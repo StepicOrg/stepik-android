@@ -14,6 +14,7 @@ import org.stepic.droid.util.hasUserAccessAndNotEmpty
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
+import org.stepik.android.model.Unit
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -45,7 +46,7 @@ constructor(
             !isDirectionCompliesStepPosition(direction, step, lessonData.lesson) ->
                 Maybe.empty()
 
-            lessonData.unit.position in 2 until lessonData.section.units.size ->
+            isDirectionCompliesUnitPosition(direction, lessonData.unit, lessonData.section) ->
                 unitRepository
                     .getUnit(lessonData.section.units[
                         when (direction) {
@@ -102,7 +103,7 @@ constructor(
             !isDirectionCompliesStepPosition(direction, step, lessonData.lesson) ->
                 Single.just(false)
 
-            lessonData.unit.position in 2 until lessonData.section.units.size ->
+            isDirectionCompliesUnitPosition(direction, lessonData.unit, lessonData.section) ->
                 Single.just(true)
 
             else ->
@@ -115,6 +116,10 @@ constructor(
     private fun isDirectionCompliesStepPosition(direction: StepNavigationDirection, step: Step, lesson: Lesson): Boolean =
         direction == StepNavigationDirection.PREV && step.position == 1L ||
         direction == StepNavigationDirection.NEXT && step.position == lesson.steps.size.toLong()
+
+    private fun isDirectionCompliesUnitPosition(direction: StepNavigationDirection, unit: Unit, section: Section): Boolean =
+        direction == StepNavigationDirection.PREV && unit.position > 1 ||
+        direction == StepNavigationDirection.NEXT && unit.position < section.units.size
 
     private fun getSlicedSections(direction: StepNavigationDirection, section: Section, course: Course): Single<List<Section>> {
         val sectionIds = course.sections ?: return Single.just(emptyList())

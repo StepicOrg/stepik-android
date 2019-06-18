@@ -52,8 +52,6 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertComplete()
-            .assertNoErrors()
             .assertResult(EnumSet.noneOf(StepNavigationDirection::class.java))
     }
 
@@ -80,9 +78,61 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertComplete()
-            .assertNoErrors()
             .assertResult(EnumSet.allOf(StepNavigationDirection::class.java))
+    }
+
+    @Test
+    fun stepNavigationDirections_firstUnit_singleStep() {
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+
+        val step = Step(id = 100, position = 1)
+        val lesson = Lesson(id = 200, steps = longArrayOf(step.id))
+
+        val unit = Unit(id = 300, lesson = lesson.id, position = 1)
+        val nextUnit = Unit(id = 301, lesson = 0, position = 2)
+
+        val section = Section(id = 400, units = listOf(unit.id, nextUnit.id), position = 1)
+        val course = Course(id = 500, sections = longArrayOf(section.id))
+
+        val lessonData = LessonData(lesson, unit, section, course)
+
+        whenever(sectionRepository.getSections()) doReturn Single.just(emptyList())
+
+        verifyNoMoreInteractions(sectionRepository)
+        verifyNoMoreInteractions(unitRepository)
+        verifyNoMoreInteractions(lessonRepository)
+
+        stepNavigationInteractor
+            .getStepNavigationDirections(step, lessonData)
+            .test()
+            .assertResult(EnumSet.of(StepNavigationDirection.NEXT))
+    }
+
+    @Test
+    fun stepNavigationDirections_lastUnit_singleStep() {
+        val stepNavigationInteractor = StepNavigationInteractor(sectionRepository, unitRepository, lessonRepository)
+
+        val step = Step(id = 100, position = 1)
+        val lesson = Lesson(id = 200, steps = longArrayOf(step.id))
+
+        val prevUnit = Unit(id = 299, lesson = 0, position = 1)
+        val unit = Unit(id = 300, lesson = lesson.id, position = 2)
+
+        val section = Section(id = 400, units = listOf(prevUnit.id, unit.id), position = 1)
+        val course = Course(id = 500, sections = longArrayOf(section.id))
+
+        val lessonData = LessonData(lesson, unit, section, course)
+
+        whenever(sectionRepository.getSections()) doReturn Single.just(emptyList())
+
+        verifyNoMoreInteractions(sectionRepository)
+        verifyNoMoreInteractions(unitRepository)
+        verifyNoMoreInteractions(lessonRepository)
+
+        stepNavigationInteractor
+            .getStepNavigationDirections(step, lessonData)
+            .test()
+            .assertResult(EnumSet.of(StepNavigationDirection.PREV))
     }
 
     @Test
@@ -111,8 +161,6 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertComplete()
-            .assertNoErrors()
             .assertResult(EnumSet.allOf(StepNavigationDirection::class.java))
     }
 
@@ -143,8 +191,6 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertComplete()
-            .assertNoErrors()
             .assertResult(EnumSet.of(StepNavigationDirection.PREV))
     }
 
@@ -175,8 +221,6 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertComplete()
-            .assertNoErrors()
             .assertResult(EnumSet.of(StepNavigationDirection.NEXT))
     }
 
@@ -206,8 +250,6 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertComplete()
-            .assertNoErrors()
             .assertResult(EnumSet.of(StepNavigationDirection.NEXT))
     }
 
@@ -237,8 +279,6 @@ class StepNavigationInteractorTest {
         stepNavigationInteractor
             .getStepNavigationDirections(step, lessonData)
             .test()
-            .assertComplete()
-            .assertNoErrors()
             .assertResult(EnumSet.of(StepNavigationDirection.PREV))
     }
 
