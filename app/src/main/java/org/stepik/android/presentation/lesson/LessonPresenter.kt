@@ -78,8 +78,8 @@ constructor(
     /**
      * Data initialization variants
      */
-    fun onLesson(lesson: Lesson, unit: Unit, section: Section, forceUpdate: Boolean = false) {
-        obtainLessonData(lessonInteractor.getLessonData(lesson, unit, section), forceUpdate)
+    fun onLesson(lesson: Lesson, unit: Unit, section: Section, isFromNextLesson: Boolean, forceUpdate: Boolean = false) {
+        obtainLessonData(lessonInteractor.getLessonData(lesson, unit, section, isFromNextLesson), forceUpdate)
     }
 
     fun onLastStep(lastStep: LastStep, forceUpdate: Boolean = false) {

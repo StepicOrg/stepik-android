@@ -146,6 +146,8 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         val unit = intent.getParcelableExtra<Unit>(EXTRA_UNIT)
         val section = intent.getParcelableExtra<Section>(EXTRA_SECTION)
 
+        val isFromNextLesson = intent.getBooleanExtra(EXTRA_BACK_ANIMATION, false)
+
         val deepLinkData = intent.getLessonDeepLinkData()
 
         when {
@@ -156,7 +158,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
                 lessonPresenter.onDeepLink(deepLinkData, forceUpdate)
 
             lesson != null && unit != null && section != null ->
-                lessonPresenter.onLesson(lesson, unit, section, forceUpdate)
+                lessonPresenter.onLesson(lesson, unit, section, isFromNextLesson, forceUpdate)
 
             else ->
                 lessonPresenter.onEmptyData()

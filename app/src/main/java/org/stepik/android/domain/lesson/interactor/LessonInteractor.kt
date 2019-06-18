@@ -23,7 +23,7 @@ constructor(
     private val sectionRepository: SectionRepository,
     private val courseRepository: CourseRepository
 ) {
-    fun getLessonData(lesson: Lesson, unit: Unit, section: Section): Maybe<LessonData> =
+    fun getLessonData(lesson: Lesson, unit: Unit, section: Section, isFromNextLesson: Boolean): Maybe<LessonData> =
         zip(
             lessonRepository.getLesson(lesson.id).onErrorReturnItem(lesson),
             unitRepository.getUnit(unit.id).onErrorReturnItem(unit),
@@ -33,7 +33,7 @@ constructor(
                 courseRepository
                     .getCourse(section.course)
                     .map { course ->
-                        LessonData(lesson, unit, section, course)
+                        LessonData(lesson, unit, section, course, stepPosition = if (isFromNextLesson) lesson.steps.size - 1 else 0)
                     }
             }
 
