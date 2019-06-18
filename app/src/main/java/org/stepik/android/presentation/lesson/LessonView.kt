@@ -2,6 +2,7 @@ package org.stepik.android.presentation.lesson
 
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.StepItem
+import org.stepik.android.model.Step
 
 interface LessonView {
     sealed class State {
@@ -36,4 +37,6 @@ interface LessonView {
     fun showStepAtPosition(position: Int)
 
     fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
+
+    fun showComments(step: Step, discussionId: Long)
 }

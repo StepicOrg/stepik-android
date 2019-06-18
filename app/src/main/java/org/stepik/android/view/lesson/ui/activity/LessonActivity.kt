@@ -26,6 +26,7 @@ import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
+import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
@@ -257,5 +258,10 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         }
 
         return isNotLastItem
+    }
+
+    override fun showComments(step: Step, discussionId: Long) {
+        // todo: use discussion id after comments refactor
+        screenManager.openComments(this, step.discussionProxy, step.id)
     }
 }

@@ -134,10 +134,35 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
-                    onSuccess  = { state = oldState.copy(stepsState = LessonView.StepsState.Loaded(it)); view?.showStepAtPosition(oldState.lessonData.stepPosition) },
-                    onError    = { state = oldState.copy(stepsState = LessonView.StepsState.NetworkError) }
+                    onSuccess = { stepItems ->
+                        state = oldState.copy(stepsState = LessonView.StepsState.Loaded(stepItems))
+                        view?.showStepAtPosition(oldState.lessonData.stepPosition)
+                        handleDiscussionId()
+                    },
+                    onError = {
+                        state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
+                    }
                 )
         }
+    }
+
+    private fun handleDiscussionId() {
+        val state = (state as? LessonView.State.LessonLoaded)
+            ?: return
+
+        val discussionId = state
+            .lessonData
+            .discussionId
+            ?: return
+
+        val step = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?.stepItems
+            ?.getOrNull(state.lessonData.stepPosition)
+            ?.stepWrapper
+            ?.step
+            ?: return
+
+        view?.showComments(step, discussionId)
     }
 
     /**
