@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
+import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
@@ -146,4 +147,6 @@ public interface ScreenManager {
     void showProfileEdit(Context context);
     void showProfileEditInfo(Activity activity, Profile profile);
     void showProfileEditPassword(Activity activity, long profileId);
+
+    void openSocialMediaLink(Context context, SocialMedia socialLink);
 }

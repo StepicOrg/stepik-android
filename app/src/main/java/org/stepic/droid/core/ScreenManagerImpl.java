@@ -27,6 +27,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.util.UriExtensionsKt;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.user.Profile;
@@ -699,5 +700,11 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showProfileEditPassword(Activity activity, long profileId) {
         activity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
         activity.startActivityForResult(ProfileEditPasswordActivity.Companion.createIntent(activity, profileId), ProfileEditPasswordActivity.REQUEST_CODE);
+    }
+
+    @Override
+    public void openSocialMediaLink(Context context, SocialMedia socialLink) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(socialLink.getLink()));
+        context.startActivity(browserIntent);
     }
 }
