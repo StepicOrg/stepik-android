@@ -738,4 +738,7 @@
     <string name="step_navigation_prev">Previous lesson</string>
     <string name="step_discussion_show">Show discussions (%d)</string>
     <string name="step_discussion_write_first">Leave a comment</string>
+
+    <!-- Feedback -->
+    <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>

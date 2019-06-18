@@ -709,4 +709,7 @@
     <string name="step_navigation_prev">Предыдущий урок</string>
     <string name="step_discussion_show">Окрыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
+
+    <!-- Feedback -->
+    <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>
