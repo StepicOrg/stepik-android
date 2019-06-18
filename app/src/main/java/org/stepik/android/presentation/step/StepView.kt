@@ -13,6 +13,8 @@ interface StepView {
         ) : State()
     }
 
+    fun setBlockingLoading(isLoading: Boolean)
+
     fun setNavigation(directions: Set<StepNavigationDirection>)
     fun showLesson(direction: StepNavigationDirection, lessonData: LessonData)
 }

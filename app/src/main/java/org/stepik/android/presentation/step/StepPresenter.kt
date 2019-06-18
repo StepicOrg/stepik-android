@@ -31,8 +31,15 @@ constructor(
             view?.setNavigation(value)
         }
 
+    private var isBlockingLoading: Boolean = false
+        set(value) {
+            field = value
+            view?.setBlockingLoading(value)
+        }
+
     override fun attachView(view: StepView) {
         super.attachView(view)
+        view.setBlockingLoading(isBlockingLoading)
         view.setNavigation(stepNavigationDirections)
     }
 
@@ -65,6 +72,8 @@ constructor(
             .getLessonDataForDirection(stepNavigationDirection, state.stepWrapper.step, state.lessonData)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
+            .doOnSubscribe { isBlockingLoading = true }
+            .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = { view?.showLesson(stepNavigationDirection, lessonData = it) },
                 onError = emptyOnErrorStub

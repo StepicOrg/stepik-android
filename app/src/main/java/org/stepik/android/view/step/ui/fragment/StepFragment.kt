@@ -3,6 +3,7 @@ package org.stepik.android.view.step.ui.fragment
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
+import android.support.v4.app.DialogFragment
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutCompat
 import android.view.LayoutInflater
@@ -17,8 +18,10 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
@@ -62,6 +65,9 @@ class StepFragment : Fragment(), StepView {
 
     private lateinit var stepNavigationDelegate: StepNavigationDelegate
     private lateinit var stepDiscussionsDelegate: StepDiscussionsDelegate
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -156,6 +162,14 @@ class StepFragment : Fragment(), StepView {
         StepShareDialogFragment
             .newInstance(stepWrapper.step, lessonData.lesson, lessonData.unit)
             .show(supportFragmentManager, StepShareDialogFragment.TAG)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
     }
 
     override fun setNavigation(directions: Set<StepNavigationDirection>) {
