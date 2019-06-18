@@ -191,9 +191,8 @@ public class HtmlHelper {
 
         String scripts = CollectionsKt.joinToString(additionalScripts, "", "", "", -1, "", null);
         String preBody = String.format(Locale.getDefault(), PRE_BODY, scripts, getStyle(fontPath, textColorHighlight), widthPx, baseUrl);
-        String modifiedBody = removeImageFixedHeightAttribute(body.toString());
 
-        return preBody + modifiedBody + POST_BODY;
+        return preBody + body + POST_BODY;
     }
 
     public static String buildMathPage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
@@ -372,15 +371,6 @@ public class HtmlHelper {
         } catch (Exception exception) {
             return null;
         }
-    }
-
-    private static String removeImageFixedHeightAttribute(String body) {
-        Document document = Jsoup.parse(body);
-        Elements imgElements = document.getElementsByTag("img");
-        for (Element element : imgElements) {
-            element.removeAttr("height");
-        }
-        return document.html();
     }
 
 }
