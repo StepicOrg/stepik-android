@@ -155,7 +155,14 @@ constructor(
             ?.worth
             ?: return
 
-        view?.showLessonInfoTooltip(stepWorth, state.lessonData.lesson.timeToComplete, -1)
+        val timeToComplete = state
+            .lessonData
+            .lesson
+            .timeToComplete
+            .takeIf { it > 0 }
+            ?: state.lessonData.lesson.steps.size * 60L
+
+        view?.showLessonInfoTooltip(stepWorth, timeToComplete, -1)
     }
 
     /**
