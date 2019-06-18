@@ -39,14 +39,18 @@ class StepFragmentAdapter(
 
     override fun getItem(position: Int): Fragment {
         val stepWrapper = items[position].stepWrapper
-        val fragment = stepTypeResolver.getFragment(stepWrapper.step)
-        val args = Bundle()
-        args.putParcelable(AppConstants.KEY_STEP_BUNDLE, stepWrapper)
-        args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lessonData.lesson)
-        args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, lessonData.unit)
-        args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, lessonData.section)
-        fragment.arguments = args
-        return StepFragment.newInstance(stepWrapper, lessonData)
+        return if (stepTypeResolver.isNeedUseOldStepContainer(stepWrapper.step)) {
+            val fragment = stepTypeResolver.getFragment(stepWrapper.step)
+            val args = Bundle()
+            args.putParcelable(AppConstants.KEY_STEP_BUNDLE, stepWrapper)
+            args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lessonData.lesson)
+            args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, lessonData.unit)
+            args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, lessonData.section)
+            fragment.arguments = args
+            fragment
+        } else {
+            StepFragment.newInstance(stepWrapper, lessonData)
+        }
     }
 
     override fun getCount(): Int =
