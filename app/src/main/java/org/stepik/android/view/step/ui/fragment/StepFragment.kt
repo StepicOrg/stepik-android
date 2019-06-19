@@ -115,9 +115,12 @@ class StepFragment : Fragment(), StepView {
             }
 
         if (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) == null) {
+            val stepContentFragment =
+                stepContentFragmentFactory.createStepContentFragment(stepWrapper, lessonData)
+
             childFragmentManager
                 .beginTransaction()
-                .add(R.id.stepContentContainer, stepContentFragmentFactory.createStepContentFragment(stepWrapper), STEP_CONTENT_FRAGMENT_TAG)
+                .add(R.id.stepContentContainer, stepContentFragment, STEP_CONTENT_FRAGMENT_TAG)
                 .commitNow()
         }
     }

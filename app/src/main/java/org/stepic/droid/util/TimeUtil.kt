@@ -1,7 +1,7 @@
 package org.stepic.droid.util
 
 object TimeUtil {
-    private val colon = ":"
+    private const val colon = ":"
 
     fun getFormattedVideoTime(millis: Long): String {
         val durationInSeconds = millis / 1000

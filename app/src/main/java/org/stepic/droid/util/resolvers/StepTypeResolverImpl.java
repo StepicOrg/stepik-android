@@ -177,6 +177,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
         switch (step.getBlock().getName()) {
             case AppConstants.TYPE_TEXT:
+            case AppConstants.TYPE_VIDEO:
                 return false;
             default:
                 return true;
