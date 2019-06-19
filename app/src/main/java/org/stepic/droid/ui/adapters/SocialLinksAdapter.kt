@@ -1,6 +1,6 @@
 package org.stepic.droid.ui.adapters
 
-import android.support.graphics.drawable.VectorDrawableCompat
+import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.social_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.base.App
 import org.stepic.droid.social.SocialMedia
 
 class SocialLinksAdapter(
@@ -23,7 +22,7 @@ class SocialLinksAdapter(
 
     override fun onBindViewHolder(holder: SocialViewHolder, position: Int) {
         val socialType = socialLinks[position]
-        holder.image.setImageDrawable(VectorDrawableCompat.create(App.application.resources, socialType.drawable, null))
+        holder.image.setImageDrawable(AppCompatResources.getDrawable(holder.itemView.context, socialType.drawable))
         holder.itemView.setOnClickListener { onClick(socialType)}
     }
 
