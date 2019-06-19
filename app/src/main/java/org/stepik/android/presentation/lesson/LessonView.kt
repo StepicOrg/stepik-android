@@ -24,6 +24,7 @@ interface LessonView {
         object Loading : StepsState()
         object NetworkError : StepsState()
         object EmptySteps : StepsState()
+        object AccessDenied : StepsState()
         class Loaded(
             val stepItems: List<StepItem>
         ) : StepsState()

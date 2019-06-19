@@ -111,12 +111,13 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         viewStepStateDelegate.addState<LessonView.StepsState.Loading>(lessonPlaceholder)
         viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
         viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(emptyLesson)
+        viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonNotFound)
         viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager, lessonTab)
 
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+        goToCatalog.setOnClickListener { screenManager.showCatalog(this); finish() }
         authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
 
         stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)

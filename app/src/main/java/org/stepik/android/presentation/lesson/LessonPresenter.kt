@@ -98,7 +98,8 @@ constructor(
 
     private fun obtainLessonData(lessonDataSource: Maybe<LessonData>, forceUpdate: Boolean = false) {
         if (state != LessonView.State.Idle &&
-            !(state == LessonView.State.NetworkError && forceUpdate)
+            !(state == LessonView.State.NetworkError && forceUpdate) &&
+            !((state as? LessonView.State.LessonLoaded)?.stepsState is LessonView.StepsState.NetworkError && forceUpdate)
         ) {
             return
         }
@@ -135,7 +136,13 @@ constructor(
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
                     onSuccess = { stepItems ->
-                        state = oldState.copy(stepsState = LessonView.StepsState.Loaded(stepItems))
+                        val stepsState =
+                            if (stepItems.isEmpty() && stepIds.isNotEmpty()) {
+                                LessonView.StepsState.AccessDenied
+                            } else {
+                                LessonView.StepsState.Loaded(stepItems)
+                            }
+                        state = oldState.copy(stepsState = stepsState)
                         view?.showStepAtPosition(oldState.lessonData.stepPosition)
                         handleDiscussionId()
                     },
