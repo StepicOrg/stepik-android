@@ -739,4 +739,6 @@
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
 
+    <string name="feedback_email_chooser_title">Choose email app</string>
+
 </resources>
