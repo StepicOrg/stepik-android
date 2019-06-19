@@ -70,7 +70,7 @@ constructor(
     fun saveVideoTimestamp(videoId: Long, timestamp: Long): Completable =
         videoTimestampRepository.addVideoTimestamp(videoId, timestamp)
 
-    fun isFisrtVideoPlayback(): Single<Boolean> =
+    fun isFirstVideoPlayback(): Single<Boolean> =
         Single.fromCallable {
             val isFirstTime = sharedPreferenceHelper.isFirstTimeVideo
             sharedPreferenceHelper.afterFirstTimeVideo()

@@ -96,7 +96,7 @@ constructor(
 
     private fun resolveVideoInBackgroundPopup() {
         compositeDisposable += videoPlayerSettingsInteractor
-            .isFisrtVideoPlayback()
+            .isFirstVideoPlayback()
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
