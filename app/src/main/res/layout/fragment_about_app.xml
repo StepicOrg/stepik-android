@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
-        android:text="Наши аккаунты в соцсетях" />
+        android:text="@string/about_our_social" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/socialListRecyclerView"
