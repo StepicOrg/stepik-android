@@ -739,6 +739,8 @@
     <string name="step_discussion_show">Show discussions (%d)</string>
     <string name="step_discussion_write_first">Leave a comment</string>
 
+    <string name="step_content_video_no_video">Video has not been uploaded or processed yet</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>

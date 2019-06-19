@@ -710,6 +710,8 @@
     <string name="step_discussion_show">Окрыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
 
+    <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>
