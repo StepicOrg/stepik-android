@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_step_content_video.*
 import kotlinx.android.synthetic.main.view_course_info_video.*
 import kotlinx.android.synthetic.main.view_length_video_thumbnail.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -37,7 +38,10 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView {
     }
 
     @Inject
-    lateinit var screenManager: ScreenManager
+    internal lateinit var analytic: Analytic
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -84,6 +88,7 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView {
 
     private fun openVideoPlayer() {
         if (stepWrapper.cachedVideo == null && stepWrapper.step.block?.video == null) {
+            analytic.reportEventWithName(Analytic.Error.ILLEGAL_STATE_VIDEO_STEP_PLAY, stepWrapper.step.id.toString())
             Snackbar
                 .make(videoStepContent, R.string.step_content_video_no_video, Snackbar.LENGTH_SHORT)
                 .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
