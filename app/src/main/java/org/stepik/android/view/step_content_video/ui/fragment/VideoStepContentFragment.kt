@@ -1,5 +1,7 @@
 package org.stepik.android.view.step_content_video.ui.fragment
 
+import android.arch.lifecycle.ViewModelProvider
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -10,17 +12,21 @@ import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_step_content_video.*
 import kotlinx.android.synthetic.main.view_course_info_video.*
+import kotlinx.android.synthetic.main.view_length_video_thumbnail.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
+import org.stepik.android.presentation.step_content_video.VideoStepContentView
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
 
-class VideoStepContentFragment : Fragment() {
+class VideoStepContentFragment : Fragment(), VideoStepContentView {
     companion object {
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
             VideoStepContentFragment()
@@ -33,12 +39,25 @@ class VideoStepContentFragment : Fragment() {
     @Inject
     lateinit var screenManager: ScreenManager
 
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var presenter: VideoStepContentPresenter
+
     private var lessonData: LessonData by argument()
     private var stepWrapper: StepPersistentWrapper by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
+
+        presenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(VideoStepContentPresenter::class.java)
+
+        if (savedInstanceState == null) {
+            presenter.fetchVideoLength(stepWrapper)
+        }
     }
 
     private fun injectComponent() {
@@ -79,5 +98,23 @@ class VideoStepContentFragment : Fragment() {
                 externalVideo = stepWrapper.step.block?.video
             ))
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.attachView(this)
+    }
+
+    override fun onStop() {
+        presenter.detachView(this)
+        super.onStop()
+    }
+
+    override fun setState(state: VideoStepContentView.State) {
+        val videoLengthText = (state as? VideoStepContentView.State.Loaded)
+            ?.videoLength
+
+        videoLength.changeVisibility(needShow = videoLengthText != null)
+        videoLength.text = videoLengthText
     }
 }

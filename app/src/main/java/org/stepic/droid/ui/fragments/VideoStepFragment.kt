@@ -100,8 +100,8 @@ class VideoStepFragment : StepBaseFragment(),
     private fun showTime(timeString: String?) {
         //at this callback view can be dead!
         timeString?.let {
-            videoLengthTextView?.visibility = View.VISIBLE
-            videoLengthTextView?.text = it
+            videoLength?.visibility = View.VISIBLE
+            videoLength?.text = it
         }
     }
 

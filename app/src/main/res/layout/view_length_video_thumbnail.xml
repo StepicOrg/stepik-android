@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView
-    android:id="@+id/videoLengthTextView"
-    style="@style/VideoTimeThumbnail"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/videoLength"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:visibility="gone"
+    style="@style/VideoTimeThumbnail"
     tools:text="1:24:08"
-    tools:visibility="visible"/>
+    tools:visibility="visible" />
