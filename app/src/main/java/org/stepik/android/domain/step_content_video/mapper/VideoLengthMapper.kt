@@ -24,7 +24,6 @@ constructor() {
                 append(COLON)
                 append(String.format("%02d", minutes)) // 2 digits always
                 append(COLON)
-
             } else {
                 // no hours -> 1 or 2 digits minutes
                 append(minutes)

@@ -29,7 +29,7 @@ constructor(
             .map { videoPath ->
                 val metadataRetriever = MediaMetadataRetriever()
                 try {
-                    metadataRetriever.setDataSource(videoPath) //local
+                    metadataRetriever.setDataSource(videoPath) // local
                 } catch (exception: IllegalArgumentException) {
                     metadataRetriever.setDataSource(videoPath, emptyMap()) // internet
                 }
