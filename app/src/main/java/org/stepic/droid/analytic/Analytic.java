@@ -154,6 +154,8 @@ public interface Analytic {
         String CLICK_CHOOSE_NOTIFICATION_INTERVAL = "click_choose_notification_interval";
         String CLICK_PRIVACY_POLICY = "click_privacy_policy";
         String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
+        String CLICK_SOCIAL_NETWORK = "settings_click_social_network";
+
 
         String INVITE_DIALOG_SHOWN = "invite_dialog_shown";
         String INVITE_DIALOG_DISMISSED = "invite_dialog_dismissed";
