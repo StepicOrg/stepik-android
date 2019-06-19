@@ -48,7 +48,7 @@ class AboutAppFragment : FragmentBase() {
 
     private fun initSocialRecycler() {
         socialListRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-        socialListRecyclerView.adapter = SocialLinksAdapter(onClick = { handleSocialClick(it) })
+        socialListRecyclerView.adapter = SocialLinksAdapter(onClick = ::handleSocialClick)
     }
 
     private fun handleSocialClick(social: SocialMedia) {
