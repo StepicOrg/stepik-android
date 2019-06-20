@@ -2,8 +2,41 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/stringStepQuizField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+
+        android:background="@drawable/bg_step_quiz_string_field"
+
+        fontPath="fonts/Roboto-Medium.ttf"
+        android:textSize="16sp"
+        android:textColor="@color/new_accent_color"
+        android:letterSpacing="0.01"
+        android:lineSpacingExtra="6sp"
+
+        android:hint="@string/step_quiz_string_field_hint"
+        android:textColorHint="@color/new_accent_color_alpha_40"
+
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:targetApi="lollipop" />
 
     <include
         layout="@layout/view_step_quiz_submit_button"
@@ -12,7 +45,10 @@
 
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
 
+        app:layout_constraintVertical_bias="1"
+        app:layout_constraintTop_toBottomOf="@id/stringStepQuizField"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />

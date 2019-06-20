@@ -713,6 +713,8 @@
     <string name="step_quiz_submit_button_action">Отправить</string>
     <string name="step_quiz_submit_button_try_again">Попробовать снова</string>
 
+    <string name="step_quiz_string_field_hint">Введите ответ…</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>

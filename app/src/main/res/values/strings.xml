@@ -743,6 +743,8 @@
     <string name="step_quiz_submit_button_action">Submit</string>
     <string name="step_quiz_submit_button_try_again">Try again</string>
 
+    <string name="step_quiz_string_field_hint">Type your answer…</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>

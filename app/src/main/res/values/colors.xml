@@ -58,6 +58,7 @@
     <!--Redesigned colors-->
     <color name="new_primary_color">#F6F6F6</color>
     <color name="new_accent_color">#535366</color>
+    <color name="new_accent_color_alpha_60">#9a535366</color>
     <color name="new_accent_color_alpha_40">#66535366</color>
     <color name="new_accent_color_alpha_30">#4D535366</color>
     <color name="new_accent_color_alpha_5">#0D535366</color>
@@ -152,6 +153,7 @@
 
     <!-- Design system -->
     <color name="grey04">#EAECF0</color>
+    <color name="grey03">#CCCCCC</color>
     <color name="green01">#66CC66</color>
     <color name="green03">#54AD54</color>
     <color name="green04">#ACD1AC</color>
