@@ -354,6 +354,7 @@
     <string name="about_app_title">About</string>
     <string name="terms_of_service_title">Terms of Service</string>
     <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="about_our_social">Our social networks</string>
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="sign_in_with_password_suffix">" with e-mail"</string>
     <string name="content_course_logo">Course logo</string>
