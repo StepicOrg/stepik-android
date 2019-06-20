@@ -198,4 +198,13 @@
     <color name="step_navigation_button_ripple">#2066CC66</color>
 
     <color name="step_discussion_button">@color/new_primary_color</color>
+
+    <!-- Choice quiz -->
+    <color name="choice_checked">#e8eafa</color>
+    <color name="choice_correct">#e7f7e7</color>
+    <color name="choice_incorrect">#ffebe7</color>
+
+    <color name="choice_checked_border">@color/color_violet_1</color>
+    <color name="choice_correct_border">#64cc64</color>
+    <color name="choice_incorrect_border">#ff7965</color>
 </resources>
