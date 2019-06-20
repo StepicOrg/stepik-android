@@ -6,14 +6,15 @@
             <corners android:radius="@dimen/step_submit_button_radius" />
         </shape>
     </item>
-    <item android:state_selected="false" android:state_enabled="true">
-        <shape android:shape="rectangle">
-            <solid android:color="@color/green01" />
-            <corners android:radius="@dimen/step_submit_button_radius" />
-        </shape>
+    <item android:state_enabled="true">
+        <layer-list>
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/green01" />
+                    <corners android:radius="@dimen/step_submit_button_radius" />
+                </shape>
+            </item>
+            <item android:drawable="@drawable/bg_step_submit_button_ripple" />
+        </layer-list>
     </item>
-    <item
-        android:state_selected="true"
-        android:state_enabled="true"
-        android:drawable="@drawable/bg_step_submit_button_ripple" />
 </selector>
