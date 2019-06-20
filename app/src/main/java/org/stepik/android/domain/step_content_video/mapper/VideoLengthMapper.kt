@@ -1,10 +1,16 @@
-package org.stepic.droid.util
+package org.stepik.android.domain.step_content_video.mapper
 
-object TimeUtil {
-    private val colon = ":"
+import javax.inject.Inject
 
-    fun getFormattedVideoTime(millis: Long): String {
-        val durationInSeconds = millis / 1000
+class VideoLengthMapper
+@Inject
+constructor() {
+    companion object {
+        private const val COLON = ":"
+    }
+
+    fun mapVideoLengthFromMsToString(videoLengthMs: Long): String {
+        val durationInSeconds = videoLengthMs / 1000
 
         val hours = durationInSeconds / 3600
         val minutesAndSecondsInSeconds = durationInSeconds % 3600
@@ -15,14 +21,13 @@ object TimeUtil {
         stringBuilder.apply {
             if (hours > 0) {
                 append(hours)
-                append(colon)
+                append(COLON)
                 append(String.format("%02d", minutes)) // 2 digits always
-                append(colon)
-
+                append(COLON)
             } else {
                 // no hours -> 1 or 2 digits minutes
                 append(minutes)
-                append(colon)
+                append(COLON)
             }
 
             append(String.format("%02d", seconds)) // 2 digits always for seconds

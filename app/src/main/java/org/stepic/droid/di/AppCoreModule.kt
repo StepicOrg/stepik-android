@@ -41,8 +41,6 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl
-import org.stepic.droid.util.resolvers.VideoResolver
-import org.stepic.droid.util.resolvers.VideoResolverImpl
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.util.resolvers.text.TextResolverImpl
 import org.stepic.droid.web.Api
@@ -84,10 +82,6 @@ abstract class AppCoreModule {
     @AppSingleton
     internal abstract fun provideIApi(api: ApiImpl): Api
 
-    @Binds
-    @AppSingleton
-    internal abstract fun provideVideoResolver(videoResolver: VideoResolverImpl): VideoResolver
-
     @AppSingleton
     @Binds
     internal abstract fun provideLessonSessionManager(localLessonSessionManager: LocalLessonSessionManagerImpl): LessonSessionManager
@@ -111,10 +105,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideTextResolver(textResolver: TextResolverImpl): TextResolver
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideVideoLengthResolver(videoLengthResolver: VideoLengthResolverImpl): VideoLengthResolver
 
     @Binds
     @AppSingleton

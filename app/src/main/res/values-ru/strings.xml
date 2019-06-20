@@ -374,15 +374,12 @@
     <string name="next">Дальше</string>
     <string name="no_connection">Нет подключения</string>
 
-    <!--Video step screen-->
-    <string name="video_step_play_content_description">Воспроизвести видео</string>
-    <string name="video_step_video_image_content_description">Видео</string>
-
     <!--Video player screen-->
     <string name="video_player_quality">Качество видео</string>
     <string name="video_player_device_orientation_title">Поворот видео</string>
     <string name="video_player_downloaded_quality">Загруженное (%s)</string>
     <string name="video_url_incorrect">Извините, видео не найдено</string>
+    <string name="video_content_description">Воспроизвести видео</string>
 
     <!--Rate dialog-->
     <string name="rate_dialog_title">Как бы Вы оценили Stepik?</string>
@@ -708,8 +705,10 @@
     <!-- Step -->
     <string name="step_navigation_next">Следующий урок</string>
     <string name="step_navigation_prev">Предыдущий урок</string>
-    <string name="step_discussion_show">Окрыть комментарии (%d)</string>
+    <string name="step_discussion_show">Открыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
+
+    <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>

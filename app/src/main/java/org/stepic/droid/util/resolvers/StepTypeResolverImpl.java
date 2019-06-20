@@ -20,8 +20,6 @@ import org.stepic.droid.ui.fragments.SortingStepFragment;
 import org.stepic.droid.ui.fragments.SqlStepFragment;
 import org.stepic.droid.ui.fragments.StringStepFragment;
 import org.stepic.droid.ui.fragments.TableChoiceStepFragment;
-import org.stepic.droid.ui.fragments.TextStepFragment;
-import org.stepic.droid.ui.fragments.VideoStepFragment;
 import org.stepic.droid.ui.quiz.ChoiceQuizDelegate;
 import org.stepic.droid.ui.quiz.NotSupportedQuizDelegate;
 import org.stepic.droid.ui.quiz.NumberQuizDelegate;
@@ -112,10 +110,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
         String type = step.getBlock().getName();
         switch (type) {
-            case AppConstants.TYPE_VIDEO:
-                return new VideoStepFragment();
-            case AppConstants.TYPE_TEXT:
-                return new TextStepFragment();
             case AppConstants.TYPE_CHOICE:
                 return new ChoiceStepFragment();
             case AppConstants.TYPE_FREE_ANSWER:
@@ -177,6 +171,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
         switch (step.getBlock().getName()) {
             case AppConstants.TYPE_TEXT:
+            case AppConstants.TYPE_VIDEO:
                 return false;
             default:
                 return true;

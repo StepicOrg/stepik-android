@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/videoStepContent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFEEFF">
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <include
+            android:id="@+id/videoContainer"
+            layout="@layout/view_course_info_video" />
+
+        <include
+            layout="@layout/view_length_video_thumbnail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="4dp" />
+    </FrameLayout>
 
 </FrameLayout>
