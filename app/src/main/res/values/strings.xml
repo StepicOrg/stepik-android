@@ -740,6 +740,8 @@
 
     <string name="step_content_video_no_video">Video has not been uploaded or processed yet</string>
 
+    <string name="step_quiz_submit">Submit</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>

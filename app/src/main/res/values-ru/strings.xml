@@ -710,6 +710,8 @@
 
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 
+    <string name="step_quiz_submit">Отправить</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>
