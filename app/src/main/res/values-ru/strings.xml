@@ -705,7 +705,7 @@
     <!-- Step -->
     <string name="step_navigation_next">Следующий урок</string>
     <string name="step_navigation_prev">Предыдущий урок</string>
-    <string name="step_discussion_show">Окрыть комментарии (%d)</string>
+    <string name="step_discussion_show">Открыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
 
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
