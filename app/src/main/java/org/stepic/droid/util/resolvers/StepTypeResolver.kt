@@ -16,4 +16,6 @@ interface StepTypeResolver {
 
     fun getFragment(step: Step?): StepBaseFragment
     fun getQuizDelegate(step: Step?): QuizDelegate
+
+    fun isNeedUseOldStepContainer(step: Step): Boolean
 }

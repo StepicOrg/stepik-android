@@ -57,6 +57,8 @@ import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDat
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
+import org.stepik.android.view.injection.step.StepComponent
+import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
@@ -88,6 +90,7 @@ import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
         ProfileBusModule::class,
         ProgressBusModule::class,
         ViewAssignmentBusModule::class,
+        StepDiscussionBusModule::class,
         PersonalDeadlinesDataModule::class,
 
         CourseRoutingModule::class, // todo unite it in RoutingModule::class
@@ -143,6 +146,8 @@ interface AppCoreComponent {
     fun viewAssignmentComponentBuilder(): ViewAssignmentComponent.Builder
 
     fun lessonComponentBuilder(): LessonComponent.Builder
+
+    fun stepComponentBuilder(): StepComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

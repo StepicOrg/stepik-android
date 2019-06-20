@@ -151,11 +151,6 @@
         <item quantity="other">%d new notifications</item>
     </plurals>
 
-    <plurals name="open_comments">
-        <item quantity="one">Open %d comment</item>
-        <item quantity="other">Open %d comments</item>
-    </plurals>
-
     <string name="open_comments_zero">No comments. Add your comment</string>
     <string name="comment_sent">Comment is sent successfully</string>
     <string name="comment_denied">Comments are not available for this lesson</string>
@@ -739,6 +734,12 @@
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
 
-    <string name="feedback_email_chooser_title">Choose email app</string>
+    <!-- Step -->
+    <string name="step_navigation_next">Next lesson</string>
+    <string name="step_navigation_prev">Previous lesson</string>
+    <string name="step_discussion_show">Show discussions (%d)</string>
+    <string name="step_discussion_write_first">Leave a comment</string>
 
+    <!-- Feedback -->
+    <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>

@@ -167,4 +167,19 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return errorDelegate;
         }
     }
+
+    @Override
+    public boolean isNeedUseOldStepContainer(@NotNull Step step) {
+        if (step.getBlock() == null
+                || step.getBlock().getName() == null
+                || step.getBlock().getName().equals(""))
+            return true;
+
+        switch (step.getBlock().getName()) {
+            case AppConstants.TYPE_TEXT:
+                return false;
+            default:
+                return true;
+        }
+    }
 }

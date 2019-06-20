@@ -269,7 +269,7 @@ public abstract class StepBaseFragment extends FragmentBase
         });
         int discussionCount = step.getDiscussionsCount();
         if (discussionCount > 0) {
-            textForComment.setText(App.Companion.getAppContext().getResources().getQuantityString(R.plurals.open_comments, discussionCount, discussionCount));
+            textForComment.setText(App.Companion.getAppContext().getString(R.string.step_discussion_show, discussionCount));
         } else {
             textForComment.setText(App.Companion.getAppContext().getResources().getString(R.string.open_comments_zero));
         }

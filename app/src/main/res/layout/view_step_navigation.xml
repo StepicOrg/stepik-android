@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepNavigationPrev"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+
+        android:minWidth="48dp"
+
+        android:textSize="16sp"
+        android:textColor="@color/step_navigation_button"
+        android:background="@drawable/bg_step_navigation_button"
+
+        android:paddingStart="17dp"
+        android:paddingLeft="17dp"
+        android:paddingEnd="16dp"
+        android:paddingRight="16dp"
+
+        android:gravity="center"
+
+        tools:drawableStart="@drawable/ic_step_navigation_prev"
+        tools:drawableLeft="@drawable/ic_step_navigation_prev"
+
+        app:layout_constraintEnd_toStartOf="@id/stepNavigationNext"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepNavigationNext"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+
+        android:minWidth="48dp"
+        android:textSize="16sp"
+        android:textColor="@color/step_navigation_button"
+        android:background="@drawable/bg_step_navigation_button"
+        android:text="@string/step_navigation_next"
+
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="17dp"
+        android:paddingRight="17dp"
+
+        android:gravity="center_vertical|start"
+
+        tools:drawableEnd="@drawable/ic_step_navigation_next"
+        tools:drawableRight="@drawable/ic_step_navigation_next"
+
+        app:layout_constraintStart_toEndOf="@id/stepNavigationPrev"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+
+        app:layout_goneMarginLeft="0dp"
+        app:layout_goneMarginStart="0dp" />
+
+</android.support.constraint.ConstraintLayout>

@@ -50,13 +50,13 @@ constructor(
 
     private fun packStepItems(assignments: List<Assignment>, steps: List<StepPersistentWrapper>, progresses: List<Progress>): List<StepItem> =
         steps
-            .map { step ->
+            .map { stepWrapper ->
                 val assignment = assignments
-                    .find { it.step == step.step.id }
+                    .find { it.step == stepWrapper.step.id }
 
                 StepItem(
-                    step = step,
-                    stepProgress = progresses.find { it.id == step.progress },
+                    stepWrapper = stepWrapper,
+                    stepProgress = progresses.find { it.id == stepWrapper.progress },
 
                     assignment = assignment,
                     assignmentProgress = progresses.find { it.id == assignment?.progress }

@@ -114,13 +114,6 @@
         <item quantity="many">%d новых уведомлений</item>
         <item quantity="other">%d новых уведомлений</item>
     </plurals>
-
-    <plurals name="open_comments">
-        <item quantity="one">Открыть %d комментарий</item>
-        <item quantity="few">Открыть %d комментария</item>
-        <item quantity="many">Открыть %d комментариев</item>
-        <item quantity="other">Открыть %d комментариев</item>
-    </plurals>
     <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
     <string name="sound_title">Звук</string>
@@ -712,6 +705,12 @@
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
 
-    <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
+    <!-- Step -->
+    <string name="step_navigation_next">Следующий урок</string>
+    <string name="step_navigation_prev">Предыдущий урок</string>
+    <string name="step_discussion_show">Окрыть комментарии (%d)</string>
+    <string name="step_discussion_write_first">Написать первый комментарий</string>
 
+    <!-- Feedback -->
+    <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>

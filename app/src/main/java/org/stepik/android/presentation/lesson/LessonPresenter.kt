@@ -78,8 +78,8 @@ constructor(
     /**
      * Data initialization variants
      */
-    fun onLesson(lesson: Lesson, unit: Unit, section: Section, forceUpdate: Boolean = false) {
-        obtainLessonData(lessonInteractor.getLessonData(lesson, unit, section), forceUpdate)
+    fun onLesson(lesson: Lesson, unit: Unit, section: Section, isFromNextLesson: Boolean, forceUpdate: Boolean = false) {
+        obtainLessonData(lessonInteractor.getLessonData(lesson, unit, section, isFromNextLesson), forceUpdate)
     }
 
     fun onLastStep(lastStep: LastStep, forceUpdate: Boolean = false) {
@@ -98,7 +98,8 @@ constructor(
 
     private fun obtainLessonData(lessonDataSource: Maybe<LessonData>, forceUpdate: Boolean = false) {
         if (state != LessonView.State.Idle &&
-            !(state == LessonView.State.NetworkError && forceUpdate)
+            !(state == LessonView.State.NetworkError && forceUpdate) &&
+            !((state as? LessonView.State.LessonLoaded)?.stepsState is LessonView.StepsState.NetworkError && forceUpdate)
         ) {
             return
         }
@@ -134,10 +135,41 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
-                    onSuccess  = { state = oldState.copy(stepsState = LessonView.StepsState.Loaded(it)); view?.showStepAtPosition(oldState.lessonData.stepPosition) },
-                    onError    = { state = oldState.copy(stepsState = LessonView.StepsState.NetworkError) }
+                    onSuccess = { stepItems ->
+                        val stepsState =
+                            if (stepItems.isEmpty() && stepIds.isNotEmpty()) {
+                                LessonView.StepsState.AccessDenied
+                            } else {
+                                LessonView.StepsState.Loaded(stepItems)
+                            }
+                        state = oldState.copy(stepsState = stepsState)
+                        view?.showStepAtPosition(oldState.lessonData.stepPosition)
+                        handleDiscussionId()
+                    },
+                    onError = {
+                        state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
+                    }
                 )
         }
+    }
+
+    private fun handleDiscussionId() {
+        val state = (state as? LessonView.State.LessonLoaded)
+            ?: return
+
+        val discussionId = state
+            .lessonData
+            .discussionId
+            ?: return
+
+        val step = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?.stepItems
+            ?.getOrNull(state.lessonData.stepPosition)
+            ?.stepWrapper
+            ?.step
+            ?: return
+
+        view?.showComments(step, discussionId)
     }
 
     /**
@@ -150,12 +182,19 @@ constructor(
         val stepWorth = (state.stepsState as? LessonView.StepsState.Loaded)
             ?.stepItems
             ?.getOrNull(position)
-            ?.step
+            ?.stepWrapper
             ?.step
             ?.worth
             ?: return
 
-        view?.showLessonInfoTooltip(stepWorth, state.lessonData.lesson.timeToComplete, -1)
+        val timeToComplete = state
+            .lessonData
+            .lesson
+            .timeToComplete
+            .takeIf { it > 0 }
+            ?: state.lessonData.lesson.steps.size * 60L
+
+        view?.showLessonInfoTooltip(stepWorth, timeToComplete, -1)
     }
 
     /**
@@ -194,7 +233,7 @@ constructor(
         currentStepPosition = position
 
         compositeDisposable += stepViewReportInteractor
-            .reportViewAssignment(stepItem.step.step, stepItem.assignment, state.lessonData.unit, state.lessonData.course)
+            .reportViewAssignment(stepItem.stepWrapper.step, stepItem.assignment, state.lessonData.unit, state.lessonData.course)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(onError = emptyOnErrorStub)
@@ -202,7 +241,7 @@ constructor(
         /**
          * Analytic
          */
-        val step = stepItem.step.step
+        val step = stepItem.stepWrapper.step
         analytic.reportEventWithName(Analytic.Steps.STEP_OPENED, step.getStepType())
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
@@ -222,7 +261,7 @@ constructor(
         val step = (state.stepsState as? LessonView.StepsState.Loaded)
             ?.stepItems
             ?.getOrNull(position)
-            ?.step
+            ?.stepWrapper
             ?.step
             ?: return
 

@@ -14,6 +14,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.Toast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.fragment_comments.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
@@ -41,6 +42,7 @@ import org.stepic.droid.util.*
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
+import org.stepik.android.view.injection.step.StepDiscussionBus
 import java.util.*
 import javax.inject.Inject
 
@@ -91,6 +93,10 @@ class CommentsFragment : FragmentBase(),
 
     @Inject
     lateinit var commentCountPoster: CommentCountPoster
+
+    @Inject
+    @field:StepDiscussionBus
+    lateinit var stepDiscussionSubject: PublishSubject<Long>
 
     private var discussionId: String by argument()
     private var stepId: Long by argument()
@@ -553,6 +559,7 @@ class CommentsFragment : FragmentBase(),
         onRefresh() // it can be dangerous, when 10 or more comments was submit by another users.
 
         commentCountPoster.updateCommentCount()//say to listeners, that count is updated
+        stepDiscussionSubject.onNext(stepId)
     }
 
 

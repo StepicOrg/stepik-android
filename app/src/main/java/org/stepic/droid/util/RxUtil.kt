@@ -86,3 +86,14 @@ fun <T> Single<List<T>>.requireSize(size: Int): Single<List<T>> =
     }
 
 val emptyOnErrorStub: (Throwable) -> Unit = {}
+
+/**
+ * Filters observable according to [predicateSource] predicate
+ */
+fun <T> Observable<T>.filterSingle(predicateSource: (T) -> Single<Boolean>): Observable<T> =
+    flatMap { item ->
+        predicateSource(item)
+            .toObservable()
+            .filter { it }
+            .map { item }
+    }
