@@ -127,6 +127,7 @@ class StepFragment : Fragment(), StepView {
 
     private fun initStepQuizFragment() {
         val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+        stepContentSeparator.changeVisibility(isStepHasQuiz)
         stepQuizContainer.changeVisibility(isStepHasQuiz)
         if (isStepHasQuiz && childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null) {
             childFragmentManager

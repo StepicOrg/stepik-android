@@ -17,6 +17,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
+            <View
+                android:id="@+id/stepContentSeparator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/step_quiz_separator" />
+
             <FrameLayout
                 android:id="@+id/stepQuizContainer"
                 android:layout_width="match_parent"
