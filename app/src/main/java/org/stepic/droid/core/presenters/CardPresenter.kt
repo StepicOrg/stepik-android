@@ -16,7 +16,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.SubmissionResponse
+import org.stepik.android.remote.submission.model.SubmissionResponse
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -114,6 +114,7 @@ class CardPresenter(
                     reply = view?.getQuizViewDelegate()?.createReply(),
                     attempt = card.attempt?.id ?: 0)
             disposable = api.createNewSubmissionReactive(submission)
+                    .ignoreElement()
                     .andThen(api.getSubmissionsReactive(submission.attempt))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)

@@ -65,13 +65,6 @@ class RetryExponential(private val maxAttempts: Int)
 
 }
 
-
-fun <T> Iterable<T>.toMaybe(): Maybe<T> =
-        firstOrNull()?.let { Maybe.just(it) } ?: Maybe.empty()
-
-fun <T> Single<List<T>>.maybeFirst(): Maybe<T> =
-        flatMapMaybe { it.toMaybe() }
-
 inline fun <T> Maybe<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Maybe<T> =
         flatMap { completableSource(it).andThen(Maybe.just(it)) }
 
@@ -101,9 +94,24 @@ fun <T> Observable<T>.filterSingle(predicateSource: (T) -> Single<Boolean>): Obs
             .map { item }
     }
 
+/**
+ * Wraps current object to Maybe
+ */
 fun <T : Any> T?.toMaybe(): Maybe<T> =
     if (this == null) {
         Maybe.empty()
     } else {
         Maybe.just(this)
     }
+
+/**
+ * Returns first element of list wrapped in Maybe or empty
+ */
+fun <T : Any> Single<List<T>>.maybeFirst(): Maybe<T> =
+    flatMapMaybe { it.firstOrNull().toMaybe() }
+
+/**
+ * Returns first element of list
+ */
+fun <T : Any> Single<List<T>>.first(): Single<T> =
+    map { it.first() }

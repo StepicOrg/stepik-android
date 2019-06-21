@@ -20,6 +20,8 @@ import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.submission.model.SubmissionRequest;
+import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
@@ -157,7 +159,7 @@ public interface StepicRestLoggedService {
     );
 
     @POST("api/submissions")
-    Completable createNewSubmissionReactive(
+    Single<SubmissionResponse> createNewSubmissionReactive(
             @Body SubmissionRequest submissionRequest
     );
 
@@ -229,6 +231,9 @@ public interface StepicRestLoggedService {
 
     @GET("api/submissions?order=desc")
     Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);
+
+    @GET("api/submissions?order=desc")
+    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId);
 
     @GET("api/notifications")
     Call<NotificationResponse> getNotifications(@Query("page") int page, @Nullable @Query("type") String type);

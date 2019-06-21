@@ -78,6 +78,8 @@ import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.submission.model.SubmissionRequest;
+import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 
@@ -654,7 +656,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Completable createNewSubmissionReactive(Submission submission) {
+    public Single<SubmissionResponse> createNewSubmissionReactive(Submission submission) {
         return loggedService.createNewSubmissionReactive(new SubmissionRequest(submission));
     }
 
@@ -681,6 +683,11 @@ public class ApiImpl implements Api {
     @Override
     public Call<SubmissionResponse> getSubmissionForStep(long stepId) {
         return loggedService.getExistingSubmissionsForStep(stepId);
+    }
+
+    @Override
+    public Single<SubmissionResponse> getSubmissionForStepReactive(long stepId) {
+        return loggedService.getExistingSubmissionsForStepReactive(stepId);
     }
 
     @Override
