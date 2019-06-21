@@ -67,6 +67,8 @@ import org.stepik.android.model.comments.Vote;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.attempt.model.AttemptRequest;
+import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;

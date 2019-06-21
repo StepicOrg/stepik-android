@@ -5,6 +5,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.attempt.model.AttemptRequest;
+import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
