@@ -7,5 +7,5 @@ class AttemptRequest(
     @SerializedName("attempt")
     val attempt: Attempt
 ) {
-    constructor(stepId: Long): this(Attempt(step = stepId))
+    constructor(stepId: Long) : this(Attempt(step = stepId))
 }

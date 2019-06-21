@@ -11,6 +11,7 @@ import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Step
 import org.stepic.droid.util.filterSingle
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
+import org.stepic.droid.util.toMaybe
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
@@ -70,8 +71,7 @@ constructor(
                     .flatMapMaybe { sections ->
                         sections
                             .firstOrNull { it.hasUserAccessAndNotEmpty(lessonData.course) }
-                            ?.let { Maybe.just(it) }
-                            ?: Maybe.empty()
+                            .toMaybe()
                     }
                     .flatMap { section ->
                         val unitId =
