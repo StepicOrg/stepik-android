@@ -745,6 +745,8 @@
 
     <string name="step_quiz_string_field_hint">Type your answer…</string>
 
+    <string name="step_quiz_progress">Evaluation…</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>

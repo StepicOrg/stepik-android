@@ -715,6 +715,8 @@
 
     <string name="step_quiz_string_field_hint">Введите ответ…</string>
 
+    <string name="step_quiz_progress">Проверка…</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>

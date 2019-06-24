@@ -1,13 +1,18 @@
 package org.stepik.android.view.step_quiz_string.ui.fragment
 
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.content.res.AppCompatResources
+import android.support.v7.graphics.drawable.AnimatedStateListDrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.fragment_step_quiz_string.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 
@@ -32,5 +37,9 @@ class StringStepQuizFragment : Fragment() {
 
         stepQuizSubmit.setOnClickListener { }
         stepQuizSubmit.isEnabled = true
+
+        val drawable = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_step_quiz_progress) as? AnimationDrawable
+        stepQuizProgress.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        drawable?.start()
     }
 }
