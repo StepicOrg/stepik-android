@@ -70,6 +70,7 @@ ext.versions = [
         confetti             : '1.1.1',
         MPAndroidChart       : 'v3.0.3',
 
+
         shortcutBadger       : '1.1.19@aar',
         StoriesKit           : '1.1.1',
 
