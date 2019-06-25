@@ -720,6 +720,8 @@
     <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз!</string>
     <string name="step_quiz_feedback_wrong_last_try">Неверно</string>
 
+    <string name="step_quiz_feedback_validation_fill_blanks">Необходимо заполнить все пробелы перед отправкой</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>

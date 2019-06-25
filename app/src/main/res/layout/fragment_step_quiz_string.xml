@@ -39,55 +39,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:targetApi="lollipop" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stepQuizFeedbackWrong"
-        style="@style/StepQuizFeedback"
-        android:background="@drawable/bg_step_quiz_feedback_wrong"
-
-        android:textColor="@color/step_quiz_feedback_wrong_text"
-
-        android:layout_marginBottom="16dp"
+    <include
+        android:id="@+id/stepQuizFeedbackBlocks"
+        layout="@layout/layout_step_quiz_feedback_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
         app:layout_constraintVertical_bias="1"
-        app:layout_constraintTop_toBottomOf="@id/stringStepQuizField"
-        app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackCorrect"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-
-        tools:text="@string/step_quiz_feedback_wrong_not_last_try"
-        tools:drawableStart="@drawable/ic_step_quiz_wrong" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stepQuizFeedbackCorrect"
-        style="@style/StepQuizFeedback"
-        android:background="@drawable/bg_step_quiz_feedback_correct"
-
-        android:textColor="@color/green01"
-
-        android:layout_marginBottom="16dp"
-
-        app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackEvaluation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        tools:text="@string/step_quiz_feedback_correct_free_answer"
-        tools:drawableStart="@drawable/ic_step_quiz_correct" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stepQuizFeedbackEvaluation"
-        style="@style/StepQuizFeedback"
-
-        android:background="@drawable/bg_step_quiz_feedback_evaluation"
-        android:text="@string/step_quiz_feedback_evaluation"
-        android:textColor="@color/color_violet_1"
-
-        android:layout_marginBottom="16dp"
 
         app:layout_constraintBottom_toTopOf="@id/stepQuizSubmit"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stringStepQuizField"
 
-        tools:drawableStart="@drawable/ic_step_quiz_evaluation" />
+        android:layout_margin="16dp" />
 
     <include
         layout="@layout/view_step_quiz_submit_button"
