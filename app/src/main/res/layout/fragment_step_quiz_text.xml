@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:minHeight="48dp"
 
-        android:background="@drawable/bg_step_quiz_string_field"
+        android:background="@drawable/bg_step_quiz_text_field"
 
         fontPath="fonts/Roboto-Medium.ttf"
         android:textSize="16sp"
@@ -20,7 +20,7 @@
         android:letterSpacing="0.01"
         android:lineSpacingExtra="6sp"
 
-        android:hint="@string/step_quiz_string_field_hint"
+        android:hint="@string/step_quiz_text_field_hint"
         android:textColorHint="@color/new_accent_color_alpha_40"
 
         android:gravity="center_vertical"

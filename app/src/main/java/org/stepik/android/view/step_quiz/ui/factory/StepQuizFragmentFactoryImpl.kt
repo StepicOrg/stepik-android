@@ -3,7 +3,7 @@ package org.stepik.android.view.step_quiz.ui.factory
 import android.support.v4.app.Fragment
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
-import org.stepik.android.view.step_quiz_string.ui.fragment.StringStepQuizFragment
+import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 import javax.inject.Inject
 
 class StepQuizFragmentFactoryImpl
@@ -12,7 +12,7 @@ constructor() : StepQuizFragmentFactory {
     override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment =
         when (stepPersistentWrapper.step.block?.name) {
             AppConstants.TYPE_STRING ->
-                StringStepQuizFragment.newInstance(stepPersistentWrapper)
+                TextStepQuizFragment.newInstance(stepPersistentWrapper)
 
             else ->
                 Fragment()

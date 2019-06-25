@@ -713,7 +713,7 @@
     <string name="step_quiz_submit_button_action">Отправить</string>
     <string name="step_quiz_submit_button_try_again">Попробовать снова</string>
 
-    <string name="step_quiz_string_field_hint">Введите ответ…</string>
+    <string name="step_quiz_text_field_hint">Введите ответ…</string>
 
     <string name="step_quiz_feedback_evaluation">Проверка…</string>
     <string name="step_quiz_feedback_correct_free_answer">Любой ответ будет оценен как правильный</string>

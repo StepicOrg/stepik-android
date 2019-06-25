@@ -743,7 +743,7 @@
     <string name="step_quiz_submit_button_action">Submit</string>
     <string name="step_quiz_submit_button_try_again">Try again</string>
 
-    <string name="step_quiz_string_field_hint">Type your answer…</string>
+    <string name="step_quiz_text_field_hint">Type your answer…</string>
 
     <string name="step_quiz_feedback_evaluation">Evaluation…</string>
     <string name="step_quiz_feedback_correct_free_answer">Any text response will be graded as correct</string>
