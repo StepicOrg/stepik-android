@@ -32,6 +32,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,36 +40,54 @@
         tools:targetApi="lollipop" />
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stepQuizProgress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
+        android:id="@+id/stepQuizFeedbackWrong"
+        style="@style/StepQuizFeedback"
+        android:background="@drawable/bg_step_quiz_feedback_wrong"
 
-        fontPath="fonts/Roboto-Regular.ttf"
+        android:textColor="@color/step_quiz_feedback_wrong_text"
 
-        android:background="@drawable/bg_step_quiz_progress"
-        android:text="@string/step_quiz_progress"
-        android:textSize="16sp"
-        android:textColor="@color/color_violet_1"
-
-        android:drawablePadding="16dp"
-
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
 
         app:layout_constraintVertical_bias="1"
         app:layout_constraintTop_toBottomOf="@id/stringStepQuizField"
+        app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackCorrect"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="@string/step_quiz_feedback_wrong_not_last_try"
+        tools:drawableStart="@drawable/ic_step_quiz_wrong" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedbackCorrect"
+        style="@style/StepQuizFeedback"
+        android:background="@drawable/bg_step_quiz_feedback_correct"
+
+        android:textColor="@color/green01"
+
+        android:layout_marginBottom="16dp"
+
+        app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackEvaluation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="@string/step_quiz_feedback_correct_free_answer"
+        tools:drawableStart="@drawable/ic_step_quiz_correct" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedbackEvaluation"
+        style="@style/StepQuizFeedback"
+
+        android:background="@drawable/bg_step_quiz_feedback_evaluation"
+        android:text="@string/step_quiz_feedback_evaluation"
+        android:textColor="@color/color_violet_1"
+
+        android:layout_marginBottom="16dp"
+
         app:layout_constraintBottom_toTopOf="@id/stepQuizSubmit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 
-        tools:drawableStart="@drawable/ic_step_quiz_progress" />
+        tools:drawableStart="@drawable/ic_step_quiz_evaluation" />
 
     <include
         layout="@layout/view_step_quiz_submit_button"

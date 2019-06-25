@@ -715,7 +715,10 @@
 
     <string name="step_quiz_string_field_hint">Введите ответ…</string>
 
-    <string name="step_quiz_progress">Проверка…</string>
+    <string name="step_quiz_feedback_evaluation">Проверка…</string>
+    <string name="step_quiz_feedback_correct_free_answer">Любой ответ будет оценен как правильный</string>
+    <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз!</string>
+    <string name="step_quiz_feedback_wrong_last_try">Неверно</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>

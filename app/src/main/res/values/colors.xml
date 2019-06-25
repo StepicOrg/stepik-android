@@ -205,4 +205,7 @@
 
     <color name="step_discussion_button">@color/new_primary_color</color>
     <color name="step_quiz_separator">@color/grey04</color>
+
+    <color name="step_quiz_feedback_wrong_text">#ff7965</color>
+    <color name="step_quiz_feedback_wrong_background">#26ff7965</color>
 </resources>

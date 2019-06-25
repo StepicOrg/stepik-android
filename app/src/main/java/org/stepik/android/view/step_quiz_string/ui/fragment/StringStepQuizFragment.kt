@@ -4,7 +4,6 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.content.res.AppCompatResources
-import android.support.v7.graphics.drawable.AnimatedStateListDrawableCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,8 +37,14 @@ class StringStepQuizFragment : Fragment() {
         stepQuizSubmit.setOnClickListener { }
         stepQuizSubmit.isEnabled = true
 
-        val drawable = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_step_quiz_progress) as? AnimationDrawable
-        stepQuizProgress.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
+        val drawable = AppCompatResources.getDrawable(requireContext(), R.drawable.ic_step_quiz_evaluation) as? AnimationDrawable
+        stepQuizFeedbackEvaluation.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)
         drawable?.start()
+
+        stepQuizFeedbackCorrect.setCompoundDrawables(start = R.drawable.ic_step_quiz_correct)
+        stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+
+        stepQuizFeedbackWrong.setCompoundDrawables(start = R.drawable.ic_step_quiz_wrong)
+        stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
     }
 }

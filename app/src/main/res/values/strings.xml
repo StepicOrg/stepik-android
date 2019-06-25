@@ -745,7 +745,10 @@
 
     <string name="step_quiz_string_field_hint">Type your answer…</string>
 
-    <string name="step_quiz_progress">Evaluation…</string>
+    <string name="step_quiz_feedback_evaluation">Evaluation…</string>
+    <string name="step_quiz_feedback_correct_free_answer">Any text response will be graded as correct</string>
+    <string name="step_quiz_feedback_wrong_not_last_try">Wrong. Let\'s try again.</string>
+    <string name="step_quiz_feedback_wrong_last_try">Incorrect</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>

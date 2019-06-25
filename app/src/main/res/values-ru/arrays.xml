@@ -11,4 +11,21 @@
         <item>Последние 7 дней</item>
         <item>За всё время</item>
     </string-array>
+
+    <string-array name="step_quiz_feedback_correct">
+        <item>Правильно</item>
+        <item>Правильно, молодец!</item>
+        <item>Всё правильно</item>
+        <item>Верно</item>
+        <item>Верно. Так держать!</item>
+        <item>Здорово, всё верно</item>
+        <item>Хорошая работа</item>
+        <item>Отличное решение!</item>
+        <item>Абсолютно точно</item>
+        <item>Хорошие новости, верно!</item>
+        <item>Прекрасный ответ</item>
+        <item>Так точно!</item>
+        <item>Отлично!</item>
+        <item>Всё получилось!</item>
+    </string-array>
 </resources>
