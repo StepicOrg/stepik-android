@@ -175,8 +175,8 @@ ext.libraries = [
 
         shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
         StoriesKit           : "ru.nobird.android:StoriesKitSupport:$versions.StoriesKit",
-        AdapterDelegates     : "ru.nobird.android.ui:AdapterDelegates:$versions.AdapterDelegates",
-        Adapters             : "ru.nobird.android.ui:Adapters:$versions.Adapters",
+        AdapterDelegates     : "ru.nobird.android.ui:AdapterDelegatesSupport:$versions.AdapterDelegates",
+        Adapters             : "ru.nobird.android.ui:AdaptersSupport:$versions.Adapters",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
