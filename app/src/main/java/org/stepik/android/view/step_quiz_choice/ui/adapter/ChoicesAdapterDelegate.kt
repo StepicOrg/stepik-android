@@ -46,7 +46,7 @@ class ChoicesAdapterDelegate(
         }
 
         private fun bindBackground(data: Choice) {
-            val shape = itemChoiceText.background as GradientDrawable
+            val shape = itemChoiceText.background.mutate() as GradientDrawable
             val choiceColor = inferChoiceColor(data)
             bindTip(data)
             setChoiceCorners(shape, data.tip != null)
