@@ -22,6 +22,7 @@
         android:paddingBottom="12dp"
         android:paddingTop="12dp"
         tools:text="This is a tip"
+        android:visibility="gone"
         android:background="@drawable/bg_compound_step_quiz_feedback_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
