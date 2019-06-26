@@ -1,11 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_choice_text"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:background="@drawable/choice_not_checked_background"
-    android:padding="14dp"
-    android:textColor="@color/black"
-    tools:text="Hello there bla bla" />
+    android:orientation="vertical"
+    android:layout_marginBottom="8dp">
+    <TextView
+        android:id="@+id/itemChoiceText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_choice_quiz_selected"
+        android:padding="16dp"
+        android:textColor="@color/black"
+        tools:text="Hello there bla bla" />
+    <TextView
+        android:id="@+id/itemChoiceTip"
+        android:minHeight="48dp"
+        android:textSize="16sp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        tools:text="This is a tip"
+        android:background="@drawable/bg_compound_step_quiz_feedback_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

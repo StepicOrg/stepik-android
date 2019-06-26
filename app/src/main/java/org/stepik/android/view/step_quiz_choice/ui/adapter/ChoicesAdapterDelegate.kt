@@ -4,9 +4,11 @@ import android.graphics.drawable.GradientDrawable
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import kotlinx.android.synthetic.main.item_choice_quiz.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.DpPixelsHelper
+import org.stepic.droid.util.setRoundedCorners
+import org.stepic.droid.util.setTopRoundedCorners
 import org.stepik.android.presentation.step_quiz_choice.model.Choice
 import org.stepik.android.presentation.step_quiz_choice.model.ChoiceColor
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
@@ -24,34 +26,62 @@ class ChoicesAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_choice_quiz))
 
     inner class ViewHolder(
-        containerView: View
-    ) : DelegateViewHolder<Choice>(containerView) {
+        root: View
+    ) : DelegateViewHolder<Choice>(root) {
+
+        private val itemChoiceText = root.itemChoiceText
+        private val itemChoiceTip  = root.itemChoiceTip
 
         init {
-            containerView.setOnClickListener { onClick(itemData as Choice) }
+            root.setOnClickListener { onClick(itemData as Choice) }
         }
 
         override fun onBind(data: Choice) {
-            itemView as TextView
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            itemView.text = data.option
-            itemView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-            bindColor(data)
+            itemChoiceText.apply {
+                text = data.option
+                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            }
+            bindBackground(data)
         }
 
-        private fun bindColor(data: Choice) {
-            val shape = itemView.background as GradientDrawable
+        private fun bindBackground(data: Choice) {
+            val shape = itemChoiceText.background as GradientDrawable
             val choiceColor = inferChoiceColor(data)
+            bindTip(data)
+            setChoiceCorners(shape, data.tip != null)
             shape.setColor(ContextCompat.getColor(itemView.context, choiceColor.backgroundColor))
-            shape.setStroke(DpPixelsHelper.convertDpToPixel(1f).toInt(), ContextCompat.getColor(itemView.context, choiceColor.strokeColor))
+            shape.setStroke(
+                DpPixelsHelper.convertDpToPixel(itemView.context.resources.getDimension(R.dimen.choice_option_stroke_width)).toInt(),
+                ContextCompat.getColor(itemView.context, choiceColor.strokeColor)
+            )
+        }
+
+        private fun setChoiceCorners(shape: GradientDrawable, hasTip: Boolean) {
+            if (hasTip) {
+                shape.setTopRoundedCorners(DpPixelsHelper.convertDpToPixel(8f))
+            } else {
+                shape.setRoundedCorners(DpPixelsHelper.convertDpToPixel(8f))
+            }
+        }
+
+        private fun bindTip(data: Choice) {
+            if (data.tip == null) {
+                itemChoiceTip.visibility = View.GONE
+
+            } else {
+                itemChoiceTip.apply {
+                    visibility = View.VISIBLE
+                    text = data.tip
+                }
+            }
         }
 
         private fun inferChoiceColor(data: Choice): ChoiceColor =
             if (itemView.isSelected) {
                 when (data.correct) {
                     true -> {
-                        itemView as TextView
-                        itemView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_correct_checkmark, 0)
+                        itemChoiceText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_correct_checkmark, 0)
                         ChoiceColor.CORRECT
                     }
                     false -> {
