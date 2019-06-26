@@ -5,9 +5,6 @@ import org.stepik.android.model.Submission
 
 interface SubmissionRepository {
     fun createSubmission(submission: Submission): Single<Submission>
-
-    fun getSubmission(submissionId: Long): Single<Submission>
-
     fun getSubmissionsForAttempt(attemptId: Long): Single<List<Submission>>
     fun getSubmissionsForStep(stepId: Long): Single<List<Submission>>
 }
