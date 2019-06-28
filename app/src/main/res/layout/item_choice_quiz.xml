@@ -9,7 +9,7 @@
         android:id="@+id/itemChoiceText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_choice_quiz_selected"
+        android:background="@drawable/bg_choice_quiz_item"
         android:padding="16dp"
         android:textColor="@color/black"
         tools:text="Hello there bla bla" />
