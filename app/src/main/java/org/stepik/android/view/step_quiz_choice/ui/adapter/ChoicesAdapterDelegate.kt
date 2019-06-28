@@ -1,16 +1,12 @@
 package org.stepik.android.view.step_quiz_choice.ui.adapter
 
-import android.graphics.drawable.GradientDrawable
-import android.support.v4.content.ContextCompat
+import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_choice_quiz.view.*
 import org.stepic.droid.R
-import org.stepic.droid.util.DpPixelsHelper
-import org.stepic.droid.util.setRoundedCorners
-import org.stepic.droid.util.setTopRoundedCorners
 import org.stepik.android.presentation.step_quiz_choice.model.Choice
-import org.stepik.android.presentation.step_quiz_choice.model.ChoiceColor
+import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
@@ -31,9 +27,19 @@ class ChoicesAdapterDelegate(
 
         private val itemChoiceText = root.itemChoiceText
         private val itemChoiceTip  = root.itemChoiceTip
+        private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
             root.setOnClickListener { onClick(itemData as Choice) }
+            layerListDrawableDelegate = LayerListDrawableDelegate(
+                listOf(
+                    R.id.not_checked_layer,
+                    R.id.checked_layer,
+                    R.id.correct_layer,
+                    R.id.incorrect_layer,
+                    R.id.incorrect_layer_with_tip
+                ),
+                itemChoiceText.background.mutate() as LayerDrawable)
         }
 
         override fun onBind(data: Choice) {
@@ -42,27 +48,8 @@ class ChoicesAdapterDelegate(
                 text = data.option
                 setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
             }
-            bindBackground(data)
-        }
-
-        private fun bindBackground(data: Choice) {
-            val shape = itemChoiceText.background.mutate() as GradientDrawable
-            val choiceColor = inferChoiceColor(data)
+            layerListDrawableDelegate.showLayer(inferChoiceId(data))
             bindTip(data)
-            setChoiceCorners(shape, data.tip != null)
-            shape.setColor(ContextCompat.getColor(itemView.context, choiceColor.backgroundColor))
-            shape.setStroke(
-                DpPixelsHelper.convertDpToPixel(itemView.context.resources.getDimension(R.dimen.choice_option_stroke_width)).toInt(),
-                ContextCompat.getColor(itemView.context, choiceColor.strokeColor)
-            )
-        }
-
-        private fun setChoiceCorners(shape: GradientDrawable, hasTip: Boolean) {
-            if (hasTip) {
-                shape.setTopRoundedCorners(DpPixelsHelper.convertDpToPixel(8f))
-            } else {
-                shape.setRoundedCorners(DpPixelsHelper.convertDpToPixel(8f))
-            }
         }
 
         private fun bindTip(data: Choice) {
@@ -77,22 +64,26 @@ class ChoicesAdapterDelegate(
             }
         }
 
-        private fun inferChoiceColor(data: Choice): ChoiceColor =
+        private fun inferChoiceId(data: Choice): Int =
             if (itemView.isSelected) {
                 when (data.correct) {
                     true -> {
                         itemChoiceText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_correct_checkmark, 0)
-                        ChoiceColor.CORRECT
+                        R.id.correct_layer
                     }
                     false -> {
-                        ChoiceColor.INCORRECT
+                        if (data.tip == null) {
+                            R.id.incorrect_layer
+                        } else {
+                            R.id.incorrect_layer_with_tip
+                        }
                     }
                     else -> {
-                        ChoiceColor.CHECKED
+                        R.id.checked_layer
                     }
                 }
             } else {
-                ChoiceColor.NOT_CHECKED
+                R.id.not_checked_layer
             }
     }
 }
