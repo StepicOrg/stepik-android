@@ -33,8 +33,9 @@ constructor(
         view.setState(state)
     }
 
-    fun onStepData(stepId: Long) {
-        if (state == StepQuizView.State.Idle) {
+    fun onStepData(stepId: Long, forceUpdate: Boolean = false) {
+        if (state == StepQuizView.State.Idle ||
+            state == StepQuizView.State.NetworkError && forceUpdate) {
             fetchAttempt(stepId)
         }
     }
@@ -46,25 +47,15 @@ constructor(
             .flatMap { attempt ->
                 stepQuizInteractor
                     .getSubmission(attempt.id)
-                    .map { StepQuizView.SubmissionState.Loaded(
-                        it
-                    ) as StepQuizView.SubmissionState
-                    }
+                    .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
                     .toSingle(StepQuizView.SubmissionState.Empty)
-                    .map {
-                        StepQuizView.State.AttemptLoaded(
-                            attempt,
-                            it
-                        )
-                    }
+                    .map { StepQuizView.State.AttemptLoaded(attempt, it) }
             }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { state = it },
-                onError = { state =
-                    StepQuizView.State.NetworkError
-                }
+                onError = { state = StepQuizView.State.NetworkError }
             )
     }
 
@@ -75,15 +66,8 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state =
-                    StepQuizView.State.AttemptLoaded(
-                        it,
-                        StepQuizView.SubmissionState.Empty
-                    )
-                },
-                onError = { state =
-                    StepQuizView.State.NetworkError
-                }
+                onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty) },
+                onError = { state = StepQuizView.State.NetworkError }
             )
     }
 
@@ -100,19 +84,13 @@ constructor(
 
         val submission = Submission(attempt = oldState.attempt.id, reply = reply, status = Submission.Status.EVALUATION)
 
-        state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(
-            submission
-        )
-        )
+        state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))
         compositeDisposable += stepQuizInteractor
             .createSubmission(oldState.attempt.id, reply)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(
-                    it
-                )
-                ) },
+                onSuccess = { state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(it)) },
                 onError = { state = oldState }
             )
     }
