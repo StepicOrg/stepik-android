@@ -23,30 +23,26 @@ class TextStepQuizFormDelegate(
     private val quizDescription = containerView.stringStepQuizDescription
 
     init {
-        when (stepWrapper.step.block?.name) {
-            AppConstants.TYPE_STRING -> {
-                textField.inputType = InputType.TYPE_CLASS_TEXT
-                quizDescription.setText(R.string.step_quiz_string_description)
-                quizDescription.changeVisibility(true)
+        val (inputType, textRes) =
+            when (val blockName = stepWrapper.step.block?.name) {
+                AppConstants.TYPE_STRING ->
+                    InputType.TYPE_CLASS_TEXT to R.string.step_quiz_string_description
+
+                AppConstants.TYPE_NUMBER ->
+                    InputType.TYPE_CLASS_NUMBER to R.string.step_quiz_number_description
+
+                AppConstants.TYPE_MATH ->
+                    InputType.TYPE_CLASS_TEXT to R.string.step_quiz_math_description
+
+                AppConstants.TYPE_FREE_ANSWER ->
+                    InputType.TYPE_CLASS_TEXT to R.string.step_quiz_free_answer_description
+
+                else ->
+                    throw IllegalArgumentException("Unsupported block type = $blockName")
             }
 
-            AppConstants.TYPE_NUMBER -> {
-                textField.inputType = InputType.TYPE_CLASS_NUMBER
-                quizDescription.setText(R.string.step_quiz_number_description)
-                quizDescription.changeVisibility(true)
-            }
-
-            AppConstants.TYPE_MATH -> {
-                textField.inputType = InputType.TYPE_CLASS_TEXT
-                quizDescription.setText(R.string.step_quiz_math_description)
-                quizDescription.changeVisibility(true)
-            }
-
-            AppConstants.TYPE_FREE_ANSWER -> {
-                textField.inputType = InputType.TYPE_CLASS_TEXT
-                quizDescription.changeVisibility(false)
-            }
-        }
+        textField.inputType = inputType
+        quizDescription.setText(textRes)
     }
 
     override fun createReply(): Reply =

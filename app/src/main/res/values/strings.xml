@@ -755,6 +755,7 @@
     <string name="step_quiz_number_description">Enter a number</string>
     <string name="step_quiz_math_description">Enter a math formula</string>
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
+    <string name="step_quiz_free_answer_description">Write an essay</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
