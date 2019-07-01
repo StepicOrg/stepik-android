@@ -6,13 +6,13 @@ import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 
 class StepQuizFeedbackMapper {
     fun mapToStepQuizFeedbackState(state: TextStepQuizView.State): StepQuizFeedbackState =
-        if (state is TextStepQuizView.State.SubmissionLoaded) {
-            when (state.submission.status) {
+        if (state is TextStepQuizView.State.AttemptLoaded && state.submissionState is TextStepQuizView.SubmissionState.Loaded) {
+            when (state.submissionState.submission.status) {
                 Submission.Status.CORRECT ->
-                    StepQuizFeedbackState.Correct(state.submission.hint)
+                    StepQuizFeedbackState.Correct(state.submissionState.submission.hint?.takeIf(String::isNotEmpty))
 
                 Submission.Status.WRONG ->
-                    StepQuizFeedbackState.Wrong(state.submission.hint)
+                    StepQuizFeedbackState.Wrong(state.submissionState.submission.hint?.takeIf(String::isNotEmpty))
 
                 Submission.Status.EVALUATION ->
                     StepQuizFeedbackState.Evaluation

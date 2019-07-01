@@ -7,11 +7,16 @@ interface TextStepQuizView {
     sealed class State {
         object Idle : State()
         object Loading : State()
-        data class AttemptLoaded(val attempt: Attempt) : State()
-        data class SubmissionLoaded(val attempt: Attempt, val submission: Submission) : State()
+        data class AttemptLoaded(val attempt: Attempt, val submissionState: SubmissionState) : State()
 
         object NetworkError : State()
     }
 
+    sealed class SubmissionState {
+        object Empty : SubmissionState()
+        data class Loaded(val submission: Submission) : SubmissionState()
+    }
+
     fun setState(state: State)
+    fun showNetworkError()
 }

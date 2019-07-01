@@ -25,6 +25,10 @@ constructor(
             .filter { it.status == "active" }
             .switchIfEmpty(attemptRepository.createAttemptForStep(stepId))
 
+    fun createAttempt(stepId: Long): Single<Attempt> =
+        attemptRepository
+            .createAttemptForStep(stepId)
+
     fun getSubmission(attemptId: Long): Maybe<Submission> =
         submissionRepository
             .getSubmissionsForAttempt(attemptId)

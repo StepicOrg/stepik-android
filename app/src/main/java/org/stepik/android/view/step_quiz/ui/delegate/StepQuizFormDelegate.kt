@@ -3,15 +3,10 @@ package org.stepik.android.view.step_quiz.ui.delegate
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.presentation.step_quiz_text.TextStepQuizView
 
 interface StepQuizFormDelegate {
-    /**
-     * If [isEnabled] == false form should block any changes from user
-     */
-    var isEnabled: Boolean
-
-    fun setAttempt(attempt: Attempt)
-    fun setSubmission(submission: Submission)
+    fun setState(state: TextStepQuizView.State)
 
     /**
      * Generates reply from current form data
