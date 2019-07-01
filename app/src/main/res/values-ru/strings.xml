@@ -722,6 +722,10 @@
 
     <string name="step_quiz_feedback_validation_fill_blanks">Необходимо заполнить все пробелы перед отправкой</string>
 
+    <string name="step_quiz_number_description">Введите численный ответ</string>
+    <string name="step_quiz_math_description">Введите математическую формулу</string>
+    <string name="step_quiz_string_description">Напишите текст (строку)</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>
