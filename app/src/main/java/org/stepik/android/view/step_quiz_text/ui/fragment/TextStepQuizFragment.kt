@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_text.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
@@ -19,13 +20,14 @@ import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class TextStepQuizFragment : Fragment(),
-    StepQuizView {
+class TextStepQuizFragment : Fragment(), StepQuizView {
     companion object {
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper): Fragment =
             TextStepQuizFragment()
@@ -45,6 +47,8 @@ class TextStepQuizFragment : Fragment(),
     private lateinit var stepQuizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate
     private lateinit var textStepQuizFormDelegate: TextStepQuizFormDelegate
     private lateinit var stepQuizDelegate: StepQuizDelegate
+
+    private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizView.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,9 +71,17 @@ class TextStepQuizFragment : Fragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<StepQuizView.State.Idle>()
+        viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizFeedbackBlocks, stringStepQuizField, stringStepQuizDescription, stepQuizSubmit)
+        viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
+
+        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper.step.id, forceUpdate = true) }
+
         stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks)
         textStepQuizFormDelegate = TextStepQuizFormDelegate(stepWrapper, view)
-        stepQuizDelegate = StepQuizDelegate(textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizSubmit, presenter::createSubmission)
+        stepQuizDelegate = StepQuizDelegate(textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizSubmit, presenter)
     }
 
     override fun onStart() {
@@ -83,6 +95,7 @@ class TextStepQuizFragment : Fragment(),
     }
 
     override fun setState(state: StepQuizView.State) {
+        viewStateDelegate.switchState(state)
         stepQuizDelegate.setState(state)
     }
 

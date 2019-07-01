@@ -57,6 +57,32 @@
         tools:targetApi="lollipop" />
 
     <include
+        android:id="@+id/stepQuizNetworkError"
+        layout="@layout/error_no_connection_with_button_small"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintVertical_bias="0"
+
+        android:visibility="gone" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/stepQuizProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone" />
+
+    <include
         android:id="@+id/stepQuizFeedbackBlocks"
         layout="@layout/layout_step_quiz_feedback_block"
         android:layout_width="match_parent"
