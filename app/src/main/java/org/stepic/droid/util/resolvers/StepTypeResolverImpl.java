@@ -173,6 +173,9 @@ public class StepTypeResolverImpl implements StepTypeResolver {
             case AppConstants.TYPE_TEXT:
             case AppConstants.TYPE_VIDEO:
             case AppConstants.TYPE_STRING:
+            case AppConstants.TYPE_NUMBER:
+            case AppConstants.TYPE_MATH:
+            case AppConstants.TYPE_FREE_ANSWER:
                 return false;
             default:
                 return true;
