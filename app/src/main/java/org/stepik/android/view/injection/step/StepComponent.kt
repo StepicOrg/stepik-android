@@ -4,7 +4,7 @@ import dagger.Subcomponent
 import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.step_content.StepContentModule
 import org.stepik.android.view.injection.step_quiz.StepQuizModule
-import org.stepik.android.view.injection.step_quiz_text.TextStepQuizModule
+import org.stepik.android.view.injection.step_quiz.StepQuizPresentationModule
 import org.stepik.android.view.injection.submission.SubmissionDataModule
 import org.stepik.android.view.step.ui.fragment.StepFragment
 import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
@@ -14,7 +14,7 @@ import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
     StepContentModule::class,
     StepQuizModule::class,
 
-    TextStepQuizModule::class,
+    StepQuizPresentationModule::class,
     AttemptDataModule::class,
     SubmissionDataModule::class
 ])

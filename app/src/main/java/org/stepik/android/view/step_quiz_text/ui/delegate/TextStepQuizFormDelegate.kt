@@ -9,7 +9,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Reply
-import org.stepik.android.presentation.step_quiz_text.TextStepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.mapper.StepQuizFormMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
@@ -59,11 +59,11 @@ class TextStepQuizFormDelegate(
             null
         }
 
-    override fun setState(state: TextStepQuizView.State) {
-        if (state !is TextStepQuizView.State.AttemptLoaded) return
+    override fun setState(state: StepQuizView.State) {
+        if (state !is StepQuizView.State.AttemptLoaded) return
 
         textField.isEnabled = stepQuizFormMapper.isQuizEnabled(state)
-        textField.text = (state.submissionState as? TextStepQuizView.SubmissionState.Loaded)
+        textField.text = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
             ?.submission
             ?.reply
             ?.text

@@ -17,15 +17,15 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.presentation.step_quiz_text.TextStepQuizPresenter
-import org.stepik.android.presentation.step_quiz_text.TextStepQuizView
-import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
+import org.stepik.android.presentation.step_quiz.StepQuizPresenter
+import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
 import javax.inject.Inject
 
-class TextStepQuizFragment : Fragment(), TextStepQuizView {
+class TextStepQuizFragment : Fragment(),
+    StepQuizView {
     companion object {
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper): Fragment =
             TextStepQuizFragment()
@@ -37,7 +37,7 @@ class TextStepQuizFragment : Fragment(), TextStepQuizView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var presenter: TextStepQuizPresenter
+    private lateinit var presenter: StepQuizPresenter
 
     private var lessonData: LessonData by argument()
     private var stepWrapper: StepPersistentWrapper by argument()
@@ -50,7 +50,7 @@ class TextStepQuizFragment : Fragment(), TextStepQuizView {
         super.onCreate(savedInstanceState)
         injectComponent()
 
-        presenter = ViewModelProviders.of(this, viewModelFactory).get(TextStepQuizPresenter::class.java)
+        presenter = ViewModelProviders.of(this, viewModelFactory).get(StepQuizPresenter::class.java)
         presenter.onStepData(stepWrapper.step.id)
     }
 
@@ -82,7 +82,7 @@ class TextStepQuizFragment : Fragment(), TextStepQuizView {
         super.onStop()
     }
 
-    override fun setState(state: TextStepQuizView.State) {
+    override fun setState(state: StepQuizView.State) {
         stepQuizDelegate.setState(state)
     }
 

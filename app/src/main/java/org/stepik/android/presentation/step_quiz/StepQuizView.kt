@@ -1,9 +1,9 @@
-package org.stepik.android.presentation.step_quiz_text
+package org.stepik.android.presentation.step_quiz
 
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 
-interface TextStepQuizView {
+interface StepQuizView {
     sealed class State {
         object Idle : State()
         object Loading : State()

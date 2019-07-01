@@ -2,7 +2,7 @@ package org.stepik.android.view.step_quiz.ui.delegate
 
 import android.view.View
 import org.stepik.android.model.Reply
-import org.stepik.android.presentation.step_quiz_text.TextStepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.mapper.StepQuizFormMapper
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
@@ -30,7 +30,7 @@ class StepQuizDelegate(
         }
     }
 
-    fun setState(state: TextStepQuizView.State) {
+    fun setState(state: StepQuizView.State) {
         stepQuizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(state))
         stepQuizFormDelegate.setState(state)
 

@@ -1,12 +1,10 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
 import org.stepik.android.model.Reply
-import org.stepik.android.model.Submission
-import org.stepik.android.model.attempts.Attempt
-import org.stepik.android.presentation.step_quiz_text.TextStepQuizView
+import org.stepik.android.presentation.step_quiz.StepQuizView
 
 interface StepQuizFormDelegate {
-    fun setState(state: TextStepQuizView.State)
+    fun setState(state: StepQuizView.State)
 
     /**
      * Generates reply from current form data
