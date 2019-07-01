@@ -11,7 +11,10 @@ class StepQuizFragmentFactoryImpl
 constructor() : StepQuizFragmentFactory {
     override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment =
         when (stepPersistentWrapper.step.block?.name) {
-            AppConstants.TYPE_STRING ->
+            AppConstants.TYPE_STRING,
+            AppConstants.TYPE_NUMBER,
+            AppConstants.TYPE_MATH,
+            AppConstants.TYPE_FREE_ANSWER ->
                 TextStepQuizFragment.newInstance(stepPersistentWrapper)
 
             else ->

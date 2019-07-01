@@ -1,16 +1,44 @@
 package org.stepik.android.view.step_quiz_text.ui.delegate
 
+import android.text.InputType
+import android.view.View
 import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_step_quiz_text.view.*
 import org.stepic.droid.R
+import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz_text.TextStepQuizView
 import org.stepik.android.view.step_quiz.mapper.StepQuizFormMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class TextStepQuizFormDelegate(
-    private val textField: TextView
+    stepWrapper: StepPersistentWrapper,
+    containerView: View
 ) : StepQuizFormDelegate {
     private val stepQuizFormMapper = StepQuizFormMapper()
+
+    private val textField = containerView.stringStepQuizField as TextView
+
+    init {
+        when (stepWrapper.step.block?.name) {
+            AppConstants.TYPE_STRING -> {
+                textField.inputType = InputType.TYPE_CLASS_TEXT
+            }
+
+            AppConstants.TYPE_NUMBER -> {
+                textField.inputType = InputType.TYPE_CLASS_NUMBER
+            }
+
+            AppConstants.TYPE_MATH -> {
+                textField.inputType = InputType.TYPE_CLASS_TEXT
+            }
+
+            AppConstants.TYPE_FREE_ANSWER -> {
+                textField.inputType = InputType.TYPE_CLASS_TEXT
+            }
+        }
+    }
 
     override fun createReply(): Reply =
         Reply(text = textField.text.toString())

@@ -68,7 +68,7 @@ class TextStepQuizFragment : Fragment(), TextStepQuizView {
         super.onViewCreated(view, savedInstanceState)
 
         stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks)
-        textStepQuizFormDelegate = TextStepQuizFormDelegate(stringStepQuizField)
+        textStepQuizFormDelegate = TextStepQuizFormDelegate(stepWrapper, view)
         stepQuizDelegate = StepQuizDelegate(textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizSubmit, presenter::createSubmission)
     }
 
