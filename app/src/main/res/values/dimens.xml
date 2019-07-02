@@ -221,4 +221,5 @@
     <dimen name="step_submit_button_height">48dp</dimen>
 
     <dimen name="step_quiz_text_field_radius">8dp</dimen>
+    <dimen name="step_quiz_text_field_min_height">48dp</dimen>
 </resources>

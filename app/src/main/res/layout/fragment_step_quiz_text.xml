@@ -27,7 +27,7 @@
         android:id="@+id/stringStepQuizField"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="48dp"
+        android:minHeight="@dimen/step_quiz_text_field_min_height"
 
         android:background="@drawable/bg_step_quiz_text_field"
 
