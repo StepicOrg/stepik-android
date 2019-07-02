@@ -49,7 +49,6 @@
     <dimen name="placeholders_image_width">180dp</dimen>
     <dimen name="padding_placeholders">16dp</dimen>
 
-    <dimen name="video_height">200dp</dimen>
     <dimen name="guideline_standard_padding">16dp</dimen>
     <dimen name="card_bottom_margin">10dp</dimen>
     <dimen name="stepik_text_size_in_button">14sp</dimen>
@@ -212,4 +211,8 @@
     <!-- Course reviews -->
     <dimen name="course_review_item_margin">24dp</dimen>
     <dimen name="course_review_item_inner_margin">12dp</dimen>
+
+    <!-- Step -->
+    <dimen name="step_content_block_radius">8dp</dimen>
+    <dimen name="step_navigation_button_radius">@dimen/step_content_block_radius</dimen>
 </resources>

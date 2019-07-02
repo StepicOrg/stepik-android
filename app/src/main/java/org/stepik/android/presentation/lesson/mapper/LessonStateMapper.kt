@@ -11,7 +11,7 @@ constructor() {
     fun mergeStateWithProgress(state: LessonView.State, progress: Progress): LessonView.State =
         if (state !is LessonView.State.LessonLoaded ||
             state.stepsState !is LessonView.StepsState.Loaded ||
-            state.stepsState.stepItems.all { it.step.progress != progress.id && it.assignment?.progress != progress.id }) {
+            state.stepsState.stepItems.all { it.stepWrapper.progress != progress.id && it.assignment?.progress != progress.id }) {
             state
         } else {
             state.copy(stepsState = LessonView.StepsState.Loaded(state.stepsState.stepItems.map { updateItemProgress(it, progress) }))
@@ -19,7 +19,7 @@ constructor() {
 
     private fun updateItemProgress(stepItem: StepItem, progress: Progress): StepItem =
         when {
-            stepItem.step.progress == progress.id ->
+            stepItem.stepWrapper.progress == progress.id ->
                 stepItem.copy(stepProgress = progress)
 
             stepItem.assignment?.progress == progress.id ->

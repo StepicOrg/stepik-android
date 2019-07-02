@@ -151,11 +151,6 @@
         <item quantity="other">%d new notifications</item>
     </plurals>
 
-    <plurals name="open_comments">
-        <item quantity="one">Open %d comment</item>
-        <item quantity="other">Open %d comments</item>
-    </plurals>
-
     <string name="open_comments_zero">No comments. Add your comment</string>
     <string name="comment_sent">Comment is sent successfully</string>
     <string name="comment_denied">Comments are not available for this lesson</string>
@@ -359,6 +354,7 @@
     <string name="about_app_title">About</string>
     <string name="terms_of_service_title">Terms of Service</string>
     <string name="privacy_policy_title">Privacy Policy</string>
+    <string name="about_our_social">Our social networks</string>
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="sign_in_with_password_suffix">" with e-mail"</string>
     <string name="content_course_logo">Course logo</string>
@@ -380,15 +376,13 @@
     <string name="next">Next</string>
     <string name="no_connection">No connection</string>
 
-    <!--Video step screen-->
-    <string name="video_step_play_content_description">Play video</string>
-    <string name="video_step_video_image_content_description">Video</string>
-
     <!--Video player screen-->
     <string name="video_player_quality">Video quality</string>
     <string name="video_player_device_orientation_title">Rotate video</string>
     <string name="video_player_downloaded_quality">Downloaded (%s)</string>
     <string name="video_url_incorrect">Sorry, video is not found</string>
+
+    <string name="video_content_description">Play video</string>
 
     <!--Rate dialog-->
     <string name="rate_dialog_title">Do you like Stepik?</string>
@@ -738,6 +732,14 @@
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
 
-    <string name="feedback_email_chooser_title">Choose email app</string>
+    <!-- Step -->
+    <string name="step_navigation_next">Next lesson</string>
+    <string name="step_navigation_prev">Previous lesson</string>
+    <string name="step_discussion_show">Show discussions (%d)</string>
+    <string name="step_discussion_write_first">Leave a comment</string>
 
+    <string name="step_content_video_no_video">Video has not been uploaded or processed yet</string>
+
+    <!-- Feedback -->
+    <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>

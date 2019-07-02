@@ -85,4 +85,25 @@ fun <T> Single<List<T>>.requireSize(size: Int): Single<List<T>> =
             ?: Single.error(IllegalStateException("Expected list size = $size, actual = ${list.size}"))
     }
 
+/**
+ * Empty on error stub in order to suppress errors
+ */
 val emptyOnErrorStub: (Throwable) -> Unit = {}
+
+/**
+ * Filters observable according to [predicateSource] predicate
+ */
+fun <T> Observable<T>.filterSingle(predicateSource: (T) -> Single<Boolean>): Observable<T> =
+    flatMap { item ->
+        predicateSource(item)
+            .toObservable()
+            .filter { it }
+            .map { item }
+    }
+
+fun <T : Any> T?.toMaybe(): Maybe<T> =
+    if (this == null) {
+        Maybe.empty()
+    } else {
+        Maybe.just(this)
+    }

@@ -114,13 +114,6 @@
         <item quantity="many">%d новых уведомлений</item>
         <item quantity="other">%d новых уведомлений</item>
     </plurals>
-
-    <plurals name="open_comments">
-        <item quantity="one">Открыть %d комментарий</item>
-        <item quantity="few">Открыть %d комментария</item>
-        <item quantity="many">Открыть %d комментариев</item>
-        <item quantity="other">Открыть %d комментариев</item>
-    </plurals>
     <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
     <string name="sound_title">Звук</string>
@@ -357,6 +350,7 @@
     <string name="about_app_title">О приложении</string>
     <string name="terms_of_service_title">Условия использования</string>
     <string name="privacy_policy_title">Политика конфиденциальности</string>
+    <string name="about_our_social">Наши аккаунты в соцсетях</string>
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
     <string name="content_course_logo">Логотип курса</string>
@@ -380,15 +374,12 @@
     <string name="next">Дальше</string>
     <string name="no_connection">Нет подключения</string>
 
-    <!--Video step screen-->
-    <string name="video_step_play_content_description">Воспроизвести видео</string>
-    <string name="video_step_video_image_content_description">Видео</string>
-
     <!--Video player screen-->
     <string name="video_player_quality">Качество видео</string>
     <string name="video_player_device_orientation_title">Поворот видео</string>
     <string name="video_player_downloaded_quality">Загруженное (%s)</string>
     <string name="video_url_incorrect">Извините, видео не найдено</string>
+    <string name="video_content_description">Воспроизвести видео</string>
 
     <!--Rate dialog-->
     <string name="rate_dialog_title">Как бы Вы оценили Stepik?</string>
@@ -711,6 +702,14 @@
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
 
-    <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
+    <!-- Step -->
+    <string name="step_navigation_next">Следующий урок</string>
+    <string name="step_navigation_prev">Предыдущий урок</string>
+    <string name="step_discussion_show">Открыть комментарии (%d)</string>
+    <string name="step_discussion_write_first">Написать первый комментарий</string>
 
+    <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
+
+    <!-- Feedback -->
+    <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>

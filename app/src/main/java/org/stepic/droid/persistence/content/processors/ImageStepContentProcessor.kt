@@ -38,6 +38,7 @@ constructor() : StepContentProcessor {
             val src = element.attr(SRC_ATTR)
             val link = links[src]?.let { "file://$it" }
             element.attr(SRC_ATTR, link ?: src)
+            element.removeAttr("height")
         }
 
         return stepWrapper.copy(step = stepWrapper.step.copy(block = block.copy(text = document.toString())))

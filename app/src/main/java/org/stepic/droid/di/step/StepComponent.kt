@@ -6,7 +6,6 @@ import org.stepic.droid.di.comment.CommentsComponent
 import org.stepic.droid.di.step.code.CodeComponent
 import org.stepic.droid.di.streak.StreakModule
 import org.stepic.droid.ui.fragments.StepAttemptFragment
-import org.stepic.droid.ui.fragments.VideoStepFragment
 import org.stepik.android.view.injection.comments.CommentsBannerDataModule
 import org.stepik.android.view.injection.feedback.FeedbackDataModule
 
@@ -23,8 +22,6 @@ interface StepComponent {
     fun codeComponentBuilder(): CodeComponent.Builder
 
     fun inject(stepFragment: StepBaseFragment)
-
-    fun inject(videoStepFragment: VideoStepFragment)
 
     fun inject(stepAttemptFragment: StepAttemptFragment)
 }

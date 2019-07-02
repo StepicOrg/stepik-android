@@ -26,6 +26,7 @@ import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
+import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
@@ -110,12 +111,13 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         viewStepStateDelegate.addState<LessonView.StepsState.Loading>(lessonPlaceholder)
         viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
         viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(emptyLesson)
+        viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonNotFound)
         viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager, lessonTab)
 
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+        goToCatalog.setOnClickListener { screenManager.showCatalog(this); finish() }
         authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
 
         stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)
@@ -146,6 +148,8 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         val unit = intent.getParcelableExtra<Unit>(EXTRA_UNIT)
         val section = intent.getParcelableExtra<Section>(EXTRA_SECTION)
 
+        val isFromNextLesson = intent.getBooleanExtra(EXTRA_BACK_ANIMATION, false)
+
         val deepLinkData = intent.getLessonDeepLinkData()
 
         when {
@@ -156,7 +160,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
                 lessonPresenter.onDeepLink(deepLinkData, forceUpdate)
 
             lesson != null && unit != null && section != null ->
-                lessonPresenter.onLesson(lesson, unit, section, forceUpdate)
+                lessonPresenter.onLesson(lesson, unit, section, isFromNextLesson, forceUpdate)
 
             else ->
                 lessonPresenter.onEmptyData()
@@ -201,7 +205,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
                 viewStepStateDelegate.switchState(state.stepsState)
                 centeredToolbarTitle.text = state.lessonData.lesson.title
 
-                stepsAdapter.setDataIfNotNull(state.lessonData.lesson, state.lessonData.unit, state.lessonData.section)
+                stepsAdapter.lessonData = state.lessonData
                 stepsAdapter.items =
                     if (state.stepsState is LessonView.StepsState.Loaded) {
                         state.stepsState.stepItems
@@ -219,9 +223,6 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
     }
 
     private fun invalidateTabLayout() {
-        val stepsAdapter = (lessonPager.adapter as? StepFragmentAdapter)
-            ?: return
-
         for (i in 0 until lessonTab.tabCount) {
             val tabIcon = AppCompatResources
                 .getDrawable(this, stepsAdapter.getTabDrawable(i))
@@ -258,5 +259,10 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         }
 
         return isNotLastItem
+    }
+
+    override fun showComments(step: Step, discussionId: Long) {
+        // todo: use discussion id after comments refactor
+        screenManager.openComments(this, step.discussionProxy, step.id)
     }
 }

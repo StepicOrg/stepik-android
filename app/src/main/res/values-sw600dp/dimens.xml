@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="video_height">500dp</dimen>
-
     <dimen name="onboarding_side_margin">112dp</dimen>
     <dimen name="onboarding_bottom_margin">140dp</dimen>
     <dimen name="onboarding_top_margin">80dp</dimen>

@@ -27,6 +27,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepic.droid.util.UriExtensionsKt;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
@@ -702,5 +703,11 @@ public class ScreenManagerImpl implements ScreenManager {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, supportEmailData.getSubject());
         emailIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "org.stepic.droid.provider", supportEmailData.getBody()));
         context.startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, context, context.getString(R.string.feedback_email_chooser_title)));
+    }
+
+    @Override
+    public void openSocialMediaLink(Context context, SocialMedia socialLink) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(socialLink.getLink()));
+        context.startActivity(browserIntent);
     }
 }
