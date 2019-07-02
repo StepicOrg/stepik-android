@@ -17,6 +17,12 @@ constructor(
         private const val MIN_SOLVED_STEPS_FOR_RATING = 5
     }
 
+    fun needShowAppRateDialog(): Boolean =
+        !sharedPreferenceHelper.wasRateHandled()
+        && isRateDelayGreater()
+        && isRateWasShownFewTimes()
+        && isUserSolveEnough()
+
     private fun isRateDelayGreater(): Boolean {
         val wasShownMillis = sharedPreferenceHelper.whenRateWasShown()
         if (wasShownMillis < 0) {
