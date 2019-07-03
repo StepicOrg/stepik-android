@@ -1,7 +1,6 @@
 package org.stepik.android.view.step_quiz_text.ui.delegate
 
 import android.support.annotation.DrawableRes
-import android.support.v4.view.ViewCompat
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.content.res.AppCompatResources
 import android.text.InputType
@@ -20,7 +19,7 @@ import org.stepik.android.view.step_quiz.mapper.StepQuizFormMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class TextStepQuizFormDelegate(
-    stepWrapper: StepPersistentWrapper,
+    private val stepWrapper: StepPersistentWrapper,
     containerView: View
 ) : StepQuizFormDelegate {
     private val stepQuizFormMapper = StepQuizFormMapper()
@@ -52,7 +51,16 @@ class TextStepQuizFormDelegate(
     }
 
     override fun createReply(): Reply =
-        Reply(text = textField.text.toString())
+        when (stepWrapper.step.block?.name) {
+            AppConstants.TYPE_NUMBER ->
+                Reply(number = textField.text.toString())
+
+            AppConstants.TYPE_MATH ->
+                Reply(formula = textField.text.toString())
+
+            else ->
+                Reply(text = textField.text.toString())
+        }
 
     override fun validateForm(): String? =
         if (textField.text.isEmpty()) {
@@ -67,11 +75,20 @@ class TextStepQuizFormDelegate(
         val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
             ?.submission
 
+        val reply = submission?.reply
+
         textField.isEnabled = stepQuizFormMapper.isQuizEnabled(state)
-        textField.text = submission
-            ?.reply
-            ?.text
-            ?: ""
+        textField.text =
+            when(stepWrapper.step.block?.name) {
+                AppConstants.TYPE_NUMBER ->
+                    reply?.number
+
+                AppConstants.TYPE_MATH ->
+                    reply?.formula
+
+                else ->
+                    reply?.text ?: ""
+            }
 
         @DrawableRes
         val drawableRes =

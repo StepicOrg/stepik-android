@@ -132,7 +132,7 @@ class StepFragment : Fragment(), StepView {
         if (isStepHasQuiz && childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null) {
             childFragmentManager
                 .beginTransaction()
-                .add(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper), STEP_QUIZ_FRAGMENT_TAG)
+                .add(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData), STEP_QUIZ_FRAGMENT_TAG)
                 .commitNow()
         }
     }

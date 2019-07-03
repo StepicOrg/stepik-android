@@ -20,7 +20,6 @@ import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
-import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
@@ -29,10 +28,11 @@ import javax.inject.Inject
 
 class TextStepQuizFragment : Fragment(), StepQuizView {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper): Fragment =
+        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
             TextStepQuizFragment()
                 .apply {
                     this.stepWrapper = stepPersistentWrapper
+                    this.lessonData = lessonData
                 }
     }
 
@@ -55,7 +55,7 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
         injectComponent()
 
         presenter = ViewModelProviders.of(this, viewModelFactory).get(StepQuizPresenter::class.java)
-        presenter.onStepData(stepWrapper.step.id)
+        presenter.onStepData(stepWrapper, lessonData)
     }
 
     private fun injectComponent() {
@@ -77,7 +77,7 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizFeedbackBlocks, stringStepQuizField, stringStepQuizDescription, stepQuizSubmit)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
-        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper.step.id, forceUpdate = true) }
+        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
 
         stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks)
         textStepQuizFormDelegate = TextStepQuizFormDelegate(stepWrapper, view)

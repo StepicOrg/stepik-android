@@ -1,10 +1,14 @@
 package org.stepik.android.presentation.step_quiz
 
 import io.reactivex.Scheduler
+import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
@@ -33,23 +37,22 @@ constructor(
         view.setState(state)
     }
 
-    fun onStepData(stepId: Long, forceUpdate: Boolean = false) {
+    fun onStepData(stepWrapper: StepPersistentWrapper, lessonData: LessonData, forceUpdate: Boolean = false) {
         if (state == StepQuizView.State.Idle ||
             state == StepQuizView.State.NetworkError && forceUpdate) {
-            fetchAttempt(stepId)
+            fetchAttempt(stepWrapper, lessonData)
         }
     }
 
-    private fun fetchAttempt(stepId: Long) {
+    private fun fetchAttempt(stepWrapper: StepPersistentWrapper, lessonData: LessonData) {
         state = StepQuizView.State.Loading
         compositeDisposable += stepQuizInteractor
-            .getAttempt(stepId)
+            .getAttempt(stepWrapper.step.id)
             .flatMap { attempt ->
-                stepQuizInteractor
-                    .getSubmission(attempt.id)
-                    .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
-                    .toSingle(StepQuizView.SubmissionState.Empty)
-                    .map { StepQuizView.State.AttemptLoaded(attempt, it) }
+                zip(getSubmissionState(attempt.id), stepQuizInteractor.getStepRestrictions(stepWrapper, lessonData))
+                    .map { (submissionState, stepRestrictions) ->
+                        StepQuizView.State.AttemptLoaded(attempt, submissionState, stepRestrictions)
+                    }
             }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
@@ -59,14 +62,23 @@ constructor(
             )
     }
 
+    private fun getSubmissionState(attemptId: Long): Single<StepQuizView.SubmissionState> =
+        stepQuizInteractor
+            .getSubmission(attemptId)
+            .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
+            .toSingle(StepQuizView.SubmissionState.Empty)
+
     fun createAttempt(stepId: Long) {
+        val oldState = (state as? StepQuizView.State.AttemptLoaded)
+            ?: return
+        
         state = StepQuizView.State.Loading
         compositeDisposable += stepQuizInteractor
             .createAttempt(stepId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty) },
+                onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty, oldState.restrictions) },
                 onError = { state = StepQuizView.State.NetworkError }
             )
     }
@@ -90,7 +102,13 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(it)) },
+                onSuccess = { newSubmission ->
+                    state = oldState
+                        .copy(
+                            submissionState = StepQuizView.SubmissionState.Loaded(newSubmission),
+                            restrictions = oldState.restrictions.copy(submissionCount = oldState.restrictions.submissionCount + 1)
+                        )
+                },
                 onError = { state = oldState }
             )
     }
