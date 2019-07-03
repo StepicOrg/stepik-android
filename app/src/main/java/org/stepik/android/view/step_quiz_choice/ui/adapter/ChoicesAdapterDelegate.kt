@@ -25,8 +25,10 @@ class ChoicesAdapterDelegate(
         root: View
     ) : DelegateViewHolder<Choice>(root) {
 
-        private val itemChoiceText = root.itemChoiceText
-        private val itemChoiceTip  = root.itemChoiceTip
+        private val itemChoiceContainer = root.itemChoiceContainer
+        private val itemChoiceCheckmark = root.itemChoiceCheckmark
+        private val itemChoiceLatex = root.itemChoiceLatex
+        private val itemChoiceFeedback  = root.itemChoiceFeedback
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
@@ -39,25 +41,23 @@ class ChoicesAdapterDelegate(
                     R.id.incorrect_layer,
                     R.id.incorrect_layer_with_tip
                 ),
-                itemChoiceText.background.mutate() as LayerDrawable)
+                itemChoiceContainer.background.mutate() as LayerDrawable)
         }
 
         override fun onBind(data: Choice) {
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            itemChoiceText.apply {
-                text = data.option
-                setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
-            }
+            itemChoiceCheckmark.visibility = View.INVISIBLE
+            itemChoiceLatex.setAnyText(data.option)
             layerListDrawableDelegate.showLayer(inferChoiceId(data))
             bindTip(data)
         }
 
         private fun bindTip(data: Choice) {
             if (data.tip == null) {
-                itemChoiceTip.visibility = View.GONE
+                itemChoiceFeedback.visibility = View.GONE
 
             } else {
-                itemChoiceTip.apply {
+                itemChoiceFeedback.apply {
                     visibility = View.VISIBLE
                     text = data.tip
                 }
@@ -68,7 +68,7 @@ class ChoicesAdapterDelegate(
             if (itemView.isSelected) {
                 when (data.correct) {
                     true -> {
-                        itemChoiceText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_correct_checkmark, 0)
+                        itemChoiceCheckmark.visibility = View.VISIBLE
                         R.id.correct_layer
                     }
                     false -> {
