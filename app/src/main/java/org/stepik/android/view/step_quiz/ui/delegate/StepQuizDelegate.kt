@@ -1,9 +1,7 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
-import android.support.annotation.StringRes
 import android.widget.TextView
 import org.stepic.droid.R
-import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
@@ -17,6 +15,8 @@ class StepQuizDelegate(
     private val submitButton: TextView,
     private val presenter: StepQuizPresenter
 ) {
+    private val context = submitButton.context
+
     private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
     private val stepQuizFormMapper = StepQuizFormMapper()
 
@@ -40,17 +40,34 @@ class StepQuizDelegate(
         submitButton.isEnabled = stepQuizFormMapper.isQuizSubmitEnabled(state)
 
         if (state is StepQuizView.State.AttemptLoaded) {
-            @StringRes
-            val submitButtonTextRes =
-                when ((state.submissionState as? StepQuizView.SubmissionState.Loaded)?.submission?.status) {
-                    Submission.Status.CORRECT,
-                    Submission.Status.WRONG ->
-                        R.string.step_quiz_submit_button_try_again
-
-                    else ->
-                        R.string.step_quiz_submit_button_action
-                }
-            submitButton.setText(submitButtonTextRes)
+            submitButton.text = resolveQuizActionButtonText(state)
         }
     }
+
+    private fun resolveQuizActionButtonText(state: StepQuizView.State.AttemptLoaded): String =
+        with(state.restrictions) {
+            val isSubmissionInTerminalState =
+                (state.submissionState as? StepQuizView.SubmissionState.Loaded)
+                    ?.submission
+                    ?.status
+                    .let { it == Submission.Status.CORRECT || it == Submission.Status.WRONG }
+            
+            if (isSubmissionInTerminalState) {
+                if (maxSubmissionCount in 0 until submissionCount) {
+                    context.getString(R.string.step_quiz_action_button_no_submissions)
+                } else {
+                    context.getString(R.string.step_quiz_action_button_try_again)
+                }
+            } else {
+                if (maxSubmissionCount > submissionCount) {
+                    val submissionsLeft = maxSubmissionCount - submissionCount
+                    context.getString(
+                        R.string.step_quiz_action_button_submit_with_counter,
+                        context.resources.getQuantityString(R.plurals.submissions, submissionsLeft, submissionsLeft)
+                    )
+                } else {
+                    context.getString(R.string.step_quiz_action_button_submit)
+                }
+            }
+        }
 }

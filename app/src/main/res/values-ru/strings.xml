@@ -710,8 +710,10 @@
 
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 
-    <string name="step_quiz_submit_button_action">Отправить</string>
-    <string name="step_quiz_submit_button_try_again">Попробовать снова</string>
+    <string name="step_quiz_action_button_submit">Отправить</string>
+    <string name="step_quiz_action_button_submit_with_counter">Отправить (осталось %s)</string>
+    <string name="step_quiz_action_button_try_again">Попробовать снова</string>
+    <string name="step_quiz_action_button_no_submissions">Попытки закончились</string>
 
     <string name="step_quiz_text_field_hint">Введите ответ…</string>
 

@@ -6,7 +6,7 @@
     android:layout_height="@dimen/step_submit_button_height"
     android:background="@drawable/bg_step_submit_button"
 
-    android:text="@string/step_quiz_submit_button_action"
+    android:text="@string/step_quiz_action_button_submit"
     android:textSize="16sp"
     android:textColor="@color/color_step_submit_button_text"
     android:gravity="center" />

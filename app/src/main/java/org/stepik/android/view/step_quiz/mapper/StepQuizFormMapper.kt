@@ -16,5 +16,6 @@ class StepQuizFormMapper {
         isQuizEnabled(state) ||
         state is StepQuizView.State.AttemptLoaded &&
         state.submissionState is StepQuizView.SubmissionState.Loaded &&
-        (state.submissionState.submission.status == Submission.Status.CORRECT || state.submissionState.submission.status == Submission.Status.WRONG)
+        state.submissionState.submission.status.let { it == Submission.Status.CORRECT || it == Submission.Status.WRONG } &&
+        with(state.restrictions) { maxSubmissionCount < 0 || maxSubmissionCount > submissionCount }
 }
