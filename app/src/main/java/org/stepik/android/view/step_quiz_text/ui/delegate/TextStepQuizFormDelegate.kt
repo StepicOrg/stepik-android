@@ -37,7 +37,7 @@ class TextStepQuizFormDelegate(
                     InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE to R.string.step_quiz_string_description
 
                 AppConstants.TYPE_NUMBER ->
-                    InputType.TYPE_CLASS_NUMBER to R.string.step_quiz_number_description
+                    InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED to R.string.step_quiz_number_description
 
                 AppConstants.TYPE_MATH ->
                     InputType.TYPE_CLASS_TEXT to R.string.step_quiz_math_description
