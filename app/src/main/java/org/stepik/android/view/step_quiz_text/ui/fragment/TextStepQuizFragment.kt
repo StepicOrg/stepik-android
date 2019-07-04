@@ -81,7 +81,7 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
 
         stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks)
         textStepQuizFormDelegate = TextStepQuizFormDelegate(stepWrapper, view)
-        stepQuizDelegate = StepQuizDelegate(textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizSubmit, stepQuizDiscountingPolicy, presenter)
+        stepQuizDelegate = StepQuizDelegate(stepWrapper.step, textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizSubmit, stepQuizDiscountingPolicy, presenter)
     }
 
     override fun onStart() {

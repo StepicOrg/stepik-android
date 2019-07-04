@@ -4,6 +4,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.lesson.model.LessonData
@@ -11,6 +12,7 @@ import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Reply
+import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import java.util.concurrent.TimeUnit
@@ -70,4 +72,16 @@ constructor(
         submissionRepository
             .getSubmissionsForStep(stepId)
             .map { it.size }
+
+    fun isNeedRecreateAttemptForNewSubmission(step: Step): Boolean =
+        when (step.block?.name) {
+            AppConstants.TYPE_STRING,
+            AppConstants.TYPE_NUMBER,
+            AppConstants.TYPE_MATH,
+            AppConstants.TYPE_FREE_ANSWER ->
+                false
+
+            else ->
+                true
+        }
 }

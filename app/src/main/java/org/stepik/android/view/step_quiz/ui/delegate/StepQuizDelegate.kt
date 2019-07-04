@@ -4,6 +4,7 @@ import android.widget.TextView
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.DiscountingPolicyType
+import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
@@ -13,6 +14,7 @@ import org.stepik.android.view.step_quiz.mapper.StepQuizFormMapper
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 
 class StepQuizDelegate(
+    private val step: Step,
     private val stepQuizFormDelegate: StepQuizFormDelegate,
     private val stepQuizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate,
     private val actionButton: TextView,
@@ -34,7 +36,7 @@ class StepQuizDelegate(
         val state = currentState ?: return
 
         if (stepQuizFormMapper.isSubmissionInTerminalState(state)) {
-            presenter.createAttempt(state.attempt.step)
+            presenter.createAttempt(step)
         } else {
             when (val replyResult = stepQuizFormDelegate.createReply()) {
                 is ReplyResult.Success ->

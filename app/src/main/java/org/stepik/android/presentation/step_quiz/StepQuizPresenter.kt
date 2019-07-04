@@ -11,6 +11,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Reply
+import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
@@ -68,19 +69,30 @@ constructor(
             .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
             .toSingle(StepQuizView.SubmissionState.Empty)
 
-    fun createAttempt(stepId: Long) {
+    fun createAttempt(step: Step) {
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
-        
-        state = StepQuizView.State.Loading
-        compositeDisposable += stepQuizInteractor
-            .createAttempt(stepId)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty, oldState.restrictions) },
-                onError = { state = StepQuizView.State.NetworkError }
-            )
+
+        if (stepQuizInteractor.isNeedRecreateAttemptForNewSubmission(step)) {
+            state = StepQuizView.State.Loading
+
+            compositeDisposable += stepQuizInteractor
+                .createAttempt(step.id)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty, oldState.restrictions) },
+                    onError = { state = StepQuizView.State.NetworkError }
+                )
+        } else {
+            val submissionState = (oldState.submissionState as? StepQuizView.SubmissionState.Loaded)
+                ?.submission
+                ?.let { Submission(attempt = oldState.attempt.id, reply = it.reply, status = Submission.Status.LOCAL) }
+                ?.let { StepQuizView.SubmissionState.Loaded(it) }
+                ?: StepQuizView.SubmissionState.Empty
+
+            state = oldState.copy(submissionState = submissionState)
+        }
     }
 
     fun createSubmission(reply: Reply) {
