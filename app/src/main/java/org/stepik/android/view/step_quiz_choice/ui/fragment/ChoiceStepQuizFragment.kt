@@ -9,6 +9,8 @@ import kotlinx.android.synthetic.main.fragment_step_quiz_choice.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.argument
+import org.stepik.android.model.Reply
+import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.attempts.Dataset
 import org.stepik.android.model.attempts.DatasetWrapper
@@ -35,10 +37,15 @@ class ChoiceStepQuizFragment: Fragment() {
         choiceQuizFormDelegate.setAttempt(Attempt(
             _dataset = DatasetWrapper(
                 Dataset(
-                    options = listOf("Variant 1", "Variant 2", "Variant 3\nExtra line", "Variant 4"),
-                    isMultipleChoice = false
+                    options = listOf("Variant 1", "\$P_{1000, 0.002}(7) \\approx P_{\\lambda}(7) = \\frac{\\lambda^7}{7!} \\cdot e^{-\\lambda} = \\frac{2^7 \\cdot e^{-2}}{7!} \\approx 0.003437 = P_{1000, 0.002}(7) \\approx P_{\\lambda}(7)\$", "Variant 3\nExtra lineExtra lineExtra lineExtra lineExtra lineExtra lineExtra lineExtra line", "<p><iframe allowfullscreen=\"\" height=\"315\" src=\"https://www.youtube.com/embed/R1g07RpTPFE\" width=\"560\"></iframe></p>"),
+                    isMultipleChoice = true
                 )
             )
         ))
+        choiceQuizFormDelegate.isEnabled = true
+//        choiceQuizFormDelegate.setSubmission(Submission(
+//            reply = Reply(choices = listOf(true, true, false, true))
+//        ))
+
     }
 }
