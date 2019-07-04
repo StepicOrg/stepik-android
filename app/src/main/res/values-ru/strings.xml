@@ -729,6 +729,8 @@
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
     <string name="step_quiz_free_answer_description">Напишите эссе</string>
 
+    <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>

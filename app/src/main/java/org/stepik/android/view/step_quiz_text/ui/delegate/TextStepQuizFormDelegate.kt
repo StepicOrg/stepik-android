@@ -69,7 +69,7 @@ class TextStepQuizFormDelegate(
                     }
                 ReplyResult.Success(reply)
             } else {
-                ReplyResult.Error(context.getString(R.string.empty_courses_anonymous))
+                ReplyResult.Error(context.getString(R.string.step_quiz_text_empty_reply))
             }
         }
 
