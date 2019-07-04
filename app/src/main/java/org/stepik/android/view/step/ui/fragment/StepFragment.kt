@@ -188,6 +188,15 @@ class StepFragment : Fragment(), StepView {
 
     override fun setNavigation(directions: Set<StepNavigationDirection>) {
         stepNavigationDelegate.setState(directions)
+        stepQuizContainer.layoutParams = (stepQuizContainer.layoutParams as ViewGroup.MarginLayoutParams)
+            .apply {
+                bottomMargin =
+                    if (stepNavigation.visibility == View.VISIBLE) {
+                        0
+                    } else {
+                        resources.getDimensionPixelSize(R.dimen.step_quiz_container_bottom_margin)
+                    }
+            }
     }
 
     override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData) {
