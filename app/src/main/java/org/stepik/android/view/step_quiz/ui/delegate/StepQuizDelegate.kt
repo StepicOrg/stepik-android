@@ -13,6 +13,7 @@ class StepQuizDelegate(
     private val stepQuizFormDelegate: StepQuizFormDelegate,
     private val stepQuizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate,
     private val actionButton: TextView,
+    private val stepQuizDiscountingPolicy: TextView,
     private val presenter: StepQuizPresenter
 ) {
     private val context = actionButton.context
@@ -72,4 +73,14 @@ class StepQuizDelegate(
                 }
             }
         }
+
+    fun syncReplyState() {
+        if (stepQuizFormMapper.isSubmissionInTerminalState(currentState ?: return)) return
+
+        val reply = (stepQuizFormDelegate.createReply() as? ReplyResult.Success)
+            ?.reply
+            ?: return
+
+        presenter.syncReplyState(reply)
+    }
 }

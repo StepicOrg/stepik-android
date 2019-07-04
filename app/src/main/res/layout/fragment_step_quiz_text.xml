@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stringStepQuizDescription"
+        android:id="@+id/stepQuizDiscountingPolicy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -18,6 +18,23 @@
         style="@style/StepQuizDescription"
 
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="@string/discount_policy_inverse_title" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stringStepQuizDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+
+        style="@style/StepQuizDescription"
+
+        app:layout_constraintTop_toBottomOf="@id/stepQuizDiscountingPolicy"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
 

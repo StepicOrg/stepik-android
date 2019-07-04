@@ -74,14 +74,14 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>()
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizFeedbackBlocks, stringStepQuizField, stringStepQuizDescription, stepQuizSubmit)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stringStepQuizField, stringStepQuizDescription, stepQuizSubmit)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
 
         stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks)
         textStepQuizFormDelegate = TextStepQuizFormDelegate(stepWrapper, view)
-        stepQuizDelegate = StepQuizDelegate(textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizSubmit, presenter)
+        stepQuizDelegate = StepQuizDelegate(textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizSubmit, stepQuizDiscountingPolicy, presenter)
     }
 
     override fun onStart() {
@@ -91,6 +91,7 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
 
     override fun onStop() {
         presenter.detachView(this)
+        stepQuizDelegate.syncReplyState()
         super.onStop()
     }
 

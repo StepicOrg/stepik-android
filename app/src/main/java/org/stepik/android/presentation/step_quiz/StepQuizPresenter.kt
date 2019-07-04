@@ -105,4 +105,12 @@ constructor(
                 onError = { state = oldState }
             )
     }
+
+    fun syncReplyState(reply: Reply) {
+        val oldState = (state as? StepQuizView.State.AttemptLoaded)
+            ?: return
+
+        val submission = Submission(attempt = oldState.attempt.id, reply = reply, status = Submission.Status.LOCAL)
+        state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))
+    }
 }
