@@ -96,7 +96,9 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
 
     override fun setState(state: StepQuizView.State) {
         viewStateDelegate.switchState(state)
-        stepQuizDelegate.setState(state)
+        if (state is StepQuizView.State.AttemptLoaded) {
+            stepQuizDelegate.setState(state)
+        }
     }
 
     override fun showNetworkError() {

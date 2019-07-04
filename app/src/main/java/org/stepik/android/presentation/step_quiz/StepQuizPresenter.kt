@@ -87,13 +87,6 @@ constructor(
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
 
-        if (oldState.submissionState is StepQuizView.SubmissionState.Loaded) {
-            if (oldState.submissionState.submission.status == Submission.Status.WRONG || oldState.submissionState.submission.status == Submission.Status.CORRECT) {
-                createAttempt(oldState.attempt.step)
-                return
-            }
-        }
-
         val submission = Submission(attempt = oldState.attempt.id, reply = reply, status = Submission.Status.EVALUATION)
 
         state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))

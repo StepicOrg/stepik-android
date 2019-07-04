@@ -14,6 +14,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.base.ui.drawable.GravityDrawable
 import org.stepik.android.view.step_quiz.mapper.StepQuizFormMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -22,6 +23,8 @@ class TextStepQuizFormDelegate(
     private val stepWrapper: StepPersistentWrapper,
     containerView: View
 ) : StepQuizFormDelegate {
+    private val context = containerView.context
+
     private val stepQuizFormMapper = StepQuizFormMapper()
 
     private val textField = containerView.stringStepQuizField as TextView
@@ -50,28 +53,27 @@ class TextStepQuizFormDelegate(
         quizDescription.setText(textRes)
     }
 
-    override fun createReply(): Reply =
-        when (stepWrapper.step.block?.name) {
-            AppConstants.TYPE_NUMBER ->
-                Reply(number = textField.text.toString())
+    override fun createReply(): ReplyResult =
+        textField.text.toString().let { value ->
+            if (value.isNotEmpty()) {
+                val reply =
+                    when (stepWrapper.step.block?.name) {
+                        AppConstants.TYPE_NUMBER ->
+                            Reply(number = value)
 
-            AppConstants.TYPE_MATH ->
-                Reply(formula = textField.text.toString())
+                        AppConstants.TYPE_MATH ->
+                            Reply(formula = value)
 
-            else ->
-                Reply(text = textField.text.toString())
+                        else ->
+                            Reply(text = value)
+                    }
+                ReplyResult.Success(reply)
+            } else {
+                ReplyResult.Error(context.getString(R.string.empty_courses_anonymous))
+            }
         }
 
-    override fun validateForm(): String? =
-        if (textField.text.isEmpty()) {
-            textField.context.getString(R.string.empty_courses_anonymous) // todo add string res
-        } else {
-            null
-        }
-
-    override fun setState(state: StepQuizView.State) {
-        if (state !is StepQuizView.State.AttemptLoaded) return
-
+    override fun setState(state: StepQuizView.State.AttemptLoaded) {
         val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
             ?.submission
 
@@ -87,8 +89,8 @@ class TextStepQuizFormDelegate(
                     reply?.formula
 
                 else ->
-                    reply?.text ?: ""
-            }
+                    reply?.text
+            } ?: ""
 
         @DrawableRes
         val drawableRes =
