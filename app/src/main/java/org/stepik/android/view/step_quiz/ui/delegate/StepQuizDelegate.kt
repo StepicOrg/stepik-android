@@ -2,6 +2,9 @@ package org.stepik.android.view.step_quiz.ui.delegate
 
 import android.widget.TextView
 import org.stepic.droid.R
+import org.stepic.droid.ui.util.changeVisibility
+import org.stepik.android.model.DiscountingPolicyType
+import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -51,6 +54,13 @@ class StepQuizDelegate(
 
         actionButton.isEnabled = stepQuizFormMapper.isQuizActionEnabled(state)
         actionButton.text = resolveQuizActionButtonText(state)
+
+        val isNeedShowDiscountingPolicy =
+            state.restrictions.discountingPolicyType != DiscountingPolicyType.NoDiscount &&
+            (state.submissionState as? StepQuizView.SubmissionState.Loaded)?.submission?.status != Submission.Status.CORRECT
+
+        stepQuizDiscountingPolicy.changeVisibility(isNeedShowDiscountingPolicy)
+        stepQuizDiscountingPolicy.text = resolveQuizDiscountingPolicyText(state)
     }
 
     private fun resolveQuizActionButtonText(state: StepQuizView.State.AttemptLoaded): String =
@@ -71,6 +81,26 @@ class StepQuizDelegate(
                 } else {
                     context.getString(R.string.step_quiz_action_button_submit)
                 }
+            }
+        }
+
+    private fun resolveQuizDiscountingPolicyText(state: StepQuizView.State.AttemptLoaded): String? =
+        with(state.restrictions) {
+            when (discountingPolicyType) {
+                DiscountingPolicyType.Inverse ->
+                    context.getString(R.string.discount_policy_inverse_title)
+
+                DiscountingPolicyType.FirstOne, DiscountingPolicyType.FirstThree -> {
+                    val remainingSubmissionCount = discountingPolicyType.numberOfTries() - state.restrictions.submissionCount
+                    if (remainingSubmissionCount > 0) {
+                        context.resources.getQuantityString(R.plurals.discount_policy_first_n, remainingSubmissionCount, remainingSubmissionCount)
+                    } else {
+                        context.getString(R.string.discount_policy_no_way)
+                    }
+                }
+
+                else ->
+                    null
             }
         }
 
