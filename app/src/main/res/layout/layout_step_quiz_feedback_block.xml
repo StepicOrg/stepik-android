@@ -46,12 +46,10 @@
 
         tools:drawableStart="@drawable/ic_step_quiz_validation" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <org.stepic.droid.ui.custom.LatexSupportableExpandableFrameLayout
         android:id="@+id/stepQuizFeedbackHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_step_quiz_hint"
-        fontPath="fonts/PT-Mono.ttf"
         android:textSize="14sp"
         android:textColor="@color/new_accent_color"
         android:lineSpacingExtra="4sp"
