@@ -17,11 +17,13 @@ class StepQuizDelegate(
     private val step: Step,
     private val stepQuizFormDelegate: StepQuizFormDelegate,
     private val stepQuizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate,
-    private val actionButton: TextView,
+
+    private val stepQuizActionButton: TextView,
     private val stepQuizDiscountingPolicy: TextView,
-    private val presenter: StepQuizPresenter
+
+    private val stepQuizPresenter: StepQuizPresenter
 ) {
-    private val context = actionButton.context
+    private val context = stepQuizActionButton.context
 
     private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
     private val stepQuizFormMapper = StepQuizFormMapper()
@@ -29,18 +31,18 @@ class StepQuizDelegate(
     private var currentState: StepQuizView.State.AttemptLoaded? = null
 
     init {
-        actionButton.setOnClickListener { onActionButtonClicked() }
+        stepQuizActionButton.setOnClickListener { onActionButtonClicked() }
     }
 
     private fun onActionButtonClicked() {
         val state = currentState ?: return
 
         if (stepQuizFormMapper.isSubmissionInTerminalState(state)) {
-            presenter.createAttempt(step)
+            stepQuizPresenter.createAttempt(step)
         } else {
             when (val replyResult = stepQuizFormDelegate.createReply()) {
                 is ReplyResult.Success ->
-                    presenter.createSubmission(replyResult.reply)
+                    stepQuizPresenter.createSubmission(replyResult.reply)
 
                 is ReplyResult.Error ->
                     stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.message))
@@ -54,8 +56,8 @@ class StepQuizDelegate(
         stepQuizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(state))
         stepQuizFormDelegate.setState(state)
 
-        actionButton.isEnabled = stepQuizFormMapper.isQuizActionEnabled(state)
-        actionButton.text = resolveQuizActionButtonText(state)
+        stepQuizActionButton.isEnabled = stepQuizFormMapper.isQuizActionEnabled(state)
+        stepQuizActionButton.text = resolveQuizActionButtonText(state)
 
         val isNeedShowDiscountingPolicy =
             state.restrictions.discountingPolicyType != DiscountingPolicyType.NoDiscount &&
@@ -113,6 +115,6 @@ class StepQuizDelegate(
             ?.reply
             ?: return
 
-        presenter.syncReplyState(reply)
+        stepQuizPresenter.syncReplyState(reply)
     }
 }

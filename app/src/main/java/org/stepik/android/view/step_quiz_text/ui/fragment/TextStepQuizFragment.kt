@@ -45,11 +45,8 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
     private var lessonData: LessonData by argument()
     private var stepWrapper: StepPersistentWrapper by argument()
 
-    private lateinit var stepQuizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate
-    private lateinit var textStepQuizFormDelegate: TextStepQuizFormDelegate
-    private lateinit var stepQuizDelegate: StepQuizDelegate
-
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizView.State>
+    private lateinit var stepQuizDelegate: StepQuizDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,9 +80,15 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
 
-        stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks)
-        textStepQuizFormDelegate = TextStepQuizFormDelegate(view, stepWrapper)
-        stepQuizDelegate = StepQuizDelegate(stepWrapper.step, textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizAction, stepQuizDiscountingPolicy, presenter)
+        stepQuizDelegate =
+            StepQuizDelegate(
+                step = stepWrapper.step,
+                stepQuizFormDelegate = TextStepQuizFormDelegate(view, stepWrapper),
+                stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks),
+                stepQuizActionButton = stepQuizAction,
+                stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
+                stepQuizPresenter = presenter
+            )
     }
 
     override fun onStart() {
