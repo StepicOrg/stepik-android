@@ -29,10 +29,10 @@ class StepQuizFeedbackBlocksDelegate(
 
     init {
         viewStateDelegate.addState<StepQuizFeedbackState.Idle>()
-        viewStateDelegate.addState<StepQuizFeedbackState.Evaluation>(stepQuizFeedbackEvaluation)
-        viewStateDelegate.addState<StepQuizFeedbackState.Correct>(stepQuizFeedbackCorrect, stepQuizFeedbackHint)
-        viewStateDelegate.addState<StepQuizFeedbackState.Wrong>(stepQuizFeedbackWrong, stepQuizFeedbackHint)
-        viewStateDelegate.addState<StepQuizFeedbackState.Validation>(stepQuizFeedbackValidation)
+        viewStateDelegate.addState<StepQuizFeedbackState.Evaluation>(containerView, stepQuizFeedbackEvaluation)
+        viewStateDelegate.addState<StepQuizFeedbackState.Correct>(containerView, stepQuizFeedbackCorrect, stepQuizFeedbackHint)
+        viewStateDelegate.addState<StepQuizFeedbackState.Wrong>(containerView, stepQuizFeedbackWrong, stepQuizFeedbackHint)
+        viewStateDelegate.addState<StepQuizFeedbackState.Validation>(containerView, stepQuizFeedbackValidation)
 
         val drawable = AppCompatResources.getDrawable(context, R.drawable.ic_step_quiz_evaluation) as? AnimationDrawable
         stepQuizFeedbackEvaluation.setCompoundDrawablesWithIntrinsicBounds(drawable, null, null, null)

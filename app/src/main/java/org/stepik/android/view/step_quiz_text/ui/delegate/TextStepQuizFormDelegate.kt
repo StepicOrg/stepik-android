@@ -7,7 +7,8 @@ import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
-import kotlinx.android.synthetic.main.fragment_step_quiz_text.view.*
+import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
+import kotlinx.android.synthetic.main.layout_step_quiz_text.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
@@ -20,15 +21,15 @@ import org.stepik.android.view.step_quiz.mapper.StepQuizFormMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class TextStepQuizFormDelegate(
-    private val stepWrapper: StepPersistentWrapper,
-    containerView: View
+    containerView: View,
+    private val stepWrapper: StepPersistentWrapper
 ) : StepQuizFormDelegate {
     private val context = containerView.context
 
     private val stepQuizFormMapper = StepQuizFormMapper()
 
     private val textField = containerView.stringStepQuizField as TextView
-    private val quizDescription = containerView.stringStepQuizDescription
+    private val quizDescription = containerView.stepQuizDescription
 
     init {
         val (inputType, textRes) =

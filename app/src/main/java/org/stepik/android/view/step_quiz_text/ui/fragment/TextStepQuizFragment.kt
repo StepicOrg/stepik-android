@@ -10,7 +10,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
-import kotlinx.android.synthetic.main.fragment_step_quiz_text.*
+import kotlinx.android.synthetic.main.fragment_step_quiz.*
+import kotlinx.android.synthetic.main.layout_step_quiz_text.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -66,7 +67,10 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_step_quiz_text, container, false)
+        (inflater.inflate(R.layout.fragment_step_quiz, container, false) as ViewGroup)
+            .apply {
+                addView(inflater.inflate(R.layout.layout_step_quiz_text, this, false))
+            }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,14 +78,14 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>()
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stringStepQuizField, stringStepQuizDescription, stepQuizSubmit)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stringStepQuizField, stepQuizDescription, stepQuizAction)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
 
         stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks)
-        textStepQuizFormDelegate = TextStepQuizFormDelegate(stepWrapper, view)
-        stepQuizDelegate = StepQuizDelegate(stepWrapper.step, textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizSubmit, stepQuizDiscountingPolicy, presenter)
+        textStepQuizFormDelegate = TextStepQuizFormDelegate(view, stepWrapper)
+        stepQuizDelegate = StepQuizDelegate(stepWrapper.step, textStepQuizFormDelegate, stepQuizFeedbackBlocksDelegate, stepQuizAction, stepQuizDiscountingPolicy, presenter)
     }
 
     override fun onStart() {
