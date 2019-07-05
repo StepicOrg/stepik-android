@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz_text.ui.delegate
 
 import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import android.support.v4.widget.TextViewCompat
 import android.support.v7.content.res.AppCompatResources
 import android.text.InputType
@@ -17,7 +18,7 @@ import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.base.ui.drawable.GravityDrawable
-import org.stepik.android.view.step_quiz.mapper.StepQuizFormMapper
+import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class TextStepQuizFormDelegate(
@@ -26,13 +27,11 @@ class TextStepQuizFormDelegate(
 ) : StepQuizFormDelegate {
     private val context = containerView.context
 
-    private val stepQuizFormMapper = StepQuizFormMapper()
-
-    private val textField = containerView.stringStepQuizField as TextView
+    private val quizTextField = containerView.stringStepQuizField as TextView
     private val quizDescription = containerView.stepQuizDescription
 
     init {
-        val (inputType, textRes) =
+        val (inputType, @StringRes descriptionTextRes) =
             when (val blockName = stepWrapper.step.block?.name) {
                 AppConstants.TYPE_STRING ->
                     InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE to R.string.step_quiz_string_description
@@ -50,12 +49,12 @@ class TextStepQuizFormDelegate(
                     throw IllegalArgumentException("Unsupported block type = $blockName")
             }
 
-        textField.inputType = inputType
-        quizDescription.setText(textRes)
+        quizTextField.inputType = inputType
+        quizDescription.setText(descriptionTextRes)
     }
 
     override fun createReply(): ReplyResult =
-        textField.text.toString().let { value ->
+        quizTextField.text.toString().let { value ->
             if (value.isNotEmpty()) {
                 val reply =
                     when (stepWrapper.step.block?.name) {
@@ -80,8 +79,8 @@ class TextStepQuizFormDelegate(
 
         val reply = submission?.reply
 
-        textField.isEnabled = stepQuizFormMapper.isQuizEnabled(state)
-        textField.text =
+        quizTextField.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
+        quizTextField.text =
             when (stepWrapper.step.block?.name) {
                 AppConstants.TYPE_NUMBER ->
                     reply?.number
@@ -107,9 +106,9 @@ class TextStepQuizFormDelegate(
             }
 
         val drawable = drawableRes
-            ?.let { AppCompatResources.getDrawable(textField.context, it) }
-            ?.let { GravityDrawable(it, Gravity.BOTTOM, textField.resources.getDimensionPixelSize(R.dimen.step_quiz_text_field_min_height)) }
+            ?.let { AppCompatResources.getDrawable(quizTextField.context, it) }
+            ?.let { GravityDrawable(it, Gravity.BOTTOM, quizTextField.resources.getDimensionPixelSize(R.dimen.step_quiz_text_field_min_height)) }
 
-        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textField, null, null, drawable, null)
+        TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(quizTextField, null, null, drawable, null)
     }
 }

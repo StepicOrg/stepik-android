@@ -15,5 +15,5 @@ abstract class StepQuizPresentationModule {
     @Binds
     @IntoMap
     @ViewModelKey(StepQuizPresenter::class)
-    internal abstract fun bindStepQuizPresenter(textStepQuizPresenter: StepQuizPresenter): ViewModel
+    internal abstract fun bindStepQuizPresenter(stepQuizPresenter: StepQuizPresenter): ViewModel
 }

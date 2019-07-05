@@ -26,8 +26,7 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : PresenterBase<StepQuizView>() {
-    private var state: StepQuizView.State =
-        StepQuizView.State.Idle
+    private var state: StepQuizView.State = StepQuizView.State.Idle
         set(value) {
             field = value
             view?.setState(value)

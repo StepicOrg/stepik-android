@@ -1,9 +1,9 @@
-package org.stepik.android.view.step_quiz.mapper
+package org.stepik.android.view.step_quiz.resolver
 
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizView
 
-class StepQuizFormMapper {
+object StepQuizFormResolver {
     fun isQuizEnabled(state: StepQuizView.State.AttemptLoaded): Boolean =
         state.submissionState is StepQuizView.SubmissionState.Empty ||
         state.submissionState is StepQuizView.SubmissionState.Loaded &&
