@@ -50,10 +50,6 @@
         android:id="@+id/stepQuizFeedbackHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@color/new_accent_color"
-        android:lineSpacingExtra="4sp"
-        android:padding="16dp"
-        tools:text="Variant 1 and Variant 4 are opposite options. It can’t be the correct choice." />
+        android:padding="16dp" />
 
 </android.support.v7.widget.LinearLayoutCompat>
