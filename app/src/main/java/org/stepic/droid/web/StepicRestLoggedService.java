@@ -5,6 +5,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.comment.model.CommentRequest;
+import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -208,16 +210,16 @@ public interface StepicRestLoggedService {
     Call<DiscussionProxyResponse> getDiscussionProxy(@Path("id") String discussionProxyId);
 
     @GET("api/comments")
-    Call<CommentsResponse> getComments(@Query("ids[]") long[] ids);
+    Call<CommentResponse> getComments(@Query("ids[]") long[] ids);
 
     @POST("api/comments")
-    Call<CommentsResponse> postComment(@Body CommentRequest comment);
+    Call<CommentResponse> postComment(@Body CommentRequest comment);
 
     @PUT("api/votes/{id}")
     Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 
     @DELETE("api/comments/{id}")
-    Call<CommentsResponse> deleteComment(@Path("id") long commentId);
+    Call<CommentResponse> deleteComment(@Path("id") long commentId);
 
     @GET("api/certificates")
     Call<CertificateResponse> getCertificates(@Query("user") long userId);

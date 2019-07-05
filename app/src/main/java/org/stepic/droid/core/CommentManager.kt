@@ -8,7 +8,7 @@ import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.CommentsResponse
+import org.stepik.android.remote.comment.model.CommentResponse
 import org.stepik.android.model.user.User
 import retrofit2.Call
 import retrofit2.Callback
@@ -73,7 +73,7 @@ class CommentManager @Inject constructor(
         }
     }
 
-    private fun addComments(stepicResponse: CommentsResponse, fromReply: Boolean = false) {
+    private fun addComments(stepicResponse: CommentResponse, fromReply: Boolean = false) {
         updateOnlyCommentsIfCachedSilent(stepicResponse.comments)
         stepicResponse.users
                 ?.forEach {
@@ -148,9 +148,9 @@ class CommentManager @Inject constructor(
     }
 
     fun loadCommentsByIds(idsForLoading: LongArray, fromReply: Boolean = false) {
-        api.getCommentsByIds(idsForLoading).enqueue(object : Callback<CommentsResponse> {
+        api.getCommentsByIds(idsForLoading).enqueue(object : Callback<CommentResponse> {
 
-            override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
+            override fun onResponse(call: Call<CommentResponse>?, response: Response<CommentResponse>?) {
 
                 if (response != null && response.isSuccessful) {
                     val stepicResponse = response.body()
@@ -164,7 +164,7 @@ class CommentManager @Inject constructor(
                 }
             }
 
-            override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
+            override fun onFailure(call: Call<CommentResponse>?, t: Throwable?) {
                 commentsPoster.connectionProblem()
             }
         })
