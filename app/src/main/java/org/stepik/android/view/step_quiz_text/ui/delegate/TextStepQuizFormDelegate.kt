@@ -81,7 +81,7 @@ class TextStepQuizFormDelegate(
 
         textField.isEnabled = stepQuizFormMapper.isQuizEnabled(state)
         textField.text =
-            when(stepWrapper.step.block?.name) {
+            when (stepWrapper.step.block?.name) {
                 AppConstants.TYPE_NUMBER ->
                     reply?.number
 

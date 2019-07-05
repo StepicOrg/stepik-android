@@ -69,6 +69,9 @@ constructor(
             .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
             .toSingle(StepQuizView.SubmissionState.Empty)
 
+    /**
+     * Attemtps
+     */
     fun createAttempt(step: Step) {
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
@@ -95,6 +98,9 @@ constructor(
         }
     }
 
+    /**
+     * Submissions
+     */
     fun createSubmission(reply: Reply) {
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
@@ -103,7 +109,7 @@ constructor(
 
         state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))
         compositeDisposable += stepQuizInteractor
-            .createSubmission(oldState.attempt.id, reply)
+            .createSubmission(oldState.attempt.step, oldState.attempt.id, reply)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

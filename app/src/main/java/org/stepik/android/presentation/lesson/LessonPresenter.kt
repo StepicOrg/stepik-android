@@ -24,6 +24,7 @@ import org.stepik.android.domain.step.interactor.StepIndexingInteractor
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
+import org.stepik.android.view.injection.step_quiz.StepQuizBus
 import javax.inject.Inject
 
 class LessonPresenter
@@ -37,6 +38,9 @@ constructor(
     private val stateMapper: LessonStateMapper,
 
     private val progressObservable: Observable<Progress>,
+
+    @StepQuizBus
+    private val stepQuizObservable: Observable<Long>,
 
     private val stepViewReportInteractor: ViewAssignmentReportInteractor,
     private val stepIndexingInteractor: StepIndexingInteractor,
@@ -61,6 +65,7 @@ constructor(
 
     init {
         subscribeForProgressesUpdates()
+        subscribeForStepPassedUpdates()
     }
 
     override fun attachView(view: LessonView) {
@@ -249,6 +254,35 @@ constructor(
                 AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
                 AmplitudeAnalytic.Steps.Params.STEP to step.id
             ))
+    }
+
+    /**
+     * Step passed
+     */
+    private fun subscribeForStepPassedUpdates() {
+        compositeDisposable += stepQuizObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(onNext = ::onStepPassed, onError = emptyOnErrorStub)
+    }
+
+    private fun onStepPassed(stepId: Long) {
+        val state = (state as? LessonView.State.LessonLoaded)
+            ?: return
+
+        val stepsState = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?: return
+
+        val stepItem = stepsState
+            .stepItems
+            .find { it.stepWrapper.step.id == stepId }
+            ?: return
+
+        compositeDisposable += stepViewReportInteractor
+            .updatePassedStep(stepItem.stepWrapper.step, stepItem.assignment)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     /**

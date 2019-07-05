@@ -1,7 +1,6 @@
 package org.stepik.android.view.base.ui.drawable
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable

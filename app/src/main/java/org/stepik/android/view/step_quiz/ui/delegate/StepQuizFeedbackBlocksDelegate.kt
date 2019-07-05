@@ -80,7 +80,8 @@ class StepQuizFeedbackBlocksDelegate(
 
     private fun setHint(
         targetView: TextView,
-        @DrawableRes backgroundRes: Int, @DrawableRes hintedBackgroundRes: Int,
+        @DrawableRes backgroundRes: Int,
+        @DrawableRes hintedBackgroundRes: Int,
         hint: String?
     ) {
         if (hint != null) {

@@ -3,6 +3,7 @@ package org.stepik.android.domain.step_quiz.interactor
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.maybeFirst
@@ -15,12 +16,16 @@ import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.view.injection.step_quiz.StepQuizBus
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class StepQuizInteractor
 @Inject
 constructor(
+    @StepQuizBus
+    private val stepQuizPublisher: PublishSubject<Long>,
+
     private val attemptRepository: AttemptRepository,
     private val submissionRepository: SubmissionRepository
 ) {
@@ -40,7 +45,7 @@ constructor(
             .getSubmissionsForAttempt(attemptId)
             .maybeFirst()
 
-    fun createSubmission(attemptId: Long, reply: Reply): Single<Submission> =
+    fun createSubmission(stepId: Long, attemptId: Long, reply: Reply): Single<Submission> =
         submissionRepository
             .createSubmission(Submission(attempt = attemptId, reply = reply))
             .flatMapObservable {
@@ -50,6 +55,11 @@ constructor(
                     .skipWhile { it.status == Submission.Status.EVALUATION }
             }
             .firstOrError()
+            .doOnSuccess { newSubmission ->
+                if (newSubmission.status == Submission.Status.CORRECT) {
+                    stepQuizPublisher.onNext(stepId)
+                }
+            }
 
     fun getStepRestrictions(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizRestrictions> =
         getStepSubmissionCount(stepPersistentWrapper.step.id)
