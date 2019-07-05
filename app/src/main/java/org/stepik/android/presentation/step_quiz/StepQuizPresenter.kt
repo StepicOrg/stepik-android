@@ -70,7 +70,7 @@ constructor(
             .toSingle(StepQuizView.SubmissionState.Empty)
 
     /**
-     * Attemtps
+     * Attempts
      */
     fun createAttempt(step: Step) {
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
@@ -120,7 +120,7 @@ constructor(
                             restrictions = oldState.restrictions.copy(submissionCount = oldState.restrictions.submissionCount + 1)
                         )
                 },
-                onError = { state = oldState }
+                onError = { state = oldState; view?.showNetworkError() }
             )
     }
 
