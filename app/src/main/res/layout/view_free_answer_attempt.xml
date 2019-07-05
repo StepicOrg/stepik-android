@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="top|start"
-    android:hint="@string/hint_for_type_answer"
+    android:hint="@string/step_quiz_text_field_hint"
     android:imeOptions="flagNoFullscreen"
     android:inputType="textMultiLine|textCapSentences"
     android:maxLines="9000"

@@ -76,7 +76,6 @@
         включите интернет-соединение.
     </string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
-    <string name="hint_for_type_answer">Введите ответ здесь…</string>
     <string name="py_message">
         <![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="terms_message_register">
