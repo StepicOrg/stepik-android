@@ -212,6 +212,9 @@ public interface StepicRestLoggedService {
     @GET("api/comments")
     Call<CommentResponse> getComments(@Query("ids[]") long[] ids);
 
+    @GET("api/comments")
+    Single<CommentResponse> getCommentsReactive(@Query("ids[]") long[] ids);
+
     @POST("api/comments")
     Call<CommentResponse> postComment(@Body CommentRequest comment);
 
