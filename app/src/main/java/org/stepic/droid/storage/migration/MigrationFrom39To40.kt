@@ -1,10 +1,10 @@
 package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
-import org.stepik.android.cache.comments.structure.DbStructureCommentsBanner
+import org.stepik.android.cache.comment_banner.structure.DbStructureCommentBanner
 
 object MigrationFrom39To40 : Migration {
     override fun migrate(db: SQLiteDatabase) {
-        DbStructureCommentsBanner.createTable(db)
+        DbStructureCommentBanner.createTable(db)
     }
 }

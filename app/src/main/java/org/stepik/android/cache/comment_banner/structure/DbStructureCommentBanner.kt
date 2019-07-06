@@ -1,8 +1,8 @@
-package org.stepik.android.cache.comments.structure
+package org.stepik.android.cache.comment_banner.structure
 
 import android.database.sqlite.SQLiteDatabase
 
-object DbStructureCommentsBanner {
+object DbStructureCommentBanner {
     const val COMMENTS_BANNER = "comments_banner"
 
     object Columns {
