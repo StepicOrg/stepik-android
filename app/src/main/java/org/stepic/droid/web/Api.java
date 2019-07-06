@@ -22,6 +22,7 @@ import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
+import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -150,8 +151,6 @@ public interface Api {
     Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead);
 
     Call<Void> removeDevice(long deviceId);
-
-    Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId);
 
     Call<CommentResponse> getCommentAnd20Replies(long commentId);
 
