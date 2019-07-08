@@ -32,7 +32,11 @@ class ChoicesAdapterDelegate(
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
-            root.itemChoiceContainer.setOnClickListener { onClick(itemData as Choice) }
+            root.itemChoiceContainer.setOnClickListener {
+                if (it.isEnabled) {
+                    onClick(itemData as Choice)
+                }
+            }
             layerListDrawableDelegate = LayerListDrawableDelegate(
                 listOf(
                     R.id.not_checked_layer,
@@ -45,6 +49,7 @@ class ChoicesAdapterDelegate(
         }
 
         override fun onBind(data: Choice) {
+            itemView.itemChoiceContainer.isEnabled = data.isEnabled
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
             itemChoiceCheckmark.visibility = View.INVISIBLE
             itemChoiceLatex.setAnyText(data.option)
@@ -53,13 +58,13 @@ class ChoicesAdapterDelegate(
         }
 
         private fun bindTip(data: Choice) {
-            if (data.tip == null) {
+            if (data.feedback == null) {
                 itemChoiceFeedback.visibility = View.GONE
 
             } else {
                 itemChoiceFeedback.apply {
                     visibility = View.VISIBLE
-                    text = data.tip
+                    text = data.feedback
                 }
             }
         }
@@ -72,7 +77,7 @@ class ChoicesAdapterDelegate(
                         R.id.correct_layer
                     }
                     false -> {
-                        if (data.tip == null) {
+                        if (data.feedback == null) {
                             R.id.incorrect_layer
                         } else {
                             R.id.incorrect_layer_with_tip
