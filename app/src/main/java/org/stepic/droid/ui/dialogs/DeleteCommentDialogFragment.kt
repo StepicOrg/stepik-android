@@ -11,7 +11,7 @@ import org.stepik.android.model.comments.Comment
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.CommentsResponse
+import org.stepik.android.remote.comment.model.CommentResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,9 +54,9 @@ class DeleteCommentDialogFragment : DialogFragment() {
                 .setPositiveButton(R.string.delete_label) { _, _ ->
                     ProgressHelper.activate(loadingProgressDialog)
                     analytic.reportEvent(Analytic.Comments.DELETE_COMMENT_CONFIRMATION)
-                    api.deleteComment(commentId).enqueue(object : Callback<CommentsResponse> {
+                    api.deleteComment(commentId).enqueue(object : Callback<CommentResponse> {
 
-                        override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
+                        override fun onResponse(call: Call<CommentResponse>?, response: Response<CommentResponse>?) {
                             ProgressHelper.dismiss(loadingProgressDialog)
                             if (response?.isSuccessful != true) {
                                 val comment = response?.body()?.comments?.firstOrNull()
@@ -68,7 +68,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
                             }
                         }
 
-                        override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
+                        override fun onFailure(call: Call<CommentResponse>?, t: Throwable?) {
                             ProgressHelper.dismiss(loadingProgressDialog)
                             (targetFragment as DialogCallback).onDeleteConnectionProblem()
                         }
