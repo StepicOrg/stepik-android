@@ -8,12 +8,15 @@ import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
 import org.stepic.droid.R
+import org.stepic.droid.fonts.FontType
+import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 
 class StepQuizFeedbackBlocksDelegate(
-    containerView: View
+    containerView: View,
+    private val fontsProvider: FontsProvider
 ) {
     private val context = containerView.context
     private val resources = containerView.resources
@@ -46,6 +49,9 @@ class StepQuizFeedbackBlocksDelegate(
 
         stepQuizFeedbackValidation.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
         stepQuizFeedbackValidation.setText(R.string.step_quiz_feedback_validation_fill_blanks)
+
+        stepQuizFeedbackHint.setTextSize(14f)
+        stepQuizFeedbackHint.setBackgroundResource(R.drawable.bg_step_quiz_hint)
     }
 
     fun setState(state: StepQuizFeedbackState) {
@@ -86,7 +92,7 @@ class StepQuizFeedbackBlocksDelegate(
     ) {
         if (hint != null) {
             targetView.setBackgroundResource(hintedBackgroundRes)
-            stepQuizFeedbackHint.text = hint
+            stepQuizFeedbackHint.setPlainOrLaTeXTextWithCustomFontColored(hint, fontsProvider.provideFontPath(FontType.mono), R.color.new_accent_color, true)
             stepQuizFeedbackHint.visibility = View.VISIBLE
         } else {
             targetView.setBackgroundResource(backgroundRes)

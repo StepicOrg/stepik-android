@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.layout_step_quiz_text.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
@@ -39,6 +40,9 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var fontsProvider: FontsProvider
 
     private lateinit var presenter: StepQuizPresenter
 
@@ -84,7 +88,7 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizFormDelegate = TextStepQuizFormDelegate(view, stepWrapper),
-                stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks),
+                stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
                 stepQuizActionButton = stepQuizAction,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
                 stepQuizPresenter = presenter
