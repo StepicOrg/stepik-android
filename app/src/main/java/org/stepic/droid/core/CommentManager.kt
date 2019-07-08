@@ -1,28 +1,37 @@
 package org.stepic.droid.core
 
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.core.comments.contract.CommentsPoster
 import org.stepic.droid.di.comment.CommentsScope
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.CommentAdapterItem
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.Api
-import org.stepic.droid.web.CommentsResponse
+import org.stepik.android.domain.comment.interactor.CommentInteractor
+import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.user.User
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 
 @CommentsScope
-class CommentManager @Inject constructor(
-        private val api: Api,
-        private val commentsPoster: CommentsPoster,
-        private val sharedPrefs: SharedPreferenceHelper
-) {
+class CommentManager
+@Inject
+constructor(
+    private val commentInteractor: CommentInteractor,
+    private val commentsPoster: CommentsPoster,
+    private val sharedPrefs: SharedPreferenceHelper,
 
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler
+) {
     private var discussionProxy: DiscussionProxy? = null
     private val discussionOrderList: MutableList<Long> = ArrayList()
 
@@ -39,6 +48,8 @@ class CommentManager @Inject constructor(
     private val repliesIdIsLoading: MutableSet<Long> = HashSet()
     private val commentIdIsLoading: MutableSet<Long> = HashSet() //can be reply or comment (with 0 replies) for load more comments).
     private val voteMap: MutableMap<String, Vote> = HashMap()
+
+    private val compositeDisposable = CompositeDisposable()
 
     fun loadComments() {
         val orderOfComments = discussionOrderList
@@ -73,18 +84,19 @@ class CommentManager @Inject constructor(
         }
     }
 
-    private fun addComments(stepicResponse: CommentsResponse, fromReply: Boolean = false) {
-        updateOnlyCommentsIfCachedSilent(stepicResponse.comments)
-        stepicResponse.users
-                ?.forEach {
-                    if (it.id !in userSetMap) {
-                        userSetMap[it.id] = it
-                    }
+    private fun addComments(commentsData: CommentsData, fromReply: Boolean = false) {
+        updateOnlyCommentsIfCachedSilent(commentsData.comments)
+        commentsData.users
+            .forEach {
+                if (it.id !in userSetMap) {
+                    userSetMap[it.id] = it
                 }
-        stepicResponse.votes?.forEach {
-            //updating info
-            voteMap[it.id] = it
-        }
+            }
+        commentsData.votes
+            .forEach {
+                //updating info
+                voteMap[it.id] = it
+            }
         //commentIdIsLoading = commentIdIsLoading.filterNot { cachedCommentsSetMap.containsKey(it) }.toHashSet()
         if (fromReply) {
             repliesIdIsLoading.clear()
@@ -148,26 +160,14 @@ class CommentManager @Inject constructor(
     }
 
     fun loadCommentsByIds(idsForLoading: LongArray, fromReply: Boolean = false) {
-        api.getCommentsByIds(idsForLoading).enqueue(object : Callback<CommentsResponse> {
-
-            override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
-
-                if (response != null && response.isSuccessful) {
-                    val stepicResponse = response.body()
-                    if (stepicResponse != null) {
-                        addComments(stepicResponse, fromReply)
-                    } else {
-                        commentsPoster.connectionProblem()
-                    }
-                } else {
-                    commentsPoster.connectionProblem()
-                }
-            }
-
-            override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
-                commentsPoster.connectionProblem()
-            }
-        })
+        compositeDisposable += commentInteractor
+            .getComments(*idsForLoading)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { addComments(it, fromReply) },
+                onError = { commentsPoster.connectionProblem() }
+            )
     }
 
     fun getSize() = cachedCommentsList.size
@@ -254,6 +254,8 @@ class CommentManager @Inject constructor(
     fun getVoteByVoteId(voteId: String): Vote? = voteMap[voteId]
 
     fun resetAll(dP: DiscussionProxy? = null) {
+        compositeDisposable.clear()
+
         parentIdToPositionInDiscussionMap.clear()
         if (dP != null) {
             setDiscussionProxy(dP)
@@ -274,6 +276,8 @@ class CommentManager @Inject constructor(
     fun clearAllLoadings() {
         commentIdIsLoading.clear()
         repliesIdIsLoading.clear()
+
+        compositeDisposable.clear()
     }
 
     fun isDiscussionProxyNull() = (discussionProxyId == null)

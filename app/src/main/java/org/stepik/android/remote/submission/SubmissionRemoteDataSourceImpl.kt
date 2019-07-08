@@ -21,7 +21,7 @@ constructor(
             .map(submissionMapper)
             .first()
 
-    override fun getSubmissionsForAttemtp(attemptId: Long): Single<List<Submission>> =
+    override fun getSubmissionsForAttempt(attemptId: Long): Single<List<Submission>> =
         api.getSubmissionsReactive(attemptId)
             .map(submissionMapper)
 
