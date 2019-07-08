@@ -45,7 +45,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     init {
         LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
-        codeEditor.typeface = Typeface.MONOSPACE
         theme = Presets.themes[0]
     }
 
