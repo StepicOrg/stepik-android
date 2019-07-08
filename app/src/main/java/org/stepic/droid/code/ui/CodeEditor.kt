@@ -40,7 +40,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     companion object {
         private const val SCROLL_DEBOUNCE_MS = 100L
         private const val INPUT_DEBOUNCE_MS = 200L
-        private const val LINE_NUMBERS_MARGIN_DP = 4f
+        private const val LINE_NUMBERS_MARGIN_DP = 8f
         const val DEFAULT_INDENT_SIZE = 2
         const val MAX_INDENT_SIZE = 8
     }
