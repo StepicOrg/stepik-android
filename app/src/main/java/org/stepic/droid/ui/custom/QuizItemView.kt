@@ -24,7 +24,8 @@ class QuizItemView @JvmOverloads constructor(
     private var startClickTime: Long = 0
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        val dispatched = super.dispatchTouchEvent(ev)
+        val webview = getChildAt(2) as ProgressLatexView
+        val dispatched = webview.webView.dispatchTouchEvent(ev)
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             startClickTime = Calendar.getInstance().timeInMillis
         }
