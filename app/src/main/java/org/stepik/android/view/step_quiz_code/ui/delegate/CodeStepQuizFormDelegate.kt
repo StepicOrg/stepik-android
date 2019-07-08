@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.layout_step_quiz_code.view.stepQuizCodeDet
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.stepQuizCodeDetailsContent
 import org.stepic.droid.R
 import org.stepic.droid.code.util.CodeToolbarUtil
+import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.util.StepikAnimUtils
@@ -103,9 +104,15 @@ class CodeStepQuizFormDelegate(
 
         val reply = submission?.reply
 
+        val lang =
+            reply
+                ?.language
+                ?: stepWrapper.step.block?.options?.codeTemplates?.keys?.firstOrNull() ?: ""
+        val extension = extensionForLanguage(lang)
+
         codeLayout.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
         codeLayout.setText(reply?.code)
-        codeLayout.lang = reply?.language ?: stepWrapper.step.block?.options?.codeTemplates?.keys?.firstOrNull() ?: ""
+        codeLayout.lang = extension
 
         stepQuizCodeDetailsAdapter.items =
             codeStepQuizDetailsMapper.mapToCodeDetails(stepWrapper.step, codeLayout.lang)
