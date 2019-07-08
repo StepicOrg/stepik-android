@@ -311,7 +311,8 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name="org.stepik.android.view.lesson.ui.activity.LessonActivity">
+            android:name="org.stepik.android.view.lesson.ui.activity.LessonActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter
                 android:autoVerify="true"
                 tools:ignore="UnusedAttribute">

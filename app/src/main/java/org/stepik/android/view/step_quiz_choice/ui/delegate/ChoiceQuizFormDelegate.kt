@@ -6,6 +6,8 @@ import kotlinx.android.synthetic.main.view_choice_quiz_attempt.view.*
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.presentation.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.ui.adapter.ChoicesAdapterDelegate
@@ -17,6 +19,7 @@ import ru.nobird.android.ui.adapterssupport.selection.SingleChoiceSelectionHelpe
 class ChoiceQuizFormDelegate(
     private val choiceAttemptView: View
 ) : StepQuizFormDelegate {
+
     private var choicesAdapter: DefaultDelegateAdapter<Choice> = DefaultDelegateAdapter()
     private lateinit var selectionHelper: SelectionHelper
 
@@ -27,9 +30,9 @@ class ChoiceQuizFormDelegate(
         }
     }
 
-    override var isEnabled: Boolean = true
+    var isEnabled: Boolean = true
 
-    override fun setAttempt(attempt: Attempt) {
+    fun setAttempt(attempt: Attempt) {
         val dataSet = attempt.dataset
         dataSet?.options?.let { options ->
             choicesAdapter.items = options.map { Choice(it) }
@@ -42,19 +45,19 @@ class ChoiceQuizFormDelegate(
         }
     }
 
-    override fun setSubmission(submission: Submission) {
+    fun setSubmission(submission: Submission) {
         submission.reply?.choices?.let { setChoices(it)}
     }
 
-    override fun createReply(): Reply {
-        val selection = (0 until choicesAdapter.itemCount)
-                .map {
-                    selectionHelper.isSelected(it)
-                }
-        return Reply(choices = selection)
+    override fun setState(state: StepQuizView.State.AttemptLoaded) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun validateForm(): String? {
+    override fun createReply(): ReplyResult {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    fun validateForm(): String? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

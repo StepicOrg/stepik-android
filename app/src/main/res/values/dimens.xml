@@ -215,6 +215,14 @@
     <!-- Step -->
     <dimen name="step_content_block_radius">8dp</dimen>
     <dimen name="step_navigation_button_radius">@dimen/step_content_block_radius</dimen>
+    <dimen name="step_quiz_container_bottom_margin">16dp</dimen>
+
+    <dimen name="step_control_block_radius">8dp</dimen>
+    <dimen name="step_submit_button_radius">@dimen/step_control_block_radius</dimen>
+    <dimen name="step_submit_button_height">48dp</dimen>
+
+    <dimen name="step_quiz_text_field_radius">8dp</dimen>
+    <dimen name="step_quiz_text_field_min_height">48dp</dimen>
 
     <!-- Choice quiz -->
     <dimen name="choice_option_stroke_width">1dp</dimen>

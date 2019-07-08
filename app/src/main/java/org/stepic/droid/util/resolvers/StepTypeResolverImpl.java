@@ -10,15 +10,11 @@ import org.stepik.android.model.Step;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
 import org.stepic.droid.ui.fragments.CodeStepFragment;
 import org.stepic.droid.ui.fragments.FillBlanksFragment;
-import org.stepic.droid.ui.fragments.FreeResponseStepFragment;
 import org.stepic.droid.ui.fragments.MatchingStepFragment;
-import org.stepic.droid.ui.fragments.MathStepFragment;
 import org.stepic.droid.ui.fragments.NotSupportedYetStepFragment;
-import org.stepic.droid.ui.fragments.NumberStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
 import org.stepic.droid.ui.fragments.SortingStepFragment;
 import org.stepic.droid.ui.fragments.SqlStepFragment;
-import org.stepic.droid.ui.fragments.StringStepFragment;
 import org.stepic.droid.ui.fragments.TableChoiceStepFragment;
 import org.stepic.droid.ui.quiz.ChoiceQuizDelegate;
 import org.stepic.droid.ui.quiz.NotSupportedQuizDelegate;
@@ -112,14 +108,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         switch (type) {
             case AppConstants.TYPE_CHOICE:
                 return new ChoiceStepFragment();
-            case AppConstants.TYPE_FREE_ANSWER:
-                return new FreeResponseStepFragment();
-            case AppConstants.TYPE_STRING:
-                return new StringStepFragment();
-            case AppConstants.TYPE_MATH:
-                return new MathStepFragment();
-            case AppConstants.TYPE_NUMBER:
-                return new NumberStepFragment();
             case AppConstants.TYPE_PYCHARM:
                 return new PyCharmStepFragment();
             case AppConstants.TYPE_SORTING:
@@ -172,6 +160,11 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         switch (step.getBlock().getName()) {
             case AppConstants.TYPE_TEXT:
             case AppConstants.TYPE_VIDEO:
+
+            case AppConstants.TYPE_STRING:
+            case AppConstants.TYPE_NUMBER:
+            case AppConstants.TYPE_MATH:
+            case AppConstants.TYPE_FREE_ANSWER:
             case AppConstants.TYPE_CHOICE:
                 return false;
             default:

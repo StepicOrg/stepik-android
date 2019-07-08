@@ -92,7 +92,6 @@
         completing the assignments.
     </string>
     <string name="correct_free_response">Your answer was saved.</string>
-    <string name="hint_for_type_answer">Type your answer here…</string>
     <string name="py_message">
         <![CDATA[Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive
@@ -739,6 +738,27 @@
     <string name="step_discussion_write_first">Leave a comment</string>
 
     <string name="step_content_video_no_video">Video has not been uploaded or processed yet</string>
+
+    <string name="step_quiz_action_button_submit">Submit</string>
+    <string name="step_quiz_action_button_submit_with_counter">Submit (%s left)</string>
+    <string name="step_quiz_action_button_try_again">Try again</string>
+    <string name="step_quiz_action_button_no_submissions">No submissions left</string>
+
+    <string name="step_quiz_text_field_hint">Type your answer…</string>
+
+    <string name="step_quiz_feedback_evaluation">Evaluation…</string>
+    <string name="step_quiz_feedback_correct_free_answer">Any text response will be graded as correct</string>
+    <string name="step_quiz_feedback_wrong_not_last_try">Wrong. Let\'s try again.</string>
+    <string name="step_quiz_feedback_wrong_last_try">Incorrect</string>
+
+    <string name="step_quiz_feedback_validation_fill_blanks">All blanks should be filled</string>
+
+    <string name="step_quiz_number_description">Enter a number</string>
+    <string name="step_quiz_math_description">Enter a math formula</string>
+    <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
+    <string name="step_quiz_free_answer_description">Write an essay</string>
+
+    <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>

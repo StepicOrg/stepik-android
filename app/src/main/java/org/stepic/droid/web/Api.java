@@ -18,6 +18,7 @@ import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -27,6 +28,7 @@ import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 
@@ -118,7 +120,7 @@ public interface Api {
 
     Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId);
 
-    Completable createNewSubmissionReactive(Submission submission);
+    Single<SubmissionResponse> createNewSubmissionReactive(Submission submission);
 
     Call<AttemptResponse> getExistingAttempts(long stepId);
 
@@ -129,6 +131,8 @@ public interface Api {
     Single<SubmissionResponse> getSubmissionsReactive(long attemptId);
 
     Call<SubmissionResponse> getSubmissionForStep(long stepId);
+
+    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId);
 
     Call<Void> remindPassword(String email);
 
