@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <include
-        android:id="@+id/choice_quiz_attempt"
-        layout="@layout/view_choice_quiz_attempt"/>
-</LinearLayout>
