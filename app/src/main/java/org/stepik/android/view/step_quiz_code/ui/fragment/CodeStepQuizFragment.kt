@@ -17,12 +17,12 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.base.ui.extension.parentOfType
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
@@ -88,7 +88,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
-                stepQuizFormDelegate = CodeStepQuizFormDelegate(view, stepWrapper),
+                stepQuizFormDelegate = CodeStepQuizFormDelegate(view, parentOfType(), stepWrapper),
                 stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
                 stepQuizActionButton = stepQuizAction,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,

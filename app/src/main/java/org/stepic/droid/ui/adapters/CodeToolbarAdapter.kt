@@ -15,6 +15,7 @@ import org.stepic.droid.R
 import org.stepic.droid.code.data.AutocompleteState
 import org.stepic.droid.model.code.symbolsForLanguage
 import org.stepic.droid.ui.listeners.OnItemClickListener
+import timber.log.Timber
 
 class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
