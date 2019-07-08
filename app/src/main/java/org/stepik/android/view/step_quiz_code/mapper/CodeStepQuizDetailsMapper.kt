@@ -11,7 +11,7 @@ class CodeStepQuizDetailsMapper {
 
         val samples = options
             .samples
-            .mapIndexed { i, sample -> CodeDetail.Sample(i + 1, sample[0], sample[1]) }
+            .mapIndexed { i, sample -> CodeDetail.Sample(i + 1, sample[0].trim('\n'), sample[1].trim('\n')) }
 
         val codeLimit = options.limits[lang]
             ?: CodeLimit(options.executionTimeLimit, options.executionMemoryLimit)

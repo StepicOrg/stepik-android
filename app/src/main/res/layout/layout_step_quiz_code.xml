@@ -2,6 +2,7 @@
 <android.support.v7.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -52,15 +53,18 @@
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"/>
     </FrameLayout>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/stepQuizCodeDetailsContent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/step_quiz_separator" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/stepQuizCodeDetailsContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/new_primary_color"
+        tools:listitem="@layout/item_step_quiz_code_detail_sample" />
 
     <org.stepic.droid.code.ui.CodeEditorLayout
         android:id="@+id/codeStepLayout"

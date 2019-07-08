@@ -25,14 +25,16 @@ class CodeDetailSampleAdapterDelegate : AdapterDelegate<CodeDetail, DelegateView
         private val output = root.stepQuizCodeDetailSampleOutput
 
         init {
+            val sampleHeight = context.resources.getDimensionPixelOffset(R.dimen.step_quiz_code_sample_min_height)
+
             val inputCompoundDrawable = AppCompatResources
                 .getDrawable(context, R.drawable.ic_step_quiz_code_sample_input)
-                ?.let { GravityDrawable(it, Gravity.TOP, 0) }
+                ?.let { GravityDrawable(it, Gravity.TOP, sampleHeight) }
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(input, inputCompoundDrawable, null, null, null)
 
             val outputCompoundDrawable = AppCompatResources
                 .getDrawable(context, R.drawable.ic_step_quiz_code_sample_output)
-                ?.let { GravityDrawable(it, Gravity.TOP, 0) }
+                ?.let { GravityDrawable(it, Gravity.TOP, sampleHeight) }
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(output, outputCompoundDrawable, null, null, null)
         }
 

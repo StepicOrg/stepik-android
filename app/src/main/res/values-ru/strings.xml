@@ -733,6 +733,10 @@
     <string name="step_quiz_code_details">Детали</string>
     <string name="step_quiz_code_detail_sample_title">Пример данных %d:</string>
 
+    <string name="step_quiz_code_detail_limit_title_time">Ограничение по времени:</string>
+    <string name="step_quiz_code_detail_limit_title_memory">Ограничение по памяти:</string>
+    <string name="step_quiz_code_detail_limit_value_memory">%d МБ</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>

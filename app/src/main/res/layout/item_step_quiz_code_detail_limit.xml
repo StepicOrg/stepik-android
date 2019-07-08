@@ -8,7 +8,7 @@
     android:padding="16dp">
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stepQuizCodeDetailSampleTitle"
+        android:id="@+id/stepQuizCodeDetailLimitTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -18,7 +18,7 @@
         tools:text="Пример данных 1:" />
 
     <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stepQuizCodeDetailSampleInput"
+        android:id="@+id/stepQuizCodeDetailLimitValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -26,25 +26,7 @@
         android:textSize="14sp"
         android:textColor="@color/new_accent_color"
         fontPath="fonts/PT-Mono.ttf"
-
-        android:drawablePadding="16dp"
-        tools:drawableStart="@drawable/ic_step_quiz_code_sample_input"
 
         tools:text="77 1010" />
-
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/stepQuizCodeDetailSampleOutput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-
-        android:textSize="14sp"
-        android:textColor="@color/new_accent_color"
-        fontPath="fonts/PT-Mono.ttf"
-
-        android:drawablePadding="16dp"
-        tools:drawableStart="@drawable/ic_step_quiz_code_sample_output"
-
-        tools:text="77777777 1010101010101010" />
 
 </android.support.v7.widget.LinearLayoutCompat>
