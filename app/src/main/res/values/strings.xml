@@ -757,8 +757,10 @@
     <string name="step_quiz_math_description">Enter a math formula</string>
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
     <string name="step_quiz_free_answer_description">Write an essay</string>
+    <string name="step_quiz_choice_description">Choose one or multiple options</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
+    <string name="step_quiz_choice_empty_reply">Choose an option</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
