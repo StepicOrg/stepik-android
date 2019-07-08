@@ -7,7 +7,7 @@
     android:layout_marginBottom="8dp"
     android:orientation="vertical">
 
-    <FrameLayout
+    <org.stepic.droid.ui.custom.QuizItemView
         android:id="@+id/itemChoiceContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:layout_marginEnd="24dp"
             android:textSize="12sp"
             android:layout_marginRight="24dp" />
-    </FrameLayout>
+    </org.stepic.droid.ui.custom.QuizItemView>
 
     <TextView
         android:id="@+id/itemChoiceFeedback"

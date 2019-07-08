@@ -32,7 +32,7 @@ class ChoicesAdapterDelegate(
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
-            root.setOnClickListener { onClick(itemData as Choice) }
+            root.itemChoiceContainer.setOnClickListener { onClick(itemData as Choice) }
             layerListDrawableDelegate = LayerListDrawableDelegate(
                 listOf(
                     R.id.not_checked_layer,

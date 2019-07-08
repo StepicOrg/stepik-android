@@ -93,6 +93,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             webSettings.setMediaPlaybackRequiresUserGesture(false);
         }
         addJavascriptInterface(new OnScrollWebListener(), HtmlHelper.HORIZONTAL_SCROLL_LISTENER);
+        setSoundEffectsEnabled(false);
     }
 
     public void setTextIsSelectable(boolean isSelectable) {
