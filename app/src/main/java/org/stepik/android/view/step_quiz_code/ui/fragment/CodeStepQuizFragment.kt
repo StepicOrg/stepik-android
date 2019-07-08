@@ -6,8 +6,16 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
+import kotlinx.android.synthetic.main.fragment_step_quiz.*
+import kotlinx.android.synthetic.main.layout_step_quiz_code.*
+import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
@@ -15,6 +23,8 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
+import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
@@ -30,6 +40,9 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var fontsProvider: FontsProvider
 
     private lateinit var presenter: StepQuizPresenter
 
@@ -52,6 +65,34 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
             .stepComponentBuilder()
             .build()
             .inject(this)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        (inflater.inflate(R.layout.fragment_step_quiz, container, false) as ViewGroup)
+            .apply {
+                addView(inflater.inflate(R.layout.layout_step_quiz_code, this, false))
+            }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        stepQuizDescription.visibility = View.GONE
+
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<StepQuizView.State.Idle>()
+        viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, codeStepLayout, stepQuizAction)
+        viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
+
+        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
+
+        stepQuizDelegate =
+            StepQuizDelegate(
+                step = stepWrapper.step,
+                stepQuizFormDelegate = CodeStepQuizFormDelegate(view),
+                stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
+                stepQuizActionButton = stepQuizAction,
+                stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
+                stepQuizPresenter = presenter
+            )
     }
 
     override fun onStart() {
