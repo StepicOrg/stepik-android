@@ -2,13 +2,15 @@ package org.stepik.android.view.step_quiz_choice.ui.delegate
 
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
-import kotlinx.android.synthetic.main.view_choice_quiz_attempt.view.*
+import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
+import kotlinx.android.synthetic.main.layout_step_quiz_choice.view.*
+import org.stepic.droid.R
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
-import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.presentation.step_quiz_choice.model.Choice
+import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.ui.adapter.ChoicesAdapterDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
@@ -17,71 +19,75 @@ import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
 import ru.nobird.android.ui.adapterssupport.selection.SingleChoiceSelectionHelper
 
 class ChoiceQuizFormDelegate(
-    private val choiceAttemptView: View
+    containerView: View
 ) : StepQuizFormDelegate {
+    private val context = containerView.context
 
+    private val quizDescription = containerView.stepQuizDescription
     private var choicesAdapter: DefaultDelegateAdapter<Choice> = DefaultDelegateAdapter()
-    private lateinit var selectionHelper: SelectionHelper
+    private var selectionHelper: SelectionHelper? = null
 
     init {
-        choiceAttemptView.choices_recycler.apply {
+        containerView.choices_recycler.apply {
             adapter = choicesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
+        quizDescription.setText(R.string.step_quiz_choice_description)
     }
 
-    var isEnabled: Boolean = true
+    override fun setState(state: StepQuizView.State.AttemptLoaded) {
+        val dataset = state.attempt.dataset ?: return
 
-    fun setAttempt(attempt: Attempt) {
-        val dataSet = attempt.dataset
-        dataSet?.options?.let { options ->
-            choicesAdapter.items = options.map { Choice(it) }
-            selectionHelper = if (dataSet.isMultipleChoice) {
+        val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
+                ?.submission
+
+        val reply = submission?.reply
+
+        choicesAdapter.items = dataset.options?.map { Choice(it, isEnabled = StepQuizFormResolver.isQuizEnabled(state)) } ?: return
+
+        if (selectionHelper == null) {
+            selectionHelper = if (dataset.isMultipleChoice) {
                 MultipleChoiceSelectionHelper(choicesAdapter)
             } else {
                 SingleChoiceSelectionHelper(choicesAdapter)
             }
-            choicesAdapter += ChoicesAdapterDelegate(selectionHelper, onClick = ::handleChoiceClick)
         }
-    }
-
-    fun setSubmission(submission: Submission) {
-        submission.reply?.choices?.let { setChoices(it)}
-    }
-
-    override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (choicesAdapter.delegates.isEmpty()) {
+            choicesAdapter += ChoicesAdapterDelegate(selectionHelper as SelectionHelper, onClick = ::handleChoiceClick)
+        }
+        selectionHelper?.reset()
+        setChoices(reply?.choices, submission?.status)
     }
 
     override fun createReply(): ReplyResult {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    fun validateForm(): String? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val choices = (0 until choicesAdapter.itemCount).map { selectionHelper?.isSelected(it) as Boolean }
+        return if (choices.contains(true)) {
+            ReplyResult.Success(Reply(choices = choices))
+        } else {
+            ReplyResult.Error(context.getString(R.string.step_quiz_choice_empty_reply))
+        }
     }
 
     private fun handleChoiceClick(choice: Choice) {
-        if (!isEnabled) return
         when (selectionHelper) {
             is SingleChoiceSelectionHelper -> {
-                selectionHelper.reset()
-                selectionHelper.select(choicesAdapter.items.indexOf(choice))
-                choicesAdapter.notifyDataSetChanged()
+                selectionHelper?.select(choicesAdapter.items.indexOf(choice))
             }
             is MultipleChoiceSelectionHelper -> {
-                selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
+                selectionHelper?.toggle(choicesAdapter.items.indexOf(choice))
             }
         }
     }
 
-    private fun setChoices(choices: List<Boolean>) {
-        (0 until choices.size).forEach {pos ->
+    private fun setChoices(choices: List<Boolean>?, status: Submission.Status?) {
+        if (choices == null) return
+        (0 until choices.size).forEach { pos ->
             if (choices[pos]) {
-                selectionHelper.select(pos)
-                choicesAdapter.items[pos].apply {
-                    correct = true
-                    // tip = "This is a tip\n new line"
+                selectionHelper?.select(pos)
+                choicesAdapter.items[pos].correct = when (status) {
+                    Submission.Status.CORRECT -> true
+                    Submission.Status.WRONG -> false
+                    else -> null
                 }
             }
         }

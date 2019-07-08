@@ -19,7 +19,7 @@ constructor() : StepQuizFragmentFactory {
             AppConstants.TYPE_FREE_ANSWER ->
                 TextStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
             AppConstants.TYPE_CHOICE ->
-                ChoiceStepQuizFragment.newInstance(stepPersistentWrapper)
+                ChoiceStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
 
             else ->
                 Fragment()
