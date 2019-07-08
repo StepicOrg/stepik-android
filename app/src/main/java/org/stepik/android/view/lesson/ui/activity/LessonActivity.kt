@@ -38,7 +38,7 @@ import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, KeyboardExtensionContainer {
+class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -267,7 +267,4 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, Keyboar
         // todo: use discussion id after comments refactor
         screenManager.openComments(this, step.discussionProxy, step.id)
     }
-
-    override fun getKeyboardExtensionViewContainer(): ViewGroup =
-        lessonContainer
 }

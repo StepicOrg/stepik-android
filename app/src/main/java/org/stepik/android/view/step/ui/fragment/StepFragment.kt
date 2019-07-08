@@ -27,13 +27,14 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.base.ui.interfaces.KeyboardExtensionContainer
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import javax.inject.Inject
 
-class StepFragment : Fragment(), StepView {
+class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -206,4 +207,7 @@ class StepFragment : Fragment(), StepView {
         screenManager.showSteps(activity, unit, lessonData.lesson, direction == StepNavigationDirection.PREV, section)
         activity?.finish()
     }
+
+    override fun getKeyboardExtensionViewContainer(): ViewGroup =
+        stepContainer
 }
