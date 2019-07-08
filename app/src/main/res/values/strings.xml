@@ -760,6 +760,9 @@
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
 
+    <string name="step_quiz_code_details">Details</string>
+    <string name="step_quiz_code_detail_sample_title">Sample data %d:</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>

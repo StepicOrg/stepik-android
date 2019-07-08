@@ -730,6 +730,9 @@
 
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
 
+    <string name="step_quiz_code_details">Детали</string>
+    <string name="step_quiz_code_detail_sample_title">Пример данных %d:</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>

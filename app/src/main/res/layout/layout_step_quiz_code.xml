@@ -17,6 +17,46 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks">
 
+    <FrameLayout
+        android:id="@+id/stepQuizCodeDetails"
+        android:background="@drawable/bg_step_quiz_code_details"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_gravity="center_vertical"
+            app:srcCompat="@drawable/ic_step_quiz_code_details" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|start"
+
+            android:text="@string/step_quiz_code_details"
+            android:textColor="@color/new_accent_color"
+            android:textSize="16sp"
+
+            android:layout_marginStart="48dp"
+            android:layout_marginLeft="48dp"
+            android:layout_marginEnd="48dp"
+            android:layout_marginRight="48dp" />
+
+        <org.stepic.droid.ui.custom.ArrowImageView
+            android:id="@+id/stepQuizCodeDetailsArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"/>
+    </FrameLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/stepQuizCodeDetailsContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
