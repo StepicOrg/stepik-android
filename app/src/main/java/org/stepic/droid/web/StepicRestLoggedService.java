@@ -5,6 +5,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.comment.model.CommentRequest;
+import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -12,6 +14,7 @@ import org.stepik.android.remote.course_payments.model.CoursePaymentRequest;
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
+import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -204,20 +207,23 @@ public interface StepicRestLoggedService {
     @DELETE("api/devices/{id}")
     Call<Void> removeDevice(@Path("id") long deviceId);
 
-    @GET("api/discussion-proxies/{id}")
-    Call<DiscussionProxyResponse> getDiscussionProxy(@Path("id") String discussionProxyId);
+    @GET("api/discussion-proxies")
+    Single<DiscussionProxyResponse> getDiscussionProxies(@Query("ids[]") String[] ids);
 
     @GET("api/comments")
-    Call<CommentsResponse> getComments(@Query("ids[]") long[] ids);
+    Call<CommentResponse> getComments(@Query("ids[]") long[] ids);
+
+    @GET("api/comments")
+    Single<CommentResponse> getCommentsReactive(@Query("ids[]") long[] ids);
 
     @POST("api/comments")
-    Call<CommentsResponse> postComment(@Body CommentRequest comment);
+    Call<CommentResponse> postComment(@Body CommentRequest comment);
 
     @PUT("api/votes/{id}")
     Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 
     @DELETE("api/comments/{id}")
-    Call<CommentsResponse> deleteComment(@Path("id") long commentId);
+    Call<CommentResponse> deleteComment(@Path("id") long commentId);
 
     @GET("api/certificates")
     Call<CertificateResponse> getCertificates(@Query("user") long userId);

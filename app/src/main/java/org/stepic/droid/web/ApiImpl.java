@@ -67,9 +67,12 @@ import org.stepik.android.model.comments.Vote;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.comment.model.CommentRequest;
+import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
+import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -792,23 +795,18 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId) {
-        return loggedService.getDiscussionProxy(discussionProxyId);
-    }
-
-    @Override
-    public Call<CommentsResponse> getCommentAnd20Replies(long commentId) {
+    public Call<CommentResponse> getCommentAnd20Replies(long commentId) {
         long[] id = new long[]{commentId};
         return loggedService.getComments(id);
     }
 
     @Override
-    public Call<CommentsResponse> getCommentsByIds(long[] commentIds) {
+    public Call<CommentResponse> getCommentsByIds(long[] commentIds) {
         return loggedService.getComments(commentIds);
     }
 
     @Override
-    public Call<CommentsResponse> postComment(String text, long target, @Nullable Long parent) {
+    public Call<CommentResponse> postComment(String text, long target, @Nullable Long parent) {
         Comment comment = new Comment(target, text, parent);
         return loggedService.postComment(new CommentRequest(comment));
     }
@@ -821,7 +819,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CommentsResponse> deleteComment(long commentId) {
+    public Call<CommentResponse> deleteComment(long commentId) {
         return loggedService.deleteComment(commentId);
     }
 

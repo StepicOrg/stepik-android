@@ -9,14 +9,14 @@ import org.stepic.droid.core.presenters.contracts.CommentsView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
-import org.stepik.android.domain.comments.interactor.CommentsInteractor
+import org.stepik.android.domain.comment_banner.interactor.CommentBannerInteractor
 import timber.log.Timber
 import javax.inject.Inject
 
 class CommentsBannerPresenter
 @Inject
 constructor(
-    private val commentsBannerInteractor: CommentsInteractor,
+    private val commentsBannerInteractor: CommentBannerInteractor,
     private val commentsTooltipSplitTest: CommentsTooltipSplitTest,
 
     @BackgroundScheduler

@@ -18,9 +18,11 @@ import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
+import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -150,17 +152,15 @@ public interface Api {
 
     Call<Void> removeDevice(long deviceId);
 
-    Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId);
+    Call<CommentResponse> getCommentAnd20Replies(long commentId);
 
-    Call<CommentsResponse> getCommentAnd20Replies(long commentId);
+    Call<CommentResponse> getCommentsByIds(long[] commentIds);
 
-    Call<CommentsResponse> getCommentsByIds(long[] commentIds);
-
-    Call<CommentsResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
+    Call<CommentResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
 
     Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
 
-    Call<CommentsResponse> deleteComment(long commentId);
+    Call<CommentResponse> deleteComment(long commentId);
 
     Call<CertificateResponse> getCertificates();
 
