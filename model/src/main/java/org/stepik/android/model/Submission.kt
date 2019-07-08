@@ -3,15 +3,23 @@ package org.stepik.android.model
 import com.google.gson.annotations.SerializedName
 
 class Submission(
-        val id: Long = 0,
-        val status: Status? = null,
-        val score: String? = null,
-        val hint: String? = null,
-        val time: String? = null,
-        reply: Reply? = null,
-        val attempt: Long = 0,
-        val session: String? = null,
-        val eta: String? = null
+    @SerializedName("id")
+    val id: Long = 0,
+    @SerializedName("status")
+    val status: Status? = null,
+    @SerializedName("score")
+    val score: String? = null,
+    @SerializedName("hint")
+    val hint: String? = null,
+    @SerializedName("time")
+    val time: String? = null,
+    reply: Reply? = null,
+    @SerializedName("attempt")
+    val attempt: Long = 0,
+    @SerializedName("session")
+    val session: String? = null,
+    @SerializedName("eta")
+    val eta: String? = null
 ) {
     @Deprecated("this compatibility constructor will be removed after rewriting StepAttemptFragment in Kotlin")
     constructor(reply: Reply?, attempt: Long, status: Status?): this(id = 0, reply = reply, attempt = attempt, status = status)

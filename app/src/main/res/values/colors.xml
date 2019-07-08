@@ -58,6 +58,7 @@
     <!--Redesigned colors-->
     <color name="new_primary_color">#F6F6F6</color>
     <color name="new_accent_color">#535366</color>
+    <color name="new_accent_color_alpha_60">#9a535366</color>
     <color name="new_accent_color_alpha_40">#66535366</color>
     <color name="new_accent_color_alpha_30">#4D535366</color>
     <color name="new_accent_color_alpha_5">#0D535366</color>
@@ -83,6 +84,7 @@
     <color name="new_accent_color_opacity_50">#80535366</color>
     <color name="white_opacity_20">#33FFFFFF</color>
     <color name="white_opacity_30">#4DFFFFFF</color>
+    <color name="white_opacity_60">#99FFFFFF</color>
 
     <color name="join_text_color">#66CC66</color>
     <color name="continue_button_color">#0D535366</color>
@@ -151,6 +153,10 @@
 
     <!-- Design system -->
     <color name="grey04">#EAECF0</color>
+    <color name="grey03">#CCCCCC</color>
+    <color name="green01">#66CC66</color>
+    <color name="green03">#54AD54</color>
+    <color name="green04">#ACD1AC</color>
 
     <!--adaptive-->
     <color name="adaptive_color_easy">#227300</color>
@@ -198,4 +204,8 @@
     <color name="step_navigation_button_ripple">#2066CC66</color>
 
     <color name="step_discussion_button">@color/new_primary_color</color>
+    <color name="step_quiz_separator">@color/grey04</color>
+
+    <color name="step_quiz_feedback_wrong_text">#ff7965</color>
+    <color name="step_quiz_feedback_wrong_background">#26ff7965</color>
 </resources>

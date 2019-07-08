@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedbackWrong"
+        style="@style/StepQuizFeedback"
+        android:background="@drawable/bg_step_quiz_feedback_wrong"
+
+        android:textColor="@color/step_quiz_feedback_wrong_text"
+
+        tools:text="@string/step_quiz_feedback_wrong_not_last_try"
+        tools:drawableStart="@drawable/ic_step_quiz_wrong" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedbackCorrect"
+        style="@style/StepQuizFeedback"
+        android:background="@drawable/bg_step_quiz_feedback_correct"
+
+        android:textColor="@color/green01"
+
+        tools:text="@string/step_quiz_feedback_correct_free_answer"
+        tools:drawableStart="@drawable/ic_step_quiz_correct" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedbackEvaluation"
+        style="@style/StepQuizFeedback"
+
+        android:background="@drawable/bg_step_quiz_feedback_evaluation"
+        android:text="@string/step_quiz_feedback_evaluation"
+        android:textColor="@color/color_violet_1"
+
+        tools:drawableStart="@drawable/ic_step_quiz_evaluation" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedbackValidation"
+        style="@style/StepQuizFeedback"
+
+        android:background="@drawable/bg_step_quiz_feedback_evaluation"
+        android:text="@string/step_quiz_feedback_evaluation"
+        android:textColor="@color/color_violet_1"
+
+        tools:drawableStart="@drawable/ic_step_quiz_validation" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedbackHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_step_quiz_hint"
+        fontPath="fonts/PT-Mono.ttf"
+        android:textSize="14sp"
+        android:textColor="@color/new_accent_color"
+        android:lineSpacingExtra="4sp"
+        android:padding="16dp"
+        tools:text="Variant 1 and Variant 4 are opposite options. It can’t be the correct choice." />
+
+</android.support.v7.widget.LinearLayoutCompat>
