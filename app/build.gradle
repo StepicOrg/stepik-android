@@ -189,6 +189,8 @@ dependencies {
 
     implementation libraries.shortcutBadger
     implementation libraries.StoriesKit
+    implementation libraries.AdapterDelegates
+    implementation libraries.Adapters
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
