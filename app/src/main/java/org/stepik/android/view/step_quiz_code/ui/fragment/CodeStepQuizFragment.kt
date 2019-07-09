@@ -1,7 +1,9 @@
 package org.stepik.android.view.step_quiz_code.ui.fragment
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
@@ -18,6 +20,9 @@ import org.stepic.droid.base.App
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
+import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
+import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
+import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
@@ -30,7 +35,7 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelega
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class CodeStepQuizFragment : Fragment(), StepQuizView {
+class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.Callback, ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback {
     companion object {
         private const val CODE_PLAYGROUND_REQUEST = 153
 
@@ -57,6 +62,8 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
     private lateinit var stepQuizDelegate: StepQuizDelegate
 
     private lateinit var codeStepQuizFormDelegate: CodeStepQuizFormDelegate
+
+    private var fullscreenResult: Pair<String, String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +99,10 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
 
         val actionsListener = object : CodeStepQuizFormDelegate.ActionsListener {
             override fun onChangeLanguageClicked() {
-
+                val dialog = ChangeCodeLanguageDialog.newInstance()
+                if (!dialog.isAdded) {
+                    dialog.show(childFragmentManager, null)
+                }
             }
 
             override fun onFullscreenClicked(lang: String, code: String) {
@@ -102,7 +112,10 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
             }
 
             override fun onResetClicked() {
-
+                val dialog = ResetCodeDialogFragment.newInstance()
+                if (!dialog.isAdded) {
+                    dialog.show(childFragmentManager, null)
+                }
             }
         }
 
@@ -134,6 +147,9 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate.switchState(state)
         if (state is StepQuizView.State.AttemptLoaded) {
             stepQuizDelegate.setState(state)
+
+            fullscreenResult?.let { (lang, code) -> codeStepQuizFormDelegate.onResultFromFullscreen(lang, code) }
+            fullscreenResult = null
         }
     }
 
@@ -144,5 +160,37 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
             .make(view, R.string.no_connection, Snackbar.LENGTH_SHORT)
             .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             .show()
+    }
+
+    override fun onReset() {
+        codeStepQuizFormDelegate.onResetCode()
+    }
+
+    override fun onChangeLanguage() {
+        val languages = stepWrapper.step.block?.options?.limits?.keys?.sorted()?.toTypedArray() ?: emptyArray()
+
+        val dialog = ProgrammingLanguageChooserDialogFragment.newInstance(languages)
+        if (!dialog.isAdded) {
+            dialog.show(childFragmentManager, null)
+        }
+    }
+
+    override fun onLanguageChosen(programmingLanguage: String) {
+        codeStepQuizFormDelegate.onLanguageSelected(programmingLanguage)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when (requestCode) {
+            CODE_PLAYGROUND_REQUEST ->
+                data?.takeIf { resultCode == Activity.RESULT_OK }
+                    ?.let { intent ->
+                        val lang = intent.getStringExtra(CodePlaygroundActivity.LANG_KEY)
+                        val code = intent.getStringExtra(CodePlaygroundActivity.CODE_KEY)
+                        fullscreenResult = lang to code
+                    }
+
+            else ->
+                super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }

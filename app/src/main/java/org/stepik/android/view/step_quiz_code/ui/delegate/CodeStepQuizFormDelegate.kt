@@ -201,8 +201,14 @@ class CodeStepQuizFormDelegate(
         popupMenu.show()
     }
 
-    override fun createReply(): ReplyResult =
-        ReplyResult.Success(Reply(code = codeLayout.text.toString(), language = codeLayout.lang))
+    override fun createReply(): ReplyResult {
+        val state = state
+        return if (state is CodeStepQuizFormState.Lang) {
+            ReplyResult.Success(Reply(code = codeLayout.text.toString(), language = state.lang))
+        } else {
+            ReplyResult.Error("Choose lang")
+        }
+    }
 
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
         this.state = codeStepQuizFormStateMapper.mapToFormState(codeOptions, state)
