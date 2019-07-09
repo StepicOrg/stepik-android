@@ -25,10 +25,13 @@ import org.stepik.android.view.base.ui.interfaces.KeyboardExtensionContainer
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
+import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizFormStateMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
+import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailLimitAdapterDelegate
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailSampleAdapterDelegate
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeLangAdapterDelegate
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 
 class CodeStepQuizFormDelegate(
@@ -36,6 +39,28 @@ class CodeStepQuizFormDelegate(
     keyboardExtensionContainer: KeyboardExtensionContainer?,
     private val stepWrapper: StepPersistentWrapper
 ) : StepQuizFormDelegate {
+    private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
+        set(value) {
+            field = value
+
+            viewStateDelegate.switchState(value)
+
+            when (value) {
+                is CodeStepQuizFormState.Lang -> {
+                    codeLayout.setText(value.code)
+                    codeLayout.lang = extensionForLanguage(value.lang)
+
+                    codeToolbarAdapter.setLanguage(value.lang)
+                }
+            }
+
+            stepQuizCodeDetailsAdapter.items =
+                codeStepQuizDetailsMapper.mapToCodeDetails(stepWrapper.step, (value as? CodeStepQuizFormState.Lang)?.lang)
+        }
+
+    private val viewStateDelegate = ViewStateDelegate<CodeStepQuizFormState>()
+    private val codeStepQuizFormStateMapper = CodeStepQuizFormStateMapper()
+
     private val codeLayout = containerView.codeStepLayout
 
     private val stepQuizCodeDetails = containerView.stepQuizCodeDetails
@@ -60,7 +85,13 @@ class CodeStepQuizFormDelegate(
     private val stepQuizCodeLangChooser = containerView.stepQuizCodeLangChooser
     private val stepQuizCodeLangChooserAdapter = DefaultDelegateAdapter<String>()
 
+    private val codeOptions = stepWrapper.step.block?.options ?: throw IllegalArgumentException("Code options shouldn't be null")
+
     init {
+        viewStateDelegate.addState<CodeStepQuizFormState.Idle>()
+        viewStateDelegate.addState<CodeStepQuizFormState.NoLang>(stepQuizCodeLangChooserTitle, stepQuizCodeLangChooser)
+        viewStateDelegate.addState<CodeStepQuizFormState.Lang>(codeLayout)
+
         /**
          * Details
          */
@@ -110,9 +141,9 @@ class CodeStepQuizFormDelegate(
         /**
          * Lang chooser
          */
-        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate {}
+        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate { state = CodeStepQuizFormState.Lang(it, codeOptions.codeTemplates[it] ?: "") }
         stepQuizCodeLangChooserAdapter.items =
-            stepWrapper.step.block?.options?.codeTemplates?.keys?.toList() ?: emptyList()
+            codeOptions.codeTemplates.keys.toList().sorted()
 
         stepQuizCodeLangChooserTitle.setCompoundDrawables(start = R.drawable.ic_step_quiz_code_lang)
         with(stepQuizCodeLangChooser) {
@@ -125,24 +156,7 @@ class CodeStepQuizFormDelegate(
         ReplyResult.Success(Reply(code = codeLayout.text.toString(), language = codeLayout.lang))
 
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
-            ?.submission
-
-        val reply = submission?.reply
-
-        val lang =
-            reply
-                ?.language
-                ?: stepWrapper.step.block?.options?.codeTemplates?.keys?.firstOrNull() ?: ""
-        val extension = extensionForLanguage(lang)
-
+        this.state = codeStepQuizFormStateMapper.mapToFormState(codeOptions, state)
         codeLayout.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
-        codeLayout.setText(reply?.code)
-        codeLayout.lang = extension
-
-        stepQuizCodeDetailsAdapter.items =
-            codeStepQuizDetailsMapper.mapToCodeDetails(stepWrapper.step, codeLayout.lang)
-
-        codeToolbarAdapter.setLanguage(codeLayout.lang)
     }
 }

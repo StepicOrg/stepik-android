@@ -80,7 +80,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>()
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, codeStepLayout, stepQuizAction)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizCodeContainer, stepQuizAction)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }

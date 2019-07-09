@@ -5,7 +5,7 @@ import org.stepik.android.model.code.CodeLimit
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
 
 class CodeStepQuizDetailsMapper {
-    fun mapToCodeDetails(step: Step, lang: String): List<CodeDetail> {
+    fun mapToCodeDetails(step: Step, lang: String?): List<CodeDetail> {
         val options = step.block?.options
             ?: return emptyList()
 
