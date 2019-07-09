@@ -1,6 +1,7 @@
 package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.feedback.Feedback
 
 class Submission(
     @SerializedName("id")
@@ -19,7 +20,9 @@ class Submission(
     @SerializedName("session")
     val session: String? = null,
     @SerializedName("eta")
-    val eta: String? = null
+    val eta: String? = null,
+    @SerializedName("feedback")
+    val feedback: Feedback? = null
 ) {
     @Deprecated("this compatibility constructor will be removed after rewriting StepAttemptFragment in Kotlin")
     constructor(reply: Reply?, attempt: Long, status: Status?): this(id = 0, reply = reply, attempt = attempt, status = status)
@@ -30,7 +33,13 @@ class Submission(
     val reply: Reply? // this virtual property allows to work with reply like it regular class field without additional wrapper
         get() = replyWrapper?.reply
 
-    enum class Status(val scope: String) {
+//    @SerializedName("feedback")
+//    private val feedBackWrapper: FeedBackWrapper? = feedback?.let(::FeedBackWrapper)
+//
+//    val feedback: Feedback?
+//        get() = feedBackWrapper?.feedback
+
+        enum class Status(val scope: String) {
         @SerializedName("correct")
         CORRECT("correct"),
 
