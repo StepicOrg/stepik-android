@@ -49,6 +49,7 @@ class CodeStepQuizFormDelegate(
                 is CodeStepQuizFormState.Lang -> {
                     codeLayout.setText(value.code)
                     codeLayout.lang = extensionForLanguage(value.lang)
+                    stepQuizActionChangeLang.text = value.lang
 
                     codeToolbarAdapter.setLanguage(value.lang)
                 }
@@ -60,6 +61,7 @@ class CodeStepQuizFormDelegate(
 
     private val viewStateDelegate = ViewStateDelegate<CodeStepQuizFormState>()
     private val codeStepQuizFormStateMapper = CodeStepQuizFormStateMapper()
+
 
     private val codeLayout = containerView.codeStepLayout
 
@@ -85,12 +87,19 @@ class CodeStepQuizFormDelegate(
     private val stepQuizCodeLangChooser = containerView.stepQuizCodeLangChooser
     private val stepQuizCodeLangChooserAdapter = DefaultDelegateAdapter<String>()
 
+
+    private val stepQuizActions = containerView.stepQuizActions
+    private val stepQuizActionChangeLang = containerView.stepQuizActionChangeLang
+    private val stepQuizActionFullscreen = containerView.stepQuizActionFullscreen
+    private val stepQuizActionMore = containerView.stepQuizActionMore
+
+
     private val codeOptions = stepWrapper.step.block?.options ?: throw IllegalArgumentException("Code options shouldn't be null")
 
     init {
         viewStateDelegate.addState<CodeStepQuizFormState.Idle>()
         viewStateDelegate.addState<CodeStepQuizFormState.NoLang>(stepQuizCodeLangChooserTitle, stepQuizCodeLangChooser)
-        viewStateDelegate.addState<CodeStepQuizFormState.Lang>(codeLayout)
+        viewStateDelegate.addState<CodeStepQuizFormState.Lang>(codeLayout, stepQuizActions)
 
         /**
          * Details
@@ -150,6 +159,15 @@ class CodeStepQuizFormDelegate(
             layoutManager = LinearLayoutManager(context)
             adapter = stepQuizCodeLangChooserAdapter
         }
+
+        /**
+         * Actions
+         */
+        stepQuizActionChangeLang.setCompoundDrawables(end = R.drawable.ic_arrow_bottom)
+        stepQuizActionChangeLang.setOnClickListener {  }
+
+        stepQuizActionFullscreen.setOnClickListener {  }
+        stepQuizActionMore.setOnClickListener {  }
     }
 
     override fun createReply(): ReplyResult =
