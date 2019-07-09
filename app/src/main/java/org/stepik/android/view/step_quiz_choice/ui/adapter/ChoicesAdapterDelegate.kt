@@ -58,7 +58,7 @@ class ChoicesAdapterDelegate(
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
             itemChoiceCheckmark.visibility = View.INVISIBLE
             itemChoiceLatex.setAnyText(data.option)
-             layerListDrawableDelegate.showLayer(inferChoiceId(data))
+            layerListDrawableDelegate.showLayer(inferChoiceId(data))
             bindTip(data)
         }
 
