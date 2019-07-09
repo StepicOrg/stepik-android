@@ -35,4 +35,8 @@
         <item quantity="one">%d point</item>
         <item quantity="other">%d points</item>
     </plurals>
+    <plurals name="submissions">
+        <item quantity="one">%d submission</item>
+        <item quantity="other">%d submissions</item>
+    </plurals>
 </resources>

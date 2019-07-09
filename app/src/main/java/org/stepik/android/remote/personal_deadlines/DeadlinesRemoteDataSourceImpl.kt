@@ -6,6 +6,7 @@ import io.reactivex.Single
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.data.personal_deadlines.getKindOfRecord
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.toMaybe
 import org.stepic.droid.web.storage.RemoteStorageService
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.data.personal_deadlines.source.DeadlinesRemoteDataSource
@@ -41,7 +42,6 @@ constructor(
             .flatMap { response ->
                 deadlinesMapper
                     .mapToStorageRecord(response)
-                    ?.let { Maybe.just(it) }
-                    ?: Maybe.empty()
+                    .toMaybe()
             }
 }

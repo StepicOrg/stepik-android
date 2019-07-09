@@ -3,33 +3,43 @@ package org.stepik.android.model
 import com.google.gson.annotations.SerializedName
 
 class Reply(
-        val choices: List<Boolean>? = null,
-        val text: String? = null,
-        val attachments: List<Attachment>? = null,
-        val formula: String? = null,
-        val number: String? = null,
-        val ordering: List<Int>? = null,
-        val language: String? = null,
-        val code: String? = null,
+    @SerializedName("choices")
+    val choices: List<Boolean>? = null,
+    @SerializedName("text")
+    val text: String? = null,
+    @SerializedName("attachments")
+    val attachments: List<Attachment>? = null,
+    @SerializedName("formula")
+    val formula: String? = null,
+    @SerializedName("number")
+    val number: String? = null,
+    @SerializedName("ordering")
+    val ordering: List<Int>? = null,
+    @SerializedName("language")
+    val language: String? = null,
+    @SerializedName("code")
+    val code: String? = null,
 
-        @SerializedName("solve_sql")
-        val solveSql: String? = null,
+    @SerializedName("solve_sql")
+    val solveSql: String? = null,
 
-        val blanks: List<String>? = null,
-        var tableChoices: List<TableChoiceAnswer>? = null //this is not serialize by default, because  field 'choices' is already created by different type
+    @SerializedName("blanks")
+    val blanks: List<String>? = null,
+    var tableChoices: List<TableChoiceAnswer>? = null //this is not serialize by default, because  field 'choices' is already created by different type
 )
-
 
 class ReplyWrapper(val reply: Reply?)
 
-
 data class TableChoiceAnswer(
-        @SerializedName("name_row")
-        val nameRow: String,
-        val columns: List<Cell>
+    @SerializedName("name_row")
+    val nameRow: String,
+    @SerializedName("columns")
+    val columns: List<Cell>
 ) {
     data class Cell(
-            val name: String,
-            var answer: Boolean
+        @SerializedName("name")
+        val name: String,
+        @SerializedName("answer")
+        var answer: Boolean
     )
 }

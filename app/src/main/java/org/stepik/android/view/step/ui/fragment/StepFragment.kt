@@ -127,11 +127,12 @@ class StepFragment : Fragment(), StepView {
 
     private fun initStepQuizFragment() {
         val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+        stepContentSeparator.changeVisibility(isStepHasQuiz)
         stepQuizContainer.changeVisibility(isStepHasQuiz)
         if (isStepHasQuiz && childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null) {
             childFragmentManager
                 .beginTransaction()
-                .add(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper), STEP_QUIZ_FRAGMENT_TAG)
+                .add(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData), STEP_QUIZ_FRAGMENT_TAG)
                 .commitNow()
         }
     }
@@ -187,6 +188,15 @@ class StepFragment : Fragment(), StepView {
 
     override fun setNavigation(directions: Set<StepNavigationDirection>) {
         stepNavigationDelegate.setState(directions)
+        stepQuizContainer.layoutParams = (stepQuizContainer.layoutParams as ViewGroup.MarginLayoutParams)
+            .apply {
+                bottomMargin =
+                    if (stepNavigation.visibility == View.VISIBLE) {
+                        0
+                    } else {
+                        resources.getDimensionPixelSize(R.dimen.step_quiz_container_bottom_margin)
+                    }
+            }
     }
 
     override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData) {
