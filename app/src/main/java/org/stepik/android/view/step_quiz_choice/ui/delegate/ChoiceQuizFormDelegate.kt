@@ -29,6 +29,7 @@ class ChoiceQuizFormDelegate(
 
     init {
         containerView.choices_recycler.apply {
+            itemAnimator = null
             adapter = choicesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
