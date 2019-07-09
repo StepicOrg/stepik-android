@@ -5,8 +5,10 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_choice.view.*
 import org.stepic.droid.R
+import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
+import org.stepik.android.model.feedback.ChoiceFeedback
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.presentation.step_quiz_choice.model.Choice
@@ -19,7 +21,8 @@ import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
 import ru.nobird.android.ui.adapterssupport.selection.SingleChoiceSelectionHelper
 
 class ChoiceQuizFormDelegate(
-    containerView: View
+    containerView: View,
+    private val fontsProvider: FontsProvider
 ) : StepQuizFormDelegate {
     private val context = containerView.context
 
@@ -54,10 +57,10 @@ class ChoiceQuizFormDelegate(
             }
         }
         if (choicesAdapter.delegates.isEmpty()) {
-            choicesAdapter += ChoicesAdapterDelegate(selectionHelper as SelectionHelper, onClick = ::handleChoiceClick)
+            choicesAdapter += ChoicesAdapterDelegate(fontsProvider, selectionHelper as SelectionHelper, onClick = ::handleChoiceClick)
         }
         selectionHelper?.reset()
-        setChoices(reply?.choices, submission?.status)
+        setChoices(reply?.choices, submission?.status, submission?.feedback as? ChoiceFeedback)
     }
 
     override fun createReply(): ReplyResult {
@@ -80,15 +83,18 @@ class ChoiceQuizFormDelegate(
         }
     }
 
-    private fun setChoices(choices: List<Boolean>?, status: Submission.Status?) {
+    private fun setChoices(choices: List<Boolean>?, status: Submission.Status?, choiceFeedback: ChoiceFeedback?) {
         if (choices == null) return
         (0 until choices.size).forEach { pos ->
             if (choices[pos]) {
                 selectionHelper?.select(pos)
-                choicesAdapter.items[pos].correct = when (status) {
-                    Submission.Status.CORRECT -> true
-                    Submission.Status.WRONG -> false
-                    else -> null
+                choicesAdapter.items[pos].apply {
+                    correct = when (status) {
+                        Submission.Status.CORRECT -> true
+                        Submission.Status.WRONG -> false
+                        else -> null
+                    }
+                    feedback = choiceFeedback?.optionsFeedback?.get(pos) ?: ""
                 }
             }
         }

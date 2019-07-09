@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_choice_quiz.view.*
 import org.stepic.droid.R
+import org.stepic.droid.fonts.FontType
+import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.presentation.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
@@ -12,6 +14,7 @@ import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
 
 class ChoicesAdapterDelegate(
+    private val fontsProvider: FontsProvider,
     private val selectionHelper: SelectionHelper,
     private val onClick: (Choice) -> Unit
 ): AdapterDelegate<Choice, DelegateViewHolder<Choice>>() {
@@ -28,6 +31,7 @@ class ChoicesAdapterDelegate(
         private val itemChoiceContainer = root.itemChoiceContainer
         private val itemChoiceCheckmark = root.itemChoiceCheckmark
         private val itemChoiceLatex = root.itemChoiceLatex
+        private val itemChoiceFeedbackContainer = root.itemChoiceFeedbackContainer
         private val itemChoiceFeedback  = root.itemChoiceFeedback
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
@@ -58,14 +62,12 @@ class ChoicesAdapterDelegate(
         }
 
         private fun bindTip(data: Choice) {
-            if (data.feedback == null) {
-                itemChoiceFeedback.visibility = View.GONE
+            if (data.feedback.isNullOrEmpty()) {
+                itemChoiceFeedbackContainer.visibility = View.GONE
 
             } else {
-                itemChoiceFeedback.apply {
-                    visibility = View.VISIBLE
-                    text = data.feedback
-                }
+                itemChoiceFeedbackContainer.visibility = View.VISIBLE
+                itemChoiceFeedback.setPlainOrLaTeXTextWithCustomFontColored(data.feedback, fontsProvider.provideFontPath(FontType.mono), R.color.new_accent_color, true)
             }
         }
 
@@ -77,7 +79,7 @@ class ChoicesAdapterDelegate(
                         R.id.correct_layer
                     }
                     false -> {
-                        if (data.feedback == null) {
+                        if (data.feedback.isNullOrEmpty()) {
                             R.id.incorrect_layer
                         } else {
                             R.id.incorrect_layer_with_tip

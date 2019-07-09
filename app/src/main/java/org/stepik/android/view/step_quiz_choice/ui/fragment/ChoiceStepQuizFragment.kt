@@ -88,7 +88,7 @@ class ChoiceStepQuizFragment: Fragment(), StepQuizView {
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
-                stepQuizFormDelegate = ChoiceQuizFormDelegate(view),
+                stepQuizFormDelegate = ChoiceQuizFormDelegate(view, fontsProvider),
                 stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
                 stepQuizActionButton = stepQuizAction,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
