@@ -28,7 +28,7 @@ import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceQuizFormDelega
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class ChoiceStepQuizFragment: Fragment(), StepQuizView {
+class ChoiceStepQuizFragment : Fragment(), StepQuizView {
     companion object {
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
             ChoiceStepQuizFragment()
@@ -72,7 +72,6 @@ class ChoiceStepQuizFragment: Fragment(), StepQuizView {
             .apply {
                 addView(inflater.inflate(R.layout.layout_step_quiz_choice, this, false))
             }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

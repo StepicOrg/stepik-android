@@ -17,7 +17,7 @@ class ChoicesAdapterDelegate(
     private val fontsProvider: FontsProvider,
     private val selectionHelper: SelectionHelper,
     private val onClick: (Choice) -> Unit
-): AdapterDelegate<Choice, DelegateViewHolder<Choice>>() {
+) : AdapterDelegate<Choice, DelegateViewHolder<Choice>>() {
     override fun isForViewType(position: Int, data: Choice): Boolean =
         true
 
@@ -44,10 +44,11 @@ class ChoicesAdapterDelegate(
             layerListDrawableDelegate = LayerListDrawableDelegate(
                 listOf(
                     R.id.not_checked_layer,
+                    R.id.not_checked_layer_with_hint,
                     R.id.checked_layer,
                     R.id.correct_layer,
                     R.id.incorrect_layer,
-                    R.id.incorrect_layer_with_tip
+                    R.id.incorrect_layer_with_hint
                 ),
                 itemChoiceContainer.background.mutate() as LayerDrawable)
         }
@@ -57,17 +58,20 @@ class ChoicesAdapterDelegate(
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
             itemChoiceCheckmark.visibility = View.INVISIBLE
             itemChoiceLatex.setAnyText(data.option)
-            layerListDrawableDelegate.showLayer(inferChoiceId(data))
+             layerListDrawableDelegate.showLayer(inferChoiceId(data))
             bindTip(data)
         }
 
         private fun bindTip(data: Choice) {
             if (data.feedback.isNullOrEmpty()) {
                 itemChoiceFeedbackContainer.visibility = View.GONE
-
             } else {
                 itemChoiceFeedbackContainer.visibility = View.VISIBLE
-                itemChoiceFeedback.setPlainOrLaTeXTextWithCustomFontColored(data.feedback, fontsProvider.provideFontPath(FontType.mono), R.color.new_accent_color, true)
+                itemChoiceFeedback.setPlainOrLaTeXTextWithCustomFontColored(
+                    data.feedback, fontsProvider.provideFontPath(FontType.mono),
+                    R.color.new_accent_color,
+                    true
+                )
             }
         }
 
@@ -82,7 +86,7 @@ class ChoicesAdapterDelegate(
                         if (data.feedback.isNullOrEmpty()) {
                             R.id.incorrect_layer
                         } else {
-                            R.id.incorrect_layer_with_tip
+                            R.id.incorrect_layer_with_hint
                         }
                     }
                     else -> {
@@ -90,7 +94,11 @@ class ChoicesAdapterDelegate(
                     }
                 }
             } else {
-                R.id.not_checked_layer
+                if (data.feedback.isNullOrEmpty()) {
+                    R.id.not_checked_layer
+                } else {
+                    R.id.not_checked_layer_with_hint
+                }
             }
     }
 }

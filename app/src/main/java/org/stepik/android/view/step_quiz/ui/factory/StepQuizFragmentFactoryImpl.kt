@@ -23,7 +23,6 @@ constructor() : StepQuizFragmentFactory {
 
             else ->
                 Fragment()
-
         }
 
     override fun isStepCanHaveQuiz(stepPersistentWrapper: StepPersistentWrapper): Boolean =

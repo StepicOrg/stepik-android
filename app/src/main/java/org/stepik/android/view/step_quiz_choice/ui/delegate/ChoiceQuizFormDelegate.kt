@@ -94,9 +94,9 @@ class ChoiceQuizFormDelegate(
                         Submission.Status.WRONG -> false
                         else -> null
                     }
-                    feedback = choiceFeedback?.optionsFeedback?.get(pos) ?: ""
                 }
             }
+            choicesAdapter.items[pos].feedback = choiceFeedback?.optionsFeedback?.get(pos) ?: ""
         }
     }
 }
