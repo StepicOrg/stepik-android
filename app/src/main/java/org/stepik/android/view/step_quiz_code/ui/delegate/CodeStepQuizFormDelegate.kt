@@ -16,6 +16,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.inflate
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizView
@@ -27,6 +28,7 @@ import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailLimitAdapterDelegate
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailSampleAdapterDelegate
+import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeLangAdapterDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 
 class CodeStepQuizFormDelegate(
@@ -41,8 +43,8 @@ class CodeStepQuizFormDelegate(
     private val stepQuizCodeDetailsContent = containerView.stepQuizCodeDetailsContent
 
     private val stepQuizCodeDetailsAdapter = DefaultDelegateAdapter<CodeDetail>()
-
     private val codeStepQuizDetailsMapper = CodeStepQuizDetailsMapper()
+
 
     private val codeToolbarAdapter = CodeToolbarAdapter(containerView.context)
         .apply {
@@ -53,7 +55,15 @@ class CodeStepQuizFormDelegate(
             }
         }
 
+
+    private val stepQuizCodeLangChooserTitle = containerView.stepQuizCodeLangChooserTitle
+    private val stepQuizCodeLangChooser = containerView.stepQuizCodeLangChooser
+    private val stepQuizCodeLangChooserAdapter = DefaultDelegateAdapter<String>()
+
     init {
+        /**
+         * Details
+         */
         stepQuizCodeDetails.setOnClickListener {
             stepQuizCodeDetailsArrow.changeState()
             if (stepQuizCodeDetailsArrow.isExpanded()) {
@@ -76,6 +86,9 @@ class CodeStepQuizFormDelegate(
             addItemDecoration(divider)
         }
 
+        /**
+         * Keyboard extension
+         */
         keyboardExtensionContainer
             ?.getKeyboardExtensionViewContainer()
             ?.let { container ->
@@ -93,6 +106,19 @@ class CodeStepQuizFormDelegate(
                     onKeyboardShown = { stepQuizCodeKeyboardExtension.visibility = View.VISIBLE }
                 )
             }
+
+        /**
+         * Lang chooser
+         */
+        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate {}
+        stepQuizCodeLangChooserAdapter.items =
+            stepWrapper.step.block?.options?.codeTemplates?.keys?.toList() ?: emptyList()
+
+        stepQuizCodeLangChooserTitle.setCompoundDrawables(start = R.drawable.ic_step_quiz_code_lang)
+        with(stepQuizCodeLangChooser) {
+            layoutManager = LinearLayoutManager(context)
+            adapter = stepQuizCodeLangChooserAdapter
+        }
     }
 
     override fun createReply(): ReplyResult =
