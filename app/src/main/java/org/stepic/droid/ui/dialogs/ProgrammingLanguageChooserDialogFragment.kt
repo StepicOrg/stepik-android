@@ -34,7 +34,7 @@ class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
                 .positiveText(R.string.choose_action)
                 .negativeText(R.string.cancel)
                 .onPositive { _, _ ->
-                    (parentFragment as Callback).onLanguageChosen(picker.displayedValues.get(picker.value))
+                    (parentFragment as Callback).onLanguageChosen(picker.displayedValues[picker.value])
                 }
                 .build()
     }

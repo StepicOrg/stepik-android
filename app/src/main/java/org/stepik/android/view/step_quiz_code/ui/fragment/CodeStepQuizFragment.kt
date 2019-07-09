@@ -17,6 +17,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
@@ -31,6 +32,8 @@ import javax.inject.Inject
 
 class CodeStepQuizFragment : Fragment(), StepQuizView {
     companion object {
+        private const val CODE_PLAYGROUND_REQUEST = 153
+
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
             CodeStepQuizFragment()
                 .apply {
@@ -52,6 +55,8 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizView.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate
+
+    private lateinit var codeStepQuizFormDelegate: CodeStepQuizFormDelegate
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,10 +90,28 @@ class CodeStepQuizFragment : Fragment(), StepQuizView {
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
 
+        val actionsListener = object : CodeStepQuizFormDelegate.ActionsListener {
+            override fun onChangeLanguageClicked() {
+
+            }
+
+            override fun onFullscreenClicked(lang: String, code: String) {
+                val intent = CodePlaygroundActivity.intentForLaunch(requireActivity(), code, lang,
+                    stepWrapper.step.block?.options ?: throw IllegalStateException("can't find code options in code quiz"))
+                startActivityForResult(intent, CODE_PLAYGROUND_REQUEST)
+            }
+
+            override fun onResetClicked() {
+
+            }
+        }
+
+        codeStepQuizFormDelegate = CodeStepQuizFormDelegate(view, parentOfType(), stepWrapper, actionsListener)
+
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
-                stepQuizFormDelegate = CodeStepQuizFormDelegate(view, parentOfType(), stepWrapper),
+                stepQuizFormDelegate = codeStepQuizFormDelegate,
                 stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
                 stepQuizActionButton = stepQuizAction,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
