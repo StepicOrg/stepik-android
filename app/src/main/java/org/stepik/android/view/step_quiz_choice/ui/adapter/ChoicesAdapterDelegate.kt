@@ -3,7 +3,7 @@ package org.stepik.android.view.step_quiz_choice.ui.adapter
 import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_choice_quiz.view.*
+import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import org.stepic.droid.R
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
@@ -22,7 +22,7 @@ class ChoicesAdapterDelegate(
         true
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<Choice> =
-        ViewHolder(createView(parent, R.layout.item_choice_quiz))
+        ViewHolder(createView(parent, R.layout.item_step_quiz_choice))
 
     inner class ViewHolder(
         root: View
@@ -56,13 +56,17 @@ class ChoicesAdapterDelegate(
         override fun onBind(data: Choice) {
             itemView.itemChoiceContainer.isEnabled = data.isEnabled
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            itemChoiceCheckmark.visibility = View.INVISIBLE
+            if (data.correct == true) {
+                itemChoiceCheckmark.visibility = View.VISIBLE
+            } else {
+                itemChoiceCheckmark.visibility = View.INVISIBLE
+            }
             itemChoiceLatex.setAnyText(data.option)
-            layerListDrawableDelegate.showLayer(inferChoiceId(data))
-            bindTip(data)
+            layerListDrawableDelegate.showLayer(getItemBackgroundLayer(data))
+            bindHint(data)
         }
 
-        private fun bindTip(data: Choice) {
+        private fun bindHint(data: Choice) {
             if (data.feedback.isNullOrEmpty()) {
                 itemChoiceFeedbackContainer.visibility = View.GONE
             } else {
@@ -75,11 +79,10 @@ class ChoicesAdapterDelegate(
             }
         }
 
-        private fun inferChoiceId(data: Choice): Int =
+        private fun getItemBackgroundLayer(data: Choice): Int =
             if (itemView.isSelected) {
                 when (data.correct) {
                     true -> {
-                        itemChoiceCheckmark.visibility = View.VISIBLE
                         R.id.correct_layer
                     }
                     false -> {

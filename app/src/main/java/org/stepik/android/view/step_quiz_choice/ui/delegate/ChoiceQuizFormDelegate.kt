@@ -28,10 +28,10 @@ class ChoiceQuizFormDelegate(
 
     private val quizDescription = containerView.stepQuizDescription
     private var choicesAdapter: DefaultDelegateAdapter<Choice> = DefaultDelegateAdapter()
-    private var selectionHelper: SelectionHelper? = null
+    private lateinit var selectionHelper: SelectionHelper
 
     init {
-        containerView.choices_recycler.apply {
+        containerView.choicesRecycler.apply {
             itemAnimator = null
             adapter = choicesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -49,17 +49,15 @@ class ChoiceQuizFormDelegate(
 
         choicesAdapter.items = dataset.options?.map { Choice(it, isEnabled = StepQuizFormResolver.isQuizEnabled(state)) } ?: return
 
-        if (selectionHelper == null) {
+        if (choicesAdapter.delegates.isEmpty()) {
             selectionHelper = if (dataset.isMultipleChoice) {
                 MultipleChoiceSelectionHelper(choicesAdapter)
             } else {
                 SingleChoiceSelectionHelper(choicesAdapter)
             }
+            choicesAdapter += ChoicesAdapterDelegate(fontsProvider, selectionHelper, onClick = ::handleChoiceClick)
         }
-        if (choicesAdapter.delegates.isEmpty()) {
-            choicesAdapter += ChoicesAdapterDelegate(fontsProvider, selectionHelper as SelectionHelper, onClick = ::handleChoiceClick)
-        }
-        selectionHelper?.reset()
+        selectionHelper.reset()
         setChoices(reply?.choices, submission?.status, submission?.feedback as? ChoiceFeedback)
     }
 
@@ -75,10 +73,10 @@ class ChoiceQuizFormDelegate(
     private fun handleChoiceClick(choice: Choice) {
         when (selectionHelper) {
             is SingleChoiceSelectionHelper -> {
-                selectionHelper?.select(choicesAdapter.items.indexOf(choice))
+                selectionHelper.select(choicesAdapter.items.indexOf(choice))
             }
             is MultipleChoiceSelectionHelper -> {
-                selectionHelper?.toggle(choicesAdapter.items.indexOf(choice))
+                selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
             }
         }
     }
@@ -87,7 +85,7 @@ class ChoiceQuizFormDelegate(
         if (choices == null) return
         (0 until choices.size).forEach { pos ->
             if (choices[pos]) {
-                selectionHelper?.select(pos)
+                selectionHelper.select(pos)
                 choicesAdapter.items[pos].apply {
                     correct = when (status) {
                         Submission.Status.CORRECT -> true

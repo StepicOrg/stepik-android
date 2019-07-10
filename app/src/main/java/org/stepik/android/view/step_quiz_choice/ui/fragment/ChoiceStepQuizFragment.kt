@@ -79,7 +79,7 @@ class ChoiceStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>()
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, choices_recycler, stepQuizDescription, stepQuizAction)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, choicesRecycler, stepQuizDescription, stepQuizAction)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }

@@ -210,13 +210,13 @@
     <color name="step_quiz_feedback_wrong_background">#26ff7965</color>
 
     <!-- Choice quiz -->
-    <color name="choice_not_checked">#ffffff</color>
-    <color name="choice_checked">#e8eafa</color>
-    <color name="choice_correct">#e7f7e7</color>
-    <color name="choice_incorrect">#ffebe7</color>
+    <color name="step_quiz_choice_not_checked">#ffffff</color>
+    <color name="step_quiz_choice_checked">#e8eafa</color>
+    <color name="step_quiz_choice_correct">#e7f7e7</color>
+    <color name="step_quiz_choice_incorrect">#ffebe7</color>
 
-    <color name="choice_not_checked_border">#888888</color>
-    <color name="choice_checked_border">@color/color_violet_1</color>
-    <color name="choice_correct_border">#64cc64</color>
-    <color name="choice_incorrect_border">#ff7965</color>
+    <color name="step_quiz_choice_not_checked_border">#888888</color>
+    <color name="step_quiz_choice_checked_border">@color/color_violet_1</color>
+    <color name="step_quiz_choice_correct_border">#64cc64</color>
+    <color name="step_quiz_choice_incorrect_border">#ff7965</color>
 </resources>

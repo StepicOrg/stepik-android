@@ -6,14 +6,14 @@
     android:layout_marginBottom="8dp"
     android:orientation="vertical">
 
-    <org.stepic.droid.ui.custom.QuizItemView
+    <org.stepik.android.view.step_quiz_choice.ui.view.QuizItemView
         android:id="@+id/itemChoiceContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_choice_quiz_item"
+        android:background="@drawable/bg_step_quiz_choice_item"
         android:padding="16dp">
 
-        <ImageView
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/itemChoiceCheckmark"
             android:layout_width="16dp"
             android:layout_height="16dp"
@@ -27,7 +27,7 @@
             android:layout_marginEnd="24dp"
             android:textSize="16sp"
             android:layout_marginRight="24dp" />
-    </org.stepic.droid.ui.custom.QuizItemView>
+    </org.stepik.android.view.step_quiz_choice.ui.view.QuizItemView>
 
     <FrameLayout
         android:id="@+id/itemChoiceFeedbackContainer"

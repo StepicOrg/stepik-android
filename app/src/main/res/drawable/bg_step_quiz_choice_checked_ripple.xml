@@ -4,7 +4,7 @@
         <shape android:shape="rectangle" >
             <stroke
                 android:width="1dp"
-                android:color="@color/choice_checked_border" />
+                android:color="@color/step_quiz_choice_checked_border" />
             <corners android:radius="8dp" />
         </shape>
     </item>

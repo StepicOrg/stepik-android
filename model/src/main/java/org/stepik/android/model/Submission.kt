@@ -33,12 +33,6 @@ class Submission(
     val reply: Reply? // this virtual property allows to work with reply like it regular class field without additional wrapper
         get() = replyWrapper?.reply
 
-//    @SerializedName("feedback")
-//    private val feedBackWrapper: FeedBackWrapper? = feedback?.let(::FeedBackWrapper)
-//
-//    val feedback: Feedback?
-//        get() = feedBackWrapper?.feedback
-
         enum class Status(val scope: String) {
         @SerializedName("correct")
         CORRECT("correct"),
