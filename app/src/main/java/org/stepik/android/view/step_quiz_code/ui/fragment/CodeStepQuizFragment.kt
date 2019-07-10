@@ -186,7 +186,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
                     ?.let { intent ->
                         val lang = intent.getStringExtra(CodePlaygroundActivity.LANG_KEY)
                         val code = intent.getStringExtra(CodePlaygroundActivity.CODE_KEY)
-                        fullscreenResult = lang to code
+                        fullscreenResult = lang to code // todo: remove after fullscreen code quiz refactor
                     }
 
             else ->

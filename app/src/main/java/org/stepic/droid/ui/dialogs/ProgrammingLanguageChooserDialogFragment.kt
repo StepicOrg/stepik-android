@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import biz.kasual.materialnumberpicker.MaterialNumberPicker
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.initForCodeLanguages
 
@@ -29,13 +30,14 @@ class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
         picker.initForCodeLanguages(arguments?.getStringArray(LANGUAGES_KEY)!!)
 
         return MaterialDialog.Builder(requireContext())
-                .title(R.string.choose_language)
-                .customView(picker, false)
-                .positiveText(R.string.choose_action)
-                .negativeText(R.string.cancel)
-                .onPositive { _, _ ->
-                    (parentFragment as Callback).onLanguageChosen(picker.displayedValues[picker.value])
-                }
-                .build()
+            .theme(Theme.LIGHT)
+            .title(R.string.choose_language)
+            .customView(picker, false)
+            .positiveText(R.string.choose_action)
+            .negativeText(R.string.cancel)
+            .onPositive { _, _ ->
+                (parentFragment as Callback).onLanguageChosen(picker.displayedValues[picker.value])
+            }
+            .build()
     }
 }
