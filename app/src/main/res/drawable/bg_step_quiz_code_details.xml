@@ -5,5 +5,5 @@
             <solid android:color="@color/new_primary_color" />
         </shape>
     </item>
-    <item android:drawable="?selectableItemBackground" />
+    <item android:drawable="@drawable/bg_step_quiz_code_details_ripple" />
 </layer-list>
