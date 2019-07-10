@@ -20,10 +20,6 @@
             android:layout_gravity="center_vertical|end"
             app:srcCompat="@drawable/ic_correct_checkmark"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
         <org.stepic.droid.ui.custom.ProgressLatexView
             android:id="@+id/itemChoiceLatex"
             android:layout_width="match_parent"
