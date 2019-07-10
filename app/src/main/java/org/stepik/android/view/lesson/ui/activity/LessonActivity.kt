@@ -11,7 +11,6 @@ import android.support.v4.view.ViewPager
 import android.support.v7.content.res.AppCompatResources
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewGroup
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
@@ -31,7 +30,6 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
-import org.stepik.android.view.base.ui.interfaces.KeyboardExtensionContainer
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate

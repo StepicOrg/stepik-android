@@ -738,6 +738,7 @@
     <string name="step_quiz_code_detail_limit_value_memory">%d МБ</string>
 
     <string name="step_quiz_code_lang_chooser">Выберите язык</string>
+    <string name="step_quiz_code_empty_lang">Перед отправкой решения выберите язык программирования из списка</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>

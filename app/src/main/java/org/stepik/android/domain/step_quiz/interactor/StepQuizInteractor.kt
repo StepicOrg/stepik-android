@@ -89,7 +89,6 @@ constructor(
             AppConstants.TYPE_NUMBER,
             AppConstants.TYPE_MATH,
             AppConstants.TYPE_FREE_ANSWER,
-                
             AppConstants.TYPE_CODE ->
                 false
 

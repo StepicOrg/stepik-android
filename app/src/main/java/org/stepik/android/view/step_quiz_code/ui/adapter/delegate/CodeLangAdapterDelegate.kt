@@ -13,7 +13,7 @@ class CodeLangAdapterDelegate(
         ViewHolder(createView(parent, R.layout.item_step_quiz_code_lang) as TextView)
 
     override fun isForViewType(position: Int, data: String): Boolean =
-       true
+        true
 
     private inner class ViewHolder(private val root: TextView) : DelegateViewHolder<String>(root) {
         init {

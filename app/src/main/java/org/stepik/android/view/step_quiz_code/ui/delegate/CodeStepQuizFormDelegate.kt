@@ -67,7 +67,6 @@ class CodeStepQuizFormDelegate(
     private val viewStateDelegate = ViewStateDelegate<CodeStepQuizFormState>()
     private val codeStepQuizFormStateMapper = CodeStepQuizFormStateMapper()
 
-
     private val codeLayout = containerView.codeStepLayout
 
     private val stepQuizCodeDetails = containerView.stepQuizCodeDetails
@@ -76,7 +75,6 @@ class CodeStepQuizFormDelegate(
 
     private val stepQuizCodeDetailsAdapter = DefaultDelegateAdapter<CodeDetail>()
     private val codeStepQuizDetailsMapper = CodeStepQuizDetailsMapper()
-
 
     private val codeToolbarAdapter = CodeToolbarAdapter(containerView.context)
         .apply {
@@ -87,17 +85,14 @@ class CodeStepQuizFormDelegate(
             }
         }
 
-
     private val stepQuizCodeLangChooserTitle = containerView.stepQuizCodeLangChooserTitle
     private val stepQuizCodeLangChooser = containerView.stepQuizCodeLangChooser
     private val stepQuizCodeLangChooserAdapter = DefaultDelegateAdapter<String>()
-
 
     private val stepQuizActions = containerView.stepQuizActions
     private val stepQuizActionChangeLang = containerView.stepQuizActionChangeLang
     private val stepQuizActionFullscreen = containerView.stepQuizActionFullscreen
     private val stepQuizActionMore = containerView.stepQuizActionMore
-
 
     private val codeOptions = stepWrapper.step.block?.options ?: throw IllegalArgumentException("Code options shouldn't be null")
 
@@ -206,7 +201,7 @@ class CodeStepQuizFormDelegate(
         return if (state is CodeStepQuizFormState.Lang) {
             ReplyResult.Success(Reply(code = codeLayout.text.toString(), language = state.lang))
         } else {
-            ReplyResult.Error("Choose lang")
+            ReplyResult.Error(codeLayout.context.getString(R.string.step_quiz_code_empty_lang))
         }
     }
 
