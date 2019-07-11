@@ -11,9 +11,9 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="12dp"
-    android:paddingBottom="12dp"
 
     android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp"
 
     app:layout_constraintVertical_bias="0"
 

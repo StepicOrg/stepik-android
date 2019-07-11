@@ -33,7 +33,7 @@ class Submission(
     val reply: Reply? // this virtual property allows to work with reply like it regular class field without additional wrapper
         get() = replyWrapper?.reply
 
-        enum class Status(val scope: String) {
+    enum class Status(val scope: String) {
         @SerializedName("correct")
         CORRECT("correct"),
 

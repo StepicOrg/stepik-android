@@ -21,15 +21,11 @@ class QuizItemView @JvmOverloads constructor(
         const val MAX_CLICK_DURATION = 200
     }
 
-    private var startClickTime: Long = 0
     private var clickDuration: Long = 0
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         val webview = findViewById<ProgressLatexView>(R.id.itemChoiceLatex)
         val dispatched = webview.webView.dispatchTouchEvent(ev)
-        if (ev?.action == MotionEvent.ACTION_DOWN) {
-            startClickTime = ev.eventTime
-        }
         if (ev?.action == MotionEvent.ACTION_UP) {
             clickDuration = ev.eventTime - ev.downTime
         }
