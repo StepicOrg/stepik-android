@@ -57,14 +57,14 @@ class ChoiceStepQuizFormDelegate(
             choicesAdapter += ChoicesAdapterDelegate(fontsProvider, selectionHelper, onClick = ::handleChoiceClick)
         }
 
-        selectionHelper.reset()
-
         choicesAdapter.items = choiceStepQuizOptionsMapper.mapChoices(
             dataset.options ?: emptyList(),
             reply?.choices,
             submission,
             StepQuizFormResolver.isQuizEnabled(state)
         )
+
+        selectionHelper.reset()
         reply?.choices?.let {
             it.forEachIndexed { index, choice ->
                 if (choice) {
@@ -76,17 +76,20 @@ class ChoiceStepQuizFormDelegate(
 
     override fun createReply(): ReplyResult {
         val choices = (0 until choicesAdapter.itemCount).map { selectionHelper.isSelected(it) }
-        return if (choices.contains(true)) {
-            ReplyResult.Success(Reply(choices = choices))
-        } else {
+        return if ((true !in choices && selectionHelper is SingleChoiceSelectionHelper)) {
             ReplyResult.Error(context.getString(R.string.step_quiz_choice_empty_reply))
+        } else {
+            ReplyResult.Success(Reply(choices = choices))
         }
     }
 
     private fun handleChoiceClick(choice: Choice) {
         when (selectionHelper) {
-            is SingleChoiceSelectionHelper -> selectionHelper.select(choicesAdapter.items.indexOf(choice))
-            is MultipleChoiceSelectionHelper -> selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
+            is SingleChoiceSelectionHelper ->
+                selectionHelper.select(choicesAdapter.items.indexOf(choice))
+
+            is MultipleChoiceSelectionHelper ->
+                selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
         }
     }
 }

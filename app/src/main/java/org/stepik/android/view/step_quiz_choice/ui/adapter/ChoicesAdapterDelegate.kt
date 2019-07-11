@@ -82,15 +82,18 @@ class ChoicesAdapterDelegate(
         private fun getItemBackgroundLayer(data: Choice): Int =
             if (itemView.isSelected) {
                 when (data.correct) {
-                    true -> R.id.correct_layer
-                    false -> {
+                    true ->
+                        R.id.correct_layer
+
+                    false ->
                         if (data.feedback.isNullOrEmpty()) {
                             R.id.incorrect_layer
                         } else {
                             R.id.incorrect_layer_with_hint
                         }
-                    }
-                    else -> R.id.checked_layer
+
+                    else ->
+                        R.id.checked_layer
                 }
             } else {
                 if (data.feedback.isNullOrEmpty()) {
