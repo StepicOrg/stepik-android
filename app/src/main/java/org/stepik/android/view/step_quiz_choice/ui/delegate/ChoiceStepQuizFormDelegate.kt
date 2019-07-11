@@ -7,26 +7,26 @@ import kotlinx.android.synthetic.main.layout_step_quiz_choice.view.*
 import org.stepic.droid.R
 import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.model.Reply
-import org.stepik.android.model.Submission
-import org.stepik.android.model.feedback.ChoiceFeedback
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
-import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
+import org.stepik.android.view.step_quiz_choice.mapper.ChoiceStepQuizOptionsMapper
+import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.adapter.ChoicesAdapterDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapterssupport.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
 import ru.nobird.android.ui.adapterssupport.selection.SingleChoiceSelectionHelper
 
-class ChoiceQuizFormDelegate(
+class ChoiceStepQuizFormDelegate(
     containerView: View,
     private val fontsProvider: FontsProvider
 ) : StepQuizFormDelegate {
     private val context = containerView.context
 
     private val quizDescription = containerView.stepQuizDescription
+    private val choiceStepQuizOptionsMapper = ChoiceStepQuizOptionsMapper()
     private var choicesAdapter: DefaultDelegateAdapter<Choice> = DefaultDelegateAdapter()
     private lateinit var selectionHelper: SelectionHelper
 
@@ -56,8 +56,16 @@ class ChoiceQuizFormDelegate(
                 }
             choicesAdapter += ChoicesAdapterDelegate(fontsProvider, selectionHelper, onClick = ::handleChoiceClick)
         }
+
         selectionHelper.reset()
-        mapChoices(dataset.options ?: emptyList(), reply?.choices, submission, StepQuizFormResolver.isQuizEnabled(state))
+
+        choicesAdapter.items = choiceStepQuizOptionsMapper.mapChoices(
+            dataset.options ?: emptyList(),
+            reply?.choices,
+            submission,
+            StepQuizFormResolver.isQuizEnabled(state)
+        )
+        choiceStepQuizOptionsMapper.mapSelections(reply?.choices, selectionHelper)
     }
 
     override fun createReply(): ReplyResult {
@@ -78,30 +86,5 @@ class ChoiceQuizFormDelegate(
                 selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
             }
         }
-    }
-
-    private fun mapChoices(options: List<String>, choices: List<Boolean>?, submission: Submission?, isQuizEnabled: Boolean) {
-        val feedback = submission?.feedback as? ChoiceFeedback
-
-        choicesAdapter.items =
-            options.mapIndexed { i, option ->
-                val isCorrect =
-                    if (choices?.getOrNull(i) == true) {
-                        selectionHelper.select(i)
-                        when (submission?.status) {
-                            Submission.Status.CORRECT -> true
-                            Submission.Status.WRONG -> false
-                            else -> null
-                        }
-                    } else {
-                        null
-                    }
-                Choice(
-                    option = option,
-                    feedback = feedback?.optionsFeedback?.getOrNull(i),
-                    correct = isCorrect,
-                    isEnabled = isQuizEnabled
-                )
-            }
     }
 }
