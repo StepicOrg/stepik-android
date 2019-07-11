@@ -1,4 +1,4 @@
-package org.stepik.android.presentation.step_quiz_choice.model
+package org.stepik.android.view.step_quiz_choice.model
 
 import ru.nobird.android.core.model.Identifiable
 

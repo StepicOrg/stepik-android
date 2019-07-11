@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import org.stepic.droid.R
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
-import org.stepik.android.presentation.step_quiz_choice.model.Choice
+import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder

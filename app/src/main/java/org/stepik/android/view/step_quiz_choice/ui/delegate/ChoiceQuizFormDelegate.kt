@@ -11,7 +11,7 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.feedback.ChoiceFeedback
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
-import org.stepik.android.presentation.step_quiz_choice.model.Choice
+import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.ui.adapter.ChoicesAdapterDelegate
