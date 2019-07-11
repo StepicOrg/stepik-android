@@ -15,7 +15,7 @@ constructor(
         submissionRemoteDataSource.createSubmission(submission)
 
     override fun getSubmissionsForAttempt(attemptId: Long): Single<List<Submission>> =
-        submissionRemoteDataSource.getSubmissionsForAttemtp(attemptId)
+        submissionRemoteDataSource.getSubmissionsForAttempt(attemptId)
 
     override fun getSubmissionsForStep(stepId: Long): Single<List<Submission>> =
         submissionRemoteDataSource.getSubmissionsForStep(stepId)
