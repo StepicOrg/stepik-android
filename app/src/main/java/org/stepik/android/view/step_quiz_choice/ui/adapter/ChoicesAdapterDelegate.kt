@@ -56,10 +56,10 @@ class ChoicesAdapterDelegate(
         override fun onBind(data: Choice) {
             itemView.itemChoiceContainer.isEnabled = data.isEnabled
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            if (data.correct == true) {
-                itemChoiceCheckmark.visibility = View.VISIBLE
+            itemChoiceCheckmark.visibility = if (data.correct == true) {
+                View.VISIBLE
             } else {
-                itemChoiceCheckmark.visibility = View.INVISIBLE
+                View.INVISIBLE
             }
             itemChoiceLatex.setAnyText(data.option)
             layerListDrawableDelegate.showLayer(getItemBackgroundLayer(data))
@@ -82,9 +82,7 @@ class ChoicesAdapterDelegate(
         private fun getItemBackgroundLayer(data: Choice): Int =
             if (itemView.isSelected) {
                 when (data.correct) {
-                    true -> {
-                        R.id.correct_layer
-                    }
+                    true -> R.id.correct_layer
                     false -> {
                         if (data.feedback.isNullOrEmpty()) {
                             R.id.incorrect_layer
@@ -92,9 +90,7 @@ class ChoicesAdapterDelegate(
                             R.id.incorrect_layer_with_hint
                         }
                     }
-                    else -> {
-                        R.id.checked_layer
-                    }
+                    else -> R.id.checked_layer
                 }
             } else {
                 if (data.feedback.isNullOrEmpty()) {

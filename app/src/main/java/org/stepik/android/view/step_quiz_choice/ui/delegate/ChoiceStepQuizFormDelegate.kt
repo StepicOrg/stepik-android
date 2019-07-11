@@ -65,7 +65,13 @@ class ChoiceStepQuizFormDelegate(
             submission,
             StepQuizFormResolver.isQuizEnabled(state)
         )
-        choiceStepQuizOptionsMapper.mapSelections(reply?.choices, selectionHelper)
+        reply?.choices?.let {
+            it.forEachIndexed { index, choice ->
+                if (choice) {
+                    selectionHelper.select(index)
+                }
+            }
+        }
     }
 
     override fun createReply(): ReplyResult {
@@ -79,12 +85,8 @@ class ChoiceStepQuizFormDelegate(
 
     private fun handleChoiceClick(choice: Choice) {
         when (selectionHelper) {
-            is SingleChoiceSelectionHelper -> {
-                selectionHelper.select(choicesAdapter.items.indexOf(choice))
-            }
-            is MultipleChoiceSelectionHelper -> {
-                selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
-            }
+            is SingleChoiceSelectionHelper -> selectionHelper.select(choicesAdapter.items.indexOf(choice))
+            is MultipleChoiceSelectionHelper -> selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
         }
     }
 }
