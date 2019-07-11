@@ -47,7 +47,11 @@ class ChoiceQuizFormDelegate(
 
         val reply = submission?.reply
 
-        choicesAdapter.items = dataset.options?.map { Choice(it, isEnabled = StepQuizFormResolver.isQuizEnabled(state)) } ?: return
+        if (choicesAdapter.items.isEmpty()) {
+            choicesAdapter.items = dataset.options?.map { Choice(it, isEnabled = StepQuizFormResolver.isQuizEnabled(state)) } ?: return
+        } else {
+            setOptions(dataset.options, StepQuizFormResolver.isQuizEnabled(state))
+        }
 
         if (choicesAdapter.delegates.isEmpty()) {
             selectionHelper = if (dataset.isMultipleChoice) {
@@ -62,7 +66,7 @@ class ChoiceQuizFormDelegate(
     }
 
     override fun createReply(): ReplyResult {
-        val choices = (0 until choicesAdapter.itemCount).map { selectionHelper?.isSelected(it) as Boolean }
+        val choices = (0 until choicesAdapter.itemCount).map { selectionHelper.isSelected(it) }
         return if (choices.contains(true)) {
             ReplyResult.Success(Reply(choices = choices))
         } else {
@@ -78,6 +82,24 @@ class ChoiceQuizFormDelegate(
             is MultipleChoiceSelectionHelper -> {
                 selectionHelper.toggle(choicesAdapter.items.indexOf(choice))
             }
+        }
+    }
+
+    private fun setOptions(receivedOptions: List<String>?, isQuizEnabled: Boolean) {
+        if (receivedOptions == null) return
+
+        val currentOptions = choicesAdapter.items.map { it.option }
+
+        if (currentOptions != receivedOptions) {
+            (0 until choicesAdapter.itemCount).forEach {
+                choicesAdapter.items[it].apply {
+                    option = receivedOptions[it]
+                    correct = null
+                    feedback = null
+                    isEnabled = isQuizEnabled
+                }
+            }
+            choicesAdapter.notifyDataSetChanged()
         }
     }
 
