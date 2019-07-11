@@ -47,22 +47,17 @@ class ChoiceQuizFormDelegate(
 
         val reply = submission?.reply
 
-        if (choicesAdapter.items.isEmpty()) {
-            choicesAdapter.items = dataset.options?.map { Choice(it, isEnabled = StepQuizFormResolver.isQuizEnabled(state)) } ?: return
-        } else {
-            setOptions(dataset.options, StepQuizFormResolver.isQuizEnabled(state))
-        }
-
-        if (choicesAdapter.delegates.isEmpty()) {
-            selectionHelper = if (dataset.isMultipleChoice) {
-                MultipleChoiceSelectionHelper(choicesAdapter)
-            } else {
-                SingleChoiceSelectionHelper(choicesAdapter)
-            }
+        if (!::selectionHelper.isInitialized) {
+            selectionHelper =
+                if (dataset.isMultipleChoice) {
+                    MultipleChoiceSelectionHelper(choicesAdapter)
+                } else {
+                    SingleChoiceSelectionHelper(choicesAdapter)
+                }
             choicesAdapter += ChoicesAdapterDelegate(fontsProvider, selectionHelper, onClick = ::handleChoiceClick)
         }
         selectionHelper.reset()
-        setChoices(reply?.choices, submission?.status, submission?.feedback as? ChoiceFeedback)
+        mapChoices(dataset.options ?: emptyList(), reply?.choices, submission, StepQuizFormResolver.isQuizEnabled(state))
     }
 
     override fun createReply(): ReplyResult {
@@ -85,38 +80,28 @@ class ChoiceQuizFormDelegate(
         }
     }
 
-    private fun setOptions(receivedOptions: List<String>?, isQuizEnabled: Boolean) {
-        if (receivedOptions == null) return
+    private fun mapChoices(options: List<String>, choices: List<Boolean>?, submission: Submission?, isQuizEnabled: Boolean) {
+        val feedback = submission?.feedback as? ChoiceFeedback
 
-        val currentOptions = choicesAdapter.items.map { it.option }
-
-        if (currentOptions != receivedOptions) {
-            (0 until choicesAdapter.itemCount).forEach {
-                choicesAdapter.items[it].apply {
-                    option = receivedOptions[it]
-                    correct = null
-                    feedback = null
-                    isEnabled = isQuizEnabled
-                }
-            }
-            choicesAdapter.notifyDataSetChanged()
-        }
-    }
-
-    private fun setChoices(choices: List<Boolean>?, status: Submission.Status?, choiceFeedback: ChoiceFeedback?) {
-        if (choices == null) return
-        (0 until choices.size).forEach { pos ->
-            if (choices[pos]) {
-                selectionHelper.select(pos)
-                choicesAdapter.items[pos].apply {
-                    correct = when (status) {
-                        Submission.Status.CORRECT -> true
-                        Submission.Status.WRONG -> false
-                        else -> null
+        choicesAdapter.items =
+            options.mapIndexed { i, option ->
+                val isCorrect =
+                    if (choices?.getOrNull(i) == true) {
+                        selectionHelper.select(i)
+                        when (submission?.status) {
+                            Submission.Status.CORRECT -> true
+                            Submission.Status.WRONG -> false
+                            else -> null
+                        }
+                    } else {
+                        null
                     }
-                }
+                Choice(
+                    option = option,
+                    feedback = feedback?.optionsFeedback?.getOrNull(i),
+                    correct = isCorrect,
+                    isEnabled = isQuizEnabled
+                )
             }
-            choicesAdapter.items[pos].feedback = choiceFeedback?.optionsFeedback?.get(pos) ?: ""
-        }
     }
 }
