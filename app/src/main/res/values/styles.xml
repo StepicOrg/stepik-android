@@ -247,16 +247,12 @@
         <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
     </style>
 
-    <style name="StepikButtonStyleBase" parent="Base.Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_width">wrap_content</item>
+    <style name="LoginButtons" parent="Base.Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">@dimen/auth_elements_width</item>
         <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
         <item name="android:background">@drawable/login_button_background</item>
         <item name="android:textColor">@color/login_button_text_color</item>
         <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="LoginButtons" parent="StepikButtonStyleBase">
-        <item name="android:layout_width">@dimen/auth_elements_width</item>
         <item name="android:textSize">@dimen/launch_button_text_size</item>
     </style>
 
