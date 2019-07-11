@@ -104,10 +104,10 @@
     <color name="login_edit_text_block_background_color_wrong">#0CC82850</color>
 
 
-    <color name="login_button_color">#1966CC66</color>
+    <color name="login_button_color">@color/stepic_brand_primary_dark</color>
     <color name="login_button_color_pressed">#6666CC66</color>
     <color name="login_button_color_disabled">#0C66CC66</color>
-    <color name="login_button_text_color_enabled">@color/stepic_brand_primary</color>
+    <color name="login_button_text_color_enabled">#FFFFFF</color>
     <color name="login_button_text_color_disabled">#6666CC66</color>
 
     <color name="login_error_color">@color/new_red_color</color>
