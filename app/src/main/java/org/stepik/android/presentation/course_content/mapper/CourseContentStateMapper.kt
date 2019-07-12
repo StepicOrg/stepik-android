@@ -77,14 +77,16 @@ constructor(
         courseContent
             .map { item ->
                 if (item is CourseContentItem.SectionItem) {
+                    val sectionDates = sectionDatesMapper.mapSectionDates(item.section)
                     val dates = deadlinesRecord
                         ?.data
                         ?.deadlines
                         ?.find { it.section == item.section.id }
                         ?.let { deadline ->
-                            listOf(CourseContentSectionDate(R.string.course_content_timeline_deadline, deadline.deadline))
+                            (listOf(CourseContentSectionDate(R.string.course_content_timeline_deadline, deadline.deadline)) + sectionDates)
+                                .sortedBy { it.date.time }
                         }
-                        ?: sectionDatesMapper.mapSectionDates(item.section)
+                        ?: sectionDates
                     item.copy(dates = dates)
                 } else {
                     item
