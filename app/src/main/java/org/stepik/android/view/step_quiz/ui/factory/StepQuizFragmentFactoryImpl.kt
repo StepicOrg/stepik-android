@@ -6,6 +6,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
+import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
 import javax.inject.Inject
 
 class StepQuizFragmentFactoryImpl
@@ -18,6 +19,8 @@ constructor() : StepQuizFragmentFactory {
             AppConstants.TYPE_MATH,
             AppConstants.TYPE_FREE_ANSWER ->
                 TextStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+            AppConstants.TYPE_CHOICE ->
+                ChoiceStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
 
             AppConstants.TYPE_CODE ->
                 CodeStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)

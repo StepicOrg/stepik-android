@@ -1,6 +1,7 @@
 package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.feedback.Feedback
 
 class Submission(
     @SerializedName("id")
@@ -19,7 +20,9 @@ class Submission(
     @SerializedName("session")
     val session: String? = null,
     @SerializedName("eta")
-    val eta: String? = null
+    val eta: String? = null,
+    @SerializedName("feedback")
+    val feedback: Feedback? = null
 ) {
     @Deprecated("this compatibility constructor will be removed after rewriting StepAttemptFragment in Kotlin")
     constructor(reply: Reply?, attempt: Long, status: Status?): this(id = 0, reply = reply, attempt = attempt, status = status)
