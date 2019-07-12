@@ -32,6 +32,7 @@ import org.stepic.droid.di.network.StethoInterceptor;
 import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
+import org.stepic.droid.jsonHelpers.deserializers.FeedbackDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
 import org.stepic.droid.model.NotificationCategory;
@@ -64,6 +65,7 @@ import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.attempts.DatasetWrapper;
 import org.stepik.android.model.comments.Comment;
 import org.stepik.android.model.comments.Vote;
+import org.stepik.android.model.feedback.Feedback;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
@@ -380,6 +382,7 @@ public class ApiImpl implements Api {
                 .registerTypeAdapter(ReplyWrapper.class, new ReplyDeserializer())
                 .registerTypeAdapter(ReplyWrapper.class, new ReplySerializer())
                 .registerTypeAdapter(Date.class, new UTCDateAdapter())
+                .registerTypeAdapter(Feedback.class, new FeedbackDeserializer())
                 .create();
         return GsonConverterFactory.create(gson);
     }
