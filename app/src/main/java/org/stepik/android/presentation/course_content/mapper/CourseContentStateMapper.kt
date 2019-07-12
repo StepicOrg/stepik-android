@@ -43,8 +43,8 @@ constructor(
                 ?: courseContent
 
         val hasDates = content
-                .filterIsInstance<CourseContentItem.SectionItem>()
-                .any { sectionItem -> sectionItem.dates.isNotEmpty() }
+            .filterIsInstance<CourseContentItem.SectionItem>()
+            .any { sectionItem -> sectionItem.dates.isNotEmpty() }
 
         return CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content, hasDates)
     }
