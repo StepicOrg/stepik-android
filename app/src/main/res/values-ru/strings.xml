@@ -727,7 +727,8 @@
     <string name="step_quiz_math_description">Введите математическую формулу</string>
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
     <string name="step_quiz_free_answer_description">Напишите эссе</string>
-    <string name="step_quiz_choice_description">Выберите один или несколько элементов</string>
+    <string name="step_quiz_choice_description_single">Выберите один элемент</string>
+    <string name="step_quiz_choice_description_multiple">Выберите один или несколько элементов</string>
 
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
     <string name="step_quiz_choice_empty_reply">Выберите вариант</string>

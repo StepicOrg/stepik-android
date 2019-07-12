@@ -2,7 +2,6 @@
 <android.support.v7.widget.RecyclerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
 
     android:id="@+id/choicesRecycler"
     android:layout_width="match_parent"
@@ -18,5 +17,4 @@
     app:layout_constraintTop_toBottomOf="@id/stepQuizDescription"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks"
-    tools:targetApi="lollipop" />
+    app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks" />

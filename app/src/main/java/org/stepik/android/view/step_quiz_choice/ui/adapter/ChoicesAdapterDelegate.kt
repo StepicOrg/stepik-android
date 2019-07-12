@@ -31,7 +31,6 @@ class ChoicesAdapterDelegate(
         private val itemChoiceContainer = root.itemChoiceContainer
         private val itemChoiceCheckmark = root.itemChoiceCheckmark
         private val itemChoiceLatex = root.itemChoiceLatex
-        private val itemChoiceFeedbackContainer = root.itemChoiceFeedbackContainer
         private val itemChoiceFeedback  = root.itemChoiceFeedback
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
@@ -51,6 +50,9 @@ class ChoicesAdapterDelegate(
                     R.id.incorrect_layer_with_hint
                 ),
                 itemChoiceContainer.background.mutate() as LayerDrawable)
+
+            itemChoiceFeedback.setTextSize(14f)
+            itemChoiceFeedback.setBackgroundResource(R.drawable.bg_step_quiz_choice_item_feedback)
         }
 
         override fun onBind(data: Choice) {
@@ -68,9 +70,9 @@ class ChoicesAdapterDelegate(
 
         private fun bindHint(data: Choice) {
             if (data.feedback.isNullOrEmpty()) {
-                itemChoiceFeedbackContainer.visibility = View.GONE
+                itemChoiceFeedback.visibility = View.GONE
             } else {
-                itemChoiceFeedbackContainer.visibility = View.VISIBLE
+                itemChoiceFeedback.visibility = View.VISIBLE
                 itemChoiceFeedback.setPlainOrLaTeXTextWithCustomFontColored(
                     data.feedback, fontsProvider.provideFontPath(FontType.mono),
                     R.color.new_accent_color,

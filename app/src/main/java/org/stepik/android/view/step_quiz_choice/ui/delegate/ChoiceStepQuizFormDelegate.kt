@@ -1,5 +1,6 @@
 package org.stepik.android.view.step_quiz_choice.ui.delegate
 
+import android.support.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
@@ -35,12 +36,21 @@ class ChoiceStepQuizFormDelegate(
             itemAnimator = null
             adapter = choicesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            isNestedScrollingEnabled = false
         }
-        quizDescription.setText(R.string.step_quiz_choice_description)
     }
 
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
         val dataset = state.attempt.dataset ?: return
+
+        @StringRes
+        val descriptionRes =
+            if (dataset.isMultipleChoice) {
+                R.string.step_quiz_choice_description_multiple
+            } else {
+                R.string.step_quiz_choice_description_single
+            }
+        quizDescription.setText(descriptionRes)
 
         val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
                 ?.submission
