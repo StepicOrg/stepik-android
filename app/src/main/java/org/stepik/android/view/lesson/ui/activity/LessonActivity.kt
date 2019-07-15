@@ -295,7 +295,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
         if (config.isAppInStore) {
             screenManager.showStoreWithApp(this)
         } else {
-             setupTextFeedback()
+            setupTextFeedback()
         }
     }
 
@@ -305,8 +305,9 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
         setupTextFeedback()
     }
 
-    override fun sendTextFeedback(supportEmailData: SupportEmailData) =
+    override fun sendTextFeedback(supportEmailData: SupportEmailData) {
         screenManager.openTextFeedBack(this, supportEmailData)
+    }
 
     private fun setupTextFeedback() {
         lessonPresenter.sendTextFeedback(
