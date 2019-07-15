@@ -692,9 +692,6 @@
     <string name="retention_notification_day3_title">Time to study ‍🎓</string>
     <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
 
-
-    <string name="step_comment_tooltip">Open discussions for better understanding or asking a question</string>
-
     <!-- Profile edit -->
     <string name="profile_edit_menu_item">Edit profile</string>
     <string name="profile_edit_password_title">Password</string>
@@ -757,8 +754,11 @@
     <string name="step_quiz_math_description">Enter a math formula</string>
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
     <string name="step_quiz_free_answer_description">Write an essay</string>
+    <string name="step_quiz_choice_description_single">Choose one option</string>
+    <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
+    <string name="step_quiz_choice_empty_reply">Choose an option</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
