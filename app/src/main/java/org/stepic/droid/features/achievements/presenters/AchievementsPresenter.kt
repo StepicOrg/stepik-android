@@ -3,7 +3,6 @@ package org.stepic.droid.features.achievements.presenters
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.analytic.experiments.AchievementsSplitTest
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -14,7 +13,6 @@ import javax.inject.Inject
 class AchievementsPresenter
 @Inject
 constructor(
-    achievementsSplitTest: AchievementsSplitTest,
     private val achievementsRepository: AchievementsRepository,
 
     @BackgroundScheduler
@@ -24,12 +22,7 @@ constructor(
 ): PresenterBase<AchievementsView>() {
     private val compositeDisposable = CompositeDisposable()
 
-    private var state: AchievementsView.State =
-        if (achievementsSplitTest.currentGroup.isAchievementsEnabled) {
-            AchievementsView.State.Idle
-        } else {
-            AchievementsView.State.NoAchievementsBlock
-        }
+    private var state: AchievementsView.State = AchievementsView.State.Idle
         set(value) {
             field = value
             setViewState(value)
@@ -61,9 +54,6 @@ constructor(
 
             is AchievementsView.State.Error ->
                 view?.onAchievementsLoadingError()
-
-            is AchievementsView.State.NoAchievementsBlock ->
-                view?.onHideAchievements()
         }
     }
 }
