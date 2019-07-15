@@ -11,18 +11,20 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
+import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.lesson.interactor.LessonContentInteractor
 import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.lesson.model.LessonDeepLinkData
+import org.stepik.android.domain.rating.interactor.RatingInteractor
+import org.stepik.android.domain.step.interactor.StepIndexingInteractor
+import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.Lesson
+import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.domain.lesson.model.LessonDeepLinkData
-import org.stepik.android.domain.step.interactor.StepIndexingInteractor
-import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
-import org.stepik.android.model.Progress
 import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
 import org.stepik.android.view.injection.step_quiz.StepQuizBus
 import javax.inject.Inject
@@ -34,6 +36,8 @@ constructor(
 
     private val lessonInteractor: LessonInteractor,
     private val lessonContentInteractor: LessonContentInteractor,
+    private val ratingInteractor: RatingInteractor,
+    private val feedbackInteractor: FeedbackInteractor,
 
     private val stateMapper: LessonStateMapper,
 
@@ -278,6 +282,11 @@ constructor(
             .find { it.stepWrapper.step.id == stepId }
             ?: return
 
+        ratingInteractor.incrementSolvedStepCounter()
+        if (ratingInteractor.needShowAppRateDialog()) {
+            view?.showRateDialog()
+        }
+
         compositeDisposable += stepViewReportInteractor
             .updatePassedStep(stepItem.stepWrapper.step, stepItem.assignment)
             .subscribeOn(backgroundScheduler)
@@ -304,5 +313,19 @@ constructor(
 
     private fun endIndexing() {
         stepIndexingInteractor.endIndexing()
+    }
+
+    /**
+     * Feedback
+     */
+    fun sendTextFeedback(subject: String, aboutSystemInfo: String) {
+        compositeDisposable += feedbackInteractor
+                .createSupportEmailData(subject, aboutSystemInfo)
+                .observeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribeBy(
+                    onSuccess = { view?.sendTextFeedback(it) },
+                    onError = emptyOnErrorStub
+                )
     }
 }

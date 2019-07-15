@@ -17,12 +17,18 @@ import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
+import org.stepic.droid.ui.dialogs.RateAppDialogFragment
 import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.DeviceInfoUtil
+import org.stepic.droid.util.RatingUtil
+import org.stepic.droid.util.reportRateEvent
 import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
@@ -36,7 +42,7 @@ import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
+class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateAppDialogFragment.Companion.Callback {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -264,5 +270,48 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
     override fun showComments(step: Step, discussionId: Long) {
         // todo: use discussion id after comments refactor
         screenManager.openComments(this, step.discussionProxy, step.id)
+    }
+
+    override fun showRateDialog() {
+        val rateAppDialogFragment = RateAppDialogFragment.newInstance()
+        if (!rateAppDialogFragment.isAdded) {
+            analytic.reportEvent(Analytic.Rating.SHOWN)
+            rateAppDialogFragment.show(supportFragmentManager, null)
+        }
+    }
+
+    override fun onClickLater(starNumber: Int) {
+        if (RatingUtil.isExcellent(starNumber)) {
+            analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_LATER)
+        } else {
+            analytic.reportRateEvent(starNumber, Analytic.Rating.NEGATIVE_LATER)
+        }
+    }
+
+    override fun onClickGooglePlay(starNumber: Int) {
+        sharedPreferenceHelper.afterRateWasHandled()
+        analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_APPSTORE)
+
+        if (config.isAppInStore) {
+            screenManager.showStoreWithApp(this)
+        } else {
+             setupTextFeedback()
+        }
+    }
+
+    override fun onClickSupport(starNumber: Int) {
+        sharedPreferenceHelper.afterRateWasHandled()
+        analytic.reportRateEvent(starNumber, Analytic.Rating.NEGATIVE_EMAIL)
+        setupTextFeedback()
+    }
+
+    override fun sendTextFeedback(supportEmailData: SupportEmailData) =
+        screenManager.openTextFeedBack(this, supportEmailData)
+
+    private fun setupTextFeedback() {
+        lessonPresenter.sendTextFeedback(
+            getString(R.string.feedback_subject),
+            DeviceInfoUtil.getInfosAboutDevice(this, "\n")
+        )
     }
 }
