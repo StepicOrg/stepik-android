@@ -68,7 +68,11 @@ class RateAppDialogFragment : DialogFragment() {
         isCancelable = false
         CalligraphyUtils.applyFontToTextView(rateDialogPositive, boldTypeface)
 
-        val callback = targetFragment as Callback
+        val callback = if (targetFragment != null) {
+            targetFragment as Callback
+        } else {
+            activity as Callback
+        }
 
         rateDialogLater.setOnClickListener {
             dialog.dismiss()
