@@ -6,10 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.AppSingleton;
-import org.stepik.android.model.Step;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
 import org.stepic.droid.ui.fragments.CodeStepFragment;
-import org.stepic.droid.ui.fragments.FillBlanksFragment;
 import org.stepic.droid.ui.fragments.MatchingStepFragment;
 import org.stepic.droid.ui.fragments.NotSupportedYetStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
@@ -22,6 +20,7 @@ import org.stepic.droid.ui.quiz.NumberQuizDelegate;
 import org.stepic.droid.ui.quiz.QuizDelegate;
 import org.stepic.droid.ui.quiz.StringQuizDelegate;
 import org.stepic.droid.util.AppConstants;
+import org.stepik.android.model.Step;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +60,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_DATASET, hardQuizDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_ANIMATION, animationDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_CHEMICAL, simpleQuestionDrawable);
-        mapFromTypeToDrawableRes.put(AppConstants.TYPE_FILL_BLANKS, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_PUZZLE, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_PYCHARM, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_CODE, hardQuizDrawable);
@@ -114,8 +112,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return new SortingStepFragment();
             case AppConstants.TYPE_MATCHING:
                 return new MatchingStepFragment();
-            case AppConstants.TYPE_FILL_BLANKS:
-                return new FillBlanksFragment();
             case AppConstants.TYPE_TABLE:
                 return TableChoiceStepFragment.Companion.newInstance();
             case AppConstants.TYPE_CODE:
