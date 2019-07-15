@@ -140,13 +140,7 @@ open class FragmentBase : Fragment() {
      * Null is not used at Theme because of black background on pre-loading activity.
      */
     protected fun nullifyActivityBackground() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            activity?.window?.decorView?.background = null
-        } else {
-            //we use it for old version of device
-            @Suppress("DEPRECATION")
-            activity?.window?.decorView?.setBackgroundDrawable(null)
-        }
+        activity?.window?.decorView?.background = null
     }
 
     protected open fun getRootView(): ViewGroup? = null
