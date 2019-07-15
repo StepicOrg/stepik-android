@@ -362,8 +362,6 @@
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
-    <string name="fill_blanks_select_value"><![CDATA[<Выберите значение>]]></string>
-    <string name="fill_blanks_type_text">Введите текст</string>
     <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
