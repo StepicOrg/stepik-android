@@ -2,6 +2,7 @@ package org.stepik.android.view.course_content.ui.adapter.delegates.unit
 
 import android.graphics.BitmapFactory
 import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v4.util.LongSparseArray
 import android.view.View
@@ -38,6 +39,8 @@ class CourseContentUnitDelegate(
         private val unitViewCountIcon = root.unitViewCountIcon
         private val unitRating = root.unitRating
         private val unitRatingIcon = root.unitRatingIcon
+
+        private val unitTimeToComplete = root.unitTimeToComplete
 
         private val unitDownloadStatus = root.unitDownloadStatus
 
@@ -85,6 +88,23 @@ class CourseContentUnitDelegate(
                 } else {
                     unitProgress.progress = 0f
                     unitTextProgress.visibility = View.GONE
+                }
+
+                val timeToComplete = lesson.timeToComplete.takeIf { it > 0 } ?: 0
+
+                if (timeToComplete > 0) {
+                    unitTimeToComplete.visibility = View.VISIBLE
+
+                    val (timeValue, @StringRes timeUnit) =
+                        if (timeToComplete in 0 until 3600) {
+                            timeToComplete / 60 to R.string.course_content_time_to_complete_minutes_unit
+                        } else {
+                            timeToComplete / 3600 to R.string.course_content_time_to_complete_hours_unit
+                        }
+
+                    unitTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, context.getString(timeUnit, timeValue))
+                } else {
+                    unitTimeToComplete.visibility = View.GONE
                 }
 
                 unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
