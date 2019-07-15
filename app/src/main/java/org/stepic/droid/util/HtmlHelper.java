@@ -63,7 +63,7 @@ public class HtmlHelper {
 
 
     public static boolean hasLaTeX(String textString) {
-        return textString.contains("$") || textString.contains("\\[") || textString.contains("math-tex");
+        return textString.contains("$") || textString.contains("\\[") || textString.contains("math-tex") || textString.contains("\\(");
     }
 
     private static boolean hasKotlinRunnableSample(String text) {

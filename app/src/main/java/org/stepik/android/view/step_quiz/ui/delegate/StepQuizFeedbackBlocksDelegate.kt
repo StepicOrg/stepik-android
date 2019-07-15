@@ -52,6 +52,7 @@ class StepQuizFeedbackBlocksDelegate(
 
         stepQuizFeedbackHint.setTextSize(14f)
         stepQuizFeedbackHint.setBackgroundResource(R.drawable.bg_step_quiz_hint)
+        stepQuizFeedbackHint.setTextIsSelectable(false)
     }
 
     fun setState(state: StepQuizFeedbackState) {
