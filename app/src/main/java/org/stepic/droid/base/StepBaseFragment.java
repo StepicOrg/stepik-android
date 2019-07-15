@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.NestedScrollView;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,50 +16,37 @@ import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.commentcount.contract.CommentCountListener;
 import org.stepic.droid.core.presenters.AnonymousPresenter;
-import org.stepic.droid.core.presenters.CommentsBannerPresenter;
 import org.stepic.droid.core.presenters.RouteStepPresenter;
 import org.stepic.droid.core.presenters.contracts.AnonymousView;
-import org.stepic.droid.core.presenters.contracts.CommentsView;
 import org.stepic.droid.core.presenters.contracts.RouteStepView;
 import org.stepic.droid.persistence.model.StepPersistentWrapper;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.ui.custom.StepTextWrapper;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment;
-import org.stepic.droid.ui.util.PopupHelper;
 import org.stepic.droid.util.AppConstants;
-import org.stepic.droid.util.DisplayUtils;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
 import org.stepik.android.remote.step.model.StepResponse;
-import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener;
 
 import java.lang.ref.WeakReference;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
-import static org.stepic.droid.util.RxUtilKt.zip;
 
 public abstract class StepBaseFragment extends FragmentBase
         implements RouteStepView,
         AnonymousView,
-        CommentsView,
-        CommentCountListener,
-        FragmentViewPagerScrollStateListener {
+        CommentCountListener {
 
     @BindView(R.id.open_comments_text)
     protected TextView textForComment;
@@ -114,18 +100,7 @@ public abstract class StepBaseFragment extends FragmentBase
     AnonymousPresenter anonymousPresenter;
 
     @Inject
-    CommentsBannerPresenter commentsBannerPresenter;
-
-    @Inject
     Client<CommentCountListener> commentCountListenerClient;
-
-    private CompositeDisposable uiCompositeDisposable = new CompositeDisposable();
-
-    private BehaviorSubject<FragmentViewPagerScrollStateListener.ScrollState> fragmentVisibilitySubject =
-        BehaviorSubject.create();
-
-    private BehaviorSubject<Boolean> commentsVisibilitySubject =
-        BehaviorSubject.createDefault(false);
 
     @Override
     protected void injectComponent() {
@@ -165,7 +140,6 @@ public abstract class StepBaseFragment extends FragmentBase
         commentCountListenerClient.subscribe(this);
         routeStepPresenter.attachView(this);
         anonymousPresenter.attachView(this);
-        commentsBannerPresenter.attachView(this);
         anonymousPresenter.checkForAnonymous();
         if (unit != null) {
             nextLessonView.setOnClickListener(new View.OnClickListener() {
@@ -189,32 +163,6 @@ public abstract class StepBaseFragment extends FragmentBase
 
     protected abstract void attachStepTextWrapper();
     protected abstract void detachStepTextWrapper();
-    @Override
-    public void showCommentsBanner() {
-        Observable<ScrollState> visibilityObservable =
-            fragmentVisibilitySubject.filter(state -> state == ScrollState.ACTIVE);
-
-        Observable<Boolean> commentsObservable =
-            commentsVisibilitySubject.filter(isVisible -> isVisible);
-
-        uiCompositeDisposable.add(zip(visibilityObservable, commentsObservable)
-            .firstElement()
-            .ignoreElement()
-            .subscribe(() -> {
-                View view = nestedScrollView.findViewById(R.id.open_comments_text);
-                PopupHelper.INSTANCE.showPopupAnchoredToView(
-                    getContext(),
-                    view,
-                    getString(R.string.step_comment_tooltip),
-                    PopupHelper.PopupTheme.DARK_ABOVE,
-                    true,
-                    Gravity.TOP,
-                    true,
-                    true
-                );
-                commentsBannerPresenter.onBannerShown(section.getCourse());
-            }));
-    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -226,22 +174,6 @@ public abstract class StepBaseFragment extends FragmentBase
                 getScreenManager().showLaunchScreen(getActivity());
             }
         });
-        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView nestedScrollView, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY == (nestedScrollView.getChildAt(0).getMeasuredHeight() - nestedScrollView.getMeasuredHeight())) {
-                    commentsVisibilitySubject.onNext(DisplayUtils.isVisible(nestedScrollView, textForComment));
-                }
-            }
-        });
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser) {
-            checkCommentsBanner();
-        }
     }
 
     private void updateCommentState() {
@@ -304,10 +236,8 @@ public abstract class StepBaseFragment extends FragmentBase
         routeStepPresenter.detachView(this);
         commentCountListenerClient.unsubscribe(this);
         anonymousPresenter.detachView(this);
-        commentsBannerPresenter.detachView(this);
         nextLessonView.setOnClickListener(null);
         previousLessonView.setOnClickListener(null);
-        uiCompositeDisposable.clear();
         super.onDestroyView();
     }
 
@@ -436,27 +366,5 @@ public abstract class StepBaseFragment extends FragmentBase
         public void onError(Throwable e) {
 
         }
-    }
-
-    @Override
-    public void onViewPagerScrollStateChanged(ScrollState scrollState) {
-        changeVisibilitySubjects(scrollState);
-    }
-
-    private void changeVisibilitySubjects(ScrollState scrollState) {
-        fragmentVisibilitySubject.onNext(scrollState);
-        if (scrollState == ScrollState.ACTIVE && nestedScrollView != null) {
-            commentsVisibilitySubject.onNext(DisplayUtils.isVisible(nestedScrollView, textForComment));
-        }
-    }
-
-    private void checkCommentsBanner() {
-        uiCompositeDisposable.add(Completable.timer(3, TimeUnit.SECONDS, AndroidSchedulers.mainThread())
-                .subscribe(() -> {
-                    if (section != null && step.getDiscussionsCount() > 0) {
-                        changeVisibilitySubjects(ScrollState.ACTIVE);
-                        commentsBannerPresenter.fetchCommentsBanner(section.getCourse());
-                    }
-                }));
     }
 }
