@@ -23,13 +23,18 @@ constructor(
         && isRateWasShownFewTimes()
         && isUserSolveEnough()
 
+    fun incrementSolvedStepCounter() {
+        sharedPreferenceHelper.trackWhenUserSolved()
+        sharedPreferenceHelper.incrementUserSolved()
+    }
+
     private fun isRateDelayGreater(): Boolean {
         val wasShownMillis = sharedPreferenceHelper.whenRateWasShown()
         if (wasShownMillis < 0) {
             return true
         }
 
-        val delayMillis = firebaseRemoteConfig.getLong(RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC).toInt() * 1000L // TODO Discuss remote config field
+        val delayMillis = firebaseRemoteConfig.getLong(RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC).toInt() * 1000L
 
         return DateTimeHelper.isBeforeNowUtc(delayMillis + wasShownMillis) //if delay is expired (before now) -> show
     }
