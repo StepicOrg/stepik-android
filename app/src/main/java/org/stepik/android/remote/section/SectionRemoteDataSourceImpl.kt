@@ -14,8 +14,7 @@ class SectionRemoteDataSourceImpl
 constructor(
     private val api: Api
 ) : SectionRemoteDataSource {
-    private val sectionResponseMapper =
-        Function<SectionResponse, List<Section>>(SectionResponse::sections)
+    private val sectionResponseMapper = Function(SectionResponse::sections)
 
     override fun getSections(vararg sectionIds: Long): Single<List<Section>> =
         sectionIds

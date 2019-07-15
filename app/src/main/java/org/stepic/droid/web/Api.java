@@ -18,6 +18,8 @@ import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Reply;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
+import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -27,6 +29,7 @@ import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 
@@ -118,7 +121,7 @@ public interface Api {
 
     Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId);
 
-    Completable createNewSubmissionReactive(Submission submission);
+    Single<SubmissionResponse> createNewSubmissionReactive(Submission submission);
 
     Call<AttemptResponse> getExistingAttempts(long stepId);
 
@@ -129,6 +132,8 @@ public interface Api {
     Single<SubmissionResponse> getSubmissionsReactive(long attemptId);
 
     Call<SubmissionResponse> getSubmissionForStep(long stepId);
+
+    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId);
 
     Call<Void> remindPassword(String email);
 
@@ -150,17 +155,15 @@ public interface Api {
 
     Call<Void> removeDevice(long deviceId);
 
-    Call<DiscussionProxyResponse> getDiscussionProxies(String discussionProxyId);
+    Call<CommentResponse> getCommentAnd20Replies(long commentId);
 
-    Call<CommentsResponse> getCommentAnd20Replies(long commentId);
+    Call<CommentResponse> getCommentsByIds(long[] commentIds);
 
-    Call<CommentsResponse> getCommentsByIds(long[] commentIds);
-
-    Call<CommentsResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
+    Call<CommentResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
 
     Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
 
-    Call<CommentsResponse> deleteComment(long commentId);
+    Call<CommentResponse> deleteComment(long commentId);
 
     Call<CertificateResponse> getCertificates();
 

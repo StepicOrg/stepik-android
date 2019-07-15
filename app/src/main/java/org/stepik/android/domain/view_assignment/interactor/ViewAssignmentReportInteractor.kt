@@ -33,6 +33,10 @@ constructor(
     @ViewAssignmentBus
     private val viewAssignmentObserver: BehaviorSubject<kotlin.Unit>
 ) {
+    fun updatePassedStep(step: Step, assignment: Assignment?): Completable =
+        updateLocalStepProgress(step, assignment)
+            .andThen(localProgressInteractor.updateStepsProgress(listOf(step)))
+
     fun reportViewAssignment(step: Step, assignment: Assignment?, unit: Unit?, course: Course?): Completable =
         updateLocalLastStep(step, unit, course)
             .andThen(updateLocalStepProgress(step, assignment))

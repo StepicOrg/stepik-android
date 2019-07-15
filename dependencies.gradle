@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2027,
-        name                 : '1.86',
+        code                 : 2029,
+        name                 : '1.87',
 
         minSdk               : 15,
         targetSdk            : 26,
@@ -72,6 +72,8 @@ ext.versions = [
 
         shortcutBadger       : '1.1.19@aar',
         StoriesKit           : '1.1.1',
+        AdapterDelegates     : '1.0.1',
+        Adapters             : '1.0.1',
 
         stetho               : '1.4.2',
         leakCanary           : '1.5.1',
@@ -173,6 +175,8 @@ ext.libraries = [
 
         shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
         StoriesKit           : "ru.nobird.android:StoriesKitSupport:$versions.StoriesKit",
+        AdapterDelegates     : "ru.nobird.android.ui:AdapterDelegatesSupport:$versions.AdapterDelegates",
+        Adapters             : "ru.nobird.android.ui:AdaptersSupport:$versions.Adapters",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",

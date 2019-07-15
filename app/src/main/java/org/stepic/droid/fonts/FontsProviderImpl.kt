@@ -12,5 +12,6 @@ class FontsProviderImpl @Inject constructor() : FontsProvider {
                 FontType.boldItalic -> "fonts/Roboto-BoldItalic.ttf"
                 FontType.medium -> "fonts/Roboto-Medium.ttf"
                 FontType.light -> "fonts/Roboto-Light.ttf"
+                FontType.mono -> "fonts/PT-Mono.ttf"
             }
 }

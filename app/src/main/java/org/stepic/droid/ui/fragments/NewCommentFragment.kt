@@ -20,7 +20,7 @@ import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.web.CommentsResponse
+import org.stepik.android.remote.comment.model.CommentResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -148,9 +148,9 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                 enableMenuItem(true)
             }
 
-            api.postComment(text, target!!, parent).enqueue(object : Callback<CommentsResponse> {
+            api.postComment(text, target!!, parent).enqueue(object : Callback<CommentResponse> {
 
-                override fun onResponse(call: Call<CommentsResponse>?, response: Response<CommentsResponse>?) {
+                override fun onResponse(call: Call<CommentResponse>?, response: Response<CommentResponse>?) {
                     if (response?.isSuccessful ?: false && response?.body()?.comments != null) {
                         analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY)
                         val newComment = response.body()?.comments?.firstOrNull()
@@ -169,7 +169,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
                     }
                 }
 
-                override fun onFailure(call: Call<CommentsResponse>?, t: Throwable?) {
+                override fun onFailure(call: Call<CommentResponse>?, t: Throwable?) {
                     Toast.makeText(App.getAppContext(), R.string.connectionProblems, Toast.LENGTH_LONG).show()
                     onFinishTryingSending()
                 }

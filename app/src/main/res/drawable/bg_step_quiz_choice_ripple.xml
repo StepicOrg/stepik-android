@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item     android:state_enabled="true"
+        android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#30000000" />
+            <stroke
+                android:width="2dp"
+                android:color="@android:color/transparent" />
+            <corners android:radius="@dimen/step_quiz_choice_option_view_radius" />
+        </shape>
+    </item>
+</selector>

@@ -24,4 +24,21 @@
         <item>#ACA5FF</item>
         <item>#ACECFE</item>
     </array>
+
+    <string-array name="step_quiz_feedback_correct">
+        <item>Correct</item>
+        <item>You are right, well done!</item>
+        <item>All is correct</item>
+        <item>Right</item>
+        <item>You\'re right!</item>
+        <item>Totally right</item>
+        <item>Good job</item>
+        <item>Great work!</item>
+        <item>Absolutely right</item>
+        <item>Good news for you, correct!</item>
+        <item>Fabulous answer</item>
+        <item>Yes!</item>
+        <item>Great!</item>
+        <item>Well done!</item>
+    </string-array>
 </resources>

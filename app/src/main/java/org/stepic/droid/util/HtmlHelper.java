@@ -63,7 +63,7 @@ public class HtmlHelper {
 
 
     public static boolean hasLaTeX(String textString) {
-        return textString.contains("$") || textString.contains("\\[") || textString.contains("math-tex");
+        return textString.contains("$") || textString.contains("\\[") || textString.contains("math-tex") || textString.contains("\\(");
     }
 
     private static boolean hasKotlinRunnableSample(String text) {
@@ -204,7 +204,7 @@ public class HtmlHelper {
     }
 
     public static String buildPageWithCustomFont(CharSequence body, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.mutableListOf(), fontPath, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.mutableListOf(MathJaxScript), fontPath, textColorHighlight, widthPx, baseUrl);
     }
 
     public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";

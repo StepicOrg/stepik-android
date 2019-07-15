@@ -60,6 +60,7 @@ import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
+import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
@@ -92,6 +93,7 @@ import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
         ProgressBusModule::class,
         ViewAssignmentBusModule::class,
         StepDiscussionBusModule::class,
+        StepQuizBusModule::class,
         PersonalDeadlinesDataModule::class,
 
         CourseRoutingModule::class, // todo unite it in RoutingModule::class
