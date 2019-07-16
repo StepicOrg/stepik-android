@@ -731,6 +731,16 @@
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
     <string name="step_quiz_choice_empty_reply">Выберите вариант</string>
 
+    <string name="step_quiz_code_details">Детали</string>
+    <string name="step_quiz_code_detail_sample_title">Пример данных %d:</string>
+
+    <string name="step_quiz_code_detail_limit_title_time">Ограничение по времени:</string>
+    <string name="step_quiz_code_detail_limit_title_memory">Ограничение по памяти:</string>
+    <string name="step_quiz_code_detail_limit_value_memory">%d МБ</string>
+
+    <string name="step_quiz_code_lang_chooser">Выберите язык</string>
+    <string name="step_quiz_code_empty_lang">Перед отправкой решения выберите язык программирования из списка</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 </resources>
