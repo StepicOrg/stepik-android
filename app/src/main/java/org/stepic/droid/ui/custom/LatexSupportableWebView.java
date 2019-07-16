@@ -17,7 +17,6 @@ import android.webkit.WebView;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
-import org.stepic.droid.ui.util.AssetSupportWebViewClient;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 
@@ -137,9 +136,6 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         if (fontPath != null) {
             html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                setWebViewClient(new AssetSupportWebViewClient());
-            }
             html = HtmlHelper.buildMathPage(text, textColorHighlight, width, config.getBaseUrl());
         } else {
             html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, textColorHighlight, width, config.getBaseUrl());
