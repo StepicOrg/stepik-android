@@ -24,11 +24,7 @@ import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.doOnPreDraw
-import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.ui.util.*
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -222,7 +218,8 @@ class CourseHeaderDelegate(
                 menuItemView,
                 courseActivity.getString(R.string.course_share_description),
                 theme = PopupHelper.PopupTheme.LIGHT,
-                cancelableOnTouchOutside = true
+                cancelableOnTouchOutside = true,
+                withArrow = true
             )
     }
 
