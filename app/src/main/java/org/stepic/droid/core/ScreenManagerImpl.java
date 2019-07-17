@@ -67,7 +67,6 @@ import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
-import org.stepic.droid.util.AndroidVersionKt;
 import org.stepic.droid.util.AppConstants;
 import org.stepik.android.model.Tag;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
@@ -330,12 +329,7 @@ public class ScreenManagerImpl implements ScreenManager {
             analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
-        boolean isCompatible = AndroidVersionKt.isJellyBeanOrLater();
-        if (!isCompatible) {
-            analytic.reportEvent(Analytic.Video.NOT_COMPATIBLE);
-        }
-
-        if (isCompatible && !isOpenExternal) {
+        if (!isOpenExternal) {
             sourceActivity.startActivity(VideoPlayerActivity.Companion.createIntent(sourceActivity, videoPlayerMediaData));
         } else {
             @Nullable
