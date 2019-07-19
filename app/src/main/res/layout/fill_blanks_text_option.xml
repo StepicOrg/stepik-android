@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<org.stepic.droid.ui.custom.ProgressLatexView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/latex_text_fill_blanks"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/guideline_standard_padding">
-</org.stepic.droid.ui.custom.ProgressLatexView>
