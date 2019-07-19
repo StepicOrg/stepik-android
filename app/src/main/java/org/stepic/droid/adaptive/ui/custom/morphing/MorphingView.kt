@@ -19,12 +19,7 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
 
 
     init {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            @Suppress("DEPRECATION")
-            setBackgroundDrawable(drawableWrapper.drawable)
-        } else {
-            background = drawableWrapper.drawable
-        }
+        background = drawableWrapper.drawable
     }
 
     fun setGradientDrawableParams(color: Int, cornerRadius: Float) {

@@ -163,11 +163,10 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
     private fun initSocialRecycler(state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {
         socialListRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            socialListRecyclerView.itemAnimator = FadeInDownAnimator().apply {
+        socialListRecyclerView.itemAnimator = FadeInDownAnimator()
+            .apply {
                 removeDuration = 0
             }
-        }
 
         val adapter = SocialAuthAdapter(this::onSocialItemClicked, state)
         showMore.setOnClickListener {

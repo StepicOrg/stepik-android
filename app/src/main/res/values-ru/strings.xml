@@ -362,8 +362,6 @@
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
-    <string name="fill_blanks_select_value"><![CDATA[<Выберите значение>]]></string>
-    <string name="fill_blanks_type_text">Введите текст</string>
     <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
@@ -722,8 +720,6 @@
     <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз!</string>
     <string name="step_quiz_feedback_wrong_last_try">Неверно</string>
 
-    <string name="step_quiz_feedback_validation_fill_blanks">Необходимо заполнить все пробелы перед отправкой</string>
-
     <string name="step_quiz_number_description">Введите численный ответ</string>
     <string name="step_quiz_math_description">Введите математическую формулу</string>
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
@@ -733,6 +729,16 @@
 
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
     <string name="step_quiz_choice_empty_reply">Выберите вариант</string>
+
+    <string name="step_quiz_code_details">Детали</string>
+    <string name="step_quiz_code_detail_sample_title">Пример данных %d:</string>
+
+    <string name="step_quiz_code_detail_limit_title_time">Ограничение по времени:</string>
+    <string name="step_quiz_code_detail_limit_title_memory">Ограничение по памяти:</string>
+    <string name="step_quiz_code_detail_limit_value_memory">%d МБ</string>
+
+    <string name="step_quiz_code_lang_chooser">Выберите язык</string>
+    <string name="step_quiz_code_empty_lang">Перед отправкой решения выберите язык программирования из списка</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>

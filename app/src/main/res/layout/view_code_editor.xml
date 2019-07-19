@@ -10,4 +10,9 @@
     android:imeOptions="flagNoFullscreen"
     android:inputType="textWebEmailAddress|textMultiLine|textNoSuggestions"
     android:textSize="@dimen/code_text_size_default"
-    android:typeface="monospace"/>
+
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:lineSpacingExtra="4dp"
+
+    fontPath="fonts/PT-Mono.ttf" />

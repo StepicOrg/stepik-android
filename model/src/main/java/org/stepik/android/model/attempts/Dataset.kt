@@ -6,7 +6,6 @@ class Dataset(
         val options: List<String>? = null,
         val someStringValueFromServer: String? = null,
         val pairs: List<Pair>? = null,
-        val components: List<FillBlankComponent>? = null,
         val rows: List<String>? = null,
         val columns: List<String>? = null,
         val description: String? = null,

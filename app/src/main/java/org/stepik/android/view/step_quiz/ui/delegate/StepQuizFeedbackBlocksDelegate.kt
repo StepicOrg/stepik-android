@@ -48,10 +48,10 @@ class StepQuizFeedbackBlocksDelegate(
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
 
         stepQuizFeedbackValidation.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
-        stepQuizFeedbackValidation.setText(R.string.step_quiz_feedback_validation_fill_blanks)
 
         stepQuizFeedbackHint.setTextSize(14f)
         stepQuizFeedbackHint.setBackgroundResource(R.drawable.bg_step_quiz_hint)
+        stepQuizFeedbackHint.setTextIsSelectable(false)
     }
 
     fun setState(state: StepQuizFeedbackState) {
