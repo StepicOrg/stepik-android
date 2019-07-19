@@ -746,8 +746,6 @@
     <string name="step_quiz_feedback_wrong_not_last_try">Wrong. Let\'s try again.</string>
     <string name="step_quiz_feedback_wrong_last_try">Incorrect</string>
 
-    <string name="step_quiz_feedback_validation_fill_blanks">All blanks should be filled</string>
-
     <string name="step_quiz_number_description">Enter a number</string>
     <string name="step_quiz_math_description">Enter a math formula</string>
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
