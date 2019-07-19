@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="light_theme_name" translatable="false">Light</string>
-    <color name="light_theme_plain">#333333</color>
+    <color name="light_theme_plain">#535366</color>
     <color name="light_theme_string">#c18401</color>
     <color name="light_theme_keyword">#0184bc</color>
     <color name="light_theme_comment">#999999</color>
@@ -12,9 +12,9 @@
     <color name="light_theme_attribute_value">#d14d14</color>
 
     <color name="light_theme_background">#FFFFFF</color>
-    <color name="light_theme_line_number_background">#EEEEEE</color>
-    <color name="light_theme_line_number_text">#333333</color>
+    <color name="light_theme_line_number_background">#F6F6F6</color>
+    <color name="light_theme_line_number_text">#80535366</color>
     <color name="light_theme_selected_line_background">#44CCCCCC</color>
-    <color name="light_theme_line_number_stroke">#CCCCCC</color>
+    <color name="light_theme_line_number_stroke">#F6F6F6</color>
     <color name="light_theme_brackets_highlight">#AAFFD77A</color>
 </resources>

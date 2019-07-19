@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizCodeDetailLimitTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:textSize="16sp"
+        android:textColor="@color/new_accent_color"
+
+        tools:text="Пример данных 1:" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizCodeDetailLimitValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+
+        android:textSize="14sp"
+        android:textColor="@color/new_accent_color"
+        fontPath="fonts/PT-Mono.ttf"
+
+        tools:text="77 1010" />
+
+</android.support.v7.widget.LinearLayoutCompat>

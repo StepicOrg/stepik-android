@@ -45,7 +45,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     init {
         LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
-        codeEditor.typeface = Typeface.MONOSPACE
         theme = Presets.themes[0]
     }
 
@@ -63,8 +62,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         text?.let { codeEditor.setText(it) }
     }
 
-    fun insertText(text: String, offset: Int) =
-            codeEditor.insertText(text, offset)
+    fun insertText(text: String, offset: Int) {
+        codeEditor.insertText(text, offset)
+    }
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
