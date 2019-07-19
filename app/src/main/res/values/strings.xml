@@ -648,6 +648,9 @@
     <string name="course_reviews_compose_banner_review_motivation">Share your opinion</string>
 
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
+    <string name="course_content_time_to_complete" translatable="false">&#8776; %s</string>
+    <string name="course_content_time_to_complete_minutes_unit">%d min</string>
+    <string name="course_content_time_to_complete_hours_unit">%d h</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
 
     <string name="course_content_timeline_begin_date">Begin date</string>
