@@ -362,8 +362,6 @@
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
-    <string name="fill_blanks_select_value"><![CDATA[<Выберите значение>]]></string>
-    <string name="fill_blanks_type_text">Введите текст</string>
     <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
@@ -718,8 +716,6 @@
     <string name="step_quiz_feedback_correct_free_answer">Любой ответ будет оценен как правильный</string>
     <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз!</string>
     <string name="step_quiz_feedback_wrong_last_try">Неверно</string>
-
-    <string name="step_quiz_feedback_validation_fill_blanks">Необходимо заполнить все пробелы перед отправкой</string>
 
     <string name="step_quiz_number_description">Введите численный ответ</string>
     <string name="step_quiz_math_description">Введите математическую формулу</string>

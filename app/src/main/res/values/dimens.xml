@@ -56,7 +56,6 @@
     <dimen name="login_button_radius">32dp</dimen>
     <dimen name="launch_button_text_size">18sp</dimen>
     <dimen name="onePx">1px</dimen>
-    <dimen name="fill_blanks_input_text_size">16sp</dimen>
     <dimen name="sort_image_view_height">24dp</dimen>
     <dimen name="padding_sort_controller">12dp</dimen>
     <dimen name="loading_size">56dp</dimen>

@@ -365,8 +365,6 @@
     <string name="retry">Retry</string>
     <string name="retry_internet">@string/retry</string>
     <string name="accessibility_drag_and_drop">drag and drop</string>
-    <string name="fill_blanks_select_value"><![CDATA[<Select value>]]></string>
-    <string name="fill_blanks_type_text">Type text</string>
     <string name="table_quiz_beta">Table problem β</string>
     <string name="logout_user_error">Access was revoked. Login again</string>
     <string name="google_services_late">Update Google Play Services for signing in with it</string>
@@ -747,8 +745,6 @@
     <string name="step_quiz_feedback_correct_free_answer">Any text response will be graded as correct</string>
     <string name="step_quiz_feedback_wrong_not_last_try">Wrong. Let\'s try again.</string>
     <string name="step_quiz_feedback_wrong_last_try">Incorrect</string>
-
-    <string name="step_quiz_feedback_validation_fill_blanks">All blanks should be filled</string>
 
     <string name="step_quiz_number_description">Enter a number</string>
     <string name="step_quiz_math_description">Enter a math formula</string>
