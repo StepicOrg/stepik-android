@@ -45,6 +45,7 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
 import javax.inject.Inject
 
@@ -74,7 +75,8 @@ constructor(
     private val personalDeadlinesDao: PersonalDeadlinesDao,
     private val deadlinesBannerDao: DeadlinesBannerDao,
     private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>,
-    private val sectionDateEventDao: IDao<SectionDateEvent>
+    private val sectionDateEventDao: IDao<SectionDateEvent>,
+    private val submissionDao: IDao<Submission>
 ) {
 
     fun dropDatabase() {
@@ -100,6 +102,7 @@ constructor(
         deadlinesBannerDao.removeAll()
         viewedStoryTemplatesDao.removeAll()
         sectionDateEventDao.removeAll()
+        submissionDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {

@@ -28,7 +28,6 @@ import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
-import org.stepic.droid.ui.util.removeGlobalLayoutListener
 import org.stepic.droid.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -40,7 +39,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     companion object {
         private const val SCROLL_DEBOUNCE_MS = 100L
         private const val INPUT_DEBOUNCE_MS = 200L
-        private const val LINE_NUMBERS_MARGIN_DP = 4f
+        private const val LINE_NUMBERS_MARGIN_DP = 8f
         const val DEFAULT_INDENT_SIZE = 2
         const val MAX_INDENT_SIZE = 8
     }
@@ -99,7 +98,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         set(value) {
             field?.let { container ->
                 container.viewTreeObserver.removeOnScrollChangedListener(onScrollChangedListener)
-                container.viewTreeObserver.removeGlobalLayoutListener(onGlobalLayoutListener)
+                container.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
             }
 
             value?.let { container ->

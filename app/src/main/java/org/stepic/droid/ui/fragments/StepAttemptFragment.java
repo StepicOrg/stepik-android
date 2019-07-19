@@ -441,11 +441,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
             return;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            attemptContainer.setBackground(rootView.getBackground());
-        } else {
-            attemptContainer.setBackgroundDrawable(rootView.getBackground());
-        }
+        attemptContainer.setBackground(rootView.getBackground());
     }
 
     private void setListenerToActionButton(View.OnClickListener listener) {

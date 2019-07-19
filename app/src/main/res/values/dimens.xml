@@ -223,6 +223,7 @@
     <dimen name="step_quiz_text_field_radius">8dp</dimen>
     <dimen name="step_quiz_text_field_min_height">48dp</dimen>
 
+    <dimen name="step_quiz_code_sample_min_height">16dp</dimen>
     <!-- Choice quiz -->
     <dimen name="step_quiz_choice_option_stroke_width">1dp</dimen>
     <dimen name="step_quiz_choice_option_view_radius">8dp</dimen>

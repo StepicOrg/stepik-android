@@ -100,13 +100,7 @@ class PlainTextWithButtonStoryPartDelegate(
             backgroundDrawable.setColor(COLOR_MASK or button.backgroundColor.toInt(16))
             backgroundDrawable.cornerRadius = view.context.resources.getDimension(R.dimen.stories_default_corner_radius)
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                @Suppress("DEPRECATION")
-                storyButton.setBackgroundDrawable(backgroundDrawable)
-            } else {
-                storyButton.background = backgroundDrawable
-            }
-
+            storyButton.background = backgroundDrawable
             storyButton.setTextColor(COLOR_MASK or button.textColor.toInt(16))
 
             storyButton.text = button.title
