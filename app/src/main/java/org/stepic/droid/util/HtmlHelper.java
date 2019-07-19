@@ -196,7 +196,7 @@ public class HtmlHelper {
     }
 
     public static String buildMathPage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.arrayListOf(MathJaxScript), null, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.arrayListOf(LaTeXScript), null, textColorHighlight, widthPx, baseUrl);
     }
 
     public static String buildPageWithAdjustingTextAndImage(CharSequence body, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
@@ -204,7 +204,7 @@ public class HtmlHelper {
     }
 
     public static String buildPageWithCustomFont(CharSequence body, String fontPath, @ColorInt int textColorHighlight, int widthPx, String baseUrl) {
-        return buildPage(body, CollectionsKt.mutableListOf(MathJaxScript), fontPath, textColorHighlight, widthPx, baseUrl);
+        return buildPage(body, CollectionsKt.mutableListOf(LaTeXScript), fontPath, textColorHighlight, widthPx, baseUrl);
     }
 
     public static final String HORIZONTAL_SCROLL_LISTENER = "scrollListener";
@@ -273,7 +273,8 @@ public class HtmlHelper {
             "</script>\n";
 
     //string with 2 format args
-    private static final String PRE_BODY = "<html>\n" +
+    private static final String PRE_BODY = "<!DOCTYPE html>" +
+            "<html>\n" +
             "<head>\n" +
 
             "<title>Step</title>\n" +
@@ -328,17 +329,21 @@ public class HtmlHelper {
 
     private static final String POST_BODY;
 
-    private static final String MathJaxScript =
-            "<script type=\"text/x-mathjax-config\">\n" +
-                    "  MathJax.Hub.Config({" +
-                    "showMathMenu: false, " +
-                    "messageStyle: \"none\", " +
-                    "TeX: {extensions: [ \"color.js\"]}, " +
-                    "tex2jax: {preview: \"none\", inlineMath: [['$','$'], ['\\\\(','\\\\)']]}});\n" +
-                    "displayMath: [ ['$$','$$'], ['\\[','\\]'] ]" +
-                    "</script>\n" +
-                    "<script type=\"text/javascript\"\n" +
-                    " src=\"file:///android_asset/MathJax/MathJax.js?config=TeX-AMS_HTML\">\n" +
+    private static final String LaTeXScript =
+            "<link rel=\"stylesheet\" href=\"file:///android_asset/katex/katex.min.css\" />" +
+                    "<script src=\"file:///android_asset/katex/katex.min.js\" ></script>" +
+                    "<script src=\"file:///android_asset/katex/auto-render.min.js\"></script>" +
+                    "<script>\n" +
+                    "    document.addEventListener(\"DOMContentLoaded\", function() {\n" +
+                    "        renderMathInElement(document.body, {\n" +
+                    "            delimiters: [\n" +
+                    "                  {left: \"$$\", right: \"$$\", display: true},\n" +
+                    "                  {left: \"\\\\[\", right: \"\\\\]\", display: true},\n" +
+                    "                  {left: \"$\", right: \"$\", display: false},\n" +
+                    "                  {left: \"\\\\(\", right: \"\\\\)\", display: false}\n" +
+                    "              ]" +
+                    "        });\n" +
+                    "    });\n" +
                     "</script>\n";
 
     private static final String HighlightScript =
