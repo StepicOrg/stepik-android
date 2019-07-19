@@ -42,7 +42,7 @@ import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.LessonSession;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
-import org.stepic.droid.ui.dialogs.RateAppDialogFragment;
+import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
@@ -74,7 +74,7 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 public abstract class StepAttemptFragment extends StepBaseFragment implements
         StepAttemptView,
         InternetEnabledListener,
-        RateAppDialogFragment.Companion.Callback {
+        RateAppDialog.Companion.Callback {
 
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
     private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
@@ -687,11 +687,11 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
 
     @Override
     public void onNeedShowRateDialog() {
-        RateAppDialogFragment rateAppDialogFragment = RateAppDialogFragment.Companion.newInstance();
-        rateAppDialogFragment.setTargetFragment(this, 0);
-        if (!rateAppDialogFragment.isAdded()) {
+        RateAppDialog rateAppDialog = RateAppDialog.Companion.newInstance();
+        rateAppDialog.setTargetFragment(this, 0);
+        if (!rateAppDialog.isAdded()) {
             getAnalytic().reportEvent(Analytic.Rating.SHOWN);
-            rateAppDialogFragment.show(getFragmentManager(), null);
+            rateAppDialog.show(getFragmentManager(), null);
         }
     }
 

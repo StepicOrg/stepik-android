@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.dialogs
+package org.stepik.android.view.app_rating.ui.dialog
 
 import android.content.Context
 import android.graphics.Typeface
@@ -23,13 +23,14 @@ import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 
-class RateAppDialogFragment : DialogFragment() {
+class RateAppDialog : DialogFragment() {
 
     companion object {
+        const val TAG = "rate_app_dialog"
         private const val ratingKey = "ratingKey"
 
-        fun newInstance(): RateAppDialogFragment =
-                RateAppDialogFragment()
+        fun newInstance(): RateAppDialog =
+            RateAppDialog()
 
         /**
          * This callback should be implemented by targeted fragment

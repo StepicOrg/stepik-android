@@ -21,7 +21,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
-import org.stepic.droid.ui.dialogs.RateAppDialogFragment
 import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.DeviceInfoUtil
@@ -36,13 +35,14 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
+import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateAppDialogFragment.Companion.Callback {
+class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateAppDialog.Companion.Callback {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -273,11 +273,13 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     }
 
     override fun showRateDialog() {
-        val rateAppDialogFragment = RateAppDialogFragment.newInstance()
-        if (!rateAppDialogFragment.isAdded) {
-            analytic.reportEvent(Analytic.Rating.SHOWN)
-            rateAppDialogFragment.show(supportFragmentManager, null)
-        }
+        val supportFragmentManager = supportFragmentManager
+                ?.takeIf { it.findFragmentByTag(RateAppDialog.TAG) == null }
+                ?: return
+
+        val dialog = RateAppDialog.newInstance()
+        analytic.reportEvent(Analytic.Rating.SHOWN)
+        dialog.show(supportFragmentManager, RateAppDialog.TAG)
     }
 
     override fun onClickLater(starNumber: Int) {
@@ -289,7 +291,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     }
 
     override fun onClickGooglePlay(starNumber: Int) {
-        sharedPreferenceHelper.afterRateWasHandled()
+        lessonPresenter.rateHandled()
         analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_APPSTORE)
 
         if (config.isAppInStore) {
@@ -300,7 +302,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     }
 
     override fun onClickSupport(starNumber: Int) {
-        sharedPreferenceHelper.afterRateWasHandled()
+        lessonPresenter.rateHandled()
         analytic.reportRateEvent(starNumber, Analytic.Rating.NEGATIVE_EMAIL)
         setupTextFeedback()
     }

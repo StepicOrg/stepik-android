@@ -1,4 +1,4 @@
-package org.stepik.android.domain.rating.interactor
+package org.stepik.android.domain.app_rating.interactor
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import org.stepic.droid.configuration.RemoteConfig
@@ -6,7 +6,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
 import javax.inject.Inject
 
-class RatingInteractor
+class AppRatingInteractor
 @Inject
 constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
@@ -26,6 +26,10 @@ constructor(
     fun incrementSolvedStepCounter() {
         sharedPreferenceHelper.trackWhenUserSolved()
         sharedPreferenceHelper.incrementUserSolved()
+    }
+
+    fun rateHandled() {
+        sharedPreferenceHelper.afterRateWasHandled()
     }
 
     private fun isRateDelayGreater(): Boolean {
