@@ -22,7 +22,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyUtils
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
-
 class RateAppDialog : DialogFragment() {
 
     companion object {
@@ -61,7 +60,7 @@ class RateAppDialog : DialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.dialog_rate_app, container, false)
+        inflater.inflate(R.layout.dialog_rate_app, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,11 +81,12 @@ class RateAppDialog : DialogFragment() {
 
         rateDialogPositive.setOnClickListener {
             dialog.dismiss()
-            val rating = rateDialogRatingBar.rating
-            if (RatingUtil.isExcellent(rating.toInt())) {
-                callback.onClickGooglePlay(rating.toInt())
-            } else {
-                callback.onClickSupport(rating.toInt())
+            val rating = rateDialogRatingBar.rating.toInt()
+            when (RatingUtil.isExcellent(rating)) {
+                true ->
+                    callback.onClickGooglePlay(rating)
+                false ->
+                    callback.onClickSupport(rating)
             }
         }
 
@@ -132,10 +132,8 @@ class RateAppDialog : DialogFragment() {
         outState.putInt(ratingKey, rateDialogRatingBar.rating.toInt())
     }
 
-    private fun TextView.setTextAndColor(@StringRes stringRes: Int,
-                                         @ColorRes textColorRes: Int) {
+    private fun TextView.setTextAndColor(@StringRes stringRes: Int, @ColorRes textColorRes: Int) {
         this.setText(stringRes)
         this.setTextColor(org.stepic.droid.util.ColorUtil.getColorArgb(textColorRes, context))
     }
-
 }
