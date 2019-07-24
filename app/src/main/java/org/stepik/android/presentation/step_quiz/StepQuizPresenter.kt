@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Reply
@@ -89,7 +90,7 @@ constructor(
         } else {
             val submissionState = (oldState.submissionState as? StepQuizView.SubmissionState.Loaded)
                 ?.submission
-                ?.let { Submission(attempt = oldState.attempt.id, reply = it.reply, status = Submission.Status.LOCAL) }
+                ?.let { Submission(id = it.id + 1, attempt = oldState.attempt.id, reply = it.reply, status = Submission.Status.LOCAL) }
                 ?.let { StepQuizView.SubmissionState.Loaded(it) }
                 ?: StepQuizView.SubmissionState.Empty
 
@@ -127,7 +128,18 @@ constructor(
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
 
-        val submission = Submission(attempt = oldState.attempt.id, reply = reply, status = Submission.Status.LOCAL)
+        val submissionId = (oldState.submissionState as? StepQuizView.SubmissionState.Loaded)
+            ?.submission
+            ?.id
+            ?: 0
+
+        val submission = Submission(id = submissionId, attempt = oldState.attempt.id, reply = reply, status = Submission.Status.LOCAL)
         state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))
+
+        compositeDisposable += stepQuizInteractor
+            .createLocalSubmission(submission)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 }

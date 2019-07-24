@@ -8,7 +8,6 @@ import android.telephony.TelephonyManager
 /** hasCombBar test if device has Combined Bar : only for tablet with Honeycomb or ICS */
 fun hasCombinationBar(context: Context): Boolean {
     return (!isPhone(context)
-            && (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
             && (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN))
 }
 

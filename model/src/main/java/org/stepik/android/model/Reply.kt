@@ -23,8 +23,6 @@ class Reply(
     @SerializedName("solve_sql")
     val solveSql: String? = null,
 
-    @SerializedName("blanks")
-    val blanks: List<String>? = null,
     var tableChoices: List<TableChoiceAnswer>? = null //this is not serialize by default, because  field 'choices' is already created by different type
 )
 

@@ -41,7 +41,6 @@ public class AppConstants {
     public static final String TYPE_DATASET = "dataset";
     public static final String TYPE_ANIMATION = "animation";
     public static final String TYPE_CHEMICAL = "chemical";
-    public static final String TYPE_FILL_BLANKS = "fill-blanks";
     public static final String TYPE_PUZZLE = "puzzle";
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";

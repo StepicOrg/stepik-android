@@ -57,10 +57,6 @@ fun stopListenKeyboardChanges(
         rootView: View,
         onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener?) {
     onGlobalLayoutListener?.let {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            rootView.viewTreeObserver.removeOnGlobalLayoutListener(it)
-        } else {
-            rootView.viewTreeObserver.removeGlobalOnLayoutListener(it)
-        }
+        rootView.viewTreeObserver.removeOnGlobalLayoutListener(it)
     }
 }
