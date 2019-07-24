@@ -329,7 +329,7 @@ constructor(
                 )
     }
 
-    fun rateHandled() {
+    fun onAppRateShow() {
         appRatingInteractor.rateHandled()
     }
 }

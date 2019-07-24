@@ -291,7 +291,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     }
 
     override fun onClickGooglePlay(starNumber: Int) {
-        lessonPresenter.rateHandled()
+        lessonPresenter.onAppRateShow()
         analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_APPSTORE)
 
         if (config.isAppInStore) {
@@ -302,7 +302,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     }
 
     override fun onClickSupport(starNumber: Int) {
-        lessonPresenter.rateHandled()
+        lessonPresenter.onAppRateShow()
         analytic.reportRateEvent(starNumber, Analytic.Rating.NEGATIVE_EMAIL)
         setupTextFeedback()
     }

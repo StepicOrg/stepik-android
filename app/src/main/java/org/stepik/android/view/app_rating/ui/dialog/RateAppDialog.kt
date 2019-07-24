@@ -82,11 +82,10 @@ class RateAppDialog : DialogFragment() {
         rateDialogPositive.setOnClickListener {
             dialog.dismiss()
             val rating = rateDialogRatingBar.rating.toInt()
-            when (RatingUtil.isExcellent(rating)) {
-                true ->
-                    callback.onClickGooglePlay(rating)
-                false ->
-                    callback.onClickSupport(rating)
+            if (RatingUtil.isExcellent(rating)) {
+                callback.onClickGooglePlay(rating)
+            } else {
+                callback.onClickSupport(rating)
             }
         }
 
