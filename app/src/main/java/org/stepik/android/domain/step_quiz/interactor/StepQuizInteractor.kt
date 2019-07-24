@@ -3,11 +3,14 @@ package org.stepik.android.domain.step_quiz.interactor
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.maybeFirst
+import org.stepic.droid.util.toMaybe
 import org.stepik.android.domain.attempt.repository.AttemptRepository
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.domain.submission.repository.SubmissionRepository
@@ -41,9 +44,29 @@ constructor(
             .createAttemptForStep(stepId)
 
     fun getSubmission(attemptId: Long): Maybe<Submission> =
-        submissionRepository
-            .getSubmissionsForAttempt(attemptId)
-            .maybeFirst()
+        zip(
+            submissionRepository
+                .getSubmissionsForAttempt(attemptId, DataSourceType.REMOTE),
+            submissionRepository
+                .getSubmissionsForAttempt(attemptId, DataSourceType.CACHE)
+        )
+            .flatMapMaybe { (remoteSubmissions, localSubmissions) ->
+                val remoteSubmission = remoteSubmissions
+                    .firstOrNull()
+
+                val localSubmission = localSubmissions
+                    .firstOrNull()
+
+                if (remoteSubmission != null && localSubmission != null) {
+                    if (remoteSubmission.id >= localSubmission.id) {
+                        remoteSubmission
+                    } else {
+                        localSubmission
+                    }
+                } else {
+                    remoteSubmission ?: localSubmission
+                }.toMaybe()
+            }
 
     fun createSubmission(stepId: Long, attemptId: Long, reply: Reply): Single<Submission> =
         submissionRepository
@@ -60,6 +83,10 @@ constructor(
                     stepQuizPublisher.onNext(stepId)
                 }
             }
+
+    fun createLocalSubmission(submission: Submission): Single<Submission> =
+        submissionRepository
+            .createSubmission(submission, dataSourceType = DataSourceType.CACHE)
 
     fun getStepRestrictions(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizRestrictions> =
         getStepSubmissionCount(stepPersistentWrapper.step.id)
