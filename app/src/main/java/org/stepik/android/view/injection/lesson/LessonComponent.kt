@@ -9,6 +9,7 @@ import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.section.SectionDataModule
 import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.unit.UnitDataModule
+import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentDataModule
 import org.stepik.android.view.lesson.ui.activity.LessonActivity
 
@@ -26,7 +27,8 @@ import org.stepik.android.view.lesson.ui.activity.LessonActivity
     ProgressDataModule::class,
     ViewAssignmentDataModule::class,
 
-    FeedbackDataModule::class
+    FeedbackDataModule::class,
+    UserActivityDataModule::class
 ])
 interface LessonComponent {
     @Subcomponent.Builder
