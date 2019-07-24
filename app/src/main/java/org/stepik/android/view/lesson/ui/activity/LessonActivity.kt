@@ -17,12 +17,17 @@ import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
 import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.DeviceInfoUtil
+import org.stepic.droid.util.RatingUtil
+import org.stepic.droid.util.reportRateEvent
 import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
@@ -30,13 +35,14 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
+import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
+class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateAppDialog.Companion.Callback {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -264,5 +270,51 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
     override fun showComments(step: Step, discussionId: Long) {
         // todo: use discussion id after comments refactor
         screenManager.openComments(this, step.discussionProxy, step.id)
+    }
+
+    override fun showRateDialog() {
+        val supportFragmentManager = supportFragmentManager
+                ?.takeIf { it.findFragmentByTag(RateAppDialog.TAG) == null }
+                ?: return
+
+        val dialog = RateAppDialog.newInstance()
+        analytic.reportEvent(Analytic.Rating.SHOWN)
+        dialog.show(supportFragmentManager, RateAppDialog.TAG)
+    }
+
+    override fun onClickLater(starNumber: Int) {
+        if (RatingUtil.isExcellent(starNumber)) {
+            analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_LATER)
+        } else {
+            analytic.reportRateEvent(starNumber, Analytic.Rating.NEGATIVE_LATER)
+        }
+    }
+
+    override fun onClickGooglePlay(starNumber: Int) {
+        lessonPresenter.onAppRateShow()
+        analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_APPSTORE)
+
+        if (config.isAppInStore) {
+            screenManager.showStoreWithApp(this)
+        } else {
+            setupTextFeedback()
+        }
+    }
+
+    override fun onClickSupport(starNumber: Int) {
+        lessonPresenter.onAppRateShow()
+        analytic.reportRateEvent(starNumber, Analytic.Rating.NEGATIVE_EMAIL)
+        setupTextFeedback()
+    }
+
+    override fun sendTextFeedback(supportEmailData: SupportEmailData) {
+        screenManager.openTextFeedBack(this, supportEmailData)
+    }
+
+    private fun setupTextFeedback() {
+        lessonPresenter.sendTextFeedback(
+            getString(R.string.feedback_subject),
+            DeviceInfoUtil.getInfosAboutDevice(this, "\n")
+        )
     }
 }

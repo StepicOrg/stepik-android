@@ -3,6 +3,7 @@ package org.stepik.android.view.injection.lesson
 import dagger.Subcomponent
 import org.stepik.android.view.injection.assignment.AssignmentDataModule
 import org.stepik.android.view.injection.course.CourseDataModule
+import org.stepik.android.view.injection.feedback.FeedbackDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.section.SectionDataModule
@@ -23,7 +24,9 @@ import org.stepik.android.view.lesson.ui.activity.LessonActivity
     AssignmentDataModule::class,
     StepDataModule::class,
     ProgressDataModule::class,
-    ViewAssignmentDataModule::class
+    ViewAssignmentDataModule::class,
+
+    FeedbackDataModule::class
 ])
 interface LessonComponent {
     @Subcomponent.Builder
