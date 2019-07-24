@@ -509,6 +509,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void continueCourse(Activity activity, @NotNull LastStep lastStep) {
+        Intent intent = LessonActivity.Companion.createIntent(activity, lastStep);
+        activity.startActivity(intent);
+    }
+
+    @Override
     public void openInWeb(Activity context, String path) {
         analytic.reportEventWithName(Analytic.Screens.OPEN_LINK_IN_WEB, path);
         final Intent intent = getOpenInWebIntent(path);
