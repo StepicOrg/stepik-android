@@ -14,6 +14,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.fragment_step.*
+import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -25,6 +26,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
+import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
 import org.stepik.android.view.base.ui.interfaces.KeyboardExtensionContainer
@@ -99,8 +101,10 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         }
         stepDiscussionsDelegate.setDiscussionsCount(stepWrapper.step.discussionsCount)
 
+        stepStatusTryAgain.setOnClickListener {
+            stepPresenter.fetchStepUpdate(stepWrapper.step.id, lessonData)
+        }
         initStepContentFragment()
-        initStepQuizFragment()
     }
 
     private fun initStepContentFragment() {
@@ -130,6 +134,7 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
         stepContentSeparator.changeVisibility(isStepHasQuiz)
         stepQuizContainer.changeVisibility(isStepHasQuiz)
+        stepQuizError.changeVisibility(false)
         if (isStepHasQuiz && childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null) {
             childFragmentManager
                 .beginTransaction()
@@ -176,6 +181,14 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         if (state is StepView.State.Loaded) {
             stepWrapper = state.stepWrapper
             stepDiscussionsDelegate.setDiscussionsCount(state.stepWrapper.step.discussionsCount)
+            if (stepWrapper.step.status == Step.Status.READY) {
+                initStepQuizFragment()
+            }
+            if (stepWrapper.step.status == Step.Status.ERROR) {
+                stepContentSeparator.changeVisibility(true)
+                stepQuizContainer.changeVisibility(false)
+                stepQuizError.changeVisibility(true)
+            }
         }
     }
 
