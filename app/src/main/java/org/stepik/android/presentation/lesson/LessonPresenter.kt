@@ -200,7 +200,7 @@ constructor(
             .lessonData
             .lesson
             .timeToComplete
-            .takeIf { it > 0 }
+            .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
         view?.showLessonInfoTooltip(stepWorth, timeToComplete, -1)
