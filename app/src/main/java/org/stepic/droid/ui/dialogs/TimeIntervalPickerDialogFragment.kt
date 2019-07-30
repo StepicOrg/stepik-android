@@ -21,6 +21,7 @@ import javax.inject.Inject
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
+        const val TAG = "time_interval_picker_dialog"
         const val RESULT_INTERVAL_CODE_KEY = "RESULT_INTERVAL_CODE_KEY"
         private const val CHOSEN_POSITION_KEY = "CHOSEN_POSITION_KEY"
         fun newInstance(): TimeIntervalPickerDialogFragment =
