@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import org.stepic.droid.R
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
@@ -53,6 +54,7 @@ class ChoicesAdapterDelegate(
 
             itemChoiceFeedback.setTextSize(14f)
             itemChoiceFeedback.setBackgroundResource(R.drawable.bg_step_quiz_choice_item_feedback)
+            itemChoiceLatex.findViewById<LatexSupportableEnhancedFrameLayout>(R.id.latex_text).setTextIsSelectable(true)
         }
 
         override fun onBind(data: Choice) {
