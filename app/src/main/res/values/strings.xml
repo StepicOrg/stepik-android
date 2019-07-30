@@ -724,7 +724,8 @@
     <string name="lesson_title">Lesson</string>
     <string name="lesson_menu_info">Info</string>
 
-    <string name="lesson_info_points">%s for step</string>
+    <string name="lesson_info_points_with_score">You got %s out of %s for step</string>
+    <string name="lesson_info_points">You will get %s for step</string>
     <string name="lesson_info_time_to_complete">&#8776;%s for lesson</string>
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
