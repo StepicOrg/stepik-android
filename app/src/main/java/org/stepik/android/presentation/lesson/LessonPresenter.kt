@@ -19,6 +19,7 @@ import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 import org.stepik.android.domain.step.interactor.StepIndexingInteractor
+import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
@@ -38,6 +39,7 @@ constructor(
     private val lessonContentInteractor: LessonContentInteractor,
     private val appRatingInteractor: AppRatingInteractor,
     private val feedbackInteractor: FeedbackInteractor,
+    private val streakInteractor: StreakInteractor,
 
     private val stateMapper: LessonStateMapper,
 
@@ -285,6 +287,13 @@ constructor(
         appRatingInteractor.incrementSolvedStepCounter()
         if (appRatingInteractor.needShowAppRateDialog()) {
             view?.showRateDialog()
+        } else if (streakInteractor.needShowStreakDialog()) {
+            compositeDisposable += streakInteractor
+                    .onNeedShowStreak()
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(onNext = { view?.showStreakDialog(it) }, onError = emptyOnErrorStub)
+
         }
 
         compositeDisposable += stepViewReportInteractor
@@ -331,5 +340,9 @@ constructor(
 
     fun onAppRateShow() {
         appRatingInteractor.rateHandled()
+    }
+
+    fun setStreakTime(timeIntervalCode: Int) {
+        streakInteractor.setStreakTime(timeIntervalCode)
     }
 }
