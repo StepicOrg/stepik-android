@@ -293,7 +293,6 @@ constructor(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(onNext = { view?.showStreakDialog(it) }, onError = emptyOnErrorStub)
-
         }
 
         compositeDisposable += stepViewReportInteractor
