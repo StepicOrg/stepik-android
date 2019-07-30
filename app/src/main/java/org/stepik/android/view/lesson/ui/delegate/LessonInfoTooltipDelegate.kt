@@ -36,7 +36,6 @@ class LessonInfoTooltipDelegate(
             .from(anchorView.context)
             .inflate(R.layout.tooltip_lesson_info, null)
 
-
         if (stepScore > 0) {
             popupView
                 .stepWorth
