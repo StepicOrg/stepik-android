@@ -72,7 +72,7 @@ constructor(
         stepUpdatesDisposable.clear()
 
         stepUpdatesDisposable += stepInteractor
-            .getStepUpdates(stepId, shouldSkipFirstValue)
+            .getStepUpdates(stepId, shouldSkipFirstValue, false)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -90,7 +90,7 @@ constructor(
         stepUpdatesDisposable.clear()
 
         stepUpdatesDisposable += stepInteractor
-                .getStepUpdates(stepId, false)
+                .getStepUpdates(stepId, false, true)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(

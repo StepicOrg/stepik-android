@@ -16,10 +16,13 @@ constructor(
     private val stepCacheDataSource: StepCacheDataSource,
     private val stepRemoteDataSource: StepRemoteDataSource
 ) : StepRepository {
-    override fun getSteps(vararg stepIds: Long, primarySourceType: DataSourceType): Single<List<Step>> {
+    override fun getSteps(vararg stepIds: Long, primarySourceType: DataSourceType, cacheRemote: Boolean): Single<List<Step>> {
         val remoteSource = stepRemoteDataSource
             .getSteps(*stepIds)
-            .doCompletableOnSuccess(stepCacheDataSource::saveSteps)
+
+        if (cacheRemote) {
+             remoteSource.doCompletableOnSuccess(stepCacheDataSource::saveSteps)
+        }
 
         val cacheSource = stepCacheDataSource
             .getSteps(*stepIds)
