@@ -4,7 +4,6 @@ import android.graphics.drawable.AnimationDrawable
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.LinearLayoutCompat
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
@@ -12,7 +11,6 @@ import org.stepic.droid.R
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.ui.util.setCompoundDrawables
-import org.stepic.droid.util.DpPixelsHelper
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 
@@ -46,7 +44,12 @@ class StepQuizFeedbackBlocksDelegate(
         drawable?.start()
 
         stepQuizFeedbackCorrect.setCompoundDrawables(start = R.drawable.ic_step_quiz_correct)
-        stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+        if (hasReview) {
+            stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
+            stepQuizFeedbackCorrect.setOnClickListener { reviewClick() }
+        } else {
+            stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+        }
 
         stepQuizFeedbackWrong.setCompoundDrawables(start = R.drawable.ic_step_quiz_wrong)
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
@@ -62,12 +65,16 @@ class StepQuizFeedbackBlocksDelegate(
         viewStateDelegate.switchState(state)
         when (state) {
             is StepQuizFeedbackState.Correct -> {
-                stepQuizFeedbackCorrect.text =
-                    if (state.isFreeAnswer) {
-                        context.getString(R.string.step_quiz_feedback_correct_free_answer)
-                    } else {
-                        resources.getStringArray(R.array.step_quiz_feedback_correct).random()
-                    }
+                if (hasReview) {
+                    stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
+                } else {
+                    stepQuizFeedbackCorrect.text =
+                        if (state.isFreeAnswer) {
+                            context.getString(R.string.step_quiz_feedback_correct_free_answer)
+                        } else {
+                            resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+                        }
+                }
                 setHint(stepQuizFeedbackCorrect, R.drawable.bg_step_quiz_feedback_correct, R.drawable.bg_step_quiz_feedback_correct_with_hint, state.hint)
             }
 
@@ -86,9 +93,6 @@ class StepQuizFeedbackBlocksDelegate(
             is StepQuizFeedbackState.Validation ->
                 stepQuizFeedbackValidation.text = state.message
         }
-        if (hasReview) {
-            setReview(state)
-        }
     }
 
     private fun setHint(
@@ -104,24 +108,6 @@ class StepQuizFeedbackBlocksDelegate(
         } else {
             targetView.setBackgroundResource(backgroundRes)
             stepQuizFeedbackHint.visibility = View.GONE
-        }
-    }
-
-    private fun setReview(state: StepQuizFeedbackState) {
-        if (state is StepQuizFeedbackState.Correct) {
-            stepQuizFeedbackValidation.setText(R.string.review_warning)
-            stepQuizFeedbackValidation.visibility = View.VISIBLE
-            stepQuizFeedbackValidation.setOnClickListener { reviewClick() }
-            stepQuizFeedbackValidation.layoutParams = (stepQuizFeedbackValidation.layoutParams as LinearLayoutCompat.LayoutParams)
-                .apply {
-                    topMargin = DpPixelsHelper.convertDpToPixel(16f).toInt()
-                }
-        } else {
-            stepQuizFeedbackValidation.setOnClickListener(null)
-            stepQuizFeedbackValidation.layoutParams = (stepQuizFeedbackValidation.layoutParams as LinearLayoutCompat.LayoutParams)
-                    .apply {
-                        topMargin = 0
-                    }
         }
     }
 }
