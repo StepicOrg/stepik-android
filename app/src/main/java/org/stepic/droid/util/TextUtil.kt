@@ -1,5 +1,10 @@
 package org.stepic.droid.util
 
+import android.support.v4.text.HtmlCompat
+import android.support.v4.text.util.LinkifyCompat
+import android.text.Html
+import android.text.SpannableString
+import android.text.util.Linkify
 import kotlin.math.log
 import kotlin.math.pow
 
@@ -34,4 +39,12 @@ object TextUtil {
         val letter = "kMGTPE"[exp - 1]
         return "%.1f %sB".format(bytes / unit.toDouble().pow(exp), letter)
     }
+
+    @JvmStatic
+    fun linkify(text: String): String =
+        SpannableString(HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT))
+            .let {
+                LinkifyCompat.addLinks(it, Linkify.WEB_URLS)
+                HtmlCompat.toHtml(it, HtmlCompat.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
+            }
 }
