@@ -17,12 +17,12 @@ constructor(
     private val stepRepository: StepRepository,
     private val stepContentResolver: StepContentResolver
 ) {
-    fun getStepUpdates(stepId: Long, shouldSkipFirstValue: Boolean = false, cacheResult: Boolean = true): Observable<StepPersistentWrapper> =
+    fun getStepUpdates(stepId: Long, shouldSkipFirstValue: Boolean = false): Observable<StepPersistentWrapper> =
         Observable
             .just(stepId)
             .concat(stepDiscussionObservable)
             .skip(if (shouldSkipFirstValue) 1 else 0)
             .filter { it == stepId }
-            .flatMapMaybe { stepRepository.getStep(stepId, DataSourceType.REMOTE, cacheResult) }
+            .flatMapMaybe { stepRepository.getStep(stepId, DataSourceType.REMOTE) }
             .flatMap(stepContentResolver::resolvePersistentContent)
 }
