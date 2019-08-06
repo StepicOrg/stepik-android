@@ -292,8 +292,8 @@ constructor(
                     .onNeedShowStreak()
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
-                    .subscribeBy(onNext = { view?.showStreakDialog(it) }, onError = emptyOnErrorStub)
-        }
+                    .subscribeBy(onSuccess = { view?.showStreakDialog(it) }, onError = { it.printStackTrace() })
+            }
 
         compositeDisposable += stepViewReportInteractor
             .updatePassedStep(stepItem.stepWrapper.step, stepItem.assignment)

@@ -1,10 +1,9 @@
 package org.stepik.android.domain.streak.interactor
 
-import io.reactivex.Observable
+import io.reactivex.Maybe
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.RxOptional
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.util.unwrapOptional
+import org.stepic.droid.util.toMaybe
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import javax.inject.Inject
@@ -22,15 +21,12 @@ constructor(
         canShowStreakDialog() &&
         isAuthResponseFromStore()
 
-    fun onNeedShowStreak(): Observable<Int> =
-        Observable.fromCallable { RxOptional(sharedPreferenceHelper.profile?.id) }
-            .unwrapOptional()
-            .flatMap { userActivityRepository.getUserActivities(it).toObservable() }
-            .map { RxOptional(it.firstOrNull()?.pins) }
-            .map { optional ->
-                optional.map { StepikUtil.getCurrentStreak(it) }
-            }
-            .unwrapOptional()
+    fun onNeedShowStreak(): Maybe<Int> =
+        Maybe
+            .fromCallable { sharedPreferenceHelper.profile?.id }
+            .flatMapSingleElement { userActivityRepository.getUserActivities(it) }
+            .flatMap { it.firstOrNull()?.pins.toMaybe() }
+            .map { StepikUtil.getCurrentStreak(it) }
 
     fun setStreakTime(timeIntervalCode: Int) {
         sharedPreferenceHelper.isStreakNotificationEnabled = true
