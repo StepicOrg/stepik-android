@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
 import android.graphics.drawable.AnimationDrawable
+import android.os.Build
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
 import android.support.v7.content.res.AppCompatResources
@@ -18,7 +19,7 @@ class StepQuizFeedbackBlocksDelegate(
     containerView: View,
     private val fontsProvider: FontsProvider,
     private val hasReview: Boolean,
-    private val reviewClick: () -> Unit
+    private val onReviewClicked: () -> Unit
 ) {
     private val context = containerView.context
     private val resources = containerView.resources
@@ -46,9 +47,13 @@ class StepQuizFeedbackBlocksDelegate(
         stepQuizFeedbackCorrect.setCompoundDrawables(start = R.drawable.ic_step_quiz_correct)
         if (hasReview) {
             stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
-            stepQuizFeedbackCorrect.setOnClickListener { reviewClick() }
+            stepQuizFeedbackCorrect.setOnClickListener { onReviewClicked() }
         } else {
             stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+        }
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            applyCorrectFeedbackBackground()
         }
 
         stepQuizFeedbackWrong.setCompoundDrawables(start = R.drawable.ic_step_quiz_wrong)
@@ -65,14 +70,16 @@ class StepQuizFeedbackBlocksDelegate(
         viewStateDelegate.switchState(state)
         when (state) {
             is StepQuizFeedbackState.Correct -> {
-                if (hasReview) {
-                    stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
-                } else {
-                    stepQuizFeedbackCorrect.text =
-                        if (state.isFreeAnswer) {
-                            context.getString(R.string.step_quiz_feedback_correct_free_answer)
-                        } else {
-                            resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+                when (hasReview) {
+                    true ->
+                        stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
+                    false -> {
+                        stepQuizFeedbackCorrect.text =
+                            if (state.isFreeAnswer) {
+                                context.getString(R.string.step_quiz_feedback_correct_free_answer)
+                            } else {
+                                resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+                            }
                         }
                 }
                 setHint(stepQuizFeedbackCorrect, R.drawable.bg_step_quiz_feedback_correct, R.drawable.bg_step_quiz_feedback_correct_with_hint, state.hint)
@@ -109,5 +116,19 @@ class StepQuizFeedbackBlocksDelegate(
             targetView.setBackgroundResource(backgroundRes)
             stepQuizFeedbackHint.visibility = View.GONE
         }
+    }
+
+    // Pre-Lollipop devices don't retain the paddings when defining this background
+    private fun applyCorrectFeedbackBackground() {
+        val paddingLeft = stepQuizFeedbackCorrect.paddingLeft
+        val paddingTop = stepQuizFeedbackCorrect.paddingTop
+        val paddingRight = stepQuizFeedbackCorrect.paddingRight
+        val paddingBottom = stepQuizFeedbackCorrect.paddingBottom
+        val compoundDrawablePadding = stepQuizFeedbackCorrect.compoundDrawablePadding
+
+        stepQuizFeedbackCorrect.setBackgroundResource(R.drawable.bg_step_quiz_feedback_correct)
+
+        stepQuizFeedbackCorrect.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+        stepQuizFeedbackCorrect.compoundDrawablePadding = compoundDrawablePadding
     }
 }
