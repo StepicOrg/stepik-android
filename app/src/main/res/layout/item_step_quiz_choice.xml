@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_step_quiz_choice_item"
-        android:padding="16dp">
+        android:padding="@dimen/step_quiz_choice_quiz_item_padding">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/itemChoiceCheckmark"

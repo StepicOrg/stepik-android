@@ -4,11 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
-import org.stepic.droid.ui.custom.ProgressLatexView
-import org.stepic.droid.util.DpPixelsHelper
 
 /**
  * Custom item view to infer clicks on the item and scrolling of the webview inside the item
@@ -20,26 +17,20 @@ class QuizItemView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
     companion object {
         const val MAX_CLICK_DURATION = 200
-        const val LATEX_TOUCH_EVENT_OFFSET = 16f
     }
 
     private var clickDuration: Long = 0
 
-    private lateinit var webView: ProgressLatexView
     private lateinit var latexText: LatexSupportableEnhancedFrameLayout
+    private val latexTouchEventOffset = resources.getDimension(R.dimen.step_quiz_choice_quiz_item_padding)
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        if (!::webView.isInitialized) {
-            webView = findViewById(R.id.itemChoiceLatex)
-        }
-        val dispatched = webView.webView.dispatchTouchEvent(ev)
-
         val latexTextTouchEvent = MotionEvent.obtain(
             ev.downTime,
             ev.eventTime,
             ev.action,
-            ev.x - DpPixelsHelper.convertDpToPixel(LATEX_TOUCH_EVENT_OFFSET),
-            ev.y - DpPixelsHelper.convertDpToPixel(LATEX_TOUCH_EVENT_OFFSET),
+            ev.x - latexTouchEventOffset,
+            ev.y - latexTouchEventOffset,
             ev.metaState
         )
 
@@ -47,11 +38,12 @@ class QuizItemView @JvmOverloads constructor(
             latexText = findViewById(R.id.latex_text)
         }
         latexText.dispatchTouchEvent(latexTextTouchEvent)
+
         if (ev.action == MotionEvent.ACTION_UP) {
             clickDuration = ev.eventTime - ev.downTime
         }
         super.onTouchEvent(ev)
-        return dispatched
+        return true
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean = false

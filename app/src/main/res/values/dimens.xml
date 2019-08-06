@@ -227,4 +227,5 @@
     <!-- Choice quiz -->
     <dimen name="step_quiz_choice_option_stroke_width">1dp</dimen>
     <dimen name="step_quiz_choice_option_view_radius">8dp</dimen>
+    <dimen name="step_quiz_choice_quiz_item_padding">16dp</dimen>
 </resources>
