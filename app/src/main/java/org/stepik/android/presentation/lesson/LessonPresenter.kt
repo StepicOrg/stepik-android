@@ -196,7 +196,7 @@ constructor(
         // Because the score field in Progress is a String, GSON parses integers in the response as floating point numbers
         val stepScore = stepProgress
             ?.score
-            ?.toFloat()
+            ?.toFloatOrNull()
             ?.toLong()
             ?: 0L
 
