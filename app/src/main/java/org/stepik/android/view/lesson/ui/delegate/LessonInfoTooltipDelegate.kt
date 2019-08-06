@@ -88,14 +88,7 @@ class LessonInfoTooltipDelegate(
         @DrawableRes drawableRes: Int
     ) {
         if (value > 0) {
-            val iconDrawable = AppCompatResources
-                .getDrawable(context, drawableRes)
-                ?.let(DrawableCompat::wrap)
-                ?.let(Drawable::mutate)
-                ?: return
-            DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(context,  android.R.color.white))
-            setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
-
+            setItemDrawable(drawableRes)
             text = context.getString(stringRes, resources.getQuantityString(pluralRes, value.toInt(), value))
             visibility = View.VISIBLE
         } else {
@@ -111,6 +104,12 @@ class LessonInfoTooltipDelegate(
         @PluralsRes pluralRes: Int,
         @DrawableRes drawableRes: Int
     ) {
+        setItemDrawable(drawableRes)
+        text = context.getString(stringRes, resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore), stepCost)
+        visibility = View.VISIBLE
+    }
+
+    private fun AppCompatTextView.setItemDrawable(@DrawableRes drawableRes: Int) {
         val iconDrawable = AppCompatResources
                 .getDrawable(context, drawableRes)
                 ?.let(DrawableCompat::wrap)
@@ -118,9 +117,6 @@ class LessonInfoTooltipDelegate(
             ?: return
         DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(context,  android.R.color.white))
         setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
-
-        text = context.getString(stringRes, resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore), stepCost)
-        visibility = View.VISIBLE
     }
 
     private fun calcArrowHorizontalOffset(anchorView: View, popupView: View, arrowView: View): Float {
