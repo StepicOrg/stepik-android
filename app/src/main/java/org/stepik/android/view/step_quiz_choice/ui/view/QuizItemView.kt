@@ -20,24 +20,33 @@ class QuizItemView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr) {
     companion object {
         const val MAX_CLICK_DURATION = 200
+        const val LATEX_TOUCH_EVENT_OFFSET = 16f
     }
 
     private var clickDuration: Long = 0
 
+    private lateinit var webView: ProgressLatexView
+    private lateinit var latexText: LatexSupportableEnhancedFrameLayout
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        val webview = findViewById<ProgressLatexView>(R.id.itemChoiceLatex)
-        val dispatched = webview.webView.dispatchTouchEvent(ev)
+        if (!::webView.isInitialized) {
+            webView = findViewById(R.id.itemChoiceLatex)
+        }
+        val dispatched = webView.webView.dispatchTouchEvent(ev)
 
         val latexTextTouchEvent = MotionEvent.obtain(
             ev.downTime,
             ev.eventTime,
             ev.action,
-            ev.x - DpPixelsHelper.convertDpToPixel(16f),
-            ev.y - DpPixelsHelper.convertDpToPixel(16f),
+            ev.x - DpPixelsHelper.convertDpToPixel(LATEX_TOUCH_EVENT_OFFSET),
+            ev.y - DpPixelsHelper.convertDpToPixel(LATEX_TOUCH_EVENT_OFFSET),
             ev.metaState
         )
 
-        findViewById<LatexSupportableEnhancedFrameLayout>(R.id.latex_text).dispatchTouchEvent(latexTextTouchEvent)
+        if (!::latexText.isInitialized) {
+            latexText = findViewById(R.id.latex_text)
+        }
+        latexText.dispatchTouchEvent(latexTextTouchEvent)
         if (ev.action == MotionEvent.ACTION_UP) {
             clickDuration = ev.eventTime - ev.downTime
         }

@@ -33,6 +33,7 @@ class ChoicesAdapterDelegate(
         private val itemChoiceCheckmark = root.itemChoiceCheckmark
         private val itemChoiceLatex = root.itemChoiceLatex
         private val itemChoiceFeedback  = root.itemChoiceFeedback
+        private val itemChoiceLatexEnhancedLayout = itemChoiceLatex.findViewById<LatexSupportableEnhancedFrameLayout>(R.id.latex_text)
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
@@ -54,7 +55,7 @@ class ChoicesAdapterDelegate(
 
             itemChoiceFeedback.setTextSize(14f)
             itemChoiceFeedback.setBackgroundResource(R.drawable.bg_step_quiz_choice_item_feedback)
-            itemChoiceLatex.findViewById<LatexSupportableEnhancedFrameLayout>(R.id.latex_text).setTextIsSelectable(true)
+            itemChoiceLatexEnhancedLayout.setTextIsSelectable(true)
         }
 
         override fun onBind(data: Choice) {
