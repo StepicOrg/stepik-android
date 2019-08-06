@@ -54,18 +54,16 @@ import org.stepic.droid.util.argument
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
-import java.util.ArrayList
-import java.util.Date
-import java.util.TimeZone
+import java.util.*
 import javax.inject.Inject
 
 class   ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView,
-        AchievementsView {
+        AchievementsView,
+        TimeIntervalPickerDialogFragment.Companion.Callback{
 
     companion object {
-        private const val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
         private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
         private const val DETAILED_INFO_CONTAINER_KEY = "detailedInfoContainerKey"
 
@@ -144,7 +142,7 @@ class   ProfileFragment : FragmentBase(),
             analytic.reportEvent(Analytic.Interaction.CLICK_CHOOSE_NOTIFICATION_INTERVAL)
             val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
             if (!dialogFragment.isAdded) {
-                dialogFragment.setTargetFragment(this@ProfileFragment, NOTIFICATION_INTERVAL_REQUEST_CODE)
+                dialogFragment.setTargetFragment(this@ProfileFragment, 0)
                 dialogFragment.show(fragmentManager, null)
             }
         }
@@ -438,19 +436,6 @@ class   ProfileFragment : FragmentBase(),
         notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == NOTIFICATION_INTERVAL_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                val intervalCode = data!!.getIntExtra(TimeIntervalPickerDialogFragment.RESULT_INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
-                streakPresenter.setStreakTime(intervalCode)
-                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, intervalCode.toString() + "")
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE)
-            }
-        }
-    }
-
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
         if (localUserViewModel != null) {
@@ -474,6 +459,17 @@ class   ProfileFragment : FragmentBase(),
             }
         }
         return false
+    }
+
+    override fun onTimeIntervalPicked(data: Intent) {
+        val resultCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_RESULT_KEY, Activity.RESULT_CANCELED)
+        if (resultCode == Activity.RESULT_OK) {
+            val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
+            streakPresenter.setStreakTime(intervalCode)
+            analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, intervalCode.toString() + "")
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE)
+        }
     }
 
     private fun shareProfile() {

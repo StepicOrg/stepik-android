@@ -1,5 +1,6 @@
 package org.stepik.android.view.lesson.ui.activity
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -55,7 +56,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
-class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateAppDialog.Companion.Callback, TimeIntervalPickerDialogFragment.Callback {
+class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateAppDialog.Companion.Callback, TimeIntervalPickerDialogFragment.Companion.Callback {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -329,15 +330,9 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
 
                     analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG)
                     val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
-                    dialogFragment.callback = this
                     dialogFragment.show(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
                 }
-                .onNegative { _, _ ->
-                    analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
-                    Snackbar.make(lessonPager, R.string.streak_notification_canceled, Snackbar.LENGTH_LONG)
-                        .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
-                        .show()
-                }
+                .onNegative { _, _ -> onStreakDialogCancelled() }
                 .build()
         dialog.show()
     }
@@ -372,14 +367,17 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     }
 
     override fun onTimeIntervalPicked(data: Intent) {
-        val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.RESULT_INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
-        lessonPresenter.setStreakTime(intervalCode)
-        analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode.toString())
-        Snackbar.make(lessonPager, R.string.streak_notification_enabled_successfully, Snackbar.LENGTH_LONG)
-                .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
-                .show()
-
-        // TODO StepAttemptFragment handled a cancelled state by showing a snackbar saying that the notifications were not enabled
+        val resultCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_RESULT_KEY, Activity.RESULT_CANCELED)
+        if (resultCode == Activity.RESULT_OK) {
+            val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
+            lessonPresenter.setStreakTime(intervalCode)
+            analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode.toString())
+            Snackbar.make(lessonPager, R.string.streak_notification_enabled_successfully, Snackbar.LENGTH_LONG)
+                    .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
+                    .show()
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            onStreakDialogCancelled()
+        }
     }
 
     private fun setupTextFeedback() {
@@ -387,5 +385,12 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
             getString(R.string.feedback_subject),
             DeviceInfoUtil.getInfosAboutDevice(this, "\n")
         )
+    }
+
+    private fun onStreakDialogCancelled() {
+        analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
+        Snackbar.make(lessonPager, R.string.streak_notification_canceled, Snackbar.LENGTH_LONG)
+                .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
+                .show()
     }
 }

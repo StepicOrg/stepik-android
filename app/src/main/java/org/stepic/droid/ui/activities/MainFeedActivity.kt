@@ -28,18 +28,22 @@ import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.fonts.FontType
-import org.stepik.android.model.Course
 import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.fragments.*
+import org.stepic.droid.ui.fragments.CatalogFragment
+import org.stepic.droid.ui.fragments.CertificatesFragment
+import org.stepic.droid.ui.fragments.HomeFragment
+import org.stepic.droid.ui.fragments.NotificationsFragment
+import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.model.Course
 import org.stepik.android.model.user.Profile
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
@@ -56,7 +60,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         ProfileMainFeedView,
         EarlyStreakListener,
         NotificationsBadgesListener,
-        TimeIntervalPickerDialogFragment.Callback {
+        TimeIntervalPickerDialogFragment.Companion.Callback {
 
     companion object {
         const val CURRENT_INDEX_KEY = "currentIndexKey"
@@ -195,6 +199,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (savedInstanceState == null) {
             profileMainFeedPresenter.fetchProfile()
         }
+
+        onShowStreakSuggestion()
     }
 
     private fun getFragmentIndexFromIntent(intent: Intent?): Int {
@@ -381,7 +387,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (intent.action == LOGGED_ACTION) {
             intent.action = null
 
-
             val streakTitle = SpannableString(getString(R.string.early_notification_title))
             streakTitle.setSpan(ForegroundColorSpan(Color.BLACK), 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(this.assets, fontsProvider.provideFontPath(FontType.bold)))
@@ -400,7 +405,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                     .onPositive { _, _ ->
                         analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_POSITIVE)
                         val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
-                        dialogFragment.callback = this
                         if (!dialogFragment.isAdded) {
                             dialogFragment.show(supportFragmentManager, null)
                         }
@@ -412,7 +416,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     override fun onTimeIntervalPicked(data: Intent) {
         analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
-        val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.RESULT_INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
+        val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
         streakPresenter.setStreakTime(intervalCode) // we do not need attach this view, because we need only set in model
     }
 

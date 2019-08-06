@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -42,7 +41,6 @@ import org.stepic.droid.fonts.FontType;
 import org.stepic.droid.model.LessonSession;
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
-import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
@@ -61,6 +59,7 @@ import org.stepik.android.model.Reply;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Submission;
 import org.stepik.android.model.attempts.Attempt;
+import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog;
 
 import javax.inject.Inject;
 
@@ -71,13 +70,15 @@ import kotlin.collections.CollectionsKt;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
+import static android.app.Activity.RESULT_CANCELED;
+
 public abstract class StepAttemptFragment extends StepBaseFragment implements
         StepAttemptView,
         InternetEnabledListener,
-        RateAppDialog.Companion.Callback {
+        RateAppDialog.Companion.Callback,
+        TimeIntervalPickerDialogFragment.Companion.Callback {
 
     private final int DISCOUNTING_POLICY_REQUEST_CODE = 131;
-    private final int NOTIFICATION_TIME_REQUEST_CODE = 11;
 
     @BindView(R.id.rootStepAttemptView)
     ViewGroup rootView;
@@ -349,7 +350,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                         getAnalytic().reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG);
                         DialogFragment dialogFragment = TimeIntervalPickerDialogFragment.Companion.newInstance();
                         if (!dialogFragment.isAdded()) {
-                            dialogFragment.setTargetFragment(StepAttemptFragment.this, NOTIFICATION_TIME_REQUEST_CODE);
+                            dialogFragment.setTargetFragment(StepAttemptFragment.this, 0);
                             dialogFragment.show(getFragmentManager(), null);
                         }
                     }
@@ -619,24 +620,25 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == DISCOUNTING_POLICY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             makeSubmissionDirectly();
-        } else if (requestCode == NOTIFICATION_TIME_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.RESULT_INTERVAL_CODE_KEY, TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
-                streakPresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
-                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
-                SnackbarExtensionKt
-                        .setTextColor(
-                                Snackbar.make(rootView,
-                                        R.string.streak_notification_enabled_successfully,
-                                        Snackbar.LENGTH_LONG),
-                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                        getContext()))
-                        .show();
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
-                messageOnNotEnablingNotification();
-            }
         }
+//        else if (requestCode == NOTIFICATION_TIME_REQUEST_CODE) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
+//                streakPresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
+//                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
+//                SnackbarExtensionKt
+//                        .setTextColor(
+//                                Snackbar.make(rootView,
+//                                        R.string.streak_notification_enabled_successfully,
+//                                        Snackbar.LENGTH_LONG),
+//                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
+//                                        getContext()))
+//                        .show();
+//            } else if (resultCode == RESULT_CANCELED) {
+//                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
+//                messageOnNotEnablingNotification();
+//            }
+//        }
     }
 
     private void messageOnNotEnablingNotification() {
@@ -724,6 +726,27 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     @Override
     public void sendTextFeedback(@NotNull SupportEmailData supportEmailData) {
         screenManager.openTextFeedBack(requireContext(), supportEmailData);
+    }
+
+    @Override
+    public void onTimeIntervalPicked(@NotNull Intent data) {
+        int resultCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_RESULT_KEY, Activity.RESULT_CANCELED);
+            if (resultCode == Activity.RESULT_OK) {
+                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
+                streakPresenter.setStreakTime(intervalCode);
+                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
+                SnackbarExtensionKt
+                        .setTextColor(
+                                Snackbar.make(rootView,
+                                        R.string.streak_notification_enabled_successfully,
+                                        Snackbar.LENGTH_LONG),
+                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                        getContext()))
+                        .show();
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
+                messageOnNotEnablingNotification();
+            }
     }
 
     protected final void hideWrongStatus() {
