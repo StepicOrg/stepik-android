@@ -1,5 +1,6 @@
 package org.stepik.android.view.step_quiz_choice.mapper
 
+import org.stepic.droid.util.TextUtil
 import org.stepik.android.model.Submission
 import org.stepik.android.model.feedback.ChoiceFeedback
 import org.stepik.android.view.step_quiz_choice.model.Choice
@@ -21,7 +22,7 @@ class ChoiceStepQuizOptionsMapper {
                     }
                 Choice(
                     option = option,
-                    feedback = feedback?.optionsFeedback?.getOrNull(i),
+                    feedback = feedback?.optionsFeedback?.getOrNull(i)?.let(TextUtil::linkify),
                     correct = isCorrect,
                     isEnabled = isQuizEnabled
                 )
