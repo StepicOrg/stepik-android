@@ -69,6 +69,8 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
     private lateinit var stepNavigationDelegate: StepNavigationDelegate
     private lateinit var stepDiscussionsDelegate: StepDiscussionsDelegate
 
+    private var mustReloadFromRemote: Boolean = false
+
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
@@ -102,7 +104,8 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         stepDiscussionsDelegate.setDiscussionsCount(stepWrapper.step.discussionsCount)
 
         stepStatusTryAgain.setOnClickListener {
-            stepPresenter.fetchStepUpdate(stepWrapper.step.id, lessonData)
+            mustReloadFromRemote = true
+            stepPresenter.fetchStepUpdate(stepWrapper.step.id)
         }
         initStepContentFragment()
     }
@@ -140,6 +143,12 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
                 .beginTransaction()
                 .add(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData), STEP_QUIZ_FRAGMENT_TAG)
                 .commitNow()
+        } else if (mustReloadFromRemote) {
+            childFragmentManager
+                .beginTransaction()
+                .replace(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData), STEP_QUIZ_FRAGMENT_TAG)
+                .commitNow()
+            mustReloadFromRemote = false
         }
     }
 
@@ -181,13 +190,14 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         if (state is StepView.State.Loaded) {
             stepWrapper = state.stepWrapper
             stepDiscussionsDelegate.setDiscussionsCount(state.stepWrapper.step.discussionsCount)
-            if (stepWrapper.step.status == Step.Status.READY) {
-                initStepQuizFragment()
-            }
-            if (stepWrapper.step.status == Step.Status.ERROR) {
-                stepContentSeparator.changeVisibility(true)
-                stepQuizContainer.changeVisibility(false)
-                stepQuizError.changeVisibility(true)
+            when (stepWrapper.step.status) {
+                Step.Status.READY ->
+                    initStepQuizFragment()
+                Step.Status.PREPARING, Step.Status.ERROR -> {
+                    stepContentSeparator.changeVisibility(true)
+                    stepQuizContainer.changeVisibility(false)
+                    stepQuizError.changeVisibility(true)
+                }
             }
         }
     }
