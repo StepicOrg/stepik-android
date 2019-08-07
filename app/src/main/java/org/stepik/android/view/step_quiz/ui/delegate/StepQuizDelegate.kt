@@ -136,7 +136,6 @@ class StepQuizDelegate(
             R.color.color_step_submit_button_text
         }
 
-
     private fun resolveQuizDiscountingPolicyText(state: StepQuizView.State.AttemptLoaded): String? =
         with(state.restrictions) {
             when (discountingPolicyType) {
