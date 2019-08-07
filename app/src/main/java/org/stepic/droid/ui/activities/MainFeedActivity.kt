@@ -414,10 +414,14 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
     }
 
-    override fun onTimeIntervalPicked(resultCode: Int?, chosenInterval: Int?) {
+    override fun onTimeIntervalPicked(chosenInterval: Int) {
         analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
-        val intervalCode = chosenInterval ?: TimeIntervalUtil.defaultTimeCode
-        streakPresenter.setStreakTime(intervalCode) // we do not need attach this view, because we need only set in model
+        streakPresenter.setStreakTime(chosenInterval) // we do not need attach this view, because we need only set in model
+    }
+
+    override fun onDialogTimeIntervalDialogCancelled() {
+        analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
+        streakPresenter.setStreakTime(TimeIntervalUtil.defaultTimeCode)
     }
 
     override fun onBadgeShouldBeHidden() {

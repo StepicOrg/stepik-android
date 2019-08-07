@@ -1,7 +1,5 @@
 package org.stepic.droid.ui.dialogs
 
-import android.app.Activity.RESULT_CANCELED
-import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -27,7 +25,8 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
                 TimeIntervalPickerDialogFragment()
 
         interface Callback {
-            fun onTimeIntervalPicked(resultCode: Int? = null, chosenInterval: Int? = null)
+            fun onTimeIntervalPicked(chosenInterval: Int)
+            fun onDialogTimeIntervalDialogCancelled()
         }
     }
 
@@ -75,7 +74,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
                 .negativeText(R.string.cancel)
                 .onPositive { _, _ ->
                     //todo set result to Ok with position
-                    callback.onTimeIntervalPicked(RESULT_OK, picker.value)
+                    callback.onTimeIntervalPicked(picker.value)
                 }
                 .build()
     }
@@ -83,7 +82,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
         // explicitly click Negative or cancel by back button || touch outside
-        callback.onTimeIntervalPicked(resultCode = RESULT_CANCELED)
+        callback.onDialogTimeIntervalDialogCancelled()
     }
 
 }

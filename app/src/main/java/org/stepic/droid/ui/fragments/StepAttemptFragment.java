@@ -43,7 +43,6 @@ import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout;
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment;
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment;
 import org.stepic.droid.ui.listeners.NextMoveable;
-import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -709,24 +708,23 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     @Override
-    public void onTimeIntervalPicked(@Nullable Integer resultCode, @Nullable Integer chosenInterval) {
-        if (resultCode == null) return;
-        if (resultCode == Activity.RESULT_OK) {
-            int intervalCode = chosenInterval != null ? chosenInterval : TimeIntervalUtil.INSTANCE.getDefaultTimeCode();
-            streakPresenter.setStreakTime(intervalCode);
-            getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
-            SnackbarExtensionKt
-                    .setTextColor(
-                            Snackbar.make(rootView,
-                                    R.string.streak_notification_enabled_successfully,
-                                    Snackbar.LENGTH_LONG),
-                            ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                    getContext()))
-                    .show();
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
-            messageOnNotEnablingNotification();
-        }
+    public void onTimeIntervalPicked(int chosenInterval) {
+        streakPresenter.setStreakTime(chosenInterval);
+        getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, chosenInterval + "");
+        SnackbarExtensionKt
+                .setTextColor(
+                        Snackbar.make(rootView,
+                                R.string.streak_notification_enabled_successfully,
+                                Snackbar.LENGTH_LONG),
+                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                getContext()))
+                .show();
+    }
+
+    @Override
+    public void onDialogTimeIntervalDialogCancelled() {
+        getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
+        messageOnNotEnablingNotification();
     }
 
     protected final void hideWrongStatus() {

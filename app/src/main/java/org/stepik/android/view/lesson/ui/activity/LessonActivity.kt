@@ -1,6 +1,5 @@
 package org.stepik.android.view.lesson.ui.activity
 
-import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
@@ -31,7 +30,6 @@ import org.stepic.droid.fonts.FontType
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.listeners.NextMoveable
-import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DeviceInfoUtil
@@ -366,17 +364,16 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
         screenManager.openTextFeedBack(this, supportEmailData)
     }
 
-    override fun onTimeIntervalPicked(resultCode: Int?, chosenInterval: Int?) {
-        if (resultCode == Activity.RESULT_OK) {
-            val intervalCode = chosenInterval ?: TimeIntervalUtil.defaultTimeCode
-            lessonPresenter.setStreakTime(intervalCode)
-            analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode.toString())
-            Snackbar.make(lessonPager, R.string.streak_notification_enabled_successfully, Snackbar.LENGTH_LONG)
-                    .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
-                    .show()
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            onStreakDialogCancelled()
-        }
+    override fun onTimeIntervalPicked(chosenInterval: Int) {
+        lessonPresenter.setStreakTime(chosenInterval)
+        analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, chosenInterval.toString())
+        Snackbar.make(lessonPager, R.string.streak_notification_enabled_successfully, Snackbar.LENGTH_LONG)
+                .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
+                .show()
+    }
+
+    override fun onDialogTimeIntervalDialogCancelled() {
+        onStreakDialogCancelled()
     }
 
     private fun setupTextFeedback() {
