@@ -28,7 +28,7 @@
         android:layout_height="@dimen/step_submit_button_height"
         android:background="@drawable/bg_step_submit_button"
 
-        android:drawablePadding="12dp"
+        android:drawablePadding="-36dp"
         android:padding="12dp"
 
         android:text="@string/step_quiz_action_button_submit"
