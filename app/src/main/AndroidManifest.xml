@@ -369,6 +369,9 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="org.stepik.android.view.step_quiz_fullscreen_code.ui.activity.CodeStepQuizFullScreenActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
