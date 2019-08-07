@@ -86,23 +86,8 @@ constructor(
             )
     }
 
-    fun fetchStepUpdate(stepId: Long, lessonData: LessonData) {
-        stepUpdatesDisposable.clear()
-
-        stepUpdatesDisposable += stepInteractor
-                .getStepUpdates(stepId, false)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onNext = { stepWrapper ->
-                        this.state =
-                            StepView.State.Loaded(stepWrapper, lessonData)
-                    },
-                    onError = {
-                        subscribeForStepUpdates(stepId, shouldSkipFirstValue = true)
-                    }
-                )
-    }
+    fun fetchStepUpdate(stepId: Long) =
+        subscribeForStepUpdates(stepId, false)
 
     /**
      * Navigation
