@@ -76,7 +76,7 @@ class StepQuizDelegate(
         stepQuizActionButton.setTextColor(ContextCompat.getColorStateList(context, resolveQuizActionTextColor(state)))
         stepQuizActionButton.setCompoundDrawables(start = resolveQuizActionCompoundDrawable(state))
 
-        stepRetryButton.changeVisibility(StepQuizFormResolver.isQuizRetryEnabled(state))
+        stepRetryButton.changeVisibility(StepQuizFormResolver.canMoveToNextStep(step, lessonData, state))
 
         val isNeedShowDiscountingPolicy =
             state.restrictions.discountingPolicyType != DiscountingPolicyType.NoDiscount &&
