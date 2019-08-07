@@ -18,6 +18,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
@@ -83,7 +84,7 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>()
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stringStepQuizField, stepQuizDescription, stepQuizAction)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stringStepQuizField, stepQuizDescription, stepQuizActionContainer)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
@@ -91,6 +92,7 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
+                lessonData = lessonData,
                 stepQuizFormDelegate = TextStepQuizFormDelegate(view, stepWrapper),
                 stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(
                     stepQuizFeedbackBlocks,
@@ -99,9 +101,12 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
                     { screenManager.openStepInWeb(requireContext(), stepWrapper.step) }
                 ),
                 stepQuizActionButton = stepQuizAction,
+                stepRetryButton = stepQuizRetry,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
                 stepQuizPresenter = presenter
-            )
+            ) {
+                (parentFragment as? NextMoveable)?.moveNext()
+            }
     }
 
     override fun onStart() {
