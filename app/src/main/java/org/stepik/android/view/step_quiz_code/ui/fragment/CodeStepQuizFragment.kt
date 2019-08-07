@@ -125,6 +125,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
+                lessonData = lessonData,
                 stepQuizFormDelegate = codeStepQuizFormDelegate,
                 stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
                 stepQuizActionButton = stepQuizAction,

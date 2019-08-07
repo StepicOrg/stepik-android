@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.TextView
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
@@ -16,6 +17,7 @@ import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 
 class StepQuizDelegate(
     private val step: Step,
+    private val lessonData: LessonData,
     private val stepQuizFormDelegate: StepQuizFormDelegate,
     private val stepQuizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate,
 
@@ -42,7 +44,7 @@ class StepQuizDelegate(
         val state = currentState ?: return
 
         if (StepQuizFormResolver.isSubmissionInTerminalState(state)) {
-            if ((state.submissionState as? StepQuizView.SubmissionState.Loaded)?.submission?.status == Submission.Status.CORRECT) {
+            if (StepQuizFormResolver.canMoveToNextStep(step, lessonData, state)) {
                 onNextClicked()
             } else {
                 stepQuizPresenter.createAttempt(step)
@@ -80,10 +82,8 @@ class StepQuizDelegate(
     private fun resolveQuizActionButtonText(state: StepQuizView.State.AttemptLoaded): String =
         with(state.restrictions) {
             if (StepQuizFormResolver.isSubmissionInTerminalState(state)) {
-                state.submissionState as StepQuizView.SubmissionState.Loaded
-
                 when {
-                    state.submissionState.submission.status == Submission.Status.CORRECT ->
+                    StepQuizFormResolver.canMoveToNextStep(step, lessonData, state) ->
                         context.getString(R.string.next)
 
                     maxSubmissionCount in 0 until submissionCount ->

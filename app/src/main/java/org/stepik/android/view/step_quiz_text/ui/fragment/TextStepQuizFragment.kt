@@ -88,6 +88,7 @@ class TextStepQuizFragment : Fragment(), StepQuizView {
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
+                lessonData = lessonData,
                 stepQuizFormDelegate = TextStepQuizFormDelegate(view, stepWrapper),
                 stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
                 stepQuizActionButton = stepQuizAction,
