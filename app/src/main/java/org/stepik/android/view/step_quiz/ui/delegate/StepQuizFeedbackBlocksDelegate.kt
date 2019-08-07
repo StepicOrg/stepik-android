@@ -52,9 +52,7 @@ class StepQuizFeedbackBlocksDelegate(
             stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
         }
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            applyCorrectFeedbackBackground()
-        }
+        applyFeedbackBlockBackground(stepQuizFeedbackCorrect, R.drawable.bg_step_quiz_feedback_correct)
 
         stepQuizFeedbackWrong.setCompoundDrawables(start = R.drawable.ic_step_quiz_wrong)
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
@@ -109,26 +107,30 @@ class StepQuizFeedbackBlocksDelegate(
         hint: String?
     ) {
         if (hint != null) {
-            targetView.setBackgroundResource(hintedBackgroundRes)
+            applyFeedbackBlockBackground(targetView, hintedBackgroundRes)
             stepQuizFeedbackHint.setPlainOrLaTeXTextWithCustomFontColored(hint, fontsProvider.provideFontPath(FontType.mono), R.color.new_accent_color, true)
             stepQuizFeedbackHint.visibility = View.VISIBLE
         } else {
-            targetView.setBackgroundResource(backgroundRes)
+            applyFeedbackBlockBackground(targetView, backgroundRes)
             stepQuizFeedbackHint.visibility = View.GONE
         }
     }
 
     // Pre-Lollipop devices don't retain the paddings when defining this background
-    private fun applyCorrectFeedbackBackground() {
-        val paddingLeft = stepQuizFeedbackCorrect.paddingLeft
-        val paddingTop = stepQuizFeedbackCorrect.paddingTop
-        val paddingRight = stepQuizFeedbackCorrect.paddingRight
-        val paddingBottom = stepQuizFeedbackCorrect.paddingBottom
-        val compoundDrawablePadding = stepQuizFeedbackCorrect.compoundDrawablePadding
+    private fun applyFeedbackBlockBackground(feedbackBlock: TextView, @DrawableRes backgroundRes: Int) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            val paddingLeft = feedbackBlock.paddingLeft
+            val paddingTop = feedbackBlock.paddingTop
+            val paddingRight = feedbackBlock.paddingRight
+            val paddingBottom = feedbackBlock.paddingBottom
+            val compoundDrawablePadding = feedbackBlock.compoundDrawablePadding
 
-        stepQuizFeedbackCorrect.setBackgroundResource(R.drawable.bg_step_quiz_feedback_correct)
+            feedbackBlock.setBackgroundResource(backgroundRes)
 
-        stepQuizFeedbackCorrect.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
-        stepQuizFeedbackCorrect.compoundDrawablePadding = compoundDrawablePadding
+            feedbackBlock.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+            feedbackBlock.compoundDrawablePadding = compoundDrawablePadding
+        } else {
+            feedbackBlock.setBackgroundResource(backgroundRes)
+        }
     }
 }
