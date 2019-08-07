@@ -19,7 +19,6 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.activities.CodePlaygroundActivity
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
@@ -32,6 +31,8 @@ import org.stepik.android.view.base.ui.extension.parentOfType
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_fullscreen_code.ui.activity.CodeStepQuizFullScreenActivity
+import org.stepik.android.view.step_quiz_fullscreen_code.ui.fragment.CodeStepQuizFullScreenPlaygroundFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
@@ -63,7 +64,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
 
     private lateinit var codeStepQuizFormDelegate: CodeStepQuizFormDelegate
 
-    private var fullscreenResult: Pair<String, String>? = null
+    private var isFullScreenSubmitClicked: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,9 +107,10 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
             }
 
             override fun onFullscreenClicked(lang: String, code: String) {
-                val intent = CodePlaygroundActivity.intentForLaunch(requireActivity(), code, lang,
-                    stepWrapper.step.block?.options ?: throw IllegalStateException("can't find code options in code quiz"))
-                startActivityForResult(intent, CODE_PLAYGROUND_REQUEST)
+                stepQuizDelegate.syncReplyState {
+                    val intent = CodeStepQuizFullScreenActivity.createIntent(requireActivity(), lang, stepWrapper, lessonData)
+                    startActivityForResult(intent, CODE_PLAYGROUND_REQUEST)
+                }
             }
 
             override fun onResetClicked() {
@@ -147,9 +149,10 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
         viewStateDelegate.switchState(state)
         if (state is StepQuizView.State.AttemptLoaded) {
             stepQuizDelegate.setState(state)
-
-            fullscreenResult?.let { (lang, code) -> codeStepQuizFormDelegate.onResultFromFullscreen(lang, code) }
-            fullscreenResult = null
+            if (isFullScreenSubmitClicked && state.submissionState is StepQuizView.SubmissionState.Loaded) {
+                isFullScreenSubmitClicked = false
+                stepQuizDelegate.onActionButtonClicked()
+            }
         }
     }
 
@@ -182,13 +185,10 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             CODE_PLAYGROUND_REQUEST ->
-                data?.takeIf { resultCode == Activity.RESULT_OK }
-                    ?.let { intent ->
-                        val lang = intent.getStringExtra(CodePlaygroundActivity.LANG_KEY)
-                        val code = intent.getStringExtra(CodePlaygroundActivity.CODE_KEY)
-                        fullscreenResult = lang to code // todo: remove after fullscreen code quiz refactor
-                    }
-
+                if (resultCode == Activity.RESULT_OK) {
+                    isFullScreenSubmitClicked = data?.getBooleanExtra(CodeStepQuizFullScreenPlaygroundFragment.IS_SUBMITTED_CLICKED, false) ?: false
+                    presenter.fetchUponFullScreenReturn(stepWrapper, lessonData)
+                }
             else ->
                 super.onActivityResult(requestCode, resultCode, data)
         }

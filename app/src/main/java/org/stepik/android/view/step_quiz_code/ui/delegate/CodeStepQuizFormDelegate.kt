@@ -9,9 +9,6 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.PopupMenu
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code.view.stepQuizCodeDetails
-import kotlinx.android.synthetic.main.layout_step_quiz_code.view.stepQuizCodeDetailsArrow
-import kotlinx.android.synthetic.main.layout_step_quiz_code.view.stepQuizCodeDetailsContent
 import org.stepic.droid.R
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.model.code.extensionForLanguage
@@ -221,10 +218,6 @@ class CodeStepQuizFormDelegate(
         }
 
         state = CodeStepQuizFormState.Lang(lang, codeOptions.codeTemplates[lang] ?: "")
-    }
-
-    fun onResultFromFullscreen(lang: String, code: String) {
-        state = CodeStepQuizFormState.Lang(lang, code)
     }
 
     fun onResetCode() {
