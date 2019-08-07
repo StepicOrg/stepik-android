@@ -1,9 +1,13 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
+import android.support.annotation.ColorRes
+import android.support.annotation.DrawableRes
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.TextView
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Step
@@ -68,6 +72,9 @@ class StepQuizDelegate(
 
         stepQuizActionButton.isEnabled = StepQuizFormResolver.isQuizActionEnabled(state)
         stepQuizActionButton.text = resolveQuizActionButtonText(state)
+        stepQuizActionButton.setBackgroundResource(resolveQuizActionBackground(state))
+        stepQuizActionButton.setTextColor(ContextCompat.getColorStateList(context, resolveQuizActionTextColor(state)))
+        stepQuizActionButton.setCompoundDrawables(start = resolveQuizActionCompoundDrawable(state))
 
         stepRetryButton.changeVisibility(StepQuizFormResolver.isQuizRetryEnabled(state))
 
@@ -104,6 +111,31 @@ class StepQuizDelegate(
                 }
             }
         }
+
+    @DrawableRes
+    private fun resolveQuizActionBackground(state: StepQuizView.State.AttemptLoaded): Int =
+        if (StepQuizFormResolver.canOnlyRetry(step, lessonData, state)) {
+            R.drawable.bg_step_quiz_retry_button
+        } else {
+            R.drawable.bg_step_submit_button
+        }
+
+    @DrawableRes
+    private fun resolveQuizActionCompoundDrawable(state: StepQuizView.State.AttemptLoaded): Int =
+        if (StepQuizFormResolver.canOnlyRetry(step, lessonData, state)) {
+            R.drawable.ic_step_quiz_retry
+        } else {
+            -1
+        }
+
+    @ColorRes
+    private fun resolveQuizActionTextColor(state: StepQuizView.State.AttemptLoaded): Int =
+        if (StepQuizFormResolver.canOnlyRetry(step, lessonData, state)) {
+            R.color.color_step_quiz_retry_button
+        } else {
+            R.color.color_step_submit_button_text
+        }
+
 
     private fun resolveQuizDiscountingPolicyText(state: StepQuizView.State.AttemptLoaded): String? =
         with(state.restrictions) {
