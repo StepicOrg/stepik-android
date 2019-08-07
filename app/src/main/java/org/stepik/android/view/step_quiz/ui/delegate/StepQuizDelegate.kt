@@ -8,6 +8,7 @@ import android.widget.TextView
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.ui.util.setTextViewBackgroundWithoutResettingPadding
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Step
@@ -72,7 +73,7 @@ class StepQuizDelegate(
 
         stepQuizActionButton.isEnabled = StepQuizFormResolver.isQuizActionEnabled(state)
         stepQuizActionButton.text = resolveQuizActionButtonText(state)
-        stepQuizActionButton.setBackgroundResource(resolveQuizActionBackground(state))
+        stepQuizActionButton.setTextViewBackgroundWithoutResettingPadding(resolveQuizActionBackground(state))
         stepQuizActionButton.setTextColor(ContextCompat.getColorStateList(context, resolveQuizActionTextColor(state)))
         stepQuizActionButton.setCompoundDrawables(start = resolveQuizActionCompoundDrawable(state))
 
