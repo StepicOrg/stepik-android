@@ -4,10 +4,10 @@ import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
+import kotlinx.android.synthetic.main.progressable_latex_supportable_frame_layout.view.*
 import org.stepic.droid.R
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
@@ -33,7 +33,7 @@ class ChoicesAdapterDelegate(
         private val itemChoiceCheckmark = root.itemChoiceCheckmark
         private val itemChoiceLatex = root.itemChoiceLatex
         private val itemChoiceFeedback  = root.itemChoiceFeedback
-        private val itemChoiceLatexEnhancedLayout = itemChoiceLatex.findViewById<LatexSupportableEnhancedFrameLayout>(R.id.latex_text)
+        private val itemChoiceLatexEnhancedLayout = itemChoiceLatex.latex_text
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
