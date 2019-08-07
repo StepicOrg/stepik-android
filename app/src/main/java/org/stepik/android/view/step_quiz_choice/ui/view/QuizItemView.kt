@@ -4,9 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.FrameLayout
-import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.custom.ProgressLatexView
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 
 /**
  * Custom item view to infer clicks on the item and scrolling of the webview inside the item
@@ -16,21 +15,35 @@ class QuizItemView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr) {
-
     companion object {
         const val MAX_CLICK_DURATION = 200
     }
 
     private var clickDuration: Long = 0
 
-    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        val webview = findViewById<ProgressLatexView>(R.id.itemChoiceLatex)
-        val dispatched = webview.webView.dispatchTouchEvent(ev)
-        if (ev?.action == MotionEvent.ACTION_UP) {
+    private lateinit var latexText: LatexSupportableEnhancedFrameLayout
+    private val latexTouchEventOffset = resources.getDimension(R.dimen.step_quiz_choice_quiz_item_padding)
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        val latexTextTouchEvent = MotionEvent.obtain(
+            ev.downTime,
+            ev.eventTime,
+            ev.action,
+            ev.x - latexTouchEventOffset,
+            ev.y - latexTouchEventOffset,
+            ev.metaState
+        )
+
+        if (!::latexText.isInitialized) {
+            latexText = findViewById(R.id.latex_text)
+        }
+        latexText.dispatchTouchEvent(latexTextTouchEvent)
+
+        if (ev.action == MotionEvent.ACTION_UP) {
             clickDuration = ev.eventTime - ev.downTime
         }
         super.onTouchEvent(ev)
-        return dispatched
+        return true
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean = false
