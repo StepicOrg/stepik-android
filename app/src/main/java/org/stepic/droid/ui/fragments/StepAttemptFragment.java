@@ -70,8 +70,6 @@ import kotlin.collections.CollectionsKt;
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan;
 import uk.co.chrisjenx.calligraphy.TypefaceUtils;
 
-import static android.app.Activity.RESULT_CANCELED;
-
 public abstract class StepAttemptFragment extends StepBaseFragment implements
         StepAttemptView,
         InternetEnabledListener,
@@ -621,24 +619,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
         if (requestCode == DISCOUNTING_POLICY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             makeSubmissionDirectly();
         }
-//        else if (requestCode == NOTIFICATION_TIME_REQUEST_CODE) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
-//                streakPresenter.setStreakTime(intervalCode); // we do not need attach this view, because we need only set in model
-//                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
-//                SnackbarExtensionKt
-//                        .setTextColor(
-//                                Snackbar.make(rootView,
-//                                        R.string.streak_notification_enabled_successfully,
-//                                        Snackbar.LENGTH_LONG),
-//                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
-//                                        getContext()))
-//                        .show();
-//            } else if (resultCode == RESULT_CANCELED) {
-//                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
-//                messageOnNotEnablingNotification();
-//            }
-//        }
     }
 
     private void messageOnNotEnablingNotification() {
