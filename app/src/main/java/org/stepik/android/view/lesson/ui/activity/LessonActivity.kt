@@ -249,7 +249,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
 
     override fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
         lessonInfoTooltipDelegate
-                .showLessonInfoTooltip(stepScore, stepCost, lessonTimeToComplete, certificateThreshold)
+            .showLessonInfoTooltip(stepScore, stepCost, lessonTimeToComplete, certificateThreshold)
     }
 
     override fun moveNext(): Boolean {
