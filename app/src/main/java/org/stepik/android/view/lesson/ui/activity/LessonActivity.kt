@@ -366,10 +366,9 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
         screenManager.openTextFeedBack(this, supportEmailData)
     }
 
-    override fun onTimeIntervalPicked(data: Intent) {
-        val resultCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_RESULT_KEY, Activity.RESULT_CANCELED)
+    override fun onTimeIntervalPicked(resultCode: Int?, chosenInterval: Int?) {
         if (resultCode == Activity.RESULT_OK) {
-            val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
+            val intervalCode = chosenInterval ?: TimeIntervalUtil.defaultTimeCode
             lessonPresenter.setStreakTime(intervalCode)
             analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode.toString())
             Snackbar.make(lessonPager, R.string.streak_notification_enabled_successfully, Snackbar.LENGTH_LONG)

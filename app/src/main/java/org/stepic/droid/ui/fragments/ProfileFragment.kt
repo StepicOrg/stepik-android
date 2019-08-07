@@ -2,7 +2,6 @@ package org.stepic.droid.ui.fragments
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -461,10 +460,9 @@ class   ProfileFragment : FragmentBase(),
         return false
     }
 
-    override fun onTimeIntervalPicked(data: Intent) {
-        val resultCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_RESULT_KEY, Activity.RESULT_CANCELED)
+    override fun onTimeIntervalPicked(resultCode: Int?, chosenInterval: Int?) {
         if (resultCode == Activity.RESULT_OK) {
-            val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
+            val intervalCode = chosenInterval ?: TimeIntervalUtil.defaultTimeCode
             streakPresenter.setStreakTime(intervalCode)
             analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, intervalCode.toString() + "")
         } else if (resultCode == Activity.RESULT_CANCELED) {

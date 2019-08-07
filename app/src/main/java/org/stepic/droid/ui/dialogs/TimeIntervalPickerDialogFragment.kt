@@ -4,7 +4,6 @@ import android.app.Activity.RESULT_CANCELED
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.NumberPicker
@@ -23,14 +22,12 @@ import javax.inject.Inject
 class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "time_interval_picker_dialog"
-        const val INTERVAL_CODE_KEY = "INTERVAL_CODE_KEY"
-        const val INTERVAL_RESULT_KEY = "INTERVAL_RESULT_KEY"
         private const val CHOSEN_POSITION_KEY = "CHOSEN_POSITION_KEY"
         fun newInstance(): TimeIntervalPickerDialogFragment =
                 TimeIntervalPickerDialogFragment()
 
         interface Callback {
-            fun onTimeIntervalPicked(data: Intent)
+            fun onTimeIntervalPicked(resultCode: Int? = null, chosenInterval: Int? = null)
         }
     }
 
@@ -78,10 +75,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
                 .negativeText(R.string.cancel)
                 .onPositive { _, _ ->
                     //todo set result to Ok with position
-                    val data = Intent()
-                    data.putExtra(INTERVAL_RESULT_KEY, RESULT_OK)
-                    data.putExtra(INTERVAL_CODE_KEY, picker.value)
-                    callback.onTimeIntervalPicked(data)
+                    callback.onTimeIntervalPicked(RESULT_OK, picker.value)
                 }
                 .build()
     }
@@ -89,9 +83,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
         // explicitly click Negative or cancel by back button || touch outside
-        val data = Intent()
-        data.putExtra(INTERVAL_RESULT_KEY, RESULT_CANCELED)
-        callback.onTimeIntervalPicked(data)
+        callback.onTimeIntervalPicked(resultCode = RESULT_CANCELED)
     }
 
 }

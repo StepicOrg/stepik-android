@@ -709,24 +709,24 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     @Override
-    public void onTimeIntervalPicked(@NotNull Intent data) {
-        int resultCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_RESULT_KEY, Activity.RESULT_CANCELED);
-            if (resultCode == Activity.RESULT_OK) {
-                int intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.INSTANCE.getDefaultTimeCode());
-                streakPresenter.setStreakTime(intervalCode);
-                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
-                SnackbarExtensionKt
-                        .setTextColor(
-                                Snackbar.make(rootView,
-                                        R.string.streak_notification_enabled_successfully,
-                                        Snackbar.LENGTH_LONG),
-                                ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                        getContext()))
-                        .show();
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
-                messageOnNotEnablingNotification();
-            }
+    public void onTimeIntervalPicked(@Nullable Integer resultCode, @Nullable Integer chosenInterval) {
+        if (resultCode == null) return;
+        if (resultCode == Activity.RESULT_OK) {
+            int intervalCode = chosenInterval != null ? chosenInterval : TimeIntervalUtil.INSTANCE.getDefaultTimeCode();
+            streakPresenter.setStreakTime(intervalCode);
+            getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL, intervalCode + "");
+            SnackbarExtensionKt
+                    .setTextColor(
+                            Snackbar.make(rootView,
+                                    R.string.streak_notification_enabled_successfully,
+                                    Snackbar.LENGTH_LONG),
+                            ColorUtil.INSTANCE.getColorArgb(R.color.white,
+                                    getContext()))
+                    .show();
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
+            messageOnNotEnablingNotification();
+        }
     }
 
     protected final void hideWrongStatus() {

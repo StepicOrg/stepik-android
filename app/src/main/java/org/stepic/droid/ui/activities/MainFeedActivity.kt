@@ -414,9 +414,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
     }
 
-    override fun onTimeIntervalPicked(data: Intent) {
+    override fun onTimeIntervalPicked(resultCode: Int?, chosenInterval: Int?) {
         analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
-        val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
+        val intervalCode = chosenInterval ?: TimeIntervalUtil.defaultTimeCode
         streakPresenter.setStreakTime(intervalCode) // we do not need attach this view, because we need only set in model
     }
 
