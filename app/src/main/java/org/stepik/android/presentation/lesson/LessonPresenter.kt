@@ -292,6 +292,7 @@ constructor(
 
         appRatingInteractor.incrementSolvedStepCounter()
         if (appRatingInteractor.needShowAppRateDialog()) {
+            appRatingInteractor.rateDialogShown()
             view?.showRateDialog()
         }
 

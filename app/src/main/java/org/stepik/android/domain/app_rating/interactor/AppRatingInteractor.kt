@@ -32,6 +32,10 @@ constructor(
         sharedPreferenceHelper.afterRateWasHandled()
     }
 
+    fun rateDialogShown() {
+        sharedPreferenceHelper.rateShown(DateTimeHelper.nowUtc())
+    }
+
     private fun isRateDelayGreater(): Boolean {
         val wasShownMillis = sharedPreferenceHelper.whenRateWasShown()
         if (wasShownMillis < 0) {

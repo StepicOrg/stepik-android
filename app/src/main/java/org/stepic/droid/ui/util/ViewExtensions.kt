@@ -63,6 +63,22 @@ fun TextView.setCompoundDrawables(
     setCompoundDrawablesWithIntrinsicBounds(startDrawable, topDrawable, endDrawable, bottomDrawable)
 }
 
+fun TextView.setTextViewBackgroundWithoutResettingPadding(@DrawableRes backgroundRes: Int) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        val paddingLeft = this.paddingLeft
+        val paddingTop = this.paddingTop
+        val paddingRight = this.paddingRight
+        val paddingBottom = this.paddingBottom
+        val compoundDrawablePadding = this.compoundDrawablePadding
+
+        setBackgroundResource(backgroundRes)
+        setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+        this.compoundDrawablePadding = compoundDrawablePadding
+    } else {
+        setBackgroundResource(backgroundRes)
+    }
+}
+
 
 fun Drawable.toBitmap(width: Int = intrinsicWidth, height: Int = intrinsicHeight): Bitmap {
     val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)

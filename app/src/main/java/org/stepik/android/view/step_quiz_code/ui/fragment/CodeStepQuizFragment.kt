@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.activities.CodePlaygroundActivity
@@ -52,6 +53,9 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
 
     @Inject
     internal lateinit var fontsProvider: FontsProvider
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     private lateinit var presenter: StepQuizPresenter
 
@@ -125,7 +129,12 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
             StepQuizDelegate(
                 step = stepWrapper.step,
                 stepQuizFormDelegate = codeStepQuizFormDelegate,
-                stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
+                stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(
+                    stepQuizFeedbackBlocks,
+                    fontsProvider,
+                    stepWrapper.step.actions?.doReview != null,
+                    { screenManager.openStepInWeb(requireContext(), stepWrapper.step) }
+                ),
                 stepQuizActionButton = stepQuizAction,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
                 stepQuizPresenter = presenter
