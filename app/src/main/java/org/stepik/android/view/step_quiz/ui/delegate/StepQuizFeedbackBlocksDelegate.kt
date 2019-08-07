@@ -67,18 +67,15 @@ class StepQuizFeedbackBlocksDelegate(
         viewStateDelegate.switchState(state)
         when (state) {
             is StepQuizFeedbackState.Correct -> {
-                when (hasReview) {
-                    true ->
-                        stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
-                    false -> {
-                        stepQuizFeedbackCorrect.text =
-                            if (state.isFreeAnswer) {
-                                context.getString(R.string.step_quiz_feedback_correct_free_answer)
-                            } else {
-                                resources.getStringArray(R.array.step_quiz_feedback_correct).random()
-                            }
-                        }
-                }
+                stepQuizFeedbackCorrect.text =
+                    when {
+                        hasReview ->
+                            context.getString(R.string.review_warning)
+                        state.isFreeAnswer ->
+                            context.getString(R.string.step_quiz_feedback_correct_free_answer)
+                        else ->
+                            resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+                    }
                 setHint(stepQuizFeedbackCorrect, R.drawable.bg_step_quiz_feedback_correct, R.drawable.bg_step_quiz_feedback_correct_with_hint, state.hint)
             }
 
