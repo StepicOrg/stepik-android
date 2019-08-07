@@ -722,7 +722,7 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
     }
 
     @Override
-    public void onDialogTimeIntervalDialogCancelled() {
+    public void onTimeIntervalDialogCancelled() {
         getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
         messageOnNotEnablingNotification();
     }

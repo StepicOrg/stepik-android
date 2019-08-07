@@ -372,7 +372,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
                 .show()
     }
 
-    override fun onDialogTimeIntervalDialogCancelled() {
+    override fun onTimeIntervalDialogCancelled() {
         onStreakDialogCancelled()
     }
 

@@ -463,7 +463,7 @@ class   ProfileFragment : FragmentBase(),
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, chosenInterval.toString() + "")
     }
 
-    override fun onDialogTimeIntervalDialogCancelled() {
+    override fun onTimeIntervalDialogCancelled() {
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE)
     }
 

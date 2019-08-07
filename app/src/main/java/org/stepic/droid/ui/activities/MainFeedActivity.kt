@@ -419,7 +419,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         streakPresenter.setStreakTime(chosenInterval) // we do not need attach this view, because we need only set in model
     }
 
-    override fun onDialogTimeIntervalDialogCancelled() {
+    override fun onTimeIntervalDialogCancelled() {
         analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
         streakPresenter.setStreakTime(TimeIntervalUtil.defaultTimeCode)
     }
