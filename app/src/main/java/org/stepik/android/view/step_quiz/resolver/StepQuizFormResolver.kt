@@ -14,6 +14,11 @@ object StepQuizFormResolver {
         isSubmissionInTerminalState(state) &&
         with(state.restrictions) { maxSubmissionCount < 0 || maxSubmissionCount > submissionCount }
 
+    fun isQuizRetryEnabled(state: StepQuizView.State.AttemptLoaded): Boolean =
+        isQuizActionEnabled(state) &&
+        state.submissionState is StepQuizView.SubmissionState.Loaded &&
+        state.submissionState.submission.status == Submission.Status.CORRECT
+
     fun isSubmissionInTerminalState(state: StepQuizView.State.AttemptLoaded): Boolean =
         state.submissionState is StepQuizView.SubmissionState.Loaded &&
         state.submissionState.submission.status.let { it == Submission.Status.CORRECT || it == Submission.Status.WRONG }

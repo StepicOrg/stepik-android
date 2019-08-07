@@ -8,8 +8,8 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/stepQuizRetry"
-        android:layout_height="48dp"
-        android:layout_width="48dp"
+        android:layout_height="@dimen/step_submit_button_height"
+        android:layout_width="@dimen/step_submit_button_height"
 
         android:background="@drawable/bg_step_quiz_retry_button"
         android:padding="12dp"
@@ -19,7 +19,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
 
-        app:tint="@color/new_accent_color"
+        app:tint="@color/new_accent_color_alpha_60"
         app:srcCompat="@drawable/ic_step_quiz_retry" />
 
     <android.support.v7.widget.AppCompatTextView
