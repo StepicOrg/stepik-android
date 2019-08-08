@@ -45,7 +45,7 @@ class CodeQuizFormFullScreenDelegate(
                     codeLayout.setText(value.code)
                     codeLayout.lang = extensionForLanguage(value.lang)
                     codeToolbarAdapter.setLanguage(value.lang)
-                    codeChosenLanguage.setText(value.lang)
+                    codeChosenLanguage.text = value.lang
                 }
             }
 
@@ -129,8 +129,6 @@ class CodeQuizFormFullScreenDelegate(
                     }
                 )
             }
-
-        codeChosenLanguage.setOnClickListener { actionsListener.onChangeLanguageClicked() }
         codeSubmitButton.setOnClickListener { actionsListener.onSubmitClicked() }
     }
 
@@ -167,7 +165,6 @@ class CodeQuizFormFullScreenDelegate(
     }
 
     interface ActionsListener {
-        fun onChangeLanguageClicked()
         fun onSubmitClicked()
     }
 }

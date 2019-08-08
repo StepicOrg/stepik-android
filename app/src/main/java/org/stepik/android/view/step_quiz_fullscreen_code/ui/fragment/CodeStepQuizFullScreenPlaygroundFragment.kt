@@ -73,13 +73,6 @@ class CodeStepQuizFullScreenPlaygroundFragment : Fragment(), StepQuizView, Chang
         super.onViewCreated(view, savedInstanceState)
 
         val actionsListener = object : CodeQuizFormFullScreenDelegate.ActionsListener {
-            override fun onChangeLanguageClicked() {
-                val dialog = ChangeCodeLanguageDialog.newInstance()
-                if (!dialog.isAdded) {
-                    dialog.show(childFragmentManager, null)
-                }
-            }
-
             override fun onSubmitClicked() {
                 syncCodeOnFullScreenExit(true)
             }
@@ -134,7 +127,7 @@ class CodeStepQuizFullScreenPlaygroundFragment : Fragment(), StepQuizView, Chang
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.step_quiz_code_full_screen_playground_menu, menu)
+        inflater.inflate(R.menu.code_playground_menu, menu)
         val menuItem = menu.findItem(R.id.action_reset_code)
         val resetString = SpannableString(getString(R.string.code_quiz_reset))
         resetString.setSpan(ForegroundColorSpan(ColorUtil.getColorArgb(R.color.new_red_color)), 0, resetString.length, 0)
@@ -145,6 +138,13 @@ class CodeStepQuizFullScreenPlaygroundFragment : Fragment(), StepQuizView, Chang
         when (item?.itemId) {
             R.id.action_reset_code -> {
                 val dialog = ResetCodeDialogFragment.newInstance()
+                if (!dialog.isAdded) {
+                    dialog.show(childFragmentManager, null)
+                }
+                true
+            }
+            R.id.action_language_code -> {
+                val dialog = ChangeCodeLanguageDialog.newInstance()
                 if (!dialog.isAdded) {
                     dialog.show(childFragmentManager, null)
                 }
