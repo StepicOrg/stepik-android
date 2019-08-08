@@ -44,5 +44,7 @@ interface LessonView {
 
     fun showRateDialog()
 
+    fun showStreakDialog(streakDays: Int)
+
     fun sendTextFeedback(supportEmailData: SupportEmailData)
 }

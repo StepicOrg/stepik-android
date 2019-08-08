@@ -27,6 +27,7 @@ import org.stepik.android.remote.submission.model.SubmissionRequest;
 import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
+import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 
 import java.util.List;
