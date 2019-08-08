@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz_sorting.ui.delegate
 
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.SimpleItemAnimator
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_sorting.view.*
@@ -33,6 +34,9 @@ class SortingStepQuizFormDelegate(
             adapter = optionsAdapter
             isNestedScrollingEnabled = false
             layoutManager = LinearLayoutManager(context)
+
+            (itemAnimator as? SimpleItemAnimator)
+                ?.supportsChangeAnimations = false
         }
     }
 
