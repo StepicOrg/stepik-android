@@ -368,8 +368,8 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
         lessonPresenter.setStreakTime(chosenInterval)
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, chosenInterval.toString())
         Snackbar.make(lessonPager, R.string.streak_notification_enabled_successfully, Snackbar.LENGTH_LONG)
-                .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
-                .show()
+            .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
+            .show()
     }
 
     override fun onTimeIntervalDialogCancelled() {
@@ -386,7 +386,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     private fun onStreakDialogCancelled() {
         analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
         Snackbar.make(lessonPager, R.string.streak_notification_canceled, Snackbar.LENGTH_LONG)
-                .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
-                .show()
+            .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
+            .show()
     }
 }
