@@ -86,7 +86,7 @@ constructor(
             )
     }
 
-    fun fetchStepUpdate(stepId: Long) =
+    fun fetchStepUpdate(stepId: Long): Unit =
         subscribeForStepUpdates(stepId, false)
 
     /**
