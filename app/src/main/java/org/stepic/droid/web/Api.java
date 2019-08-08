@@ -168,6 +168,8 @@ public interface Api {
 
     Call<CertificateResponse> getCertificates();
 
+    Single<CertificateResponse> getCertificatesReactive(long userId);
+
     Single<UnitResponse> getUnitsByLessonId(long lessonId);
 
     Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);

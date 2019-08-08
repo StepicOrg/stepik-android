@@ -233,6 +233,9 @@ public interface StepicRestLoggedService {
     @GET("api/certificates")
     Call<CertificateResponse> getCertificates(@Query("user") long userId);
 
+    @GET("api/certificates")
+    Single<CertificateResponse> getCertificatesReactive(@Query("user") long userId);
+
     @GET("api/units")
     Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
 
