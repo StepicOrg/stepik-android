@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz.*
-import kotlinx.android.synthetic.main.layout_step_quiz_choice.*
+import kotlinx.android.synthetic.main.layout_step_quiz_sorting.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -26,11 +26,19 @@ import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
-import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class SortingStepQuizFragment : Fragment(), StepQuizView {
+    companion object {
+        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
+            SortingStepQuizFragment()
+                .apply {
+                    this.stepWrapper = stepPersistentWrapper
+                    this.lessonData = lessonData
+                }
+    }
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -67,7 +75,7 @@ class SortingStepQuizFragment : Fragment(), StepQuizView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         (inflater.inflate(R.layout.fragment_step_quiz, container, false) as ViewGroup)
             .apply {
-//                addView(inflater.inflate(R.layout.layout_step_quiz_choice, this, false))
+                addView(inflater.inflate(R.layout.layout_step_quiz_sorting, this, false))
             }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,7 +84,7 @@ class SortingStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>()
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, choicesRecycler, stepQuizDescription, stepQuizActionContainer)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, sortingRecycler, stepQuizDescription, stepQuizActionContainer)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
@@ -85,7 +93,7 @@ class SortingStepQuizFragment : Fragment(), StepQuizView {
             StepQuizDelegate(
                 step = stepWrapper.step,
                 lessonData = lessonData,
-                stepQuizFormDelegate = ChoiceStepQuizFormDelegate(view, fontsProvider),
+                stepQuizFormDelegate = SortingStepQuizFormDelegate(view),
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(
                         stepQuizFeedbackBlocks,

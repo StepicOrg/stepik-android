@@ -163,6 +163,8 @@ public class StepTypeResolverImpl implements StepTypeResolver {
             case AppConstants.TYPE_FREE_ANSWER:
             case AppConstants.TYPE_CODE:
             case AppConstants.TYPE_CHOICE:
+
+            case AppConstants.TYPE_SORTING:
                 return false;
             default:
                 return true;
