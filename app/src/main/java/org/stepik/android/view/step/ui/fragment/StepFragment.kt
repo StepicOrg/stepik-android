@@ -69,8 +69,6 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
     private lateinit var stepNavigationDelegate: StepNavigationDelegate
     private lateinit var stepDiscussionsDelegate: StepDiscussionsDelegate
 
-    private var mustReloadFromRemote: Boolean = false
-
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
@@ -103,10 +101,7 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         }
         stepDiscussionsDelegate.setDiscussionsCount(stepWrapper.step.discussionsCount)
 
-        stepStatusTryAgain.setOnClickListener {
-            mustReloadFromRemote = true
-            stepPresenter.fetchStepUpdate(stepWrapper.step.id)
-        }
+        stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
         initStepContentFragment()
     }
 
@@ -133,7 +128,7 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         }
     }
 
-    private fun initStepQuizFragment() {
+    private fun setStepQuizFragment(mustReload: Boolean) {
         val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
         stepContentSeparator.changeVisibility(isStepHasQuiz)
         stepQuizContainer.changeVisibility(isStepHasQuiz)
@@ -143,12 +138,11 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
                 .beginTransaction()
                 .add(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData), STEP_QUIZ_FRAGMENT_TAG)
                 .commitNow()
-        } else if (mustReloadFromRemote) {
+        } else if (mustReload) {
             childFragmentManager
                 .beginTransaction()
                 .replace(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData), STEP_QUIZ_FRAGMENT_TAG)
                 .commitNow()
-            mustReloadFromRemote = false
         }
     }
 
@@ -188,11 +182,12 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
 
     override fun setState(state: StepView.State) {
         if (state is StepView.State.Loaded) {
+            val mustReload = stepWrapper.step.block != state.stepWrapper.step.block
             stepWrapper = state.stepWrapper
             stepDiscussionsDelegate.setDiscussionsCount(state.stepWrapper.step.discussionsCount)
             when (stepWrapper.step.status) {
                 Step.Status.READY ->
-                    initStepQuizFragment()
+                    setStepQuizFragment(mustReload)
                 Step.Status.PREPARING, Step.Status.ERROR -> {
                     stepContentSeparator.changeVisibility(true)
                     stepQuizContainer.changeVisibility(false)

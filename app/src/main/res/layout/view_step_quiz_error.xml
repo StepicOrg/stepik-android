@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal">
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/stepStatusErrorMessage"
         style="@style/PlaceholderTextViewStyle"
         android:layout_width="wrap_content"
