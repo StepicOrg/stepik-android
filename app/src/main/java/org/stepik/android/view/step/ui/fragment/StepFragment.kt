@@ -139,7 +139,7 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
 
             if (isQuizFragmentEmpty || isNeedReload) {
                 val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData)
-                
+
                 childFragmentManager.commitNow {
                     if (isQuizFragmentEmpty) {
                         add(R.id.stepQuizContainer, quizFragment, STEP_QUIZ_FRAGMENT_TAG)
@@ -187,12 +187,15 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
 
     override fun setState(state: StepView.State) {
         if (state is StepView.State.Loaded) {
+            val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block
+
             stepWrapper = state.stepWrapper
             stepDiscussionsDelegate.setDiscussionsCount(state.stepWrapper.step.discussionsCount)
             when (stepWrapper.step.status) {
                 Step.Status.READY ->
-                    setStepQuizFragment(isNeedReload = stepWrapper.step.block != state.stepWrapper.step.block)
-                Step.Status.PREPARING, Step.Status.ERROR -> {
+                    setStepQuizFragment(isNeedReloadQuiz)
+                Step.Status.PREPARING,
+                Step.Status.ERROR -> {
                     stepContentSeparator.changeVisibility(true)
                     stepQuizContainer.changeVisibility(false)
                     stepQuizError.changeVisibility(true)

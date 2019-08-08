@@ -3,7 +3,7 @@ package org.stepic.droid.storage.migration
 import android.database.sqlite.SQLiteDatabase
 import org.stepik.android.cache.block.structure.DbStructureBlock
 
-object MigrationFrom44To45: Migration {
+object MigrationFrom44To45 : Migration {
     override fun migrate(db: SQLiteDatabase) {
         createBlocksTable(db)
         migrateBlocks(db)
