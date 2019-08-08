@@ -57,3 +57,18 @@ fun Iterable<LongArray>.flatten(): LongArray {
 @JvmName("LongArray_distinct")
 fun LongArray.distinct(): LongArray =
     toMutableSet().toLongArray()
+
+/**
+ * Immutable swap
+ */
+fun <T> List<T>.swap(i: Int, j: Int): List<T> {
+    val a = this[i]
+    val b = this[j]
+    return mapIndexed { index, t ->
+        when (index) {
+            i -> a
+            j -> b
+            else -> t
+        }
+    }
+}
