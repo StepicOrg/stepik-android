@@ -29,9 +29,6 @@ import org.stepic.droid.features.achievements.service.AchievementsNotificationSe
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
-import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
-import org.stepik.android.model.Course
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
@@ -40,14 +37,39 @@ import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
-import org.stepic.droid.ui.adapters.*
+import org.stepic.droid.ui.adapters.CoursesAdapter
+import org.stepic.droid.ui.adapters.DownloadsAdapter
+import org.stepic.droid.ui.adapters.NotificationAdapter
+import org.stepic.droid.ui.adapters.SearchQueriesAdapter
+import org.stepic.droid.ui.adapters.SocialAuthAdapter
+import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
-import org.stepic.droid.ui.custom.*
-import org.stepic.droid.ui.dialogs.*
+import org.stepic.droid.ui.custom.AutoCompleteSearchView
+import org.stepic.droid.ui.custom.ExpandableTextView
+import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+import org.stepic.droid.ui.custom.LatexSupportableWebView
+import org.stepic.droid.ui.custom.PlaceholderTextView
+import org.stepic.droid.ui.dialogs.CertificateShareDialog
+import org.stepic.droid.ui.dialogs.ChooseStorageDialog
+import org.stepic.droid.ui.dialogs.ClearVideosDialog
+import org.stepic.droid.ui.dialogs.CoursesLangDialog
+import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
+import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment
+import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
+import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment
+import org.stepic.droid.ui.dialogs.StepShareDialog
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
+import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
+import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
+import org.stepic.droid.ui.dialogs.VideoQualityDialog
+import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
+import org.stepic.droid.ui.dialogs.WantMoveDataDialog
 import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepic.droid.util.glide.GlideCustomModule
+import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.injection.billing.BillingModule
+import org.stepik.android.view.injection.certificates.CertificatesComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
@@ -63,10 +85,12 @@ import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
-import org.stepik.android.view.notification.service.BootCompleteService
-import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
+import org.stepik.android.view.notification.service.BootCompleteService
+import org.stepik.android.view.notification.service.NotificationAlarmService
+import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
+import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 
 @AppSingleton
 @Component(
@@ -154,6 +178,8 @@ interface AppCoreComponent {
     fun stepComponentBuilder(): StepComponent.Builder
 
     fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder
+
+    fun certificatesComponentBuilder(): CertificatesComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

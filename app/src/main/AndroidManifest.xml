@@ -369,6 +369,9 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="org.stepik.android.view.certificates.ui.activity.CertificatesActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
