@@ -5,6 +5,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_sorting.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.swap
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -17,19 +18,16 @@ import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 class SortingStepQuizFormDelegate(
     containerView: View
 ) : StepQuizFormDelegate {
-    private val context = containerView.context
-
     private val quizDescription = containerView.stepQuizDescription
 
     private val optionsAdapter = DefaultDelegateAdapter<SortingOption>()
-        .also {
-            it += SortingOptionAdapterDelegate()
-        }
 
     private val sortingOptionMapper = SortingOptionMapper()
 
     init {
         quizDescription.setText(R.string.step_quiz_sorting_description)
+
+        optionsAdapter += SortingOptionAdapterDelegate(optionsAdapter, ::moveSortingOption)
 
         with(containerView.sortingRecycler) {
             adapter = optionsAdapter
@@ -38,8 +36,30 @@ class SortingStepQuizFormDelegate(
         }
     }
 
+    private fun moveSortingOption(position: Int, direction: SortingOptionAdapterDelegate.SortingDirection) {
+        val targetPosition =
+            when (direction) {
+                SortingOptionAdapterDelegate.SortingDirection.UP ->
+                    position - 1
+
+                SortingOptionAdapterDelegate.SortingDirection.DOWN ->
+                    position + 1
+            }
+
+        optionsAdapter.items = optionsAdapter.items.swap(position, targetPosition)
+        optionsAdapter.notifyItemChanged(position)
+        optionsAdapter.notifyItemChanged(targetPosition)
+    }
+
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        optionsAdapter.items = sortingOptionMapper.mapToSortingOptions(state.attempt)
+        val sortingOptions = sortingOptionMapper.mapToSortingOptions(state.attempt)
+
+        optionsAdapter.items =
+            if (state.submissionState is StepQuizView.SubmissionState.Loaded) {
+                sortingOptions.sortedBy { state.submissionState.submission.reply?.ordering?.indexOf(it.id) }
+            } else {
+                sortingOptions
+            }
     }
 
     override fun createReply(): ReplyResult =

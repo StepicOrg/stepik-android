@@ -62,12 +62,17 @@ fun LongArray.distinct(): LongArray =
  * Immutable swap
  */
 fun <T> List<T>.swap(i: Int, j: Int): List<T> {
+    if (i !in 0 until size ||
+        j !in 0 until size) {
+        return this
+    }
+
     val a = this[i]
     val b = this[j]
     return mapIndexed { index, t ->
         when (index) {
-            i -> a
-            j -> b
+            i -> b
+            j -> a
             else -> t
         }
     }
