@@ -74,6 +74,10 @@ public class ProgressLatexView extends FrameLayout {
         }
     }
 
+    public void setTextSize(float textSize) {
+        optionText.setTextSize(textSize);
+    }
+
     private boolean beforeIsEqual(String newText) {
         return beforeText != null && newText != null && newText.equals(beforeText);
     }

@@ -56,6 +56,7 @@ class ChoicesAdapterDelegate(
             itemChoiceFeedback.setTextSize(14f)
             itemChoiceFeedback.setBackgroundResource(R.drawable.bg_step_quiz_choice_item_feedback)
             itemChoiceLatexEnhancedLayout.setTextIsSelectable(true)
+            itemChoiceLatexEnhancedLayout.setTextSize(16f)
         }
 
         override fun onBind(data: Choice) {

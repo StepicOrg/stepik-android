@@ -27,13 +27,14 @@ class SortingOptionAdapterDelegate(
 
         init {
             ViewCompat.setElevation(root, context.resources.getDimension(R.dimen.step_quiz_sorting_item_elevation))
+            stepQuizSortingOption.setTextSize(16f)
 
             stepQuizSortingOptionUp.setOnClickListener { onMoveItemClicked(adapterPosition, SortingDirection.UP) }
             stepQuizSortingOptionDown.setOnClickListener { onMoveItemClicked(adapterPosition, SortingDirection.DOWN) }
         }
 
         override fun onBind(data: SortingOption) {
-            stepQuizSortingOption.text = data.option
+            stepQuizSortingOption.setPlainOrLaTeXText(data.option)
 
             stepQuizSortingOptionUp.isEnabled = adapterPosition != 0
             stepQuizSortingOptionUp.alpha = if (stepQuizSortingOptionUp.isEnabled) 1f else 0.2f

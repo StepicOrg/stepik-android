@@ -9,7 +9,7 @@
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp">
 
-    <android.support.v7.widget.AppCompatTextView
+    <org.stepic.droid.ui.custom.ProgressLatexView
         android:id="@+id/stepQuizSortingOption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -31,11 +31,11 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/stepQuizSortingOptionUp"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="@drawable/selectable_item_rounded_background"
 
-        android:padding="10dp"
+        android:padding="16dp"
 
         app:layout_constraintBottom_toTopOf="@id/stepQuizSortingOptionDown"
         app:layout_constraintTop_toTopOf="parent"
@@ -51,11 +51,11 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/stepQuizSortingOptionDown"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="@drawable/selectable_item_rounded_background"
 
-        android:padding="10dp"
+        android:padding="16dp"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
