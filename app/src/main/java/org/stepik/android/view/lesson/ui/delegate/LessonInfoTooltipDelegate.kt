@@ -23,7 +23,8 @@ class LessonInfoTooltipDelegate(
     private val view: View
 ) {
     fun showLessonInfoTooltip(
-        stepWorth: Long,
+        stepScore: Long,
+        stepCost: Long,
         lessonTimeToCompleteInSeconds: Long,
         certificateThreshold: Long
     ) {
@@ -35,9 +36,15 @@ class LessonInfoTooltipDelegate(
             .from(anchorView.context)
             .inflate(R.layout.tooltip_lesson_info, null)
 
-        popupView
-            .stepWorth
-            .setItem(stepWorth, R.string.lesson_info_points, R.plurals.points, R.drawable.ic_check_rounded)
+        if (stepScore > 0) {
+            popupView
+                .stepWorth
+                .setItem(stepScore, stepCost, R.string.lesson_info_points_with_score, R.plurals.points, R.drawable.ic_check_rounded)
+        } else {
+            popupView
+                .stepWorth
+                .setItem(stepCost, R.string.lesson_info_points, R.plurals.points, R.drawable.ic_check_rounded)
+        }
 
         val (timeValue, @PluralsRes timeUnitPlural) =
             if (lessonTimeToCompleteInSeconds in 0 until 3600) {
@@ -81,19 +88,35 @@ class LessonInfoTooltipDelegate(
         @DrawableRes drawableRes: Int
     ) {
         if (value > 0) {
-            val iconDrawable = AppCompatResources
-                .getDrawable(context, drawableRes)
-                ?.let(DrawableCompat::wrap)
-                ?.let(Drawable::mutate)
-                ?: return
-            DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(context,  android.R.color.white))
-            setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
-
+            setItemDrawable(drawableRes)
             text = context.getString(stringRes, resources.getQuantityString(pluralRes, value.toInt(), value))
             visibility = View.VISIBLE
         } else {
             visibility = View.GONE
         }
+    }
+
+    // 'StepProgress.score' points out of 'StepProgress.cost' (for step)
+    private fun AppCompatTextView.setItem(
+        stepScore: Long,
+        stepCost: Long,
+        @StringRes stringRes: Int,
+        @PluralsRes pluralRes: Int,
+        @DrawableRes drawableRes: Int
+    ) {
+        setItemDrawable(drawableRes)
+        text = context.getString(stringRes, resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore), stepCost)
+        visibility = View.VISIBLE
+    }
+
+    private fun AppCompatTextView.setItemDrawable(@DrawableRes drawableRes: Int) {
+        val iconDrawable = AppCompatResources
+                .getDrawable(context, drawableRes)
+                ?.let(DrawableCompat::wrap)
+                ?.let(Drawable::mutate)
+            ?: return
+        DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(context,  android.R.color.white))
+        setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, null, null)
     }
 
     private fun calcArrowHorizontalOffset(anchorView: View, popupView: View, arrowView: View): Float {

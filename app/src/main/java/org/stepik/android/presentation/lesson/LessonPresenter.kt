@@ -190,22 +190,30 @@ constructor(
         val state = (state as? LessonView.State.LessonLoaded)
             ?: return
 
-        val stepWorth = (state.stepsState as? LessonView.StepsState.Loaded)
+        val stepProgress = (state.stepsState as? LessonView.StepsState.Loaded)
             ?.stepItems
             ?.getOrNull(position)
-            ?.stepWrapper
-            ?.step
-            ?.worth
-            ?: return
+            ?.stepProgress
+
+        // Because the score field in Progress is a String, GSON parses integers in the response as floating point numbers
+        val stepScore = stepProgress
+            ?.score
+            ?.toFloatOrNull()
+            ?.toLong()
+            ?: 0L
+
+        val stepCost = stepProgress
+            ?.cost
+            ?: 0L
 
         val timeToComplete = state
             .lessonData
             .lesson
             .timeToComplete
-            .takeIf { it > 0 }
+            .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
-        view?.showLessonInfoTooltip(stepWorth, timeToComplete, -1)
+        view?.showLessonInfoTooltip(stepScore, stepCost, timeToComplete, -1)
     }
 
     /**
@@ -286,6 +294,7 @@ constructor(
 
         appRatingInteractor.incrementSolvedStepCounter()
         if (appRatingInteractor.needShowAppRateDialog()) {
+            appRatingInteractor.rateDialogShown()
             view?.showRateDialog()
         } else if (streakInteractor.needShowStreakDialog()) {
             compositeDisposable += streakInteractor

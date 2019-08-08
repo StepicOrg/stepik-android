@@ -11,12 +11,15 @@ import org.stepic.droid.R
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.ui.util.setTextViewBackgroundWithoutResettingPadding
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 
 class StepQuizFeedbackBlocksDelegate(
     containerView: View,
-    private val fontsProvider: FontsProvider
+    private val fontsProvider: FontsProvider,
+    private val hasReview: Boolean,
+    private val onReviewClicked: () -> Unit
 ) {
     private val context = containerView.context
     private val resources = containerView.resources
@@ -42,7 +45,13 @@ class StepQuizFeedbackBlocksDelegate(
         drawable?.start()
 
         stepQuizFeedbackCorrect.setCompoundDrawables(start = R.drawable.ic_step_quiz_correct)
-        stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+        if (hasReview) {
+            stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
+            stepQuizFeedbackCorrect.setOnClickListener { onReviewClicked() }
+        } else {
+            stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+        }
+        stepQuizFeedbackCorrect.setTextViewBackgroundWithoutResettingPadding(R.drawable.bg_step_quiz_feedback_correct)
 
         stepQuizFeedbackWrong.setCompoundDrawables(start = R.drawable.ic_step_quiz_wrong)
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
@@ -59,10 +68,13 @@ class StepQuizFeedbackBlocksDelegate(
         when (state) {
             is StepQuizFeedbackState.Correct -> {
                 stepQuizFeedbackCorrect.text =
-                    if (state.isFreeAnswer) {
-                        context.getString(R.string.step_quiz_feedback_correct_free_answer)
-                    } else {
-                        resources.getStringArray(R.array.step_quiz_feedback_correct).random()
+                    when {
+                        hasReview ->
+                            context.getString(R.string.review_warning)
+                        state.isFreeAnswer ->
+                            context.getString(R.string.step_quiz_feedback_correct_free_answer)
+                        else ->
+                            resources.getStringArray(R.array.step_quiz_feedback_correct).random()
                     }
                 setHint(stepQuizFeedbackCorrect, R.drawable.bg_step_quiz_feedback_correct, R.drawable.bg_step_quiz_feedback_correct_with_hint, state.hint)
             }
@@ -91,11 +103,11 @@ class StepQuizFeedbackBlocksDelegate(
         hint: String?
     ) {
         if (hint != null) {
-            targetView.setBackgroundResource(hintedBackgroundRes)
+            targetView.setTextViewBackgroundWithoutResettingPadding(hintedBackgroundRes)
             stepQuizFeedbackHint.setPlainOrLaTeXTextWithCustomFontColored(hint, fontsProvider.provideFontPath(FontType.mono), R.color.new_accent_color, true)
             stepQuizFeedbackHint.visibility = View.VISIBLE
         } else {
-            targetView.setBackgroundResource(backgroundRes)
+            targetView.setTextViewBackgroundWithoutResettingPadding(backgroundRes)
             stepQuizFeedbackHint.visibility = View.GONE
         }
     }

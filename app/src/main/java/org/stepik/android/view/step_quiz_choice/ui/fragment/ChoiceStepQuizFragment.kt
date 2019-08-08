@@ -15,8 +15,10 @@ import kotlinx.android.synthetic.main.layout_step_quiz_choice.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
@@ -43,6 +45,9 @@ class ChoiceStepQuizFragment : Fragment(), StepQuizView {
 
     @Inject
     internal lateinit var fontsProvider: FontsProvider
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     private lateinit var presenter: StepQuizPresenter
 
@@ -79,7 +84,7 @@ class ChoiceStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>()
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
-        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, choicesRecycler, stepQuizDescription, stepQuizAction)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, choicesRecycler, stepQuizDescription, stepQuizActionContainer)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
@@ -87,12 +92,21 @@ class ChoiceStepQuizFragment : Fragment(), StepQuizView {
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
+                lessonData = lessonData,
                 stepQuizFormDelegate = ChoiceStepQuizFormDelegate(view, fontsProvider),
-                stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
+                stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(
+                    stepQuizFeedbackBlocks,
+                    fontsProvider,
+                    stepWrapper.step.actions?.doReview != null,
+                    { screenManager.openStepInWeb(requireContext(), stepWrapper.step) }
+                ),
                 stepQuizActionButton = stepQuizAction,
+                stepRetryButton = stepQuizRetry,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
                 stepQuizPresenter = presenter
-            )
+            ) {
+                (parentFragment as? NextMoveable)?.moveNext()
+            }
     }
 
     override fun onStart() {

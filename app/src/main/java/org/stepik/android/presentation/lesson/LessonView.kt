@@ -38,7 +38,7 @@ interface LessonView {
      */
     fun showStepAtPosition(position: Int)
 
-    fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
+    fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
 
     fun showComments(step: Step, discussionId: Long)
 

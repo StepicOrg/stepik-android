@@ -20,6 +20,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
+import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
@@ -34,7 +35,7 @@ import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactor
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import javax.inject.Inject
 
-class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
+class StepFragment : Fragment(), StepView, KeyboardExtensionContainer, NextMoveable {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -210,4 +211,11 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
 
     override fun getKeyboardExtensionViewContainer(): ViewGroup =
         stepContainer
+
+    override fun moveNext(): Boolean {
+        if ((activity as? NextMoveable)?.moveNext() != true) {
+            stepPresenter.onStepDirectionClicked(StepNavigationDirection.NEXT)
+        }
+        return true
+    }
 }
