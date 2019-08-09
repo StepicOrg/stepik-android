@@ -20,7 +20,7 @@ class SortingOptionAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SortingOption> =
         ViewHolder(createView(parent, R.layout.item_step_quiz_sorting))
 
-    private inner class ViewHolder(root: View): DelegateViewHolder<SortingOption>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<SortingOption>(root) {
         private val stepQuizSortingOption = root.stepQuizSortingOption
         private val stepQuizSortingOptionUp = root.stepQuizSortingOptionUp
         private val stepQuizSortingOptionDown = root.stepQuizSortingOptionDown
