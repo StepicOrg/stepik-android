@@ -365,8 +365,6 @@
     <string name="retry">Retry</string>
     <string name="retry_internet">@string/retry</string>
     <string name="accessibility_drag_and_drop">drag and drop</string>
-    <string name="fill_blanks_select_value"><![CDATA[<Select value>]]></string>
-    <string name="fill_blanks_type_text">Type text</string>
     <string name="table_quiz_beta">Table problem β</string>
     <string name="logout_user_error">Access was revoked. Login again</string>
     <string name="google_services_late">Update Google Play Services for signing in with it</string>
@@ -650,6 +648,9 @@
     <string name="course_reviews_compose_banner_review_motivation">Share your opinion</string>
 
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
+    <string name="course_content_time_to_complete" translatable="false">&#8776; %s</string>
+    <string name="course_content_time_to_complete_minutes_unit">%d min</string>
+    <string name="course_content_time_to_complete_hours_unit">%d h</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
 
     <string name="course_content_timeline_begin_date">Begin date</string>
@@ -692,9 +693,6 @@
     <string name="retention_notification_day3_title">Time to study ‍🎓</string>
     <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
 
-
-    <string name="step_comment_tooltip">Open discussions for better understanding or asking a question</string>
-
     <!-- Profile edit -->
     <string name="profile_edit_menu_item">Edit profile</string>
     <string name="profile_edit_password_title">Password</string>
@@ -726,7 +724,8 @@
     <string name="lesson_title">Lesson</string>
     <string name="lesson_menu_info">Info</string>
 
-    <string name="lesson_info_points">%s for step</string>
+    <string name="lesson_info_points_with_score">You got %s out of %s for step</string>
+    <string name="lesson_info_points">You will get %s for step</string>
     <string name="lesson_info_time_to_complete">&#8776;%s for lesson</string>
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
@@ -751,8 +750,6 @@
     <string name="step_quiz_feedback_wrong_not_last_try">Wrong. Let\'s try again.</string>
     <string name="step_quiz_feedback_wrong_last_try">Incorrect</string>
 
-    <string name="step_quiz_feedback_validation_fill_blanks">All blanks should be filled</string>
-
     <string name="step_quiz_number_description">Enter a number</string>
     <string name="step_quiz_math_description">Enter a math formula</string>
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
@@ -762,6 +759,18 @@
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
     <string name="step_quiz_choice_empty_reply">Choose an option</string>
+
+    <string name="step_quiz_code_details">Details</string>
+    <string name="step_quiz_code_detail_sample_title">Sample data %d:</string>
+
+    <string name="step_quiz_code_detail_limit_title_time">Time limit:</string>
+    <string name="step_quiz_code_detail_limit_title_memory">Memory limit:</string>
+    <string name="step_quiz_code_detail_limit_value_memory">%d MB</string>
+
+    <string name="step_quiz_code_lang_chooser">Choose language</string>
+    <string name="step_quiz_code_empty_lang">Choose programming language before submission</string>
+
+    <string name="step_quiz_not_ready">Sorry, the quiz is not ready yet</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>

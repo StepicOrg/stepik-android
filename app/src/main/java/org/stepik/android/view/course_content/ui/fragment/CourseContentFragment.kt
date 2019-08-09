@@ -35,13 +35,11 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.util.requestMultiplePermissions
-import org.stepic.droid.util.checkSelfPermissions
-import org.stepic.droid.util.argument
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.argument
+import org.stepic.droid.util.checkSelfPermissions
+import org.stepic.droid.util.requestMultiplePermissions
 import org.stepic.droid.util.setTextColor
-import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
-import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.domain.personal_deadlines.model.Deadline
@@ -55,6 +53,8 @@ import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.view.course_calendar.ui.ChooseCalendarDialog
 import org.stepik.android.view.course_calendar.ui.ExplainCalendarPermissionDialog
+import org.stepik.android.view.course_content.model.CourseContentItem
+import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
 import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentSectionClickListenerImpl
 import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentUnitClickListenerImpl
@@ -273,7 +273,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             .subscribe {
                 val anchorView = courseContentRecycler.findViewById<View>(R.id.course_control_schedule)
                 val deadlinesDescription = getString(R.string.deadlines_banner_description)
-                PopupHelper.showPopupAnchoredToView(requireContext(), anchorView, deadlinesDescription, cancelableOnTouchOutside = true)
+                PopupHelper.showPopupAnchoredToView(requireContext(), anchorView, deadlinesDescription, cancelableOnTouchOutside = true, withArrow = true)
             }
     }
 

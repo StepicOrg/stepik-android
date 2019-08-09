@@ -11,18 +11,21 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
+import org.stepik.android.domain.app_rating.interactor.AppRatingInteractor
+import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.lesson.interactor.LessonContentInteractor
 import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.lesson.model.LessonDeepLinkData
+import org.stepik.android.domain.step.interactor.StepIndexingInteractor
+import org.stepik.android.domain.streak.interactor.StreakInteractor
+import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.Lesson
+import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.domain.lesson.model.LessonDeepLinkData
-import org.stepik.android.domain.step.interactor.StepIndexingInteractor
-import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
-import org.stepik.android.model.Progress
 import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
 import org.stepik.android.view.injection.step_quiz.StepQuizBus
 import javax.inject.Inject
@@ -34,6 +37,9 @@ constructor(
 
     private val lessonInteractor: LessonInteractor,
     private val lessonContentInteractor: LessonContentInteractor,
+    private val appRatingInteractor: AppRatingInteractor,
+    private val feedbackInteractor: FeedbackInteractor,
+    private val streakInteractor: StreakInteractor,
 
     private val stateMapper: LessonStateMapper,
 
@@ -184,22 +190,30 @@ constructor(
         val state = (state as? LessonView.State.LessonLoaded)
             ?: return
 
-        val stepWorth = (state.stepsState as? LessonView.StepsState.Loaded)
+        val stepProgress = (state.stepsState as? LessonView.StepsState.Loaded)
             ?.stepItems
             ?.getOrNull(position)
-            ?.stepWrapper
-            ?.step
-            ?.worth
-            ?: return
+            ?.stepProgress
+
+        // Because the score field in Progress is a String, GSON parses integers in the response as floating point numbers
+        val stepScore = stepProgress
+            ?.score
+            ?.toFloatOrNull()
+            ?.toLong()
+            ?: 0L
+
+        val stepCost = stepProgress
+            ?.cost
+            ?: 0L
 
         val timeToComplete = state
             .lessonData
             .lesson
             .timeToComplete
-            .takeIf { it > 0 }
+            .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
-        view?.showLessonInfoTooltip(stepWorth, timeToComplete, -1)
+        view?.showLessonInfoTooltip(stepScore, stepCost, timeToComplete, -1)
     }
 
     /**
@@ -278,6 +292,18 @@ constructor(
             .find { it.stepWrapper.step.id == stepId }
             ?: return
 
+        appRatingInteractor.incrementSolvedStepCounter()
+        if (appRatingInteractor.needShowAppRateDialog()) {
+            appRatingInteractor.rateDialogShown()
+            view?.showRateDialog()
+        } else if (streakInteractor.needShowStreakDialog()) {
+            compositeDisposable += streakInteractor
+                    .onNeedShowStreak()
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(onSuccess = { view?.showStreakDialog(it) }, onError = { it.printStackTrace() })
+            }
+
         compositeDisposable += stepViewReportInteractor
             .updatePassedStep(stepItem.stepWrapper.step, stepItem.assignment)
             .subscribeOn(backgroundScheduler)
@@ -304,5 +330,27 @@ constructor(
 
     private fun endIndexing() {
         stepIndexingInteractor.endIndexing()
+    }
+
+    /**
+     * Feedback
+     */
+    fun sendTextFeedback(subject: String, aboutSystemInfo: String) {
+        compositeDisposable += feedbackInteractor
+                .createSupportEmailData(subject, aboutSystemInfo)
+                .observeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribeBy(
+                    onSuccess = { view?.sendTextFeedback(it) },
+                    onError = emptyOnErrorStub
+                )
+    }
+
+    fun onAppRateShow() {
+        appRatingInteractor.rateHandled()
+    }
+
+    fun setStreakTime(timeIntervalCode: Int) {
+        streakInteractor.setStreakTime(timeIntervalCode)
     }
 }

@@ -9,6 +9,9 @@ import org.stepic.droid.storage.migration.MigrationFrom38To39;
 import org.stepic.droid.storage.migration.MigrationFrom39To40;
 import org.stepic.droid.storage.migration.MigrationFrom40To41;
 import org.stepic.droid.storage.migration.MigrationFrom41To42;
+import org.stepic.droid.storage.migration.MigrationFrom42To43;
+import org.stepic.droid.storage.migration.MigrationFrom43To44;
+import org.stepic.droid.storage.migration.MigrationFrom44To45;
 import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
 import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
 import org.stepic.droid.storage.migration.MigrationFrom33To34;
@@ -115,6 +118,9 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom39To40(db);
         upgradeFrom40To41(db);
         upgradeFrom41To42(db);
+        upgradeFrom42To43(db);
+        upgradeFrom43To44(db);
+        upgradeFrom44To45(db);
     }
 
 
@@ -325,6 +331,30 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 42) {
             upgradeFrom41To42(db);
         }
+
+        if (oldVersion < 43) {
+            upgradeFrom42To43(db);
+        }
+
+        if (oldVersion < 44) {
+            upgradeFrom43To44(db);
+        }
+
+        if (oldVersion < 45) {
+            upgradeFrom44To45(db);
+        }
+    }
+
+    private void upgradeFrom44To45(SQLiteDatabase db) {
+        MigrationFrom44To45.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom43To44(SQLiteDatabase db) {
+        MigrationFrom43To44.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom42To43(SQLiteDatabase db) {
+        MigrationFrom42To43.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom41To42(SQLiteDatabase db) {

@@ -15,16 +15,6 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 
-
-fun ViewTreeObserver.removeGlobalLayoutListener(listener: ViewTreeObserver.OnGlobalLayoutListener) {
-    if (Build.VERSION.SDK_INT > Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-        removeOnGlobalLayoutListener(listener)
-    } else {
-        @Suppress("DEPRECATION") //use only on old API
-        removeGlobalOnLayoutListener(listener)
-    }
-}
-
 fun View.changeVisibility(needShow: Boolean) {
     if (needShow) {
         this.visibility = View.VISIBLE
@@ -71,6 +61,22 @@ fun TextView.setCompoundDrawables(
     val endDrawable = getDrawableOrNull(end)
     val bottomDrawable = getDrawableOrNull(bottom)
     setCompoundDrawablesWithIntrinsicBounds(startDrawable, topDrawable, endDrawable, bottomDrawable)
+}
+
+fun TextView.setTextViewBackgroundWithoutResettingPadding(@DrawableRes backgroundRes: Int) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        val paddingLeft = this.paddingLeft
+        val paddingTop = this.paddingTop
+        val paddingRight = this.paddingRight
+        val paddingBottom = this.paddingBottom
+        val compoundDrawablePadding = this.compoundDrawablePadding
+
+        setBackgroundResource(backgroundRes)
+        setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+        this.compoundDrawablePadding = compoundDrawablePadding
+    } else {
+        setBackgroundResource(backgroundRes)
+    }
 }
 
 

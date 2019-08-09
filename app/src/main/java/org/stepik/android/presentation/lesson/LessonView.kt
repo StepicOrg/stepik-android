@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.lesson
 
+import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.StepItem
 import org.stepik.android.model.Step
@@ -37,7 +38,13 @@ interface LessonView {
      */
     fun showStepAtPosition(position: Int)
 
-    fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
+    fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
 
     fun showComments(step: Step, discussionId: Long)
+
+    fun showRateDialog()
+
+    fun showStreakDialog(streakDays: Int)
+
+    fun sendTextFeedback(supportEmailData: SupportEmailData)
 }

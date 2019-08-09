@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stepContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v4.widget.NestedScrollView
@@ -22,6 +23,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/step_quiz_separator" />
+
+            <include
+                android:id="@+id/stepQuizError"
+                android:visibility="gone"
+                layout="@layout/view_step_quiz_error"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
 
             <FrameLayout
                 android:id="@+id/stepQuizContainer"

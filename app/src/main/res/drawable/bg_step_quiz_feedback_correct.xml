@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="@color/correct_answer_background" />
-    <corners android:radius="@dimen/step_control_block_radius" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/correct_answer_background" />
+            <corners android:radius="@dimen/step_control_block_radius" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/bg_step_quiz_feedback_correct_ripple" />
+</layer-list>

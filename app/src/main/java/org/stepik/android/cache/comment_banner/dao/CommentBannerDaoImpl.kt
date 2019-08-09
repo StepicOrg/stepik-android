@@ -14,7 +14,7 @@ constructor(
 ) : DaoBase<Long>(databaseOperations),
     CommentBannerDao {
     override fun getDbName(): String =
-        DbStructureCommentBanner.COMMENTS_BANNER
+        DbStructureCommentBanner.TABLE_NAME
 
     override fun getDefaultPrimaryColumn(): String =
         DbStructureCommentBanner.Columns.COURSE_ID

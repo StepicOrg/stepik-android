@@ -362,8 +362,6 @@
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
-    <string name="fill_blanks_select_value"><![CDATA[<Выберите значение>]]></string>
-    <string name="fill_blanks_type_text">Введите текст</string>
     <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
@@ -625,6 +623,9 @@
     <string name="course_reviews_compose_banner_review_description">Чтобы оставить отзыв, пройдите больше 80% материалов</string>
     <string name="course_reviews_compose_banner_review_motivation">Поделитесь своим мнением</string>
 
+    <string name="course_content_time_to_complete_minutes_unit">%d мин</string>
+    <string name="course_content_time_to_complete_hours_unit">%d ч</string>
+
     <string name="course_content_timeline_begin_date">Дата начала</string>
     <string name="course_content_timeline_end_date">Дата закрытия</string>
     <string name="course_content_timeline_soft_deadline">Мягкий дедлайн</string>
@@ -664,8 +665,6 @@
     <string name="retention_notification_day3_title">Время учиться ‍🎓</string>
     <string name="retention_notification_day3_message">Вас давно не было. Заходите и учитесь новому! 💡</string>
 
-    <string name="step_comment_tooltip">Откройте комментарии, чтобы лучше понять материал или задать вопрос</string>
-
     <!-- Profile edit -->
     <string name="profile_edit_menu_item">Редактировать профиль</string>
     <string name="profile_edit_password_title">Пароль</string>
@@ -696,7 +695,8 @@
     <string name="lesson_title">Урок</string>
     <string name="lesson_menu_info">Инфо</string>
 
-    <string name="lesson_info_points">%s за шаг</string>
+    <string name="lesson_info_points_with_score">Вы получили %s из %s за шаг</string>
+    <string name="lesson_info_points">Вы получите %s за шаг</string>
     <string name="lesson_info_time_to_complete">&#8776;%s на урок</string>
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
@@ -721,8 +721,6 @@
     <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз!</string>
     <string name="step_quiz_feedback_wrong_last_try">Неверно</string>
 
-    <string name="step_quiz_feedback_validation_fill_blanks">Необходимо заполнить все пробелы перед отправкой</string>
-
     <string name="step_quiz_number_description">Введите численный ответ</string>
     <string name="step_quiz_math_description">Введите математическую формулу</string>
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
@@ -732,6 +730,18 @@
 
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
     <string name="step_quiz_choice_empty_reply">Выберите вариант</string>
+
+    <string name="step_quiz_code_details">Детали</string>
+    <string name="step_quiz_code_detail_sample_title">Пример данных %d:</string>
+
+    <string name="step_quiz_code_detail_limit_title_time">Ограничение по времени:</string>
+    <string name="step_quiz_code_detail_limit_title_memory">Ограничение по памяти:</string>
+    <string name="step_quiz_code_detail_limit_value_memory">%d МБ</string>
+
+    <string name="step_quiz_code_lang_chooser">Выберите язык</string>
+    <string name="step_quiz_code_empty_lang">Перед отправкой решения выберите язык программирования из списка</string>
+
+    <string name="step_quiz_not_ready">Извините, эта задача еще не готова</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
