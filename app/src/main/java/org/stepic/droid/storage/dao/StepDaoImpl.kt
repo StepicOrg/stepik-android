@@ -2,10 +2,7 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepik.android.model.Assignment
 import org.stepic.droid.model.BlockPersistentWrapper
-import org.stepik.android.model.Progress
-import org.stepik.android.model.Step
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureProgress
@@ -18,7 +15,9 @@ import org.stepic.droid.util.getString
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.model.Actions
-
+import org.stepik.android.model.Assignment
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Step
 import javax.inject.Inject
 
 class StepDaoImpl
@@ -121,9 +120,9 @@ constructor(
         return step
     }
 
-    override fun insertOrUpdate(persistentObject: Step) {
+    override fun insertOrReplace(persistentObject: Step) {
         super.insertOrUpdate(persistentObject)
-        persistentObject.block?.let { blockWrapperDao.insertOrUpdate(BlockPersistentWrapper(it, persistentObject.id)) }
+        persistentObject.block?.let { blockWrapperDao.insertOrReplace(BlockPersistentWrapper(it, persistentObject.id)) }
     }
 
     override fun insertOrReplaceAll(persistentObjects: List<Step>) {

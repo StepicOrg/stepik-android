@@ -771,6 +771,8 @@
     <string name="step_quiz_code_lang_chooser">Choose language</string>
     <string name="step_quiz_code_empty_lang">Choose programming language before submission</string>
 
+    <string name="step_quiz_not_ready">Sorry, the quiz is not ready yet</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 </resources>
