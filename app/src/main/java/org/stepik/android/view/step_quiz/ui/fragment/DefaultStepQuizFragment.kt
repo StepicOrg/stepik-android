@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,7 @@ import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.setTextColor
+import org.stepic.droid.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
@@ -128,11 +127,6 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     }
 
     override fun showNetworkError() {
-        val view = view ?: return
-
-        Snackbar
-            .make(view, R.string.no_connection, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            .show()
+        snackbar(messageRes = R.string.no_connection, length = Snackbar.LENGTH_SHORT)
     }
 }
