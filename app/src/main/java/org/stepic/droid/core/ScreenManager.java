@@ -94,6 +94,8 @@ public interface ScreenManager {
 
     void showCertificates(Context context);
 
+    void showCertificatesNew(Context context, long userId);
+
     void openSyllabusInWeb(Context context, long courseId);
 
     void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams);

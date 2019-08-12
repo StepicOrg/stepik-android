@@ -291,6 +291,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showCertificatesNew(Context context, long userId) {
+        Intent intent = org.stepik.android.view.certificates.ui.activity.CertificatesActivity.Companion.createIntent(context, userId);
+        context.startActivity(intent);
+    }
+
+    @Override
     public void showDownloads(Context context) {
         Intent intent = new Intent(context, DownloadsActivity.class);
         if (!(context instanceof Activity)) {
