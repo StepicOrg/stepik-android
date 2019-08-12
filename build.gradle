@@ -15,7 +15,7 @@ buildscript {
         maven { url "https://dl.bintray.com/eadm/ru.nobird.android" }
     }
     dependencies {
-        classpath gradlePlugins.android
+        classpath "com.android.tools.build:gradle:${versions.androidGradlePlugin}"
         classpath gradlePlugins.googleServices
         classpath gradlePlugins.kotlin
         classpath gradlePlugins.fabric
