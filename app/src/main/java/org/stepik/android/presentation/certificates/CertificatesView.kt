@@ -5,9 +5,10 @@ import org.stepic.droid.model.CertificateViewItem
 interface CertificatesView {
     sealed class State {
         object Idle : State()
-        object Error : State()
         object Loading : State()
-        class CertificatesLoaded(val certificates: List<CertificateViewItem>)
+        object EmptyCertificates : State()
+        object NetworkError : State()
+        class CertificatesLoaded(val certificates: List<CertificateViewItem>) : State()
     }
 
     fun setState(state: State)

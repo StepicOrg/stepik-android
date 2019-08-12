@@ -5,12 +5,24 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_certificates.*
+import kotlinx.android.synthetic.main.empty_certificates.*
+import kotlinx.android.synthetic.main.empty_login.*
+import kotlinx.android.synthetic.main.error_no_connection.*
+import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.model.CertificateViewItem
+import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.certificates.CertificatesPresenter
 import org.stepik.android.presentation.certificates.CertificatesView
+import org.stepik.android.view.certificates.ui.adapter.CertificatesAdapterDelegate
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import javax.inject.Inject
 
 class CertificatesActivity: FragmentActivityBase(), CertificatesView {
@@ -22,10 +34,17 @@ class CertificatesActivity: FragmentActivityBase(), CertificatesView {
                 .putExtra(EXTRA_USER_ID, userId)
     }
 
+    private var userId: Long = -1
+
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var certificatesPresenter: CertificatesPresenter
+
+    private var certificatesAdapter: DefaultDelegateAdapter<CertificateViewItem> = DefaultDelegateAdapter()
+
+    private val viewStateDelegate =
+        ViewStateDelegate<CertificatesView.State>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +56,22 @@ class CertificatesActivity: FragmentActivityBase(), CertificatesView {
             .get(CertificatesPresenter::class.java)
 
         initCenteredToolbar(R.string.certificates_title, showHomeButton = true)
+
+        initViewStateDelegate()
+
+        certificateRecyclerView.apply {
+            adapter = certificatesAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
+        certificatesAdapter += CertificatesAdapterDelegate(
+            onItemClick = { screenManager.showPdfInBrowserByGoogleDocs(this, it) },
+            onShareButtonClick = { onNeedShowShareDialog(it) }
+        )
+        certificateSwipeRefresh.setOnRefreshListener { certificatesPresenter.onLoadCertificates(userId) }
+        authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
+        goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+        userId = intent.getLongExtra(EXTRA_USER_ID, -1)
+        certificatesPresenter.onLoadCertificates(userId)
     }
 
     private fun injectComponent() {
@@ -46,7 +81,54 @@ class CertificatesActivity: FragmentActivityBase(), CertificatesView {
             .inject(this)
     }
 
+    override fun onStart() {
+        super.onStart()
+        certificatesPresenter.attachView(this)
+    }
+
+    override fun onStop() {
+        certificatesPresenter.detachView(this)
+        super.onStop()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        }
+
+
+    private fun initViewStateDelegate() {
+        viewStateDelegate.addState<CertificatesView.State.EmptyCertificates>(reportEmptyCertificates)
+        viewStateDelegate.addState<CertificatesView.State.Loading>(loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<CertificatesView.State.NetworkError>(reportProblem)
+        viewStateDelegate.addState<CertificatesView.State.CertificatesLoaded>(certificateSwipeRefresh, certificateRecyclerView)
+    }
+
     override fun setState(state: CertificatesView.State) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        certificateSwipeRefresh.isRefreshing = false
+        certificateSwipeRefresh.isEnabled = (state is CertificatesView.State.CertificatesLoaded || state is CertificatesView.State.NetworkError)
+        viewStateDelegate.switchState(state)
+        when (state) {
+            is CertificatesView.State.CertificatesLoaded -> {
+                certificatesAdapter.items = state.certificates
+                certificatesAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    private fun onNeedShowShareDialog(certificateViewItem: CertificateViewItem?) {
+        if (certificateViewItem == null) {
+            return
+        }
+        val bottomSheetDialogFragment =
+            CertificateShareDialogFragment.newInstance(certificateViewItem)
+        if (!bottomSheetDialogFragment.isAdded) {
+            bottomSheetDialogFragment.show(supportFragmentManager, null)
+        }
     }
 }
