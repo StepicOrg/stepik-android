@@ -12,6 +12,7 @@ import org.stepic.droid.storage.migration.MigrationFrom41To42;
 import org.stepic.droid.storage.migration.MigrationFrom42To43;
 import org.stepic.droid.storage.migration.MigrationFrom43To44;
 import org.stepic.droid.storage.migration.MigrationFrom44To45;
+import org.stepic.droid.storage.migration.MigrationFrom45to46;
 import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
 import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
 import org.stepic.droid.storage.migration.MigrationFrom33To34;
@@ -121,6 +122,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom42To43(db);
         upgradeFrom43To44(db);
         upgradeFrom44To45(db);
+        upgradeFrom45To46(db);
     }
 
 
@@ -343,6 +345,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 45) {
             upgradeFrom44To45(db);
         }
+
+        if (oldVersion < 46) {
+            upgradeFrom45To46(db);
+        }
+    }
+
+    private void upgradeFrom45To46(SQLiteDatabase db) {
+        MigrationFrom45to46.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom44To45(SQLiteDatabase db) {

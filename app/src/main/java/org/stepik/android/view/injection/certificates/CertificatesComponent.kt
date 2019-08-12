@@ -4,7 +4,8 @@ import dagger.Subcomponent
 import org.stepik.android.view.certificates.ui.activity.CertificatesActivity
 
 @Subcomponent(modules = [
-    CertificatesModule::class
+    CertificatesModule::class,
+    CertificatesDataModule::class
 ])
 interface CertificatesComponent {
     @Subcomponent.Builder
