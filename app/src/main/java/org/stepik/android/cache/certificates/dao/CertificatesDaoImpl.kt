@@ -27,7 +27,6 @@ constructor(
     override fun getDefaultPrimaryValue(persistentObject: Certificate): String =
         persistentObject.id.toString()
 
-
     override fun parsePersistentObject(cursor: Cursor): Certificate =
         Certificate(
             id = cursor.getLong(DbStructureCertificate.Columns.ID),

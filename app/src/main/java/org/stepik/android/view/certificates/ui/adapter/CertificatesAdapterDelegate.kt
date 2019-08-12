@@ -35,7 +35,7 @@ class CertificatesAdapterDelegate(
             ContextCompat.getDrawable(context, R.drawable.general_placeholder)
 
         init {
-            root.setOnClickListener { onItemClick ( itemData?.fullPath ?: "") }
+            root.setOnClickListener { onItemClick(itemData?.fullPath ?: "") }
             certificateShareButton.setOnClickListener { onShareButtonClick(itemData as CertificateViewItem) }
         }
 
@@ -52,7 +52,6 @@ class CertificatesAdapterDelegate(
             }
 
             certificateGradeView.text = context.resources.getString(R.string.certificate_result_with_substitution, data.grade ?: "")
-
 
             Glide.with(context)
                 .load(data.coverFullPath ?: "")

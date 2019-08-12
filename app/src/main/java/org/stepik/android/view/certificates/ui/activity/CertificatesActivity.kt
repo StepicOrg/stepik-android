@@ -25,7 +25,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import javax.inject.Inject
 
-class CertificatesActivity: FragmentActivityBase(), CertificatesView {
+class CertificatesActivity : FragmentActivityBase(), CertificatesView {
     companion object {
         private const val EXTRA_IS_OWN_PROFILE = "is_own_profile"
         private const val EXTRA_USER_ID = "user_id"
@@ -107,7 +107,6 @@ class CertificatesActivity: FragmentActivityBase(), CertificatesView {
                 super.onOptionsItemSelected(item)
         }
 
-
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<CertificatesView.State.EmptyCertificates>(reportEmptyCertificates)
         viewStateDelegate.addState<CertificatesView.State.Loading>(loadProgressbarOnEmptyScreen)
@@ -119,7 +118,6 @@ class CertificatesActivity: FragmentActivityBase(), CertificatesView {
         if (isOwnProfile) return
         emptyCertificatesMessage.text = resources.getString(R.string.empty_certificates_others)
         goToCatalog.visibility = View.GONE
-        
     }
 
     override fun setState(state: CertificatesView.State) {
