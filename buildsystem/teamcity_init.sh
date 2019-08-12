@@ -1,6 +1,8 @@
 #!/bin/bash
 
 rm -rf /home/buildagent/.gradle/caches/transforms-1
+rm -rf /home/buildagent/.gradle/caches/modules-2
+rm -rf /home/buildagent/.gradle/caches/build-cache-1
 
 SDK_VERSION=`grep compileSdk dependencies.gradle | awk '{ print $3+0}'`
 SDK_DIR=$ANDROID_HOME/platforms/android-$SDK_VERSION
