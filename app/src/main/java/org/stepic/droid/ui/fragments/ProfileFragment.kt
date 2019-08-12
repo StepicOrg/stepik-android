@@ -51,7 +51,9 @@ import org.stepic.droid.util.argument
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 class   ProfileFragment : FragmentBase(),
@@ -113,6 +115,10 @@ class   ProfileFragment : FragmentBase(),
         initToolbar()
         initTimezone()
 
+        if (userId == 0L) {
+            userId = userPreferences.userId
+        }
+
         profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
         profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(requireActivity(), profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
@@ -157,6 +163,8 @@ class   ProfileFragment : FragmentBase(),
 
         achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
+
+        certificatesTitleContainer.setOnClickListener { screenManager.showCertificatesNew(requireContext(), userId) }
     }
 
     override fun onDestroyView() {
