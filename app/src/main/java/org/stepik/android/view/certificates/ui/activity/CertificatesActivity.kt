@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
+import android.view.View
 import kotlinx.android.synthetic.main.activity_certificates.*
 import kotlinx.android.synthetic.main.empty_certificates.*
 import kotlinx.android.synthetic.main.empty_login.*
@@ -27,13 +28,15 @@ import javax.inject.Inject
 
 class CertificatesActivity: FragmentActivityBase(), CertificatesView {
     companion object {
+        private const val EXTRA_IS_OWN_PROFILE = "is_own_profile"
         private const val EXTRA_USER_ID = "user_id"
 
-        fun createIntent(context: Context, userId: Long): Intent =
+        fun createIntent(context: Context, isOwnProfile: Boolean, userId: Long): Intent =
             Intent(context, CertificatesActivity::class.java)
                 .putExtra(EXTRA_USER_ID, userId)
     }
 
+    private var isOwnProfile: Boolean = false
     private var userId: Long = -1
 
     @Inject
@@ -57,7 +60,11 @@ class CertificatesActivity: FragmentActivityBase(), CertificatesView {
 
         initCenteredToolbar(R.string.certificates_title, showHomeButton = true)
 
+        isOwnProfile = intent.getBooleanExtra(EXTRA_IS_OWN_PROFILE, false)
+        userId = intent.getLongExtra(EXTRA_USER_ID, -1)
+
         initViewStateDelegate()
+        setupViewMessages()
 
         certificateRecyclerView.apply {
             adapter = certificatesAdapter
@@ -67,10 +74,11 @@ class CertificatesActivity: FragmentActivityBase(), CertificatesView {
             onItemClick = { screenManager.showPdfInBrowserByGoogleDocs(this, it) },
             onShareButtonClick = { onNeedShowShareDialog(it) }
         )
+
         certificateSwipeRefresh.setOnRefreshListener { certificatesPresenter.onLoadCertificates(userId) }
         authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
-        userId = intent.getLongExtra(EXTRA_USER_ID, -1)
+
         certificatesPresenter.onLoadCertificates(userId)
     }
 
@@ -107,6 +115,13 @@ class CertificatesActivity: FragmentActivityBase(), CertificatesView {
         viewStateDelegate.addState<CertificatesView.State.Loading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<CertificatesView.State.NetworkError>(reportProblem)
         viewStateDelegate.addState<CertificatesView.State.CertificatesLoaded>(certificateSwipeRefresh, certificateRecyclerView)
+    }
+
+    private fun setupViewMessages() {
+        if (isOwnProfile) return
+        emptyCertificatesMessage.text = resources.getString(R.string.empty_certificates_others)
+        goToCatalog.visibility = View.GONE
+        
     }
 
     override fun setState(state: CertificatesView.State) {

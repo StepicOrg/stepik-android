@@ -204,7 +204,8 @@
     <string name="link_copied_title">Ссылка скопирована</string>
     <string name="certificate_share_share_link">Поделиться…</string>
     <string name="add_to_linkedin">Добавить в профиль LinkedIn</string>
-    <string name="empty_certificates">Пока вы не получили ни одного сертификата</string>
+    <string name="empty_certificates_own">Пока вы не получили ни одного сертификата</string>
+    <string name="empty_certificates_others">Данный пользователь не получил ни одного сертификата</string>
     <string name="are_you_sure_remove_comment_text">Если Вы выйдите, эта запись будет потеряна
     </string>
 

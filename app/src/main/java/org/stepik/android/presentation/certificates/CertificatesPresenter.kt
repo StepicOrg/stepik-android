@@ -7,7 +7,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.data.certificates.CertificatesInteractor
 import org.stepik.android.presentation.base.PresenterBase
-import timber.log.Timber
 import javax.inject.Inject
 
 class CertificatesPresenter
@@ -45,10 +44,14 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = {
-                    Timber.d("Items: $it")
-                    state = CertificatesView.State.CertificatesLoaded(it)
+                    state = if (it.isEmpty()) {
+                        CertificatesView.State.EmptyCertificates
+                    } else {
+                        CertificatesView.State.CertificatesLoaded(it)
+                    }
                 },
                 onError = {
+                    state = CertificatesView.State.NetworkError
                     it.printStackTrace()
                 }
             )

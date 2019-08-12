@@ -24,18 +24,18 @@
         android:layout_marginEnd="@dimen/placeholders_image_margin"
         android:layout_marginRight="@dimen/placeholders_image_margin"
         android:src="@drawable/ic_empty"
-        android:contentDescription="@string/empty_certificates"
+        android:contentDescription="@string/empty_certificates_own"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/centerGuideline"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/placeholderMessage"
+        android:id="@+id/emptyCertificatesMessage"
         style="@style/PlaceholderTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/empty_certificates"
+        android:text="@string/empty_certificates_own"
         app:layout_constraintBottom_toTopOf="@+id/goToCatalog"
         app:layout_constraintStart_toStartOf="@+id/centerGuideline"
         app:layout_constraintTop_toTopOf="parent"
@@ -49,8 +49,8 @@
         android:layout_margin="@dimen/half_padding"
         android:text="@string/placeholder_go_to_catalog"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/placeholderMessage"
-        app:layout_constraintStart_toStartOf="@+id/placeholderMessage"
-        app:layout_constraintTop_toBottomOf="@+id/placeholderMessage" />
+        app:layout_constraintEnd_toEndOf="@+id/emptyCertificatesMessage"
+        app:layout_constraintStart_toStartOf="@+id/emptyCertificatesMessage"
+        app:layout_constraintTop_toBottomOf="@+id/emptyCertificatesMessage" />
 
 </android.support.constraint.ConstraintLayout>
