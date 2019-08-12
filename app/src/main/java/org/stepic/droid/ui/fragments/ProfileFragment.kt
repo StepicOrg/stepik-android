@@ -164,7 +164,7 @@ class   ProfileFragment : FragmentBase(),
         achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
 
-        certificatesTitleContainer.setOnClickListener { screenManager.showCertificatesNew(requireContext(), localUserViewModel?.isMyProfile ?: false, userId) }
+        certificatesTitleContainer.setOnClickListener { screenManager.showCertificates(requireContext(), localUserViewModel?.isMyProfile ?: false, userId) }
     }
 
     override fun onDestroyView() {

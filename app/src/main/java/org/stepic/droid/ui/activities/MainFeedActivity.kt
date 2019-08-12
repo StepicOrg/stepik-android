@@ -77,8 +77,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
-        const val CERTIFICATE_INDEX: Int = 4 // TODO Discuss this index and FCM handling
-        const val NOTIFICATIONS_INDEX: Int = 5
+        const val NOTIFICATIONS_INDEX: Int = 4
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)

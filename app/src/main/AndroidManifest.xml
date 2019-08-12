@@ -198,8 +198,6 @@
 
         <activity android:name=".ui.activities.DownloadsActivity" />
 
-        <activity android:name=".ui.activities.CertificatesActivity" />
-
         <activity android:name=".ui.activities.CourseListActivity" />
 
         <activity

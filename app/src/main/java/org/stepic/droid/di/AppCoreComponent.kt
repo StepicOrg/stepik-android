@@ -12,7 +12,6 @@ import org.stepic.droid.code.ui.CodeEditor
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.analytic.AnalyticModule
 import org.stepic.droid.di.catalog.CatalogComponent
-import org.stepic.droid.di.certificates.CertificateComponent
 import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
@@ -148,8 +147,6 @@ interface AppCoreComponent {
     fun profileComponentBuilder(): ProfileComponent.Builder
 
     fun homeComponentBuilder(): HomeComponent.Builder
-
-    fun certificateComponentBuilder(): CertificateComponent.Builder
 
     fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
 
