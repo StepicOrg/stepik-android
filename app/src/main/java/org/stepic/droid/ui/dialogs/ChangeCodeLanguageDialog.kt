@@ -20,7 +20,12 @@ class ChangeCodeLanguageDialog : DialogFragment() {
                     .setTitle(R.string.reset_code_dialog_title)
                     .setMessage(R.string.change_code_dialog_explanation)
                     .setPositiveButton(R.string.yes) { _, _ ->
-                        (parentFragment as Callback).onChangeLanguage()
+                        val callback = if (parentFragment != null) {
+                            parentFragment as Callback
+                        } else {
+                            activity as Callback
+                        }
+                        callback.onChangeLanguage()
                     }
                     .setNegativeButton(R.string.cancel, null)
                     .create()
