@@ -10,7 +10,7 @@ task findbugs(type: FindBugs) {
         html.enabled = true
         xml.enabled = false
         html {
-            destination "${project.rootDir}/reports/findbugs-output.html"
+            destination file("${project.rootDir}/reports/findbugs-output.html")
         }
     }
 
