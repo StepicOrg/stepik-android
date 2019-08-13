@@ -12,16 +12,14 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.util.BackButtonHandler
 import org.stepic.droid.ui.util.OnBackClickListener
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.base.ui.interfaces.KeyboardExtensionContainer
-import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenAdapter
+import org.stepik.android.view.step_quiz_fullscreen_code.ui.experiment.CodeStepQuizFullScreenPagerAdapter
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import java.lang.ref.WeakReference
 
-class CodeStepQuizFullScreenActivity : FragmentActivityBase(), BackButtonHandler,
-    KeyboardExtensionContainer {
+class CodeStepQuizFullScreenActivity : FragmentActivityBase(), KeyboardExtensionContainer {
     companion object {
         private val EXTRA_CURRENT_LANG = "current_lang_key"
         private val EXTRA_STEP_WRAPPER = "step_wrapper"
@@ -60,34 +58,24 @@ class CodeStepQuizFullScreenActivity : FragmentActivityBase(), BackButtonHandler
 
         fullScreenCodeToolbarTitle.text = lessonData.lesson.title
 
-        initViewPager(currentLang, stepPersistentWrapper, lessonData)
+        initViewPager()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         if (item.itemId == android.R.id.home) {
-            if (fragmentBackKeyIntercept()) {
-                true
-            } else {
-                finish()
-                true
-            }
+            finish()
+            true
         } else {
             false
         }
 
-    override fun onBackPressed() {
-        if (!fragmentBackKeyIntercept()) {
-            super.onBackPressed()
-        }
-    }
-
-    private fun initViewPager(currentLang: String, stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData) {
+    private fun initViewPager() {
         val lightFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.light))
         val regularFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.regular))
 
-        val codePagerAdapter = CodeStepQuizFullScreenAdapter(this, currentLang, supportFragmentManager, stepPersistentWrapper, lessonData)
+        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(this)
 
-        fullScreenCodeViewPager.adapter = codePagerAdapter
+        fullScreenCodeViewPager.adapter = pagerAdapter
         fullScreenCodeTabs.setupWithViewPager(fullScreenCodeViewPager)
         fullScreenCodeTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -111,17 +99,6 @@ class CodeStepQuizFullScreenActivity : FragmentActivityBase(), BackButtonHandler
         (fullScreenCodeTabs.getTabAt(fullScreenCodeTabs.selectedTabPosition)?.customView as? TextView)
             ?.typeface = regularFont
     }
-
-    override fun setBackClickListener(onBackClickListener: OnBackClickListener) {
-        this.onBackClickListener = WeakReference(onBackClickListener)
-    }
-
-    override fun removeBackClickListener(onBackClickListener: OnBackClickListener) {
-        this.onBackClickListener = null
-    }
-
-    private fun fragmentBackKeyIntercept(): Boolean =
-        onBackClickListener?.get()?.onBackClick() ?: false
 
     override fun getKeyboardExtensionViewContainer(): ViewGroup =
         coordinator
