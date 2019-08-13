@@ -9,7 +9,7 @@ import org.stepik.android.view.injection.submission.SubmissionDataModule
 import org.stepik.android.view.step.ui.fragment.StepFragment
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
-import org.stepik.android.view.step_quiz_fullscreen_code.ui.fragment.CodeStepQuizFullScreenPlaygroundFragment
+import org.stepik.android.view.step_quiz_fullscreen_code.ui.activity.CodeStepQuizFullScreenActivity
 import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 
 @Subcomponent(modules = [
@@ -33,5 +33,5 @@ interface StepComponent {
     fun inject(codeStepQuizFragment: CodeStepQuizFragment)
     fun inject(textStepQuizFragment: TextStepQuizFragment)
 
-    fun inject(codeStepQuizFullScreenPlaygroundFragment: CodeStepQuizFullScreenPlaygroundFragment)
+    fun inject(codeStepQuizFullScreenActivity: CodeStepQuizFullScreenActivity)
 }

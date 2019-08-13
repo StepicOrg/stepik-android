@@ -16,8 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:gravity="start"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+            android:gravity="start">
 
 
             <android.support.v7.widget.Toolbar
@@ -66,8 +65,7 @@
             app:tabSelectedTextColor="@color/new_accent_color"
             app:tabTextAppearance="@style/CourseTabAppearance"
             app:tabPaddingStart="24dp"
-            app:tabPaddingEnd="24dp"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"/>
+            app:tabPaddingEnd="24dp" />
 
         <View
             android:layout_width="match_parent"
@@ -75,10 +73,17 @@
             android:background="@color/course_appbar_separator" />
     </android.support.design.widget.AppBarLayout>
 
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/stepQuizProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <android.support.v4.view.ViewPager
         android:id="@+id/fullScreenCodeViewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

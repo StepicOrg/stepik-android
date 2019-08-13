@@ -21,7 +21,6 @@ import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
-import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
@@ -30,13 +29,12 @@ import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.base.ui.extension.parentOfType
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
-import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.activity.CodeStepQuizFullScreenActivity
-import org.stepik.android.view.step_quiz_fullscreen_code.ui.fragment.CodeStepQuizFullScreenPlaygroundFragment
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.Callback, ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback {
+class CodeStepQuizFragment : Fragment(), StepQuizView, ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback {
     companion object {
         private const val CODE_PLAYGROUND_REQUEST = 153
 
@@ -62,7 +60,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizView.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate
 
-    private lateinit var codeStepQuizFormDelegate: CodeStepQuizFormDelegate
+    private lateinit var codeStepQuizFormDelegateNew: CodeStepQuizFormDelegate
 
     private var isFullScreenSubmitClicked: Boolean = false
 
@@ -106,27 +104,20 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
                 }
             }
 
-            override fun onFullscreenClicked(lang: String, code: String) {
+            override fun onFullscreenClicked() {
                 stepQuizDelegate.syncReplyState {
-                    val intent = CodeStepQuizFullScreenActivity.createIntent(requireActivity(), lang, stepWrapper, lessonData)
+                    val intent = CodeStepQuizFullScreenActivity.createIntent(requireActivity(), stepWrapper, lessonData)
                     startActivityForResult(intent, CODE_PLAYGROUND_REQUEST)
-                }
-            }
-
-            override fun onResetClicked() {
-                val dialog = ResetCodeDialogFragment.newInstance()
-                if (!dialog.isAdded) {
-                    dialog.show(childFragmentManager, null)
                 }
             }
         }
 
-        codeStepQuizFormDelegate = CodeStepQuizFormDelegate(view, parentOfType(), stepWrapper, actionsListener)
+        codeStepQuizFormDelegateNew = CodeStepQuizFormDelegate(view, parentOfType(), stepWrapper, actionsListener)
 
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
-                stepQuizFormDelegate = codeStepQuizFormDelegate,
+                stepQuizFormDelegate = codeStepQuizFormDelegateNew,
                 stepQuizFeedbackBlocksDelegate = StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, fontsProvider),
                 stepQuizActionButton = stepQuizAction,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
@@ -165,10 +156,6 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
             .show()
     }
 
-    override fun onReset() {
-        codeStepQuizFormDelegate.onResetCode()
-    }
-
     override fun onChangeLanguage() {
         val languages = stepWrapper.step.block?.options?.limits?.keys?.sorted()?.toTypedArray() ?: emptyArray()
 
@@ -179,14 +166,14 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ResetCodeDialogFragment.C
     }
 
     override fun onLanguageChosen(programmingLanguage: String) {
-        codeStepQuizFormDelegate.onLanguageSelected(programmingLanguage)
+        codeStepQuizFormDelegateNew.onLanguageSelected(programmingLanguage)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             CODE_PLAYGROUND_REQUEST ->
                 if (resultCode == Activity.RESULT_OK) {
-                    isFullScreenSubmitClicked = data?.getBooleanExtra(CodeStepQuizFullScreenPlaygroundFragment.IS_SUBMITTED_CLICKED, false) ?: false
+                    isFullScreenSubmitClicked = data?.getBooleanExtra(CodeStepQuizFullScreenActivity.IS_SUBMITTED_CLICKED, false) ?: false
                     presenter.fetchUponFullScreenReturn(stepWrapper, lessonData)
                 }
             else ->

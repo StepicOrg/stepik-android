@@ -1,4 +1,4 @@
-package org.stepik.android.view.step_quiz_fullscreen_code.ui.experiment
+package org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter
 
 import android.content.Context
 import android.support.v4.view.PagerAdapter
@@ -12,8 +12,8 @@ class CodeStepQuizFullScreenPagerAdapter(
 ) : PagerAdapter() {
 
     private val layouts = listOf(
-        LayoutInflater.from(context).inflate(R.layout.fragment_step_quiz_code_fullscreen_instruction, null) to "Instruction",
-        LayoutInflater.from(context).inflate(R.layout.fragment_step_quiz_code_fullscreen_playground, null) to "Playground"
+        LayoutInflater.from(context).inflate(R.layout.layout_step_quiz_code_fullscreen_instruction, null) to "Instruction",
+        LayoutInflater.from(context).inflate(R.layout.layout_step_quiz_code_fullscreen_playground, null) to "Playground"
     )
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
@@ -26,16 +26,14 @@ class CodeStepQuizFullScreenPagerAdapter(
         container.removeView(layouts[position].first)
     }
 
-    override fun isViewFromObject(p0: View, p1: Any): Boolean {
-        return p0 == p1
-    }
+    override fun isViewFromObject(p0: View, p1: Any): Boolean =
+        p0 == p1
 
     override fun getPageTitle(position: Int): CharSequence =
         layouts[position].second
 
-    override fun getCount(): Int {
-        return layouts.size
-    }
+    override fun getCount(): Int =
+        layouts.size
 
     fun getViewAt(position: Int): View =
         layouts[position].first
