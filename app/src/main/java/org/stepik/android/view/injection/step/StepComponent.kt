@@ -9,6 +9,7 @@ import org.stepik.android.view.injection.submission.SubmissionDataModule
 import org.stepik.android.view.step.ui.fragment.StepFragment
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
+import org.stepik.android.view.step_quiz_sorting.ui.fragment.SortingStepQuizFragment
 import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 
 @Subcomponent(modules = [
@@ -31,4 +32,5 @@ interface StepComponent {
     fun inject(choiceStepQuizFragment: ChoiceStepQuizFragment)
     fun inject(codeStepQuizFragment: CodeStepQuizFragment)
     fun inject(textStepQuizFragment: TextStepQuizFragment)
+    fun inject(sortingStepQuizFragment: SortingStepQuizFragment)
 }
