@@ -4,5 +4,6 @@ import ru.nobird.android.core.model.Identifiable
 
 data class SortingOption(
     override val id: Int,
-    val option: String
+    val option: String,
+    val isEnabled: Boolean
 ) : Identifiable<Int>

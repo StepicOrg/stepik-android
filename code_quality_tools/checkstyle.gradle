@@ -16,7 +16,7 @@ task checkstyle(type: Checkstyle) {
     exclude '**/R.java'
     exclude '**/BuildConfig.java'
     reports {
-        html.destination "${project.rootDir}/reports/checkstyle/main.html"
+        html.destination file("${project.rootDir}/reports/checkstyle/main.html")
     }
     classpath = files()
 }

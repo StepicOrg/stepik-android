@@ -10,6 +10,7 @@ import org.stepic.droid.util.swap
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
+import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_sorting.ui.adapter.delegate.SortingOptionAdapterDelegate
 import org.stepik.android.view.step_quiz_sorting.ui.mapper.SortingOptionMapper
@@ -56,7 +57,8 @@ class SortingStepQuizFormDelegate(
     }
 
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        val sortingOptions = sortingOptionMapper.mapToSortingOptions(state.attempt)
+        val sortingOptions = sortingOptionMapper
+            .mapToSortingOptions(state.attempt, StepQuizFormResolver.isQuizEnabled(state))
 
         optionsAdapter.items =
             if (state.submissionState is StepQuizView.SubmissionState.Loaded) {
