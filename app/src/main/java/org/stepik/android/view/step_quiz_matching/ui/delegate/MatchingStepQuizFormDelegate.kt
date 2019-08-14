@@ -62,7 +62,16 @@ class MatchingStepQuizFormDelegate(
 
         optionsAdapter.items =
             if (state.submissionState is StepQuizView.SubmissionState.Loaded) {
-                matchingItems.sortedBy { state.submissionState.submission.reply?.ordering?.indexOf(it.id) }
+                val ordering = state.submissionState.submission.reply?.ordering ?: emptyList()
+                matchingItems.sortedBy {
+                    when (it) {
+                        is MatchingItem.Title ->
+                            it.id * 2
+
+                        is MatchingItem.Option ->
+                            ordering.indexOf(it.id) * 2 + 1
+                    }
+                }
             } else {
                 matchingItems
             }
