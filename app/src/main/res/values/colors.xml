@@ -12,8 +12,6 @@
     <color name="stepic_weak_text">#A5A5A5</color>
     <color name="black">#000000</color>
     <color name="drawer_item_highlighting_pressed">#EDEDED</color>
-    <color name="table_header">#F0F0F0</color>
-    <color name="table_even_row">#F6F9FC</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">#66CC66</color>
