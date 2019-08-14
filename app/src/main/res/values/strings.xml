@@ -754,6 +754,7 @@
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
     <string name="step_quiz_free_answer_description">Write an essay</string>
     <string name="step_quiz_sorting_description">Sort a given list</string>
+    <string name="step_quiz_matching_description">Match two lists</string>
     <string name="step_quiz_choice_description_single">Choose one option</string>
     <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
 

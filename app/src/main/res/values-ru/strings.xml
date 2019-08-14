@@ -725,6 +725,7 @@
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
     <string name="step_quiz_free_answer_description">Напишите эссе</string>
     <string name="step_quiz_sorting_description">Упорядочьте элементы списка</string>
+    <string name="step_quiz_matching_description">Сопоставьте значения из двух списков</string>
     <string name="step_quiz_choice_description_single">Выберите один элемент</string>
     <string name="step_quiz_choice_description_multiple">Выберите один или несколько элементов</string>
 

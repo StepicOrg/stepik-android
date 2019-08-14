@@ -234,4 +234,7 @@
     <!-- Sorting quiz -->
     <dimen name="step_quiz_sorting_item_radius">@dimen/step_quiz_item_radius</dimen>
     <dimen name="step_quiz_sorting_item_elevation">1dp</dimen>
+
+    <!-- Matching quiz -->
+    <dimen name="step_quiz_matching_item_margin">64dp</dimen>
 </resources>
