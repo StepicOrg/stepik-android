@@ -36,4 +36,11 @@ constructor() {
             .firstOrNull()
             ?.unwrap<DeadlinesWrapper>(gson)
             ?.takeIf { it.data.deadlines != null }
+
+    fun mapToStorageRecordList(response: StorageResponse): List<StorageRecord<DeadlinesWrapper>>? =
+        response
+            .records
+            .map {
+                it.unwrap<DeadlinesWrapper>(gson)
+            }
 }

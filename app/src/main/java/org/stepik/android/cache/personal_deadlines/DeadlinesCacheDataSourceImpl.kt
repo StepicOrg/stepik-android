@@ -70,6 +70,11 @@ constructor(
             personalDeadlinesDao.insertOrReplaceAll(deadlinesEntityMapper.mapToEntity(record))
         }
 
+    override fun saveDeadlineRecords(records: List<StorageRecord<DeadlinesWrapper>>): Completable =
+        Completable.fromAction {
+            personalDeadlinesDao.insertOrReplaceAll(records.flatMap { deadlinesEntityMapper.mapToEntity(it) })
+        }
+
     override fun removeDeadlineRecord(recordId: Long): Completable =
         Completable.fromCallable {
             personalDeadlinesDao
