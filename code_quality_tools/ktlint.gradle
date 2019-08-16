@@ -16,10 +16,10 @@ dependencies {
 
 task ktlint(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
-    main = "org.stepik.android.ktlint.Main"
+    main = "com.pinterest.ktlint.Main"
     classpath = configurations.ktlint
 //    args "src/main/java/org/stepic/droid/di/AppCoreModule.kt"
-    args = ["--rules-to-ignore=no-multi-spaces,package-name", "src/main/java/org/stepik/**/*.kt"]
+    args = ["--disabled_rules=no-multi-spaces,package-name,final-newline,import-ordering", "src/main/java/org/stepik/**/*.kt"]
     // to generate report in checkstyle format prepend following args:
     // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
     // see https://github.com/shyiko/ktlint#usage for more
