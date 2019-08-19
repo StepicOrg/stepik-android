@@ -87,8 +87,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/coursesCarouselCount"
-        android:layout_marginBottom="@dimen/course_list_bottom_padding"
-        android:layout_marginTop="@dimen/courses_carousel_top_margin"
+        android:paddingBottom="@dimen/course_list_bottom_padding"
+        android:paddingTop="@dimen/courses_carousel_top_margin"
         android:clipToPadding="false"
         android:divider="@color/transparent"
         android:overScrollMode="never"
@@ -99,8 +99,7 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="none"
         android:splitMotionEvents="false"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <include
         android:id="@+id/coursesLoadingView"

@@ -69,7 +69,7 @@
                 android:maxLines="2"
                 tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
 
-            <RelativeLayout
+            <include
                 android:id="@+id/coursePropertiesContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,58 +77,8 @@
                 android:visibility="gone"
                 app:layout_constraintLeft_toLeftOf="@+id/courseItemName"
                 app:layout_constraintTop_toBottomOf="@+id/courseItemName"
-                tools:visibility="visible">
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/learnersCountImage"
-                    style="@style/CourseWidgetPropertyImageView"
-                    android:layout_alignBaseline="@+id/learnersCountText"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:baselineAlignBottom="true"
-                    android:contentDescription="@string/learners_count"
-                    android:src="@drawable/ic_learners"/>
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/learnersCountText"
-                    style="@style/CourseWidgetPropertyTextView"
-                    android:layout_toEndOf="@id/learnersCountImage"
-                    android:layout_toRightOf="@id/learnersCountImage"
-                    tools:text="999K"/>
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/courseRatingImage"
-                    style="@style/CourseWidgetPropertyImageView"
-                    android:layout_alignBaseline="@+id/courseRatingText"
-                    android:layout_toEndOf="@id/learnersCountText"
-                    android:layout_toRightOf="@id/learnersCountText"
-                    android:baselineAlignBottom="true"
-                    android:contentDescription="@string/course_rating"
-                    android:src="@drawable/ic_rating"/>
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/courseRatingText"
-                    style="@style/CourseWidgetPropertyTextView"
-                    android:layout_toEndOf="@id/courseRatingImage"
-                    android:layout_toRightOf="@id/courseRatingImage"
-                    tools:text="4.7"/>
-
-                <org.stepic.droid.ui.custom.CircleProgressView
-                    android:id="@+id/courseItemProgressView"
-                    android:layout_width="@dimen/course_item_progress_size"
-                    android:layout_height="@dimen/course_item_progress_size"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/courseRatingText"
-                    android:layout_toRightOf="@id/courseRatingText"
-                    app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:id="@+id/courseItemProgressTitle"
-                    style="@style/CourseWidgetPropertyTextView"
-                    android:layout_toEndOf="@id/courseItemProgressView"
-                    android:layout_toRightOf="@id/courseItemProgressView"
-                    tools:text="77%"/>
-            </RelativeLayout>
+                layout="@layout/layout_course_properties"
+                tools:visibility="visible" />
 
             <View
                 android:id="@+id/courseButtonSeparator"

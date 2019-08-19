@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
+import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
@@ -21,7 +22,7 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.*
-import java.util.*
+import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import javax.inject.Inject
 
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE",
@@ -51,13 +52,8 @@ class CourseItemViewHolder(
     private val courseContinueButton = view.courseContinueButton
     private val courseButtonSeparator = view.courseButtonSeparator
     private val courseItemName = view.courseItemName
-    private val learnersCountImage = view.learnersCountImage
-    private val learnersCountText = view.learnersCountText
-    private val coursePropertiesContainer = view.coursePropertiesContainer
-    private val courseItemProgress = view.courseItemProgressView
-    private val courseItemProgressTitle = view.courseItemProgressTitle
-    private val courseRatingImage = view.courseRatingImage
-    private val courseRatingText = view.courseRatingText
+
+    private val coursePropertiesDelegate = CoursePropertiesDelegate(view.coursePropertiesContainer as ViewGroup)
 
     private var course: Course? = null
 
@@ -92,11 +88,7 @@ class CourseItemViewHolder(
 
     private fun applyColorType(colorType: CoursesCarouselColorType) {
         courseItemName.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        learnersCountText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        learnersCountImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        courseRatingText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        courseRatingImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        courseItemProgress.backgroundPaintColor = ColorUtil.getColorArgb(colorType.textColor, itemView.context)
+        coursePropertiesDelegate.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
     }
 
     private fun onClickCourse() = course?.let {
@@ -131,55 +123,14 @@ class CourseItemViewHolder(
                 .fitCenter()
                 .into(imageViewTarget)
 
-        val needShowLearners = course.learnersCount > 0
-        if (needShowLearners) {
-            learnersCountText.text = String.format(Locale.getDefault(), "%d", course.learnersCount)
-        }
-        learnersCountImage.changeVisibility(needShowLearners)
-        learnersCountText.changeVisibility(needShowLearners)
-
         courseContinueButton.changeVisibility(needShow = isEnrolled(course))
+        courseButtonSeparator.changeVisibility(needShow = isEnrolled(course))
 
-        val needShowProgress = bindProgressView(course)
-        val needShowRating = bindRatingView(course)
-
-        val showContainer = needShowLearners || needShowProgress || needShowRating
-        coursePropertiesContainer.changeVisibility(showContainer)
+        coursePropertiesDelegate.setStats(course)
 
         adaptiveCourseMarker.changeVisibility(adaptiveCoursesResolver.isAdaptive(course.id))
 
         this.course = course
-    }
-
-    private fun bindProgressView(course: Course): Boolean {
-        val progressPercent: Int? = ProgressUtil.getProgressPercent(course.progressObject)
-        val needShow =
-                if (progressPercent != null && progressPercent > 0) {
-                    prepareViewForProgress(progressPercent)
-                    true
-                } else {
-                    false
-                }
-        courseItemProgress.changeVisibility(needShow)
-        courseItemProgressTitle.changeVisibility(needShow)
-        return needShow
-    }
-
-    private fun prepareViewForProgress(progressPercent: Int) {
-        courseItemProgress.progress = progressPercent / 100f
-        courseItemProgressTitle.text = itemView
-                .resources
-                .getString(R.string.percent_symbol, progressPercent)
-    }
-
-    private fun bindRatingView(course: Course): Boolean {
-        val needShow = course.rating > 0
-        if (needShow) {
-            courseRatingText.text = String.format(Locale.ROOT, itemView.resources.getString(R.string.course_rating_value), course.rating)
-        }
-        courseRatingImage.changeVisibility(needShow)
-        courseRatingText.changeVisibility(needShow)
-        return needShow
     }
 
     private fun isEnrolled(course: Course?): Boolean =
