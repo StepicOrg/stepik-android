@@ -4,21 +4,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="141dp"
     app:cardCornerRadius="8dp">
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/courseItemTopContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
+            <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/courseItemImage"
                 android:layout_width="@dimen/new_course_image_size"
                 android:layout_height="@dimen/new_course_image_size"
@@ -26,9 +22,14 @@
                 android:contentDescription="@string/content_course_logo"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+
+                android:layout_marginTop="@dimen/course_item_space_between_items"
+                android:layout_marginLeft="@dimen/course_item_space_between_items"
+                android:layout_marginStart="@dimen/course_item_space_between_items"
+
                 tools:src="@drawable/general_placeholder"/>
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/adaptiveCourseMarker"
                 android:text="@string/adaptive_course_marker"
                 android:textSize="7.5sp"
@@ -50,15 +51,16 @@
                 app:layout_constraintEnd_toEndOf="@+id/courseItemImage"
                 app:layout_constraintStart_toStartOf="@+id/courseItemImage" />
 
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/courseItemName"
                 fontPath="fonts/Roboto-Regular.ttf"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/courseTitleRightPadding"
+                android:layout_marginEnd="@dimen/course_item_space_between_items"
                 android:layout_marginLeft="@dimen/course_item_space_between_items"
-                android:layout_marginRight="@dimen/courseTitleRightPadding"
+                android:layout_marginRight="@dimen/course_item_space_between_items"
                 android:layout_marginStart="@dimen/course_item_space_between_items"
+                android:layout_marginTop="@dimen/course_item_space_between_items"
                 android:textColor="@color/new_accent_color"
                 android:textSize="@dimen/course_item_titles_text_size"
                 app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
@@ -66,7 +68,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingPrefix"
                 android:ellipsize="end"
-                android:maxLines="3"
+                android:maxLines="2"
                 tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
 
             <RelativeLayout
@@ -79,7 +81,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/courseItemName"
                 tools:visibility="visible">
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/learnersCountImage"
                     style="@style/CourseWidgetPropertyImageView"
                     android:layout_alignBaseline="@+id/learnersCountText"
@@ -89,14 +91,14 @@
                     android:contentDescription="@string/learners_count"
                     android:src="@drawable/ic_learners"/>
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/learnersCountText"
                     style="@style/CourseWidgetPropertyTextView"
                     android:layout_toEndOf="@id/learnersCountImage"
                     android:layout_toRightOf="@id/learnersCountImage"
                     tools:text="999K"/>
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/courseRatingImage"
                     style="@style/CourseWidgetPropertyImageView"
                     android:layout_alignBaseline="@+id/courseRatingText"
@@ -106,7 +108,7 @@
                     android:contentDescription="@string/course_rating"
                     android:src="@drawable/ic_rating"/>
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/courseRatingText"
                     style="@style/CourseWidgetPropertyTextView"
                     android:layout_toEndOf="@id/courseRatingImage"
@@ -122,7 +124,7 @@
                     android:layout_toRightOf="@id/courseRatingText"
                     app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/courseItemProgressTitle"
                     style="@style/CourseWidgetPropertyTextView"
                     android:layout_toEndOf="@id/courseItemProgressView"
@@ -130,22 +132,40 @@
                     tools:text="77%"/>
             </RelativeLayout>
 
+            <View
+                android:id="@+id/courseButtonSeparator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+
+                android:background="@color/grey04"
+
+                android:layout_marginTop="@dimen/course_item_space_between_items"
+                app:layout_constraintTop_toBottomOf="@id/courseItemImage" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/courseContinueButton"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+
+                android:text="@string/continue_learning"
+                android:textSize="@dimen/course_item_button_text_size"
+                android:textColor="@color/green01"
+                android:gravity="start|center_vertical"
+                android:maxLines="1"
+                android:ellipsize="end"
+
+                android:paddingLeft="19dp"
+                android:paddingStart="19dp"
+
+                android:paddingRight="16dp"
+                android:paddingEnd="16dp"
+
+                android:drawablePadding="12dp"
+                tools:drawableStart="@drawable/ic_step_navigation_next"
+
+                app:layout_constraintTop_toBottomOf="@id/courseButtonSeparator"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
         </android.support.constraint.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/courseWidgetButton"
-            style="@style/CourseWidgetView"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/min_ux_touchable_size"
-            android:layout_marginEnd="@dimen/extraPaddingRightCourseItem"
-            android:layout_marginLeft="@dimen/course_item_space_between_items"
-            android:layout_marginRight="@dimen/extraPaddingRightCourseItem"
-            android:layout_marginStart="@dimen/course_item_space_between_items"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/courseWidgetInfo"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:background="@drawable/course_widget_continue_background"
-            tools:text="Continue"/>
-
-    </android.support.constraint.ConstraintLayout>
 </android.support.design.card.MaterialCardView>

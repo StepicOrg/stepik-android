@@ -19,6 +19,7 @@ import org.stepik.android.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.*
 import java.util.*
 import javax.inject.Inject
@@ -47,7 +48,8 @@ class CourseItemViewHolder(
 
     private val adaptiveCourseMarker = view.adaptiveCourseMarker
     private val courseItemImage = view.courseItemImage
-    private val courseWidgetButton = view.courseWidgetButton
+    private val courseContinueButton = view.courseContinueButton
+    private val courseButtonSeparator = view.courseButtonSeparator
     private val courseItemName = view.courseItemName
     private val learnersCountImage = view.learnersCountImage
     private val learnersCountText = view.learnersCountText
@@ -66,11 +68,9 @@ class CourseItemViewHolder(
 
         imageViewTarget = RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), courseItemImage)
 
-        courseWidgetButton.setOnClickListener {
-            course?.let {
-                onClickWidgetButton(it, isEnrolled(it))
-            }
-        }
+        courseContinueButton.setOnClickListener { course?.let(::onClickContinueLearning) }
+        courseContinueButton.setCompoundDrawables(start = R.drawable.ic_step_navigation_next)
+
         itemView.setOnClickListener { onClickCourse() }
 
         itemView.setOnLongClickListener { v ->
@@ -94,7 +94,6 @@ class CourseItemViewHolder(
         courseItemName.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         learnersCountText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         learnersCountImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
-        courseWidgetButton.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         courseRatingText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         courseRatingImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         courseItemProgress.backgroundPaintColor = ColorUtil.getColorArgb(colorType.textColor, itemView.context)
@@ -113,17 +112,13 @@ class CourseItemViewHolder(
         }
     }
 
-    private fun onClickWidgetButton(course: Course, enrolled: Boolean) {
-        if (enrolled) {
-            analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                    AmplitudeAnalytic.Course.Params.COURSE to course.id,
-                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
-            ))
-            continueCoursePresenter.continueCourse(course) //provide position?
-        } else {
-            screenManager.showCourseDescription(contextActivity, course, true)
-        }
+    private fun onClickContinueLearning(course: Course) {
+        analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
+                AmplitudeAnalytic.Course.Params.COURSE to course.id,
+                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
+        ))
+        continueCoursePresenter.continueCourse(course) //provide position?
     }
 
     fun setDataOnView(course: Course) {
@@ -143,7 +138,7 @@ class CourseItemViewHolder(
         learnersCountImage.changeVisibility(needShowLearners)
         learnersCountText.changeVisibility(needShowLearners)
 
-        courseWidgetButton.changeVisibility(needShow = isEnrolled(course))
+        courseContinueButton.changeVisibility(needShow = isEnrolled(course))
 
         val needShowProgress = bindProgressView(course)
         val needShowRating = bindRatingView(course)

@@ -90,7 +90,7 @@
 
     <!--new course item-->
     <dimen name="new_course_image_size">80dp</dimen>
-    <dimen name="course_item_space_between_items">12dp</dimen>
+    <dimen name="course_item_space_between_items">8dp</dimen>
     <dimen name="course_item_titles_text_size">16sp</dimen>
     <dimen name="course_item_button_text_size">14sp</dimen>
     <dimen name="course_widget_radius">7dp</dimen>
@@ -123,7 +123,6 @@
 
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
-    <dimen name="courseTitleRightPadding">28dp</dimen>
     <dimen name="home_right_recycler_padding">46dp</dimen>
     <!-- 'home_right_recycler_padding' minus 'course_list_side_right_padding'-->
     <dimen name="home_right_recycler_padding_without_extra">34dp</dimen>
