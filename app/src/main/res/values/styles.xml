@@ -291,10 +291,10 @@
     <style name="CourseWidgetView" parent="android:Widget.Holo.Light.TextView">
         <item name="android:textSize">@dimen/course_item_button_text_size</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">44dp</item>
+        <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
         <item name="android:clickable">true</item>
         <item name="fontPath">fonts/Roboto-Regular.ttf</item>
-        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:gravity">start</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>
     </style>

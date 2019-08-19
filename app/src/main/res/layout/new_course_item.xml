@@ -80,6 +80,29 @@
                 layout="@layout/layout_course_properties"
                 tools:visibility="visible" />
 
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/courseDescription"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+
+                app:layout_constraintTop_toBottomOf="@id/coursePropertiesContainer"
+                app:layout_constraintStart_toEndOf="@id/courseItemImage"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0"
+
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+
+                android:textSize="14sp"
+                android:textColor="@color/grey03"
+                android:lineSpacingExtra="1sp"
+                android:ellipsize="end"
+
+                tools:text="Основы программирования на C++ на примере множества несложных практических задач…" />
+
             <View
                 android:id="@+id/courseButtonSeparator"
                 android:layout_width="match_parent"

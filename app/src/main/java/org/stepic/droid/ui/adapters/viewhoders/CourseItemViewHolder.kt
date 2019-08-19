@@ -20,6 +20,7 @@ import org.stepik.android.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.*
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
@@ -50,6 +51,7 @@ class CourseItemViewHolder(
     private val adaptiveCourseMarker = view.adaptiveCourseMarker
     private val courseItemImage = view.courseItemImage
     private val courseContinueButton = view.courseContinueButton
+    private val courseDescription = view.courseDescription
     private val courseButtonSeparator = view.courseButtonSeparator
     private val courseItemName = view.courseItemName
 
@@ -125,6 +127,12 @@ class CourseItemViewHolder(
 
         courseContinueButton.changeVisibility(needShow = isEnrolled(course))
         courseButtonSeparator.changeVisibility(needShow = isEnrolled(course))
+        courseDescription.changeVisibility(needShow = !isEnrolled(course))
+
+        if (!isEnrolled(course)) {
+            courseDescription.text = course.summary
+            courseDescription.doOnGlobalLayout { it.maxLines = it.height / it.lineHeight }
+        }
 
         coursePropertiesDelegate.setStats(course)
 
@@ -134,5 +142,5 @@ class CourseItemViewHolder(
     }
 
     private fun isEnrolled(course: Course?): Boolean =
-            course != null && course.enrollment != 0L
+        course != null && course.enrollment != 0L
 }
