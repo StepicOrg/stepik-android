@@ -19,7 +19,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepik.android.domain.course_payments.model.CoursePayment;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
@@ -49,8 +48,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private FragmentActivity contextActivity;
     private final List<Course> courses;
     private final ContinueCoursePresenter continueCoursePresenter;
-    @NotNull
-    private final DroppingPresenter droppingPresenter;
 
     private CoursesDescriptionContainer descriptionContainer;
 
@@ -63,7 +60,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private boolean isNeedShowFooter;
     private final String continueTitle;
     private final String joinTitle;
-    private final boolean showMore;
     private final CoursesCarouselColorType colorType;
 
     private @NonNull Map<String, Sku> skus = new HashMap<>();
@@ -72,12 +68,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public CoursesAdapter(FragmentActivity activity,
                           List<Course> courses,
                           @NotNull ContinueCoursePresenter continueCoursePresenter,
-                          @NotNull DroppingPresenter droppingPresenter,
                           boolean withPagination,
-                          boolean showMore,
                           CoursesCarouselColorType colorType
     ) {
-        this.showMore = showMore;
         this.colorType = colorType;
         if (withPagination) {
             NUMBER_OF_POST_ITEMS = 1;
@@ -87,7 +80,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         contextActivity = activity;
         this.courses = courses;
         this.continueCoursePresenter = continueCoursePresenter;
-        this.droppingPresenter = droppingPresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         App.Companion.component().inject(this);
 
@@ -120,11 +112,9 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return new CourseItemViewHolder(
                     view,
                     contextActivity,
-                    showMore,
                     joinTitle,
                     continueTitle,
                     coursePlaceholder,
-                    droppingPresenter,
                     continueCoursePresenter,
                     colorType
             );

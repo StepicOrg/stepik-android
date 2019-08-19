@@ -7,7 +7,6 @@ import android.support.annotation.DrawableRes
 import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
-import android.widget.PopupMenu
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
@@ -20,7 +19,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
-import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepik.android.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
@@ -36,11 +34,9 @@ import javax.inject.Inject
 class CourseItemViewHolder(
         val view: View,
         private val contextActivity: Activity,
-        private val showMore: Boolean,
         private val joinTitle: String,
         private val continueTitle: String,
         private val coursePlaceholder: Drawable,
-        private val droppingPresenter: DroppingPresenter,
         private val continueCoursePresenter: ContinueCoursePresenter,
         private val colorType: CoursesCarouselColorType
 ) : RecyclerView.ViewHolder(view) {
@@ -71,7 +67,6 @@ class CourseItemViewHolder(
     private val courseItemName = view.courseItemName
     private val learnersCountImage = view.learnersCountImage
     private val learnersCountText = view.learnersCountText
-    private val courseItemMore = view.courseItemMore
     private val coursePropertiesContainer = view.coursePropertiesContainer
     private val courseWidgetInfo = view.courseWidgetInfo
     private val courseItemProgress = view.courseItemProgressView
@@ -95,16 +90,10 @@ class CourseItemViewHolder(
         }
         itemView.setOnClickListener { onClickCourse() }
 
-        itemView.setOnLongClickListener({ v ->
+        itemView.setOnLongClickListener { v ->
             v.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             itemView.showContextMenu()
             true
-        })
-
-        itemView.courseItemMore.setOnClickListener { view ->
-            course?.let {
-                showMore(view, it)
-            }
         }
 
         courseWidgetInfo.applyToButton(infoTitle, continueColor, colorType.continueResource)
@@ -127,26 +116,6 @@ class CourseItemViewHolder(
         courseRatingText.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         courseRatingImage.setColorFilter(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         courseItemProgress.backgroundPaintColor = ColorUtil.getColorArgb(colorType.textColor, itemView.context)
-    }
-
-    private fun showMore(view: View, course: Course) {
-        val morePopupMenu = PopupMenu(itemView.context, view)
-        morePopupMenu.inflate(ContextMenuCourseUtil.getMenuResource(course))
-
-        morePopupMenu.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.menu_item_info -> {
-                    screenManager.showCourseDescription(itemView.context, course)
-                    true
-                }
-                R.id.menu_item_unroll -> {
-                    droppingPresenter.dropCourse(course)
-                    true
-                }
-                else -> false
-            }
-        }
-        morePopupMenu.show()
     }
 
     private fun onClickCourse() = course?.let {
@@ -218,8 +187,6 @@ class CourseItemViewHolder(
 
         val showContainer = needShowLearners || needShowProgress || needShowRating
         coursePropertiesContainer.changeVisibility(showContainer)
-
-        courseItemMore.changeVisibility(showMore)
 
         adaptiveCourseMarker.changeVisibility(adaptiveCoursesResolver.isAdaptive(course.id))
 

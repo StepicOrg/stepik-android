@@ -25,7 +25,6 @@ import org.stepic.droid.core.filters.contract.FiltersListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.CourseCollectionPresenter
-import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
@@ -71,9 +70,6 @@ constructor(
 
     @Inject
     lateinit var courseListPresenter: PersistentCourseListPresenter
-
-    @Inject
-    lateinit var droppingPresenter: DroppingPresenter
 
     @Inject
     lateinit var continueCoursePresenter: ContinueCoursePresenter
@@ -152,7 +148,6 @@ constructor(
 
         continueCoursePresenter.attachView(this)
         courseListPresenter.attachView(this)
-        droppingPresenter.attachView(this)
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
         filterClient.subscribe(this)
@@ -174,7 +169,6 @@ constructor(
         droppingClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
-        droppingPresenter.detachView(this)
 
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
     }
@@ -205,8 +199,7 @@ constructor(
         coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
         showDescription(info.description)
 
-        val showMore = info.courseListType == CourseListType.ENROLLED
-        coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
+        coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, false, info.colorType)
     }
 
     private fun showDescription(description: String) {

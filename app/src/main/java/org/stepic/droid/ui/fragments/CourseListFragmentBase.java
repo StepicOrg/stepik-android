@@ -145,8 +145,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (courses == null) courses = new ArrayList<>();
-        boolean showMore = getCourseType() == CourseListType.ENROLLED;
-        coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
+        coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, true, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
