@@ -2,6 +2,7 @@ package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
 import android.graphics.drawable.Drawable
+import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
@@ -89,6 +90,7 @@ class CourseItemViewHolder(
     }
 
     private fun applyColorType(colorType: CoursesCarouselColorType) {
+        (view as CardView).setCardBackgroundColor(ColorUtil.getColorArgb(colorType.backgroundColorRes, itemView.context))
         courseItemName.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         coursePropertiesDelegate.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
     }

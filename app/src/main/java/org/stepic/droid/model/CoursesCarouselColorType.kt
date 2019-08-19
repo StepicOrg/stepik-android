@@ -16,7 +16,7 @@ enum class CoursesCarouselColorType(
 
     Light(
             R.color.new_accent_color,
-            R.color.transparent,
+            R.color.white,
             R.color.view_all_course_list_color
     ),
     Dark(
