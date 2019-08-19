@@ -276,7 +276,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    public final void showCourses(@NonNull List<Course> courses, @NonNull Map<String, Sku> skus, @NonNull Map<Long, CoursePayment> coursePayments) {
+    public final void showCourses(@NonNull List<Course> courses) {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
         coursesAdapter.showLoadingFooter(false);
@@ -293,8 +293,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         this.courses.clear();
         this.courses.addAll(finalCourses);
 
-        coursesAdapter.setSkus(skus);
-        coursesAdapter.setCoursePayments(coursePayments);
         coursesAdapter.notifyDataSetChanged();
 
         if (oldSize >= updatedSize) {

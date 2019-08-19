@@ -14,12 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.checkout.Sku;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepik.android.domain.course_payments.model.CoursePayment;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.model.CoursesDescriptionContainer;
@@ -27,9 +25,7 @@ import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.HeaderItemViewHolder;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -58,12 +54,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int NUMBER_OF_PRE_ITEMS = 0;
     private final int NUMBER_OF_POST_ITEMS;
     private boolean isNeedShowFooter;
-    private final String continueTitle;
-    private final String joinTitle;
     private final CoursesCarouselColorType colorType;
-
-    private @NonNull Map<String, Sku> skus = new HashMap<>();
-    private @NonNull Map<Long, CoursePayment> coursePayments = new HashMap<>();
 
     public CoursesAdapter(FragmentActivity activity,
                           List<Course> courses,
@@ -89,13 +80,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         circularBitmapDrawable.setCornerRadius(contextActivity.getResources().getDimension(R.dimen.course_image_radius));
         coursePlaceholder = circularBitmapDrawable;
 
-        continueTitle = contextActivity.getString(R.string.continue_course_title);
-        joinTitle = contextActivity.getString(R.string.course_item_join);
         isNeedShowFooter = false;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == HEADER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.course_collection_header_view, parent, false);
             ((RecyclerView.LayoutParams) view.getLayoutParams()).setMargins(
@@ -112,8 +102,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return new CourseItemViewHolder(
                     view,
                     contextActivity,
-                    joinTitle,
-                    continueTitle,
                     coursePlaceholder,
                     continueCoursePresenter,
                     colorType
@@ -124,7 +112,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case HEADER_VIEW_TYPE: {
                 HeaderItemViewHolder headerItemViewHolder = (HeaderItemViewHolder) holder;
@@ -133,7 +121,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             case ITEM_VIEW_TYPE: {
                 CourseItemViewHolder courseItemViewHolder = (CourseItemViewHolder) holder;
-                courseItemViewHolder.setDataOnView(courses.get(position - NUMBER_OF_PRE_ITEMS), skus, coursePayments);
+                courseItemViewHolder.setDataOnView(courses.get(position - NUMBER_OF_PRE_ITEMS));
                 break;
             }
             case FOOTER_VIEW_TYPE: {
@@ -188,13 +176,5 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return Unit.INSTANCE;
             }
         });
-    }
-
-    public void setSkus(@NonNull Map<String, Sku> skus) {
-        this.skus = skus;
-    }
-
-    public void setCoursePayments(@NonNull Map<Long, CoursePayment> coursePayments) {
-        this.coursePayments = coursePayments;
     }
 }

@@ -2,16 +2,12 @@ package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
 import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
-import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
-import org.solovyev.android.checkout.Sku
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -24,7 +20,6 @@ import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.*
-import org.stepik.android.domain.course_payments.model.CoursePayment
 import java.util.*
 import javax.inject.Inject
 
@@ -34,8 +29,6 @@ import javax.inject.Inject
 class CourseItemViewHolder(
         val view: View,
         private val contextActivity: Activity,
-        private val joinTitle: String,
-        private val continueTitle: String,
         private val coursePlaceholder: Drawable,
         private val continueCoursePresenter: ContinueCoursePresenter,
         private val colorType: CoursesCarouselColorType
@@ -50,15 +43,6 @@ class CourseItemViewHolder(
     @Inject
     lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
 
-    private val continueColor: Int by lazy {
-        ColorUtil.getColorArgb(colorType.textColor, itemView.context)
-    }
-    private val joinColor: Int by lazy {
-        ColorUtil.getColorArgb(R.color.join_text_color, itemView.context)
-    }
-    private val infoTitle: String by lazy {
-        itemView.context.resources.getString(R.string.course_item_info)
-    }
     private var imageViewTarget: BitmapImageViewTarget
 
     private val adaptiveCourseMarker = view.adaptiveCourseMarker
@@ -68,7 +52,6 @@ class CourseItemViewHolder(
     private val learnersCountImage = view.learnersCountImage
     private val learnersCountText = view.learnersCountText
     private val coursePropertiesContainer = view.coursePropertiesContainer
-    private val courseWidgetInfo = view.courseWidgetInfo
     private val courseItemProgress = view.courseItemProgressView
     private val courseItemProgressTitle = view.courseItemProgressTitle
     private val courseRatingImage = view.courseRatingImage
@@ -96,8 +79,7 @@ class CourseItemViewHolder(
             true
         }
 
-        courseWidgetInfo.applyToButton(infoTitle, continueColor, colorType.continueResource)
-        courseWidgetInfo.setOnClickListener {
+        view.setOnClickListener {
             course?.let {
                 if (isEnrolled(it)) {
                     screenManager.showCourseModules(contextActivity, it)
@@ -144,10 +126,7 @@ class CourseItemViewHolder(
         }
     }
 
-    fun setDataOnView(course: Course, skus: Map<String, Sku>, coursePayments: Map<Long, CoursePayment>) {
-        val sku = skus[course.priceTier]
-        val coursePayment = coursePayments[course.id]
-
+    fun setDataOnView(course: Course) {
         courseItemName.text = course.title
         Glide
                 .with(itemView.context)
@@ -164,23 +143,7 @@ class CourseItemViewHolder(
         learnersCountImage.changeVisibility(needShowLearners)
         learnersCountText.changeVisibility(needShowLearners)
 
-        if (isEnrolled(course)) {
-            courseWidgetInfo.setText(R.string.course_item_syllabus)
-            showContinueButton()
-        } else {
-            val joinTitle =
-                if (course.isPaid && coursePayment == null) {
-                    if (sku == null) {
-                        contextActivity.getString(R.string.course_payments_purchase_in_web)
-                    } else {
-                        contextActivity.getString(R.string.course_payments_purchase_in_app, sku.price)
-                    }
-                } else {
-                    this.joinTitle
-                }
-            courseWidgetInfo.setText(R.string.course_item_info)
-            showJoinButton(joinTitle)
-        }
+        courseWidgetButton.changeVisibility(needShow = isEnrolled(course))
 
         val needShowProgress = bindProgressView(course)
         val needShowRating = bindRatingView(course)
@@ -226,19 +189,4 @@ class CourseItemViewHolder(
 
     private fun isEnrolled(course: Course?): Boolean =
             course != null && course.enrollment != 0L
-
-    private fun showJoinButton(joinTitle: String) {
-        courseWidgetButton.applyToButton(joinTitle, joinColor, colorType.joinResource)
-    }
-
-    private fun showContinueButton() {
-        courseWidgetButton.applyToButton(continueTitle, continueColor, colorType.continueResource)
-    }
-
-    private fun TextView.applyToButton(title: String, @ColorInt textColor: Int, @DrawableRes background: Int) {
-        this.text = title
-        this.setTextColor(textColor)
-        this.setBackgroundResource(background)
-    }
-
 }

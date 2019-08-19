@@ -351,7 +351,6 @@
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
     <string name="content_course_logo">Логотип курса</string>
-    <string name="continue_course_title">Учиться</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
     <string name="step_with_position">– Шаг %d</string>
     <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти
@@ -413,8 +412,6 @@
     <string name="manage_notification_settings">Управлять уведомлениями</string>
 
     <string name="course_item_join">Поступить на курс</string>
-    <string name="course_item_info">Инфо</string>
-    <string name="course_item_syllabus">План</string>
 
     <string name="learners_count">Количество студентов</string>
     <string name="continue_learning">Продолжить учиться</string>

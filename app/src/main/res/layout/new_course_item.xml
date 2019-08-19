@@ -133,18 +133,6 @@
         </android.support.constraint.ConstraintLayout>
 
         <TextView
-            android:id="@+id/courseWidgetInfo"
-            style="@style/CourseWidgetView"
-            android:layout_width="@dimen/new_course_image_size"
-            android:layout_height="@dimen/min_ux_touchable_size"
-            android:layout_marginTop="@dimen/course_item_space_between_items"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/courseItemTopContainer"
-            tools:background="@drawable/course_widget_continue_background"
-            tools:text="@string/course_item_info"/>
-
-        <TextView
             android:id="@+id/courseWidgetButton"
             style="@style/CourseWidgetView"
             android:layout_width="0dp"

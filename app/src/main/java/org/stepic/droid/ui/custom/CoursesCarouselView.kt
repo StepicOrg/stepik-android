@@ -283,8 +283,8 @@ constructor(
         }
     }
 
-    override fun showCourses(courses: List<Course>, skus: Map<String, Sku>, coursePayments: Map<Long, CoursePayment>) {
-        state = CoursesCarouselViewState(courses, skus, coursePayments, DEFAULT_SCROLL_POSITION)
+    override fun showCourses(courses: List<Course>) {
+        state = CoursesCarouselViewState(courses, DEFAULT_SCROLL_POSITION)
         coursesLoadingView.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
         if (lastSavedScrollPosition != DEFAULT_SCROLL_POSITION) {
@@ -296,11 +296,7 @@ constructor(
         coursesViewAll.visibility = View.VISIBLE
         this.courses.clear()
         this.courses.addAll(courses)
-        (coursesRecycler.adapter as? CoursesAdapter)?.let { adapter ->
-            adapter.setSkus(skus)
-            adapter.setCoursePayments(coursePayments)
-            adapter.notifyDataSetChanged()
-        }
+        (coursesRecycler.adapter as? CoursesAdapter)?.notifyDataSetChanged()
         updateOnCourseCountChanged()
     }
 
@@ -387,7 +383,7 @@ constructor(
         } else if (info.courseListType == CourseListType.ENROLLED) {
             //insert at 0 index is more complex than just add, but order will be right
             if (courses.isEmpty()) {
-                showCourses(mutableListOf(joinedCourse), emptyMap(), emptyMap())
+                showCourses(mutableListOf(joinedCourse))
             } else {
                 courses.add(0, joinedCourse)
                 coursesRecycler.adapter?.notifyDataSetChanged()
@@ -490,6 +486,6 @@ constructor(
         _info = outerInfo
         lastSavedScrollPosition = state.scrollPosition
         initCourseCarouselWithInfo(outerInfo)
-        showCourses(state.courses, state.skus, state.coursePayments)
+        showCourses(state.courses)
     }
 }
