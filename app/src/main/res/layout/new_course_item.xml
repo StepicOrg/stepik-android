@@ -117,6 +117,7 @@
                 android:id="@+id/courseContinueButton"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
+                android:background="@drawable/selectable_item_rounded_bottom_background"
 
                 android:text="@string/continue_learning"
                 android:textSize="@dimen/course_item_button_text_size"
