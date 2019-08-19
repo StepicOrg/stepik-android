@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.solovyev.android.checkout.Sku;
@@ -25,10 +24,8 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.joining.contract.JoiningListener;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
-import org.stepic.droid.core.presenters.contracts.DroppingView;
 import org.stepic.droid.model.CourseListType;
 import org.stepik.android.domain.course_payments.model.CoursePayment;
 import org.stepik.android.domain.last_step.model.LastStep;
@@ -58,8 +55,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         implements SwipeRefreshLayout.OnRefreshListener,
         CoursesView,
         ContinueCourseView,
-        JoiningListener,
-        DroppingView {
+        JoiningListener {
 
     private static final String continueLoadingTag = "continueLoadingTag";
 
@@ -107,9 +103,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
 
     @Inject
     Client<JoiningListener> joiningListenerClient;
-
-    @Inject
-    protected DroppingPresenter droppingPresenter;
 
     @Inject
     protected RemindAppNotificationDelegate remindAppNotificationDelegate;
@@ -196,7 +189,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         });
         joiningListenerClient.subscribe(this);
         continueCoursePresenter.attachView(this);
-        droppingPresenter.attachView(this);
 
         goToCatalog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +202,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
     public void onDestroyView() {
         joiningListenerClient.unsubscribe(this);
         continueCoursePresenter.detachView(this);
-        droppingPresenter.detachView(this);
         if (listOfCoursesView != null) {
             // do not set adapter to null, because fade out animation for fragment will not working
             unregisterForContextMenu(listOfCoursesView);
@@ -350,10 +341,5 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void onSuccessJoin(@Nullable Course joinedCourse) {
         updateEnrollment(joinedCourse, joinedCourse.getEnrollment());
-    }
-
-    @Override
-    public final void onUserHasNotPermissionsToDrop() {
-        Toast.makeText(getContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
     }
 }

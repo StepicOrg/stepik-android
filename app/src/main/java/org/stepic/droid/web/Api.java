@@ -70,9 +70,6 @@ public interface Api {
 
     Completable dropCourse(long courseId);
 
-    @Nullable
-    Call<Void> dropCourse(@NotNull Course course);
-
     Call<SectionResponse> getSections(long[] sectionsIds);
 
     Single<SectionResponse> getSectionsRx(long[] sectionsIds);

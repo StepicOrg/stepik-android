@@ -28,7 +28,6 @@ import org.stepic.droid.core.presenters.CourseCollectionPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
-import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.model.*
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.decorators.LeftSpacesDecoration
@@ -56,7 +55,6 @@ constructor(
 ) : FrameLayout(context, attrs, defStyleAttr),
         ContinueCourseView,
         CoursesView,
-        DroppingView,
         JoiningListener,
         DroppingListener,
         FiltersListener {
@@ -315,11 +313,6 @@ constructor(
         coursesPlaceholder.setOnClickListener(listener)
         coursesPlaceholder.visibility = View.VISIBLE
     }
-
-    override fun onUserHasNotPermissionsToDrop() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
     override fun onSuccessDropCourse(course: Course) {
         val courseId = course.id
