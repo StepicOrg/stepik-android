@@ -142,7 +142,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
-        listOfCoursesView.addItemDecoration(new VerticalSpacesDecoration(getResources().getDimensionPixelSize(R.dimen.course_list_between_items_padding)));
+//        listOfCoursesView.addItemDecoration(new VerticalSpacesDecoration(getResources().getDimensionPixelSize(R.dimen.course_list_between_items_padding)));
 
         listOfCoursesViewListener = new RecyclerView.OnScrollListener() {
             @Override

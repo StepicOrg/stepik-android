@@ -97,6 +97,7 @@
     <dimen name="placeholder_radius">7dp</dimen>
     <dimen name="course_image_radius">7dp</dimen>
     <dimen name="course_list_side_padding">20dp</dimen>
+    <dimen name="course_list_inner_padding">16dp</dimen>
     <dimen name="course_list_side_right_padding">12dp</dimen>
     <dimen name="course_list_between_items_padding">8dp</dimen>
     <dimen name="course_list_bottom_padding">14dp</dimen>

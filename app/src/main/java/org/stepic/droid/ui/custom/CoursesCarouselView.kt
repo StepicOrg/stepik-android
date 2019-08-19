@@ -179,11 +179,7 @@ constructor(
 
         gridLayoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         coursesRecycler.layoutManager = gridLayoutManager
-        val verticalSpaceBetweenItems = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
-        val leftSpacePx = resources.getDimensionPixelSize(R.dimen.course_list_side_padding)
 
-        coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(verticalSpaceBetweenItems / 2, ROW_COUNT)) //warning: verticalSpaceBetweenItems/2 – workaround for some bug, decoration will set this param twice
-        coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
         coursesRecycler.itemAnimator?.changeDuration = 0
         val snapHelper = CoursesSnapHelper(ROW_COUNT)
