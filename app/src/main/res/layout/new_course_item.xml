@@ -9,10 +9,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="match_parent"
+            android:duplicateParentState="true">
 
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/courseItemImage"
@@ -167,5 +165,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:duplicateParentState="true"
+                android:background="@drawable/selectable_item_rounded_background" />
         </android.support.constraint.ConstraintLayout>
 </android.support.design.card.MaterialCardView>
