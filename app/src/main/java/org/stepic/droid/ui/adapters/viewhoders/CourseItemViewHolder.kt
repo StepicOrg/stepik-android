@@ -91,6 +91,7 @@ class CourseItemViewHolder(
 
     private fun applyColorType(colorType: CoursesCarouselColorType) {
         (view as CardView).setCardBackgroundColor(ColorUtil.getColorArgb(colorType.backgroundColorRes, itemView.context))
+        courseButtonSeparator.setBackgroundColor(ColorUtil.getColorArgb(colorType.separatorColorRes, itemView.context))
         courseItemName.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
         coursePropertiesDelegate.setTextColor(ColorUtil.getColorArgb(colorType.textColor, itemView.context))
     }
