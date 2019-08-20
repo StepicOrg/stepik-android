@@ -42,6 +42,7 @@ class TextStepContentFragment : Fragment() {
                 ?.takeIf(String::isNotEmpty)
 
             view.changeVisibility(needShow = text != null)
+            view.setTextSize(16f)
             if (text != null) {
                 view.setText(text)
                 view.setTextIsSelectable(true)

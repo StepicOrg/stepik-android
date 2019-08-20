@@ -219,4 +219,8 @@
     <color name="step_quiz_choice_checked_border">@color/color_violet_1</color>
     <color name="step_quiz_choice_correct_border">#64cc64</color>
     <color name="step_quiz_choice_wrong_border">#ff7965</color>
+
+    <!-- Sorting quiz -->
+    <color name="step_quiz_sorting_background">@color/white</color>
+    <color name="step_quiz_sorting_stroke">@color/grey03</color>
 </resources>
