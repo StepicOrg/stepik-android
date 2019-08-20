@@ -45,7 +45,7 @@ constructor(
             .getDeadlineRecordByCourseId(courseId)
             .doCompletableOnSuccess(deadlinesCacheDataSource::saveDeadlineRecord)
 
-    override fun getDeadlineRecords(): Maybe<List<StorageRecord<DeadlinesWrapper>>> =
+    override fun getDeadlineRecords(): Single<List<StorageRecord<DeadlinesWrapper>>> =
         deadlinesRemoteDataSource
             .getDeadlinesRecords()
             .doCompletableOnSuccess(deadlinesCacheDataSource::saveDeadlineRecords)

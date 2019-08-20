@@ -14,5 +14,5 @@ interface DeadlinesRepository {
     fun removeDeadlineRecord(recordId: Long): Completable
     fun removeDeadlineRecordByCourseId(courseId: Long): Completable
     fun getDeadlineRecordByCourseId(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>>
-    fun getDeadlineRecords(): Maybe<List<StorageRecord<DeadlinesWrapper>>>
+    fun getDeadlineRecords(): Single<List<StorageRecord<DeadlinesWrapper>>>
 }

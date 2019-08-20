@@ -46,13 +46,12 @@ constructor(
                     .toMaybe()
             }
 
-    override fun getDeadlinesRecords(): Maybe<List<StorageRecord<DeadlinesWrapper>>> =
+    override fun getDeadlinesRecords(): Single<List<StorageRecord<DeadlinesWrapper>>> =
         remoteStorageService
             .getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, startsWith = getKindStartsWithOfRecord())
             .firstElement()
-            .flatMap { response ->
+            .map { response ->
                 deadlinesMapper
                     .mapToStorageRecordList(response)
-                    .toMaybe()
-            }
+            }.toSingle()
 }

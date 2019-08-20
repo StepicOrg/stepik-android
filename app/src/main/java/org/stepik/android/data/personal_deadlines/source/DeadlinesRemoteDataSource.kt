@@ -8,7 +8,7 @@ import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 
 interface DeadlinesRemoteDataSource {
     fun getDeadlineRecordByCourseId(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>>
-    fun getDeadlinesRecords(): Maybe<List<StorageRecord<DeadlinesWrapper>>>
+    fun getDeadlinesRecords(): Single<List<StorageRecord<DeadlinesWrapper>>>
 
     fun createDeadlineRecord(deadlines: DeadlinesWrapper): Single<StorageRecord<DeadlinesWrapper>>
     fun updateDeadlineRecord(record: StorageRecord<DeadlinesWrapper>): Single<StorageRecord<DeadlinesWrapper>>
