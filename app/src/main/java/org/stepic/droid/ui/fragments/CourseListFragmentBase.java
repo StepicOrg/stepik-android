@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.checkout.Sku;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -27,7 +26,6 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.CourseListType;
-import org.stepik.android.domain.course_payments.model.CoursePayment;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
@@ -36,7 +34,6 @@ import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
-import org.stepic.droid.ui.decorators.VerticalSpacesDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
@@ -45,7 +42,6 @@ import org.stepik.android.view.course_list.notification.RemindAppNotificationDel
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -125,7 +121,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_courses, container, false);
     }
 
@@ -142,7 +138,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
-//        listOfCoursesView.addItemDecoration(new VerticalSpacesDecoration(getResources().getDimensionPixelSize(R.dimen.course_list_between_items_padding)));
 
         listOfCoursesViewListener = new RecyclerView.OnScrollListener() {
             @Override

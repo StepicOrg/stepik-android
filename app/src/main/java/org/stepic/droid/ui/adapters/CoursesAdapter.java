@@ -56,6 +56,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private boolean isNeedShowFooter;
     private final CoursesCarouselColorType colorType;
 
+    private final int courseListPadding;
+
     public CoursesAdapter(FragmentActivity activity,
                           List<Course> courses,
                           @NotNull ContinueCoursePresenter continueCoursePresenter,
@@ -69,6 +71,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             NUMBER_OF_POST_ITEMS = 0;
         }
         contextActivity = activity;
+        courseListPadding = activity.getResources().getDimensionPixelOffset(R.dimen.course_list_padding);
+
         this.courses = courses;
         this.continueCoursePresenter = continueCoursePresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -89,10 +93,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         if (viewType == HEADER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.course_collection_header_view, parent, false);
             ((RecyclerView.LayoutParams) view.getLayoutParams()).setMargins(
-                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_inner_padding),
-                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_inner_padding),
-                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_inner_padding),
-                    (int) contextActivity.getResources().getDimension(R.dimen.course_list_inner_padding)); // todo refactor layouts
+                    -courseListPadding, -courseListPadding, -courseListPadding, courseListPadding); // todo refactor layouts
             return new HeaderItemViewHolder(view);
         } else if (viewType == FOOTER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.loading_view, parent, false);

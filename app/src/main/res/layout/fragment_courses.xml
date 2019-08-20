@@ -34,7 +34,7 @@
                 android:clipToPadding="false"
                 android:divider="@color/transparent"
                 android:overScrollMode="never"
-                android:padding="12dp"
+                android:padding="@dimen/course_list_padding"
                 android:scrollbarStyle="outsideOverlay"
                 android:scrollbars="vertical"
                 android:splitMotionEvents="false"/>
