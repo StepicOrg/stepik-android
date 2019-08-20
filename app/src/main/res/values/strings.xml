@@ -314,7 +314,7 @@
             day in order to improve your record. We suggest you turn on the reminders.
         </item>
     </plurals>
-    <string name="choose_notification_time_interval">Choose notification interval</string>
+    <string name="choose_notification_time_interval">Change notification interval</string>
     <string name="notification_time">Notification time: %s</string>
     <string name="notification_about_learning">Notifications about learning</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
