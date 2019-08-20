@@ -309,7 +309,7 @@
     <string name="empty_user_title">Пользователь не найден</string>
     <string name="streak_dialog_title">Поздравляем!</string>
     <string name="later_tatle">Позже</string>
-    <string name="choose_notification_time_interval">Выберите время напоминания</string>
+    <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
     <string name="notification_about_learning">Уведомления о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
@@ -724,6 +724,7 @@
     <string name="step_quiz_math_description">Введите математическую формулу</string>
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
     <string name="step_quiz_free_answer_description">Напишите эссе</string>
+    <string name="step_quiz_sorting_description">Упорядочьте элементы списка</string>
     <string name="step_quiz_choice_description_single">Выберите один элемент</string>
     <string name="step_quiz_choice_description_multiple">Выберите один или несколько элементов</string>
 
