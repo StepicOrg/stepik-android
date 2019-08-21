@@ -91,8 +91,6 @@ public interface Api {
 
     Single<StepResponse> getSteps(long[] steps);
 
-    Single<StepResponse> getStepsReactive(long[] steps);
-
     Single<StepResponse> getStepsByLessonId(long lessonId);
 
     Call<ProgressResponse> getProgresses(String[] progresses);

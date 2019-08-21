@@ -560,11 +560,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<StepResponse> getStepsReactive(long[] steps) {
-        return loggedService.getStepsReactive(steps);
-    }
-
-    @Override
     public Single<StepResponse> getStepsByLessonId(long lessonId) {
         return loggedService.getStepsByLessonId(lessonId);
     }

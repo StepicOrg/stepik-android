@@ -106,11 +106,6 @@ public interface StepicRestLoggedService {
     );
 
     @GET("api/steps")
-    Single<StepResponse> getStepsReactive(
-            @Query("ids[]") long[] steps
-    );
-
-    @GET("api/steps")
     Single<StepResponse> getStepsByLessonId(
             @Query("lesson") long lessonId
     );

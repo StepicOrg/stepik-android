@@ -3,12 +3,10 @@ package org.stepic.droid.util.resolvers;
 import android.support.annotation.DrawableRes;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.ui.fragments.ChoiceStepFragment;
-import org.stepic.droid.ui.fragments.CodeStepFragment;
-import org.stepic.droid.ui.fragments.NotSupportedYetStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
 import org.stepic.droid.ui.fragments.SqlStepFragment;
 import org.stepic.droid.ui.quiz.ChoiceQuizDelegate;
@@ -89,27 +87,22 @@ public class StepTypeResolverImpl implements StepTypeResolver {
     }
 
     @Override
-    @NotNull
+    @Nullable
     public StepBaseFragment getFragment(Step step) {
-        StepBaseFragment errorStep = new NotSupportedYetStepFragment();//todo: error and update?
         if (step == null
                 || step.getBlock() == null
                 || step.getBlock().getName() == null
                 || step.getBlock().getName().equals(""))
-            return errorStep;
+            return null;
 
         String type = step.getBlock().getName();
         switch (type) {
-            case AppConstants.TYPE_CHOICE:
-                return new ChoiceStepFragment();
             case AppConstants.TYPE_PYCHARM:
                 return new PyCharmStepFragment();
-            case AppConstants.TYPE_CODE:
-                return CodeStepFragment.Companion.newInstance();
             case AppConstants.TYPE_SQL:
                 return SqlStepFragment.Companion.newInstance();
             default:
-                return new NotSupportedYetStepFragment();
+                return null;
         }
     }
 
