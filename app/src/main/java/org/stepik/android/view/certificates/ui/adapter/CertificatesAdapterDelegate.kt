@@ -35,14 +35,14 @@ class CertificatesAdapterDelegate(
             ContextCompat.getDrawable(context, R.drawable.general_placeholder)
 
         init {
-            root.setOnClickListener { onItemClick(itemData?.fullPath ?: "") }
+            root.setOnClickListener { onItemClick(itemData?.certificate?.url ?: "") }
             certificateShareButton.setOnClickListener { onShareButtonClick(itemData as CertificateViewItem) }
         }
 
         override fun onBind(data: CertificateViewItem) {
             certificateTitleView.text = data.title ?: ""
 
-            certificateDescription.text = when (data.type) {
+            certificateDescription.text = when (data.certificate.type) {
                 Certificate.Type.DISTINCTION ->
                     context.resources.getString(R.string.certificate_distinction_with_substitution, data.title ?: "")
                 Certificate.Type.REGULAR ->
@@ -51,7 +51,7 @@ class CertificatesAdapterDelegate(
                     ""
             }
 
-            certificateGradeView.text = context.resources.getString(R.string.certificate_result_with_substitution, data.grade ?: "")
+            certificateGradeView.text = context.resources.getString(R.string.certificate_result_with_substitution, data.certificate.grade ?: "")
 
             Glide.with(context)
                 .load(data.coverFullPath ?: "")

@@ -12,7 +12,6 @@ import org.stepic.droid.features.stories.storage.dao.ViewedStoryTemplatesDaoImpl
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepic.droid.model.CalendarSection
-import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.model.ViewedNotification
 import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
@@ -26,7 +25,6 @@ import org.stepic.droid.storage.dao.AdaptiveExpDaoImpl
 import org.stepic.droid.storage.dao.AssignmentDaoImpl
 import org.stepic.droid.storage.dao.BlockDaoImpl
 import org.stepic.droid.storage.dao.CalendarSectionDaoImpl
-import org.stepic.droid.storage.dao.CertificateViewItemDaoImpl
 import org.stepic.droid.storage.dao.CodeSubmissionDaoImpl
 import org.stepic.droid.storage.dao.CourseDaoImpl
 import org.stepic.droid.storage.dao.CourseListDao
@@ -111,9 +109,6 @@ abstract class StorageModule {
 
     @Binds
     internal abstract fun provideAssignmentDao(assignmentDao: AssignmentDaoImpl): IDao<Assignment>
-
-    @Binds
-    internal abstract fun provideCertificateDao(certificateViewItemDao: CertificateViewItemDaoImpl): IDao<CertificateViewItem>
 
     @Binds
     internal abstract fun provideLessonDao(lessonDao: LessonDaoImpl): IDao<Lesson>

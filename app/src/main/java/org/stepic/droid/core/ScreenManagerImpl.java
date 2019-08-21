@@ -538,7 +538,7 @@ public class ScreenManagerImpl implements ScreenManager {
         sb.append("&pfCertificationName="); // linkedin cert name
         sb.append(URLEncoder.encode(certificateViewItem.getTitle()));
         sb.append("&pfCertificationUrl=");//linkedin certificate url
-        sb.append(certificateViewItem.getFullPath());
+        sb.append(certificateViewItem.getCertificate().getUrl());
 
 
         final Intent intent = new Intent(Intent.ACTION_VIEW);

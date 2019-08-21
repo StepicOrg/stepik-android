@@ -6,7 +6,6 @@ import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepic.droid.model.CalendarSection
-import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.ViewedNotification
@@ -69,7 +68,6 @@ constructor(
     private val courseListDao: CourseListDao,
     private val notificationDao: IDao<Notification>,
     private val calendarSectionDao: IDao<CalendarSection>,
-    private val certificateViewItemDao: IDao<CertificateViewItem>,
     private val videoTimestampDao: IDao<VideoTimestamp>,
     private val lastStepDao: IDao<LastStep>,
     private val blockDao: IDao<BlockPersistentWrapper>,
@@ -92,7 +90,6 @@ constructor(
         courseDao.removeAll()
         courseListDao.removeAll()
         notificationDao.removeAll()
-        certificateViewItemDao.removeAll()
         lastStepDao.removeAll()
         blockDao.removeAll()
         videoTimestampDao.removeAll()
@@ -286,24 +283,6 @@ constructor(
     }
 
     fun getCalendarEvent(sectionId: Long) = calendarSectionDao.get(DbStructureCalendarSection.Column.SECTION_ID, sectionId.toString())
-
-    fun addCertificateViewItems(certificates: List<CertificateViewItem?>) {
-        certificates
-                .filterNotNull()
-                .forEach { certificateViewItemDao.insertOrUpdate(it) } //todo change to insertAll
-    }
-
-    /**
-     * null or not empty oldList
-     */
-    fun getAllCertificates(): List<CertificateViewItem?>? {
-        val list = certificateViewItemDao.getAll()
-        if (list.isEmpty()) {
-            return null
-        } else {
-            return list
-        }
-    }
 
     fun addTimestamp(videoTimestamp: VideoTimestamp) {
         videoTimestampDao.insertOrUpdate(videoTimestamp)
