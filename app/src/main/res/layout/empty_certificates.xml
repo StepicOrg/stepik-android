@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_empty"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/empty_certificates_own"
+        android:contentDescription="@string/empty_certificates"
         app:layout_constraintBottom_toTopOf="@+id/emptyCertificatesMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/padding_placeholders"
-        android:text="@string/empty_certificates_own"
+        android:text="@string/empty_certificates"
         app:layout_constraintBottom_toTopOf="@+id/goToCatalog"
         app:layout_constraintTop_toBottomOf="@+id/placeholderIcon" />
 

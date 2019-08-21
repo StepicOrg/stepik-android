@@ -280,19 +280,19 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public Intent getCertificateIntent() {
         Context context = App.Companion.getAppContext();
-        Intent intent = CertificatesActivity.Companion.createIntent(context, true, userPreferences.getUserId());
+        Intent intent = CertificatesActivity.Companion.createIntent(context, userPreferences.getUserId());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 
     @Override
     public void showCertificates(Context context) {
-        showCertificates(context, true, userPreferences.getUserId());
+        showCertificates(context, userPreferences.getUserId());
     }
 
     @Override
-    public void showCertificates(Context context, boolean isOwnProfile, long userId) {
-        Intent intent = CertificatesActivity.Companion.createIntent(context, isOwnProfile, userId);
+    public void showCertificates(Context context, long userId) {
+        Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
         context.startActivity(intent);
     }
 

@@ -227,8 +227,7 @@
     <string name="link_copied_title">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
     <string name="add_to_linkedin">Add to LinkedIn</string>
-    <string name="empty_certificates_own">You don\'t have any certificates yet</string>
-    <string name="empty_certificates_others">This user does not have any certificates yet</string>
+    <string name="empty_certificates">You don\'t have any certificates yet</string>
     <string name="are_you_sure_remove_comment_text">If you go back, your post will be lost</string>
 
     <string name="auth_error_invalid_credentials">Login/password was incorrect</string>
