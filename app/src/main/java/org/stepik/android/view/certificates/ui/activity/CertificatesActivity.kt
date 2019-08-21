@@ -136,9 +136,9 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
 
     override fun setState(state: CertificatesView.State) {
         certificateSwipeRefresh.isRefreshing = false
-        certificateSwipeRefresh.isEnabled = (state is CertificatesView.State.CertificatesRemote
-                || state is CertificatesView.State.CertificatesCache
-                || state is CertificatesView.State.NetworkError)
+        certificateSwipeRefresh.isEnabled = (state is CertificatesView.State.CertificatesRemote ||
+                state is CertificatesView.State.CertificatesCache ||
+                state is CertificatesView.State.NetworkError)
         viewStateDelegate.switchState(state)
         when (state) {
             is CertificatesView.State.CertificatesCache ->

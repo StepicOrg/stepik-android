@@ -16,8 +16,8 @@ constructor(
     private val certificatesCacheDataSource: CertificatesCacheDataSource,
     private val certificatesRemoteDataSource: CertificatesRemoteDataSource
 ) : CertificatesRepository {
-    override fun getCertificates(userId: Long, page: Int, sourceType: DataSourceType): Single<PagedList<Certificate>> {
-        return when (sourceType) {
+    override fun getCertificates(userId: Long, page: Int, sourceType: DataSourceType): Single<PagedList<Certificate>> =
+        when (sourceType) {
             DataSourceType.REMOTE ->
                 certificatesRemoteDataSource
                     .getCertificates(userId)
@@ -30,5 +30,4 @@ constructor(
             else ->
                 throw IllegalArgumentException("Unsupported source type = $sourceType")
         }
-    }
 }

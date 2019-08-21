@@ -16,5 +16,5 @@ constructor(
 ) : CertificatesRemoteDataSource {
     override fun getCertificates(userId: Long, page: Int): Single<PagedList<Certificate>> =
         api.getCertificatesReactive(userId, page)
-            .map { it.toPagedList(CertificateResponse::certificates)}
+            .map { it.toPagedList(CertificateResponse::certificates) }
 }

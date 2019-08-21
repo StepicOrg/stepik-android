@@ -11,8 +11,8 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.concatWithPagedList
-import org.stepik.android.data.certificates.CertificatesInteractor
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.certificates.interactor.CertificatesInteractor
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -52,9 +52,8 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { state = it },
-                onError   = { state = CertificatesView.State.NetworkError}
+                onError   = { state = CertificatesView.State.NetworkError }
             )
-
     }
 
     fun fetchNextPageFromRemote(userId: Long) {
@@ -136,7 +135,6 @@ constructor(
             .filter { it.isNotEmpty() }
             .map { CertificatesView.State.CertificatesRemote(it) }
 
-
     private fun fetchCertificatesFromRemote(userId: Long): Single<CertificatesView.State> =
         certificatesInteractor
             .getCertificates(userId, page = 1, sourceType = DataSourceType.REMOTE)
@@ -147,5 +145,4 @@ constructor(
                     CertificatesView.State.CertificatesRemote(certificates)
                 }
             }
-
 }

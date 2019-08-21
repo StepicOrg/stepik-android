@@ -95,6 +95,9 @@ class   ProfileFragment : FragmentBase(),
         setHasOptionsMenu(true)
         profileSettingsList.clear()
         profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings())
+        if (userId == 0L) {
+            userId = userPreferences.userId
+        }
     }
 
     override fun injectComponent() {
@@ -114,10 +117,6 @@ class   ProfileFragment : FragmentBase(),
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
         initTimezone()
-
-        if (userId == 0L) {
-            userId = userPreferences.userId
-        }
 
         profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
         profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(requireActivity(), profileSettingsList, screenManager, this, analytic)
