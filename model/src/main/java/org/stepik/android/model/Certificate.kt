@@ -37,9 +37,6 @@ class Certificate(
     }
 
     override fun describeContents(): Int = 0
-    override fun toString(): String {
-        return "Certificate(id=$id, user=$user, course=$course, issueDate=$issueDate, updateDate=$updateDate, grade=$grade, type=$type, url=$url)"
-    }
 
     companion object CREATOR : Parcelable.Creator<Certificate> {
         override fun createFromParcel(source: Parcel): Certificate =
@@ -66,6 +63,4 @@ class Certificate(
             }
         }
     }
-
-
 }
