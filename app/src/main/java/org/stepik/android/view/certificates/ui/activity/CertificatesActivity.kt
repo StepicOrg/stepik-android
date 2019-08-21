@@ -127,7 +127,6 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         when (state) {
             is CertificatesView.State.CertificatesLoaded -> {
                 certificatesAdapter.items = state.certificates
-                certificatesAdapter.notifyDataSetChanged()
             }
         }
     }
@@ -136,10 +135,10 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         if (certificateViewItem == null) {
             return
         }
-        val bottomSheetDialogFragment =
-            CertificateShareDialogFragment.newInstance(certificateViewItem)
-        if (!bottomSheetDialogFragment.isAdded) {
-            bottomSheetDialogFragment.show(supportFragmentManager, null)
-        }
+        val supportFragmentManager = supportFragmentManager
+            ?.takeIf { (it.findFragmentByTag(CertificateShareDialogFragment.TAG) == null) }
+            ?: return
+        val bottomSheetDialogFragment = CertificateShareDialogFragment.newInstance(certificateViewItem)
+        bottomSheetDialogFragment.show(supportFragmentManager, CertificateShareDialogFragment.TAG)
     }
 }
