@@ -5,10 +5,10 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.empty_default.view.*
 import kotlinx.android.synthetic.main.view_course_review_compose_banner_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
+import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 
 class CourseReviewsComposeBannerDelegate(
     private val onCreateReviewClicked: () -> Unit
@@ -19,7 +19,7 @@ class CourseReviewsComposeBannerDelegate(
     override fun isForViewType(position: Int, data: CourseReviewItem): Boolean =
         data is CourseReviewItem.ComposeBanner
 
-    inner class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
         private val bannerText = root.bannerText
         private val bannerButton = root.bannerButton
         private val bannerEmpty = root.bannerEmpty

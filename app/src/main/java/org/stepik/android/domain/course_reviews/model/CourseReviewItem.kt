@@ -1,6 +1,7 @@
 package org.stepik.android.domain.course_reviews.model
 
 import org.stepik.android.model.user.User
+import ru.nobird.android.core.model.Identifiable
 
 sealed class CourseReviewItem {
     class Placeholder(
@@ -11,7 +12,10 @@ sealed class CourseReviewItem {
         val courseReview: CourseReview,
         val user: User,
         val isCurrentUserReview: Boolean
-    ) : CourseReviewItem()
+    ) : CourseReviewItem(), Identifiable<Long> {
+        override val id: Long =
+            courseReview.id
+    }
 
     data class ComposeBanner(
         val canWriteReview: Boolean,
