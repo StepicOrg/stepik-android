@@ -22,7 +22,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="10dp"
-            android:text="@string/open_web_to_solve"/>
+            android:text="@string/step_quiz_unsupported_action"/>
 
 
         <include layout="@layout/open_comment_view"/>

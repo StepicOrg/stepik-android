@@ -14,7 +14,7 @@ interface StepTypeResolver {
     @ColorRes
     fun getDrawableTintForStep(isViewed: Boolean): Int
 
-    fun getFragment(step: Step?): StepBaseFragment
+    fun getFragment(step: Step?): StepBaseFragment?
     fun getQuizDelegate(step: Step?): QuizDelegate
 
     fun isNeedUseOldStepContainer(step: Step): Boolean

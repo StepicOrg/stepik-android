@@ -26,7 +26,6 @@
     <string name="title_confirmation">Подтверждение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="open_web_to_solve">пройти задание в web-версии</string>
     <string name="allow_mobile_download_title">Разрешить загрузку через мобильный интернет</string>
     <string name="allow_mobile_message">Разрешить телефону загружать видео по мобильному интернету,
         когда Wi-Fi недоступен?
@@ -736,6 +735,9 @@
     <string name="step_quiz_code_empty_lang">Перед отправкой решения выберите язык программирования из списка</string>
 
     <string name="step_quiz_not_ready">Извините, эта задача еще не готова</string>
+
+    <string name="step_quiz_unsupported_action">Пройти задание в web-версии</string>
+    <string name="step_quiz_unsupported_message">Данный тип шага пока не поддерживается в приложении</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>

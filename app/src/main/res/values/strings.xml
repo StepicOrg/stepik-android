@@ -38,7 +38,6 @@
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
     <string name="no">No</string>
-    <string name="open_web_to_solve">Open the web version to solve</string>
     <string name="allow_mobile_download_title">Allow mobile downloading</string>
     <string name="allow_mobile_message">Allow your device to download videos over your mobile
         connection when Wi-Fi is not available?
@@ -765,6 +764,9 @@
     <string name="step_quiz_code_empty_lang">Choose programming language before submission</string>
 
     <string name="step_quiz_not_ready">Sorry, the quiz is not ready yet</string>
+
+    <string name="step_quiz_unsupported_action">Open the web version to solve</string>
+    <string name="step_quiz_unsupported_message">Current step type is not supported in mobile app yet</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>

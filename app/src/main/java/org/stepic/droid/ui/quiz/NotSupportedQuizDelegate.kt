@@ -12,7 +12,7 @@ class NotSupportedQuizDelegate: QuizDelegate() {
     override var isEnabled: Boolean = false
     override var actionButton: Button? = null
         set(value) {
-            value?.setText(R.string.open_web_to_solve)
+            value?.setText(R.string.step_quiz_unsupported_action)
             value?.setOnClickListener { }
         }
 

@@ -9,6 +9,7 @@ import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
 import org.stepik.android.view.step_quiz_matching.ui.fragment.MatchingStepQuizFragment
 import org.stepik.android.view.step_quiz_sorting.ui.fragment.SortingStepQuizFragment
+import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 import javax.inject.Inject
 
 class StepQuizFragmentFactoryImpl
@@ -34,9 +35,12 @@ constructor() : StepQuizFragmentFactory {
                 MatchingStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
 
             else ->
-                Fragment()
+                UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper)
         }
 
     override fun isStepCanHaveQuiz(stepPersistentWrapper: StepPersistentWrapper): Boolean =
-        stepPersistentWrapper.step.block?.name != AppConstants.TYPE_VIDEO
+        stepPersistentWrapper.step.block?.name?.let { name ->
+            name != AppConstants.TYPE_VIDEO &&
+            name != AppConstants.TYPE_TEXT
+        } ?: false
 }
