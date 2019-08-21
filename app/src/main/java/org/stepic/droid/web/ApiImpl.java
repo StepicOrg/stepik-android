@@ -843,8 +843,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CertificateResponse> getCertificatesReactive(long userId) {
-        return loggedService.getCertificatesReactive(userId);
+    public Single<CertificateResponse> getCertificatesReactive(long userId, int page) {
+        return loggedService.getCertificatesReactive(userId, page);
     }
 
     @Override

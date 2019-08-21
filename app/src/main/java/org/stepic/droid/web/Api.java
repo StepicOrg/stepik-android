@@ -169,7 +169,7 @@ public interface Api {
 
     Call<CertificateResponse> getCertificates();
 
-    Single<CertificateResponse> getCertificatesReactive(long userId);
+    Single<CertificateResponse> getCertificatesReactive(long userId, int page);
 
     Single<UnitResponse> getUnitsByLessonId(long lessonId);
 

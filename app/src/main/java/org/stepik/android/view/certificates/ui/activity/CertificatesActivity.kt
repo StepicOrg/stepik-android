@@ -5,7 +5,10 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_certificates.*
 import kotlinx.android.synthetic.main.empty_certificates.*
@@ -17,6 +20,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.setTextColor
 import org.stepik.android.presentation.certificates.CertificatesPresenter
 import org.stepik.android.presentation.certificates.CertificatesView
 import org.stepik.android.view.certificates.ui.adapter.CertificatesAdapterDelegate
@@ -57,21 +61,41 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         initCenteredToolbar(R.string.certificates_title, showHomeButton = true)
         userId = intent.getLongExtra(EXTRA_USER_ID, -1)
 
-        initViewStateDelegate()
-
-        certificateRecyclerView.apply {
-            adapter = certificatesAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        }
         certificatesAdapter += CertificatesAdapterDelegate(
             onItemClick = { screenManager.showPdfInBrowserByGoogleDocs(this, it) },
             onShareButtonClick = { onNeedShowShareDialog(it) }
         )
 
-        certificateSwipeRefresh.setOnRefreshListener { certificatesPresenter.onLoadCertificates(userId) }
+        with(certificateRecyclerView) {
+            adapter = certificatesAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
+                        ?: return
+
+                    if (dy > 0) {
+                        val visibleItemCount = layoutManager.childCount
+                        val totalItemCount = layoutManager.itemCount
+                        val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+
+                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                            post {
+                                certificatesPresenter.fetchNextPageFromRemote(userId)
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        initViewStateDelegate()
+
+        certificateSwipeRefresh.setOnRefreshListener { certificatesPresenter.forceUpdate(userId) }
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
 
-        certificatesPresenter.onLoadCertificates(userId)
+        certificatesPresenter.fetchCertificates(userId)
     }
 
     private fun injectComponent() {
@@ -105,18 +129,32 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         viewStateDelegate.addState<CertificatesView.State.EmptyCertificates>(reportEmptyCertificates)
         viewStateDelegate.addState<CertificatesView.State.Loading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<CertificatesView.State.NetworkError>(reportProblem)
-        viewStateDelegate.addState<CertificatesView.State.CertificatesLoaded>(certificateSwipeRefresh, certificateRecyclerView)
+        viewStateDelegate.addState<CertificatesView.State.CertificatesCache>(certificateSwipeRefresh, certificateRecyclerView)
+        viewStateDelegate.addState<CertificatesView.State.CertificatesRemote>(certificateSwipeRefresh, certificateRecyclerView)
+        viewStateDelegate.addState<CertificatesView.State.CertificatesRemoteLoading>(certificateSwipeRefresh, certificateRecyclerView, loadProgressbarOnEmptyScreen)
     }
 
     override fun setState(state: CertificatesView.State) {
         certificateSwipeRefresh.isRefreshing = false
-        certificateSwipeRefresh.isEnabled = (state is CertificatesView.State.CertificatesLoaded || state is CertificatesView.State.NetworkError)
+        certificateSwipeRefresh.isEnabled = (state is CertificatesView.State.CertificatesRemote
+                || state is CertificatesView.State.CertificatesCache
+                || state is CertificatesView.State.NetworkError)
         viewStateDelegate.switchState(state)
         when (state) {
-            is CertificatesView.State.CertificatesLoaded -> {
+            is CertificatesView.State.CertificatesCache ->
                 certificatesAdapter.items = state.certificates
-            }
+            is CertificatesView.State.CertificatesRemote ->
+                certificatesAdapter.items = state.certificates
+            is CertificatesView.State.CertificatesRemoteLoading ->
+                certificatesAdapter.items = state.certificates
         }
+    }
+
+    override fun showNetworkError() {
+        Snackbar
+            .make(root, R.string.connectionProblems, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+            .show()
     }
 
     private fun onNeedShowShareDialog(certificateViewItem: CertificateViewItem?) {

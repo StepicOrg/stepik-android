@@ -1,6 +1,7 @@
 package org.stepik.android.data.certificates.repository
 
 import io.reactivex.Single
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.certificates.source.CertificatesCacheDataSource
 import org.stepik.android.data.certificates.source.CertificatesRemoteDataSource
@@ -15,23 +16,19 @@ constructor(
     private val certificatesCacheDataSource: CertificatesCacheDataSource,
     private val certificatesRemoteDataSource: CertificatesRemoteDataSource
 ) : CertificatesRepository {
-    override fun getCertificates(userId: Long, primarySourceType: DataSourceType): Single<List<Certificate>> {
-        val remoteSource = certificatesRemoteDataSource
-            .getCertificates(userId)
-            .doCompletableOnSuccess(certificatesCacheDataSource::saveCertificates)
-
-        val cacheSource = certificatesCacheDataSource
-            .getCertificates(userId)
-
-        return when (primarySourceType) {
+    override fun getCertificates(userId: Long, page: Int, sourceType: DataSourceType): Single<PagedList<Certificate>> {
+        return when (sourceType) {
             DataSourceType.REMOTE ->
-                remoteSource
+                certificatesRemoteDataSource
+                    .getCertificates(userId)
+                    .doCompletableOnSuccess(certificatesCacheDataSource::saveCertificates)
 
             DataSourceType.CACHE ->
-                cacheSource
+                certificatesCacheDataSource
+                    .getCertificates(userId)
 
             else ->
-                throw IllegalArgumentException("Unsupported source type = $primarySourceType")
+                throw IllegalArgumentException("Unsupported source type = $sourceType")
         }
     }
 }
