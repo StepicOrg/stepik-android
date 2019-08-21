@@ -11,7 +11,6 @@ import org.stepic.droid.ui.fragments.CodeStepFragment;
 import org.stepic.droid.ui.fragments.NotSupportedYetStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
 import org.stepic.droid.ui.fragments.SqlStepFragment;
-import org.stepic.droid.ui.fragments.TableChoiceStepFragment;
 import org.stepic.droid.ui.quiz.ChoiceQuizDelegate;
 import org.stepic.droid.ui.quiz.NotSupportedQuizDelegate;
 import org.stepic.droid.ui.quiz.NumberQuizDelegate;
@@ -51,7 +50,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_SORTING, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_MATH, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_FREE_ANSWER, simpleQuestionDrawable);
-        mapFromTypeToDrawableRes.put(AppConstants.TYPE_TABLE, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_STRING, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_CHOICE, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_NUMBER, simpleQuestionDrawable);
@@ -106,8 +104,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return new ChoiceStepFragment();
             case AppConstants.TYPE_PYCHARM:
                 return new PyCharmStepFragment();
-            case AppConstants.TYPE_TABLE:
-                return TableChoiceStepFragment.Companion.newInstance();
             case AppConstants.TYPE_CODE:
                 return CodeStepFragment.Companion.newInstance();
             case AppConstants.TYPE_SQL:
