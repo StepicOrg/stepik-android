@@ -2,6 +2,7 @@ package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
 import android.graphics.drawable.Drawable
+import android.support.v4.text.HtmlCompat
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.HapticFeedbackConstants
@@ -133,7 +134,7 @@ class CourseItemViewHolder(
         courseDescription.changeVisibility(needShow = !isEnrolled(course))
 
         if (!isEnrolled(course)) {
-            courseDescription.text = course.summary
+            courseDescription.text = HtmlCompat.fromHtml(course.summary ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
             courseDescription.doOnGlobalLayout { it.maxLines = it.height / it.lineHeight }
         }
 
