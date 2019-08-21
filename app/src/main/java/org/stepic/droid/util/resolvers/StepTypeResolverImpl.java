@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.ui.fragments.ChoiceStepFragment;
 import org.stepic.droid.ui.fragments.CodeStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
 import org.stepic.droid.ui.fragments.SqlStepFragment;
@@ -99,8 +98,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
         String type = step.getBlock().getName();
         switch (type) {
-            case AppConstants.TYPE_CHOICE:
-                return new ChoiceStepFragment();
             case AppConstants.TYPE_PYCHARM:
                 return new PyCharmStepFragment();
             case AppConstants.TYPE_CODE:
