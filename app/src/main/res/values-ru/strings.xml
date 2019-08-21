@@ -33,7 +33,6 @@
     </string>
     <string name="allow_mobile_snack">Загрузка через мобильный интернет недоступна</string>
     <string name="drop_course">Покинуть курс</string>
-    <string name="about_course">О курсе</string>
     <string name="you_dropped">Вы покинули %s</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
@@ -101,7 +100,6 @@
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="internet_problem">Интернет недоступен. Попробуйте позже</string>
     <string name="feedback_fill_fields">Заполните пустые поля</string>
-    <string name="cant_drop">Вы не можете покинуть курс</string>
     <string name="open_in_external_player">Открывать в системном плеере</string>
     <string name="notification_title">Уведомления</string>
     <string name="notification_learn_list">Дедлайны, новые модули, сертификаты</string>
@@ -352,7 +350,6 @@
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
     <string name="content_course_logo">Логотип курса</string>
-    <string name="continue_course_title">Учиться</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
     <string name="step_with_position">– Шаг %d</string>
     <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти
@@ -412,10 +409,7 @@
 
     <string name="manage_notification_settings">Управлять уведомлениями</string>
 
-    <string name="course_item_more">Подробнее</string>
     <string name="course_item_join">Поступить на курс</string>
-    <string name="course_item_info">Инфо</string>
-    <string name="course_item_syllabus">План</string>
 
     <string name="learners_count">Количество студентов</string>
     <string name="continue_learning">Продолжить учиться</string>

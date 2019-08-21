@@ -94,7 +94,7 @@ fun ViewGroup.inflate(@LayoutRes resId: Int, attachToRoot: Boolean = false): Vie
 /**
  * Performs the given action when the view tree is about to be drawn.
  */
-inline fun View.doOnPreDraw(crossinline action: (view: View) -> Unit) {
+inline fun <T : View> T.doOnPreDraw(crossinline action: (view: T) -> Unit) {
     val vto = viewTreeObserver
     vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
         override fun onPreDraw(): Boolean {
@@ -104,6 +104,15 @@ inline fun View.doOnPreDraw(crossinline action: (view: View) -> Unit) {
                 else -> viewTreeObserver.removeOnPreDrawListener(this)
             }
             return true
+        }
+    })
+}
+
+inline fun <T : View> T.doOnGlobalLayout(crossinline action: (view: T) -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            action(this@doOnGlobalLayout)
+            viewTreeObserver.removeOnGlobalLayoutListener(this)
         }
     })
 }

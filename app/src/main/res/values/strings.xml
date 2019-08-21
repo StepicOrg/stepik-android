@@ -45,7 +45,6 @@
     </string>
     <string name="allow_mobile_snack">Mobile downloading is disabled. Turn on in settings</string>
     <string name="drop_course">Drop the course</string>
-    <string name="about_course">About the course</string>
     <string name="you_dropped">"You dropped %s"</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -124,7 +123,6 @@
     <string name="x1_5" translatable="false">x1.5</string>
     <string name="x1_75" translatable="false">x1.75</string>
     <string name="x2_0" translatable="false">x2.0</string>
-    <string name="cant_drop">You can not drop this course</string>
     <string name="open_in_external_player">Open in an external player</string>
     <string name="notification_title">Notifications</string>
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
@@ -356,7 +354,6 @@
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="sign_in_with_password_suffix">" with e-mail"</string>
     <string name="content_course_logo">Course logo</string>
-    <string name="continue_course_title">Continue</string>
     <string name="auth_inline_message">To save your progress please sign in first</string>
     <string name="step_with_position">– Step %d</string>
     <string name="anonymous_write_comment">To join this discussion you have to Sign in</string>
@@ -419,10 +416,7 @@
 
     <string name="manage_notification_settings">Manage notifications</string>
 
-    <string name="course_item_more">More</string>
     <string name="course_item_join">Join course</string>
-    <string name="course_item_info">Info</string>
-    <string name="course_item_syllabus">Syllabus</string>
 
     <string name="learners_count">Learners count</string>
 

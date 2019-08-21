@@ -115,9 +115,6 @@ public interface StepicRestLoggedService {
             @Query("lesson") long lessonId
     );
 
-    @DELETE("api/enrollments/{id}")
-    Call<Void> dropCourseLegacy(@Path("id") long courseId);
-
     @GET("api/progresses")
     Call<ProgressResponse> getProgresses(@Query("ids[]") String[] progresses);
 
