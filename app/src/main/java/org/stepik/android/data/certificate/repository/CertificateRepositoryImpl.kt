@@ -20,7 +20,7 @@ constructor(
         when (sourceType) {
             DataSourceType.REMOTE ->
                 certificateRemoteDataSource
-                    .getCertificates(userId)
+                    .getCertificates(userId, page)
                     .doCompletableOnSuccess(certificateCacheDataSource::saveCertificates)
 
             DataSourceType.CACHE ->
