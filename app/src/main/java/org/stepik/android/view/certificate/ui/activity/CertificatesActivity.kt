@@ -1,4 +1,4 @@
-package org.stepik.android.view.certificates.ui.activity
+package org.stepik.android.view.certificate.ui.activity
 
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -21,9 +21,9 @@ import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.setTextColor
-import org.stepik.android.presentation.certificates.CertificatesPresenter
-import org.stepik.android.presentation.certificates.CertificatesView
-import org.stepik.android.view.certificates.ui.adapter.CertificatesAdapterDelegate
+import org.stepik.android.presentation.certificate.CertificatesPresenter
+import org.stepik.android.presentation.certificate.CertificatesView
+import org.stepik.android.view.certificate.ui.adapter.CertificatesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import javax.inject.Inject

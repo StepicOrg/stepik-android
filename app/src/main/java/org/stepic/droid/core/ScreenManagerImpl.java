@@ -66,7 +66,7 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.Unit;
 import org.stepik.android.model.Video;
 import org.stepik.android.model.user.Profile;
-import org.stepik.android.view.certificates.ui.activity.CertificatesActivity;
+import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;

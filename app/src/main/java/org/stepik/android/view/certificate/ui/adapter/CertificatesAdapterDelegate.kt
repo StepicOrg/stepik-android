@@ -1,4 +1,4 @@
-package org.stepik.android.view.certificates.ui.adapter
+package org.stepik.android.view.certificate.ui.adapter
 
 import android.support.v4.content.ContextCompat
 import android.view.View

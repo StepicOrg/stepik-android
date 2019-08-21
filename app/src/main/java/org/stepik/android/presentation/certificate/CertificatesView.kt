@@ -1,4 +1,4 @@
-package org.stepik.android.presentation.certificates
+package org.stepik.android.presentation.certificate
 
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.util.PagedList

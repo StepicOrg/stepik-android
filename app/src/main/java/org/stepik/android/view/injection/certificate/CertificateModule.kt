@@ -1,14 +1,14 @@
-package org.stepik.android.view.injection.certificates
+package org.stepik.android.view.injection.certificate
 
 import android.arch.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import org.stepik.android.presentation.base.injection.ViewModelKey
-import org.stepik.android.presentation.certificates.CertificatesPresenter
+import org.stepik.android.presentation.certificate.CertificatesPresenter
 
 @Module
-abstract class CertificatesModule {
+abstract class CertificateModule {
     /**
      * PRESENTATION LAYER
      */

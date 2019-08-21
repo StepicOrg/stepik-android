@@ -19,7 +19,7 @@ import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.comments.Vote;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
-import org.stepik.android.remote.certificates.model.CertificateResponse;
+import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;

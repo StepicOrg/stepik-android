@@ -68,7 +68,7 @@ import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.injection.billing.BillingModule
-import org.stepik.android.view.injection.certificates.CertificatesComponent
+import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
@@ -176,7 +176,7 @@ interface AppCoreComponent {
 
     fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder
 
-    fun certificatesComponentBuilder(): CertificatesComponent.Builder
+    fun certificatesComponentBuilder(): CertificateComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

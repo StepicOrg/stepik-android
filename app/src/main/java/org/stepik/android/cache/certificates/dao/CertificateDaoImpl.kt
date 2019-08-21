@@ -12,7 +12,7 @@ import org.stepik.android.cache.certificates.structure.DbStructureCertificate
 import org.stepik.android.model.Certificate
 import javax.inject.Inject
 
-class CertificatesDaoImpl
+class CertificateDaoImpl
 @Inject
 constructor(
     databaseOperations: DatabaseOperations

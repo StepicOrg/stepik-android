@@ -1,4 +1,4 @@
-package org.stepik.android.presentation.certificates
+package org.stepik.android.presentation.certificate
 
 import io.reactivex.Maybe
 import io.reactivex.Scheduler
@@ -12,7 +12,7 @@ import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.concatWithPagedList
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.certificates.interactor.CertificatesInteractor
+import org.stepik.android.domain.certificate.interactor.CertificatesInteractor
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 

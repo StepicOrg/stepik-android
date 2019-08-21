@@ -1,30 +1,30 @@
-package org.stepik.android.data.certificates.repository
+package org.stepik.android.data.certificate.repository
 
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
-import org.stepik.android.data.certificates.source.CertificatesCacheDataSource
-import org.stepik.android.data.certificates.source.CertificatesRemoteDataSource
+import org.stepik.android.data.certificate.source.CertificateCacheDataSource
+import org.stepik.android.data.certificate.source.CertificateRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.certificates.repository.CertificatesRepository
+import org.stepik.android.domain.certificate.repository.CertificateRepository
 import org.stepik.android.model.Certificate
 import javax.inject.Inject
 
-class CertificatesRepositoryImpl
+class CertificateRepositoryImpl
 @Inject
 constructor(
-    private val certificatesCacheDataSource: CertificatesCacheDataSource,
-    private val certificatesRemoteDataSource: CertificatesRemoteDataSource
-) : CertificatesRepository {
+    private val certificateCacheDataSource: CertificateCacheDataSource,
+    private val certificateRemoteDataSource: CertificateRemoteDataSource
+) : CertificateRepository {
     override fun getCertificates(userId: Long, page: Int, sourceType: DataSourceType): Single<PagedList<Certificate>> =
         when (sourceType) {
             DataSourceType.REMOTE ->
-                certificatesRemoteDataSource
+                certificateRemoteDataSource
                     .getCertificates(userId)
-                    .doCompletableOnSuccess(certificatesCacheDataSource::saveCertificates)
+                    .doCompletableOnSuccess(certificateCacheDataSource::saveCertificates)
 
             DataSourceType.CACHE ->
-                certificatesCacheDataSource
+                certificateCacheDataSource
                     .getCertificates(userId)
 
             else ->

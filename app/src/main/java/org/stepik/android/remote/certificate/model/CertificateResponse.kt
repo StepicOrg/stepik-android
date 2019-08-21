@@ -1,4 +1,4 @@
-package org.stepik.android.remote.certificates.model
+package org.stepik.android.remote.certificate.model
 
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.Certificate
