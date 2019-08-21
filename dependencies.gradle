@@ -88,7 +88,7 @@ ext.versions = [
         espresso             : '3.0.2',
         supportTestRunner    : '1.0.2',
 
-        ktlint               : '0.30.0'
+        ktlint               : '0.34.2'
 ]
 
 ext.gradlePlugins = [
@@ -199,5 +199,5 @@ ext.libraries = [
         espressoContrib      : "com.android.support.test.espresso:espresso-contrib:$versions.espresso",
         espressoIntents      : "com.android.support.test.espresso:espresso-intents:$versions.espresso",
 
-        ktlint               : "com.github.shyiko:ktlint:$versions.ktlint"
+        ktlint               : "com.pinterest:ktlint:$versions.ktlint"
 ]
