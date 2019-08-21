@@ -441,7 +441,6 @@
 
     <string name="choose_language">Choose language</string>
     <string name="choose_action">Choose</string>
-    <string name="code_quiz_fullscreen">Fullscreen</string>
     <string name="code_quiz_reset">Reset</string>
     <string name="reset_code_dialog_title">Are you sure?</string>
     <string name="reset_code_dialog_explanation">Your code will be lost</string>
@@ -454,10 +453,6 @@
         <item quantity="one">%d second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
-    <string name="code_quiz_limits">&lt;b>Time limit:&lt;/b> %1$s\n&lt;b>Memory limit:&lt;/b>%2$s MB</string>
-    <string name="sample_input">&lt;b>Sample input %d:&lt;/b></string>
-    <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
-    <string name="step_preparing">Step is not prepared yet. Tap to reload</string>
     <string name="course_rating">Course rating</string>
     <string name="course_rating_value" translatable="false">%.1f</string>
 

@@ -432,7 +432,6 @@
 
     <string name="choose_language">Выберите язык</string>
     <string name="choose_action">Выбрать</string>
-    <string name="code_quiz_fullscreen">Развернуть</string>
     <string name="code_quiz_reset">Сброс</string>
     <string name="reset_code_dialog_title">Вы уверены?</string>
     <string name="reset_code_dialog_explanation">Ваш код будет утерян</string>
@@ -444,10 +443,6 @@
         <item quantity="many">%d секунд</item>
         <item quantity="other">%d секунд</item>
     </plurals>
-    <string name="code_quiz_limits">&lt;b>Временное ограничение:&lt;/b> %1$s\n&lt;b>Ограничение памяти:&lt;/b> %2$s MB</string>
-    <string name="sample_input">&lt;b>Пример входных данных %d:&lt;/b></string>
-    <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
-    <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
     <string name="language_of_courses">Язык курсов</string>
     <string name="language_widget_hint">Это можно изменить в настройках</string>
 
