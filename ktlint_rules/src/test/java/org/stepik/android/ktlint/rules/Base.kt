@@ -1,7 +1,7 @@
 package org.stepik.android.ktlint.rules
 
-import com.github.shyiko.ktlint.core.Rule
-import com.github.shyiko.ktlint.test.lint
+import com.pinterest.ktlint.core.Rule
+import com.pinterest.ktlint.test.lint
 import org.intellij.lang.annotations.Language
 import org.junit.Assert.assertEquals
 

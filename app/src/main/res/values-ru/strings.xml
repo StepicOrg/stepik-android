@@ -99,7 +99,6 @@
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="internet_problem">Интернет недоступен. Попробуйте позже</string>
-    <string name="internet_problem_short">Интернет недоступен</string>
     <string name="feedback_fill_fields">Заполните пустые поля</string>
     <string name="open_in_external_player">Открывать в системном плеере</string>
     <string name="notification_title">Уведомления</string>
@@ -307,7 +306,7 @@
     <string name="empty_user_title">Пользователь не найден</string>
     <string name="streak_dialog_title">Поздравляем!</string>
     <string name="later_tatle">Позже</string>
-    <string name="choose_notification_time_interval">Выберите время напоминания</string>
+    <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
     <string name="notification_about_learning">Уведомления о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
@@ -359,7 +358,6 @@
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
-    <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
     <string name="close_screen">Закрыть</string>
@@ -720,6 +718,7 @@
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
     <string name="step_quiz_free_answer_description">Напишите эссе</string>
     <string name="step_quiz_sorting_description">Упорядочьте элементы списка</string>
+    <string name="step_quiz_matching_description">Сопоставьте значения из двух списков</string>
     <string name="step_quiz_choice_description_single">Выберите один элемент</string>
     <string name="step_quiz_choice_description_multiple">Выберите один или несколько элементов</string>
 

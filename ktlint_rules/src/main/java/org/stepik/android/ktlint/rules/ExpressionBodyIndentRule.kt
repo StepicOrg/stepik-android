@@ -1,6 +1,6 @@
 package org.stepik.android.ktlint.rules
 
-import com.github.shyiko.ktlint.core.Rule
+import com.pinterest.ktlint.core.Rule
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.PsiWhiteSpace
 import org.jetbrains.kotlin.psi.KtNamedFunction
@@ -12,8 +12,7 @@ class ExpressionBodyIndentRule : Rule("expression-body-indent") {
     }
 
     override fun visit(node: ASTNode, autoCorrect: Boolean, emit: (offset: Int, errorMessage: String, canBeAutoCorrected: Boolean) -> Unit) {
-        val element = node.psi ?: return
-        when (element) {
+        when (val element = node.psi ?: return) {
             is KtNamedFunction -> {
                 val eq = element.equalsToken ?: return
                 val nextEq = eq.nextSibling

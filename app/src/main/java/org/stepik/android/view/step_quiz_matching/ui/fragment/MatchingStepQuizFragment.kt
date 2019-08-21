@@ -1,4 +1,4 @@
-package org.stepik.android.view.step_quiz_sorting.ui.fragment
+package org.stepik.android.view.step_quiz_matching.ui.fragment
 
 import android.support.v4.app.Fragment
 import android.view.View
@@ -6,15 +6,14 @@ import kotlinx.android.synthetic.main.layout_step_quiz_sorting.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
-import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFormDelegate
 
-class SortingStepQuizFragment : DefaultStepQuizFragment(), StepQuizView {
+class MatchingStepQuizFragment : DefaultStepQuizFragment() {
     companion object {
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
-            SortingStepQuizFragment()
+            MatchingStepQuizFragment()
                 .apply {
                     this.stepWrapper = stepPersistentWrapper
                     this.lessonData = lessonData
@@ -28,5 +27,5 @@ class SortingStepQuizFragment : DefaultStepQuizFragment(), StepQuizView {
         get() = arrayOf(sortingRecycler)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
-        SortingStepQuizFormDelegate(view)
+        MatchingStepQuizFormDelegate(view)
 }
