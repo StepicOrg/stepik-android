@@ -7,6 +7,7 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
+import org.stepik.android.view.step_quiz_matching.ui.fragment.MatchingStepQuizFragment
 import org.stepik.android.view.step_quiz_sorting.ui.fragment.SortingStepQuizFragment
 import javax.inject.Inject
 
@@ -28,6 +29,9 @@ constructor() : StepQuizFragmentFactory {
 
             AppConstants.TYPE_SORTING ->
                 SortingStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+
+            AppConstants.TYPE_MATCHING ->
+                MatchingStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
 
             else ->
                 Fragment()

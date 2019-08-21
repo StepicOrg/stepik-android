@@ -8,7 +8,6 @@ import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.ui.fragments.ChoiceStepFragment;
 import org.stepic.droid.ui.fragments.CodeStepFragment;
-import org.stepic.droid.ui.fragments.MatchingStepFragment;
 import org.stepic.droid.ui.fragments.NotSupportedYetStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
 import org.stepic.droid.ui.fragments.SqlStepFragment;
@@ -105,8 +104,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return new ChoiceStepFragment();
             case AppConstants.TYPE_PYCHARM:
                 return new PyCharmStepFragment();
-            case AppConstants.TYPE_MATCHING:
-                return new MatchingStepFragment();
             case AppConstants.TYPE_CODE:
                 return CodeStepFragment.Companion.newInstance();
             case AppConstants.TYPE_SQL:
@@ -158,6 +155,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
             case AppConstants.TYPE_CHOICE:
 
             case AppConstants.TYPE_SORTING:
+            case AppConstants.TYPE_MATCHING:
                 return false;
             default:
                 return true;
