@@ -3,9 +3,12 @@ package org.stepik.android.domain.certificate.interactor
 import io.reactivex.Single
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.repository.CertificateRepository
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.model.Certificate
+import org.stepik.android.model.Course
 import javax.inject.Inject
 
 class CertificatesInteractor
@@ -16,21 +19,29 @@ constructor(
 ) {
     fun getCertificates(userId: Long, page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CertificateViewItem>> =
         certificateRepository.getCertificates(userId, page, sourceType)
-            .flatMap { Single.just(it) }
-            .flatMap { certificateList ->
-                courseRepository.getCourses(*certificateList.map { it.course }.toLongArray()).map { courses ->
-                    val courseIdToCertificateMap = certificateList
-                        .associateBy { it.course }
-                    PagedList(
-                        courses.map {
-                            val certificateRelatedToCourse = courseIdToCertificateMap[it.id]
-                            CertificateViewItem(
-                                certificateRelatedToCourse!!,
-                                it.title,
-                                it.cover
-                            )
-                        }
-                    )
-                }
+            .flatMap { certificates ->
+                val courseIds =
+                    certificates.mapToLongArray(Certificate::course)
+
+                courseRepository
+                    .getCourses(*courseIds)
+                    .map { courses ->
+                        val coursesMap =
+                            courses.associateBy(Course::id)
+
+                        PagedList(
+                            certificates.map { certificate ->
+                                CertificateViewItem(
+                                    certificate,
+                                    coursesMap[certificate.course]?.title,
+                                    coursesMap[certificate.course]?.cover
+                                )
+                            },
+
+                            page = certificates.page,
+                            hasNext = certificates.hasNext,
+                            hasPrev = certificates.hasPrev
+                        )
+                    }
             }
 }
