@@ -4,7 +4,6 @@ import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -152,13 +151,14 @@ constructor(
                 }
             }
 
-    private fun fetchCertificatesRemoteSilent(userId: Long): Disposable =
-        certificatesInteractor
+    private fun fetchCertificatesRemoteSilent(userId: Long) {
+        paginationDisposable += certificatesInteractor
             .getCertificates(userId, page = 1, sourceType = DataSourceType.REMOTE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .ignoreElement()
             .subscribeBy(
+                onSuccess = { CertificatesView.State.CertificatesRemote(it) },
                 onError = { view?.showNetworkError() }
             )
+    }
 }
