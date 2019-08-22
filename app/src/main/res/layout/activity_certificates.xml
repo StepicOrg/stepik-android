@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -17,11 +18,9 @@
 
         <include layout="@layout/progress_bar_on_empty_screen"/>
 
-        <include layout="@layout/error_no_connection"/>
+        <include layout="@layout/error_no_connection_with_button"/>
 
         <include layout="@layout/empty_certificates"/>
-
-        <include layout="@layout/empty_login"/>
 
         <!--Remove this old cover, when redesign will be finished-->
         <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout

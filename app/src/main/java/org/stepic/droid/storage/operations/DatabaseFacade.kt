@@ -6,7 +6,6 @@ import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepic.droid.model.CalendarSection
-import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.ViewedNotification
@@ -25,7 +24,6 @@ import org.stepic.droid.storage.structure.DbStructureViewQueue
 import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
-import org.stepik.android.model.ViewAssignment
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
@@ -38,6 +36,7 @@ import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Assignment
+import org.stepik.android.model.Certificate
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
@@ -45,6 +44,7 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
+import org.stepik.android.model.ViewAssignment
 import javax.inject.Inject
 
 @StorageSingleton
@@ -65,7 +65,6 @@ constructor(
     private val courseListDao: CourseListDao,
     private val notificationDao: IDao<Notification>,
     private val calendarSectionDao: IDao<CalendarSection>,
-    private val certificateViewItemDao: IDao<CertificateViewItem>,
     private val videoTimestampDao: IDao<VideoTimestamp>,
     private val lastStepDao: IDao<LastStep>,
     private val blockDao: IDao<BlockPersistentWrapper>,
@@ -73,7 +72,8 @@ constructor(
     private val deadlinesBannerDao: DeadlinesBannerDao,
     private val viewedStoryTemplatesDao: IDao<ViewedStoryTemplate>,
     private val sectionDateEventDao: IDao<SectionDateEvent>,
-    private val submissionDao: IDao<Submission>
+    private val submissionDao: IDao<Submission>,
+    private val certificateDao: IDao<Certificate>
 ) {
 
     fun dropDatabase() {
@@ -87,7 +87,6 @@ constructor(
         courseDao.removeAll()
         courseListDao.removeAll()
         notificationDao.removeAll()
-        certificateViewItemDao.removeAll()
         lastStepDao.removeAll()
         blockDao.removeAll()
         videoTimestampDao.removeAll()
@@ -99,6 +98,7 @@ constructor(
         viewedStoryTemplatesDao.removeAll()
         sectionDateEventDao.removeAll()
         submissionDao.removeAll()
+        certificateDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {
@@ -279,24 +279,6 @@ constructor(
     }
 
     fun getCalendarEvent(sectionId: Long) = calendarSectionDao.get(DbStructureCalendarSection.Column.SECTION_ID, sectionId.toString())
-
-    fun addCertificateViewItems(certificates: List<CertificateViewItem?>) {
-        certificates
-                .filterNotNull()
-                .forEach { certificateViewItemDao.insertOrUpdate(it) } //todo change to insertAll
-    }
-
-    /**
-     * null or not empty oldList
-     */
-    fun getAllCertificates(): List<CertificateViewItem?>? {
-        val list = certificateViewItemDao.getAll()
-        if (list.isEmpty()) {
-            return null
-        } else {
-            return list
-        }
-    }
 
     fun addTimestamp(videoTimestamp: VideoTimestamp) {
         videoTimestampDao.insertOrUpdate(videoTimestamp)

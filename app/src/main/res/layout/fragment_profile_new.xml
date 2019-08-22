@@ -326,6 +326,33 @@
 
                 </LinearLayout>
 
+                <FrameLayout
+                    android:id="@+id/certificatesTitleContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:foreground="@drawable/non_radius_foreground">
+
+                    <TextView
+                        android:id="@+id/certificatesTitle"
+                        fontPath="fonts/Roboto-Light.ttf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/certificates_title"
+                        android:drawableEnd="@drawable/ic_nav_arrow_right"
+                        android:drawableRight="@drawable/ic_nav_arrow_right"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/left_right_margin_in_profile"
+                        android:paddingLeft="@dimen/left_right_margin_in_profile"
+                        android:paddingTop="@dimen/guideline_standard_padding"
+                        android:paddingEnd="24dp"
+                        android:paddingRight="24dp"
+                        android:paddingBottom="@dimen/guideline_standard_padding"
+                        android:textSize="@dimen/text_header"
+                        tools:ignore="MissingPrefix"
+                        tools:text="Certificates" />
+                </FrameLayout>
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/profileSettingsRecyclerView"
                     android:layout_width="match_parent"
