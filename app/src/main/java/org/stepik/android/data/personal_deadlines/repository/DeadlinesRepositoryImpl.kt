@@ -3,6 +3,7 @@ package org.stepik.android.data.personal_deadlines.repository
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepic.droid.util.then
 import org.stepic.droid.web.storage.model.StorageRecord
@@ -45,7 +46,7 @@ constructor(
             .getDeadlineRecordByCourseId(courseId)
             .doCompletableOnSuccess(deadlinesCacheDataSource::saveDeadlineRecord)
 
-    override fun getDeadlineRecords(): Single<List<StorageRecord<DeadlinesWrapper>>> =
+    override fun getDeadlineRecords(): Single<PagedList<StorageRecord<DeadlinesWrapper>>> =
         deadlinesRemoteDataSource
             .getDeadlinesRecords()
             .doCompletableOnSuccess(deadlinesCacheDataSource::saveDeadlineRecords)

@@ -4,13 +4,16 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.toMaybe
 import org.stepic.droid.web.storage.RemoteStorageService
 import org.stepic.droid.web.storage.model.StorageRecord
+import org.stepic.droid.web.storage.model.StorageResponse
 import org.stepik.android.data.personal_deadlines.getKindOfRecord
 import org.stepik.android.data.personal_deadlines.getKindStartsWithOfRecord
 import org.stepik.android.data.personal_deadlines.source.DeadlinesRemoteDataSource
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
+import org.stepik.android.remote.base.concatAllPages
 import org.stepik.android.remote.personal_deadlines.mapper.DeadlinesMapper
 import javax.inject.Inject
 
@@ -46,12 +49,10 @@ constructor(
                     .toMaybe()
             }
 
-    override fun getDeadlinesRecords(): Single<List<StorageRecord<DeadlinesWrapper>>> =
-        remoteStorageService
-            .getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, startsWith = getKindStartsWithOfRecord())
-            .firstElement()
-            .map { response ->
-                deadlinesMapper
-                    .mapToStorageRecordList(response)
-            }.toSingle()
+    override fun getDeadlinesRecords(): Single<PagedList<StorageRecord<DeadlinesWrapper>>> =
+        concatAllPages(
+            1,
+            { page -> Single.fromObservable(remoteStorageService.getStorageRecords(page, sharedPreferenceHelper.profile?.id ?: -1, startsWith = getKindStartsWithOfRecord())) },
+            { response: StorageResponse -> deadlinesMapper.mapToStorageRecordList(response) }
+        )
 }

@@ -3,6 +3,7 @@ package org.stepik.android.domain.personal_deadlines.repository
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 
@@ -14,5 +15,5 @@ interface DeadlinesRepository {
     fun removeDeadlineRecord(recordId: Long): Completable
     fun removeDeadlineRecordByCourseId(courseId: Long): Completable
     fun getDeadlineRecordByCourseId(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>>
-    fun getDeadlineRecords(): Single<List<StorageRecord<DeadlinesWrapper>>>
+    fun getDeadlineRecords(): Single<PagedList<StorageRecord<DeadlinesWrapper>>>
 }
