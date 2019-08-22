@@ -7,9 +7,9 @@ import org.stepik.android.view.injection.step_quiz.StepQuizModule
 import org.stepik.android.view.injection.step_quiz.StepQuizPresentationModule
 import org.stepik.android.view.injection.submission.SubmissionDataModule
 import org.stepik.android.view.step.ui.fragment.StepFragment
+import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
-import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
-import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
+import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 
 @Subcomponent(modules = [
     StepModule::class,
@@ -28,7 +28,7 @@ interface StepComponent {
 
     fun inject(stepFragment: StepFragment)
 
-    fun inject(choiceStepQuizFragment: ChoiceStepQuizFragment)
     fun inject(codeStepQuizFragment: CodeStepQuizFragment)
-    fun inject(textStepQuizFragment: TextStepQuizFragment)
+    fun inject(defaultStepQuizFragment: DefaultStepQuizFragment)
+    fun inject(unsupportedStepQuizFragment: UnsupportedStepQuizFragment)
 }

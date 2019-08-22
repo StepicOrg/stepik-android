@@ -26,14 +26,12 @@
     <string name="title_confirmation">Подтверждение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="open_web_to_solve">пройти задание в web-версии</string>
     <string name="allow_mobile_download_title">Разрешить загрузку через мобильный интернет</string>
     <string name="allow_mobile_message">Разрешить телефону загружать видео по мобильному интернету,
         когда Wi-Fi недоступен?
     </string>
     <string name="allow_mobile_snack">Загрузка через мобильный интернет недоступна</string>
     <string name="drop_course">Покинуть курс</string>
-    <string name="about_course">О курсе</string>
     <string name="you_dropped">Вы покинули %s</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
@@ -100,9 +98,7 @@
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="internet_problem">Интернет недоступен. Попробуйте позже</string>
-    <string name="internet_problem_short">Интернет недоступен</string>
     <string name="feedback_fill_fields">Заполните пустые поля</string>
-    <string name="cant_drop">Вы не можете покинуть курс</string>
     <string name="open_in_external_player">Открывать в системном плеере</string>
     <string name="notification_title">Уведомления</string>
     <string name="notification_learn_list">Дедлайны, новые модули, сертификаты</string>
@@ -309,7 +305,7 @@
     <string name="empty_user_title">Пользователь не найден</string>
     <string name="streak_dialog_title">Поздравляем!</string>
     <string name="later_tatle">Позже</string>
-    <string name="choose_notification_time_interval">Выберите время напоминания</string>
+    <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
     <string name="notification_about_learning">Уведомления о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
@@ -353,7 +349,6 @@
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
     <string name="content_course_logo">Логотип курса</string>
-    <string name="continue_course_title">Учиться</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
     <string name="step_with_position">– Шаг %d</string>
     <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти
@@ -362,7 +357,6 @@
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
-    <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
     <string name="close_screen">Закрыть</string>
@@ -414,10 +408,7 @@
 
     <string name="manage_notification_settings">Управлять уведомлениями</string>
 
-    <string name="course_item_more">Подробнее</string>
     <string name="course_item_join">Поступить на курс</string>
-    <string name="course_item_info">Инфо</string>
-    <string name="course_item_syllabus">План</string>
 
     <string name="learners_count">Количество студентов</string>
     <string name="continue_learning">Продолжить учиться</string>
@@ -441,7 +432,6 @@
 
     <string name="choose_language">Выберите язык</string>
     <string name="choose_action">Выбрать</string>
-    <string name="code_quiz_fullscreen">Развернуть</string>
     <string name="code_quiz_reset">Сброс</string>
     <string name="reset_code_dialog_title">Вы уверены?</string>
     <string name="reset_code_dialog_explanation">Ваш код будет утерян</string>
@@ -453,10 +443,6 @@
         <item quantity="many">%d секунд</item>
         <item quantity="other">%d секунд</item>
     </plurals>
-    <string name="code_quiz_limits">&lt;b>Временное ограничение:&lt;/b> %1$s\n&lt;b>Ограничение памяти:&lt;/b> %2$s MB</string>
-    <string name="sample_input">&lt;b>Пример входных данных %d:&lt;/b></string>
-    <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
-    <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
     <string name="language_of_courses">Язык курсов</string>
     <string name="language_widget_hint">Это можно изменить в настройках</string>
 
@@ -725,6 +711,8 @@
     <string name="step_quiz_math_description">Введите математическую формулу</string>
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
     <string name="step_quiz_free_answer_description">Напишите эссе</string>
+    <string name="step_quiz_sorting_description">Упорядочьте элементы списка</string>
+    <string name="step_quiz_matching_description">Сопоставьте значения из двух списков</string>
     <string name="step_quiz_choice_description_single">Выберите один элемент</string>
     <string name="step_quiz_choice_description_multiple">Выберите один или несколько элементов</string>
 
@@ -742,6 +730,9 @@
     <string name="step_quiz_code_empty_lang">Перед отправкой решения выберите язык программирования из списка</string>
 
     <string name="step_quiz_not_ready">Извините, эта задача еще не готова</string>
+
+    <string name="step_quiz_unsupported_action">Пройти задание в web-версии</string>
+    <string name="step_quiz_unsupported_message">Данный тип шага пока не поддерживается в приложении</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>

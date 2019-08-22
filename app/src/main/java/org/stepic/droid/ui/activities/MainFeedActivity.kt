@@ -38,7 +38,6 @@ import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
-import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
@@ -409,11 +408,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
         streakPresenter.setStreakTime(chosenInterval) // we do not need attach this view, because we need only set in model
-    }
-
-    override fun onTimeIntervalDialogCancelled() {
-        analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
-        streakPresenter.setStreakTime(TimeIntervalUtil.defaultTimeCode)
     }
 
     override fun onBadgeShouldBeHidden() {

@@ -107,17 +107,9 @@ public interface StepicRestLoggedService {
     );
 
     @GET("api/steps")
-    Single<StepResponse> getStepsReactive(
-            @Query("ids[]") long[] steps
-    );
-
-    @GET("api/steps")
     Single<StepResponse> getStepsByLessonId(
             @Query("lesson") long lessonId
     );
-
-    @DELETE("api/enrollments/{id}")
-    Call<Void> dropCourseLegacy(@Path("id") long courseId);
 
     @GET("api/progresses")
     Call<ProgressResponse> getProgresses(@Query("ids[]") String[] progresses);

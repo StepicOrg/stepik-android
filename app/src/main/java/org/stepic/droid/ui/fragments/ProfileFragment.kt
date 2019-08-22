@@ -470,10 +470,6 @@ class   ProfileFragment : FragmentBase(),
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, chosenInterval.toString() + "")
     }
 
-    override fun onTimeIntervalDialogCancelled() {
-        analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE)
-    }
-
     private fun shareProfile() {
         localUserViewModel?.let {
             val intent = shareHelper.getIntentForProfileSharing(it)

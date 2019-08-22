@@ -9,14 +9,12 @@ import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.ViewedNotification
-import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.CourseListDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.DbStructureCalendarSection
-import org.stepic.droid.storage.structure.DbStructureCodeSubmission
 import org.stepic.droid.storage.structure.DbStructureCourse
 import org.stepic.droid.storage.structure.DbStructureLastStep
 import org.stepic.droid.storage.structure.DbStructureNotification
@@ -53,7 +51,6 @@ import javax.inject.Inject
 class DatabaseFacade
 @Inject
 constructor(
-    private val codeSubmissionDao: IDao<CodeSubmission>,
     private val searchQueryDao: SearchQueryDao,
     private val adaptiveExpDao: AdaptiveExpDao,
     private val viewedNotificationsQueueDao: IDao<ViewedNotification>,
@@ -94,7 +91,6 @@ constructor(
         blockDao.removeAll()
         videoTimestampDao.removeAll()
         assignmentDao.removeAll()
-        codeSubmissionDao.removeAll()
         searchQueryDao.removeAll()
         adaptiveExpDao.removeAll()
         personalDeadlinesDao.removeAll()
@@ -312,17 +308,6 @@ constructor(
         }
 
         return emptyList()
-    }
-
-    fun getCodeSubmission(attemptId: Long): CodeSubmission? =
-            codeSubmissionDao.get(DbStructureCodeSubmission.Column.ATTEMPT_ID, attemptId.toString())
-
-    fun removeCodeSubmissionsOfStep(stepId: Long) {
-        codeSubmissionDao.remove(DbStructureCodeSubmission.Column.STEP_ID, stepId.toString())
-    }
-
-    fun addCodeSubmission(codeSubmission: CodeSubmission) {
-        codeSubmissionDao.insertOrUpdate(codeSubmission)
     }
 
     fun getSearchQueries(constraint: String, count: Int) =

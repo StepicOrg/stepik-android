@@ -259,18 +259,10 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         showError(getErrorString(registrationResponse.password))
     }
 
-    private fun getErrorString(values: Array<String>?): String? {
-        if (values == null || values.isEmpty()) return null
-        val sb = StringBuilder()
-        for (i in values.indices) {
-            sb.append(values[i])
-            if (i != values.size - 1) {
-                sb.append(ERROR_DELIMITER)
-            }
-        }
-        return sb.toString()
-    }
-
+    private fun getErrorString(values: Array<String?>?): String? =
+        values
+            ?.takeIf { it.isNotEmpty() }
+            ?.joinToString(separator = ERROR_DELIMITER)
 
     override fun onFailLogin(type: LoginFailType, credential: Credential?) {
         ProgressHelper.dismiss(progressBar)
