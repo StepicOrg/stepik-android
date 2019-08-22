@@ -4,6 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readDate
+import org.stepik.android.model.util.writeDate
 import java.util.Date
 
 class Certificate(
@@ -33,7 +34,13 @@ class Certificate(
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
         dest.writeLong(this.id)
+        dest.writeLong(this.user)
+        dest.writeLong(this.course)
+        dest.writeDate(issueDate)
+        dest.writeDate(updateDate)
         dest.writeString(this.grade)
+        dest.writeInt(this.type?.ordinal ?: -1)
+        dest.writeString(this.url)
     }
 
     override fun describeContents(): Int = 0

@@ -837,13 +837,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CertificateResponse> getCertificates() {
-        long userId = userPreferences.getUserId();
-        return loggedService.getCertificates(userId);
-    }
-
-    @Override
-    public Single<CertificateResponse> getCertificatesReactive(long userId, int page) {
+    public Single<CertificateResponse> getCertificates(long userId, int page) {
         return loggedService.getCertificatesReactive(userId, page);
     }
 

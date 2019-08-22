@@ -167,9 +167,7 @@ public interface Api {
 
     Call<CommentResponse> deleteComment(long commentId);
 
-    Call<CertificateResponse> getCertificates();
-
-    Single<CertificateResponse> getCertificatesReactive(long userId, int page);
+    Single<CertificateResponse> getCertificates(long userId, int page);
 
     Single<UnitResponse> getUnitsByLessonId(long lessonId);
 

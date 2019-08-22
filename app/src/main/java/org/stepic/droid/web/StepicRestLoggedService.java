@@ -232,9 +232,6 @@ public interface StepicRestLoggedService {
     Call<CommentResponse> deleteComment(@Path("id") long commentId);
 
     @GET("api/certificates")
-    Call<CertificateResponse> getCertificates(@Query("user") long userId);
-
-    @GET("api/certificates")
     Single<CertificateResponse> getCertificatesReactive(@Query("user") long userId, @Query("page") int page);
 
     @GET("api/units")

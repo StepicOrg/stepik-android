@@ -15,6 +15,6 @@ constructor(
     private val api: Api
 ) : CertificateRemoteDataSource {
     override fun getCertificates(userId: Long, page: Int): Single<PagedList<Certificate>> =
-        api.getCertificatesReactive(userId, page)
+        api.getCertificates(userId, page)
             .map { it.toPagedList(CertificateResponse::certificates) }
 }

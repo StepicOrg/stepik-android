@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.certificate
 
-import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -14,6 +13,7 @@ import org.stepic.droid.util.concatWithPagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.interactor.CertificatesInteractor
 import org.stepik.android.presentation.base.PresenterBase
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CertificatesPresenter
@@ -46,12 +46,12 @@ constructor(
         if (state != CertificatesView.State.Idle) return
 
         state = CertificatesView.State.Loading
-        paginationDisposable += fetchCertificatesFromCache(userId)
-            .switchIfEmpty(fetchCertificatesFromRemote(userId))
+        paginationDisposable += Single.merge(fetchCertificatesFromCache(userId), fetchCertificatesFromRemote(userId))
+            .debounce(400, TimeUnit.MILLISECONDS)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = it },
+                onNext = { state = it },
                 onError   = { state = CertificatesView.State.NetworkError }
             )
     }
@@ -129,11 +129,10 @@ constructor(
             )
     }
 
-    private fun fetchCertificatesFromCache(userId: Long): Maybe<CertificatesView.State> =
+    private fun fetchCertificatesFromCache(userId: Long): Single<CertificatesView.State> =
         certificatesInteractor
             .getCertificates(userId, page = 1, sourceType = DataSourceType.CACHE)
-            .filter { it.isNotEmpty() }
-            .map { CertificatesView.State.CertificatesRemote(it) }
+            .map { CertificatesView.State.CertificatesCache(it) }
 
     private fun fetchCertificatesFromRemote(userId: Long): Single<CertificatesView.State> =
         certificatesInteractor
