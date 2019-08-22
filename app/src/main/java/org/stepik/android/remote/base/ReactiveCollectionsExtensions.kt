@@ -1,6 +1,10 @@
 package org.stepik.android.remote.base
 
 import io.reactivex.Single
+import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.concatWithPagedList
+import org.stepik.android.remote.base.mapper.toPagedList
+import org.stepik.android.remote.base.model.MetaResponse
 
 const val CHUNK_SIZE = 100
 
@@ -17,3 +21,15 @@ inline fun <reified T, R> Array<out T>.chunkedSingleMap(chuckSize: Int = CHUNK_S
         .map { mapper(it.toTypedArray()) }
         .let { Single.concat(it) }
         .reduce(emptyList()) { a, b -> a + b }
+
+fun <T, R : MetaResponse> concatAllPages(page: Int, sourceFactory: (page: Int) -> Single<R>, mapper: (R) -> List<T>): Single<PagedList<T>> =
+    sourceFactory(page)
+        .flatMap { response ->
+            val items = response.toPagedList(mapper)
+            if (response.meta.hasNext) {
+                concatAllPages(page + 1, sourceFactory, mapper)
+                    .map { items.concatWithPagedList(it) }
+            } else {
+                Single.just(items)
+            }
+        }
