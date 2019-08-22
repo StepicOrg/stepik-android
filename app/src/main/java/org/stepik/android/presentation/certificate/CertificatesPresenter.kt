@@ -54,7 +54,7 @@ constructor(
                 onSuccess = {
                     state = it
                     if (state is CertificatesView.State.CertificatesCache) {
-                        fetchCertificatesRemoteSilent(userId)
+                        fetchNextPageFromRemote(userId)
                     }
                 },
                 onError   = { state = CertificatesView.State.NetworkError }
@@ -150,15 +150,4 @@ constructor(
                     CertificatesView.State.CertificatesRemote(certificates)
                 }
             }
-
-    private fun fetchCertificatesRemoteSilent(userId: Long) {
-        paginationDisposable += certificatesInteractor
-            .getCertificates(userId, page = 1, sourceType = DataSourceType.REMOTE)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { CertificatesView.State.CertificatesRemote(it) },
-                onError = { view?.showNetworkError() }
-            )
-    }
 }
