@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.stepic.droid.storage.migration.MigrationFrom33To34;
+import org.stepic.droid.storage.migration.MigrationFrom34To35;
+import org.stepic.droid.storage.migration.MigrationFrom35To36;
+import org.stepic.droid.storage.migration.MigrationFrom36To37;
 import org.stepic.droid.storage.migration.MigrationFrom37To38;
 import org.stepic.droid.storage.migration.MigrationFrom38To39;
 import org.stepic.droid.storage.migration.MigrationFrom39To40;
@@ -13,12 +17,7 @@ import org.stepic.droid.storage.migration.MigrationFrom42To43;
 import org.stepic.droid.storage.migration.MigrationFrom43To44;
 import org.stepic.droid.storage.migration.MigrationFrom44To45;
 import org.stepic.droid.storage.migration.MigrationFrom45To46;
-import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
-import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
-import org.stepic.droid.storage.migration.MigrationFrom33To34;
-import org.stepic.droid.storage.migration.MigrationFrom34To35;
-import org.stepic.droid.storage.migration.MigrationFrom35To36;
-import org.stepic.droid.storage.migration.MigrationFrom36To37;
+import org.stepic.droid.storage.migration.MigrationFrom46to47;
 import org.stepic.droid.storage.structure.DatabaseInfo;
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
@@ -39,6 +38,8 @@ import org.stepic.droid.storage.structure.DbStructureVideoTimestamp;
 import org.stepic.droid.storage.structure.DbStructureVideoUrl;
 import org.stepic.droid.storage.structure.DbStructureViewQueue;
 import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue;
+import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
+import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
 
 import javax.inject.Inject;
 
@@ -122,6 +123,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom43To44(db);
         upgradeFrom44To45(db);
         upgradeFrom45To46(db);
+        upgradeFrom46To47(db);
     }
 
 
@@ -348,6 +350,14 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 46) {
             upgradeFrom45To46(db);
         }
+
+        if (oldVersion < 47) {
+            upgradeFrom46To47(db);
+        }
+    }
+
+    private void upgradeFrom46To47(SQLiteDatabase db) {
+        MigrationFrom46to47.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom45To46(SQLiteDatabase db) {
