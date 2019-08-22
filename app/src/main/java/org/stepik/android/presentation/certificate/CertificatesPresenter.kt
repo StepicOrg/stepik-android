@@ -1,8 +1,10 @@
 package org.stepik.android.presentation.certificate
 
+import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -13,7 +15,6 @@ import org.stepic.droid.util.concatWithPagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.interactor.CertificatesInteractor
 import org.stepik.android.presentation.base.PresenterBase
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CertificatesPresenter
@@ -46,12 +47,17 @@ constructor(
         if (state != CertificatesView.State.Idle) return
 
         state = CertificatesView.State.Loading
-        paginationDisposable += Single.merge(fetchCertificatesFromCache(userId), fetchCertificatesFromRemote(userId))
-            .debounce(400, TimeUnit.MILLISECONDS)
+        paginationDisposable += fetchCertificatesFromCache(userId)
+            .switchIfEmpty(fetchCertificatesFromRemote(userId))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { state = it },
+                onSuccess = {
+                    state = it
+                    if (state is CertificatesView.State.CertificatesCache) {
+                        fetchCertificatesRemoteSilent(userId)
+                    }
+                },
                 onError   = { state = CertificatesView.State.NetworkError }
             )
     }
@@ -129,9 +135,10 @@ constructor(
             )
     }
 
-    private fun fetchCertificatesFromCache(userId: Long): Single<CertificatesView.State> =
+    private fun fetchCertificatesFromCache(userId: Long): Maybe<CertificatesView.State> =
         certificatesInteractor
             .getCertificates(userId, page = 1, sourceType = DataSourceType.CACHE)
+            .filter { it.isNotEmpty() }
             .map { CertificatesView.State.CertificatesCache(it) }
 
     private fun fetchCertificatesFromRemote(userId: Long): Single<CertificatesView.State> =
@@ -144,4 +151,14 @@ constructor(
                     CertificatesView.State.CertificatesRemote(certificates)
                 }
             }
+
+    private fun fetchCertificatesRemoteSilent(userId: Long): Disposable =
+        certificatesInteractor
+            .getCertificates(userId, page = 1, sourceType = DataSourceType.REMOTE)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .ignoreElement()
+            .subscribeBy(
+                onError = { view?.showNetworkError() }
+            )
 }
