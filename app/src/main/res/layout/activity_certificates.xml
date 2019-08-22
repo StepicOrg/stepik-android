@@ -18,7 +18,7 @@
 
         <include layout="@layout/progress_bar_on_empty_screen"/>
 
-        <include layout="@layout/error_no_connection"/>
+        <include layout="@layout/error_no_connection_with_button"/>
 
         <include layout="@layout/empty_certificates"/>
 

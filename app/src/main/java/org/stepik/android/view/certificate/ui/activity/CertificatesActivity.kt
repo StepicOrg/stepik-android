@@ -12,7 +12,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_certificates.*
 import kotlinx.android.synthetic.main.empty_certificates.*
-import kotlinx.android.synthetic.main.error_no_connection.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -93,6 +93,7 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         initViewStateDelegate()
 
         certificateSwipeRefresh.setOnRefreshListener { certificatesPresenter.forceUpdate(userId) }
+        tryAgain.setOnClickListener { certificatesPresenter.forceUpdate(userId) }
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
 
         certificatesPresenter.fetchCertificates(userId)
@@ -128,7 +129,7 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<CertificatesView.State.EmptyCertificates>(reportEmptyCertificates)
         viewStateDelegate.addState<CertificatesView.State.Loading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<CertificatesView.State.NetworkError>(reportProblem)
+        viewStateDelegate.addState<CertificatesView.State.NetworkError>(error)
         viewStateDelegate.addState<CertificatesView.State.CertificatesCache>(certificateSwipeRefresh, certificateRecyclerView)
         viewStateDelegate.addState<CertificatesView.State.CertificatesRemote>(certificateSwipeRefresh, certificateRecyclerView)
         viewStateDelegate.addState<CertificatesView.State.CertificatesRemoteLoading>(certificateSwipeRefresh, certificateRecyclerView, loadProgressbarOnEmptyScreen)
