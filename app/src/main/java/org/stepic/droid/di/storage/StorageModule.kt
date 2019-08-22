@@ -15,7 +15,6 @@ import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.features.stories.storage.dao.ViewedStoryTemplatesDaoImpl
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.*
-import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDaoImpl
@@ -53,11 +52,6 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideSqlOpenHelper(databaseHelper: DatabaseHelper): SQLiteOpenHelper
-
-
-    @StorageSingleton
-    @Binds
-    internal abstract fun provideCodeSubmissionDao(codeSubmissionDaoImpl: CodeSubmissionDaoImpl): IDao<CodeSubmission>
 
     @StorageSingleton
     @Binds

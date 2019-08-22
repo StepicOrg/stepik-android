@@ -34,7 +34,6 @@ public class AppConstants {
     public static final String TYPE_SORTING = "sorting";
     public static final String TYPE_MATH = "math";
     public static final String TYPE_FREE_ANSWER = "free-answer";
-    public static final String TYPE_TABLE = "table";
     public static final String TYPE_STRING = "string";
     public static final String TYPE_CHOICE = "choice";
     public static final String TYPE_NUMBER = "number";

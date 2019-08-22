@@ -55,7 +55,6 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepic.droid.web.storage.RemoteStorageService;
-import org.stepik.android.model.Course;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.ReplyWrapper;
 import org.stepik.android.model.Submission;
@@ -561,11 +560,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<StepResponse> getStepsReactive(long[] steps) {
-        return loggedService.getStepsReactive(steps);
-    }
-
-    @Override
     public Single<StepResponse> getStepsByLessonId(long lessonId) {
         return loggedService.getStepsByLessonId(lessonId);
     }
@@ -574,11 +568,6 @@ public class ApiImpl implements Api {
     public Completable dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
         return loggedService.dropCourse(courseId);
-    }
-
-    @Override
-    public Call<Void> dropCourse(@NotNull Course course) {
-        return loggedService.dropCourseLegacy(course.getId());
     }
 
     @Override

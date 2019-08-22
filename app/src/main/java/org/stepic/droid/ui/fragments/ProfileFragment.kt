@@ -51,7 +51,9 @@ import org.stepic.droid.util.argument
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 class   ProfileFragment : FragmentBase(),
@@ -461,10 +463,6 @@ class   ProfileFragment : FragmentBase(),
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         streakPresenter.setStreakTime(chosenInterval)
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, chosenInterval.toString() + "")
-    }
-
-    override fun onTimeIntervalDialogCancelled() {
-        analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE)
     }
 
     private fun shareProfile() {

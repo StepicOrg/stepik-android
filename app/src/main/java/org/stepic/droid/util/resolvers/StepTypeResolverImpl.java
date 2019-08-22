@@ -3,16 +3,12 @@ package org.stepic.droid.util.resolvers;
 import android.support.annotation.DrawableRes;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.ui.fragments.ChoiceStepFragment;
-import org.stepic.droid.ui.fragments.CodeStepFragment;
-import org.stepic.droid.ui.fragments.MatchingStepFragment;
-import org.stepic.droid.ui.fragments.NotSupportedYetStepFragment;
 import org.stepic.droid.ui.fragments.PyCharmStepFragment;
 import org.stepic.droid.ui.fragments.SqlStepFragment;
-import org.stepic.droid.ui.fragments.TableChoiceStepFragment;
 import org.stepic.droid.ui.quiz.ChoiceQuizDelegate;
 import org.stepic.droid.ui.quiz.NotSupportedQuizDelegate;
 import org.stepic.droid.ui.quiz.NumberQuizDelegate;
@@ -52,7 +48,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_SORTING, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_MATH, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_FREE_ANSWER, simpleQuestionDrawable);
-        mapFromTypeToDrawableRes.put(AppConstants.TYPE_TABLE, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_STRING, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_CHOICE, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_NUMBER, simpleQuestionDrawable);
@@ -92,31 +87,22 @@ public class StepTypeResolverImpl implements StepTypeResolver {
     }
 
     @Override
-    @NotNull
+    @Nullable
     public StepBaseFragment getFragment(Step step) {
-        StepBaseFragment errorStep = new NotSupportedYetStepFragment();//todo: error and update?
         if (step == null
                 || step.getBlock() == null
                 || step.getBlock().getName() == null
                 || step.getBlock().getName().equals(""))
-            return errorStep;
+            return null;
 
         String type = step.getBlock().getName();
         switch (type) {
-            case AppConstants.TYPE_CHOICE:
-                return new ChoiceStepFragment();
             case AppConstants.TYPE_PYCHARM:
                 return new PyCharmStepFragment();
-            case AppConstants.TYPE_MATCHING:
-                return new MatchingStepFragment();
-            case AppConstants.TYPE_TABLE:
-                return TableChoiceStepFragment.Companion.newInstance();
-            case AppConstants.TYPE_CODE:
-                return CodeStepFragment.Companion.newInstance();
             case AppConstants.TYPE_SQL:
                 return SqlStepFragment.Companion.newInstance();
             default:
-                return new NotSupportedYetStepFragment();
+                return null;
         }
     }
 
@@ -162,6 +148,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
             case AppConstants.TYPE_CHOICE:
 
             case AppConstants.TYPE_SORTING:
+            case AppConstants.TYPE_MATCHING:
                 return false;
             default:
                 return true;

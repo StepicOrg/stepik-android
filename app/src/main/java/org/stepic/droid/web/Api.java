@@ -70,9 +70,6 @@ public interface Api {
 
     Completable dropCourse(long courseId);
 
-    @Nullable
-    Call<Void> dropCourse(@NotNull Course course);
-
     Call<SectionResponse> getSections(long[] sectionsIds);
 
     Single<SectionResponse> getSectionsRx(long[] sectionsIds);
@@ -93,8 +90,6 @@ public interface Api {
     Single<LessonResponse> getLessons(long lessonId);
 
     Single<StepResponse> getSteps(long[] steps);
-
-    Single<StepResponse> getStepsReactive(long[] steps);
 
     Single<StepResponse> getStepsByLessonId(long lessonId);
 

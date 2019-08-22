@@ -42,7 +42,6 @@
         tools:ignore="MissingPrefix"
         tools:text="@string/my_courses_title"/>
 
-
     <TextView
         android:id="@+id/coursesCarouselCount"
         fontPath="fonts/Roboto-Regular.ttf"
@@ -87,20 +86,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/coursesCarouselCount"
-        android:layout_marginBottom="@dimen/course_list_bottom_padding"
-        android:layout_marginTop="@dimen/courses_carousel_top_margin"
+        android:paddingBottom="@dimen/course_carousel_bottom_padding"
+        android:paddingTop="@dimen/courses_carousel_top_margin"
         android:clipToPadding="false"
         android:divider="@color/transparent"
         android:overScrollMode="never"
         android:paddingEnd="@dimen/home_right_recycler_padding"
-        android:paddingLeft="0dp"
+        android:paddingLeft="@dimen/course_carousel_left_padding"
         android:paddingRight="@dimen/home_right_recycler_padding"
-        android:paddingStart="0dp"
+        android:paddingStart="@dimen/course_carousel_left_padding"
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="none"
         android:splitMotionEvents="false"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <include
         android:id="@+id/coursesLoadingView"
@@ -108,7 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/coursesCarouselCount"
-        android:layout_marginBottom="@dimen/course_list_bottom_padding"
+        android:layout_marginBottom="@dimen/course_carousel_bottom_padding"
         android:layout_marginTop="@dimen/courses_carousel_top_margin"
         android:visibility="gone"/>
 
