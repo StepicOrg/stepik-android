@@ -21,7 +21,7 @@ class CertificatesAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CertificateViewItem> =
         ViewHolder(createView(parent, R.layout.certificate_item))
 
-    inner class ViewHolder(
+    private inner class ViewHolder(
         root: View
     ) : DelegateViewHolder<CertificateViewItem>(root) {
 
@@ -42,16 +42,18 @@ class CertificatesAdapterDelegate(
         override fun onBind(data: CertificateViewItem) {
             certificateTitleView.text = data.title ?: ""
 
-            certificateDescription.text = when (data.certificate.type) {
-                Certificate.Type.DISTINCTION ->
-                    context.resources.getString(R.string.certificate_distinction_with_substitution, data.title ?: "")
-                Certificate.Type.REGULAR ->
-                    context.resources.getString(R.string.certificate_regular_with_substitution, data.title ?: "")
-                else ->
-                    ""
-            }
+            certificateDescription.text =
+                when (data.certificate.type) {
+                    Certificate.Type.DISTINCTION ->
+                        context.resources.getString(R.string.certificate_distinction_with_substitution, data.title ?: "")
+                    Certificate.Type.REGULAR ->
+                        context.resources.getString(R.string.certificate_regular_with_substitution, data.title ?: "")
+                    else ->
+                        ""
+                }
 
-            certificateGradeView.text = context.resources.getString(R.string.certificate_result_with_substitution, data.certificate.grade ?: "")
+            certificateGradeView.text =
+                context.resources.getString(R.string.certificate_result_with_substitution, data.certificate.grade ?: "")
 
             Glide.with(context)
                 .load(data.coverFullPath ?: "")

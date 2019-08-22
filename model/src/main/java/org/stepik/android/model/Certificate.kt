@@ -8,18 +8,24 @@ import org.stepik.android.model.util.writeDate
 import java.util.Date
 
 class Certificate(
-        val id: Long,
-        val user: Long,
-        val course: Long,
+    @SerializedName("id")
+    val id: Long,
+    @SerializedName("user")
+    val user: Long,
+    @SerializedName("course")
+    val course: Long,
 
-        @SerializedName("issue_date")
-        val issueDate: Date? = null,
-        @SerializedName("update_date")
-        val updateDate: Date? = null,
+    @SerializedName("issue_date")
+    val issueDate: Date? = null,
+    @SerializedName("update_date")
+    val updateDate: Date? = null,
 
-        val grade: String? = null,
-        val type: Type? = null,
-        val url: String? = null
+    @SerializedName("grade")
+    val grade: String? = null,
+    @SerializedName("type")
+    val type: Type? = null,
+    @SerializedName("url")
+    val url: String? = null
 ) : Parcelable {
 
     /*
@@ -54,20 +60,11 @@ class Certificate(
                 source.readDate(),
                 source.readDate(),
                 source.readString(),
-                getCertificateTypeByParcel(source),
+                Type.values().getOrNull(source.readInt()),
                 source.readString()
             )
 
-        override fun newArray(size: Int): Array<Certificate?> = arrayOfNulls(size)
-
-        private fun getCertificateTypeByParcel(input: Parcel): Certificate.Type? {
-            val temp = input.readInt()
-            val localValues = Certificate.Type.values()
-            return if (temp >= 0 && temp < localValues.size) {
-                localValues[temp]
-            } else {
-                null
-            }
-        }
+        override fun newArray(size: Int): Array<Certificate?> =
+            arrayOfNulls(size)
     }
 }
