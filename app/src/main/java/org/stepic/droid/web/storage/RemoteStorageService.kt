@@ -21,7 +21,7 @@ interface RemoteStorageService {
             @Query("user") userId: Long,
             @Query("kind") kind: String? = null,
             @Query("kind__startswith") startsWith: String? = null
-    ): Observable<StorageResponse>
+    ): Single<StorageResponse>
 
     @POST("api/storage-records")
     fun createStorageRecord(

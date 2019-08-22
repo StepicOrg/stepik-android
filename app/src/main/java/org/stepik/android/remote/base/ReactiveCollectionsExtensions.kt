@@ -22,7 +22,16 @@ inline fun <reified T, R> Array<out T>.chunkedSingleMap(chuckSize: Int = CHUNK_S
         .let { Single.concat(it) }
         .reduce(emptyList()) { a, b -> a + b }
 
-fun <T, R : MetaResponse> concatAllPages(page: Int, sourceFactory: (page: Int) -> Single<R>, mapper: (R) -> List<T>): Single<PagedList<T>> =
+/**
+ * Downloads all pages until Meta::hasNext is true starting from [page]
+ * and returns concatenated [PagedList] of data from all requests with last page information
+ * [page] - current page
+ * [sourceFactory] - factory of requests
+ * [mapper] - mapper for request result
+ *
+ * @return concatenated [PagedList] of data from all requests with last page information
+ */
+fun <T, R : MetaResponse> concatAllPages(page: Int = 1, sourceFactory: (page: Int) -> Single<R>, mapper: (R) -> List<T>): Single<PagedList<T>> =
     sourceFactory(page)
         .flatMap { response ->
             val items = response.toPagedList(mapper)

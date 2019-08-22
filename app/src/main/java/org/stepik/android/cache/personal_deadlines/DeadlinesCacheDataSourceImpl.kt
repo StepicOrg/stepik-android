@@ -32,10 +32,9 @@ constructor(
         }
 
     override fun getDeadlineRecordByCourseId(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>> =
-        Maybe.create { emitter ->
+        Maybe.fromCallable {
             val items = personalDeadlinesDao
                 .getAll(DbStructureDeadlines.Columns.COURSE_ID, courseId.toString())
-                .filterNotNull()
 
             if (items.isNotEmpty()) {
                 val recordId: Long = items.first().recordId
@@ -45,13 +44,13 @@ constructor(
                         Deadline(entity.sectionId, entity.deadline)
                     }
 
-                emitter.onSuccess(StorageRecord(
+                StorageRecord(
                     id = recordId,
                     kind = getKindOfRecord(courseId),
                     data = DeadlinesWrapper(courseId, deadlines)
-                ))
+                )
             } else {
-                emitter.onComplete()
+                null
             }
         }
 
@@ -72,7 +71,7 @@ constructor(
 
     override fun saveDeadlineRecords(records: List<StorageRecord<DeadlinesWrapper>>): Completable =
         Completable.fromAction {
-            personalDeadlinesDao.insertOrReplaceAll(records.flatMap { deadlinesEntityMapper.mapToEntity(it) })
+            personalDeadlinesDao.insertOrReplaceAll(records.flatMap(deadlinesEntityMapper::mapToEntity))
         }
 
     override fun removeDeadlineRecord(recordId: Long): Completable =
