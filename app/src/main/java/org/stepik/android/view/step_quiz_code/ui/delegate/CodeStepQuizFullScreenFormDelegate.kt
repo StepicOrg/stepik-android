@@ -1,10 +1,10 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import org.stepic.droid.R
@@ -13,7 +13,6 @@ import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepic.droid.util.DpPixelsHelper
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 
 class CodeStepQuizFullScreenFormDelegate(
@@ -26,6 +25,7 @@ class CodeStepQuizFullScreenFormDelegate(
 
     // Flag is necessary, because keyboard listener is constantly invoked (probably global layout listener reacts to view changes)
     private var keyboardShown: Boolean = false
+    private val submitButtonSeparator = codeContainerView.submitButtonSeparator
     private val codeSubmitButton = codeContainerView.codeSubmitButton
     private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
 
@@ -70,11 +70,11 @@ class CodeStepQuizFullScreenFormDelegate(
                         stepQuizCodeKeyboardExtension.visibility = View.GONE
                         codeLayout.isNestedScrollingEnabled = true
                         codeLayout.layoutParams =
-                            (codeLayout.layoutParams as RelativeLayout.LayoutParams)
+                            (codeLayout.layoutParams as ConstraintLayout.LayoutParams)
                                 .apply {
                                     bottomMargin = 0
                                 }
-                        codeLayout.setPadding(0, 0, 0, DpPixelsHelper.convertDpToPixel(80f).toInt())
+                        submitButtonSeparator.visibility = View.VISIBLE
                         codeSubmitButton.visibility = View.VISIBLE
                         keyboardShown = false
                     }
@@ -84,11 +84,11 @@ class CodeStepQuizFullScreenFormDelegate(
                         stepQuizCodeKeyboardExtension.visibility = View.VISIBLE
                         codeLayout.isNestedScrollingEnabled = false
                         codeLayout.layoutParams =
-                            (codeLayout.layoutParams as RelativeLayout.LayoutParams)
+                            (codeLayout.layoutParams as ConstraintLayout.LayoutParams)
                                 .apply {
                                     bottomMargin = stepQuizCodeKeyboardExtension.height
                                 }
-                        codeLayout.setPadding(0, 0, 0, 0)
+                        submitButtonSeparator.visibility = View.GONE
                         codeSubmitButton.visibility = View.GONE
                         keyboardShown = true
                     }

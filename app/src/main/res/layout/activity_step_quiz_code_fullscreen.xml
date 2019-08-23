@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:gravity="start">
+            android:gravity="start"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
 
 
             <android.support.v7.widget.Toolbar
@@ -65,7 +66,8 @@
             app:tabSelectedTextColor="@color/new_accent_color"
             app:tabTextAppearance="@style/CourseTabAppearance"
             app:tabPaddingStart="24dp"
-            app:tabPaddingEnd="24dp" />
+            app:tabPaddingEnd="24dp"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
 
         <View
             android:layout_width="match_parent"
@@ -84,6 +86,6 @@
         android:id="@+id/fullScreenCodeViewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="org.stepik.android.view.step_quiz_fullscreen_code.ui.behavior.FullScreenCoordinatorBehavior" />
 
 </android.support.design.widget.CoordinatorLayout>

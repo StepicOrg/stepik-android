@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/codeLayoutContainer"
@@ -12,6 +12,7 @@
         android:id="@+id/stepQuizActions"
         android:layout_width="match_parent"
         android:layout_alignParentTop="true"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_height="48dp">
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/stepQuizActionChangeLang"
@@ -44,26 +45,29 @@
 
     <org.stepic.droid.code.ui.CodeEditorLayout
         android:id="@+id/codeStepLayout"
-        android:layout_below="@id/stepQuizActions"
+        app:layout_constraintTop_toBottomOf="@id/stepQuizActions"
+        app:layout_constraintBottom_toTopOf="@id/submitButtonSeparator"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="80dp"
+        android:layout_height="0dp"
         android:fillViewport="true" />
+
+    <View
+        android:id="@+id/submitButtonSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/step_quiz_separator"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/codeSubmitButton"/>
 
     <include
         android:id="@+id/codeSubmitButton"
         layout="@layout/view_step_quiz_submit_button"
         android:layout_width="match_parent"
         android:layout_height="@dimen/step_submit_button_height"
-
-        android:layout_margin="16dp"
-        android:layout_alignParentBottom="true"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/codeSubmitButton"
-        android:background="@color/step_quiz_separator" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"/>
 
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
