@@ -138,6 +138,7 @@ class CourseContentUnitDelegate(
                 unitRating.alpha = alpha
                 unitViewCount.alpha = alpha
                 unitViewCountIcon.alpha = alpha
+                unitTimeToComplete.alpha = alpha
             }
         }
     }

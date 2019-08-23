@@ -32,9 +32,7 @@
 
         android:background="@drawable/bg_step_quiz_feedback_evaluation"
         android:text="@string/step_quiz_feedback_evaluation"
-        android:textColor="@color/color_violet_1"
-
-        tools:drawableStart="@drawable/ic_step_quiz_evaluation" />
+        android:textColor="@color/color_violet_1" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackValidation"

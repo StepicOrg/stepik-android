@@ -2,9 +2,6 @@ package org.stepic.droid.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.ContextMenu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,8 +14,6 @@ import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.model.CourseListType;
 import org.stepik.android.model.Course;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
-import org.stepic.droid.ui.util.ContextMenuRecyclerView;
-import org.stepic.droid.util.ContextMenuCourseUtil;
 
 import javax.inject.Inject;
 
@@ -31,7 +26,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
 
     @Inject
     Client<DroppingListener> droppingClient;
-
 
     @Override
     protected void injectComponent() {
@@ -72,54 +66,6 @@ public abstract class CoursesDatabaseFragmentBase extends CourseListFragmentBase
         droppingClient.unsubscribe(this);
         courseListPresenter.detachView(this);
         super.onDestroyView();
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        ContextMenuRecyclerView.RecyclerViewContextMenuInfo info = (ContextMenuRecyclerView.RecyclerViewContextMenuInfo) menuInfo;
-        if (info == null) {
-            return;
-        }
-        int position = info.position;
-        if (position >= courses.size() || position < 0) {
-            return; // the context will not be displayed
-        }
-
-        MenuInflater inflater = getActivity().getMenuInflater();
-        inflater.inflate(ContextMenuCourseUtil.INSTANCE.getMenuResource(courses.get(position)), menu);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        getAnalytic().reportEvent(Analytic.Interaction.LONG_TAP_COURSE);
-        ContextMenuRecyclerView.RecyclerViewContextMenuInfo info = (ContextMenuRecyclerView.RecyclerViewContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.menu_item_info:
-                showInfo(info.position);
-                return true;
-            case R.id.menu_item_unroll:
-                dropCourse(info.position);
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
-
-    private void dropCourse(int position) {
-        if (position >= courses.size() || position < 0) {
-            //tbh, it should be illegal state
-            return;
-        }
-        final Course course = courses.get(position);
-        droppingPresenter.dropCourse(course);
-    }
-
-    private void showInfo(int position) {
-        getAnalytic().reportEvent(Analytic.Interaction.SHOW_DETAILED_INFO_CLICK);
-        Course course = courses.get(position);
-        getScreenManager().showCourseDescription(getContext(), course);
     }
 
     @Override
