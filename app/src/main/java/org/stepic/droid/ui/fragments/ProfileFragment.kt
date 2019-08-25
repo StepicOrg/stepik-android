@@ -95,6 +95,9 @@ class   ProfileFragment : FragmentBase(),
         setHasOptionsMenu(true)
         profileSettingsList.clear()
         profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings())
+        if (userId == 0L) {
+            userId = userPreferences.userId
+        }
     }
 
     override fun injectComponent() {
@@ -159,6 +162,8 @@ class   ProfileFragment : FragmentBase(),
 
         achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
+
+        certificatesTitleContainer.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
     }
 
     override fun onDestroyView() {

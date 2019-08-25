@@ -7,6 +7,7 @@ import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.comment.model.CommentRequest;
 import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
@@ -102,11 +103,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/steps")
     Single<StepResponse> getSteps(
-            @Query("ids[]") long[] steps
-    );
-
-    @GET("api/steps")
-    Single<StepResponse> getStepsReactive(
             @Query("ids[]") long[] steps
     );
 
@@ -228,7 +224,7 @@ public interface StepicRestLoggedService {
     Call<CommentResponse> deleteComment(@Path("id") long commentId);
 
     @GET("api/certificates")
-    Call<CertificateResponse> getCertificates(@Query("user") long userId);
+    Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);
 
     @GET("api/units")
     Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);

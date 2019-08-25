@@ -27,28 +27,14 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
-import org.stepic.droid.social.SocialMedia;
-import org.stepic.droid.util.IntentExtensionsKt;
-import org.stepic.droid.util.UriExtensionsKt;
-import org.stepik.android.domain.feedback.model.SupportEmailData;
-import org.stepik.android.domain.last_step.model.LastStep;
-import org.stepik.android.model.user.Profile;
-import org.stepik.android.view.course.routing.CourseScreenTab;
-import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselInfo;
-import org.stepik.android.model.Lesson;
-import org.stepik.android.model.Section;
-import org.stepik.android.model.Step;
-import org.stepik.android.model.Unit;
-import org.stepik.android.model.Video;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
-import org.stepic.droid.ui.activities.CertificatesActivity;
 import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
@@ -68,10 +54,24 @@ import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AppConstants;
+import org.stepic.droid.util.IntentExtensionsKt;
+import org.stepic.droid.util.UriExtensionsKt;
+import org.stepik.android.domain.feedback.model.SupportEmailData;
+import org.stepik.android.domain.last_step.model.LastStep;
+import org.stepik.android.model.Course;
+import org.stepik.android.model.Lesson;
+import org.stepik.android.model.Section;
+import org.stepik.android.model.Step;
 import org.stepik.android.model.Tag;
+import org.stepik.android.model.Unit;
+import org.stepik.android.model.Video;
+import org.stepik.android.model.user.Profile;
+import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
+import org.stepik.android.view.course.routing.CourseScreenTab;
+import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
-import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
+import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
@@ -280,14 +280,20 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public Intent getCertificateIntent() {
         Context context = App.Companion.getAppContext();
-        Intent intent = new Intent(context, CertificatesActivity.class);
+        Intent intent = CertificatesActivity.Companion.createIntent(context, userPreferences.getUserId());
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 
     @Override
     public void showCertificates(Context context) {
-        showMainFeed(context, MainFeedActivity.CERTIFICATE_INDEX);
+        showCertificates(context, userPreferences.getUserId());
+    }
+
+    @Override
+    public void showCertificates(Context context, long userId) {
+        Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
+        context.startActivity(intent);
     }
 
     @Override
@@ -532,7 +538,7 @@ public class ScreenManagerImpl implements ScreenManager {
         sb.append("&pfCertificationName="); // linkedin cert name
         sb.append(URLEncoder.encode(certificateViewItem.getTitle()));
         sb.append("&pfCertificationUrl=");//linkedin certificate url
-        sb.append(certificateViewItem.getFullPath());
+        sb.append(certificateViewItem.getCertificate().getUrl());
 
 
         final Intent intent = new Intent(Intent.ACTION_VIEW);

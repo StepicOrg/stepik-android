@@ -70,6 +70,7 @@ import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.comment.model.CommentRequest;
 import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
@@ -560,11 +561,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<StepResponse> getStepsReactive(long[] steps) {
-        return loggedService.getStepsReactive(steps);
-    }
-
-    @Override
     public Single<StepResponse> getStepsByLessonId(long lessonId) {
         return loggedService.getStepsByLessonId(lessonId);
     }
@@ -830,9 +826,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CertificateResponse> getCertificates() {
-        long userId = userPreferences.getUserId();
-        return loggedService.getCertificates(userId);
+    public Single<CertificateResponse> getCertificates(long userId, int page) {
+        return loggedService.getCertificates(userId, page);
     }
 
     @Override
