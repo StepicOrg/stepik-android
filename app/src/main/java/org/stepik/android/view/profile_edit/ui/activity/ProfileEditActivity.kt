@@ -22,8 +22,9 @@ import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.profile_edit.ProfileEditPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditView
 import org.stepik.android.view.profile_edit.model.ProfileEditItem
-import org.stepik.android.view.profile_edit.ui.adapter.ProfileEditAdapter
+import org.stepik.android.view.profile_edit.ui.adapter.delegates.ProfileEditTextDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import javax.inject.Inject
 
 class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
@@ -53,21 +54,24 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
             .get(ProfileEditPresenter::class.java)
         initCenteredToolbar(R.string.profile_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 
-        val navigationItems = listOf(
-            ProfileEditItem(ProfileEditItem.Type.PERSONAL_INFO, getString(R.string.profile_edit_info_title), getString(R.string.profile_edit_info_subtitle)),
-            ProfileEditItem(ProfileEditItem.Type.PASSWORD, getString(R.string.profile_edit_password_title), getString(R.string.profile_edit_password_subtitle))
-        )
-
         navigationRecycler.layoutManager = LinearLayoutManager(this)
-        navigationRecycler.adapter = ProfileEditAdapter(navigationItems) { item ->
-            val profile = profile ?: return@ProfileEditAdapter
-            when (item.type) {
-                ProfileEditItem.Type.PERSONAL_INFO ->
-                    screenManager.showProfileEditInfo(this, profile)
-                ProfileEditItem.Type.PASSWORD ->
-                    screenManager.showProfileEditPassword(this, profile.id)
+        navigationRecycler.adapter = DefaultDelegateAdapter<ProfileEditItem>()
+            .also {
+                it += ProfileEditTextDelegate { item ->
+                    val profile = profile ?: return@ProfileEditTextDelegate
+                    when (item.type) {
+                        ProfileEditItem.Type.PERSONAL_INFO ->
+                            screenManager.showProfileEditInfo(this, profile)
+                        ProfileEditItem.Type.PASSWORD ->
+                            screenManager.showProfileEditPassword(this, profile.id)
+                    }
+                }
+
+                it.items = listOf(
+                    ProfileEditItem(ProfileEditItem.Type.PERSONAL_INFO, getString(R.string.profile_edit_info_title), getString(R.string.profile_edit_info_subtitle)),
+                    ProfileEditItem(ProfileEditItem.Type.PASSWORD, getString(R.string.profile_edit_password_title), getString(R.string.profile_edit_password_subtitle))
+                )
             }
-        }
 
         navigationRecycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL).apply {
             ContextCompat.getDrawable(this@ProfileEditActivity, R.drawable.list_divider_h)?.let(::setDrawable)
