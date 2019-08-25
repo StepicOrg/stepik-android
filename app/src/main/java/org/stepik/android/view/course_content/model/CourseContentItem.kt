@@ -6,6 +6,7 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
+import ru.nobird.android.core.model.Identifiable
 
 sealed class CourseContentItem {
     data class ControlBar(
@@ -20,11 +21,17 @@ sealed class CourseContentItem {
         val dates: List<CourseContentSectionDate>,
         val progress: Progress?,
         val isEnabled: Boolean
-    ) : CourseContentItem()
+    ) : CourseContentItem(), Identifiable<Long> {
+        override val id: Long =
+            section.id
+    }
 
     class UnitItemPlaceholder(
         val unitId: Long
-    ) : CourseContentItem()
+    ) : CourseContentItem(), Identifiable<Long> {
+        override val id: Long =
+            unitId
+    }
 
     data class UnitItem(
         val section: Section,
@@ -32,5 +39,8 @@ sealed class CourseContentItem {
         val lesson: Lesson,
         val progress: Progress?,
         val isEnabled: Boolean
-    ) : CourseContentItem()
+    ) : CourseContentItem(), Identifiable<Long> {
+        override val id: Long =
+            lesson.id
+    }
 }

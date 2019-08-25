@@ -7,7 +7,7 @@ import org.robolectric.RobolectricTestRunner
 import org.stepik.android.model.Section
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.model.CourseContentSectionDate
-import org.stepik.android.view.course_content.ui.adapter.CourseContentDiffCallback
+import ru.nobird.android.ui.adapterssupport.diff.IdentifiableDiffCallback
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
@@ -22,7 +22,7 @@ class CourseContentDiffCallbackTest {
 
         val sectionItemB = CourseContentItem.SectionItem(section, listOf(CourseContentSectionDate(0, Date())), null, true)
 
-        val callback = CourseContentDiffCallback(listOf(sectionItemA), listOf(sectionItemB))
+        val callback = IdentifiableDiffCallback(listOf(sectionItemA), listOf(sectionItemB))
 
         assertEquals(true, callback.areItemsTheSame(0, 0))
         assertEquals(false, callback.areContentsTheSame(0, 0))

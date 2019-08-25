@@ -3,8 +3,6 @@ package org.stepik.android.view.course_content.ui.adapter
 import android.support.v4.util.LongSparseArray
 import android.support.v7.util.DiffUtil
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
@@ -14,6 +12,9 @@ import org.stepik.android.view.course_content.ui.adapter.delegates.section.Cours
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitDelegate
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitPlaceholderDelegate
+import ru.nobird.android.ui.adapterdelegatessupport.DelegateAdapter
+import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterssupport.diff.IdentifiableDiffCallback
 
 class CourseContentAdapter(
     sectionClickListener: CourseContentSectionClickListener,
@@ -28,7 +29,7 @@ class CourseContentAdapter(
     var items: List<CourseContentItem> = emptyList()
         set(value) {
             DiffUtil
-                .calculateDiff(CourseContentDiffCallback(headers + field, headers + value))
+                .calculateDiff(IdentifiableDiffCallback(headers + field, headers + value))
                 .dispatchUpdatesTo(this)
             field = value
         }

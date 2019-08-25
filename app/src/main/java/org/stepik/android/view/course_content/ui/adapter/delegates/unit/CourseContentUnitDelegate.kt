@@ -11,25 +11,25 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.view.course_content.model.CourseContentItem
+import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 
 class CourseContentUnitDelegate(
     private val unitClickListener: CourseContentUnitClickListener,
     private val unitDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseContentItem> =
         ViewHolder(createView(parent, R.layout.view_course_content_unit))
 
     override fun isForViewType(position: Int, data: CourseContentItem): Boolean =
         data is CourseContentItem.UnitItem
 
-    inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val unitIcon = root.unitIcon
         private val unitTitle = root.unitTitle
         private val unitTextProgress = root.unitTextProgress

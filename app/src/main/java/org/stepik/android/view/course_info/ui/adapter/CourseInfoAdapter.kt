@@ -5,8 +5,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_course_info_block.view.*
 import org.stepic.droid.fonts.FontsProvider
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
@@ -14,6 +12,8 @@ import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoOrgani
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoVideoBlockDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
+import ru.nobird.android.ui.adapterdelegatessupport.DelegateAdapter
+import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 
 class CourseInfoAdapter(
     fontsProvider: FontsProvider,

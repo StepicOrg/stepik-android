@@ -8,27 +8,27 @@ import android.view.ViewTreeObserver
 import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
+import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 
 class CourseContentSectionDelegate(
     private val sectionClickListener: CourseContentSectionClickListener,
     private val sectionDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseContentItem> =
         ViewHolder(createView(parent, R.layout.view_course_content_section))
 
     override fun isForViewType(position: Int, data: CourseContentItem): Boolean =
         data is CourseContentItem.SectionItem
 
-    inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val sectionTitle    = root.sectionTitle
         private val sectionPosition = root.sectionPosition
         private val sectionTimeline = root.sectionTimeline

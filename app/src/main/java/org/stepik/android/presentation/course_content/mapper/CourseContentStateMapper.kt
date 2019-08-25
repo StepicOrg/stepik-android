@@ -124,6 +124,6 @@ constructor(
                     ?.copy(progress = progress)
 
             else ->
-                null
+                item
         } ?: item
 }
