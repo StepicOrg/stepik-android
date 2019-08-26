@@ -51,7 +51,9 @@ import org.stepic.droid.util.argument
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 class   ProfileFragment : FragmentBase(),
@@ -93,6 +95,9 @@ class   ProfileFragment : FragmentBase(),
         setHasOptionsMenu(true)
         profileSettingsList.clear()
         profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings())
+        if (userId == 0L) {
+            userId = userPreferences.userId
+        }
     }
 
     override fun injectComponent() {
@@ -157,6 +162,8 @@ class   ProfileFragment : FragmentBase(),
 
         achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
+
+        certificatesTitleContainer.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
     }
 
     override fun onDestroyView() {
@@ -461,10 +468,6 @@ class   ProfileFragment : FragmentBase(),
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         streakPresenter.setStreakTime(chosenInterval)
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, chosenInterval.toString() + "")
-    }
-
-    override fun onTimeIntervalDialogCancelled() {
-        analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE)
     }
 
     private fun shareProfile() {

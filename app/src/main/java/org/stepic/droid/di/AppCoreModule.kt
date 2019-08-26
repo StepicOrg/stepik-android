@@ -24,7 +24,6 @@ import org.stepic.droid.base.ListenerContainer
 import org.stepic.droid.base.ListenerContainerImpl
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.MainHandlerImpl
-import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.configuration.ConfigImpl
 import org.stepic.droid.core.*
@@ -123,8 +122,6 @@ abstract class AppCoreModule {
 
     @Module
     companion object {
-        const val SINGLE_THREAD_CODE_SAVER = "SINGLE_THREAD_CODE_SAVER"
-
         @Provides
         @JvmStatic
         @MainScheduler
@@ -161,13 +158,6 @@ abstract class AppCoreModule {
         internal fun provideSocialManager(): SocialManager {
             return SocialManager()
         }
-
-        @AppSingleton
-        @Provides
-        @JvmStatic
-        @Named(SINGLE_THREAD_CODE_SAVER)
-        internal fun provideSingleThreadExecutorForCode(): SingleThreadExecutor =
-                SingleThreadExecutor(Executors.newSingleThreadExecutor())
 
         //it is good for many short lived, which should do async
         @Provides

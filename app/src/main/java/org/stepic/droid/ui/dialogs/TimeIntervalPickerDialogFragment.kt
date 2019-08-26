@@ -26,7 +26,6 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
 
         interface Callback {
             fun onTimeIntervalPicked(chosenInterval: Int)
-            fun onTimeIntervalDialogCancelled()
         }
     }
 
@@ -82,7 +81,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
         // explicitly click Negative or cancel by back button || touch outside
-        callback.onTimeIntervalDialogCancelled()
+        callback.onTimeIntervalPicked(sharedPreferences.timeNotificationCode)
     }
 
 }

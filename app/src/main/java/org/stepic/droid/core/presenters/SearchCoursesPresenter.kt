@@ -4,7 +4,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
-import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepik.android.model.Course
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -24,9 +23,7 @@ class SearchCoursesPresenter
     private val mainHandler: MainHandler,
     private val searchResolver: SearchResolver,
     private val databaseFacade: DatabaseFacade,
-    private val analytic: Analytic,
-
-    private val coursePurchasesInteractor: CoursePurchasesInteractor
+    private val analytic: Analytic
 ) : PresenterBase<CoursesView>() {
 
     private val isLoading = AtomicBoolean(false)
@@ -89,16 +86,8 @@ class SearchCoursesPresenter
                                 forInsert = null
                             }
 
-                            val skus = coursePurchasesInteractor
-                                .getCoursesSkuMap(sortedCopy)
-                                .blockingGet()
-
-                            val coursePayments = coursePurchasesInteractor
-                                .getCoursesPaymentsMap(sortedCopy)
-                                .blockingGet()
-
                             mainHandler.post {
-                                view?.showCourses(sortedCopy, skus, coursePayments)
+                                view?.showCourses(sortedCopy)
                             }
 
                         }
