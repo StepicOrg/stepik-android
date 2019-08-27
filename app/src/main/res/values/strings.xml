@@ -90,8 +90,7 @@
         completing the assignments.
     </string>
     <string name="correct_free_response">Your answer was saved.</string>
-    <string name="py_message">
-        <![CDATA[Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
+    <string name="py_message">Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a></string>
     <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive
         the points.
     </string>

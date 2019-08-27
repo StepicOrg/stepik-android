@@ -74,8 +74,7 @@
         включите интернет-соединение.
     </string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
-    <string name="py_message">
-        <![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
+    <string name="py_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a></string>
     <string name="terms_message_register">
         <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и
