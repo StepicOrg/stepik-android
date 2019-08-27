@@ -10,6 +10,7 @@ import org.stepik.android.view.step.ui.fragment.StepFragment
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
+import org.stepik.android.view.step_quz_pycharm.ui.fragment.PyCharmStepQuizFragment
 
 @Subcomponent(modules = [
     StepModule::class,
@@ -31,4 +32,5 @@ interface StepComponent {
     fun inject(codeStepQuizFragment: CodeStepQuizFragment)
     fun inject(defaultStepQuizFragment: DefaultStepQuizFragment)
     fun inject(unsupportedStepQuizFragment: UnsupportedStepQuizFragment)
+    fun inject(pyCharmStepQuizFragment: PyCharmStepQuizFragment)
 }
