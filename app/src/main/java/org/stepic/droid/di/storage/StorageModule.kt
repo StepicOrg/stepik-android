@@ -7,15 +7,10 @@ import com.google.gson.GsonBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
-import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
-import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
-import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDaoImpl
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.features.stories.storage.dao.ViewedStoryTemplatesDaoImpl
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.*
-import org.stepic.droid.model.code.CodeSubmission
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDaoImpl
@@ -24,14 +19,19 @@ import org.stepic.droid.persistence.storage.dao.PersistentStateDaoImpl
 import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.*
 import org.stepic.droid.storage.operations.*
+import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.model.ViewAssignment
 import org.stepik.android.cache.comment_banner.dao.CommentBannerDao
 import org.stepik.android.cache.comment_banner.dao.CommentBannerDaoImpl
+import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
+import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
+import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
+import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDaoImpl
 import org.stepik.android.cache.submission.dao.SubmissionDaoImpl
 import org.stepik.android.cache.user.dao.UserDaoImpl
-import org.stepik.android.cache.video.dao.VideoEntityDaoImpl
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.cache.video.dao.VideoDaoImpl
+import org.stepik.android.cache.video.dao.VideoEntityDaoImpl
 import org.stepik.android.cache.video.dao.VideoUrlEntityDaoImpl
 import org.stepik.android.cache.video.model.VideoEntity
 import org.stepik.android.cache.video.model.VideoUrlEntity
@@ -54,11 +54,6 @@ abstract class StorageModule {
     @Binds
     internal abstract fun provideSqlOpenHelper(databaseHelper: DatabaseHelper): SQLiteOpenHelper
 
-
-    @StorageSingleton
-    @Binds
-    internal abstract fun provideCodeSubmissionDao(codeSubmissionDaoImpl: CodeSubmissionDaoImpl): IDao<CodeSubmission>
-
     @StorageSingleton
     @Binds
     internal abstract fun provideSectionDao(sectionDao: SectionDaoImpl): IDao<Section>
@@ -73,9 +68,6 @@ abstract class StorageModule {
 
     @Binds
     internal abstract fun provideAssignmentDao(assignmentDao: AssignmentDaoImpl): IDao<Assignment>
-
-    @Binds
-    internal abstract fun provideCertificateDao(certificateViewItemDao: CertificateViewItemDaoImpl): IDao<CertificateViewItem>
 
     @Binds
     internal abstract fun provideLessonDao(lessonDao: LessonDaoImpl): IDao<Lesson>
@@ -183,6 +175,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindSubmissionDao(submissionDaoImpl: SubmissionDaoImpl): IDao<Submission>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindCertificateDao(certificateDaoImpl: CertificateDaoImpl): IDao<Certificate>
 
     @Module
     companion object {

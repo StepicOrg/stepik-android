@@ -35,11 +35,9 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.fragments.CatalogFragment
-import org.stepic.droid.ui.fragments.CertificatesFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
-import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
@@ -78,8 +76,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
-        const val CERTIFICATE_INDEX: Int = 4
-        const val NOTIFICATIONS_INDEX: Int = 5
+        const val NOTIFICATIONS_INDEX: Int = 4
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -225,7 +222,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         val wantedIndex = getFragmentIndexFromIntent(launchIntent)
         when (wantedIndex) {
             CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
-            CERTIFICATE_INDEX   -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.certificates)
             PROFILE_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.profile)
             NOTIFICATIONS_INDEX -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.notifications)
             else -> {
@@ -293,7 +289,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                     analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_DRAWER)
                 }
             }
-            R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
             R.id.profile -> analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE)
             R.id.notifications -> analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS)
         }
@@ -310,10 +305,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
-            }
-            R.id.certificates -> {
-                analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
-                getNextFragmentOrNull(currentFragmentTag, CertificatesFragment::class.java.simpleName, CertificatesFragment.Companion::newInstance)
             }
             R.id.notifications -> {
                 getNextFragmentOrNull(currentFragmentTag, NotificationsFragment::class.java.simpleName, NotificationsFragment::newInstance)
@@ -417,11 +408,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
         streakPresenter.setStreakTime(chosenInterval) // we do not need attach this view, because we need only set in model
-    }
-
-    override fun onTimeIntervalDialogCancelled() {
-        analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
-        streakPresenter.setStreakTime(TimeIntervalUtil.defaultTimeCode)
     }
 
     override fun onBadgeShouldBeHidden() {

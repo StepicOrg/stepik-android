@@ -179,7 +179,6 @@ dependencies {
         exclude group: 'com.android.support'
     }
     implementation libraries.photoView
-    implementation libraries.advancedRecycler
     implementation libraries.recyclerAnimators
     implementation libraries.materialProgress
     implementation libraries.circleImageView

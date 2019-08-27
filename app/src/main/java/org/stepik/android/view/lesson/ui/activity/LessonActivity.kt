@@ -372,10 +372,6 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
             .show()
     }
 
-    override fun onTimeIntervalDialogCancelled() {
-        onStreakDialogCancelled()
-    }
-
     private fun setupTextFeedback() {
         lessonPresenter.sendTextFeedback(
             getString(R.string.feedback_subject),

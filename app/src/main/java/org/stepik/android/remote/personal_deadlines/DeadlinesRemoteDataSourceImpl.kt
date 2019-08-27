@@ -3,13 +3,16 @@ package org.stepik.android.remote.personal_deadlines
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
-import org.stepik.android.data.personal_deadlines.getKindOfRecord
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.toMaybe
 import org.stepic.droid.web.storage.RemoteStorageService
 import org.stepic.droid.web.storage.model.StorageRecord
+import org.stepik.android.data.personal_deadlines.getKindOfRecord
+import org.stepik.android.data.personal_deadlines.getKindStartsWithOfRecord
 import org.stepik.android.data.personal_deadlines.source.DeadlinesRemoteDataSource
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
+import org.stepik.android.remote.base.concatAllPages
 import org.stepik.android.remote.personal_deadlines.mapper.DeadlinesMapper
 import javax.inject.Inject
 
@@ -37,11 +40,23 @@ constructor(
 
     override fun getDeadlineRecordByCourseId(courseId: Long): Maybe<StorageRecord<DeadlinesWrapper>> =
         remoteStorageService
-            .getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, getKindOfRecord(courseId))
-            .firstElement()
-            .flatMap { response ->
+            .getStorageRecords(1, sharedPreferenceHelper.profile?.id ?: -1, kind = getKindOfRecord(courseId))
+            .flatMapMaybe { response ->
                 deadlinesMapper
                     .mapToStorageRecord(response)
                     .toMaybe()
+            }
+
+    override fun getDeadlinesRecords(): Single<PagedList<StorageRecord<DeadlinesWrapper>>> =
+        Single
+            .fromCallable { sharedPreferenceHelper.profile?.id ?: -1 }
+            .flatMap { userId ->
+                concatAllPages(
+                    sourceFactory = { page ->
+                        remoteStorageService
+                            .getStorageRecords(page, userId, startsWith = getKindStartsWithOfRecord())
+                    },
+                    mapper = deadlinesMapper::mapToStorageRecordList
+                )
             }
 }

@@ -721,12 +721,6 @@ public abstract class StepAttemptFragment extends StepBaseFragment implements
                 .show();
     }
 
-    @Override
-    public void onTimeIntervalDialogCancelled() {
-        getAnalytic().reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED);
-        messageOnNotEnablingNotification();
-    }
-
     protected final void hideWrongStatus() {
         statusTextView.setVisibility(View.GONE);
     }
