@@ -4,14 +4,6 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepik.android.model.Course
-import org.stepik.android.model.Section
-import org.stepik.android.model.Step
-import org.stepik.android.model.Unit
-import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.util.hasUserAccess
-import org.stepic.droid.util.hasUserAccessAndNotEmpty
-import org.stepic.droid.web.Api
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
