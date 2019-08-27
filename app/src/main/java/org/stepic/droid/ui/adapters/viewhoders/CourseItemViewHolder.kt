@@ -32,11 +32,11 @@ import javax.inject.Inject
         justification = "Kotlin adds null check for lateinit properties, but" +
                 "Findbugs highlights it as redundant")
 class CourseItemViewHolder(
-        val view: View,
+        private val view: View,
         private val contextActivity: Activity,
         private val coursePlaceholder: Drawable,
         private val continueCoursePresenter: ContinueCoursePresenter,
-        private val colorType: CoursesCarouselColorType
+        colorType: CoursesCarouselColorType
 ) : RecyclerView.ViewHolder(view) {
 
     @Inject
@@ -135,7 +135,7 @@ class CourseItemViewHolder(
 
         if (!isEnrolled(course)) {
             courseDescription.text = HtmlCompat.fromHtml(course.summary ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
-            courseDescription.doOnGlobalLayout { it.maxLines = it.height / it.lineHeight }
+            courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
         }
 
         coursePropertiesDelegate.setStats(course)
