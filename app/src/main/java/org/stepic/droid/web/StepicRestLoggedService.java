@@ -209,13 +209,19 @@ public interface StepicRestLoggedService {
     Single<DiscussionProxyResponse> getDiscussionProxies(@Query("ids[]") String[] ids);
 
     @GET("api/comments")
-    Call<CommentResponse> getComments(@Query("ids[]") long[] ids);
-
-    @GET("api/comments")
-    Single<CommentResponse> getCommentsReactive(@Query("ids[]") long[] ids);
+    Single<CommentResponse> getComments(@Query("ids[]") long[] ids);
 
     @POST("api/comments")
     Call<CommentResponse> postComment(@Body CommentRequest comment);
+
+    @POST("api/comments")
+    Single<CommentResponse> createComment(@Body CommentRequest request);
+
+    @PUT("api/comments/{commentId}")
+    Single<CommentResponse> saveComment(@Path("commentId") long commentId, @Body CommentRequest request);
+
+    @DELETE("api/comments/{commentId}")
+    Completable removeComment(@Path("commentId") long commentId);
 
     @PUT("api/votes/{id}")
     Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);

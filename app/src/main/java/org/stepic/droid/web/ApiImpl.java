@@ -797,17 +797,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CommentResponse> getCommentAnd20Replies(long commentId) {
-        long[] id = new long[]{commentId};
-        return loggedService.getComments(id);
-    }
-
-    @Override
-    public Call<CommentResponse> getCommentsByIds(long[] commentIds) {
-        return loggedService.getComments(commentIds);
-    }
-
-    @Override
     public Call<CommentResponse> postComment(String text, long target, @Nullable Long parent) {
         Comment comment = new Comment(target, text, parent);
         return loggedService.postComment(new CommentRequest(comment));

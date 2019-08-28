@@ -152,10 +152,6 @@ public interface Api {
 
     Call<Void> removeDevice(long deviceId);
 
-    Call<CommentResponse> getCommentAnd20Replies(long commentId);
-
-    Call<CommentResponse> getCommentsByIds(long[] commentIds);
-
     Call<CommentResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
 
     Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
