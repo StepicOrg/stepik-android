@@ -123,7 +123,6 @@
     <string name="load_more_reply">Показать еще</string>
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
     <string name="comment_sent">Комментарий успешно отправлен</string>
-    <string name="comment_denied">Извините, возможность оставлять комментарии отключена</string>
     <string name="reply_title">Ответить</string>
     <string name="one_comment_title">Комментарий</string>
     <string name="comment_is_deleted">Этот комментарий был удален</string>
@@ -741,4 +740,6 @@
     <string name="comment_action_create">Написать комментарий</string>
     <string name="comment_action_edit">Изменить</string>
     <string name="comment_action_remove">Удалить</string>
+
+    <string name="comment_disabled">Комментарии отключены</string>
 </resources>

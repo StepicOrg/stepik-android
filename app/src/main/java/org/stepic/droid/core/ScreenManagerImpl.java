@@ -560,7 +560,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm) {
         if (discussionProxyId == null) {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
-            Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.comment_disabled, Toast.LENGTH_SHORT).show();
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
             Intent intent = new Intent(context, CommentsActivity.class);
