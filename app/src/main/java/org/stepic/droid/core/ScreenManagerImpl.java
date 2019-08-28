@@ -42,7 +42,6 @@ import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
-import org.stepic.droid.ui.activities.NewCommentActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
@@ -52,7 +51,6 @@ import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
-import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepic.droid.util.UriExtensionsKt;
@@ -575,24 +573,6 @@ public class ScreenManagerImpl implements ScreenManager {
         }
     }
 
-
-    @Override
-    public void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent) {
-        if (sharedPreferences.getAuthResponseFromStore() != null) {
-            analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
-            Intent intent = new Intent(commentsFragment.getActivity(), NewCommentActivity.class);
-            Bundle bundle = new Bundle();
-            if (parent != null) {
-                bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
-            }
-            bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
-            intent.putExtras(bundle);
-            commentsFragment.startActivityForResult(intent, NewCommentActivity.Companion.getRequestCode());
-        } else {
-            Toast.makeText(commentsFragment.getContext(), R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
-        }
-    }
-
     @Override
     public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section) {
         showSteps(sourceActivity, unit, lesson, false, section);
@@ -604,7 +584,6 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson, backAnimation);
         sourceActivity.startActivity(intent);
     }
-
 
     @Override
     public void openStepInWeb(Context context, Step step) {

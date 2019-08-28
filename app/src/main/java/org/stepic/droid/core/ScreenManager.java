@@ -55,9 +55,6 @@ public interface ScreenManager {
 
     void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm);
 
-    void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
-
-
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section);

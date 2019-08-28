@@ -42,6 +42,7 @@ import org.stepic.droid.util.*
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
+import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.injection.step.StepDiscussionBus
 import java.util.*
 import javax.inject.Inject
@@ -143,7 +144,7 @@ class CommentsFragment : FragmentBase(),
 
         //open form requested from caller
         if (needInstaOpen) {
-            screenManager.openNewCommentForm(this, stepId, null)
+            showCommentComposeDialog()
             needInstaOpen = false
         }
 
@@ -165,7 +166,24 @@ class CommentsFragment : FragmentBase(),
 
     private fun initAddCommentButton() {
         addNewCommentButton.setOnClickListener {
-            screenManager.openNewCommentForm(this, stepId, null)
+            showCommentComposeDialog()
+        }
+    }
+
+    private fun showCommentComposeDialog(parent: Long? = null, comment: Comment? = null) {
+        if (sharedPreferenceHelper.authResponseFromStore != null) {
+            val supportFragmentManager = activity
+                ?.supportFragmentManager
+                ?.takeIf { it.findFragmentByTag(ComposeCommentDialogFragment.TAG) == null }
+                ?: return
+
+            analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
+
+            ComposeCommentDialogFragment
+                .newInstance(target = stepId, parent = parent, comment = comment)
+                .show(supportFragmentManager, ComposeCommentDialogFragment.TAG)
+        } else {
+            snackbar(messageRes = R.string.anonymous_write_comment)
         }
     }
 
@@ -344,7 +362,7 @@ class CommentsFragment : FragmentBase(),
     private fun replyToComment(position: Int) {
         val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
         comment?.let {
-            screenManager.openNewCommentForm(this, stepId, it.parent ?: it.id)
+            showCommentComposeDialog(parent = it.parent ?: it.id)
         }
     }
 

@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.snackbar
@@ -24,6 +25,8 @@ import javax.inject.Inject
 
 class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
     companion object {
+        const val TAG = "ComposeCommentDialogFragment"
+
         private const val ARG_COMMENT = "comment"
         private const val ARG_PARENT = "parent"
 
@@ -32,7 +35,7 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
          * [parent] - parent comment id
          * [comment] - comment if comment should be edited
          */
-        fun newInstance(target: Long, parent: Long?, comment: Comment): DialogFragment =
+        fun newInstance(target: Long, parent: Long?, comment: Comment?): DialogFragment =
             ComposeCommentDialogFragment().apply {
                 this.arguments = Bundle(3)
                     .also {
@@ -122,6 +125,7 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
     }
 
     private fun submit() {
+        commentEditText.hideKeyboard()
         val oldComment = comment
 
         val text = commentEditText.text?.toString()
