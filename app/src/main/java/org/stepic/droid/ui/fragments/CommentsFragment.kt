@@ -1,10 +1,8 @@
 package org.stepic.droid.ui.fragments
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -33,12 +31,12 @@ import org.stepic.droid.core.presenters.contracts.DiscussionView
 import org.stepic.droid.core.presenters.contracts.VoteView
 import org.stepik.android.model.user.User
 import org.stepic.droid.model.comments.*
-import org.stepic.droid.ui.activities.NewCommentActivity
 import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.*
+import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
@@ -53,7 +51,8 @@ class CommentsFragment : FragmentBase(),
         DiscussionView,
         CommentsListener,
         DeleteCommentDialogFragment.DialogCallback,
-        VoteView {
+        VoteView,
+        ComposeCommentDialogFragment.Callback {
     companion object {
         private val replyMenuId = 100
         private val likeMenuId = 101
@@ -580,18 +579,10 @@ class CommentsFragment : FragmentBase(),
         stepDiscussionSubject.onNext(stepId)
     }
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == NewCommentActivity.requestCode) {
-                data?.let {
-                    val newComment = data.getParcelableExtra<Comment>(NewCommentActivity.keyComment)
-
-                    handleCommentCountWasUpdated(newComment)
-                }
-            }
-        }
+    override fun onCommentReplaced(commentsData: CommentsData) {
+        commentsData
+            .comments
+            .firstOrNull()
+            ?.let(::handleCommentCountWasUpdated)
     }
-
 }

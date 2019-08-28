@@ -18,6 +18,7 @@ import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
 import org.stepic.droid.util.snackbar
+import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
@@ -154,6 +155,11 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
             is ComposeCommentView.State.Complete -> {
                 ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
 
+                (activity as? Callback
+                    ?: parentFragment as? Callback
+                    ?: targetFragment as? Callback)
+                    ?.onCommentReplaced(state.commentsData)
+
                 dismiss()
             }
         }
@@ -161,5 +167,9 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
 
     override fun showNetworkError() {
         snackbar(messageRes = R.string.connectionProblems)
+    }
+
+    interface Callback {
+        fun onCommentReplaced(commentsData: CommentsData)
     }
 }

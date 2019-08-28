@@ -36,7 +36,11 @@ constructor(
     }
 
     fun createComment(comment: Comment) {
-        replaceComment(composeCommentInteractor.createComment(comment))
+        replaceComment(
+            composeCommentInteractor
+                .createComment(comment)
+                .doOnSuccess { analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY) }
+        )
     }
 
     fun updateComment(comment: Comment) {
@@ -46,6 +50,7 @@ constructor(
     private fun replaceComment(commentSource: Single<CommentsData>) {
         state = ComposeCommentView.State.Loading
         compositeDisposable += commentSource
+            .doOnSubscribe { analytic.reportEvent(Analytic.Comments.CLICK_SEND_COMMENTS) }
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(

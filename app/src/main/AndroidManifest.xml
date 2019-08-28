@@ -166,16 +166,6 @@
         </activity>
 
         <activity
-            android:name=".ui.activities.NewCommentActivity"
-            android:parentActivityName=".ui.activities.CommentsActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.CommentsActivity" />
-        </activity>
-
-        <activity
             android:name=".ui.activities.ProfileActivity"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
