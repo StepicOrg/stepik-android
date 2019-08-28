@@ -26,11 +26,10 @@ import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
-import org.stepik.android.view.base.ui.extension.parentOfType
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
-import org.stepik.android.view.step_quiz_fullscreen_code.ui.activity.CodeStepQuizFullScreenActivity
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_fullscreen_code.ui.activity.CodeStepQuizFullScreenActivity
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
@@ -112,7 +111,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ChangeCodeLanguageDialog.
             }
         }
 
-        codeStepQuizFormDelegateNew = CodeStepQuizFormDelegate(view, parentOfType(), stepWrapper, actionsListener)
+        codeStepQuizFormDelegateNew = CodeStepQuizFormDelegate(view, stepWrapper, actionsListener)
 
         stepQuizDelegate =
             StepQuizDelegate(
