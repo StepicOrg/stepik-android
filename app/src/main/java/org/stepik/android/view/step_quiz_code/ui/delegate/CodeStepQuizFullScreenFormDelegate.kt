@@ -1,10 +1,11 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
-import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
+import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import org.stepic.droid.R
@@ -13,12 +14,13 @@ import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
+import org.stepic.droid.util.DpPixelsHelper
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 
 class CodeStepQuizFullScreenFormDelegate(
     instructionContainerView: View,
     codeContainerView: View,
-    keyboardExtensionContainer: ViewGroup?,
+    keyboardExtensionContainer: ViewGroup,
     stepWrapper: StepPersistentWrapper,
     actionsListener: ActionsListener
 ) : CodeQuizFormBaseDelegate(instructionContainerView, codeContainerView, stepWrapper) {
@@ -28,6 +30,9 @@ class CodeStepQuizFullScreenFormDelegate(
     private val submitButtonSeparator = codeContainerView.submitButtonSeparator
     private val codeSubmitButton = codeContainerView.codeSubmitButton
     private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
+    private val fullScreenCodeToolbar = keyboardExtensionContainer.fullScreenCodeToolbar
+    private val fullScreenCodeTabs = keyboardExtensionContainer.fullScreenCodeTabs
+    private val fullScreenCodeSeparator = keyboardExtensionContainer.fullScreenCodeSeparator
 
     init {
         viewStateDelegate.addState<CodeStepQuizFormState.Idle>()
@@ -55,13 +60,17 @@ class CodeStepQuizFullScreenFormDelegate(
          */
         keyboardExtensionContainer.let { container ->
             val stepQuizCodeKeyboardExtension =
-                container?.inflate(R.layout.layout_step_quiz_code_keyboard_extension) as RecyclerView
+                container.inflate(R.layout.layout_step_quiz_code_keyboard_extension) as RecyclerView
             stepQuizCodeKeyboardExtension.adapter = codeToolbarAdapter
             stepQuizCodeKeyboardExtension.layoutManager = LinearLayoutManager(container.context, LinearLayoutManager.HORIZONTAL, false)
             codeLayout.codeToolbarAdapter = codeToolbarAdapter
 
             container.addView(stepQuizCodeKeyboardExtension)
             stepQuizCodeKeyboardExtension.visibility = View.INVISIBLE // Apparently this fixes the offset bug when the current line is under the code toolbar adapter
+            stepQuizCodeKeyboardExtension.layoutParams = (stepQuizCodeKeyboardExtension.layoutParams as RelativeLayout.LayoutParams)
+                .apply {
+                    addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                }
 
             setOnKeyboardOpenListener(
                 container,
@@ -70,12 +79,12 @@ class CodeStepQuizFullScreenFormDelegate(
                         stepQuizCodeKeyboardExtension.visibility = View.GONE
                         codeLayout.isNestedScrollingEnabled = true
                         codeLayout.layoutParams =
-                            (codeLayout.layoutParams as ConstraintLayout.LayoutParams)
+                            (codeLayout.layoutParams as RelativeLayout.LayoutParams)
                                 .apply {
                                     bottomMargin = 0
                                 }
-                        submitButtonSeparator.visibility = View.VISIBLE
-                        codeSubmitButton.visibility = View.VISIBLE
+                        codeLayout.setPadding(0, 0, 0, DpPixelsHelper.convertDpToPixel(80f).toInt())
+                        setViewsVisibility(View.VISIBLE)
                         keyboardShown = false
                     }
                 },
@@ -84,12 +93,12 @@ class CodeStepQuizFullScreenFormDelegate(
                         stepQuizCodeKeyboardExtension.visibility = View.VISIBLE
                         codeLayout.isNestedScrollingEnabled = false
                         codeLayout.layoutParams =
-                            (codeLayout.layoutParams as ConstraintLayout.LayoutParams)
+                            (codeLayout.layoutParams as RelativeLayout.LayoutParams)
                                 .apply {
                                     bottomMargin = stepQuizCodeKeyboardExtension.height
                                 }
-                        submitButtonSeparator.visibility = View.GONE
-                        codeSubmitButton.visibility = View.GONE
+                        codeLayout.setPadding(0, 0, 0, 0)
+                        setViewsVisibility(View.GONE)
                         keyboardShown = true
                     }
                 }
@@ -98,6 +107,14 @@ class CodeStepQuizFullScreenFormDelegate(
         stepQuizActionChangeLang.setCompoundDrawables(end = R.drawable.ic_arrow_bottom)
         stepQuizActionChangeLang.setOnClickListener { actionsListener.onChangeLanguageClicked() }
         codeSubmitButton.setOnClickListener { actionsListener.onSubmitClicked() }
+    }
+
+    private fun setViewsVisibility(visibility: Int) {
+        submitButtonSeparator.visibility = visibility
+        codeSubmitButton.visibility = visibility
+        fullScreenCodeToolbar.visibility = visibility
+        fullScreenCodeTabs.visibility = visibility
+        fullScreenCodeSeparator.visibility = visibility
     }
 
     interface ActionsListener {

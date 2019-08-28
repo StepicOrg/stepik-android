@@ -1,57 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<RelativeLayout
     android:id="@+id/coordinator"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/fullScreenCodeQuizAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/fullScreenCollapsingToolbar"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/fullScreenCodeToolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?actionBarSize"
+            app:layout_collapseMode="pin"
+            android:layout_alignParentTop="true"
+            android:background="@color/course_tabbar_color"
+            app:titleTextAppearance="@style/StepikToolbarTextAppearance"
             android:layout_gravity="start"
             android:gravity="start"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
-
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/fullScreenCodeToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
-                app:layout_collapseMode="pin"
-                app:titleTextAppearance="@style/StepikToolbarTextAppearance"
-
+            android:contentInsetLeft="0dp"
+            android:contentInsetStart="0dp"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            android:contentInsetRight="0dp"
+            android:contentInsetEnd="0dp"
+            app:contentInsetRight="0dp"
+            app:contentInsetEnd="0dp">
+            <TextView
+                android:id="@+id/fullScreenCodeToolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:gravity="start"
-                android:contentInsetLeft="0dp"
-                android:contentInsetStart="0dp"
-                app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp"
-                android:contentInsetRight="0dp"
-                android:contentInsetEnd="0dp"
-                app:contentInsetRight="0dp"
-                app:contentInsetEnd="0dp">
-                <TextView
-                    android:id="@+id/fullScreenCodeToolbarTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:gravity="start"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textAppearance="@style/StepikToolbarTextAppearance"/>
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textAppearance="@style/StepikToolbarTextAppearance"/>
 
-
-            </android.support.v7.widget.Toolbar>
-
-
-        </android.support.design.widget.CollapsingToolbarLayout>
+        </android.support.v7.widget.Toolbar>
 
 
         <android.support.design.widget.TabLayout
@@ -59,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
             android:background="@color/course_tabbar_color"
+            android:layout_below="@id/fullScreenCodeToolbar"
             app:tabMode="fixed"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/new_accent_color"
@@ -70,22 +54,24 @@
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
 
         <View
+            android:id="@+id/fullScreenCodeSeparator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_below="@id/fullScreenCodeTabs"
             android:background="@color/course_appbar_separator" />
-    </android.support.design.widget.AppBarLayout>
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/stepQuizProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_centerInParent="true"
         android:visibility="gone" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/fullScreenCodeViewPager"
+        android:layout_below="@id/fullScreenCodeSeparator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="org.stepik.android.view.step_quiz_fullscreen_code.ui.behavior.FullScreenCoordinatorBehavior" />
+        android:layout_height="wrap_content" />
 
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

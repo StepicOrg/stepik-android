@@ -9,11 +9,13 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.content.ContextCompat
+import android.support.v4.view.ViewPager
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_profile_edit_info.*
 import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.*
@@ -48,6 +50,8 @@ class CodeStepQuizFullScreenActivity : FragmentActivityBase(), StepQuizView, Cha
                 .putExtra(EXTRA_STEP_WRAPPER, stepPersistentWrapper)
                 .putExtra(EXTRA_LESSON_DATA, lessonData)
     }
+
+    private val inputMethodService = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
     private lateinit var stepPersistentWrapper: StepPersistentWrapper
     private lateinit var lessonData: LessonData
@@ -165,6 +169,15 @@ class CodeStepQuizFullScreenActivity : FragmentActivityBase(), StepQuizView, Cha
 
         fullScreenCodeViewPager.adapter = pagerAdapter
         fullScreenCodeTabs.setupWithViewPager(fullScreenCodeViewPager)
+        fullScreenCodeViewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(p0: Int) {}
+            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
+            override fun onPageSelected(p0: Int) {
+                if (p0 == 0) {
+                    this@CodeStepQuizFullScreenActivity.currentFocus?.let { inputMethodService.hideSoftInputFromWindow(it.windowToken, 0) }
+                }
+            }
+        })
         fullScreenCodeTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
             override fun onTabUnselected(tab: TabLayout.Tab?) {
