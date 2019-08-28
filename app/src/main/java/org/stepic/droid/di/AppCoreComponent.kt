@@ -69,6 +69,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.certificate.CertificateComponent
+import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
@@ -180,6 +181,8 @@ interface AppCoreComponent {
     fun certificatesComponentBuilder(): CertificateComponent.Builder
 
     fun composeCommentComponentBuilder(): ComposeCommentComponent.Builder
+
+    fun commentsComponentBuilder(): CommentsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
