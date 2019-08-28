@@ -121,8 +121,6 @@
     <string name="comments_title">Комментарии</string>
     <string name="load_more">ещё</string>
     <string name="load_more_reply">Показать еще</string>
-    <string name="hint_for_new_comment">Оставьте комментарий</string>
-    <string name="new_comment_title">Новый комментарий</string>
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
     <string name="comment_sent">Комментарий успешно отправлен</string>
     <string name="comment_denied">Извините, возможность оставлять комментарии отключена</string>
@@ -736,4 +734,11 @@
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
+
+    <!-- Comment -->
+    <string name="comment_compose_hint">Оставьте комментарий</string>
+    <string name="comment_compose_title">Комментарий</string>
+    <string name="comment_action_create">Написать комментарий</string>
+    <string name="comment_action_edit">Изменить</string>
+    <string name="comment_action_remove">Удалить</string>
 </resources>

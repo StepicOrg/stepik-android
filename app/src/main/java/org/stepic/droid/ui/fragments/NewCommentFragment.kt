@@ -98,7 +98,7 @@ class NewCommentFragment : FragmentBase(), OnBackClickListener {
     }
 
     private fun initToolbar() {
-        initCenteredToolbar(R.string.new_comment_title, true, -1)
+        initCenteredToolbar(R.string.comment_compose_title, true, -1)
     }
 
     private fun showSoftKeypad(editTextView: View) {

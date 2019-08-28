@@ -47,7 +47,7 @@
         android:layout_gravity="bottom|end|right"
         android:layout_margin="@dimen/guideline_standard_padding"
         android:clickable="true"
-        android:contentDescription="@string/new_comment_title"
+        android:contentDescription="@string/comment_compose_title"
         android:src="@drawable/ic_create_white_24dp"
         app:layout_anchorGravity="bottom|right|end"
         app:layout_behavior="org.stepic.droid.ui.util.ScrollAwareFABBehavior"/>

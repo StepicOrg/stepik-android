@@ -138,8 +138,6 @@
     <string name="comments_title">Comments</string>
     <string name="load_more">more</string>
     <string name="load_more_reply">Load more</string>
-    <string name="hint_for_new_comment">Add your comment</string>
-    <string name="new_comment_title">New comment</string>
     <string name="leave_first_comment">No discussions yet. Feel free to start one.</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
@@ -765,4 +763,12 @@
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
+
+    <!-- Comment -->
+    <string name="comment_compose_title">Comment</string>
+    <string name="comment_compose_hint">Add your comment</string>
+    <string name="comment_action_create">Write comment</string>
+    <string name="comment_action_edit">Edit</string>
+    <string name="comment_action_remove">Remove</string>
+
 </resources>

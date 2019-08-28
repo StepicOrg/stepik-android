@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
-            android:hint="@string/hint_for_new_comment"
+            android:hint="@string/comment_compose_hint"
             android:inputType="textMultiLine|textCapSentences"
             android:imeOptions="flagNoFullscreen"
             android:paddingBottom="16dp"

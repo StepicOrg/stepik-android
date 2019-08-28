@@ -31,7 +31,7 @@ class NewCommentActivity : SingleFragmentActivity(), BackButtonHandler {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setBackgroundDrawable(null)
-        setTitle(R.string.new_comment_title)
+        setTitle(R.string.comment_compose_title)
     }
 
     override fun createFragment(): Fragment {
