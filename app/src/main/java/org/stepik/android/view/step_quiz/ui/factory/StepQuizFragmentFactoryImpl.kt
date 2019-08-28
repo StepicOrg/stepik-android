@@ -4,11 +4,12 @@ import android.support.v4.app.Fragment
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
-import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
+import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_matching.ui.fragment.MatchingStepQuizFragment
 import org.stepik.android.view.step_quiz_sorting.ui.fragment.SortingStepQuizFragment
+import org.stepik.android.view.step_quiz_sql.ui.fragment.SqlStepQuizFragment
+import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 import javax.inject.Inject
 
@@ -33,6 +34,9 @@ constructor() : StepQuizFragmentFactory {
 
             AppConstants.TYPE_MATCHING ->
                 MatchingStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+
+            AppConstants.TYPE_SQL ->
+                SqlStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
 
             else ->
                 UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper)

@@ -120,6 +120,7 @@ constructor(
 
             AppConstants.TYPE_SORTING,
             AppConstants.TYPE_MATCHING ->
+            // TODO Check if we need to recreate SQL quiz
                 false
 
             else ->
