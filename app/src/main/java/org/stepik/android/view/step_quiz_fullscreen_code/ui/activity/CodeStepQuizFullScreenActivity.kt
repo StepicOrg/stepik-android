@@ -51,7 +51,7 @@ class CodeStepQuizFullScreenActivity : FragmentActivityBase(), StepQuizView, Cha
                 .putExtra(EXTRA_LESSON_DATA, lessonData)
     }
 
-    private val inputMethodService = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    private lateinit var inputMethodManager: InputMethodManager
 
     private lateinit var stepPersistentWrapper: StepPersistentWrapper
     private lateinit var lessonData: LessonData
@@ -81,6 +81,8 @@ class CodeStepQuizFullScreenActivity : FragmentActivityBase(), StepQuizView, Cha
             setDisplayShowTitleEnabled(false)
             setDisplayHomeAsUpEnabled(true)
         }
+
+        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 
         stepPersistentWrapper = intent.getParcelableExtra(EXTRA_STEP_WRAPPER)
             ?: throw IllegalStateException("StepPersistentWrapper cannot be null")
@@ -174,7 +176,7 @@ class CodeStepQuizFullScreenActivity : FragmentActivityBase(), StepQuizView, Cha
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
                 if (p0 == 0) {
-                    this@CodeStepQuizFullScreenActivity.currentFocus?.let { inputMethodService.hideSoftInputFromWindow(it.windowToken, 0) }
+                    this@CodeStepQuizFullScreenActivity.currentFocus?.let { inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0) }
                 }
             }
         })
