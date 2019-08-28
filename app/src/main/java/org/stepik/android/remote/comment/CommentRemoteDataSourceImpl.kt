@@ -7,6 +7,7 @@ import org.stepic.droid.web.StepicRestLoggedService
 import org.stepik.android.data.comment.source.CommentRemoteDataSource
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
+import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.comment.model.CommentRequest
 import org.stepik.android.remote.comment.model.CommentResponse
 import javax.inject.Inject
@@ -18,7 +19,7 @@ constructor(
 ) : CommentRemoteDataSource {
     private val commentResponseMapper = Function { response: CommentResponse ->
         CommentsData(
-            comments = response.comments ?: emptyList(),
+            comments = response.toPagedList { it.comments ?: emptyList() },
             users = response.users ?: emptyList(),
             votes = response.votes ?: emptyList()
         )
