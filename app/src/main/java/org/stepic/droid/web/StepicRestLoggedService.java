@@ -30,6 +30,8 @@ import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
+import org.stepik.android.remote.vote.model.VoteRequest;
+import org.stepik.android.remote.vote.model.VoteResponse;
 
 import java.util.List;
 
@@ -222,6 +224,9 @@ public interface StepicRestLoggedService {
 
     @DELETE("api/comments/{commentId}")
     Completable removeComment(@Path("commentId") long commentId);
+
+    @PUT("api/votes/{id}")
+    Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 
     @PUT("api/votes/{id}")
     Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);

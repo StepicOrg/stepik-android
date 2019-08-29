@@ -10,7 +10,6 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.Course;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.Submission;
 import org.stepik.android.model.Tag;
@@ -34,6 +33,7 @@ import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
+import org.stepik.android.remote.vote.model.VoteResponse;
 
 import java.util.List;
 

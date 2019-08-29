@@ -87,6 +87,8 @@ import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
+import org.stepik.android.remote.vote.model.VoteRequest;
+import org.stepik.android.remote.vote.model.VoteResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;
