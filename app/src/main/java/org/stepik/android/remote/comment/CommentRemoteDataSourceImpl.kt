@@ -19,7 +19,7 @@ constructor(
 ) : CommentRemoteDataSource {
     private val commentResponseMapper = Function { response: CommentResponse ->
         CommentsData(
-            comments = response.toPagedList { it.comments ?: emptyList() },
+            comments = response.comments ?: emptyList(),
             users = response.users ?: emptyList(),
             votes = response.votes ?: emptyList()
         )

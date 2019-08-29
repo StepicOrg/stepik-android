@@ -17,14 +17,25 @@ import javax.inject.Inject
 class CommentsActivity : FragmentActivityBase(), CommentsView {
     companion object {
         private const val EXTRA_DISCUSSION_PROXY = "discussion_proxy"
+        private const val EXTRA_DISCUSSION_ID = "discussion_id"
         private const val EXTRA_STEP_ID = "step_id"
         private const val EXTRA_IS_NEED_OPEN_COMPOSE = "is_need_open_compose"
-
-        fun createIntent(context: Context, discussionProxy: String, stepId: Long, isNeedOpenCompose: Boolean = false): Intent =
+        /**
+         * [discussionId] - discussion id from deep link
+         */
+        fun createIntent(
+            context: Context,
+            stepId: Long,
+            discussionProxy: String,
+            discussionId: Long? = null,
+            isNeedOpenCompose: Boolean = false
+        ): Intent =
             Intent(context, CommentsActivity::class.java)
-                .putExtra(EXTRA_DISCUSSION_PROXY, discussionProxy)
                 .putExtra(EXTRA_STEP_ID, stepId)
+                .putExtra(EXTRA_DISCUSSION_PROXY, discussionProxy)
+                .putExtra(EXTRA_DISCUSSION_ID, discussionId ?: -1)
                 .putExtra(EXTRA_IS_NEED_OPEN_COMPOSE, isNeedOpenCompose)
+
     }
 
     @Inject
@@ -51,8 +62,12 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
-        val discussionProxy = intent.getStringExtra(EXTRA_DISCUSSION_PROXY)
         val stepId = intent.getLongExtra(EXTRA_STEP_ID, -1)
+
+        val discussionProxy = intent.getStringExtra(EXTRA_DISCUSSION_PROXY)
+        val discussionId = intent.getLongExtra(EXTRA_DISCUSSION_ID, -1)
+            .takeIf { it != -1L }
+
         val isNeedOpenCompose = intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)
 
 
@@ -66,6 +81,10 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
     override fun onStop() {
         commentsPresenter.detachView(this)
         super.onStop()
+    }
+
+    override fun setState(state: CommentsView.State) {
+
     }
 
     private fun showCommentComposeDialog(stepId: Long, parent: Long? = null, comment: Comment? = null) {
