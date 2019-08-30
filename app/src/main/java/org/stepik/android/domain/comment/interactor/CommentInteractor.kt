@@ -5,6 +5,7 @@ import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.domain.comment.repository.CommentRepository
+import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.presentation.comment.model.CommentItem
 import kotlin.math.max
@@ -64,32 +65,46 @@ constructor(
         direction: Direction,
         lastCommentId: Long
     ): Single<PagedList<CommentItem.Data>> =
-        Single
-            .just(getOrderedCommentIds(discussionProxy, discussionOrder))
-            .flatMap { orderedCommentIds ->
-                val index = orderedCommentIds
-                    .indexOf(lastCommentId)
+        getMore(
+            getOrderedCommentIds(discussionProxy, discussionOrder),
+            direction,
+            lastCommentId
+        )
 
-                if (index < 0) {
-                    throw IndexOutOfBoundsException("There is no such item with id=$lastCommentId in discussion proxy")
-                }
+    fun getMoreReplies(
+        comment: Comment,
+        lastCommentId: Long
+    ): Single<PagedList<CommentItem.Data>> =
+        getMore(comment.replies ?: emptyList(), Direction.DOWN, lastCommentId)
 
-                val (start, end) =
-                    when (direction) {
-                        Direction.UP ->
-                            max(0, index - PAGE_SIZE) to index
+    private fun getMore(
+        commentIds: List<Long>,
+        direction: Direction,
+        lastCommentId: Long
+    ): Single<PagedList<CommentItem.Data>> {
+        val index = commentIds
+            .indexOf(lastCommentId)
 
-                        Direction.DOWN ->
-                            index to min(index + PAGE_SIZE, orderedCommentIds.size)
-                    }
+        if (index < 0) {
+            throw IndexOutOfBoundsException("There is no such item with id=$lastCommentId in discussion proxy")
+        }
 
-                commentRepository
-                    .getComments(*orderedCommentIds.slice(start until end).toLongArray())
-                    .map(::mapToCommentItems)
-                    .map { comments ->
-                        PagedList(comments, hasNext = start > 0, hasPrev = end < orderedCommentIds.size)
-                    }
+        val (start, end) =
+            when (direction) {
+                Direction.UP ->
+                    max(0, index - PAGE_SIZE) to index
+
+                Direction.DOWN ->
+                    index to min(index + PAGE_SIZE, commentIds.size)
             }
+
+        return commentRepository
+            .getComments(*commentIds.slice(start until end).toLongArray())
+            .map(::mapToCommentItems)
+            .map { comments ->
+                PagedList(comments, hasNext = start > 0, hasPrev = end < commentIds.size)
+            }
+    }
 
     private fun getOrderedCommentIds(discussionProxy: DiscussionProxy, discussionOrder: DiscussionOrder): List<Long> =
         when (discussionOrder) {
