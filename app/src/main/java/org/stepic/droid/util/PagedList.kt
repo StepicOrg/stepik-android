@@ -10,3 +10,9 @@ class PagedList<E>(
 
 fun <E> List<E>.concatWithPagedList(pagedList: PagedList<E>): PagedList<E> =
     PagedList(this + pagedList, page = pagedList.page, hasNext = pagedList.hasNext, hasPrev = pagedList.hasPrev)
+
+/**
+ * Concatenate two paged lists
+ */
+operator fun <E> PagedList<E>.plus(pagedList: PagedList<E>): PagedList<E> =
+    PagedList(this + pagedList, page = pagedList.page, hasNext = pagedList.hasNext, hasPrev = hasPrev)

@@ -9,7 +9,9 @@ import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
+import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.presentation.comment.model.CommentItem
 import javax.inject.Inject
 
 class CommentsPresenter
@@ -47,25 +49,45 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = {
-                    state = CommentsView.State.DiscussionLoaded(it, DiscussionOrder.LAST_DISCUSSION, CommentsView.CommentsState.Loading)
-                    fetchComments(discussionId)
-                },
+                onSuccess = { fetchComments(it, DiscussionOrder.LAST_DISCUSSION, discussionId) },
                 onError = { state = CommentsView.State.NetworkError }
             )
     }
 
-    private fun fetchComments(discussionId: Long?) {
+    private fun fetchComments(
+        discussionProxy: DiscussionProxy,
+        discussionOrder: DiscussionOrder,
+        discussionId: Long?,
+        keepCachedComments: Boolean = false
+    ) {
+        if (discussionProxy.discussions.isEmpty()) {
+            state = CommentsView.State.DiscussionLoaded(discussionProxy, discussionOrder, discussionId, CommentsView.CommentsState.EmptyComments)
+        } else {
+            val cachedComments: List<CommentItem.Data> = ((state as? CommentsView.State.DiscussionLoaded)
+                ?.commentsState as? CommentsView.CommentsState.Loaded)
+                ?.commentItems
+                ?.takeIf { keepCachedComments }
+                ?: emptyList()
+
+            val newState = CommentsView.State.DiscussionLoaded(discussionProxy, discussionOrder, discussionId, CommentsView.CommentsState.Loading)
+            state = newState
+            compositeDisposable += commentInteractor
+                .getComments(discussionProxy, discussionOrder, discussionId, cachedComments)
+                .observeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribeBy(
+                    onSuccess = { state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(it)) },
+                    onError = { state = CommentsView.State.NetworkError }
+                )
+        }
+    }
+
+    fun changeDiscussionOrder(discussionOrder: DiscussionOrder) {
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
 
-        compositeDisposable += commentInteractor
-            .getComments(oldState.discussionProxy, discussionId, oldState.discussionOrder)
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onSuccess = { state = oldState.copy(commentsState = CommentsView.CommentsState.Loaded(it)) },
-                onError = { state = CommentsView.State.NetworkError }
-            )
+        fetchComments(oldState.discussionProxy, discussionOrder, oldState.discussionId, keepCachedComments = true)
     }
+
+
 }

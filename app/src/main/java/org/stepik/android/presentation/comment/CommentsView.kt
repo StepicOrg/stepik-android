@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.comment
 
+import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -13,6 +14,7 @@ interface CommentsView {
         data class DiscussionLoaded(
             val discussionProxy: DiscussionProxy,
             val discussionOrder: DiscussionOrder,
+            val discussionId: Long? = null,
             val commentsState: CommentsState
         ) : State()
     }
@@ -22,7 +24,7 @@ interface CommentsView {
         object EmptyComments : CommentsState()
 
         data class Loaded(
-            val commentItems: List<CommentItem>
+            val commentItems: PagedList<CommentItem.Data>
         ) : CommentsState()
     }
 
