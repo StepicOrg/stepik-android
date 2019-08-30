@@ -62,15 +62,13 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
-        val stepId = intent.getLongExtra(EXTRA_STEP_ID, -1)
-
         val discussionProxy = intent.getStringExtra(EXTRA_DISCUSSION_PROXY)
         val discussionId = intent.getLongExtra(EXTRA_DISCUSSION_ID, -1)
             .takeIf { it != -1L }
 
-        val isNeedOpenCompose = intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)
+//        val isNeedOpenCompose = intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)
 
-
+        commentsPresenter.onDiscussion(discussionProxy, discussionId, forceUpdate)
     }
 
     override fun onStart() {

@@ -14,7 +14,7 @@ interface CommentsView {
             val discussionProxy: DiscussionProxy,
             val discussionOrder: DiscussionOrder,
             val commentsState: CommentsState
-        )
+        ) : State()
     }
 
     sealed class CommentsState {
@@ -23,7 +23,7 @@ interface CommentsView {
 
         data class Loaded(
             val commentItems: List<CommentItem>
-        )
+        ) : CommentsState()
     }
 
     fun setState(state: State)

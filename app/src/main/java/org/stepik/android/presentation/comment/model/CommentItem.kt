@@ -20,6 +20,10 @@ sealed class CommentItem {
         }
     }
 
+    data class MoreReplies(
+        val hiddenComments: List<Comment>
+    ) : CommentItem()
+
     object Placeholder : CommentItem()
     object LoadMore : CommentItem()
 }
