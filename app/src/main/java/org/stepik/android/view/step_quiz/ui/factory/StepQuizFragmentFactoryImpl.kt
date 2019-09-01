@@ -36,7 +36,7 @@ constructor() : StepQuizFragmentFactory {
                 MatchingStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
 
             AppConstants.TYPE_PYCHARM ->
-                PyCharmStepQuizFragment.newInstance(stepPersistentWrapper)
+                PyCharmStepQuizFragment.newInstance()
 
             else ->
                 UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper)
