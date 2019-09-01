@@ -21,7 +21,8 @@ sealed class CommentItem {
     }
 
     data class MoreReplies(
-        val parentComment: Comment
+        val parentComment: Comment,
+        val lastCommentId: Long
     ) : CommentItem()
 
     object Placeholder : CommentItem()
