@@ -238,4 +238,7 @@
 
     <!-- Matching quiz -->
     <dimen name="step_quiz_matching_item_margin">64dp</dimen>
+    
+    <!-- Code quiz -->
+    <dimen name="step_quiz_fullscreen_code_layout_bottom_padding">80dp</dimen>
 </resources>

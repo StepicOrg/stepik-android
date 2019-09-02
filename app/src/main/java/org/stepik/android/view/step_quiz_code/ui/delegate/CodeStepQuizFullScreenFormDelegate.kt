@@ -8,13 +8,12 @@ import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
+import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepic.droid.util.DpPixelsHelper
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 
@@ -30,7 +29,7 @@ class CodeStepQuizFullScreenFormDelegate(
     private var keyboardShown: Boolean = false
     private val submitButtonSeparator = codeContainerView.submitButtonSeparator
     private val codeSubmitButton = codeContainerView.codeSubmitButton
-    private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
+    private val retryButton = codeSubmitButton.stepQuizRetry
     private val fullScreenCodeToolbar = keyboardExtensionContainer.fullScreenCodeToolbar
     private val fullScreenCodeTabs = keyboardExtensionContainer.fullScreenCodeTabs
     private val fullScreenCodeSeparator = keyboardExtensionContainer.fullScreenCodeSeparator
@@ -39,20 +38,8 @@ class CodeStepQuizFullScreenFormDelegate(
         viewStateDelegate.addState<CodeStepQuizFormState.Idle>()
         viewStateDelegate.addState<CodeStepQuizFormState.Lang>(codeLayout)
 
-        if (latexLayout == null) {
-            latexLayout = instructionContainerView.stepQuizCodeTextContent as LatexSupportableEnhancedFrameLayout
+        retryButton.visibility = View.GONE
 
-            val text = stepWrapper
-                .step
-                .block
-                ?.text
-                ?.takeIf(String::isNotEmpty)
-
-            if (text != null) {
-                instructionContainerView.stepQuizCodeTextContent.setText(text)
-                instructionContainerView.stepQuizCodeTextContent.setTextIsSelectable(true)
-            }
-        }
         setupCodeDetailContentData()
         instructionContainerView.stepQuizCodeDetailsContent.visibility = View.VISIBLE
         instructionContainerView.stepQuizCodeDetailsContent.isNestedScrollingEnabled = false
@@ -84,7 +71,7 @@ class CodeStepQuizFullScreenFormDelegate(
                                 .apply {
                                     bottomMargin = 0
                                 }
-                        codeLayout.setPadding(0, 0, 0, DpPixelsHelper.convertDpToPixel(80f).toInt())
+                        codeLayout.setPadding(0, 0, 0, container.context.resources.getDimensionPixelSize(R.dimen.step_quiz_fullscreen_code_layout_bottom_padding))
                         setViewsVisibility(View.VISIBLE)
                         keyboardShown = false
                     }

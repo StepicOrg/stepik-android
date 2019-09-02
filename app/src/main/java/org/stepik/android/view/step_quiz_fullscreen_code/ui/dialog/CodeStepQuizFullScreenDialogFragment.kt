@@ -18,6 +18,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.*
+import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -100,13 +101,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
         injectComponent()
     }
 
-    override fun setState(state: StepQuizView.State) {
-        viewStateDelegate.switchState(state)
-        if (state is StepQuizView.State.AttemptLoaded) {
-            codeStepQuizFormFullScreenDelegate.setState(state)
-        }
-    }
-
     private fun injectComponent() {
         App.component()
             .stepComponentBuilder()
@@ -150,12 +144,23 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
 
         presenter = ViewModelProviders.of(this, viewModelFactory).get(StepQuizPresenter::class.java)
 
+        val text = stepWrapper
+            .step
+            .block
+            ?.text
+            ?.takeIf(String::isNotEmpty)
+
+        if (text != null) {
+            instructionsLayout.stepQuizCodeTextContent.setText(text)
+            instructionsLayout.stepQuizCodeTextContent.setTextIsSelectable(true)
+        }
+
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>(fullScreenCodeViewPager)
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
         viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(fullScreenCodeViewPager)
 
-        val actionsListenerNew = object : CodeStepQuizFullScreenFormDelegate.ActionsListener {
+        val actionsListener = object : CodeStepQuizFullScreenFormDelegate.ActionsListener {
             override fun onSubmitClicked() {
                 callback.onSyncCodeStateWithParent((codeStepQuizFormFullScreenDelegate.state as CodeStepQuizFormState.Lang).lang, codeStepLayout.text.toString(), true)
                 dismiss()
@@ -168,7 +173,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
                 }
             }
         }
-        codeStepQuizFormFullScreenDelegate = CodeStepQuizFullScreenFormDelegate(instructionsLayout, playgroundLayout, coordinator, stepWrapper, actionsListenerNew)
+        codeStepQuizFormFullScreenDelegate = CodeStepQuizFullScreenFormDelegate(instructionsLayout, playgroundLayout, coordinator, stepWrapper, actionsListener)
 
         if (savedInstanceState == null) {
             codeStepQuizFormFullScreenDelegate.state = CodeStepQuizFormState.Lang(lang, code)
@@ -251,6 +256,13 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
             presenter.syncReplyState(reply.reply)
         }
         super.onStop()
+    }
+
+    override fun setState(state: StepQuizView.State) {
+        viewStateDelegate.switchState(state)
+        if (state is StepQuizView.State.AttemptLoaded) {
+            codeStepQuizFormFullScreenDelegate.setState(state)
+        }
     }
 
     override fun showNetworkError() {

@@ -46,7 +46,7 @@
         android:layout_below="@id/stepQuizActions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="80dp"
+        android:paddingBottom="@dimen/step_quiz_fullscreen_code_layout_bottom_padding"
         android:fillViewport="true" />
 
     <include
