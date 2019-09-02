@@ -5,7 +5,6 @@ import android.view.View
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
@@ -16,8 +15,9 @@ import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 class CodeStepQuizFormDelegate(
     containerView: View,
     stepWrapper: StepPersistentWrapper,
-    private val actionsListener: ActionsListener
-) : CodeQuizFormBaseDelegate(containerView, containerView, stepWrapper) {
+    private val actionsListener: ActionsListener,
+    codeQuizInstructionDelegate: CodeQuizInstructionDelegate
+) : CodeQuizFormBaseDelegate(containerView, stepWrapper, codeQuizInstructionDelegate) {
 
     private val stepQuizCodeLangChooserTitle = containerView.stepQuizCodeLangChooserTitle
     private val stepQuizCodeLangChooser = containerView.stepQuizCodeLangChooser
@@ -27,19 +27,6 @@ class CodeStepQuizFormDelegate(
         viewStateDelegate.addState<CodeStepQuizFormState.Idle>()
         viewStateDelegate.addState<CodeStepQuizFormState.NoLang>(stepQuizCodeLangChooserTitle, stepQuizCodeLangChooser)
         viewStateDelegate.addState<CodeStepQuizFormState.Lang>(codeLayout, stepQuizActions)
-
-        /**
-         * Details
-         */
-        stepQuizCodeDetails.setOnClickListener {
-            stepQuizCodeDetailsArrow.changeState()
-            if (stepQuizCodeDetailsArrow.isExpanded()) {
-                StepikAnimUtils.expand(stepQuizCodeDetailsContent)
-            } else {
-                StepikAnimUtils.collapse(stepQuizCodeDetailsContent)
-            }
-        }
-        setupCodeDetailContentData()
 
         /**
          * Lang chooser

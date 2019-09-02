@@ -28,6 +28,7 @@ import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -113,7 +114,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ChangeCodeLanguageDialog.
             }
         }
 
-        codeStepQuizFormDelegate = CodeStepQuizFormDelegate(view, stepWrapper, actionsListener)
+        codeStepQuizFormDelegate = CodeStepQuizFormDelegate(view, stepWrapper, actionsListener, CodeQuizInstructionDelegate(view, isCollapseable = true))
 
         stepQuizDelegate =
             StepQuizDelegate(

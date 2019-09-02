@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
 import org.stepic.droid.R
@@ -18,12 +17,12 @@ import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 
 class CodeStepQuizFullScreenFormDelegate(
-    instructionContainerView: View,
     codeContainerView: View,
     keyboardExtensionContainer: ViewGroup,
     stepWrapper: StepPersistentWrapper,
-    actionsListener: ActionsListener
-) : CodeQuizFormBaseDelegate(instructionContainerView, codeContainerView, stepWrapper) {
+    actionsListener: ActionsListener,
+    codeQuizInstructionDelegate: CodeQuizInstructionDelegate
+) : CodeQuizFormBaseDelegate(codeContainerView, stepWrapper, codeQuizInstructionDelegate) {
 
     // Flag is necessary, because keyboard listener is constantly invoked (probably global layout listener reacts to view changes)
     private var keyboardShown: Boolean = false
@@ -40,9 +39,6 @@ class CodeStepQuizFullScreenFormDelegate(
 
         retryButton.visibility = View.GONE
 
-        setupCodeDetailContentData()
-        instructionContainerView.stepQuizCodeDetailsContent.visibility = View.VISIBLE
-        instructionContainerView.stepQuizCodeDetailsContent.isNestedScrollingEnabled = false
         /**
          * Keyboard extension
          */

@@ -35,6 +35,7 @@ import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFullScreenFormDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -152,6 +153,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
 
         if (text != null) {
             instructionsLayout.stepQuizCodeTextContent.setText(text)
+            instructionsLayout.stepQuizCodeTextContent.setTextSize(16f)
             instructionsLayout.stepQuizCodeTextContent.setTextIsSelectable(true)
         }
 
@@ -173,7 +175,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
                 }
             }
         }
-        codeStepQuizFormFullScreenDelegate = CodeStepQuizFullScreenFormDelegate(instructionsLayout, playgroundLayout, coordinator, stepWrapper, actionsListener)
+        codeStepQuizFormFullScreenDelegate = CodeStepQuizFullScreenFormDelegate(playgroundLayout, coordinator, stepWrapper, actionsListener, CodeQuizInstructionDelegate(instructionsLayout, false))
 
         if (savedInstanceState == null) {
             codeStepQuizFormFullScreenDelegate.state = CodeStepQuizFormState.Lang(lang, code)
@@ -198,11 +200,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
                 if (p0 == 0) {
-                    inputMethodManager?.let {
-                        if (it.isActive) {
-                            it.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
-                        }
-                    }
+                    inputMethodManager?.hideSoftInputFromWindow(playgroundLayout.windowToken, 0)
                 }
             }
         })
