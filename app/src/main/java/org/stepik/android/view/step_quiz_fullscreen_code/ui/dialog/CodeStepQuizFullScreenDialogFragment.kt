@@ -119,7 +119,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
         return inflater.inflate(R.layout.activity_step_quiz_code_fullscreen, container, false)
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -194,10 +193,11 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
                 if (p0 == 0) {
-                    this@CodeStepQuizFullScreenDialogFragment
-                        .activity
-                        ?.currentFocus
-                        ?.let { inputMethodManager?.hideSoftInputFromWindow(it.windowToken, 0) }
+                    inputMethodManager?.let {
+                        if (it.isActive) {
+                            it.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS)
+                        }
+                    }
                 }
             }
         })
