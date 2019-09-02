@@ -65,7 +65,7 @@ constructor(
     private val hasNextPage = AtomicBoolean(true)
     private var currentNumberOfTasks: Int = 0 //only main thread
     private val isEmptyCourses = AtomicBoolean(false)
-    private lateinit var myCoursesTrace: Trace
+    private var myCoursesTrace: Trace? = null
 
     fun restoreState() {
         if (isEmptyCourses.get() && !hasNextPage.get()) {
@@ -141,12 +141,12 @@ constructor(
                     }
                     deadlinesSynchronizationInteractor.syncPersonalDeadlines().blockingAwait()
                     analytic.setCoursesCount(allMyCourses.size)
-                    stopCourseLoadingTracing()
                     allMyCourses
                 }
             } catch (ex: Exception) {
-                stopCourseLoadingTracing()
                 null
+            } finally {
+                myCoursesTrace?.stop()
             }?.distinctBy { it.id }
 
             if (coursesFromInternet == null) {
@@ -290,11 +290,5 @@ constructor(
 
     fun loadMore(courseType: CourseListType) {
         downloadData(courseType, isRefreshing = false, isLoadMore = true)
-    }
-
-    private fun stopCourseLoadingTracing() {
-        if (::myCoursesTrace.isInitialized) {
-            myCoursesTrace.stop()
-        }
     }
 }
