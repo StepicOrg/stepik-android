@@ -147,6 +147,7 @@ constructor(
                 null
             } finally {
                 myCoursesTrace?.stop()
+                myCoursesTrace = null
             }?.distinctBy { it.id }
 
             if (coursesFromInternet == null) {
