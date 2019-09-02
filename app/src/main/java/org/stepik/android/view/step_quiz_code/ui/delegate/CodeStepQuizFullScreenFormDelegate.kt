@@ -71,7 +71,6 @@ class CodeStepQuizFullScreenFormDelegate(
             stepQuizCodeKeyboardExtension.layoutParams = (stepQuizCodeKeyboardExtension.layoutParams as RelativeLayout.LayoutParams)
                 .apply {
                     addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
-//                    addRule(RelativeLayout.ALIGN_BOTTOM, R.id.codeStepLayout)
                 }
 
             setOnKeyboardOpenListener(
