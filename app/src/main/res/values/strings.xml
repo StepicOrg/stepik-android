@@ -744,6 +744,7 @@
     <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
+    <string name="step_quiz_text_invalid_number_reply">The answer must be a number</string>
     <string name="step_quiz_choice_empty_reply">Choose an option</string>
 
     <string name="step_quiz_code_details">Details</string>
