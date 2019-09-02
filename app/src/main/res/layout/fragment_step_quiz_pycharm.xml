@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="bottom">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedback"
+        style="@style/StepQuizFeedback"
+
+        android:background="@drawable/bg_step_quiz_feedback_evaluation"
+        android:text="@string/step_quiz_pycharm_message"
+        android:textColor="@color/color_violet_1"
+        android:textColorLink="@color/color_violet_1"
+
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        tools:drawableStart="@drawable/ic_step_quiz_validation" />
+
+</android.support.v7.widget.LinearLayoutCompat>
