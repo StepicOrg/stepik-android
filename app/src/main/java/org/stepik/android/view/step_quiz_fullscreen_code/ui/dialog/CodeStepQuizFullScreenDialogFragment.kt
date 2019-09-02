@@ -143,13 +143,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), StepQuizView, Cha
                     }
                     true
                 }
-                R.id.action_language_code -> {
-                    val dialog = ChangeCodeLanguageDialog.newInstance()
-                    if (!dialog.isAdded) {
-                        dialog.show(childFragmentManager, null)
-                    }
-                    true
-                }
                 else -> false
             }
         }
