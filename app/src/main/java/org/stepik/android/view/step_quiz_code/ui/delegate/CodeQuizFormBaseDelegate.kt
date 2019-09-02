@@ -11,9 +11,7 @@ import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepik.android.model.Reply
-import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
-import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizFormStateMapper
@@ -98,14 +96,6 @@ abstract class CodeQuizFormBaseDelegate(
         } else {
             ReplyResult.Error(codeLayout.context.getString(R.string.step_quiz_code_empty_lang))
         }
-    }
-
-    override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        this.state = codeStepQuizFormStateMapper.mapToFormState(codeOptions, state)
-
-        val isEnabled = StepQuizFormResolver.isQuizEnabled(state)
-        codeLayout.isEnabled = isEnabled
-        stepQuizActionChangeLang.isEnabled = isEnabled
     }
 
     fun onLanguageSelected(lang: String) {

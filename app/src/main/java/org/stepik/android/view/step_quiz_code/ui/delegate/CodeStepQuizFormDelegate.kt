@@ -7,6 +7,8 @@ import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeLangAdapterDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
@@ -60,13 +62,26 @@ class CodeStepQuizFormDelegate(
 
         codeLayout.codeEditor.isFocusable = false
         codeLayout.codeEditor.setOnClickListener {
-            if (state !is CodeStepQuizFormState.Lang) return@setOnClickListener
-            actionsListener.onFullscreenClicked()
+            val oldState = (state as? CodeStepQuizFormState.Lang)
+                ?: return@setOnClickListener
+            actionsListener.onFullscreenClicked(oldState.lang, oldState.code)
         }
+    }
+
+    override fun setState(state: StepQuizView.State.AttemptLoaded) {
+        this.state = codeStepQuizFormStateMapper.mapToFormState(codeOptions, state)
+
+        val isEnabled = StepQuizFormResolver.isQuizEnabled(state)
+        codeLayout.isEnabled = isEnabled
+        stepQuizActionChangeLang.isEnabled = isEnabled
+    }
+
+    fun updateCodeLayout(lang: String, code: String) {
+        state = CodeStepQuizFormState.Lang(lang, code)
     }
 
     interface ActionsListener {
         fun onChangeLanguageClicked()
-        fun onFullscreenClicked()
+        fun onFullscreenClicked(lang: String, code: String)
     }
 }

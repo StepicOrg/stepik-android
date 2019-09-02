@@ -107,13 +107,13 @@ class StepQuizDelegate(
             }
         }
 
-    fun syncReplyState(onSync: (() -> Unit)? = null) {
+    fun syncReplyState() {
         if (StepQuizFormResolver.isSubmissionInTerminalState(currentState ?: return)) return
 
         val reply = (stepQuizFormDelegate.createReply() as? ReplyResult.Success)
             ?.reply
             ?: return
 
-        stepQuizPresenter.syncReplyState(reply, onSync)
+        stepQuizPresenter.syncReplyState(reply)
     }
 }

@@ -15,6 +15,7 @@ import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.DpPixelsHelper
+import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 
 class CodeStepQuizFullScreenFormDelegate(
@@ -70,6 +71,7 @@ class CodeStepQuizFullScreenFormDelegate(
             stepQuizCodeKeyboardExtension.layoutParams = (stepQuizCodeKeyboardExtension.layoutParams as RelativeLayout.LayoutParams)
                 .apply {
                     addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+//                    addRule(RelativeLayout.ALIGN_BOTTOM, R.id.codeStepLayout)
                 }
 
             setOnKeyboardOpenListener(
@@ -107,6 +109,10 @@ class CodeStepQuizFullScreenFormDelegate(
         stepQuizActionChangeLang.setCompoundDrawables(end = R.drawable.ic_arrow_bottom)
         stepQuizActionChangeLang.setOnClickListener { actionsListener.onChangeLanguageClicked() }
         codeSubmitButton.setOnClickListener { actionsListener.onSubmitClicked() }
+    }
+
+    override fun setState(state: StepQuizView.State.AttemptLoaded) {
+        this.state = codeStepQuizFormStateMapper.mapToFormState(codeOptions, state)
     }
 
     private fun setViewsVisibility(visibility: Int) {

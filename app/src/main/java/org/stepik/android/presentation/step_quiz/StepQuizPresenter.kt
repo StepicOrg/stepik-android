@@ -45,9 +45,6 @@ constructor(
         }
     }
 
-    fun fetchUponFullScreenReturn(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Unit =
-        fetchAttempt(stepWrapper, lessonData)
-
     private fun fetchAttempt(stepWrapper: StepPersistentWrapper, lessonData: LessonData) {
         state = StepQuizView.State.Loading
         compositeDisposable += stepQuizInteractor
@@ -127,7 +124,7 @@ constructor(
             )
     }
 
-    fun syncReplyState(reply: Reply, onSync: (() -> Unit)? = null) {
+    fun syncReplyState(reply: Reply) {
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
 
@@ -143,6 +140,6 @@ constructor(
             .createLocalSubmission(submission)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(onSuccess = { onSync?.invoke() }, onError = emptyOnErrorStub)
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 }
