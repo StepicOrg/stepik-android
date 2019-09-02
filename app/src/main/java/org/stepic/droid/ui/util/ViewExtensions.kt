@@ -63,6 +63,22 @@ fun TextView.setCompoundDrawables(
     setCompoundDrawablesWithIntrinsicBounds(startDrawable, topDrawable, endDrawable, bottomDrawable)
 }
 
+fun TextView.setTextViewBackgroundWithoutResettingPadding(@DrawableRes backgroundRes: Int) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+        val paddingLeft = this.paddingLeft
+        val paddingTop = this.paddingTop
+        val paddingRight = this.paddingRight
+        val paddingBottom = this.paddingBottom
+        val compoundDrawablePadding = this.compoundDrawablePadding
+
+        setBackgroundResource(backgroundRes)
+        setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+        this.compoundDrawablePadding = compoundDrawablePadding
+    } else {
+        setBackgroundResource(backgroundRes)
+    }
+}
+
 
 fun Drawable.toBitmap(width: Int = intrinsicWidth, height: Int = intrinsicHeight): Bitmap {
     val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
@@ -78,7 +94,7 @@ fun ViewGroup.inflate(@LayoutRes resId: Int, attachToRoot: Boolean = false): Vie
 /**
  * Performs the given action when the view tree is about to be drawn.
  */
-inline fun View.doOnPreDraw(crossinline action: (view: View) -> Unit) {
+inline fun <T : View> T.doOnPreDraw(crossinline action: (view: T) -> Unit) {
     val vto = viewTreeObserver
     vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
         override fun onPreDraw(): Boolean {
@@ -88,6 +104,15 @@ inline fun View.doOnPreDraw(crossinline action: (view: View) -> Unit) {
                 else -> viewTreeObserver.removeOnPreDrawListener(this)
             }
             return true
+        }
+    })
+}
+
+inline fun <T : View> T.doOnGlobalLayout(crossinline action: (view: T) -> Unit) {
+    viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+        override fun onGlobalLayout() {
+            action(this@doOnGlobalLayout)
+            viewTreeObserver.removeOnGlobalLayoutListener(this)
         }
     })
 }

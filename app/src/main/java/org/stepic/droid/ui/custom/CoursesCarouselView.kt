@@ -13,7 +13,6 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import kotlinx.android.synthetic.main.view_courses_carousel.view.*
-import org.solovyev.android.checkout.Sku
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -25,23 +24,18 @@ import org.stepic.droid.core.filters.contract.FiltersListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.CourseCollectionPresenter
-import org.stepic.droid.core.presenters.DroppingPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
-import org.stepic.droid.core.presenters.contracts.DroppingView
 import org.stepic.droid.model.*
 import org.stepic.droid.ui.adapters.CoursesAdapter
-import org.stepic.droid.ui.decorators.LeftSpacesDecoration
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
-import org.stepic.droid.ui.decorators.VerticalSpacesInGridDecoration
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
-import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import java.util.*
@@ -57,7 +51,6 @@ constructor(
 ) : FrameLayout(context, attrs, defStyleAttr),
         ContinueCourseView,
         CoursesView,
-        DroppingView,
         JoiningListener,
         DroppingListener,
         FiltersListener {
@@ -71,9 +64,6 @@ constructor(
 
     @Inject
     lateinit var courseListPresenter: PersistentCourseListPresenter
-
-    @Inject
-    lateinit var droppingPresenter: DroppingPresenter
 
     @Inject
     lateinit var continueCoursePresenter: ContinueCoursePresenter
@@ -152,7 +142,6 @@ constructor(
 
         continueCoursePresenter.attachView(this)
         courseListPresenter.attachView(this)
-        droppingPresenter.attachView(this)
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
         filterClient.subscribe(this)
@@ -174,7 +163,6 @@ constructor(
         droppingClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
-        droppingPresenter.detachView(this)
 
         ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
     }
@@ -187,11 +175,7 @@ constructor(
 
         gridLayoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         coursesRecycler.layoutManager = gridLayoutManager
-        val verticalSpaceBetweenItems = resources.getDimensionPixelSize(R.dimen.course_list_between_items_padding)
-        val leftSpacePx = resources.getDimensionPixelSize(R.dimen.course_list_side_padding)
 
-        coursesRecycler.addItemDecoration(VerticalSpacesInGridDecoration(verticalSpaceBetweenItems / 2, ROW_COUNT)) //warning: verticalSpaceBetweenItems/2 – workaround for some bug, decoration will set this param twice
-        coursesRecycler.addItemDecoration(LeftSpacesDecoration(leftSpacePx))
         coursesRecycler.addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
         coursesRecycler.itemAnimator?.changeDuration = 0
         val snapHelper = CoursesSnapHelper(ROW_COUNT)
@@ -205,8 +189,7 @@ constructor(
         coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
         showDescription(info.description)
 
-        val showMore = info.courseListType == CourseListType.ENROLLED
-        coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, droppingPresenter, false, showMore, info.colorType)
+        coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, false, info.colorType)
     }
 
     private fun showDescription(description: String) {
@@ -292,8 +275,8 @@ constructor(
         }
     }
 
-    override fun showCourses(courses: List<Course>, skus: Map<String, Sku>, coursePayments: Map<Long, CoursePayment>) {
-        state = CoursesCarouselViewState(courses, skus, coursePayments, DEFAULT_SCROLL_POSITION)
+    override fun showCourses(courses: List<Course>) {
+        state = CoursesCarouselViewState(courses, DEFAULT_SCROLL_POSITION)
         coursesLoadingView.visibility = View.GONE
         coursesPlaceholder.visibility = View.GONE
         if (lastSavedScrollPosition != DEFAULT_SCROLL_POSITION) {
@@ -305,11 +288,7 @@ constructor(
         coursesViewAll.visibility = View.VISIBLE
         this.courses.clear()
         this.courses.addAll(courses)
-        (coursesRecycler.adapter as? CoursesAdapter)?.let { adapter ->
-            adapter.setSkus(skus)
-            adapter.setCoursePayments(coursePayments)
-            adapter.notifyDataSetChanged()
-        }
+        (coursesRecycler.adapter as? CoursesAdapter)?.notifyDataSetChanged()
         updateOnCourseCountChanged()
     }
 
@@ -322,11 +301,6 @@ constructor(
         coursesPlaceholder.setOnClickListener(listener)
         coursesPlaceholder.visibility = View.VISIBLE
     }
-
-    override fun onUserHasNotPermissionsToDrop() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
 
     override fun onSuccessDropCourse(course: Course) {
         val courseId = course.id
@@ -401,7 +375,7 @@ constructor(
         } else if (info.courseListType == CourseListType.ENROLLED) {
             //insert at 0 index is more complex than just add, but order will be right
             if (courses.isEmpty()) {
-                showCourses(mutableListOf(joinedCourse), emptyMap(), emptyMap())
+                showCourses(mutableListOf(joinedCourse))
             } else {
                 courses.add(0, joinedCourse)
                 coursesRecycler.adapter?.notifyDataSetChanged()
@@ -504,6 +478,6 @@ constructor(
         _info = outerInfo
         lastSavedScrollPosition = state.scrollPosition
         initCourseCarouselWithInfo(outerInfo)
-        showCourses(state.courses, state.skus, state.coursePayments)
+        showCourses(state.courses)
     }
 }

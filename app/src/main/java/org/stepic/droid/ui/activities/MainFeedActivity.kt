@@ -28,18 +28,20 @@ import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.fonts.FontType
-import org.stepik.android.model.Course
 import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.fragments.*
-import org.stepic.droid.ui.util.TimeIntervalUtil
+import org.stepic.droid.ui.fragments.CatalogFragment
+import org.stepic.droid.ui.fragments.HomeFragment
+import org.stepic.droid.ui.fragments.NotificationsFragment
+import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.model.Course
 import org.stepik.android.model.user.Profile
 import timber.log.Timber
 import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
@@ -56,7 +58,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         ProfileMainFeedView,
         EarlyStreakListener,
         NotificationsBadgesListener,
-        TimeIntervalPickerDialogFragment.Callback {
+        TimeIntervalPickerDialogFragment.Companion.Callback {
 
     companion object {
         const val CURRENT_INDEX_KEY = "currentIndexKey"
@@ -74,8 +76,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
         const val PROFILE_INDEX: Int = 3
-        const val CERTIFICATE_INDEX: Int = 4
-        const val NOTIFICATIONS_INDEX: Int = 5
+        const val NOTIFICATIONS_INDEX: Int = 4
 
         fun launchAfterLogin(sourceActivity: Activity, course: Course?) {
             val intent = Intent(sourceActivity, MainFeedActivity::class.java)
@@ -195,6 +196,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (savedInstanceState == null) {
             profileMainFeedPresenter.fetchProfile()
         }
+
+        onShowStreakSuggestion()
     }
 
     private fun getFragmentIndexFromIntent(intent: Intent?): Int {
@@ -219,7 +222,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         val wantedIndex = getFragmentIndexFromIntent(launchIntent)
         when (wantedIndex) {
             CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
-            CERTIFICATE_INDEX   -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.certificates)
             PROFILE_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.profile)
             NOTIFICATIONS_INDEX -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.notifications)
             else -> {
@@ -287,7 +289,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                     analytic.reportEvent(Analytic.Anonymous.BROWSE_COURSES_DRAWER)
                 }
             }
-            R.id.certificates -> analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
             R.id.profile -> analytic.reportEvent(Analytic.Screens.USER_OPEN_PROFILE)
             R.id.notifications -> analytic.reportEvent(Analytic.Screens.USER_OPEN_NOTIFICATIONS)
         }
@@ -304,10 +305,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
-            }
-            R.id.certificates -> {
-                analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES)
-                getNextFragmentOrNull(currentFragmentTag, CertificatesFragment::class.java.simpleName, CertificatesFragment.Companion::newInstance)
             }
             R.id.notifications -> {
                 getNextFragmentOrNull(currentFragmentTag, NotificationsFragment::class.java.simpleName, NotificationsFragment::newInstance)
@@ -381,7 +378,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (intent.action == LOGGED_ACTION) {
             intent.action = null
 
-
             val streakTitle = SpannableString(getString(R.string.early_notification_title))
             streakTitle.setSpan(ForegroundColorSpan(Color.BLACK), 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(this.assets, fontsProvider.provideFontPath(FontType.bold)))
@@ -400,7 +396,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                     .onPositive { _, _ ->
                         analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_POSITIVE)
                         val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
-                        dialogFragment.callback = this
                         if (!dialogFragment.isAdded) {
                             dialogFragment.show(supportFragmentManager, null)
                         }
@@ -410,10 +405,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
     }
 
-    override fun onTimeIntervalPicked(data: Intent) {
+    override fun onTimeIntervalPicked(chosenInterval: Int) {
         analytic.reportEvent(Analytic.Streak.EARLY_NOTIFICATION_COMPLETE)
-        val intervalCode = data.getIntExtra(TimeIntervalPickerDialogFragment.RESULT_INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
-        streakPresenter.setStreakTime(intervalCode) // we do not need attach this view, because we need only set in model
+        streakPresenter.setStreakTime(chosenInterval) // we do not need attach this view, because we need only set in model
     }
 
     override fun onBadgeShouldBeHidden() {

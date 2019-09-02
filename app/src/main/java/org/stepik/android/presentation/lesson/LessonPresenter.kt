@@ -19,6 +19,7 @@ import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
 import org.stepik.android.domain.step.interactor.StepIndexingInteractor
+import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
@@ -38,6 +39,7 @@ constructor(
     private val lessonContentInteractor: LessonContentInteractor,
     private val appRatingInteractor: AppRatingInteractor,
     private val feedbackInteractor: FeedbackInteractor,
+    private val streakInteractor: StreakInteractor,
 
     private val stateMapper: LessonStateMapper,
 
@@ -188,22 +190,30 @@ constructor(
         val state = (state as? LessonView.State.LessonLoaded)
             ?: return
 
-        val stepWorth = (state.stepsState as? LessonView.StepsState.Loaded)
+        val stepProgress = (state.stepsState as? LessonView.StepsState.Loaded)
             ?.stepItems
             ?.getOrNull(position)
-            ?.stepWrapper
-            ?.step
-            ?.worth
-            ?: return
+            ?.stepProgress
+
+        // Because the score field in Progress is a String, GSON parses integers in the response as floating point numbers
+        val stepScore = stepProgress
+            ?.score
+            ?.toFloatOrNull()
+            ?.toLong()
+            ?: 0L
+
+        val stepCost = stepProgress
+            ?.cost
+            ?: 0L
 
         val timeToComplete = state
             .lessonData
             .lesson
             .timeToComplete
-            .takeIf { it > 0 }
+            .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
-        view?.showLessonInfoTooltip(stepWorth, timeToComplete, -1)
+        view?.showLessonInfoTooltip(stepScore, stepCost, timeToComplete, -1)
     }
 
     /**
@@ -284,8 +294,15 @@ constructor(
 
         appRatingInteractor.incrementSolvedStepCounter()
         if (appRatingInteractor.needShowAppRateDialog()) {
+            appRatingInteractor.rateDialogShown()
             view?.showRateDialog()
-        }
+        } else if (streakInteractor.needShowStreakDialog()) {
+            compositeDisposable += streakInteractor
+                    .onNeedShowStreak()
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(onSuccess = { view?.showStreakDialog(it) }, onError = { it.printStackTrace() })
+            }
 
         compositeDisposable += stepViewReportInteractor
             .updatePassedStep(stepItem.stepWrapper.step, stepItem.assignment)
@@ -331,5 +348,9 @@ constructor(
 
     fun onAppRateShow() {
         appRatingInteractor.rateHandled()
+    }
+
+    fun setStreakTime(timeIntervalCode: Int) {
+        streakInteractor.setStreakTime(timeIntervalCode)
     }
 }

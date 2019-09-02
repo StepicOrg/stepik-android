@@ -9,7 +9,6 @@ import org.stepic.droid.core.FirstCoursePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
-import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
@@ -31,8 +30,6 @@ import javax.inject.Inject
 class PersistentCourseListPresenter
 @Inject
 constructor(
-    private val coursePurchasesInteractor: CoursePurchasesInteractor,
-
     private val databaseFacade: DatabaseFacade,
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
@@ -177,21 +174,13 @@ constructor(
             if (coursesForShow.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
                 //try to load next in loop
             } else {
-                val skus = coursePurchasesInteractor
-                    .getCoursesSkuMap(coursesForShow)
-                    .blockingGet()
-
-                val coursePayments = coursePurchasesInteractor
-                    .getCoursesPaymentsMap(coursesForShow)
-                    .blockingGet()
-
                 mainHandler.post {
                     postFirstCourse(courseType, coursesForShow)
                     if (coursesForShow.isEmpty()) {
                         isEmptyCourses.set(true)
                         view?.showEmptyCourses()
                     } else {
-                        view?.showCourses(coursesForShow, skus, coursePayments)
+                        view?.showCourses(coursesForShow)
                     }
                 }
                 break
@@ -213,7 +202,7 @@ constructor(
         bindsRatings(coursesForShow, DataSourceType.CACHE)
         if (coursesForShow.isNotEmpty()) {
             mainHandler.post {
-                view?.showCourses(coursesForShow, emptyMap(), emptyMap())
+                view?.showCourses(coursesForShow)
                 postFirstCourse(courseType, coursesForShow)
             }
         }

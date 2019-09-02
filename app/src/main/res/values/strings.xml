@@ -38,14 +38,12 @@
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
     <string name="no">No</string>
-    <string name="open_web_to_solve">Open the web version to solve</string>
     <string name="allow_mobile_download_title">Allow mobile downloading</string>
     <string name="allow_mobile_message">Allow your device to download videos over your mobile
         connection when Wi-Fi is not available?
     </string>
     <string name="allow_mobile_snack">Mobile downloading is disabled. Turn on in settings</string>
     <string name="drop_course">Drop the course</string>
-    <string name="about_course">About the course</string>
     <string name="you_dropped">"You dropped %s"</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
@@ -115,7 +113,6 @@
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
     <string name="internet_problem">Sorry, the connection is not available. Try again later</string>
-    <string name="internet_problem_short">Sorry, there is no connection</string>
     <string name="feedback_fill_fields">Fill empty fields</string>
     <string name="video_time_delimiter" translatable="false">/</string>
     <string name="x0_5" translatable="false">x0.5</string>
@@ -125,7 +122,6 @@
     <string name="x1_5" translatable="false">x1.5</string>
     <string name="x1_75" translatable="false">x1.75</string>
     <string name="x2_0" translatable="false">x2.0</string>
-    <string name="cant_drop">You can not drop this course</string>
     <string name="open_in_external_player">Open in an external player</string>
     <string name="notification_title">Notifications</string>
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
@@ -227,7 +223,7 @@
     <string name="link_copied_title">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
     <string name="add_to_linkedin">Add to LinkedIn</string>
-    <string name="empty_certificates">You don\'t have any certificates yet</string>
+    <string name="empty_certificates">There are no certificates</string>
     <string name="are_you_sure_remove_comment_text">If you go back, your post will be lost</string>
 
     <string name="auth_error_invalid_credentials">Login/password was incorrect</string>
@@ -314,7 +310,7 @@
             day in order to improve your record. We suggest you turn on the reminders.
         </item>
     </plurals>
-    <string name="choose_notification_time_interval">Choose notification interval</string>
+    <string name="choose_notification_time_interval">Change notification interval</string>
     <string name="notification_time">Notification time: %s</string>
     <string name="notification_about_learning">Notifications about learning</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
@@ -357,7 +353,6 @@
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="sign_in_with_password_suffix">" with e-mail"</string>
     <string name="content_course_logo">Course logo</string>
-    <string name="continue_course_title">Continue</string>
     <string name="auth_inline_message">To save your progress please sign in first</string>
     <string name="step_with_position">– Step %d</string>
     <string name="anonymous_write_comment">To join this discussion you have to Sign in</string>
@@ -365,7 +360,6 @@
     <string name="retry">Retry</string>
     <string name="retry_internet">@string/retry</string>
     <string name="accessibility_drag_and_drop">drag and drop</string>
-    <string name="table_quiz_beta">Table problem β</string>
     <string name="logout_user_error">Access was revoked. Login again</string>
     <string name="google_services_late">Update Google Play Services for signing in with it</string>
     <string name="accessibility_video_cover">Video cover</string>
@@ -421,10 +415,7 @@
 
     <string name="manage_notification_settings">Manage notifications</string>
 
-    <string name="course_item_more">More</string>
     <string name="course_item_join">Join course</string>
-    <string name="course_item_info">Info</string>
-    <string name="course_item_syllabus">Syllabus</string>
 
     <string name="learners_count">Learners count</string>
 
@@ -450,7 +441,6 @@
 
     <string name="choose_language">Choose language</string>
     <string name="choose_action">Choose</string>
-    <string name="code_quiz_fullscreen">Fullscreen</string>
     <string name="code_quiz_reset">Reset</string>
     <string name="reset_code_dialog_title">Are you sure?</string>
     <string name="reset_code_dialog_explanation">Your code will be lost</string>
@@ -463,10 +453,6 @@
         <item quantity="one">%d second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
-    <string name="code_quiz_limits">&lt;b>Time limit:&lt;/b> %1$s\n&lt;b>Memory limit:&lt;/b>%2$s MB</string>
-    <string name="sample_input">&lt;b>Sample input %d:&lt;/b></string>
-    <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
-    <string name="step_preparing">Step is not prepared yet. Tap to reload</string>
     <string name="course_rating">Course rating</string>
     <string name="course_rating_value" translatable="false">%.1f</string>
 
@@ -724,7 +710,8 @@
     <string name="lesson_title">Lesson</string>
     <string name="lesson_menu_info">Info</string>
 
-    <string name="lesson_info_points">%s for step</string>
+    <string name="lesson_info_points_with_score">You got %s out of %s for step</string>
+    <string name="lesson_info_points">You will get %s for step</string>
     <string name="lesson_info_time_to_complete">&#8776;%s for lesson</string>
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
@@ -753,6 +740,8 @@
     <string name="step_quiz_math_description">Enter a math formula</string>
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
     <string name="step_quiz_free_answer_description">Write an essay</string>
+    <string name="step_quiz_sorting_description">Sort a given list</string>
+    <string name="step_quiz_matching_description">Match two lists</string>
     <string name="step_quiz_choice_description_single">Choose one option</string>
     <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
 
@@ -768,6 +757,11 @@
 
     <string name="step_quiz_code_lang_chooser">Choose language</string>
     <string name="step_quiz_code_empty_lang">Choose programming language before submission</string>
+
+    <string name="step_quiz_not_ready">Sorry, the quiz is not ready yet</string>
+
+    <string name="step_quiz_unsupported_action">Open the web version to solve</string>
+    <string name="step_quiz_unsupported_message">Current step type is not supported in mobile app yet</string>
 
     <string name="step_quiz_code_full_screen_instruction_tab">Instruction</string>
     <string name="step_quiz_code_full_screen_code_tab">Code</string>

@@ -4,6 +4,10 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import org.stepic.droid.storage.migration.MigrationFrom33To34;
+import org.stepic.droid.storage.migration.MigrationFrom34To35;
+import org.stepic.droid.storage.migration.MigrationFrom35To36;
+import org.stepic.droid.storage.migration.MigrationFrom36To37;
 import org.stepic.droid.storage.migration.MigrationFrom37To38;
 import org.stepic.droid.storage.migration.MigrationFrom38To39;
 import org.stepic.droid.storage.migration.MigrationFrom39To40;
@@ -11,12 +15,8 @@ import org.stepic.droid.storage.migration.MigrationFrom40To41;
 import org.stepic.droid.storage.migration.MigrationFrom41To42;
 import org.stepic.droid.storage.migration.MigrationFrom42To43;
 import org.stepic.droid.storage.migration.MigrationFrom43To44;
-import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
-import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
-import org.stepic.droid.storage.migration.MigrationFrom33To34;
-import org.stepic.droid.storage.migration.MigrationFrom34To35;
-import org.stepic.droid.storage.migration.MigrationFrom35To36;
-import org.stepic.droid.storage.migration.MigrationFrom36To37;
+import org.stepic.droid.storage.migration.MigrationFrom44To45;
+import org.stepic.droid.storage.migration.MigrationFrom45To46;
 import org.stepic.droid.storage.structure.DatabaseInfo;
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
@@ -24,7 +24,6 @@ import org.stepic.droid.storage.structure.DbStructureBlock;
 import org.stepic.droid.storage.structure.DbStructureCachedVideo;
 import org.stepic.droid.storage.structure.DbStructureCalendarSection;
 import org.stepic.droid.storage.structure.DbStructureCertificateViewItem;
-import org.stepic.droid.storage.structure.DbStructureCodeSubmission;
 import org.stepic.droid.storage.structure.DbStructureEnrolledAndFeaturedCourses;
 import org.stepic.droid.storage.structure.DbStructureLesson;
 import org.stepic.droid.storage.structure.DbStructureNotification;
@@ -38,6 +37,8 @@ import org.stepic.droid.storage.structure.DbStructureVideoTimestamp;
 import org.stepic.droid.storage.structure.DbStructureVideoUrl;
 import org.stepic.droid.storage.structure.DbStructureViewQueue;
 import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue;
+import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
+import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
 
 import javax.inject.Inject;
 
@@ -119,6 +120,8 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom41To42(db);
         upgradeFrom42To43(db);
         upgradeFrom43To44(db);
+        upgradeFrom44To45(db);
+        upgradeFrom45To46(db);
     }
 
 
@@ -337,6 +340,22 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 44) {
             upgradeFrom43To44(db);
         }
+
+        if (oldVersion < 45) {
+            upgradeFrom44To45(db);
+        }
+
+        if (oldVersion < 46) {
+            upgradeFrom45To46(db);
+        }
+    }
+
+    private void upgradeFrom45To46(SQLiteDatabase db) {
+        MigrationFrom45To46.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom44To45(SQLiteDatabase db) {
+        MigrationFrom44To45.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom43To44(SQLiteDatabase db) {
@@ -420,9 +439,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.REQUIRED_SECTION, LONG_TYPE);
     }
 
-    private void upgradeFrom25To26(SQLiteDatabase db) {
-        createCodeSubmissionTable(db);
-    }
+    private void upgradeFrom25To26(SQLiteDatabase db) {}
 
     private void upgradeFrom24To25(SQLiteDatabase db) {
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.CODE_OPTIONS, TEXT_TYPE);
@@ -812,18 +829,6 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
                 + DbStructureVideoUrl.Column.videoId + WHITESPACE + LONG_TYPE + ", "
                 + DbStructureVideoUrl.Column.quality + WHITESPACE + TEXT_TYPE + ", "
                 + DbStructureVideoUrl.Column.url + WHITESPACE + TEXT_TYPE
-                + ")";
-        db.execSQL(sql);
-    }
-
-
-    private void createCodeSubmissionTable(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + DbStructureCodeSubmission.CODE_SUBMISSION
-                + " ("
-                + DbStructureCodeSubmission.Column.ATTEMPT_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureCodeSubmission.Column.STEP_ID + WHITESPACE + LONG_TYPE + ", "
-                + DbStructureCodeSubmission.Column.PROGRAMMING_LANGUAGE + WHITESPACE + TEXT_TYPE + ", "
-                + DbStructureCodeSubmission.Column.CODE + WHITESPACE + TEXT_TYPE
                 + ")";
         db.execSQL(sql);
     }

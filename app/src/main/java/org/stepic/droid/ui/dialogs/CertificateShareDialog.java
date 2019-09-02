@@ -73,7 +73,7 @@ public class CertificateShareDialog extends BottomSheetDialog {
             public void onClick(View view) {
                 dismiss();
                 analytic.reportEvent(Analytic.Certificate.COPY_LINK_CERTIFICATE);
-                ClipData clipData = ClipData.newPlainText(App.Companion.getAppContext().getString(R.string.copy_link_title), certificateViewItem.getFullPath());
+                ClipData clipData = ClipData.newPlainText(App.Companion.getAppContext().getString(R.string.copy_link_title), certificateViewItem.getCertificate().getUrl());
                 ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 clipboardManager.setPrimaryClip(clipData);
                 Toast.makeText(getContext(), R.string.link_copied_title, Toast.LENGTH_SHORT).show();

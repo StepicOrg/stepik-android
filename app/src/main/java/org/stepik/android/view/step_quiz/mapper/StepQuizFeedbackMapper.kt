@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz.mapper
 
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.TextUtil
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizView
@@ -39,4 +40,5 @@ class StepQuizFeedbackMapper {
                     """<pre><span style="font-family: 'Roboto';">$it</span></pre>"""
                 }
             }
+            ?.let(TextUtil::linkify)
 }

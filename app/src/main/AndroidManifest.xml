@@ -198,8 +198,6 @@
 
         <activity android:name=".ui.activities.DownloadsActivity" />
 
-        <activity android:name=".ui.activities.CertificatesActivity" />
-
         <activity android:name=".ui.activities.CourseListActivity" />
 
         <activity
@@ -369,7 +367,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="org.stepik.android.view.step_quiz_fullscreen_code.ui.activity.CodeStepQuizFullScreenActivity" />
+        <activity
+            android:name="org.stepik.android.view.certificate.ui.activity.CertificatesActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

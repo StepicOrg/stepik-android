@@ -1,11 +1,10 @@
 package org.stepic.droid.web.storage
 
-import org.stepic.droid.web.storage.model.StorageRequest
-import org.stepic.droid.web.storage.model.StorageResponse
-
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.stepic.droid.web.storage.model.StorageRequest
+import org.stepic.droid.web.storage.model.StorageResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -20,8 +19,9 @@ interface RemoteStorageService {
     fun getStorageRecords(
             @Query("page") page: Int,
             @Query("user") userId: Long,
-            @Query("kind") kind: String
-    ): Observable<StorageResponse>
+            @Query("kind") kind: String? = null,
+            @Query("kind__startswith") startsWith: String? = null
+    ): Single<StorageResponse>
 
     @POST("api/storage-records")
     fun createStorageRecord(

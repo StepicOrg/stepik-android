@@ -14,17 +14,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.fragment_step.*
+import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
+import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
+import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
+import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
 import org.stepik.android.view.base.ui.interfaces.KeyboardExtensionContainer
@@ -34,7 +38,7 @@ import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactor
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import javax.inject.Inject
 
-class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
+class StepFragment : Fragment(), StepView, KeyboardExtensionContainer, NextMoveable {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -99,8 +103,8 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         }
         stepDiscussionsDelegate.setDiscussionsCount(stepWrapper.step.discussionsCount)
 
+        stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
         initStepContentFragment()
-        initStepQuizFragment()
     }
 
     private fun initStepContentFragment() {
@@ -126,15 +130,25 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
         }
     }
 
-    private fun initStepQuizFragment() {
+    private fun setStepQuizFragment(isNeedReload: Boolean) {
         val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
         stepContentSeparator.changeVisibility(isStepHasQuiz)
         stepQuizContainer.changeVisibility(isStepHasQuiz)
-        if (isStepHasQuiz && childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null) {
-            childFragmentManager
-                .beginTransaction()
-                .add(R.id.stepQuizContainer, stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData), STEP_QUIZ_FRAGMENT_TAG)
-                .commitNow()
+        stepQuizError.changeVisibility(false)
+        if (isStepHasQuiz) {
+            val isQuizFragmentEmpty = childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null
+
+            if (isQuizFragmentEmpty || isNeedReload) {
+                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData)
+
+                childFragmentManager.commitNow {
+                    if (isQuizFragmentEmpty) {
+                        add(R.id.stepQuizContainer, quizFragment, STEP_QUIZ_FRAGMENT_TAG)
+                    } else {
+                        replace(R.id.stepQuizContainer, quizFragment, STEP_QUIZ_FRAGMENT_TAG)
+                    }
+                }
+            }
         }
     }
 
@@ -174,8 +188,20 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
 
     override fun setState(state: StepView.State) {
         if (state is StepView.State.Loaded) {
+            val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block
+
             stepWrapper = state.stepWrapper
             stepDiscussionsDelegate.setDiscussionsCount(state.stepWrapper.step.discussionsCount)
+            when (stepWrapper.step.status) {
+                Step.Status.READY ->
+                    setStepQuizFragment(isNeedReloadQuiz)
+                Step.Status.PREPARING,
+                Step.Status.ERROR -> {
+                    stepContentSeparator.changeVisibility(true)
+                    stepQuizContainer.changeVisibility(false)
+                    stepQuizError.changeVisibility(true)
+                }
+            }
         }
     }
 
@@ -210,4 +236,11 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer {
 
     override fun getKeyboardExtensionViewContainer(): ViewGroup =
         stepContainer
+
+    override fun moveNext(): Boolean {
+        if ((activity as? NextMoveable)?.moveNext() != true) {
+            stepPresenter.onStepDirectionClicked(StepNavigationDirection.NEXT)
+        }
+        return true
+    }
 }

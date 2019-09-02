@@ -1,12 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.AppCompatTextView
+<android.support.v7.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/stepQuizAction"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/step_submit_button_height"
-    android:background="@drawable/bg_step_submit_button"
+    android:orientation="horizontal">
 
-    android:text="@string/step_quiz_action_button_submit"
-    android:textSize="16sp"
-    android:textColor="@color/color_step_submit_button_text"
-    android:gravity="center" />
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/stepQuizRetry"
+        android:layout_height="@dimen/step_submit_button_height"
+        android:layout_width="@dimen/step_submit_button_height"
+
+        android:background="@drawable/bg_step_quiz_retry_button"
+        android:padding="12dp"
+
+        android:gravity="center"
+
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+
+        app:tint="@color/new_accent_color_alpha_60"
+        app:srcCompat="@drawable/ic_step_quiz_retry" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/stepQuizAction"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/step_submit_button_height"
+        android:background="@drawable/bg_step_submit_button"
+
+        android:drawablePadding="-36dp"
+        android:padding="12dp"
+
+        android:text="@string/step_quiz_action_button_submit"
+        android:textSize="16sp"
+        android:textColor="@color/color_step_submit_button_text"
+        android:gravity="center" />
+</android.support.v7.widget.LinearLayoutCompat>

@@ -1,8 +1,6 @@
 package org.stepic.droid.ui.fragments
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -44,7 +42,6 @@ import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.StepikAnimUtils
-import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
@@ -62,10 +59,10 @@ import javax.inject.Inject
 class   ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView,
-        AchievementsView {
+        AchievementsView,
+        TimeIntervalPickerDialogFragment.Companion.Callback{
 
     companion object {
-        private const val NOTIFICATION_INTERVAL_REQUEST_CODE = 11
         private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
         private const val DETAILED_INFO_CONTAINER_KEY = "detailedInfoContainerKey"
 
@@ -98,6 +95,9 @@ class   ProfileFragment : FragmentBase(),
         setHasOptionsMenu(true)
         profileSettingsList.clear()
         profileSettingsList.addAll(ProfileSettingsHelper.getProfileSettings())
+        if (userId == 0L) {
+            userId = userPreferences.userId
+        }
     }
 
     override fun injectComponent() {
@@ -144,7 +144,7 @@ class   ProfileFragment : FragmentBase(),
             analytic.reportEvent(Analytic.Interaction.CLICK_CHOOSE_NOTIFICATION_INTERVAL)
             val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
             if (!dialogFragment.isAdded) {
-                dialogFragment.setTargetFragment(this@ProfileFragment, NOTIFICATION_INTERVAL_REQUEST_CODE)
+                dialogFragment.setTargetFragment(this@ProfileFragment, 0)
                 dialogFragment.show(fragmentManager, null)
             }
         }
@@ -162,6 +162,8 @@ class   ProfileFragment : FragmentBase(),
 
         achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
+
+        certificatesTitleContainer.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
     }
 
     override fun onDestroyView() {
@@ -438,19 +440,6 @@ class   ProfileFragment : FragmentBase(),
         notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == NOTIFICATION_INTERVAL_REQUEST_CODE) {
-            if (resultCode == Activity.RESULT_OK) {
-                val intervalCode = data!!.getIntExtra(TimeIntervalPickerDialogFragment.RESULT_INTERVAL_CODE_KEY, TimeIntervalUtil.defaultTimeCode)
-                streakPresenter.setStreakTime(intervalCode)
-                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, intervalCode.toString() + "")
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_CANCELED_PROFILE)
-            }
-        }
-    }
-
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
         if (localUserViewModel != null) {
@@ -474,6 +463,11 @@ class   ProfileFragment : FragmentBase(),
             }
         }
         return false
+    }
+
+    override fun onTimeIntervalPicked(chosenInterval: Int) {
+        streakPresenter.setStreakTime(chosenInterval)
+        analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, chosenInterval.toString() + "")
     }
 
     private fun shareProfile() {

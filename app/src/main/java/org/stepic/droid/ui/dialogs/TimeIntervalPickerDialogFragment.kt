@@ -1,9 +1,7 @@
 package org.stepic.droid.ui.dialogs
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.NumberPicker
@@ -21,22 +19,22 @@ import javax.inject.Inject
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE")
 class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
-        const val RESULT_INTERVAL_CODE_KEY = "RESULT_INTERVAL_CODE_KEY"
+        const val TAG = "time_interval_picker_dialog"
         private const val CHOSEN_POSITION_KEY = "CHOSEN_POSITION_KEY"
         fun newInstance(): TimeIntervalPickerDialogFragment =
                 TimeIntervalPickerDialogFragment()
-    }
 
-    interface Callback {
-        fun onTimeIntervalPicked(data: Intent)
+        interface Callback {
+            fun onTimeIntervalPicked(chosenInterval: Int)
+        }
     }
-
-    var callback: Callback? = null
 
     @Inject
     lateinit var sharedPreferences: SharedPreferenceHelper
 
     lateinit var picker: MaterialNumberPicker
+
+    private lateinit var callback: Callback
 
     init {
         App.component().inject(this)
@@ -61,6 +59,12 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
             Timber.e("reflection failed -> ignore")
         }
 
+        callback = if (targetFragment != null) {
+            targetFragment as Callback
+        } else {
+            activity as Callback
+        }
+
         return MaterialDialog.Builder(requireContext())
                 .theme(Theme.LIGHT)
                 .title(R.string.choose_notification_time_interval)
@@ -69,17 +73,15 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
                 .negativeText(R.string.cancel)
                 .onPositive { _, _ ->
                     //todo set result to Ok with position
-                    val data = Intent()
-                    data.putExtra(RESULT_INTERVAL_CODE_KEY, picker.value)
-                    targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_OK, data)
-                    callback?.onTimeIntervalPicked(data)
+                    callback.onTimeIntervalPicked(picker.value)
                 }
                 .build()
     }
 
     override fun onCancel(dialog: DialogInterface?) {
         super.onCancel(dialog)
-        targetFragment?.onActivityResult(targetRequestCode, Activity.RESULT_CANCELED, null) // explicitly click Negative or cancel by back button || touch outside
+        // explicitly click Negative or cancel by back button || touch outside
+        callback.onTimeIntervalPicked(sharedPreferences.timeNotificationCode)
     }
 
 }

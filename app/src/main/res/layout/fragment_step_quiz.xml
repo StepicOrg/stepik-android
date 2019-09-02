@@ -74,7 +74,7 @@
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/stepQuizAction"
+        app:layout_constraintBottom_toTopOf="@id/stepQuizActionContainer"
 
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -82,6 +82,7 @@
 
     <include
         layout="@layout/view_step_quiz_submit_button"
+        android:id="@+id/stepQuizActionContainer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/step_submit_button_height"
 

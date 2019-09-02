@@ -7,6 +7,7 @@ import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.comment.model.CommentRequest;
 import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
@@ -27,6 +28,7 @@ import org.stepik.android.remote.submission.model.SubmissionRequest;
 import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
+import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 
 import java.util.List;
@@ -105,17 +107,9 @@ public interface StepicRestLoggedService {
     );
 
     @GET("api/steps")
-    Single<StepResponse> getStepsReactive(
-            @Query("ids[]") long[] steps
-    );
-
-    @GET("api/steps")
     Single<StepResponse> getStepsByLessonId(
             @Query("lesson") long lessonId
     );
-
-    @DELETE("api/enrollments/{id}")
-    Call<Void> dropCourseLegacy(@Path("id") long courseId);
 
     @GET("api/progresses")
     Call<ProgressResponse> getProgresses(@Query("ids[]") String[] progresses);
@@ -230,7 +224,7 @@ public interface StepicRestLoggedService {
     Call<CommentResponse> deleteComment(@Path("id") long commentId);
 
     @GET("api/certificates")
-    Call<CertificateResponse> getCertificates(@Query("user") long userId);
+    Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);
 
     @GET("api/units")
     Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
