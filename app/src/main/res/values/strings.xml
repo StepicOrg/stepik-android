@@ -135,7 +135,6 @@
     <string name="remove_all">Remove all</string>
     <string name="hint_for_idea">Type your suggestions, comments or ideas</string>
     <string name="feedback_from">From</string>
-    <string name="comments_title">Comments</string>
     <string name="load_more">more</string>
     <string name="load_more_reply">Load more</string>
     <string name="leave_first_comment">No discussions yet. Feel free to start one.</string>
@@ -771,5 +770,7 @@
     <string name="comment_action_remove">Remove</string>
 
     <string name="comment_disabled">Comments disabled</string>
+
+    <string name="comments_title">Comments</string>
 
 </resources>

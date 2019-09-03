@@ -563,13 +563,13 @@ public class ScreenManagerImpl implements ScreenManager {
             Toast.makeText(context, R.string.comment_disabled, Toast.LENGTH_SHORT).show();
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
-            Intent intent = new Intent(context, CommentsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
-            bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
-            bundle.putBoolean(CommentsActivity.Companion.getKeyNeedInstaOpenForm(), needOpenForm);
-            intent.putExtras(bundle);
-            context.startActivity(intent);
+//            Intent intent = new Intent(context, CommentsActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
+//            bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
+//            bundle.putBoolean(CommentsActivity.Companion.getKeyNeedInstaOpenForm(), needOpenForm);
+//            intent.putExtras(bundle);
+            context.startActivity(org.stepik.android.view.comment.ui.activity.CommentsActivity.Companion.createIntent(context, stepId, discussionProxyId, null, needOpenForm));
         }
     }
 

@@ -118,7 +118,6 @@
     <string name="remove_all">Удалить все</string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
     <string name="feedback_from">От</string>
-    <string name="comments_title">Комментарии</string>
     <string name="load_more">ещё</string>
     <string name="load_more_reply">Показать еще</string>
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
@@ -742,4 +741,6 @@
     <string name="comment_action_remove">Удалить</string>
 
     <string name="comment_disabled">Комментарии отключены</string>
+
+    <string name="comments_title">Комментарии</string>
 </resources>

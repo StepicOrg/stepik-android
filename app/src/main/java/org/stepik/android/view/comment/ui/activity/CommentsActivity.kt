@@ -5,9 +5,13 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_comments.*
+import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
@@ -20,6 +24,7 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         private const val EXTRA_DISCUSSION_ID = "discussion_id"
         private const val EXTRA_STEP_ID = "step_id"
         private const val EXTRA_IS_NEED_OPEN_COMPOSE = "is_need_open_compose"
+
         /**
          * [discussionId] - discussion id from deep link
          */
@@ -43,8 +48,13 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
     private lateinit var commentsPresenter: CommentsPresenter
 
+    private val stepId by lazy { intent.getLongExtra(EXTRA_STEP_ID, -1) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_comments)
+        initCenteredToolbar(titleRes = R.string.comments_title, showHomeButton = true)
 
         injectComponent()
         commentsPresenter = ViewModelProviders
@@ -52,6 +62,8 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
             .get(CommentsPresenter::class.java)
 
         setDataToPresenter()
+
+        composeCommentButton.setOnClickListener { showCommentComposeDialog(stepId) }
     }
 
     private fun injectComponent() {
@@ -66,7 +78,10 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         val discussionId = intent.getLongExtra(EXTRA_DISCUSSION_ID, -1)
             .takeIf { it != -1L }
 
-//        val isNeedOpenCompose = intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)
+        if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
+            showCommentComposeDialog(stepId)
+            intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
+        }
 
         commentsPresenter.onDiscussion(discussionProxy, discussionId, forceUpdate)
     }
@@ -80,6 +95,16 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         commentsPresenter.detachView(this)
         super.onStop()
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        }
 
     override fun setState(state: CommentsView.State) {
 
