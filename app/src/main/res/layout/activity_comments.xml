@@ -15,6 +15,19 @@
         <include
             layout="@layout/error_no_connection"/>
 
+        <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
+            android:id="@+id/commentsSwipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/commentsRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:overScrollMode="never" />
+
+        </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
     </FrameLayout>
 
     <include

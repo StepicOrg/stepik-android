@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
+import kotlinx.android.synthetic.main.error_no_connection.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -16,6 +17,7 @@ import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class CommentsActivity : FragmentActivityBase(), CommentsView {
@@ -48,6 +50,8 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
     private lateinit var commentsPresenter: CommentsPresenter
 
+    private lateinit var viewStateDelegate: ViewStateDelegate<CommentsView.State>
+
     private val stepId by lazy { intent.getLongExtra(EXTRA_STEP_ID, -1) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +59,12 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
         setContentView(R.layout.activity_comments)
         initCenteredToolbar(titleRes = R.string.comments_title, showHomeButton = true)
+
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<CommentsView.State.Idle>()
+        viewStateDelegate.addState<CommentsView.State.Loading>(commentsSwipeRefresh)
+        viewStateDelegate.addState<CommentsView.State.NetworkError>(reportProblem)
+        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsSwipeRefresh)
 
         injectComponent()
         commentsPresenter = ViewModelProviders
