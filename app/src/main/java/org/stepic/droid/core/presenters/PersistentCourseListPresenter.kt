@@ -1,6 +1,8 @@
 package org.stepic.droid.core.presenters
 
 import android.support.annotation.WorkerThread
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
@@ -21,7 +23,11 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.repository.ProgressRepository
-import org.stepik.android.model.*
+import org.stepik.android.model.Course
+import org.stepik.android.model.CourseReviewSummary
+import org.stepik.android.model.Meta
+import org.stepik.android.model.Progress
+import org.stepik.android.model.UserCourse
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -52,12 +58,14 @@ constructor(
         private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
         private const val SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000L
         private const val MILLIS_IN_SECOND = 1000L
+        private const val TRACE_MY_COURSES_LOADING = "my_courses_loading"
     }
 
     private val currentPage = AtomicInteger(1)
     private val hasNextPage = AtomicBoolean(true)
     private var currentNumberOfTasks: Int = 0 //only main thread
     private val isEmptyCourses = AtomicBoolean(false)
+    private var myCoursesTrace: Trace? = null
 
     fun restoreState() {
         if (isEmptyCourses.get() && !hasNextPage.get()) {
@@ -93,6 +101,9 @@ constructor(
 
     @WorkerThread
     private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: CourseListType) {
+        if (courseType == CourseListType.ENROLLED) {
+            myCoursesTrace = FirebasePerformance.startTrace(TRACE_MY_COURSES_LOADING)
+        }
         if (!isLoadMore) {
             mainHandler.post {
                 view?.showLoading()
@@ -134,6 +145,9 @@ constructor(
                 }
             } catch (ex: Exception) {
                 null
+            } finally {
+                myCoursesTrace?.stop()
+                myCoursesTrace = null
             }?.distinctBy { it.id }
 
             if (coursesFromInternet == null) {

@@ -25,19 +25,12 @@ class QuizItemView @JvmOverloads constructor(
     private val latexTouchEventOffset = resources.getDimension(R.dimen.step_quiz_choice_quiz_item_padding)
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        val latexTextTouchEvent = MotionEvent.obtain(
-            ev.downTime,
-            ev.eventTime,
-            ev.action,
-            ev.x - latexTouchEventOffset,
-            ev.y - latexTouchEventOffset,
-            ev.metaState
-        )
+        ev.offsetLocation(-latexTouchEventOffset, -latexTouchEventOffset)
 
         if (!::latexText.isInitialized) {
             latexText = findViewById(R.id.latex_text)
         }
-        latexText.dispatchTouchEvent(latexTextTouchEvent)
+        latexText.dispatchTouchEvent(ev)
 
         if (ev.action == MotionEvent.ACTION_UP) {
             clickDuration = ev.eventTime - ev.downTime
