@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
@@ -74,13 +76,17 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         with(commentsRecycler) {
             adapter = commentsAdapter
             layoutManager = LinearLayoutManager(context)
+
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+                ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
+            })
         }
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CommentsView.State.Idle>()
         viewStateDelegate.addState<CommentsView.State.Loading>(commentsRecycler)
         viewStateDelegate.addState<CommentsView.State.NetworkError>(reportProblem)
-        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsRecycler)
+        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsRecycler, emptyComments)
 
         commentsViewStateDelegate = ViewStateDelegate()
         commentsViewStateDelegate.addState<CommentsView.CommentsState.Loaded>(commentsRecycler)

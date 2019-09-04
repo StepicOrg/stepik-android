@@ -38,7 +38,6 @@
         android:contentDescription="@string/comment_action_create"
         android:src="@drawable/ic_create_white_24dp"
         app:backgroundTint="@color/green01"
-        app:layout_anchorGravity="bottom|right|end"
-        app:layout_behavior="org.stepic.droid.ui.util.ScrollAwareFABBehavior" />
+        app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
