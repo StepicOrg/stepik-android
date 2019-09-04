@@ -84,4 +84,19 @@
         android:layout_marginLeft="@dimen/comment_item_margin"
         android:layout_marginRight="@dimen/comment_item_margin" />
 
+    <include
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        layout="@layout/layout_comment_actions"
+
+        app:layout_constraintStart_toEndOf="@id/commentUserIcon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/commentText"
+
+        android:layout_marginLeft="@dimen/comment_item_margin"
+        android:layout_marginRight="@dimen/comment_item_margin"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"/>
+
 </android.support.constraint.ConstraintLayout>

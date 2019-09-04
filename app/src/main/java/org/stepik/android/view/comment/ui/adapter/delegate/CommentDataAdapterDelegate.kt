@@ -6,14 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_comment.view.*
+import kotlinx.android.synthetic.main.layout_comment_actions.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 
-class CommentAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHolder<CommentItem>>() {
+class CommentDataAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHolder<CommentItem>>() {
     override fun isForViewType(position: Int, data: CommentItem): Boolean =
         data is CommentItem.Data
 
@@ -28,6 +32,11 @@ class CommentAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHolder<C
         private val commentMenu = root.commentMenu
         private val commentTags = root.commentTags
 
+        private val commentTime = root.commentTime
+        private val commentReply = root.commentReply
+        private val commentLike = root.commentLike
+        private val commentDislike = root.commentDislike
+
         private val commentUserIconTarget = RoundedBitmapImageViewTarget(
             context.resources.getDimension(R.dimen.course_image_radius), commentUserIcon)
 
@@ -41,9 +50,22 @@ class CommentAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHolder<C
         private val replyOffset =
             context.resources.getDimensionPixelOffset(R.dimen.comment_item_reply_offset)
 
+        private val voteStatusViewStateDelegate: ViewStateDelegate<CommentItem.Data.VoteStatus> =
+            ViewStateDelegate()
+
         init {
             commentText.setTextSize(14f)
             commentText.setTextIsSelectable(true)
+
+            commentReply.setOnClickListener {  }
+            commentLike.setOnClickListener {  }
+            commentDislike.setOnClickListener {  }
+
+            commentLike.setCompoundDrawables(start = R.drawable.ic_comment_like)
+            commentDislike.setCompoundDrawables(start = R.drawable.ic_comment_dislike)
+
+            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Resolved>(commentLike, commentDislike)
+            voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Pending>(root.commentVoteProgress)
         }
 
         override fun onBind(data: CommentItem) {
@@ -71,6 +93,29 @@ class CommentAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHolder<C
 
             commentMenu.changeVisibility(false)
             commentTags.changeVisibility(false)
+
+            voteStatusViewStateDelegate.switchState(data.voteStatus)
+
+            commentLike.text = data.comment.epicCount.toString()
+            commentDislike.text = data.comment.abuseCount.toString()
+
+            if (data.voteStatus is CommentItem.Data.VoteStatus.Resolved) {
+                commentLike.alpha =
+                    when (data.voteStatus.vote.value) {
+                        Vote.Value.LIKE ->
+                            1f
+                        else ->
+                            0.5f
+                    }
+
+                commentDislike.alpha =
+                    when (data.voteStatus.vote.value) {
+                        Vote.Value.DISLIKE ->
+                            1f
+                        else ->
+                            0.5f
+                    }
+            }
         }
     }
 }
