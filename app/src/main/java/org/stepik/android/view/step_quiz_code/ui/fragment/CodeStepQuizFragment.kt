@@ -30,6 +30,7 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_code.ui.delegate.CoreCodeStepDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
@@ -95,7 +96,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ChangeCodeLanguageDialog.
 
         stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
 
-        val actionsListener = object : CodeStepQuizFormDelegate.ActionsListener {
+        val actionsListener = object : CoreCodeStepDelegate.ActionsListener {
             override fun onChangeLanguageClicked() {
                 val dialog = ChangeCodeLanguageDialog.newInstance()
                 if (!dialog.isAdded) {
@@ -112,9 +113,20 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ChangeCodeLanguageDialog.
                 dialog.setTargetFragment(this@CodeStepQuizFragment, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
                 dialog.show(supportFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
             }
-        }
 
-        codeStepQuizFormDelegate = CodeStepQuizFormDelegate(view, stepWrapper, actionsListener, CodeQuizInstructionDelegate(view, isCollapseable = true))
+            override fun onSubmitClicked() {}
+        }
+        
+        codeStepQuizFormDelegate = CodeStepQuizFormDelegate(
+            containerView = view,
+            coreCodeStepDelegate = CoreCodeStepDelegate(
+                codeContainerView = view,
+                keyboardExtensionContainer = null,
+                stepWrapper = stepWrapper,
+                codeQuizInstructionDelegate = CodeQuizInstructionDelegate(view, true),
+                actionsListener = actionsListener
+            )
+        )
 
         stepQuizDelegate =
             StepQuizDelegate(
@@ -177,7 +189,7 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ChangeCodeLanguageDialog.
     }
 
     override fun onSyncCodeStateWithParent(lang: String, code: String, onSubmitClicked: Boolean) {
-        codeStepQuizFormDelegate.updateCodeLayout(lang, code)
+        codeStepQuizFormDelegate.updateCodeLayoutFromDialog(lang, code)
         if (onSubmitClicked) {
             stepQuizDelegate.onActionButtonClicked()
         }

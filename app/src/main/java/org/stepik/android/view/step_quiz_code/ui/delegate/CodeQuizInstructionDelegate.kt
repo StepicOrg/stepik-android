@@ -7,6 +7,8 @@ import android.view.View
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepik.android.model.Step
+import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailLimitAdapterDelegate
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailSampleAdapterDelegate
@@ -17,14 +19,15 @@ class CodeQuizInstructionDelegate(
     private val isCollapseable: Boolean
 ) {
 
-    val stepQuizCodeDetails = detailsContainerView.stepQuizCodeDetails
-    val stepQuizCodeDetailsArrow = detailsContainerView.stepQuizCodeDetailsArrow
-    val stepQuizCodeDetailsContent = detailsContainerView.stepQuizCodeDetailsContent
+    private val stepQuizCodeDetails = detailsContainerView.stepQuizCodeDetails
+    private val stepQuizCodeDetailsArrow = detailsContainerView.stepQuizCodeDetailsArrow
+    private val stepQuizCodeDetailsContent = detailsContainerView.stepQuizCodeDetailsContent
 
-    val stepQuizCodeDetailsAdapter = DefaultDelegateAdapter<CodeDetail>()
+    private val stepQuizCodeDetailsAdapter = DefaultDelegateAdapter<CodeDetail>()
+    private val codeStepQuizDetailsMapper = CodeStepQuizDetailsMapper()
 
-    fun setCodeDetailsData(codeDetails: List<CodeDetail>) {
-        stepQuizCodeDetailsAdapter.items = codeDetails
+    fun setCodeDetailsData(step: Step, lang: String?) {
+        stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
     }
 
     fun setupCodeDetailView() {
