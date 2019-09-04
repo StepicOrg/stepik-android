@@ -83,7 +83,12 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = it },
+                onSuccess = {
+                    state = it
+                    if (state is CourseReviewsView.State.CourseReviewsCache) {
+                        fetchNextPageFromRemote(backgroundLoading = true)
+                    }
+                },
                 onError   = { state = CourseReviewsView.State.NetworkError }
             )
     }
@@ -114,7 +119,7 @@ constructor(
     /**
      * Pagination handling
      */
-    fun fetchNextPageFromRemote() {
+    fun fetchNextPageFromRemote(backgroundLoading: Boolean = false) {
         val oldState = state
 
         val oldItems = (oldState as? CourseReviewsView.State.CourseReviewsRemote)?.courseReviewItems
@@ -146,7 +151,7 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = CourseReviewsView.State.CourseReviewsRemote(currentItems.concatWithPagedList(it))
-                    if (oldState is CourseReviewsView.State.CourseReviewsCache) {
+                    if (oldState is CourseReviewsView.State.CourseReviewsCache && !backgroundLoading) {
                         fetchNextPageFromRemote() // load 2 page from remote after going online
                     }
                 },
