@@ -5,8 +5,10 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
+import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -16,8 +18,11 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
+import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAdapterDelegate
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import javax.inject.Inject
 
 class CommentsActivity : FragmentActivityBase(), CommentsView {
@@ -42,7 +47,6 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
                 .putExtra(EXTRA_DISCUSSION_PROXY, discussionProxy)
                 .putExtra(EXTRA_DISCUSSION_ID, discussionId ?: -1)
                 .putExtra(EXTRA_IS_NEED_OPEN_COMPOSE, isNeedOpenCompose)
-
     }
 
     @Inject
@@ -51,6 +55,10 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
     private lateinit var commentsPresenter: CommentsPresenter
 
     private lateinit var viewStateDelegate: ViewStateDelegate<CommentsView.State>
+    private lateinit var commentsViewStateDelegate: ViewStateDelegate<CommentsView.CommentsState>
+    private lateinit var commentsAdapter: DefaultDelegateAdapter<CommentItem>
+
+    private val commentPlaceholders = List(10) { CommentItem.Placeholder }
 
     private val stepId by lazy { intent.getLongExtra(EXTRA_STEP_ID, -1) }
 
@@ -60,11 +68,24 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         setContentView(R.layout.activity_comments)
         initCenteredToolbar(titleRes = R.string.comments_title, showHomeButton = true)
 
+        commentsAdapter = DefaultDelegateAdapter()
+        commentsAdapter += CommentPlaceholderAdapterDelegate()
+
+        with(commentsRecycler) {
+            adapter = commentsAdapter
+            layoutManager = LinearLayoutManager(context)
+        }
+
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CommentsView.State.Idle>()
-        viewStateDelegate.addState<CommentsView.State.Loading>(commentsSwipeRefresh)
+        viewStateDelegate.addState<CommentsView.State.Loading>(commentsRecycler)
         viewStateDelegate.addState<CommentsView.State.NetworkError>(reportProblem)
-        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsSwipeRefresh)
+        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsRecycler)
+
+        commentsViewStateDelegate = ViewStateDelegate()
+        commentsViewStateDelegate.addState<CommentsView.CommentsState.Loaded>(commentsRecycler)
+        commentsViewStateDelegate.addState<CommentsView.CommentsState.Loading>(commentsRecycler)
+        commentsViewStateDelegate.addState<CommentsView.CommentsState.EmptyComments>(emptyComments)
 
         injectComponent()
         commentsPresenter = ViewModelProviders
@@ -74,6 +95,7 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         setDataToPresenter()
 
         composeCommentButton.setOnClickListener { showCommentComposeDialog(stepId) }
+        commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
 
     private fun injectComponent() {
@@ -117,7 +139,28 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         }
 
     override fun setState(state: CommentsView.State) {
+        commentsSwipeRefresh.isRefreshing = false
+        commentsSwipeRefresh.isEnabled =
+            state is CommentsView.State.NetworkError ||
+            state is CommentsView.State.DiscussionLoaded
 
+        viewStateDelegate.switchState(state)
+
+        when (state) {
+            is CommentsView.State.Loading ->
+                commentsAdapter.items = commentPlaceholders
+
+            is CommentsView.State.DiscussionLoaded -> {
+                commentsViewStateDelegate.switchState(state.commentsState)
+                when (state.commentsState) {
+                    is CommentsView.CommentsState.Loading ->
+                        commentsAdapter.items = commentPlaceholders
+
+                    is CommentsView.CommentsState.Loaded ->
+                        commentsAdapter.items = state.commentsState.commentItems
+                }
+            }
+        }
     }
 
     private fun showCommentComposeDialog(stepId: Long, parent: Long? = null, comment: Comment? = null) {
