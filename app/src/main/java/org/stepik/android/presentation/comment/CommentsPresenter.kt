@@ -32,6 +32,11 @@ constructor(
             view?.setState(value)
         }
 
+    override fun attachView(view: CommentsView) {
+        super.attachView(view)
+        view.setState(state)
+    }
+
     /**
      * Data initialization variants
      */
