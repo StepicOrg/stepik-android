@@ -242,4 +242,5 @@
     <!-- Comments -->
     <dimen name="comment_user_image_size">36dp</dimen>
     <dimen name="comment_item_margin">16dp</dimen>
+    <dimen name="comment_item_reply_offset">20dp</dimen>
 </resources>
