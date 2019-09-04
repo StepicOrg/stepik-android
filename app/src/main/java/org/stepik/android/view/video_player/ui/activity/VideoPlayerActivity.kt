@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.IBinder
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.PopupMenu
 import android.view.Gravity
 import android.view.View
@@ -22,6 +23,8 @@ import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
+import kotlinx.android.synthetic.main.exo_playback_control_view.view.*
+import kotlinx.android.synthetic.main.exo_simple_player_view.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -98,8 +101,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
             playerView?.player = value
         }
-
-    private var isRotateVideo = false
+    private var isLandscapeVideo = false
 
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
 
@@ -137,6 +139,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
+        playerView.exo_controller.exo_fullscreen_icon.setOnClickListener { changeVideoRotation() }
+
         playerView.setControllerVisibilityListener { visibility ->
             if (visibility == View.VISIBLE) {
                 NavigationBarUtil.hideNavigationBar(false, this)
@@ -161,7 +165,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     override fun onStop() {
         playerInBackroundPopup?.dismiss()
-
         exoPlayer?.let { player ->
             videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
         }
@@ -208,20 +211,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         val morePopupMenu = PopupMenu(this, view)
         morePopupMenu.inflate(R.menu.video_more_menu)
 
-        val menuItem = morePopupMenu.menu.findItem(R.id.orientation_flag)
-        menuItem.isChecked = isRotateVideo
-
         morePopupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.orientation_flag -> {
-                    val oldValue = it.isChecked
-                    val newValue = !oldValue
-                    it.isChecked = newValue
-
-                    videoPlayerPresenter.changeVideoRotation(newValue)
-
-                    true
-                }
                 R.id.video_quality -> {
                     val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
                     val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
@@ -245,14 +236,13 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.showController()
     }
 
-    override fun setIsRotateVideo(isRotateVideo: Boolean) {
-        this.isRotateVideo = isRotateVideo
-        requestedOrientation =
-            if (isRotateVideo) {
-                ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-            } else {
-                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
-            }
+    override fun setIsLandscapeVideo(isLandScapeVideo: Boolean) {
+        this.isLandscapeVideo = isLandScapeVideo
+        if (isLandscapeVideo) {
+            playerView.exo_controller.exo_fullscreen_icon.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_fullscreen_exit))
+        } else {
+            playerView.exo_controller.exo_fullscreen_icon.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_fullscreen))
+        }
     }
 
     override fun showPlayInBackgroundPopup() {
@@ -284,5 +274,23 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             exoPlayer?.playWhenReady == true) {
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Video.PLAY_IN_BACKGROUND)
         }
+    }
+
+    override fun onBackPressed() {
+        if (isLandscapeVideo) {
+            changeVideoRotation()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    private fun changeVideoRotation() {
+        isLandscapeVideo = !isLandscapeVideo
+        requestedOrientation = if (isLandscapeVideo) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        videoPlayerPresenter.changeVideoRotation(isLandscapeVideo)
     }
 }
