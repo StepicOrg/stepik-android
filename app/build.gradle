@@ -163,6 +163,7 @@ dependencies {
     implementation libraries.googleauth
     implementation libraries.firebaseCore
     implementation libraries.firebaseConfig
+    implementation libraries.firebasePerf
 
     implementation libraries.checkout
 
@@ -223,3 +224,4 @@ dependencies {
 
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'com.google.firebase.firebase-perf'

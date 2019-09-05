@@ -90,8 +90,6 @@
         completing the assignments.
     </string>
     <string name="correct_free_response">Your answer was saved.</string>
-    <string name="py_message">
-        <![CDATA[Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive
         the points.
     </string>
@@ -742,6 +740,7 @@
     <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
+    <string name="step_quiz_text_invalid_number_reply">The answer must be a number</string>
     <string name="step_quiz_choice_empty_reply">Choose an option</string>
 
     <string name="step_quiz_code_details">Details</string>
@@ -758,6 +757,8 @@
 
     <string name="step_quiz_unsupported_action">Open the web version to solve</string>
     <string name="step_quiz_unsupported_message">Current step type is not supported in mobile app yet</string>
+
+    <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
