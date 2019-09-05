@@ -2,6 +2,7 @@ package org.stepik.android.domain.comment.interactor
 
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
+import org.stepik.android.domain.comment.mapper.CommentsDataMapper
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.domain.comment.repository.CommentRepository
@@ -15,7 +16,8 @@ import kotlin.math.min
 class CommentInteractor
 @Inject
 constructor(
-    private val commentRepository: CommentRepository
+    private val commentRepository: CommentRepository,
+    private val commentsDataMapper: CommentsDataMapper
 ) {
     companion object {
         private const val PAGE_SIZE = 10
@@ -47,13 +49,12 @@ constructor(
                 val cachedCommentIds = cachedComments
                     .map(CommentItem.Data::id)
 
+                val slicedCommentIds =
+                    (commentIds - cachedCommentIds).toLongArray()
+
                 commentRepository
-                    .getComments(*(commentIds - cachedCommentIds).toLongArray())
-                    .map(::mapToCommentItems)
-                    .map { commentItems ->
-                        (commentItems + cachedComments)
-                            .sortedBy { commentIds.indexOf(it.id) }
-                    }
+                    .getComments(*slicedCommentIds)
+                    .map { commentsDataMapper.mapToCommentDataItems(slicedCommentIds, it) }
                     .map { comments ->
                         PagedList(comments, hasNext = start > 0, hasPrev = end < orderedCommentIds.size)
                     }
@@ -75,7 +76,11 @@ constructor(
         comment: Comment,
         lastCommentId: Long
     ): Single<PagedList<CommentItem.Data>> =
-        getMore(comment.replies ?: emptyList(), Direction.DOWN, lastCommentId)
+        getMore(
+            comment.replies ?: emptyList(),
+            Direction.DOWN,
+            lastCommentId
+        )
 
     private fun getMore(
         commentIds: List<Long>,
@@ -98,9 +103,13 @@ constructor(
                     index to min(index + PAGE_SIZE, commentIds.size)
             }
 
+        val slicedCommentIds = commentIds
+            .slice(start until end)
+            .toLongArray()
+
         return commentRepository
-            .getComments(*commentIds.slice(start until end).toLongArray())
-            .map(::mapToCommentItems)
+            .getComments(*slicedCommentIds)
+            .map { commentsDataMapper.mapToCommentDataItems(slicedCommentIds, it) }
             .map { comments ->
                 PagedList(comments, hasNext = start > 0, hasPrev = end < commentIds.size)
             }
@@ -120,27 +129,6 @@ constructor(
             DiscussionOrder.RECENT_ACTIVITY ->
                 discussionProxy.discussionsRecentActivity
         }
-
-    private fun mapToCommentItems(commentsData: CommentsData): List<CommentItem.Data> =
-        commentsData
-            .comments
-            .mapNotNull { comment ->
-                val user = commentsData
-                    .users
-                    .find { it.id == comment.user }
-                    ?: return@mapNotNull null
-
-                val vote = commentsData
-                    .votes
-                    .find { it.id == comment.vote }
-                    ?: return@mapNotNull null
-
-                CommentItem.Data(
-                    comment = comment,
-                    user = user,
-                    voteStatus = CommentItem.Data.VoteStatus.Resolved(vote)
-                )
-            }
 
     enum class Direction {
         UP, DOWN
