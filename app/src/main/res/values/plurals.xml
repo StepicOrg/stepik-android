@@ -52,4 +52,8 @@
         <item quantity="one">%d submission</item>
         <item quantity="other">%d submissions</item>
     </plurals>
+    <plurals name="replies">
+        <item quantity="one">%d reply</item>
+        <item quantity="other">%d replies</item>
+    </plurals>
 </resources>

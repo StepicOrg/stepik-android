@@ -5,6 +5,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.DiscussionOrder
@@ -70,7 +71,7 @@ constructor(
         } else {
             val cachedComments: List<CommentItem.Data> = ((state as? CommentsView.State.DiscussionLoaded)
                 ?.commentsState as? CommentsView.CommentsState.Loaded)
-                ?.commentItems
+                ?.commentDataItems
                 ?.takeIf { keepCachedComments }
                 ?: emptyList()
 
@@ -81,7 +82,9 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
-                    onSuccess = { state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(it)) },
+                    onSuccess = { commentDataItems: PagedList<CommentItem.Data> ->
+                        state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(commentDataItems, commentDataItems as PagedList<CommentItem>))
+                    },
                     onError = { state = CommentsView.State.NetworkError }
                 )
         }

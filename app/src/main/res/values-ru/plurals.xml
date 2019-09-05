@@ -80,4 +80,10 @@
         <item quantity="many">%d попыток</item>
         <item quantity="other">%d попыток</item>
     </plurals>
+    <plurals name="replies">
+        <item quantity="one">%d ответ</item>
+        <item quantity="few">%d ответа</item>
+        <item quantity="many">%d ответов</item>
+        <item quantity="other">%d ответов</item>
+    </plurals>
 </resources>

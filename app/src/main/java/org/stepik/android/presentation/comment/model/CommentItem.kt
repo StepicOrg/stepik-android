@@ -20,11 +20,11 @@ sealed class CommentItem {
         }
     }
 
-    data class MoreReplies(
+    data class LoadMoreReplies(
         val parentComment: Comment,
-        val lastCommentId: Long
+        val lastCommentId: Long,
+        val count: Int
     ) : CommentItem()
 
     object Placeholder : CommentItem()
-    object LoadMore : CommentItem()
 }

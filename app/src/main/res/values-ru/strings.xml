@@ -744,6 +744,7 @@
     <string name="comment_disabled">Комментарии отключены</string>
 
     <string name="comments_title">Комментарии</string>
+    <string name="comments_load_more_replies">Показать %s</string>
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>

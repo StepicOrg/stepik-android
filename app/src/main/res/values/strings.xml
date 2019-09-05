@@ -773,6 +773,7 @@
     <string name="comment_disabled">Comments disabled</string>
 
     <string name="comments_title">Comments</string>
+    <string name="comments_load_more_replies">Show %s</string>
 
     <string name="relative_date_pattern">%s ago</string>
     <string name="relative_date_now">now</string>

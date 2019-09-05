@@ -22,6 +22,7 @@ import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentDataAdapterDelegate
+import org.stepik.android.view.comment.ui.adapter.delegate.CommentLoadMoreRepliesAdapterDelegate
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAdapterDelegate
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -74,6 +75,7 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()
         commentsAdapter += CommentDataAdapterDelegate()
+        commentsAdapter += CommentLoadMoreRepliesAdapterDelegate {  }
 
         with(commentsRecycler) {
             adapter = commentsAdapter
