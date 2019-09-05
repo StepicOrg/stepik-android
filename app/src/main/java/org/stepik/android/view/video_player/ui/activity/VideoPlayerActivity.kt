@@ -137,7 +137,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
-        exo_fullscreen_icon.setOnClickListener { changeVideoRotation() }
+        exo_fullscreen_icon_container.setOnClickListener { changeVideoRotation() }
 
         playerView.setControllerVisibilityListener { visibility ->
             if (visibility == View.VISIBLE) {

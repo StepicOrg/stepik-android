@@ -179,24 +179,30 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/exo_fullscreen_icon"
+            app:layout_constraintRight_toLeftOf="@id/exo_fullscreen_icon_container"
             android:layout_marginRight="@dimen/seekbar_video_margin"
             android:layout_marginEnd="@dimen/seekbar_video_margin"
             tools:text="03:35"/>
 
-
-        <ImageView
-            android:id="@+id/exo_fullscreen_icon"
+        <FrameLayout
+            android:id="@+id/exo_fullscreen_icon_container"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="@dimen/seekbar_video_margin"
+            android:layout_marginRight="@dimen/seekbar_video_margin"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginEnd="@dimen/seekbar_video_margin"
-            android:layout_marginRight="@dimen/seekbar_video_margin"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_fullscreen"/>
+            android:background="?selectableItemBackgroundBorderless">
 
+            <ImageView
+                android:id="@+id/exo_fullscreen_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_fullscreen"/>
+
+        </FrameLayout>
 
     </android.support.constraint.ConstraintLayout>
 
