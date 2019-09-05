@@ -11,8 +11,10 @@ import org.stepic.droid.R
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.view.base.ui.mapper.DateMapper
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
@@ -93,6 +95,8 @@ class CommentDataAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHold
 
             commentMenu.changeVisibility(false)
             commentTags.changeVisibility(false)
+
+            commentTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.comment.time?.time ?: 0)
 
             voteStatusViewStateDelegate.switchState(data.voteStatus)
 
