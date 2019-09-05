@@ -9,8 +9,8 @@ import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.IBinder
+import android.support.annotation.DrawableRes
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.PopupMenu
 import android.view.Gravity
 import android.view.View
@@ -23,8 +23,6 @@ import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.Util
 import kotlinx.android.synthetic.main.activity_video_player.*
 import kotlinx.android.synthetic.main.exo_playback_control_view.*
-import kotlinx.android.synthetic.main.exo_playback_control_view.view.*
-import kotlinx.android.synthetic.main.exo_simple_player_view.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -139,7 +137,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
-        playerView.exo_controller.exo_fullscreen_icon.setOnClickListener { changeVideoRotation() }
+        exo_fullscreen_icon.setOnClickListener { changeVideoRotation() }
 
         playerView.setControllerVisibilityListener { visibility ->
             if (visibility == View.VISIBLE) {
@@ -238,11 +236,16 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     override fun setIsLandscapeVideo(isLandScapeVideo: Boolean) {
         this.isLandscapeVideo = isLandScapeVideo
-        if (isLandscapeVideo) {
-            playerView.exo_controller.exo_fullscreen_icon.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_fullscreen_exit))
-        } else {
-            playerView.exo_controller.exo_fullscreen_icon.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.ic_fullscreen))
-        }
+
+        @DrawableRes
+        val fullScreenIconRes =
+            if (isLandScapeVideo) {
+                R.drawable.ic_fullscreen_exit
+            } else {
+                R.drawable.ic_fullscreen
+            }
+
+        exo_fullscreen_icon.setImageResource(fullScreenIconRes)
     }
 
     override fun showPlayInBackgroundPopup() {
