@@ -91,7 +91,7 @@ class CommentDataAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHold
                 .placeholder(commentUserIconPlaceholder)
                 .into(commentUserIconTarget)
 
-            commentText.setText(data.comment.text)
+            commentText.setPlainOrLaTeXTextColored(data.comment.text, R.color.new_accent_color)
 
             commentMenu.changeVisibility(false)
             commentTags.changeVisibility(false)
