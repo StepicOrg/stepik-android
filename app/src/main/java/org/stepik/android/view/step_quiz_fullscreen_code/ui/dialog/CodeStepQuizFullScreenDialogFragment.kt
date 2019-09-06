@@ -6,11 +6,14 @@ import android.support.design.widget.TabLayout
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.RelativeLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
@@ -20,6 +23,7 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -28,6 +32,8 @@ import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.hideKeyboard
+import org.stepic.droid.ui.util.inflate
+import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
@@ -65,9 +71,13 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     private lateinit var instructionsLayout: View
     private lateinit var playgroundLayout: View
 
+    private lateinit var codeLayout: CodeEditorLayout
     private lateinit var submitButtonSeparator: View
     private lateinit var codeSubmitButton: View
     private lateinit var retryButton: View
+
+    // Flag is necessary, because keyboard listener is constantly invoked (probably global layout listener reacts to view changes)
+    private var keyboardShown: Boolean = false
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -141,10 +151,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         }
 
         val actionsListener = object : CoreCodeStepDelegate.ActionsListener {
-            override fun keyboardShown(needShow: Boolean) {
-                setViewsVisibility(needShow)
-            }
-
             override fun onChangeLanguageClicked() {
                 val dialog = ChangeCodeLanguageDialog.newInstance()
                 if (!dialog.isAdded) {
@@ -157,7 +163,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
         coreCodeStepDelegate = CoreCodeStepDelegate(
             codeContainerView = playgroundLayout,
-            keyboardExtensionContainer = coordinator,
             stepWrapper = stepWrapper,
             codeQuizInstructionDelegate = CodeQuizInstructionDelegate(instructionsLayout, false),
             actionsListener = actionsListener
@@ -175,12 +180,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         submitButtonSeparator = playgroundLayout.submitButtonSeparator
         codeSubmitButton = playgroundLayout.codeSubmitButton
         retryButton = playgroundLayout.stepQuizRetry
+        codeLayout = playgroundLayout.codeStepLayout
 
         codeSubmitButton.setOnClickListener {
             callback.onSyncCodeStateWithParent(lang, codeStepLayout.text.toString(), true)
             dismiss()
         }
         retryButton.changeVisibility(false)
+        setupKeyboardExtensions()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -270,6 +277,59 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         coreCodeStepDelegate.onResetCode().let { codeTemplate ->
             code = codeTemplate
             playgroundLayout.codeStepLayout.setText(codeTemplate)
+        }
+    }
+
+    private fun setupKeyboardExtensions() {
+        /**
+         * Keyboard extension
+         */
+        coordinator.let { container ->
+            val stepQuizCodeKeyboardExtension =
+                container.inflate(R.layout.layout_step_quiz_code_keyboard_extension) as RecyclerView
+            stepQuizCodeKeyboardExtension.adapter = coreCodeStepDelegate.codeToolbarAdapter
+            stepQuizCodeKeyboardExtension.layoutManager = LinearLayoutManager(container.context, LinearLayoutManager.HORIZONTAL, false)
+            codeLayout.codeToolbarAdapter = coreCodeStepDelegate.codeToolbarAdapter
+
+            container.addView(stepQuizCodeKeyboardExtension)
+            stepQuizCodeKeyboardExtension.visibility = View.INVISIBLE // Apparently this fixes the offset bug when the current line is under the code toolbar adapter
+            stepQuizCodeKeyboardExtension.layoutParams = (stepQuizCodeKeyboardExtension.layoutParams as RelativeLayout.LayoutParams)
+                .apply {
+                    addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+                }
+
+            setOnKeyboardOpenListener(
+                container,
+                onKeyboardHidden = {
+                    if (keyboardShown) {
+                        stepQuizCodeKeyboardExtension.visibility = View.GONE
+                        codeLayout.isNestedScrollingEnabled = true
+                        codeLayout.layoutParams =
+                            (codeLayout.layoutParams as RelativeLayout.LayoutParams)
+                                .apply {
+                                    bottomMargin = 0
+                                }
+                        codeLayout.setPadding(0, 0, 0, container.context.resources.getDimensionPixelSize(
+                            R.dimen.step_quiz_fullscreen_code_layout_bottom_padding))
+                        setViewsVisibility(needShow = true)
+                        keyboardShown = false
+                    }
+                },
+                onKeyboardShown = {
+                    if (!keyboardShown) {
+                        stepQuizCodeKeyboardExtension.visibility = View.VISIBLE
+                        codeLayout.isNestedScrollingEnabled = false
+                        codeLayout.layoutParams =
+                            (codeLayout.layoutParams as RelativeLayout.LayoutParams)
+                                .apply {
+                                    bottomMargin = stepQuizCodeKeyboardExtension.height
+                                }
+                        codeLayout.setPadding(0, 0, 0, 0)
+                        setViewsVisibility(needShow = false)
+                        keyboardShown = true
+                    }
+                }
+            )
         }
     }
 
