@@ -4,19 +4,20 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat.getSystemService
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.fonts.FontType
@@ -25,6 +26,8 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
+import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
@@ -52,21 +55,19 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
                 }
     }
 
-    interface Callback {
-        fun onSyncCodeStateWithParent(lang: String, code: String, onSubmitClicked: Boolean = false)
-    }
-
-    private lateinit var callback: Callback
-
-    private var inputMethodManager: InputMethodManager? = null
-
     @Inject
     internal lateinit var fontsProvider: FontsProvider
+
+    private lateinit var callback: Callback
 
     private lateinit var coreCodeStepDelegate: CoreCodeStepDelegate
 
     private lateinit var instructionsLayout: View
     private lateinit var playgroundLayout: View
+
+    private lateinit var submitButtonSeparator: View
+    private lateinit var codeSubmitButton: View
+    private lateinit var retryButton: View
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -96,23 +97,20 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             .inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        return inflater.inflate(R.layout.activity_step_quiz_code_fullscreen, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.activity_step_quiz_code_fullscreen, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         callback = targetFragment as Callback
 
-        inputMethodManager = getSystemService(App.getAppContext(), InputMethodManager::class.java)
-
-        fullScreenCodeToolbarTitle.text = lessonData.lesson.title
-        fullScreenCodeToolbar.inflateMenu(R.menu.code_playground_menu)
-        fullScreenCodeToolbar.setNavigationOnClickListener { dismiss() }
-        fullScreenCodeToolbar.setNavigationIcon(R.drawable.ic_close_dark)
-        fullScreenCodeToolbar.setOnMenuItemClickListener { item ->
+        centeredToolbarTitle.text = lessonData.lesson.title
+        centeredToolbar.inflateMenu(R.menu.code_playground_menu)
+        centeredToolbar.setNavigationOnClickListener { dismiss() }
+        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.new_primary_color))
+        centeredToolbar.setOnMenuItemClickListener { item ->
             when (item?.itemId) {
                 android.R.id.home -> {
                     true
@@ -143,9 +141,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         }
 
         val actionsListener = object : CoreCodeStepDelegate.ActionsListener {
-            override fun onSubmitClicked() {
-                callback.onSyncCodeStateWithParent(lang, codeStepLayout.text.toString(), true)
-                dismiss()
+            override fun keyboardShown(needShow: Boolean) {
+                setViewsVisibility(needShow)
             }
 
             override fun onChangeLanguageClicked() {
@@ -157,6 +154,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
             override fun onFullscreenClicked(lang: String, code: String) {}
         }
+
         coreCodeStepDelegate = CoreCodeStepDelegate(
             codeContainerView = playgroundLayout,
             keyboardExtensionContainer = coordinator,
@@ -169,9 +167,20 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             lang = savedInstanceState.getString(LANG) ?: return
             code = savedInstanceState.getString(CODE) ?: return
         }
+
         coreCodeStepDelegate.setLanguage(CodeStepQuizFormState.Lang(lang, code))
         coreCodeStepDelegate.setDetailsContentData(lang)
         fullScreenCodeViewPager.setCurrentItem(1, false)
+
+        submitButtonSeparator = playgroundLayout.submitButtonSeparator
+        codeSubmitButton = playgroundLayout.codeSubmitButton
+        retryButton = playgroundLayout.stepQuizRetry
+
+        codeSubmitButton.setOnClickListener {
+            callback.onSyncCodeStateWithParent(lang, codeStepLayout.text.toString(), true)
+            dismiss()
+        }
+        retryButton.changeVisibility(false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -196,7 +205,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
                 if (p0 == 0) {
-                    inputMethodManager?.hideSoftInputFromWindow(playgroundLayout.windowToken, 0)
+                    playgroundLayout.hideKeyboard()
                 }
             }
         })
@@ -234,6 +243,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
             }
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
     }
 
     override fun onPause() {
@@ -261,5 +271,20 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             code = codeTemplate
             playgroundLayout.codeStepLayout.setText(codeTemplate)
         }
+    }
+
+    /**
+     *  Hiding views upon opening keyboard
+     */
+    private fun setViewsVisibility(needShow: Boolean) {
+        submitButtonSeparator.changeVisibility(needShow)
+        codeSubmitButton.changeVisibility(needShow)
+        centeredToolbar.changeVisibility(needShow)
+        fullScreenCodeTabs.changeVisibility(needShow)
+        fullScreenCodeSeparator.changeVisibility(needShow)
+    }
+
+    interface Callback {
+        fun onSyncCodeStateWithParent(lang: String, code: String, onSubmitClicked: Boolean = false)
     }
 }

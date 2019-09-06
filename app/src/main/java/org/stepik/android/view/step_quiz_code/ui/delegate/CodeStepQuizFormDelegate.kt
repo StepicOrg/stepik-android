@@ -12,6 +12,7 @@ import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
+import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizFormStateMapper
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeLangAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -21,7 +22,7 @@ class CodeStepQuizFormDelegate(
     containerView: View,
     private val coreCodeStepDelegate: CoreCodeStepDelegate
 ) : StepQuizFormDelegate {
-    var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
+    private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
         set(value) {
             field = value
 
@@ -34,7 +35,7 @@ class CodeStepQuizFormDelegate(
             coreCodeStepDelegate.setDetailsContentData((value as? CodeStepQuizFormState.Lang)?.lang)
         }
 
-    val viewStateDelegate = ViewStateDelegate<CodeStepQuizFormState>()
+    private val viewStateDelegate = ViewStateDelegate<CodeStepQuizFormState>()
 
     private val codeLayout = containerView.codeStepLayout
     private val stepQuizActions = containerView.stepQuizActions
@@ -42,6 +43,8 @@ class CodeStepQuizFormDelegate(
     private val stepQuizCodeLangChooserTitle = containerView.stepQuizCodeLangChooserTitle
     private val stepQuizCodeLangChooser = containerView.stepQuizCodeLangChooser
     private val stepQuizCodeLangChooserAdapter = DefaultDelegateAdapter<String>()
+
+    private val codeStepQuizFormStateMapper = CodeStepQuizFormStateMapper()
 
     init {
         viewStateDelegate.addState<CodeStepQuizFormState.Idle>()
@@ -79,7 +82,7 @@ class CodeStepQuizFormDelegate(
     }
 
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        this.state = coreCodeStepDelegate.codeStepQuizFormStateMapper.mapToFormState(coreCodeStepDelegate.codeOptions, state)
+        this.state = codeStepQuizFormStateMapper.mapToFormState(coreCodeStepDelegate.codeOptions, state)
 
         val isEnabled = StepQuizFormResolver.isQuizEnabled(state)
         coreCodeStepDelegate.setEnabled(isEnabled)

@@ -113,10 +113,9 @@ class CodeStepQuizFragment : Fragment(), StepQuizView, ChangeCodeLanguageDialog.
                 dialog.setTargetFragment(this@CodeStepQuizFragment, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
                 dialog.show(supportFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
             }
-
-            override fun onSubmitClicked() {}
+            override fun keyboardShown(needShow: Boolean) {}
         }
-        
+
         codeStepQuizFormDelegate = CodeStepQuizFormDelegate(
             containerView = view,
             coreCodeStepDelegate = CoreCodeStepDelegate(
