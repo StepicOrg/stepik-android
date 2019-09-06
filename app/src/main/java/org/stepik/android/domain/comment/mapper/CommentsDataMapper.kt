@@ -7,7 +7,11 @@ import javax.inject.Inject
 class CommentsDataMapper
 @Inject
 constructor() {
-    fun mapToCommentDataItems(commentIds: LongArray, commentsData: CommentsData): List<CommentItem.Data> =
+    fun mapToCommentDataItems(
+        commentIds: LongArray,
+        commentsData: CommentsData,
+        cachedCommentItems: List<CommentItem.Data> = emptyList()
+    ): List<CommentItem.Data> =
         commentsData
             .comments
             .mapNotNull { comment ->
@@ -27,7 +31,9 @@ constructor() {
                     voteStatus = CommentItem.Data.VoteStatus.Resolved(vote)
                 )
             }
-            .let { items ->
+            .let { newItems ->
+                val items = newItems + cachedCommentItems
+
                 commentIds
                     .flatMap { commentId ->
                         val start = items.indexOfFirst { it.comment.id == commentId }

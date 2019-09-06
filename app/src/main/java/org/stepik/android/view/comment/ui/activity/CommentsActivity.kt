@@ -6,17 +6,21 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.error_no_connection.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
@@ -71,6 +75,8 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
         setContentView(R.layout.activity_comments)
         initCenteredToolbar(titleRes = R.string.comments_title, showHomeButton = true)
+        centeredToolbar.overflowIcon =
+            AppCompatResources.getDrawable(this, R.drawable.ic_comments_ordering)
 
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()
@@ -138,14 +144,43 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         super.onStop()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.coment_list_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 true
             }
-            else ->
-                super.onOptionsItemSelected(item)
+            else -> {
+                val discussionOrder =
+                    when (item.itemId) {
+                        R.id.menu_item_last_discussion ->
+                            DiscussionOrder.LAST_DISCUSSION
+
+                        R.id.menu_item_most_liked ->
+                            DiscussionOrder.MOST_LIKED
+
+                        R.id.menu_item_most_active ->
+                            DiscussionOrder.MOST_ACTIVE
+
+                        R.id.menu_item_recent_activity ->
+                            DiscussionOrder.RECENT_ACTIVITY
+
+                        else ->
+                            null
+                    }
+
+                if (discussionOrder != null) {
+                    commentsPresenter.changeDiscussionOrder(discussionOrder)
+                    true
+                } else {
+                    super.onOptionsItemSelected(item)
+                }
+            }
         }
 
     override fun setState(state: CommentsView.State) {

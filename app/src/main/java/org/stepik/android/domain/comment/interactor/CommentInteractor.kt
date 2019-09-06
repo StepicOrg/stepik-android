@@ -49,12 +49,9 @@ constructor(
                 val cachedCommentIds = cachedComments
                     .map(CommentItem.Data::id)
 
-                val slicedCommentIds =
-                    (commentIds - cachedCommentIds).toLongArray()
-
                 commentRepository
-                    .getComments(*slicedCommentIds)
-                    .map { commentsDataMapper.mapToCommentDataItems(slicedCommentIds, it) }
+                    .getComments(*(commentIds - cachedCommentIds).toLongArray())
+                    .map { commentsDataMapper.mapToCommentDataItems(commentIds.toLongArray(), it, cachedCommentItems) }
                     .map { comments ->
                         PagedList(comments, hasNext = start > 0, hasPrev = end < orderedCommentIds.size)
                     }

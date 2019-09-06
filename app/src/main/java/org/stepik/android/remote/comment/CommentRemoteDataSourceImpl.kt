@@ -7,7 +7,6 @@ import org.stepic.droid.web.StepicRestLoggedService
 import org.stepik.android.data.comment.source.CommentRemoteDataSource
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
-import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.comment.model.CommentRequest
 import org.stepik.android.remote.comment.model.CommentResponse
 import javax.inject.Inject
@@ -26,9 +25,14 @@ constructor(
     }
 
     override fun getComments(vararg commentIds: Long): Single<CommentsData> =
-        loggedService
-            .getComments(commentIds)
-            .map(commentResponseMapper)
+        if (commentIds.isEmpty()) {
+            Single
+                .just(CommentsData(emptyList(), emptyList(), emptyList()))
+        } else {
+            loggedService
+                .getComments(commentIds)
+                .map(commentResponseMapper)
+        }
 
     override fun createComment(comment: Comment): Single<CommentsData> =
         loggedService
