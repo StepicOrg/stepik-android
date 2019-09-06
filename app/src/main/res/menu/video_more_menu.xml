@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/orientation_flag"
-        android:checkable="true"
-        android:title="@string/video_player_device_orientation_title"/>
-
-    <item
         android:id="@+id/video_quality"
         android:title="@string/video_player_quality"/>
 </menu>
