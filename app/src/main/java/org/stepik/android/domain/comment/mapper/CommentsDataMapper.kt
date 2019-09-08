@@ -34,12 +34,18 @@ constructor() {
             .let { newItems ->
                 val items = newItems + cachedCommentItems
 
+                val comments = items
+                    .associateBy { it.comment.id }
+
                 commentIds
                     .flatMap { commentId ->
-                        val start = items.indexOfFirst { it.comment.id == commentId }
-                        val end = items.indexOfLast { it.comment.parent == commentId || it.comment.id == commentId } + 1
+                        val comment = comments[commentId]
 
-                        items.subList(start, end)
+                        if (comment != null) {
+                            listOf(comment) + (comment.comment.replies?.mapNotNull(comments::get) ?: emptyList())
+                        } else {
+                            emptyList()
+                        }
                     }
             }
 }

@@ -9,8 +9,8 @@ import org.stepik.android.domain.comment.repository.CommentRepository
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.presentation.comment.model.CommentItem
-import kotlin.math.max
 import javax.inject.Inject
+import kotlin.math.max
 import kotlin.math.min
 
 class CommentInteractor
