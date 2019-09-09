@@ -97,11 +97,11 @@ constructor(
                     max(0, index - PAGE_SIZE) to index
 
                 Direction.DOWN ->
-                    index to min(index + PAGE_SIZE, commentIds.size)
+                    index + 1 to min(index + PAGE_SIZE, commentIds.size)
             }
 
         val slicedCommentIds = commentIds
-            .slice(start until end)
+            .subList(start, end)
             .toLongArray()
 
         return commentRepository

@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
@@ -20,6 +21,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.comment.CommentsPresenter
@@ -81,7 +83,7 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()
         commentsAdapter += CommentDataAdapterDelegate()
-        commentsAdapter += CommentLoadMoreRepliesAdapterDelegate {  }
+        commentsAdapter += CommentLoadMoreRepliesAdapterDelegate(commentsPresenter::onLoadMoreReplies)
 
         with(commentsRecycler) {
             adapter = commentsAdapter
@@ -89,6 +91,27 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
                 ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
+            })
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
+                        ?: return
+
+                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+                    if (dy > 0) {
+                        val visibleItemCount = layoutManager.childCount
+                        val totalItemCount = layoutManager.itemCount
+
+                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                            post { commentsPresenter.onLoadMore(CommentInteractor.Direction.DOWN) }
+                        }
+                    } else {
+                        if (pastVisibleItems == 0) {
+                            post { commentsPresenter.onLoadMore(CommentInteractor.Direction.UP) }
+                        }
+                    }
+                }
             })
         }
 
@@ -176,6 +199,7 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
                 if (discussionOrder != null) {
                     commentsPresenter.changeDiscussionOrder(discussionOrder)
+                    item.isChecked = true
                     true
                 } else {
                     super.onOptionsItemSelected(item)
