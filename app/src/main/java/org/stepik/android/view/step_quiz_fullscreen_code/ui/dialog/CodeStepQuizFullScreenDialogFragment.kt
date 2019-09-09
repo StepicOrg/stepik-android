@@ -186,7 +186,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             dismiss()
         }
         retryButton.changeVisibility(false)
-        setupKeyboardExtensions()
+        setupKeyboardExtension()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -279,10 +279,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         }
     }
 
-    private fun setupKeyboardExtensions() {
-        /**
-         * Keyboard extension
-         */
+    /**
+     * Keyboard extension
+     */
+    private fun setupKeyboardExtension() {
         stepQuizCodeKeyboardExtension.adapter = coreCodeStepDelegate.codeToolbarAdapter
         stepQuizCodeKeyboardExtension.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         codeLayout.codeToolbarAdapter = coreCodeStepDelegate.codeToolbarAdapter
