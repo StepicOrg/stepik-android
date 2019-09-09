@@ -16,7 +16,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_keyboard_extension.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -37,7 +36,6 @@ import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CoreCodeStepDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
@@ -174,10 +172,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         retryButton = playgroundLayout.stepQuizRetry
         codeLayout = playgroundLayout.codeStepLayout
 
-        codeSubmitButton.setOnClickListener {
-            callback.onSyncCodeStateWithParent(lang, codeStepLayout.text.toString(), onSubmitClicked = true)
-            dismiss()
-        }
         retryButton.changeVisibility(false)
         setupCodeToolAdapter()
         setupKeyboardExtension()
@@ -190,15 +184,20 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             codeToolbarAdapter = codeToolbarAdapter
         )
 
-        coreCodeStepDelegate.setLanguage(CodeStepQuizFormState.Lang(lang, code))
+        coreCodeStepDelegate.setLanguage(lang, code)
         coreCodeStepDelegate.setDetailsContentData(lang)
         fullScreenCodeViewPager.setCurrentItem(1, false)
+
+        codeSubmitButton.setOnClickListener {
+            callback.onSyncCodeStateWithParent(lang, codeLayout.text.toString(), onSubmitClicked = true)
+            dismiss()
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString(LANG, lang)
-        outState.putString(CODE, codeStepLayout.text.toString())
+        outState.putString(CODE, codeLayout.text.toString())
     }
 
     private fun initViewPager() {
@@ -259,7 +258,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     }
 
     override fun onPause() {
-        callback.onSyncCodeStateWithParent(lang, codeStepLayout.text.toString())
+        callback.onSyncCodeStateWithParent(lang, codeLayout.text.toString())
         super.onPause()
     }
 
@@ -274,14 +273,13 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
     override fun onLanguageChosen(programmingLanguage: String) {
         lang = programmingLanguage
-        coreCodeStepDelegate.setLanguage(coreCodeStepDelegate.onLanguageSelected(programmingLanguage))
+        coreCodeStepDelegate.setLanguage(programmingLanguage)
         coreCodeStepDelegate.setDetailsContentData(programmingLanguage)
     }
 
     override fun onReset() {
-        coreCodeStepDelegate.onResetCode().let { codeTemplate ->
-            code = codeTemplate
-            playgroundLayout.codeStepLayout.setText(codeTemplate)
+        coreCodeStepDelegate.resetCode(lang).let { codeTemplate ->
+            codeLayout.setText(codeTemplate)
         }
     }
 

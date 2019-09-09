@@ -30,11 +30,14 @@ class CoreCodeStepDelegate(
         stepQuizActionChangeLang.setCompoundDrawables(end = R.drawable.ic_arrow_bottom)
     }
 
-    fun setLanguage(codeStepQuizFormState: CodeStepQuizFormState.Lang) {
-        codeLayout.setText(codeStepQuizFormState.code)
-        codeLayout.lang = extensionForLanguage(codeStepQuizFormState.lang)
-        stepQuizActionChangeLang.text = codeStepQuizFormState.lang
-        codeToolbarAdapter?.setLanguage(codeStepQuizFormState.lang)
+    /**
+     * if [code] is null then default code template for [lang] will be used
+     */
+    fun setLanguage(lang: String, code: String? = null) {
+        codeLayout.lang = extensionForLanguage(lang)
+        stepQuizActionChangeLang.text = lang
+        codeLayout.setText(code ?: resetCode(lang))
+        codeToolbarAdapter?.setLanguage(lang)
     }
 
     fun setDetailsContentData(lang: String?) {
@@ -48,8 +51,8 @@ class CoreCodeStepDelegate(
     fun onLanguageSelected(lang: String): CodeStepQuizFormState.Lang =
         CodeStepQuizFormState.Lang(lang, codeOptions.codeTemplates[lang] ?: "")
 
-    fun onResetCode(): String =
-        codeOptions.codeTemplates[codeLayout.lang] ?: ""
+    fun resetCode(lang: String): String =
+        codeOptions.codeTemplates[lang] ?: ""
 
     fun setEnabled(isEnabled: Boolean) {
         codeLayout.isEnabled = isEnabled
