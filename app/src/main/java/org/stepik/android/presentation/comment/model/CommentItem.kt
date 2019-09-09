@@ -10,7 +10,7 @@ sealed class CommentItem {
         val comment: Comment,
         val user: User,
         val voteStatus: VoteStatus
-    ) : Identifiable<Long>, CommentItem() {
+    ) : CommentItem(), Identifiable<Long> {
         override val id: Long =
             comment.id
 
@@ -24,7 +24,10 @@ sealed class CommentItem {
         val parentComment: Comment,
         val lastCommentId: Long,
         val count: Int
-    ) : CommentItem()
+    ) : CommentItem(), Identifiable<Long> {
+        override val id: Long =
+            parentComment.id
+    }
 
     object Placeholder : CommentItem()
     object ReplyPlaceholder : CommentItem()

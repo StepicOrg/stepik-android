@@ -10,6 +10,37 @@ import javax.inject.Inject
 class CommentsStateMapper
 @Inject
 constructor() {
+    fun mapCommentDataItemsToRawItems(commentDataItems: PagedList<CommentItem.Data>): List<CommentItem> {
+        val items = ArrayList<CommentItem>()
+
+        var parentItem: CommentItem.Data? = null
+        for (i in commentDataItems.indices) {
+            val item = commentDataItems[i]
+            if (!item.comment.replies.isNullOrEmpty()) {
+                parentItem = item
+            }
+
+            items += item
+
+            if (item.comment.parent == parentItem?.id &&
+                parentItem?.id != null &&
+                commentDataItems.getOrNull(i + 1)?.comment?.parent != parentItem.id) {
+
+                val replies = parentItem.comment.replies ?: emptyList()
+                val index = replies.indexOf(item.id)
+
+                if (index in 0 until replies.size - 1) {
+                    items += CommentItem.LoadMoreReplies(parentItem.comment, item.id, replies.size - index)
+                }
+            }
+        }
+
+        return items
+    }
+
+    /**
+     * stable state -> pagination loading
+     */
     fun mapToLoadMoreState(commentsState: CommentsView.CommentsState.Loaded, direction: CommentInteractor.Direction): CommentsView.CommentsState =
         when (direction) {
             CommentInteractor.Direction.UP ->
@@ -19,6 +50,9 @@ constructor() {
                 commentsState.copy(commentItems = commentsState.commentItems + CommentItem.Placeholder)
         }
 
+    /**
+     * Pagination loading -> new stable state
+     */
     fun mapFromLoadMoreToSuccess(state: CommentsView.State, items: PagedList<CommentItem.Data>, direction: CommentInteractor.Direction): CommentsView.State {
         if (state !is CommentsView.State.DiscussionLoaded ||
             state.commentsState !is CommentsView.CommentsState.Loaded) {
@@ -26,19 +60,23 @@ constructor() {
         }
 
         val commentsState = state.commentsState
+        val rawItems = mapCommentDataItemsToRawItems(items)
 
         val (newDataItems: PagedList<CommentItem.Data>, newItems) =
             when (direction) {
                 CommentInteractor.Direction.UP ->
-                    items + commentsState.commentDataItems to items + commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
+                    items + commentsState.commentDataItems to rawItems + commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
 
                 CommentInteractor.Direction.DOWN ->
-                    commentsState.commentDataItems + items to commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals) + items
+                    commentsState.commentDataItems + items to commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals) + rawItems
             }
 
         return state.copy(commentsState = commentsState.copy(commentDataItems = newDataItems, commentItems = newItems))
     }
 
+    /**
+     * Pagination loading -> (rollback) -> previous stable state
+     */
     fun mapFromLoadMoreToError(state: CommentsView.State, direction: CommentInteractor.Direction): CommentsView.State {
         if (state !is CommentsView.State.DiscussionLoaded ||
             state.commentsState !is CommentsView.CommentsState.Loaded) {
@@ -56,4 +94,6 @@ constructor() {
 
         return state.copy(commentsState = state.commentsState.copy(commentItems = newItems))
     }
+
+
 }

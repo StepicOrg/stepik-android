@@ -86,9 +86,7 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
-                    onSuccess = { commentDataItems: PagedList<CommentItem.Data> ->
-                        state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(commentDataItems, commentDataItems))
-                    },
+                    onSuccess = { state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(it, commentsStateMapper.mapCommentDataItemsToRawItems(it))) },
                     onError = { state = CommentsView.State.NetworkError }
                 )
         }
@@ -137,7 +135,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { state = commentsStateMapper.mapFromLoadMoreToSuccess(state, it, direction) },
-                onError = { state = commentsStateMapper.mapFromLoadMoreToError(state, direction); }
+                onError = { state = commentsStateMapper.mapFromLoadMoreToError(state, direction) }
             )
     }
 
