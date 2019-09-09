@@ -114,10 +114,20 @@ constructor(
         val lastCommentId =
             when (direction) {
                 CommentInteractor.Direction.UP ->
-                    commentDataItems.first().id
+                    commentDataItems
+                        .takeIf { it.hasPrev }
+                        .takeIf { commentsState.commentItems.first() !is CommentItem.Placeholder }
+                        ?.first()
+                        ?.id
+                        ?: return
 
                 CommentInteractor.Direction.DOWN ->
-                    commentDataItems.last { it.comment.parent == null }.id
+                    commentDataItems
+                        .takeIf { it.hasNext }
+                        .takeIf { commentsState.commentItems.last() !is CommentItem.Placeholder }
+                        ?.last { it.comment.parent == null }
+                        ?.id
+                        ?: return
             }
 
         state = oldState.copy(commentsState = commentsStateMapper.mapToLoadMoreState(commentsState, direction))

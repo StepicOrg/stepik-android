@@ -27,4 +27,5 @@ sealed class CommentItem {
     ) : CommentItem()
 
     object Placeholder : CommentItem()
+    object ReplyPlaceholder : CommentItem()
 }

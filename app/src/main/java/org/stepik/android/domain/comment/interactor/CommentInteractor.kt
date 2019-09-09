@@ -53,7 +53,7 @@ constructor(
                     .getComments(*(commentIds - cachedCommentIds).toLongArray())
                     .map { commentsDataMapper.mapToCommentDataItems(commentIds.toLongArray(), it, cachedCommentItems) }
                     .map { comments ->
-                        PagedList(comments, hasNext = start > 0, hasPrev = end < orderedCommentIds.size)
+                        PagedList(comments, hasPrev = start > 0, hasNext = end < orderedCommentIds.size)
                     }
             }
 
@@ -108,7 +108,7 @@ constructor(
             .getComments(*slicedCommentIds)
             .map { commentsDataMapper.mapToCommentDataItems(slicedCommentIds, it) }
             .map { comments ->
-                PagedList(comments, hasNext = start > 0, hasPrev = end < commentIds.size)
+                PagedList(comments, hasPrev = start > 0, hasNext = end < commentIds.size)
             }
     }
 
