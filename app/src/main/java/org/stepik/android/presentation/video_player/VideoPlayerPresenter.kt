@@ -30,6 +30,7 @@ constructor(
 ) : PresenterBase<VideoPlayerView>() {
     companion object {
         private const val VIDEO_PLAYER_DATA = "video_player_data"
+        private const val FULLSCREEN_DATA = "fullscreen_data"
 
         private const val TIMESTAMP_EPS = 1000L
     }
@@ -41,29 +42,18 @@ constructor(
                 view?.setVideoPlayerData(value)
             }
         }
-
-    private var isRotateVideo: Boolean? = null
+    private var isLandscapeVideo: Boolean = false
         set(value) {
             field = value
-            view?.setIsRotateVideo(value ?: false)
+            view?.setIsLandscapeVideo(value)
         }
 
     private var isLoading = false
 
-    init {
-        compositeDisposable += videoPlayerSettingsInteractor
-            .isRotateVideo()
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribe { isRotate ->
-                isRotateVideo = isRotate
-            }
-    }
-
     override fun attachView(view: VideoPlayerView) {
         super.attachView(view)
         videoPlayerData?.let(view::setVideoPlayerData)
-        view.setIsRotateVideo(isRotateVideo ?: false)
+        view.setIsLandscapeVideo(isLandscapeVideo)
     }
 
     /**
@@ -73,6 +63,7 @@ constructor(
         if (videoPlayerData == null) {
             videoPlayerData = savedInstanceState.getParcelable(VIDEO_PLAYER_DATA)
         }
+        isLandscapeVideo = savedInstanceState.getBoolean(FULLSCREEN_DATA)
     }
 
     fun onMediaData(mediaData: VideoPlayerMediaData) {
@@ -144,12 +135,7 @@ constructor(
     }
 
     fun changeVideoRotation(isRotateVideo: Boolean) {
-        this.isRotateVideo = isRotateVideo
-
-        compositeDisposable += videoPlayerSettingsInteractor
-            .setRotateVideo(isRotateVideo)
-            .subscribeOn(backgroundScheduler)
-            .subscribe()
+        this.isLandscapeVideo = isRotateVideo
     }
 
     fun syncVideoTimestamp(currentPosition: Long, duration: Long) {
@@ -171,5 +157,6 @@ constructor(
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(VIDEO_PLAYER_DATA, videoPlayerData)
+        outState.putBoolean(FULLSCREEN_DATA, isLandscapeVideo)
     }
 }
