@@ -76,6 +76,12 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_comments)
+
+        injectComponent()
+        commentsPresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(CommentsPresenter::class.java)
+
         initCenteredToolbar(titleRes = R.string.comments_title, showHomeButton = true)
         centeredToolbar.overflowIcon =
             AppCompatResources.getDrawable(this, R.drawable.ic_comments_ordering)
@@ -125,11 +131,6 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         commentsViewStateDelegate.addState<CommentsView.CommentsState.Loaded>(commentsRecycler)
         commentsViewStateDelegate.addState<CommentsView.CommentsState.Loading>(commentsRecycler)
         commentsViewStateDelegate.addState<CommentsView.CommentsState.EmptyComments>(emptyComments)
-
-        injectComponent()
-        commentsPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(CommentsPresenter::class.java)
 
         setDataToPresenter()
 
