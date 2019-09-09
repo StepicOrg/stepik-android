@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2032,
-        name                 : '1.90',
+        code                 : 2034,
+        name                 : '1.92',
 
         minSdk               : 16,
         targetSdk            : 26,
@@ -12,6 +12,7 @@ ext.versions = [
         googleServicesVersion: '4.2.0',
         fabric               : '1.31.0',
         dexcount             : '0.8.5',
+        firebasePerfPlugin   : '1.3.1',
 
         dagger               : '2.24',
         butterKnife          : '8.8.1',
@@ -48,6 +49,7 @@ ext.versions = [
         firebaseCore         : '16.0.6',
         firebaseConfig       : '16.1.2',
         firebaseMessaging    : '17.3.4',
+        firebasePerf         : '16.2.5',
 
         checkout             : '1.2.1',
 
@@ -91,11 +93,12 @@ ext.versions = [
 ]
 
 ext.gradlePlugins = [
-        googleServices: "com.google.gms:google-services:$versions.googleServicesVersion",
-        kotlin        : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
-        android       : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
-        fabric        : "io.fabric.tools:gradle:$versions.fabric",
-        dexcount      : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcount"
+        googleServices    : "com.google.gms:google-services:$versions.googleServicesVersion",
+        kotlin            : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
+        android           : "com.android.tools.build:gradle:$versions.androidGradlePlugin",
+        fabric            : "io.fabric.tools:gradle:$versions.fabric",
+        dexcount          : "com.getkeepsafe.dexcount:dexcount-gradle-plugin:$versions.dexcount",
+        firebasePerfPlugin: "com.google.firebase:perf-plugin:$versions.firebasePerfPlugin"
 ]
 
 ext.libraries = [
@@ -149,6 +152,7 @@ ext.libraries = [
         firebaseCore         : "com.google.firebase:firebase-core:$versions.firebaseCore",
         firebaseConfig       : "com.google.firebase:firebase-config:$versions.firebaseConfig",
         firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebaseMessaging",
+        firebasePerf         : "com.google.firebase:firebase-perf:$versions.firebasePerf",
 
         checkout             : "org.solovyev.android:checkout:$versions.checkout",
 

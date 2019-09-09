@@ -17,8 +17,8 @@ import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
-import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
+import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
 
 class StepQuizDelegate(
     private val step: Step,
@@ -45,7 +45,7 @@ class StepQuizDelegate(
         stepRetryButton.setOnClickListener { stepQuizPresenter.createAttempt(step) }
     }
 
-    private fun onActionButtonClicked() {
+    fun onActionButtonClicked() {
         val state = currentState ?: return
 
         if (StepQuizFormResolver.isSubmissionInTerminalState(state)) {

@@ -11,6 +11,7 @@ import org.stepik.android.view.step_quiz_sorting.ui.fragment.SortingStepQuizFrag
 import org.stepik.android.view.step_quiz_sql.ui.fragment.SqlStepQuizFragment
 import org.stepik.android.view.step_quiz_text.ui.fragment.TextStepQuizFragment
 import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
+import org.stepik.android.view.step_quz_pycharm.ui.fragment.PyCharmStepQuizFragment
 import javax.inject.Inject
 
 class StepQuizFragmentFactoryImpl
@@ -34,6 +35,9 @@ constructor() : StepQuizFragmentFactory {
 
             AppConstants.TYPE_MATCHING ->
                 MatchingStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+
+            AppConstants.TYPE_PYCHARM ->
+                PyCharmStepQuizFragment.newInstance()
 
             AppConstants.TYPE_SQL ->
                 SqlStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)

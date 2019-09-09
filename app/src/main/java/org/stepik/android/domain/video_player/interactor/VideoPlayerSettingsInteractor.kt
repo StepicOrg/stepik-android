@@ -34,14 +34,6 @@ constructor(
             )
         }
 
-    fun isRotateVideo(): Single<Boolean> =
-        Single.fromCallable(userPreferences::isRotateVideo)
-
-    fun setRotateVideo(isRotateVideo: Boolean): Completable =
-        Completable.fromAction {
-            userPreferences.isRotateVideo = isRotateVideo
-        }
-
     private fun getVideoUrl(videoUrls: List<VideoUrl>): Single<String> =
         Single
             .fromCallable(userPreferences::getQualityVideoForPlaying)

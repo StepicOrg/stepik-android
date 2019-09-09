@@ -32,9 +32,7 @@ project.afterEvaluate {
                 group = 'Reporting'
                 description = "Generate Jacoco coverage reports for the ${sourceName.capitalize()} build."
 
-                classDirectories = fileTree(
-                        dir: "${project.buildDir}/intermediates/classes/${sourcePath}",
-                        excludes: ['**/R.class',
+                def excludes = ['**/R.class',
                                    '**/R$*.class',
                                    '**/*$ViewInjector*.*',
                                    '**/*$ViewBinder*.*',
@@ -46,6 +44,13 @@ project.afterEvaluate {
                                    '**/*Dagger*.*', // Dagger auto-generated code.
                                    '**/*MembersInjector*.*', // Dagger auto-generated code.
                                    '**/*_Provide*Factory*.*'] // Dagger auto-generated code.
+
+                classDirectories = fileTree(
+                        dir: "${project.buildDir}/intermediates/javac/${sourcePath}",
+                        excludes: excludes
+                ) + fileTree(
+                        dir: "${project.buildDir}/tmp/kotlin-classes/${sourcePath}",
+                        excludes: excludes
                 )
 
                 def coverageSourceDirs = [
