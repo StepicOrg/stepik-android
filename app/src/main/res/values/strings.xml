@@ -762,6 +762,9 @@
     <string name="step_quiz_unsupported_action">Open the web version to solve</string>
     <string name="step_quiz_unsupported_message">Current step type is not supported in mobile app yet</string>
 
+    <string name="step_quiz_code_full_screen_instruction_tab">Instruction</string>
+    <string name="step_quiz_code_full_screen_code_tab">Code</string>
+
     <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
     <!-- Feedback -->
