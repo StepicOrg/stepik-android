@@ -57,5 +57,10 @@ class CodeQuizInstructionDelegate(
 
     fun setCodeDetailsData(step: Step, lang: String?) {
         stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
+        stepQuizCodeDetails.visibility = if (stepQuizCodeDetailsAdapter.items.isEmpty()) {
+            View.GONE
+        } else {
+            View.VISIBLE
+        }
     }
 }
