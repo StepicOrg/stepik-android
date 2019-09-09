@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.comment.mapper
 
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.presentation.comment.CommentsView
@@ -95,5 +96,37 @@ constructor() {
         return state.copy(commentsState = state.commentsState.copy(commentItems = newItems))
     }
 
+    /**
+     * stable state -> replies loading
+     */
+    fun mapToLoadMoreRepliesState(commentsState: CommentsView.CommentsState.Loaded, loadMoreReplies: CommentItem.LoadMoreReplies): CommentsView.CommentsState =
+        commentsState.copy(
+            commentItems = commentsState
+                .commentItems
+                .map { if (it == loadMoreReplies) CommentItem.ReplyPlaceholder(loadMoreReplies.parentComment) else it }
+        )
 
+    fun mapFromLoadMoreRepliesToSuccess(state: CommentsView.State, items: PagedList<CommentItem.Data>, loadMoreReplies: CommentItem.LoadMoreReplies): CommentsView.State {
+        if (state !is CommentsView.State.DiscussionLoaded ||
+            state.commentsState !is CommentsView.CommentsState.Loaded) {
+            return state
+        }
+
+        val commentsState = state.commentsState
+
+        val rawIndex = commentsState.commentItems.indexOfFirst { (it as? CommentItem.ReplyPlaceholder)?.id == loadMoreReplies.id }
+        val index = commentsState.commentDataItems.indexOfFirst { it.id == loadMoreReplies.lastCommentId }
+
+        return if (rawIndex > 0 && index > 0) {
+            val commentItems =
+                commentsState.commentItems.mutate { removeAt(rawIndex); addAll(rawIndex, items) }
+
+            val commentDataItems =
+                commentsState.commentDataItems.mutate { addAll(index + 1, items) }
+
+            state.copy(commentsState = commentsState.copy(commentDataItems, commentItems))
+        } else {
+            state
+        }
+    }
 }

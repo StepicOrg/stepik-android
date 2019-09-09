@@ -30,5 +30,10 @@ sealed class CommentItem {
     }
 
     object Placeholder : CommentItem()
-    object ReplyPlaceholder : CommentItem()
+    data class ReplyPlaceholder(
+        val parentComment: Comment
+    ) : CommentItem(), Identifiable<Long> {
+        override val id: Long =
+            parentComment.id
+    }
 }

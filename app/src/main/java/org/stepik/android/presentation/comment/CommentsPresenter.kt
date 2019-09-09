@@ -5,8 +5,6 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.concatWithPagedList
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.DiscussionOrder
@@ -143,19 +141,16 @@ constructor(
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
 
-        val commentDataItems = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
-            ?.commentDataItems
+        val commentsState = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
             ?: return
 
+        state = oldState.copy(commentsState = commentsStateMapper.mapToLoadMoreRepliesState(commentsState, loadMoreReplies))
         compositeDisposable += commentInteractor
             .getMoreReplies(loadMoreReplies.parentComment, loadMoreReplies.lastCommentId)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = {
-                    val items = commentDataItems.concatWithPagedList(it)
-                    state = oldState.copy(commentsState = CommentsView.CommentsState.Loaded(items, items))
-                },
+                onSuccess = { state = commentsStateMapper.mapFromLoadMoreRepliesToSuccess(state, it, loadMoreReplies) },
                 onError = { state = oldState }
             )
     }

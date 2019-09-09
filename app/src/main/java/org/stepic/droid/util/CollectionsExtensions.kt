@@ -77,3 +77,15 @@ fun <T> List<T>.swap(i: Int, j: Int): List<T> {
         }
     }
 }
+
+/**
+ * Applies mutation to list
+ */
+inline fun <T> List<T>.mutate(mutation: MutableList<T>.() -> Unit): List<T> =
+    this.toMutableList().apply(mutation)
+
+/**
+ * Applies mutation to list
+ */
+inline fun <T> PagedList<T>.mutate(mutation: MutableList<T>.() -> Unit): PagedList<T> =
+    PagedList(this.toMutableList().apply(mutation), hasPrev = hasPrev, hasNext = hasNext, page = page)

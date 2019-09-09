@@ -12,7 +12,23 @@ class CommentPlaceholderAdapterDelegate : AdapterDelegate<CommentItem, DelegateV
         ViewHolder(createView(parent, R.layout.item_comment_placeholder))
 
     override fun isForViewType(position: Int, data: CommentItem): Boolean =
-        data is CommentItem.Placeholder
+        data is CommentItem.Placeholder ||
+        data is CommentItem.ReplyPlaceholder
 
-    private class ViewHolder(root: View) : DelegateViewHolder<CommentItem>(root)
+    private class ViewHolder(root: View) : DelegateViewHolder<CommentItem>(root) {
+        private val replyOffset =
+            context.resources.getDimensionPixelOffset(R.dimen.comment_item_reply_offset)
+
+        override fun onBind(data: CommentItem) {
+            itemView.layoutParams =
+                (itemView.layoutParams as ViewGroup.MarginLayoutParams).apply {
+                    leftMargin =
+                        if (data is CommentItem.Placeholder) {
+                            0
+                        } else {
+                            replyOffset
+                        }
+                }
+        }
+    }
 }
