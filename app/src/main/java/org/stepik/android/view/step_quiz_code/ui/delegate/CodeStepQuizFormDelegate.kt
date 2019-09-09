@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playgroun
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.model.Reply
+import org.stepik.android.model.code.CodeOptions
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.resolver.StepQuizFormResolver
@@ -20,6 +21,7 @@ import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 
 class CodeStepQuizFormDelegate(
     containerView: View,
+    private val codeOptions: CodeOptions,
     private val codeLayoutDelegate: CodeLayoutDelegate,
     private val onFullscreenClicked: (lang: String, code: String) -> Unit
 ) : StepQuizFormDelegate {
@@ -55,9 +57,8 @@ class CodeStepQuizFormDelegate(
         /**
          * Lang chooser
          */
-        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate { state = CodeStepQuizFormState.Lang(it, codeLayoutDelegate.codeOptions.codeTemplates[it] ?: "") }
-        stepQuizCodeLangChooserAdapter.items =
-            codeLayoutDelegate.codeOptions.codeTemplates.keys.toList().sorted()
+        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate { state = CodeStepQuizFormState.Lang(it, codeOptions.codeTemplates[it] ?: "") }
+        stepQuizCodeLangChooserAdapter.items = codeOptions.codeTemplates.keys.toList().sorted()
 
         stepQuizCodeLangChooserTitle.setCompoundDrawables(start = R.drawable.ic_step_quiz_code_lang)
         with(stepQuizCodeLangChooser) {
@@ -83,7 +84,7 @@ class CodeStepQuizFormDelegate(
     }
 
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        this.state = codeStepQuizFormStateMapper.mapToFormState(codeLayoutDelegate.codeOptions, state)
+        this.state = codeStepQuizFormStateMapper.mapToFormState(codeOptions, state)
 
         val isEnabled = StepQuizFormResolver.isQuizEnabled(state)
         codeLayoutDelegate.setEnabled(isEnabled)
@@ -93,7 +94,7 @@ class CodeStepQuizFormDelegate(
         if (state !is CodeStepQuizFormState.Lang) {
             return
         }
-        state = CodeStepQuizFormState.Lang(lang, codeLayoutDelegate.codeOptions.codeTemplates[lang] ?: "")
+        state = CodeStepQuizFormState.Lang(lang, codeOptions.codeTemplates[lang] ?: "")
     }
 
     fun updateCodeLayoutFromDialog(lang: String, code: String) {

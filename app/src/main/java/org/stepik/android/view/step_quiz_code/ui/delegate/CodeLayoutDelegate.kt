@@ -11,6 +11,7 @@ import org.stepic.droid.ui.util.setCompoundDrawables
 class CodeLayoutDelegate(
     codeContainerView: View,
     private val stepWrapper: StepPersistentWrapper,
+    private val codeTemplates: Map<String, String>,
     private val codeQuizInstructionDelegate: CodeQuizInstructionDelegate,
     private var codeToolbarAdapter: CodeToolbarAdapter?,
     private val onChangeLanguageClicked: () -> Unit
@@ -18,8 +19,6 @@ class CodeLayoutDelegate(
 
     private val codeLayout = codeContainerView.codeStepLayout
     private val stepQuizActionChangeLang = codeContainerView.stepQuizActionChangeLang
-
-    val codeOptions = stepWrapper.step.block?.options ?: throw IllegalArgumentException("Code options shouldn't be null")
 
     init {
         /**
@@ -35,7 +34,7 @@ class CodeLayoutDelegate(
     fun setLanguage(lang: String, code: String? = null) {
         codeLayout.lang = extensionForLanguage(lang)
         stepQuizActionChangeLang.text = lang
-        codeLayout.setText(code ?: codeOptions.codeTemplates[lang] ?: "")
+        codeLayout.setText(code ?: codeTemplates[lang] ?: "")
         codeToolbarAdapter?.setLanguage(lang)
     }
 
