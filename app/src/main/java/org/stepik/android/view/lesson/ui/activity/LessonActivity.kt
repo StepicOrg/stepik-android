@@ -9,6 +9,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.content.res.AppCompatResources
 import android.text.Spannable
@@ -26,7 +27,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.listeners.NextMoveable
@@ -46,12 +46,11 @@ import org.stepik.android.model.Unit
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateAppDialog.Companion.Callback, TimeIntervalPickerDialogFragment.Companion.Callback {
@@ -302,7 +301,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
             streakTitle.length,
             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
         )
-        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.bold)))
+        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
         streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         val description = if (streakDays > 0) {
