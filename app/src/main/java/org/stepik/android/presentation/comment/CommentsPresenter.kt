@@ -13,6 +13,7 @@ import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.presentation.comment.mapper.CommentsStateMapper
 import org.stepik.android.presentation.comment.model.CommentItem
 import javax.inject.Inject
 
@@ -22,6 +23,8 @@ constructor(
     private val commentInteractor: CommentInteractor,
     private val composeCommentInteractor: ComposeCommentInteractor,
     private val discussionProxyInteractor: DiscussionProxyInteractor,
+
+    private val commentsStateMapper: CommentsStateMapper,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -84,7 +87,7 @@ constructor(
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
                     onSuccess = { commentDataItems: PagedList<CommentItem.Data> ->
-                        state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(commentDataItems, commentDataItems as PagedList<CommentItem>))
+                        state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(commentDataItems, commentDataItems))
                     },
                     onError = { state = CommentsView.State.NetworkError }
                 )
@@ -102,9 +105,11 @@ constructor(
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
 
-        val commentDataItems = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
-            ?.commentDataItems
+        val commentsState = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
             ?: return
+
+        val commentDataItems =
+            commentsState.commentDataItems
 
         val lastCommentId =
             when (direction) {
@@ -115,16 +120,14 @@ constructor(
                     commentDataItems.last { it.comment.parent == null }.id
             }
 
+        state = oldState.copy(commentsState = commentsStateMapper.mapToLoadMoreState(commentsState, direction))
         compositeDisposable += commentInteractor
             .getMoreComments(oldState.discussionProxy, oldState.discussionOrder, direction, lastCommentId)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = {
-                    val items = commentDataItems.concatWithPagedList(it)
-                    state = oldState.copy(commentsState = CommentsView.CommentsState.Loaded(items, items as PagedList<CommentItem>))
-                },
-                onError = { state = oldState }
+                onSuccess = { state = commentsStateMapper.mapFromLoadMoreToSuccess(state, it, direction) },
+                onError = { state = commentsStateMapper.mapFromLoadMoreToError(state, direction); }
             )
     }
 
@@ -143,7 +146,7 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     val items = commentDataItems.concatWithPagedList(it)
-                    state = oldState.copy(commentsState = CommentsView.CommentsState.Loaded(items, items as PagedList<CommentItem>))
+                    state = oldState.copy(commentsState = CommentsView.CommentsState.Loaded(items, items))
                 },
                 onError = { state = oldState }
             )

@@ -24,8 +24,8 @@ interface CommentsView {
         object EmptyComments : CommentsState()
 
         data class Loaded(
-            val commentDataItems: List<CommentItem.Data>,
-            val commentItems: PagedList<CommentItem>
+            val commentDataItems: PagedList<CommentItem.Data>,
+            val commentItems: List<CommentItem>
         ) : CommentsState()
     }
 
