@@ -36,12 +36,7 @@ class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
             .positiveText(R.string.choose_action)
             .negativeText(R.string.cancel)
             .onPositive { _, _ ->
-                val callback = if (parentFragment != null) {
-                    parentFragment as Callback
-                } else {
-                    activity as Callback
-                }
-                callback.onLanguageChosen(picker.displayedValues[picker.value])
+                (parentFragment as Callback).onLanguageChosen(picker.displayedValues[picker.value])
             }
             .build()
     }

@@ -16,7 +16,7 @@ import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 
 class CodeQuizInstructionDelegate(
     detailsContainerView: View,
-    private val isCollapseable: Boolean
+    isCollapseable: Boolean
 ) {
 
     private val stepQuizCodeDetails = detailsContainerView.stepQuizCodeDetails
@@ -26,11 +26,7 @@ class CodeQuizInstructionDelegate(
     private val stepQuizCodeDetailsAdapter = DefaultDelegateAdapter<CodeDetail>()
     private val codeStepQuizDetailsMapper = CodeStepQuizDetailsMapper()
 
-    fun setCodeDetailsData(step: Step, lang: String?) {
-        stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
-    }
-
-    fun setupCodeDetailView() {
+    init {
         stepQuizCodeDetailsAdapter += CodeDetailSampleAdapterDelegate()
         stepQuizCodeDetailsAdapter += CodeDetailLimitAdapterDelegate()
 
@@ -38,6 +34,7 @@ class CodeQuizInstructionDelegate(
             visibility = View.GONE
             layoutManager = LinearLayoutManager(context)
             adapter = stepQuizCodeDetailsAdapter
+            isNestedScrollingEnabled = false
 
             val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
             divider.setDrawable(AppCompatResources.getDrawable(context, R.drawable.bg_step_quiz_code_details_separator)!!)
@@ -55,7 +52,10 @@ class CodeQuizInstructionDelegate(
             }
         } else {
             stepQuizCodeDetailsContent.visibility = View.VISIBLE
-            stepQuizCodeDetailsContent.isNestedScrollingEnabled = false
         }
+    }
+
+    fun setCodeDetailsData(step: Step, lang: String?) {
+        stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
     }
 }

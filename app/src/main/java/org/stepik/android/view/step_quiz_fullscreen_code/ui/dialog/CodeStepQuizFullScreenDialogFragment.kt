@@ -24,9 +24,11 @@ import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
+import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
@@ -74,6 +76,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     private lateinit var submitButtonSeparator: View
     private lateinit var codeSubmitButton: View
     private lateinit var retryButton: View
+
+    private lateinit var codeToolbarAdapter: CodeToolbarAdapter
 
     // Flag is necessary, because keyboard listener is constantly invoked (probably global layout listener reacts to view changes)
     private var keyboardShown: Boolean = false
@@ -160,21 +164,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             override fun onFullscreenClicked(lang: String, code: String) {}
         }
 
-        coreCodeStepDelegate = CoreCodeStepDelegate(
-            codeContainerView = playgroundLayout,
-            stepWrapper = stepWrapper,
-            codeQuizInstructionDelegate = CodeQuizInstructionDelegate(instructionsLayout, false),
-            actionsListener = actionsListener
-        )
-
         if (savedInstanceState != null) {
             lang = savedInstanceState.getString(LANG) ?: return
             code = savedInstanceState.getString(CODE) ?: return
         }
-
-        coreCodeStepDelegate.setLanguage(CodeStepQuizFormState.Lang(lang, code))
-        coreCodeStepDelegate.setDetailsContentData(lang)
-        fullScreenCodeViewPager.setCurrentItem(1, false)
 
         submitButtonSeparator = playgroundLayout.submitButtonSeparator
         codeSubmitButton = playgroundLayout.codeSubmitButton
@@ -182,11 +175,24 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         codeLayout = playgroundLayout.codeStepLayout
 
         codeSubmitButton.setOnClickListener {
-            callback.onSyncCodeStateWithParent(lang, codeStepLayout.text.toString(), true)
+            callback.onSyncCodeStateWithParent(lang, codeStepLayout.text.toString(), onSubmitClicked = true)
             dismiss()
         }
         retryButton.changeVisibility(false)
+        setupCodeToolAdapter()
         setupKeyboardExtension()
+
+        coreCodeStepDelegate = CoreCodeStepDelegate(
+            codeContainerView = playgroundLayout,
+            stepWrapper = stepWrapper,
+            codeQuizInstructionDelegate = CodeQuizInstructionDelegate(instructionsLayout, false),
+            actionsListener = actionsListener,
+            codeToolbarAdapter = codeToolbarAdapter
+        )
+
+        coreCodeStepDelegate.setLanguage(CodeStepQuizFormState.Lang(lang, code))
+        coreCodeStepDelegate.setDetailsContentData(lang)
+        fullScreenCodeViewPager.setCurrentItem(1, false)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -279,13 +285,24 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         }
     }
 
+    private fun setupCodeToolAdapter() {
+        codeToolbarAdapter = CodeToolbarAdapter(requireContext())
+            .apply {
+                onSymbolClickListener = object : CodeToolbarAdapter.OnSymbolClickListener {
+                    override fun onSymbolClick(symbol: String, offset: Int) {
+                        codeLayout.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeLayout.indentSize), offset)
+                    }
+                }
+            }
+    }
+
     /**
      * Keyboard extension
      */
     private fun setupKeyboardExtension() {
-        stepQuizCodeKeyboardExtension.adapter = coreCodeStepDelegate.codeToolbarAdapter
+        stepQuizCodeKeyboardExtension.adapter = codeToolbarAdapter
         stepQuizCodeKeyboardExtension.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        codeLayout.codeToolbarAdapter = coreCodeStepDelegate.codeToolbarAdapter
+        codeLayout.codeToolbarAdapter = codeToolbarAdapter
 
         setOnKeyboardOpenListener(
             coordinator,

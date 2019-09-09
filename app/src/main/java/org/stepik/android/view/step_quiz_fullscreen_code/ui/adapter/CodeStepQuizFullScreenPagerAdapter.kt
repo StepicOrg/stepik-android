@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import org.stepic.droid.R
 
 class CodeStepQuizFullScreenPagerAdapter(
-    val context: Context
+    private val context: Context
 ) : PagerAdapter() {
 
     private val layouts = listOf(

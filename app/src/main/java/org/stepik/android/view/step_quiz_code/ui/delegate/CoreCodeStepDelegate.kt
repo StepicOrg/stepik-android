@@ -3,7 +3,6 @@ package org.stepik.android.view.step_quiz_code.ui.delegate
 import android.view.View
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import org.stepic.droid.R
-import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
@@ -14,29 +13,16 @@ class CoreCodeStepDelegate(
     codeContainerView: View,
     private val stepWrapper: StepPersistentWrapper,
     private val codeQuizInstructionDelegate: CodeQuizInstructionDelegate,
-    private val actionsListener: ActionsListener
+    private val actionsListener: ActionsListener,
+    private var codeToolbarAdapter: CodeToolbarAdapter?
 ) {
 
     private val codeLayout = codeContainerView.codeStepLayout
     private val stepQuizActionChangeLang = codeContainerView.stepQuizActionChangeLang
 
-    val codeToolbarAdapter = CodeToolbarAdapter(codeContainerView.context)
-        .apply {
-            onSymbolClickListener = object : CodeToolbarAdapter.OnSymbolClickListener {
-                override fun onSymbolClick(symbol: String, offset: Int) {
-                    codeLayout.insertText(CodeToolbarUtil.mapToolbarSymbolToPrintable(symbol, codeLayout.indentSize), offset)
-                }
-            }
-        }
-
     val codeOptions = stepWrapper.step.block?.options ?: throw IllegalArgumentException("Code options shouldn't be null")
 
     init {
-        /**
-         *  Initialize code details
-         */
-        codeQuizInstructionDelegate.setupCodeDetailView()
-
         /**
          * Actions
          */
@@ -48,7 +34,7 @@ class CoreCodeStepDelegate(
         codeLayout.setText(codeStepQuizFormState.code)
         codeLayout.lang = extensionForLanguage(codeStepQuizFormState.lang)
         stepQuizActionChangeLang.text = codeStepQuizFormState.lang
-        codeToolbarAdapter.setLanguage(codeStepQuizFormState.lang)
+        codeToolbarAdapter?.setLanguage(codeStepQuizFormState.lang)
     }
 
     fun setDetailsContentData(lang: String?) {
