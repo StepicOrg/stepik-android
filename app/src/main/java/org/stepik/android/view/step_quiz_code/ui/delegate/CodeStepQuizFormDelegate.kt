@@ -20,7 +20,8 @@ import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 
 class CodeStepQuizFormDelegate(
     containerView: View,
-    private val coreCodeStepDelegate: CoreCodeStepDelegate
+    private val codeLayoutDelegate: CodeLayoutDelegate,
+    private val onFullscreenClicked: (lang: String, code: String) -> Unit
 ) : StepQuizFormDelegate {
     private var state: CodeStepQuizFormState = CodeStepQuizFormState.Idle
         set(value) {
@@ -30,9 +31,9 @@ class CodeStepQuizFormDelegate(
 
             when (value) {
                 is CodeStepQuizFormState.Lang ->
-                    coreCodeStepDelegate.setLanguage(value.lang, value.code)
+                    codeLayoutDelegate.setLanguage(value.lang, value.code)
             }
-            coreCodeStepDelegate.setDetailsContentData((value as? CodeStepQuizFormState.Lang)?.lang)
+            codeLayoutDelegate.setDetailsContentData((value as? CodeStepQuizFormState.Lang)?.lang)
         }
 
     private val viewStateDelegate = ViewStateDelegate<CodeStepQuizFormState>()
@@ -54,9 +55,9 @@ class CodeStepQuizFormDelegate(
         /**
          * Lang chooser
          */
-        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate { state = CodeStepQuizFormState.Lang(it, coreCodeStepDelegate.codeOptions.codeTemplates[it] ?: "") }
+        stepQuizCodeLangChooserAdapter += CodeLangAdapterDelegate { state = CodeStepQuizFormState.Lang(it, codeLayoutDelegate.codeOptions.codeTemplates[it] ?: "") }
         stepQuizCodeLangChooserAdapter.items =
-            coreCodeStepDelegate.codeOptions.codeTemplates.keys.toList().sorted()
+            codeLayoutDelegate.codeOptions.codeTemplates.keys.toList().sorted()
 
         stepQuizCodeLangChooserTitle.setCompoundDrawables(start = R.drawable.ic_step_quiz_code_lang)
         with(stepQuizCodeLangChooser) {
@@ -68,7 +69,7 @@ class CodeStepQuizFormDelegate(
         codeLayout.codeEditor.setOnClickListener {
             val oldState = (state as? CodeStepQuizFormState.Lang)
                 ?: return@setOnClickListener
-            coreCodeStepDelegate.onFullscreenClicked(oldState.lang, oldState.code)
+            onFullscreenClicked(oldState.lang, oldState.code)
         }
     }
 
@@ -82,17 +83,17 @@ class CodeStepQuizFormDelegate(
     }
 
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        this.state = codeStepQuizFormStateMapper.mapToFormState(coreCodeStepDelegate.codeOptions, state)
+        this.state = codeStepQuizFormStateMapper.mapToFormState(codeLayoutDelegate.codeOptions, state)
 
         val isEnabled = StepQuizFormResolver.isQuizEnabled(state)
-        coreCodeStepDelegate.setEnabled(isEnabled)
+        codeLayoutDelegate.setEnabled(isEnabled)
     }
 
     fun onLanguageSelected(lang: String) {
         if (state !is CodeStepQuizFormState.Lang) {
             return
         }
-        state = coreCodeStepDelegate.onLanguageSelected(lang)
+        state = CodeStepQuizFormState.Lang(lang, codeLayoutDelegate.codeOptions.codeTemplates[lang] ?: "")
     }
 
     fun updateCodeLayoutFromDialog(lang: String, code: String) {

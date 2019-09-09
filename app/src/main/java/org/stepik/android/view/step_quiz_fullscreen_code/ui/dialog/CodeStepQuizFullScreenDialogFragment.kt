@@ -36,8 +36,8 @@ import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
-import org.stepik.android.view.step_quiz_code.ui.delegate.CoreCodeStepDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
@@ -65,7 +65,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
     private lateinit var callback: Callback
 
-    private lateinit var coreCodeStepDelegate: CoreCodeStepDelegate
+    private lateinit var codeLayoutDelegate: CodeLayoutDelegate
 
     private lateinit var instructionsLayout: View
     private lateinit var playgroundLayout: View
@@ -151,17 +151,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             instructionsLayout.stepQuizCodeTextContent.setTextIsSelectable(true)
         }
 
-        val actionsListener = object : CoreCodeStepDelegate.ActionsListener {
-            override fun onChangeLanguageClicked() {
-                val dialog = ChangeCodeLanguageDialog.newInstance()
-                if (!dialog.isAdded) {
-                    dialog.show(childFragmentManager, null)
-                }
-            }
-
-            override fun onFullscreenClicked(lang: String, code: String) {}
-        }
-
         if (savedInstanceState != null) {
             lang = savedInstanceState.getString(LANG) ?: return
             code = savedInstanceState.getString(CODE) ?: return
@@ -176,16 +165,16 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         setupCodeToolAdapter()
         setupKeyboardExtension()
 
-        coreCodeStepDelegate = CoreCodeStepDelegate(
+        codeLayoutDelegate = CodeLayoutDelegate(
             codeContainerView = playgroundLayout,
             stepWrapper = stepWrapper,
             codeQuizInstructionDelegate = CodeQuizInstructionDelegate(instructionsLayout, false),
-            actionsListener = actionsListener,
-            codeToolbarAdapter = codeToolbarAdapter
+            codeToolbarAdapter = codeToolbarAdapter,
+            onChangeLanguageClicked = ::onChangeLanguageClicked
         )
 
-        coreCodeStepDelegate.setLanguage(lang, code)
-        coreCodeStepDelegate.setDetailsContentData(lang)
+        codeLayoutDelegate.setLanguage(lang, code)
+        codeLayoutDelegate.setDetailsContentData(lang)
         fullScreenCodeViewPager.setCurrentItem(1, false)
 
         codeSubmitButton.setOnClickListener {
@@ -273,14 +262,12 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
     override fun onLanguageChosen(programmingLanguage: String) {
         lang = programmingLanguage
-        coreCodeStepDelegate.setLanguage(programmingLanguage)
-        coreCodeStepDelegate.setDetailsContentData(programmingLanguage)
+        codeLayoutDelegate.setLanguage(programmingLanguage)
+        codeLayoutDelegate.setDetailsContentData(programmingLanguage)
     }
 
     override fun onReset() {
-        coreCodeStepDelegate.resetCode(lang).let { codeTemplate ->
-            codeLayout.setText(codeTemplate)
-        }
+        codeLayoutDelegate.setLanguage(lang)
     }
 
     private fun setupCodeToolAdapter() {
@@ -345,6 +332,13 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         centeredToolbar.changeVisibility(needShow)
         fullScreenCodeTabs.changeVisibility(needShow)
         fullScreenCodeSeparator.changeVisibility(needShow)
+    }
+
+    private fun onChangeLanguageClicked() {
+        val dialog = ChangeCodeLanguageDialog.newInstance()
+        if (!dialog.isAdded) {
+            dialog.show(childFragmentManager, null)
+        }
     }
 
     interface Callback {

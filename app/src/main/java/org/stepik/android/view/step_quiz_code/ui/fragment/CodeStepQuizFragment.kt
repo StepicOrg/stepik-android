@@ -11,9 +11,9 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
-import org.stepik.android.view.step_quiz_code.ui.delegate.CoreCodeStepDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
 
 class CodeStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, CodeStepQuizFullScreenDialogFragment.Callback {
@@ -35,34 +35,16 @@ class CodeStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, ChangeCode
         get() = arrayOf(stepQuizCodeContainer)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate {
-        val actionsListener = object : CoreCodeStepDelegate.ActionsListener {
-            override fun onChangeLanguageClicked() {
-                val dialog = ChangeCodeLanguageDialog.newInstance()
-                if (!dialog.isAdded) {
-                    dialog.show(childFragmentManager, null)
-                }
-            }
-
-            override fun onFullscreenClicked(lang: String, code: String) {
-                val supportFragmentManager = fragmentManager
-                    ?.takeIf { it.findFragmentByTag(CodeStepQuizFullScreenDialogFragment.TAG) == null }
-                    ?: return
-
-                val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, stepWrapper, lessonData)
-                dialog.setTargetFragment(this@CodeStepQuizFragment, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
-                dialog.show(supportFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
-            }
-        }
-
         codeStepQuizFormDelegate = CodeStepQuizFormDelegate(
             containerView = view,
-            coreCodeStepDelegate = CoreCodeStepDelegate(
+            codeLayoutDelegate = CodeLayoutDelegate(
                 codeContainerView = view,
                 stepWrapper = stepWrapper,
                 codeQuizInstructionDelegate = CodeQuizInstructionDelegate(view, true),
-                actionsListener = actionsListener,
-                codeToolbarAdapter = null
-            )
+                codeToolbarAdapter = null,
+                onChangeLanguageClicked = ::onChangeLanguageClicked
+            ),
+            onFullscreenClicked = ::onFullScreenClicked
         )
 
         return codeStepQuizFormDelegate
@@ -86,5 +68,22 @@ class CodeStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, ChangeCode
         if (onSubmitClicked) {
             onActionButtonClicked()
         }
+    }
+
+    private fun onChangeLanguageClicked() {
+        val dialog = ChangeCodeLanguageDialog.newInstance()
+        if (!dialog.isAdded) {
+            dialog.show(childFragmentManager, null)
+        }
+    }
+
+    private fun onFullScreenClicked(lang: String, code: String) {
+        val supportFragmentManager = fragmentManager
+            ?.takeIf { it.findFragmentByTag(CodeStepQuizFullScreenDialogFragment.TAG) == null }
+            ?: return
+
+        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, stepWrapper, lessonData)
+        dialog.setTargetFragment(this@CodeStepQuizFragment, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
+        dialog.show(supportFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
     }
 }
