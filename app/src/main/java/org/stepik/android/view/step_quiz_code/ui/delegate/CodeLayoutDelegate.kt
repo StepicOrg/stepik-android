@@ -25,7 +25,7 @@ class CodeLayoutDelegate(
         /**
          * Actions
          */
-        stepQuizActionChangeLang.setOnClickListener { onChangeLanguageClicked }
+        stepQuizActionChangeLang.setOnClickListener { onChangeLanguageClicked() }
         stepQuizActionChangeLang.setCompoundDrawables(end = R.drawable.ic_arrow_bottom)
     }
 

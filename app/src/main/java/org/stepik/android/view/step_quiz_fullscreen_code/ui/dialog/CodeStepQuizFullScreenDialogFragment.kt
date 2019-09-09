@@ -14,7 +14,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.TextView
-import kotlinx.android.synthetic.main.activity_step_quiz_code_fullscreen.*
+import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_keyboard_extension.*
@@ -109,7 +109,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.activity_step_quiz_code_fullscreen, container, false)
+        inflater.inflate(R.layout.dialog_step_quiz_code_fullscreen, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -122,18 +122,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.new_primary_color))
         centeredToolbar.setOnMenuItemClickListener { item ->
-            when (item?.itemId) {
-                android.R.id.home -> {
-                    true
+            if (item?.itemId == R.id.action_reset_code) {
+                val dialog = ResetCodeDialogFragment.newInstance()
+                if (!dialog.isAdded) {
+                    dialog.show(childFragmentManager, null)
                 }
-                R.id.action_reset_code -> {
-                    val dialog = ResetCodeDialogFragment.newInstance()
-                    if (!dialog.isAdded) {
-                        dialog.show(childFragmentManager, null)
-                    }
-                    true
-                }
-                else -> false
+                true
+            } else {
+                false
             }
         }
 
