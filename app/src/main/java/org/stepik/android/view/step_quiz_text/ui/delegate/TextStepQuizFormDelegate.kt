@@ -25,6 +25,15 @@ class TextStepQuizFormDelegate(
     containerView: View,
     private val stepWrapper: StepPersistentWrapper
 ) : StepQuizFormDelegate {
+    companion object {
+        private const val MINUS = "-\\\u002D\u00AD\u2012\u2013\u2014\u2015\u02D7"
+        private const val PLUS = "+"
+        private const val POINT = ",\\."
+        private const val EXP = "eEеЕ"
+
+        private const val NUMBER_VALIDATION_REGEX = "^[$MINUS$PLUS]?[0-9]*[$POINT]?[0-9]+([$EXP][$$MINUS$PLUS]?[0-9]+)?$"
+    }
+
     private val context = containerView.context
 
     private val quizTextField = containerView.stringStepQuizField as TextView
@@ -37,7 +46,7 @@ class TextStepQuizFormDelegate(
                     InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE to R.string.step_quiz_string_description
 
                 AppConstants.TYPE_NUMBER ->
-                    InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED to R.string.step_quiz_number_description
+                    InputType.TYPE_CLASS_TEXT to R.string.step_quiz_number_description
 
                 AppConstants.TYPE_MATH ->
                     InputType.TYPE_CLASS_TEXT to R.string.step_quiz_math_description
@@ -56,18 +65,20 @@ class TextStepQuizFormDelegate(
     override fun createReply(): ReplyResult =
         quizTextField.text.toString().let { value ->
             if (value.isNotEmpty()) {
-                val reply =
-                    when (stepWrapper.step.block?.name) {
-                        AppConstants.TYPE_NUMBER ->
-                            Reply(number = value)
+                when (stepWrapper.step.block?.name) {
+                    AppConstants.TYPE_NUMBER ->
+                        if (value.matches(NUMBER_VALIDATION_REGEX.toRegex())) {
+                            ReplyResult.Success(Reply(number = value))
+                        } else {
+                            ReplyResult.Error(context.getString(R.string.step_quiz_text_invalid_number_reply))
+                        }
 
-                        AppConstants.TYPE_MATH ->
-                            Reply(formula = value)
+                    AppConstants.TYPE_MATH ->
+                        ReplyResult.Success(Reply(formula = value))
 
-                        else ->
-                            Reply(text = value)
-                    }
-                ReplyResult.Success(reply)
+                    else ->
+                        ReplyResult.Success(Reply(text = value))
+                }
             } else {
                 ReplyResult.Error(context.getString(R.string.step_quiz_text_empty_reply))
             }

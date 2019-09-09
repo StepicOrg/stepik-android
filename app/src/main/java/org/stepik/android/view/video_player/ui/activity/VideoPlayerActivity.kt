@@ -9,6 +9,7 @@ import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.IBinder
+import android.support.annotation.DrawableRes
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
 import android.view.Gravity
@@ -98,8 +99,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
             playerView?.player = value
         }
-
-    private var isRotateVideo = false
+    private var isLandscapeVideo = false
 
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
 
@@ -137,6 +137,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
+        exo_fullscreen_icon_container.setOnClickListener { changeVideoRotation() }
+
         playerView.setControllerVisibilityListener { visibility ->
             if (visibility == View.VISIBLE) {
                 NavigationBarUtil.hideNavigationBar(false, this)
@@ -161,7 +163,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     override fun onStop() {
         playerInBackroundPopup?.dismiss()
-
         exoPlayer?.let { player ->
             videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
         }
@@ -208,20 +209,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         val morePopupMenu = PopupMenu(this, view)
         morePopupMenu.inflate(R.menu.video_more_menu)
 
-        val menuItem = morePopupMenu.menu.findItem(R.id.orientation_flag)
-        menuItem.isChecked = isRotateVideo
-
         morePopupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.orientation_flag -> {
-                    val oldValue = it.isChecked
-                    val newValue = !oldValue
-                    it.isChecked = newValue
-
-                    videoPlayerPresenter.changeVideoRotation(newValue)
-
-                    true
-                }
                 R.id.video_quality -> {
                     val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
                     val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
@@ -245,14 +234,18 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.showController()
     }
 
-    override fun setIsRotateVideo(isRotateVideo: Boolean) {
-        this.isRotateVideo = isRotateVideo
-        requestedOrientation =
-            if (isRotateVideo) {
-                ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+    override fun setIsLandscapeVideo(isLandScapeVideo: Boolean) {
+        this.isLandscapeVideo = isLandScapeVideo
+
+        @DrawableRes
+        val fullScreenIconRes =
+            if (isLandScapeVideo) {
+                R.drawable.ic_fullscreen_exit
             } else {
-                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                R.drawable.ic_fullscreen
             }
+
+        exo_fullscreen_icon.setImageResource(fullScreenIconRes)
     }
 
     override fun showPlayInBackgroundPopup() {
@@ -284,5 +277,23 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             exoPlayer?.playWhenReady == true) {
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Video.PLAY_IN_BACKGROUND)
         }
+    }
+
+    override fun onBackPressed() {
+        if (isLandscapeVideo) {
+            changeVideoRotation()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    private fun changeVideoRotation() {
+        isLandscapeVideo = !isLandscapeVideo
+        requestedOrientation = if (isLandscapeVideo) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        videoPlayerPresenter.changeVideoRotation(isLandscapeVideo)
     }
 }

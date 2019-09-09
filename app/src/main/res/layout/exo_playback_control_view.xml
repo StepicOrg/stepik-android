@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
 
@@ -119,7 +119,7 @@
             android:src="@drawable/ic_forward_10_white_48dp"/>
     </RelativeLayout>
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/bottom_controller_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -127,15 +127,17 @@
         android:background="@color/transparent_black_30"
         android:padding="8dp">
         <org.stepic.droid.ui.custom_exo.AppCompatSeekTimeBar
-            android:id="@id/exo_progress"
-            android:layout_width="match_parent"
+            android:id="@+id/exo_progress"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/seekbar_video_margin"
             android:layout_marginLeft="@dimen/seekbar_video_margin"
             android:layout_marginRight="@dimen/seekbar_video_margin"
             android:layout_marginStart="@dimen/seekbar_video_margin"
-            android:layout_toLeftOf="@id/exo_position"
-            android:layout_toStartOf="@id/exo_position"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/exo_position"
             android:background="@drawable/ic_seek_background"
             android:max="100"
             android:maxHeight="1000dp"
@@ -152,31 +154,57 @@
 
 
         <TextView
-            android:id="@id/exo_position"
+            android:id="@+id/exo_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/slash_video_time"
-            android:layout_toStartOf="@+id/slash_video_time"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/exo_progress"
+            app:layout_constraintRight_toLeftOf="@id/slash_video_time"
             tools:text="01:15"/>
 
         <TextView
             android:id="@+id/slash_video_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/exo_duration"
-            android:layout_toStartOf="@+id/exo_duration"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/exo_duration"
             android:text="@string/video_time_delimiter"
             android:visibility="visible"/>
 
         <TextView
-            android:id="@id/exo_duration"
+            android:id="@+id/exo_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/exo_fullscreen_icon_container"
+            android:layout_marginRight="@dimen/seekbar_video_margin"
+            android:layout_marginEnd="@dimen/seekbar_video_margin"
             tools:text="03:35"/>
 
-    </RelativeLayout>
+        <FrameLayout
+            android:id="@+id/exo_fullscreen_icon_container"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="@dimen/seekbar_video_margin"
+            android:layout_marginRight="@dimen/seekbar_video_margin"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="?selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:id="@+id/exo_fullscreen_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_fullscreen"/>
+
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
 
 
 </RelativeLayout>
