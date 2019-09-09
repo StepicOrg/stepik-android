@@ -151,7 +151,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { state = commentsStateMapper.mapFromLoadMoreRepliesToSuccess(state, it, loadMoreReplies) },
-                onError = { state = oldState }
+                onError = { state = commentsStateMapper.mapFromLoadMoreRepliesToError(state, loadMoreReplies) }
             )
     }
 

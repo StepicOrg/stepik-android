@@ -106,6 +106,9 @@ constructor() {
                 .map { if (it == loadMoreReplies) CommentItem.ReplyPlaceholder(loadMoreReplies.parentComment) else it }
         )
 
+    /**
+     * More replies loading -> new stable state
+     */
     fun mapFromLoadMoreRepliesToSuccess(state: CommentsView.State, items: PagedList<CommentItem.Data>, loadMoreReplies: CommentItem.LoadMoreReplies): CommentsView.State {
         if (state !is CommentsView.State.DiscussionLoaded ||
             state.commentsState !is CommentsView.CommentsState.Loaded) {
@@ -119,7 +122,10 @@ constructor() {
 
         return if (rawIndex > 0 && index > 0) {
             val commentItems =
-                commentsState.commentItems.mutate { removeAt(rawIndex); addAll(rawIndex, items) }
+                commentsState.commentItems.mutate {
+                    removeAt(rawIndex)
+                    addAll(rawIndex, items)
+                } // todo: handle LoadMoreReplies for next items
 
             val commentDataItems =
                 commentsState.commentDataItems.mutate { addAll(index + 1, items) }
@@ -128,5 +134,22 @@ constructor() {
         } else {
             state
         }
+    }
+
+    /**
+     * More replies loading -> (rollback) -> previous stable state
+     */
+    fun mapFromLoadMoreRepliesToError(state: CommentsView.State, loadMoreReplies: CommentItem.LoadMoreReplies): CommentsView.State {
+        if (state !is CommentsView.State.DiscussionLoaded ||
+            state.commentsState !is CommentsView.CommentsState.Loaded) {
+            return state
+        }
+
+        val commentsState = state.commentsState
+        val commentItems = commentsState.commentItems
+
+        return state.copy(commentsState = commentsState.copy(
+            commentItems = commentItems.map { if ((it as? CommentItem.ReplyPlaceholder)?.id == loadMoreReplies.id) loadMoreReplies else it }
+        ))
     }
 }
