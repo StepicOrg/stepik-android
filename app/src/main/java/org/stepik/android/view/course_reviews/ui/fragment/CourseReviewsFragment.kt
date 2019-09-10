@@ -13,8 +13,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.empty_default.report_empty
-import kotlinx.android.synthetic.main.empty_default.view.placeholderMessage
+import kotlinx.android.synthetic.main.empty_default.*
+import kotlinx.android.synthetic.main.empty_default.view.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
@@ -135,6 +135,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         super.setUserVisibleHint(isVisibleToUser)
         this.isVisibleToUser = isVisibleToUser
         reportIsVisibleToUser()
+        fetchNewReviews()
     }
 
     private fun reportIsVisibleToUser() {
@@ -144,6 +145,12 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
                     AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
                     mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
                 )
+        }
+    }
+
+    private fun fetchNewReviews() {
+        if (isVisibleToUser && this::courseReviewsPresenter.isInitialized) {
+            courseReviewsPresenter.fetchNextPageFromRemote()
         }
     }
 
