@@ -165,7 +165,37 @@ constructor() {
                 .map { if (it == commentDataItem) commentDataItem.copy(voteStatus = CommentItem.Data.VoteStatus.Pending) else it }
         )
 
-    fun mapFromVotePendingToResolved(state: CommentsView.State, vote: Vote): CommentsView.State {
+    fun mapFromVotePendingToSuccess(state: CommentsView.State, commentDataItem: CommentItem.Data): CommentsView.State {
+        if (state !is CommentsView.State.DiscussionLoaded ||
+            state.commentsState !is CommentsView.CommentsState.Loaded) {
+            return state
+        }
+
+        val commentsState = state.commentsState
+
+        return state.copy(commentsState = commentsState.copy(
+            commentItems = commentsState.commentItems
+                .map { item ->
+                    if (item is CommentItem.Data &&
+                        item.id == commentDataItem.id) {
+                        commentDataItem
+                    } else {
+                        item
+                    }
+                },
+
+            commentDataItems = commentsState.commentDataItems
+                .mapPaged { item ->
+                    if (item.id == commentDataItem.id) {
+                        commentDataItem
+                    } else {
+                        item
+                    }
+                }
+        ))
+    }
+
+    fun mapFromVotePendingToError(state: CommentsView.State, vote: Vote): CommentsView.State {
         if (state !is CommentsView.State.DiscussionLoaded ||
             state.commentsState !is CommentsView.CommentsState.Loaded) {
             return state

@@ -7,8 +7,10 @@ import org.stepik.android.domain.comment.mapper.CommentsDataMapper
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.domain.comment.repository.CommentRepository
+import org.stepik.android.domain.vote.repository.VoteRepository
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
+import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
 import javax.inject.Inject
 import kotlin.math.max
@@ -18,6 +20,8 @@ class CommentInteractor
 @Inject
 constructor(
     private val commentRepository: CommentRepository,
+    private val voteRepository: VoteRepository,
+
     private val commentsDataMapper: CommentsDataMapper,
     private val userPreferences: UserPreferences
 ) {
@@ -128,6 +132,19 @@ constructor(
             DiscussionOrder.RECENT_ACTIVITY ->
                 discussionProxy.discussionsRecentActivity
         }
+
+    fun changeCommentVote(commentId: Long, vote: Vote): Single<CommentItem.Data> =
+        voteRepository
+            .saveVote(vote)
+            .flatMap {
+                commentRepository
+                    .getComments(commentId)
+                    .map { commentsData ->
+                        commentsDataMapper
+                            .mapToCommentDataItems(longArrayOf(commentId), commentsData, userPreferences.userId)
+                            .first()
+                    }
+            }
 
     enum class Direction {
         UP, DOWN

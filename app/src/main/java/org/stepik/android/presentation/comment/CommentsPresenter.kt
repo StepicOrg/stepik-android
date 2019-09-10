@@ -6,7 +6,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.comment.interactor.CommentInteractor
-import org.stepik.android.domain.comment.interactor.CommentVoteInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
@@ -21,7 +20,6 @@ class CommentsPresenter
 @Inject
 constructor(
     private val commentInteractor: CommentInteractor,
-    private val commentVoteInteractor: CommentVoteInteractor,
     private val composeCommentInteractor: ComposeCommentInteractor,
     private val discussionProxyInteractor: DiscussionProxyInteractor,
 
@@ -188,13 +186,13 @@ constructor(
             .copy(value = voteValue.takeIf { it != commentDataItem.voteStatus.vote.value })
 
         state = oldState.copy(commentsState = commentsStateMapper.mapToVotePending(commentsState, commentDataItem))
-        compositeDisposable += commentVoteInteractor
-            .changeCommentVote(newVote)
+        compositeDisposable += commentInteractor
+            .changeCommentVote(commentDataItem.id, newVote)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { state = commentsStateMapper.mapFromVotePendingToResolved(state, it) },
-                onError = { state = commentsStateMapper.mapFromVotePendingToResolved(state, commentDataItem.voteStatus.vote) }
+                onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
+                onError = { state = commentsStateMapper.mapFromVotePendingToError(state, commentDataItem.voteStatus.vote) }
             )
     }
 }
