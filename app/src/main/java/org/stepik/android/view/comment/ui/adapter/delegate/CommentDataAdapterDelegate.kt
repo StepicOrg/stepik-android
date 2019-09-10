@@ -19,14 +19,16 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 
-class CommentDataAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHolder<CommentItem>>() {
+class CommentDataAdapterDelegate(
+    private val actionListener: ActionListener
+) : AdapterDelegate<CommentItem, DelegateViewHolder<CommentItem>>() {
     override fun isForViewType(position: Int, data: CommentItem): Boolean =
         data is CommentItem.Data
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CommentItem> =
         ViewHolder(createView(parent, R.layout.item_comment))
 
-    private class ViewHolder(root: View) : DelegateViewHolder<CommentItem>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<CommentItem>(root), View.OnClickListener {
         private val commentUserIcon = root.commentUserIcon
         private val commentUserName = root.commentUserName
 
@@ -59,9 +61,9 @@ class CommentDataAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHold
             commentText.setTextSize(14f)
             commentText.setTextIsSelectable(true)
 
-            commentReply.setOnClickListener {  }
-            commentLike.setOnClickListener {  }
-            commentDislike.setOnClickListener {  }
+            commentReply.setOnClickListener(this)
+            commentLike.setOnClickListener(this)
+            commentDislike.setOnClickListener(this)
 
             commentLike.setCompoundDrawables(start = R.drawable.ic_comment_like)
             commentDislike.setCompoundDrawables(start = R.drawable.ic_comment_dislike)
@@ -121,5 +123,19 @@ class CommentDataAdapterDelegate : AdapterDelegate<CommentItem, DelegateViewHold
                     }
             }
         }
+
+        override fun onClick(view: View) {
+            val data = itemData as? CommentItem.Data
+                ?: return
+
+            when (view.id) {
+                R.id.commentReply ->
+                    actionListener.onReplyClicked(data.id)
+            }
+        }
+    }
+
+    interface ActionListener {
+        fun onReplyClicked(parentCommentId: Long)
     }
 }

@@ -88,7 +88,13 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()
-        commentsAdapter += CommentDataAdapterDelegate()
+        commentsAdapter += CommentDataAdapterDelegate(
+            actionListener = object : CommentDataAdapterDelegate.ActionListener {
+                override fun onReplyClicked(parentCommentId: Long) {
+                    showCommentComposeDialog(stepId, parent = parentCommentId)
+                }
+            }
+        )
         commentsAdapter += CommentLoadMoreRepliesAdapterDelegate(commentsPresenter::onLoadMoreReplies)
 
         with(commentsRecycler) {
