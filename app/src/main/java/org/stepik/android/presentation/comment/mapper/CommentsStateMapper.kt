@@ -1,9 +1,11 @@
 package org.stepik.android.presentation.comment.mapper
 
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.comment.interactor.CommentInteractor
+import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
 import javax.inject.Inject
@@ -150,6 +152,46 @@ constructor() {
 
         return state.copy(commentsState = commentsState.copy(
             commentItems = commentItems.map { if ((it as? CommentItem.ReplyPlaceholder)?.id == loadMoreReplies.id) loadMoreReplies else it }
+        ))
+    }
+
+    /**
+     * VOTES
+     */
+    fun mapToVotePending(commentsState: CommentsView.CommentsState.Loaded, commentDataItem: CommentItem.Data): CommentsView.CommentsState =
+        commentsState.copy(
+            commentItems = commentsState
+                .commentItems
+                .map { if (it == commentDataItem) commentDataItem.copy(voteStatus = CommentItem.Data.VoteStatus.Pending) else it }
+        )
+
+    fun mapFromVotePendingToResolved(state: CommentsView.State, vote: Vote): CommentsView.State {
+        if (state !is CommentsView.State.DiscussionLoaded ||
+            state.commentsState !is CommentsView.CommentsState.Loaded) {
+            return state
+        }
+
+        val commentsState = state.commentsState
+
+        return state.copy(commentsState = commentsState.copy(
+            commentItems = commentsState.commentItems
+                .map { item ->
+                    if (item is CommentItem.Data &&
+                        item.comment.vote == vote.id) {
+                        item.copy(voteStatus = CommentItem.Data.VoteStatus.Resolved(vote))
+                    } else {
+                        item
+                    }
+                },
+
+            commentDataItems = commentsState.commentDataItems
+                .mapPaged { item ->
+                    if (item.comment.vote == vote.id) {
+                        item.copy(voteStatus = CommentItem.Data.VoteStatus.Resolved(vote))
+                    } else {
+                        item
+                    }
+                }
         ))
     }
 }

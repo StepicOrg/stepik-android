@@ -24,6 +24,7 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.model.comments.Comment
+import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -92,6 +93,10 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
             actionListener = object : CommentDataAdapterDelegate.ActionListener {
                 override fun onReplyClicked(parentCommentId: Long) {
                     showCommentComposeDialog(stepId, parent = parentCommentId)
+                }
+
+                override fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
+                    commentsPresenter.onChangeVote(commentDataItem, voteValue)
                 }
             }
         )

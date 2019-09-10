@@ -135,11 +135,18 @@ class CommentDataAdapterDelegate(
             when (view.id) {
                 R.id.commentReply ->
                     actionListener.onReplyClicked(data.id)
+
+                R.id.commentLike ->
+                    actionListener.onVoteClicked(data, Vote.Value.LIKE)
+
+                R.id.commentDislike ->
+                    actionListener.onVoteClicked(data, Vote.Value.DISLIKE)
             }
         }
     }
 
     interface ActionListener {
         fun onReplyClicked(parentCommentId: Long)
+        fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value)
     }
 }

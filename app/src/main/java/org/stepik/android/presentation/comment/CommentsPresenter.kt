@@ -6,10 +6,12 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.comment.interactor.CommentInteractor
+import org.stepik.android.domain.comment.interactor.CommentVoteInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
 import org.stepik.android.model.comments.DiscussionProxy
+import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.comment.mapper.CommentsStateMapper
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -19,6 +21,7 @@ class CommentsPresenter
 @Inject
 constructor(
     private val commentInteractor: CommentInteractor,
+    private val commentVoteInteractor: CommentVoteInteractor,
     private val composeCommentInteractor: ComposeCommentInteractor,
     private val discussionProxyInteractor: DiscussionProxyInteractor,
 
@@ -90,6 +93,9 @@ constructor(
         }
     }
 
+    /**
+     * Discussion ordering
+     */
     fun changeDiscussionOrder(discussionOrder: DiscussionOrder) {
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
@@ -97,6 +103,9 @@ constructor(
         fetchComments(oldState.discussionProxy, discussionOrder, oldState.discussionId, keepCachedComments = true)
     }
 
+    /**
+     * Load more logic in both directions
+     */
     fun onLoadMore(direction: CommentInteractor.Direction) {
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
@@ -137,6 +146,9 @@ constructor(
             )
     }
 
+    /**
+     * Load more comments logic
+     */
     fun onLoadMoreReplies(loadMoreReplies: CommentItem.LoadMoreReplies) {
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
@@ -155,4 +167,34 @@ constructor(
             )
     }
 
+    /**
+     * Vote logic
+     *
+     * if [voteValue] is equal to current value new value will be null
+     */
+    fun onChangeVote(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
+        if (commentDataItem.voteStatus !is CommentItem.Data.VoteStatus.Resolved ||
+            commentDataItem.isCurrentUser) {
+            return
+        }
+
+        val oldState = (state as? CommentsView.State.DiscussionLoaded)
+            ?: return
+
+        val commentsState = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
+            ?: return
+
+        val newVote = commentDataItem.voteStatus.vote
+            .copy(value = voteValue.takeIf { it != commentDataItem.voteStatus.vote.value })
+
+        state = oldState.copy(commentsState = commentsStateMapper.mapToVotePending(commentsState, commentDataItem))
+        compositeDisposable += commentVoteInteractor
+            .changeCommentVote(newVote)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onSuccess = { state = commentsStateMapper.mapFromVotePendingToResolved(state, it) },
+                onError = { state = commentsStateMapper.mapFromVotePendingToResolved(state, commentDataItem.voteStatus.vote) }
+            )
+    }
 }
