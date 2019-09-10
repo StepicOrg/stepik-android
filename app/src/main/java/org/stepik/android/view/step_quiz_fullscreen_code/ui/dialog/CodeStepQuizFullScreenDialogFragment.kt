@@ -47,14 +47,15 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         const val TAG = "CodeStepQuizFullScreenDialogFragment"
         const val CODE_PLAYGROUND_REQUEST = 153
 
-        private const val LANG = "LANG"
-        private const val CODE = "CODE"
+        private const val ARG_LANG = "LANG"
+        private const val ARG_CODE = "CODE"
 
-        fun newInstance(lang: String, code: String, stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): DialogFragment =
+        fun newInstance(lang: String, code: String, codeTemplates: Map<String, String>, stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): DialogFragment =
             CodeStepQuizFullScreenDialogFragment()
                 .apply {
                     this.lang = lang
                     this.code = code
+                    this.codeTemplates = codeTemplates
                     this.stepWrapper = stepPersistentWrapper
                     this.lessonData = lessonData
                 }
@@ -82,6 +83,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
     private var lang: String by argument()
     private var code: String by argument()
+    private var codeTemplates: Map<String, String> by argument()
     private var lessonData: LessonData by argument()
     private var stepWrapper: StepPersistentWrapper by argument()
 
@@ -148,8 +150,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         }
 
         if (savedInstanceState != null) {
-            lang = savedInstanceState.getString(LANG) ?: return
-            code = savedInstanceState.getString(CODE) ?: return
+            lang = savedInstanceState.getString(ARG_LANG) ?: return
+            code = savedInstanceState.getString(ARG_CODE) ?: return
         }
 
         submitButtonSeparator = playgroundLayout.submitButtonSeparator
@@ -164,6 +166,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         codeLayoutDelegate = CodeLayoutDelegate(
             codeContainerView = playgroundLayout,
             stepWrapper = stepWrapper,
+            codeTemplates = codeTemplates,
             codeQuizInstructionDelegate = CodeQuizInstructionDelegate(instructionsLayout, false),
             codeToolbarAdapter = codeToolbarAdapter,
             onChangeLanguageClicked = ::onChangeLanguageClicked
@@ -181,8 +184,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(LANG, lang)
-        outState.putString(CODE, codeLayout.text.toString())
+        outState.putString(ARG_LANG, lang)
+        outState.putString(ARG_CODE, codeLayout.text.toString())
     }
 
     private fun initViewPager() {
@@ -248,7 +251,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     }
 
     override fun onChangeLanguage() {
-        val languages = stepWrapper.step.block?.options?.limits?.keys?.sorted()?.toTypedArray() ?: emptyArray()
+        val languages = codeTemplates.keys.sorted().toTypedArray()
 
         val dialog = ProgrammingLanguageChooserDialogFragment.newInstance(languages)
         if (!dialog.isAdded) {
