@@ -9,7 +9,8 @@ sealed class CommentItem {
     data class Data(
         val comment: Comment,
         val user: User,
-        val voteStatus: VoteStatus
+        val voteStatus: VoteStatus,
+        val isCurrentUser: Boolean
     ) : CommentItem(), Identifiable<Long> {
         override val id: Long =
             comment.id

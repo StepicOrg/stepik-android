@@ -1,6 +1,7 @@
 package org.stepik.android.domain.comment.interactor
 
 import io.reactivex.Single
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.comment.mapper.CommentsDataMapper
 import org.stepik.android.domain.comment.model.CommentsData
@@ -17,7 +18,8 @@ class CommentInteractor
 @Inject
 constructor(
     private val commentRepository: CommentRepository,
-    private val commentsDataMapper: CommentsDataMapper
+    private val commentsDataMapper: CommentsDataMapper,
+    private val userPreferences: UserPreferences
 ) {
     companion object {
         private const val PAGE_SIZE = 10
@@ -51,7 +53,7 @@ constructor(
 
                 commentRepository
                     .getComments(*(commentIds - cachedCommentIds).toLongArray())
-                    .map { commentsDataMapper.mapToCommentDataItems(commentIds.toLongArray(), it, cachedCommentItems) }
+                    .map { commentsDataMapper.mapToCommentDataItems(commentIds.toLongArray(), it, userPreferences.userId, cachedCommentItems) }
                     .map { comments ->
                         PagedList(comments, hasPrev = start > 0, hasNext = end < orderedCommentIds.size)
                     }
@@ -106,7 +108,7 @@ constructor(
 
         return commentRepository
             .getComments(*slicedCommentIds)
-            .map { commentsDataMapper.mapToCommentDataItems(slicedCommentIds, it) }
+            .map { commentsDataMapper.mapToCommentDataItems(slicedCommentIds, it, userPreferences.userId) }
             .map { comments ->
                 PagedList(comments, hasPrev = start > 0, hasNext = end < commentIds.size)
             }

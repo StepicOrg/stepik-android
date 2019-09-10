@@ -10,6 +10,7 @@ constructor() {
     fun mapToCommentDataItems(
         commentIds: LongArray,
         commentsData: CommentsData,
+        currentUserId: Long,
         cachedCommentItems: List<CommentItem.Data> = emptyList()
     ): List<CommentItem.Data> =
         commentsData
@@ -28,7 +29,8 @@ constructor() {
                 CommentItem.Data(
                     comment = comment,
                     user = user,
-                    voteStatus = CommentItem.Data.VoteStatus.Resolved(vote)
+                    voteStatus = CommentItem.Data.VoteStatus.Resolved(vote),
+                    isCurrentUser = comment.user == currentUserId
                 )
             }
             .let { newItems ->

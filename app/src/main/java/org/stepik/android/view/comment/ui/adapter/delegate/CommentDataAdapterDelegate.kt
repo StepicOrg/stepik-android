@@ -95,7 +95,7 @@ class CommentDataAdapterDelegate(
 
             commentText.setPlainOrLaTeXTextColored(data.comment.text, R.color.new_accent_color)
 
-            commentMenu.changeVisibility(false)
+            commentMenu.changeVisibility(data.isCurrentUser)
             commentTags.changeVisibility(false)
 
             commentTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.comment.time?.time ?: 0)
@@ -104,6 +104,9 @@ class CommentDataAdapterDelegate(
 
             commentLike.text = data.comment.epicCount.toString()
             commentDislike.text = data.comment.abuseCount.toString()
+
+            commentLike.isEnabled = !data.isCurrentUser
+            commentDislike.isEnabled = !data.isCurrentUser
 
             if (data.voteStatus is CommentItem.Data.VoteStatus.Resolved) {
                 commentLike.alpha =
