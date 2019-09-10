@@ -19,6 +19,7 @@
         android:id="@+id/commentMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/ic_more_without_padding"
 
         android:paddingLeft="10dp"
