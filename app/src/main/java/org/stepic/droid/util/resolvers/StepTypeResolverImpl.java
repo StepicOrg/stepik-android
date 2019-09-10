@@ -3,9 +3,7 @@ package org.stepic.droid.util.resolvers;
 import android.support.annotation.DrawableRes;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
-import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.ui.quiz.ChoiceQuizDelegate;
 import org.stepic.droid.ui.quiz.NotSupportedQuizDelegate;
@@ -84,22 +82,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         }
     }
 
-    @Override
-    @Nullable
-    public StepBaseFragment getFragment(Step step) {
-        if (step == null
-                || step.getBlock() == null
-                || step.getBlock().getName() == null
-                || step.getBlock().getName().equals(""))
-            return null;
-
-        String type = step.getBlock().getName();
-        switch (type) {
-            default:
-                return null;
-        }
-    }
-
     @NotNull
     @Override
     public QuizDelegate getQuizDelegate(Step step) {
@@ -120,33 +102,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
                 return new NumberQuizDelegate();
             default:
                 return errorDelegate;
-        }
-    }
-
-    @Override
-    public boolean isNeedUseOldStepContainer(@NotNull Step step) {
-        if (step.getBlock() == null
-                || step.getBlock().getName() == null
-                || step.getBlock().getName().equals(""))
-            return true;
-
-        switch (step.getBlock().getName()) {
-            case AppConstants.TYPE_TEXT:
-            case AppConstants.TYPE_VIDEO:
-
-            case AppConstants.TYPE_STRING:
-            case AppConstants.TYPE_NUMBER:
-            case AppConstants.TYPE_MATH:
-            case AppConstants.TYPE_FREE_ANSWER:
-            case AppConstants.TYPE_CODE:
-            case AppConstants.TYPE_CHOICE:
-
-            case AppConstants.TYPE_SORTING:
-            case AppConstants.TYPE_MATCHING:
-            case AppConstants.TYPE_SQL:
-                return false;
-            default:
-                return true;
         }
     }
 }
