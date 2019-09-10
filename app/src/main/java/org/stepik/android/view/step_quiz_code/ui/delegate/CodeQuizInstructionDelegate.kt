@@ -7,6 +7,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.Step
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
@@ -57,10 +58,6 @@ class CodeQuizInstructionDelegate(
 
     fun setCodeDetailsData(step: Step, lang: String?) {
         stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
-        stepQuizCodeDetails.visibility = if (stepQuizCodeDetailsAdapter.items.isEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+        stepQuizCodeDetails.changeVisibility(stepQuizCodeDetailsAdapter.items.isEmpty())
     }
 }
