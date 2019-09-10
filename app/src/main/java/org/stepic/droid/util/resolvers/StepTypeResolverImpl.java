@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
 import org.stepic.droid.base.StepBaseFragment;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.ui.fragments.SqlStepFragment;
 import org.stepic.droid.ui.quiz.ChoiceQuizDelegate;
 import org.stepic.droid.ui.quiz.NotSupportedQuizDelegate;
 import org.stepic.droid.ui.quiz.NumberQuizDelegate;
@@ -96,8 +95,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
 
         String type = step.getBlock().getName();
         switch (type) {
-            case AppConstants.TYPE_SQL:
-                return SqlStepFragment.Companion.newInstance();
             default:
                 return null;
         }
