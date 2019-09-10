@@ -1,7 +1,6 @@
 package org.stepic.droid.code.ui
 
 import android.content.Context
-import android.graphics.Typeface
 import android.support.v4.widget.NestedScrollView
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -15,7 +14,7 @@ class CodeEditorLayout
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : NestedScrollView(context, attrs, defStyleAttr) {
-    private val codeEditor: CodeEditor
+    val codeEditor: CodeEditor
 
     var theme: CodeTheme
         get() = codeEditor.theme

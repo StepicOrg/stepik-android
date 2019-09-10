@@ -108,6 +108,10 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
 
     protected abstract fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate
 
+    protected fun onActionButtonClicked() {
+        stepQuizDelegate.onActionButtonClicked()
+    }
+
     override fun onStart() {
         super.onStart()
         presenter.attachView(this)
