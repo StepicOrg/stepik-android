@@ -35,10 +35,8 @@ class StepFragmentAdapter(
     override val activeFragments: Map<Int, Fragment>
         get() = _activeFragments
 
-    override fun getItem(position: Int): Fragment {
-        val stepWrapper = items[position].stepWrapper
-        return StepFragment.newInstance(stepWrapper, lessonData)
-    }
+    override fun getItem(position: Int): Fragment =
+        StepFragment.newInstance(items[position].stepWrapper, lessonData)
 
     override fun getCount(): Int =
         items.size
