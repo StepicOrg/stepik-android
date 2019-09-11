@@ -10,6 +10,7 @@ import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.SimpleItemAnimator
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
@@ -130,6 +131,9 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
                     }
                 }
             })
+
+            (itemAnimator as? SimpleItemAnimator)
+                ?.supportsChangeAnimations = false
         }
 
         viewStateDelegate = ViewStateDelegate()
