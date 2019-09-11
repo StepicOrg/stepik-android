@@ -24,7 +24,7 @@ data class CourseHeaderData(
         parcel.writeString(cover)
         parcel.writeLong(learnersCount)
         parcel.writeDouble(review)
-        parcel.writeValue(progress)
+        parcel.writeParcelable(progress, flags)
         parcel.writeDouble(readiness)
         parcel.writeSerializable(enrollmentState)
     }
