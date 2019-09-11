@@ -3,6 +3,7 @@ package org.stepik.android.domain.course.model
 import android.os.Parcel
 import android.os.Parcelable
 import org.stepik.android.model.Course
+import org.stepik.android.model.Progress
 
 data class CourseHeaderData(
     val courseId: Long,
@@ -12,7 +13,7 @@ data class CourseHeaderData(
     val learnersCount: Long,
 
     val review: Double,
-    val progress: Long?,
+    val progress: Progress?,
     val readiness: Double,
     val enrollmentState: EnrollmentState
 ) : Parcelable {
@@ -39,7 +40,7 @@ data class CourseHeaderData(
                 parcel.readString()!!,
                 parcel.readLong(),
                 parcel.readDouble(),
-                parcel.readValue(Long::class.java.classLoader) as Long?,
+                parcel.readParcelable(Progress::class.java.classLoader) as Progress?,
                 parcel.readDouble(),
                 parcel.readSerializable() as EnrollmentState
             )
