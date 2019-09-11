@@ -30,7 +30,6 @@ import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.doOnPreDraw
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.getAllQueryParameters
-import org.stepic.droid.util.safeDiv
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
@@ -170,7 +169,7 @@ class CourseHeaderDelegate(
             courseProgress.changeVisibility(isNeedShowProgress)
             courseProgressText.changeVisibility(isNeedShowProgress)
 
-            if (isNeedShowProgress) { // kotlin can't smart cast with isNeedShowProgress
+            if (isNeedShowProgress) {
                 val score = courseHeaderData
                     .progress
                     ?.score
@@ -183,7 +182,7 @@ class CourseHeaderDelegate(
                     ?.cost
                     ?: 0L
 
-                courseProgress.progress = (score * 100 safeDiv cost) / 100f
+                courseProgress.progress = (score * 100 / cost) / 100f
                 courseProgressText.text = getString(R.string.course_content_text_progress, score, cost)
             }
 

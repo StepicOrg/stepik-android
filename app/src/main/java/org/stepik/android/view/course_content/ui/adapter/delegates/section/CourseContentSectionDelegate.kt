@@ -12,7 +12,6 @@ import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.StartSnapHelper
 import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.util.safeDiv
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
@@ -83,10 +82,16 @@ class CourseContentSectionDelegate(
                 sectionTitle.text = section.title
                 sectionPosition.text = section.position.toString()
 
-                if (progress != null) {
-                    sectionProgress.progress = progress.nStepsPassed.toFloat() safeDiv progress.nSteps
+                if (progress != null && progress.cost > 0) {
+                    val score = progress
+                        .score
+                        ?.toFloatOrNull()
+                        ?.toLong()
+                        ?: 0L
+
+                    sectionProgress.progress = score / progress.cost.toFloat()
                     sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
-                        progress.nStepsPassed, progress.nSteps)
+                        score, progress.cost)
                     sectionTextProgress.visibility = View.VISIBLE
                 } else {
                     sectionProgress.progress = 0f

@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.children
-import org.stepic.droid.util.ProgressUtil
+import org.stepic.droid.util.safeDiv
 import org.stepik.android.model.Course
 import java.util.Locale
 
@@ -50,23 +50,28 @@ class CoursePropertiesDelegate(
     }
 
     private fun setProgress(course: Course) {
-        val progressPercent: Int? = ProgressUtil.getProgressPercent(course.progressObject)
-        val needShow =
-            if (progressPercent != null && progressPercent > 0) {
-                prepareViewForProgress(progressPercent)
-                true
-            } else {
-                false
-            }
+        val progress = course.progressObject
+        val needShow = if (progress != null && progress.cost > 0) {
+            val score = progress
+                .score
+                ?.toFloatOrNull()
+                ?.toLong()
+                ?: 0L
+
+            prepareViewForProgress(score, progress.cost)
+            true
+        } else {
+            false
+        }
         courseItemProgress.changeVisibility(needShow)
         courseItemProgressTitle.changeVisibility(needShow)
     }
 
-    private fun prepareViewForProgress(progressPercent: Int) {
-        courseItemProgress.progress = progressPercent / 100f
+    private fun prepareViewForProgress(score: Long, cost: Long) {
+        courseItemProgress.progress = (score * 100 safeDiv cost) / 100f
         courseItemProgressTitle.text = view
             .resources
-            .getString(R.string.percent_symbol, progressPercent)
+            .getString(R.string.course_content_text_progress, score, cost)
     }
 
     private fun setRating(course: Course) {

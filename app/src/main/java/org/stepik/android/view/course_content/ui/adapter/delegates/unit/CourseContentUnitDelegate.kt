@@ -15,7 +15,6 @@ import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.util.safeDiv
 import org.stepik.android.view.course_content.model.CourseContentItem
 
 class CourseContentUnitDelegate(
@@ -78,12 +77,17 @@ class CourseContentUnitDelegate(
             with(data as CourseContentItem.UnitItem) {
                 unitTitle.text = context.resources.getString(R.string.course_content_unit_title,
                         section.position, unit.position, lesson.title)
+                if (progress != null && progress.cost > 0) {
+                    val score = progress
+                        .score
+                        ?.toFloatOrNull()
+                        ?.toLong()
+                        ?: 0L
 
-                if (progress != null) {
                     unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
-                        progress.nStepsPassed, progress.nSteps)
+                        score, progress.cost)
 
-                    unitProgress.progress = progress.nStepsPassed.toFloat() safeDiv progress.nSteps
+                    unitProgress.progress = score / progress.cost.toFloat()
                     unitTextProgress.visibility = View.VISIBLE
                 } else {
                     unitProgress.progress = 0f

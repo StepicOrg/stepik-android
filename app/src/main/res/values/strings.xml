@@ -468,7 +468,7 @@
         <item quantity="one">%d course</item>
         <item quantity="other">%d courses</item>
     </plurals>
-    <string name="course_current_progress">Current progress: %d%%</string>
+    <string name="course_current_progress">Current progress: %d/%d</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
 
     <string name="notification_badge_placeholder" translatable="false">99+</string>
@@ -593,7 +593,6 @@
     <!-- Course -->
     <string name="course_verified">Verified</string>
     <string name="course_share_description">Share link with your friends to take this course together!</string>
-    <string name="course_score_to_cost" translatable="false">%d/%d</string>
 
     <string name="course_tab_info">Info</string>
     <string name="course_tab_reviews">Reviews</string>
