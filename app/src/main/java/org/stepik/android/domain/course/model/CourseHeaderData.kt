@@ -40,7 +40,7 @@ data class CourseHeaderData(
                 parcel.readString()!!,
                 parcel.readLong(),
                 parcel.readDouble(),
-                parcel.readParcelable(Progress::class.java.classLoader) as Progress?,
+                parcel.readParcelable(Progress::class.java.classLoader),
                 parcel.readDouble(),
                 parcel.readSerializable() as EnrollmentState
             )
