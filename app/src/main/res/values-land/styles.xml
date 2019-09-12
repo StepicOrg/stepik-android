@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <style name="PlaceholderTextViewStyle">
         <item name="android:textSize">@dimen/text_size_placeholders</item>
-        <item name="fontPath">fonts/Roboto-Light.ttf</item>
+        <item name="android:fontFamily" tools:targetApi="jelly_bean">@font/roboto_light</item>
         <item name="android:padding">@dimen/padding_placeholders</item>
         <item name="android:lineSpacingMultiplier">1.15</item>
         <item name="android:gravity">center</item>
