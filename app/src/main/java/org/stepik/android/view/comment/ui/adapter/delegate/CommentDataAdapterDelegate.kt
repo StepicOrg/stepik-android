@@ -115,6 +115,7 @@ class CommentDataAdapterDelegate(
                 CommentTag.STAFF_REPLIED.takeIf { data.comment.isStaffReplied == true },
                 CommentTag.PINNED.takeIf { data.comment.isPinned }
             )
+            commentTags.changeVisibility(needShow = commentTagsAdapter.itemCount > 0)
 
             commentTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.comment.time?.time ?: 0)
 
