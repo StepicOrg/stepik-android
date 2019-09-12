@@ -5,15 +5,13 @@ import android.support.v4.content.res.ResourcesCompat
 import android.text.SpannableString
 import android.text.style.URLSpan
 import org.stepic.droid.R
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.ui.custom.CustomFontURLSpan
 import javax.inject.Inject
 
 class NotificationTextResolver
 @Inject
 constructor(
-        private val fontsProvider: FontsProvider,
-        private val textResolver: TextResolver
+    private val textResolver: TextResolver
 ) {
 
     fun resolveNotificationText(context: Context, content: String?): CharSequence {
