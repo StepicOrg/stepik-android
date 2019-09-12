@@ -32,7 +32,7 @@
 
             android:textSize="14sp"
 
-            fontPath="fonts/Roboto-Light.ttf"
+            app:fontFamily="@font/roboto_light"
             tools:ignore="missingPrefix" />
     </FrameLayout>
 

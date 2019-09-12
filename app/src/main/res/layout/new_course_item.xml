@@ -35,7 +35,7 @@
                 android:textSize="7.5sp"
                 android:textColor="@color/new_accent_color"
                 android:gravity="center"
-                fontPath="fonts/Roboto-Bold.ttf"
+                app:fontFamily="@font/roboto_bold"
                 tools:ignore="MissingPrefix"
                 android:background="@drawable/gray_circle_small"
                 android:letterSpacing="0.1"
@@ -53,7 +53,7 @@
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/courseItemName"
-                fontPath="fonts/Roboto-Regular.ttf"
+                app:fontFamily="@font/roboto_light"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/course_item_space_between_items"

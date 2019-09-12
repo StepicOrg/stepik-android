@@ -109,7 +109,7 @@
 
             android:textSize="12sp"
             android:textColor="@color/white"
-            fontPath="fonts/Roboto-Light.ttf"
+            app:fontFamily="@font/roboto_light"
             tools:text="999K"
             tools:ignore="MissingPrefix" />
 
@@ -135,7 +135,7 @@
 
             android:textSize="12sp"
             android:textColor="@color/white"
-            fontPath="fonts/Roboto-Light.ttf"
+            app:fontFamily="@font/roboto_light"
             tools:ignore="MissingPrefix"
             tools:text="77%"/>
 
@@ -151,7 +151,7 @@
             android:text="@string/course_verified"
             android:textSize="12sp"
             android:textColor="@color/white"
-            fontPath="fonts/Roboto-Light.ttf"
+            app:fontFamily="@font/roboto_light"
             tools:ignore="MissingPrefix" />
 
     </LinearLayout>
