@@ -22,7 +22,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepik.android.domain.comment.interactor.CommentInteractor
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
@@ -122,11 +122,11 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
                         val totalItemCount = layoutManager.itemCount
 
                         if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                            post { commentsPresenter.onLoadMore(CommentInteractor.Direction.DOWN) }
+                            post { commentsPresenter.onLoadMore(PaginationDirection.DOWN) }
                         }
                     } else {
                         if (pastVisibleItems == 0) {
-                            post { commentsPresenter.onLoadMore(CommentInteractor.Direction.UP) }
+                            post { commentsPresenter.onLoadMore(PaginationDirection.UP) }
                         }
                     }
                 }

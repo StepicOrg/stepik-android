@@ -5,6 +5,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.DiscussionOrder
@@ -104,7 +105,7 @@ constructor(
     /**
      * Load more logic in both directions
      */
-    fun onLoadMore(direction: CommentInteractor.Direction) {
+    fun onLoadMore(direction: PaginationDirection) {
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
 
@@ -116,7 +117,7 @@ constructor(
 
         val lastCommentId =
             when (direction) {
-                CommentInteractor.Direction.UP ->
+                PaginationDirection.UP ->
                     commentDataItems
                         .takeIf { it.hasPrev }
                         .takeIf { commentsState.commentItems.first() !is CommentItem.Placeholder }
@@ -124,7 +125,7 @@ constructor(
                         ?.id
                         ?: return
 
-                CommentInteractor.Direction.DOWN ->
+                PaginationDirection.DOWN ->
                     commentDataItems
                         .takeIf { it.hasNext }
                         .takeIf { commentsState.commentItems.last() !is CommentItem.Placeholder }

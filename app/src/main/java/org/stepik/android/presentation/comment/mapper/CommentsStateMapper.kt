@@ -4,7 +4,7 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
-import org.stepik.android.domain.comment.interactor.CommentInteractor
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -44,19 +44,19 @@ constructor() {
     /**
      * stable state -> pagination loading
      */
-    fun mapToLoadMoreState(commentsState: CommentsView.CommentsState.Loaded, direction: CommentInteractor.Direction): CommentsView.CommentsState =
+    fun mapToLoadMoreState(commentsState: CommentsView.CommentsState.Loaded, direction: PaginationDirection): CommentsView.CommentsState =
         when (direction) {
-            CommentInteractor.Direction.UP ->
+            PaginationDirection.UP ->
                 commentsState.copy(commentItems = listOf(CommentItem.Placeholder) + commentsState.commentItems)
 
-            CommentInteractor.Direction.DOWN ->
+            PaginationDirection.DOWN ->
                 commentsState.copy(commentItems = commentsState.commentItems + CommentItem.Placeholder)
         }
 
     /**
      * Pagination loading -> new stable state
      */
-    fun mapFromLoadMoreToSuccess(state: CommentsView.State, items: PagedList<CommentItem.Data>, direction: CommentInteractor.Direction): CommentsView.State {
+    fun mapFromLoadMoreToSuccess(state: CommentsView.State, items: PagedList<CommentItem.Data>, direction: PaginationDirection): CommentsView.State {
         if (state !is CommentsView.State.DiscussionLoaded ||
             state.commentsState !is CommentsView.CommentsState.Loaded) {
             return state
@@ -67,10 +67,10 @@ constructor() {
 
         val (newDataItems: PagedList<CommentItem.Data>, newItems) =
             when (direction) {
-                CommentInteractor.Direction.UP ->
+                PaginationDirection.UP ->
                     items + commentsState.commentDataItems to rawItems + commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
 
-                CommentInteractor.Direction.DOWN ->
+                PaginationDirection.DOWN ->
                     commentsState.commentDataItems + items to commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals) + rawItems
             }
 
@@ -80,7 +80,7 @@ constructor() {
     /**
      * Pagination loading -> (rollback) -> previous stable state
      */
-    fun mapFromLoadMoreToError(state: CommentsView.State, direction: CommentInteractor.Direction): CommentsView.State {
+    fun mapFromLoadMoreToError(state: CommentsView.State, direction: PaginationDirection): CommentsView.State {
         if (state !is CommentsView.State.DiscussionLoaded ||
             state.commentsState !is CommentsView.CommentsState.Loaded) {
             return state
@@ -88,10 +88,10 @@ constructor() {
 
         val newItems =
             when (direction) {
-                CommentInteractor.Direction.UP ->
+                PaginationDirection.UP ->
                    state.commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
 
-                CommentInteractor.Direction.DOWN ->
+                PaginationDirection.DOWN ->
                    state.commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals)
             }
 

@@ -3,6 +3,7 @@ package org.stepik.android.domain.comment.interactor
 import io.reactivex.Single
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.mapper.CommentsDataMapper
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.comment.model.DiscussionOrder
@@ -66,7 +67,7 @@ constructor(
     fun getMoreComments(
         discussionProxy: DiscussionProxy,
         discussionOrder: DiscussionOrder,
-        direction: Direction,
+        direction: PaginationDirection,
         lastCommentId: Long
     ): Single<PagedList<CommentItem.Data>> =
         getMore(
@@ -81,13 +82,13 @@ constructor(
     ): Single<PagedList<CommentItem.Data>> =
         getMore(
             comment.replies ?: emptyList(),
-            Direction.DOWN,
+            PaginationDirection.DOWN,
             lastCommentId
         )
 
     private fun getMore(
         commentIds: List<Long>,
-        direction: Direction,
+        direction: PaginationDirection,
         lastCommentId: Long
     ): Single<PagedList<CommentItem.Data>> {
         val index = commentIds
@@ -99,10 +100,10 @@ constructor(
 
         val (start, end) =
             when (direction) {
-                Direction.UP ->
+                PaginationDirection.UP ->
                     max(0, index - PAGE_SIZE) to index
 
-                Direction.DOWN ->
+                PaginationDirection.DOWN ->
                     index + 1 to min(index + PAGE_SIZE, commentIds.size)
             }
 
@@ -145,8 +146,4 @@ constructor(
                             .first()
                     }
             }
-
-    enum class Direction {
-        UP, DOWN
-    }
 }
