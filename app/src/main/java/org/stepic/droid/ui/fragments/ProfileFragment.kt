@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -118,6 +119,8 @@ class   ProfileFragment : FragmentBase(),
         initToolbar()
         initTimezone()
 
+        // app:fontFamily doesn't work on this view
+        notificationStreakSwitch.typeface = ResourcesCompat.getFont(requireContext(), R.font.roboto_light)
         profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
         profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(requireActivity(), profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
