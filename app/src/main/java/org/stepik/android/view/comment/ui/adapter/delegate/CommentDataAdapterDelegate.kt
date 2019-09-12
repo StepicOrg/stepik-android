@@ -2,6 +2,7 @@ package org.stepik.android.view.comment.ui.adapter.delegate
 
 import android.graphics.BitmapFactory
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
@@ -15,9 +16,11 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.base.ui.mapper.DateMapper
+import org.stepik.android.view.comment.model.CommentTag
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 
 class CommentDataAdapterDelegate(
     private val actionListener: ActionListener
@@ -57,6 +60,8 @@ class CommentDataAdapterDelegate(
         private val voteStatusViewStateDelegate: ViewStateDelegate<CommentItem.Data.VoteStatus> =
             ViewStateDelegate()
 
+        private val commentTagsAdapter = DefaultDelegateAdapter<CommentTag>()
+
         init {
             commentText.setTextSize(14f)
             commentText.setTextIsSelectable(true)
@@ -71,6 +76,14 @@ class CommentDataAdapterDelegate(
 
             voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Resolved>(commentLike, commentDislike)
             voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Pending>(root.commentVoteProgress)
+
+            commentTagsAdapter += CommentTagsAdapterDelegate()
+            with(commentTags) {
+                itemAnimator = null
+                isNestedScrollingEnabled = false
+                layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+                adapter = commentTagsAdapter
+            }
         }
 
         override fun onBind(data: CommentItem) {
@@ -98,7 +111,10 @@ class CommentDataAdapterDelegate(
             commentText.setPlainOrLaTeXTextColored(data.comment.text, R.color.new_accent_color)
 
             commentMenu.changeVisibility(data.isCurrentUser)
-            commentTags.changeVisibility(false)
+            commentTagsAdapter.items = listOfNotNull(
+                CommentTag.STAFF_REPLIED.takeIf { data.comment.isStaffReplied == true },
+                CommentTag.PINNED.takeIf { data.comment.isPinned }
+            )
 
             commentTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.comment.time?.time ?: 0)
 

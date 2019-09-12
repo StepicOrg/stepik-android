@@ -248,4 +248,5 @@
     <dimen name="comment_item_reply_offset">20dp</dimen>
 
     <dimen name="comment_item_action_size">28dp</dimen>
+    <dimen name="comment_tag_radius">12dp</dimen>
 </resources>

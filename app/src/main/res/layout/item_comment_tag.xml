@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AppCompatTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="20dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:drawablePadding="4dp"
+
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+
+    fontPath="fonts/Roboto-Bold.ttf"
+    android:textSize="10sp"
+    android:gravity="center"
+    tools:ignore="SmallSp"
+    tools:background="@drawable/bg_comment_tag_pinned"
+    tools:drawableStart="@drawable/ic_comment_tag_pinned"
+    tools:text="Pinned" />
