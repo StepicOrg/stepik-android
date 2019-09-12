@@ -85,6 +85,7 @@ class CommentDataAdapterDelegate(
                             replyOffset
                         }
                 }
+            itemView.isActivated = data.isFocused
 
             commentUserName.text = data.user.fullName
 

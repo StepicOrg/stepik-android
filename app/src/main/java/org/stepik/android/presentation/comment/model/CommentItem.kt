@@ -10,7 +10,8 @@ sealed class CommentItem {
         val comment: Comment,
         val user: User,
         val voteStatus: VoteStatus,
-        val isCurrentUser: Boolean
+        val isCurrentUser: Boolean,
+        val isFocused: Boolean
     ) : CommentItem(), Identifiable<Long> {
         override val id: Long =
             comment.id

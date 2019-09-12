@@ -58,7 +58,7 @@ constructor(
 
                 commentRepository
                     .getComments(*(commentIds - cachedCommentIds).toLongArray())
-                    .map { commentsDataMapper.mapToCommentDataItems(commentIds.toLongArray(), it, userPreferences.userId, cachedCommentItems) }
+                    .map { commentsDataMapper.mapToCommentDataItems(commentIds.toLongArray(), it, userPreferences.userId, discussionId, cachedCommentItems) }
                     .map { comments ->
                         PagedList(comments, hasPrev = start > 0, hasNext = end < orderedCommentIds.size)
                     }

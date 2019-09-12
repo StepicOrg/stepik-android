@@ -155,6 +155,8 @@
     <color name="green01">#66CC66</color>
     <color name="green03">#54AD54</color>
     <color name="green04">#ACD1AC</color>
+    <color name="violet1">#6C7BDF</color>
+    <color name="violet2">#E9EBFA</color>
 
     <!--adaptive-->
     <color name="adaptive_color_easy">#227300</color>

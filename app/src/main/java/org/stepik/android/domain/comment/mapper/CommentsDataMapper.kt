@@ -11,6 +11,7 @@ constructor() {
         commentIds: LongArray,
         commentsData: CommentsData,
         currentUserId: Long,
+        discussionId: Long? = null,
         cachedCommentItems: List<CommentItem.Data> = emptyList()
     ): List<CommentItem.Data> =
         commentsData
@@ -30,7 +31,8 @@ constructor() {
                     comment = comment,
                     user = user,
                     voteStatus = CommentItem.Data.VoteStatus.Resolved(vote),
-                    isCurrentUser = comment.user == currentUserId
+                    isCurrentUser = comment.user == currentUserId,
+                    isFocused = discussionId == comment.id
                 )
             }
             .let { newItems ->
