@@ -29,7 +29,9 @@ data class Profile(
     val isGuest: Boolean = false,
 
     @SerializedName("email_addresses")
-    val emailAddresses: LongArray? = null
+    val emailAddresses: LongArray? = null,
+
+    val primaryEmailAdress: EmailAddress? = null
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)

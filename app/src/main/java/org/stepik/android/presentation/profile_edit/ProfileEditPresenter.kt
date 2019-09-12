@@ -30,7 +30,7 @@ constructor(
 
     init {
         compositeDisposable += profileEditInteractor
-            .getProfile()
+            .getProfileWithEmail()
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
