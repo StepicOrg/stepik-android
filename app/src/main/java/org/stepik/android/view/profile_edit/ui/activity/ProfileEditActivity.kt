@@ -41,6 +41,7 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var profile: Profile? = null
+    private lateinit var navigationItems: MutableList<ProfileEditItem>
     private val viewStateDelegate =
         ViewStateDelegate<ProfileEditView.State>()
 
@@ -53,7 +54,7 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
             .get(ProfileEditPresenter::class.java)
         initCenteredToolbar(R.string.profile_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 
-        val navigationItems = listOf(
+        navigationItems = mutableListOf(
             ProfileEditItem(ProfileEditItem.Type.PERSONAL_INFO, getString(R.string.profile_edit_info_title), getString(R.string.profile_edit_info_subtitle)),
             ProfileEditItem(ProfileEditItem.Type.PASSWORD, getString(R.string.profile_edit_password_title), getString(R.string.profile_edit_password_subtitle))
         )
@@ -131,6 +132,9 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
         viewStateDelegate.switchState(state)
         if (state is ProfileEditView.State.ProfileLoaded) {
             profile = state.profile
+            state.profile.primaryEmailAdress?.email?.let {
+                navigationItems.add(1, ProfileEditItem(ProfileEditItem.Type.EMAIL, getString(R.string.email), it))
+            }
         }
     }
 

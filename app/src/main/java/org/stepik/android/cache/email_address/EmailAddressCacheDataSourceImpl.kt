@@ -20,7 +20,6 @@ constructor(
     override fun saveEmailAddresses(emailAddresses: List<EmailAddress>): Completable =
         Completable.fromAction {
             sharedPreferenceHelper.storeEmailAddresses(emailAddresses)
-
         }
 
     override fun removeEmailAddress(emailId: Long): Completable =
