@@ -146,7 +146,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { state = commentsStateMapper.mapFromLoadMoreToSuccess(state, it, direction) },
-                onError = { state = commentsStateMapper.mapFromLoadMoreToError(state, direction) }
+                onError = { state = commentsStateMapper.mapFromLoadMoreToError(state, direction); view?.showNetworkError() }
             )
     }
 
@@ -167,7 +167,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { state = commentsStateMapper.mapFromLoadMoreRepliesToSuccess(state, it, loadMoreReplies) },
-                onError = { state = commentsStateMapper.mapFromLoadMoreRepliesToError(state, loadMoreReplies) }
+                onError = { state = commentsStateMapper.mapFromLoadMoreRepliesToError(state, loadMoreReplies); view?.showNetworkError() }
             )
     }
 
@@ -198,7 +198,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
-                onError = { state = commentsStateMapper.mapFromVotePendingToError(state, commentDataItem.voteStatus.vote) }
+                onError = { state = commentsStateMapper.mapFromVotePendingToError(state, commentDataItem.voteStatus.vote); view?.showNetworkError() }
             )
     }
 }
