@@ -741,4 +741,6 @@
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
+
+    <string name="copied_to_clipboard_toast">Скопировано в буфер</string>
 </resources>

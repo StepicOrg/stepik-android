@@ -771,4 +771,6 @@
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
+
+    <string name="copied_to_clipboard_toast">Copied to clipboard</string>
 </resources>

@@ -1,6 +1,9 @@
 package org.stepic.droid.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -13,6 +16,8 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.empty_login.*
@@ -496,6 +501,13 @@ class   ProfileFragment : FragmentBase(),
         profileIdSeparator.visibility = View.VISIBLE
         profileId.visibility = View.VISIBLE
         profileId.text = getString(R.string.profile_user_id, userId)
+        profileId.setOnLongClickListener {
+            val textToCopy = (it as TextView).text
+            val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            clipboardManager.primaryClip = ClipData.newPlainText(null, textToCopy)
+            Toast.makeText(requireContext(), getString(R.string.copied_to_clipboard_toast), Toast.LENGTH_SHORT).show()
+            true
+        }
     }
 
 }
