@@ -2,7 +2,6 @@ package org.stepic.droid.base
 
 import android.content.Context
 import android.os.Build
-import android.os.StrictMode
 import android.support.multidex.MultiDexApplication
 import android.webkit.WebView
 import com.facebook.FacebookSdk
@@ -14,7 +13,6 @@ import com.vk.sdk.VKSdk
 import com.yandex.metrica.YandexMetrica
 import io.branch.referral.Branch
 import org.stepic.droid.BuildConfig
-import org.stepic.droid.R
 import org.stepic.droid.analytic.experiments.SplitTestsHolder
 import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.core.ComponentManager
@@ -22,16 +20,13 @@ import org.stepic.droid.core.ComponentManagerImpl
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.DaggerAppCoreComponent
 import org.stepic.droid.di.storage.DaggerStorageComponent
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.StethoHelper
 import org.stepic.droid.util.isMainProcess
-import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportService
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
 import timber.log.Timber
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import javax.inject.Inject
 import javax.net.ssl.SSLContext
 
@@ -125,12 +120,6 @@ class App : MultiDexApplication() {
 
         component.inject(this)
 
-
-        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
-                .setDefaultFontPath(fontsProvider.provideFontPath(FontType.regular))
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        )
 
         componentManager = ComponentManagerImpl(component)
 

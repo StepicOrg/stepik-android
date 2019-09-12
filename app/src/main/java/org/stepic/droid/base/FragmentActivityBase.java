@@ -21,19 +21,17 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.fonts.FontsProvider;
-import org.stepik.android.model.Course;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.NotificationsViewPusher;
 import org.stepic.droid.ui.util.CloseIconHolder;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepik.android.model.Course;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
@@ -73,11 +71,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
             notificationsViewPusher.pushToViewedNotificationsQueue(
                     getIntent().getLongExtra(AppConstants.KEY_NOTIFICATION_ID, 0));
         }
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     protected void hideSoftKeypad() {
