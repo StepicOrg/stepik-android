@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.content.res.ResourcesCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
@@ -27,7 +28,6 @@ import org.stepic.droid.core.earlystreak.contract.EarlyStreakListener
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
@@ -43,9 +43,8 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.Course
 import org.stepik.android.model.user.Profile
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import timber.log.Timber
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -380,7 +379,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
             val streakTitle = SpannableString(getString(R.string.early_notification_title))
             streakTitle.setSpan(ForegroundColorSpan(Color.BLACK), 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(this.assets, fontsProvider.provideFontPath(FontType.bold)))
+            val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
             streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             val description = getString(R.string.early_notification_description)
