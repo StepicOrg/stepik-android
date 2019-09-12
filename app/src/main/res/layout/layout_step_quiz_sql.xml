@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stepQuizCodeContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    app:layout_goneMarginTop="0dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+
+    app:layout_constraintVertical_bias="0"
+
+    app:layout_constraintTop_toBottomOf="@id/stepQuizDescription"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/step_quiz_separator" />
+
+    <FrameLayout
+        android:id="@+id/stepQuizActions"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="48dp">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/stepQuizActionChangeLang"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="?selectableItemBackground"
+            android:lines="1"
+            android:ellipsize="end"
+
+            android:textSize="16sp"
+            android:textColor="@color/new_accent_color"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical|start"
+
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+
+            android:drawablePadding="12dp"
+
+            android:layout_marginRight="96dp"
+            android:layout_marginEnd="96dp"
+
+            tools:drawableEnd="@drawable/ic_arrow_bottom"
+
+            tools:text="python3 dasjdlkas dadlj aldj akjsdlakj lkjasdkl jkdas" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/step_quiz_separator"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
+
+    <org.stepic.droid.code.ui.CodeEditorLayout
+        android:id="@+id/codeStepLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/embedded_code_editor_height"
+        android:fillViewport="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/step_quiz_separator" />
+
+</android.support.v7.widget.LinearLayoutCompat>

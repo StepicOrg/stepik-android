@@ -1,13 +1,11 @@
 package org.stepic.droid.ui.adapters
 
-import android.os.Bundle
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.ViewGroup
-import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.StepItem
@@ -37,22 +35,8 @@ class StepFragmentAdapter(
     override val activeFragments: Map<Int, Fragment>
         get() = _activeFragments
 
-    override fun getItem(position: Int): Fragment {
-        val stepWrapper = items[position].stepWrapper
-
-        val fragment = stepTypeResolver.getFragment(stepWrapper.step)
-        return if (stepTypeResolver.isNeedUseOldStepContainer(stepWrapper.step) && fragment != null) {
-            val args = Bundle()
-            args.putParcelable(AppConstants.KEY_STEP_BUNDLE, stepWrapper)
-            args.putParcelable(AppConstants.KEY_LESSON_BUNDLE, lessonData.lesson)
-            args.putParcelable(AppConstants.KEY_UNIT_BUNDLE, lessonData.unit)
-            args.putParcelable(AppConstants.KEY_SECTION_BUNDLE, lessonData.section)
-            fragment.arguments = args
-            fragment
-        } else {
-            StepFragment.newInstance(stepWrapper, lessonData)
-        }
-    }
+    override fun getItem(position: Int): Fragment =
+        StepFragment.newInstance(items[position].stepWrapper, lessonData)
 
     override fun getCount(): Int =
         items.size

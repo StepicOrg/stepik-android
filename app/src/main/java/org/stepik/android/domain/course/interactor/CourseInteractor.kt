@@ -4,8 +4,6 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import org.stepik.android.model.CourseReviewSummary
-import org.stepic.droid.util.safeDiv
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -16,6 +14,7 @@ import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
+import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
 import org.stepik.android.view.injection.course.CourseScope
 import javax.inject.Inject
@@ -66,7 +65,7 @@ constructor(
                     learnersCount = course.learnersCount,
 
                     review = courseReview,
-                    progress = (courseProgress as? Progress)?.let { (it.nStepsPassed * 100 safeDiv it.nSteps).coerceIn(0L..100L) },
+                    progress = (courseProgress as? Progress),
                     readiness = course.readiness,
                     enrollmentState = enrollmentState
                 )

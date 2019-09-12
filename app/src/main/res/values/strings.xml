@@ -468,7 +468,7 @@
         <item quantity="one">%d course</item>
         <item quantity="other">%d courses</item>
     </plurals>
-    <string name="course_current_progress">Current progress: %d%%</string>
+    <string name="course_current_progress">Current progress: %d/%d</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
 
     <string name="notification_badge_placeholder" translatable="false">99+</string>
@@ -742,6 +742,7 @@
     <string name="step_quiz_matching_description">Match two lists</string>
     <string name="step_quiz_choice_description_single">Choose one option</string>
     <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
+    <string name="step_quiz_sql_description">Enter an SQL query</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
     <string name="step_quiz_text_invalid_number_reply">The answer must be a number</string>
@@ -761,6 +762,9 @@
 
     <string name="step_quiz_unsupported_action">Open the web version to solve</string>
     <string name="step_quiz_unsupported_message">Current step type is not supported in mobile app yet</string>
+
+    <string name="step_quiz_code_full_screen_instruction_tab">Instruction</string>
+    <string name="step_quiz_code_full_screen_code_tab">Code</string>
 
     <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 

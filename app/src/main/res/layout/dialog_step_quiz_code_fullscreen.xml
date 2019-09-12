@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/coordinator"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/view_centered_toolbar"/>
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/fullScreenCodeTabs"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/course_tabbar_color"
+        android:layout_below="@id/centeredToolbar"
+        app:tabMode="fixed"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/new_accent_color"
+        app:tabIndicatorHeight="2dp"
+        app:tabSelectedTextColor="@color/new_accent_color"
+        app:tabTextAppearance="@style/CourseTabAppearance"
+        app:tabPaddingStart="24dp"
+        app:tabPaddingEnd="24dp"
+        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
+
+    <View
+        android:id="@+id/fullScreenCodeSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/fullScreenCodeTabs"
+        android:background="@color/course_appbar_separator" />
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/stepQuizProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fullScreenCodeViewPager"
+        android:layout_below="@id/fullScreenCodeSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <include
+        layout="@layout/layout_step_quiz_code_keyboard_extension"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
