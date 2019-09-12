@@ -23,12 +23,12 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.domain.base.PaginationDirection
-import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.view.comment.model.DiscussionOrderItem
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentDataAdapterDelegate
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentLoadMoreRepliesAdapterDelegate
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAdapterDelegate
@@ -69,6 +69,9 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
     private lateinit var viewStateDelegate: ViewStateDelegate<CommentsView.State>
     private lateinit var commentsViewStateDelegate: ViewStateDelegate<CommentsView.CommentsState>
     private lateinit var commentsAdapter: DefaultDelegateAdapter<CommentItem>
+
+    private var isMenuOrderGroupVisible: Boolean = false
+    private var menuDiscussionOrderItem: DiscussionOrderItem = DiscussionOrderItem.LAST_DISCUSSION
 
     private val commentPlaceholders = List(10) { CommentItem.Placeholder }
 
@@ -188,6 +191,13 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         return super.onCreateOptionsMenu(menu)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.setGroupVisible(R.id.comments_menu_group, isMenuOrderGroupVisible)
+        menu.findItem(menuDiscussionOrderItem.itemId)
+            ?.isChecked = true
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             android.R.id.home -> {
@@ -196,26 +206,12 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
             }
             else -> {
                 val discussionOrder =
-                    when (item.itemId) {
-                        R.id.menu_item_last_discussion ->
-                            DiscussionOrder.LAST_DISCUSSION
-
-                        R.id.menu_item_most_liked ->
-                            DiscussionOrder.MOST_LIKED
-
-                        R.id.menu_item_most_active ->
-                            DiscussionOrder.MOST_ACTIVE
-
-                        R.id.menu_item_recent_activity ->
-                            DiscussionOrder.RECENT_ACTIVITY
-
-                        else ->
-                            null
-                    }
+                    DiscussionOrderItem
+                        .getById(item.itemId)
+                        ?.order
 
                 if (discussionOrder != null) {
                     commentsPresenter.changeDiscussionOrder(discussionOrder)
-                    item.isChecked = true
                     true
                 } else {
                     super.onOptionsItemSelected(item)
@@ -230,6 +226,7 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
             state is CommentsView.State.DiscussionLoaded
 
         viewStateDelegate.switchState(state)
+        isMenuOrderGroupVisible = state is CommentsView.State.DiscussionLoaded
 
         when (state) {
             is CommentsView.State.Loading ->
@@ -237,6 +234,9 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
             is CommentsView.State.DiscussionLoaded -> {
                 commentsViewStateDelegate.switchState(state.commentsState)
+
+                menuDiscussionOrderItem = DiscussionOrderItem.getBy(order = state.discussionOrder)
+
                 when (state.commentsState) {
                     is CommentsView.CommentsState.Loading ->
                         commentsAdapter.items = commentPlaceholders
@@ -246,6 +246,8 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
                 }
             }
         }
+
+        invalidateOptionsMenu()
     }
 
     private fun showCommentComposeDialog(stepId: Long, parent: Long? = null, comment: Comment? = null) {
