@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -24,7 +25,6 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
@@ -39,7 +39,6 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, ResetCodeDialogFragment.Callback {
@@ -192,8 +191,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         val activity = activity
             ?: return
 
-        val lightFont = TypefaceUtils.load(activity.assets, fontsProvider.provideFontPath(FontType.light))
-        val regularFont = TypefaceUtils.load(activity.assets, fontsProvider.provideFontPath(FontType.regular))
+        val lightFont = ResourcesCompat.getFont(activity, R.font.roboto_light)
+        val regularFont = ResourcesCompat.getFont(activity, R.font.roboto_regular)
 
         val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity)
 
