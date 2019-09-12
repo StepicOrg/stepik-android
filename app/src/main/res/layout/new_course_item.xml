@@ -53,7 +53,7 @@
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/courseItemName"
-                app:fontFamily="@font/roboto_light"
+                app:fontFamily="@font/roboto_regular"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/course_item_space_between_items"
