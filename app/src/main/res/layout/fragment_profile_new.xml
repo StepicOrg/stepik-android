@@ -364,6 +364,25 @@
                     android:splitMotionEvents="false"
                     android:visibility="gone"/>
 
+                <View
+                    android:id="@+id/profileIdSeparator"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:visibility="gone"
+                    android:background="@color/step_quiz_separator" />
+
+                <TextView
+                    android:id="@+id/profileId"
+                    android:gravity="center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:textColor="@color/new_accent_color_alpha_30"
+                    android:textSize="18sp"
+                    android:visibility="gone"
+                    tools:text="User ID: 1287351251"/>
+
             </LinearLayout>
 
         </android.support.v4.widget.NestedScrollView>

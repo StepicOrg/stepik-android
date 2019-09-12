@@ -102,10 +102,10 @@ class   ProfileFragment : FragmentBase(),
 
     override fun injectComponent() {
         App
-                .component()
-                .profileComponentBuilder()
-                .build()
-                .inject(this)
+            .component()
+            .profileComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -307,6 +307,7 @@ class   ProfileFragment : FragmentBase(),
             profileSettingsRecyclerView.visibility = View.VISIBLE
 
             notificationIntervalChooserContainer.visibility = View.VISIBLE
+            setupUserId()
         } else {
             //show user info expanded for strangers
             if (!shortBioArrowImageView.isExpanded()) {
@@ -489,6 +490,12 @@ class   ProfileFragment : FragmentBase(),
         maxStreakSuffix.visibility = visibility
         maxStreakValue.visibility = visibility
         streakIndicator.visibility = visibility
+    }
+
+    private fun setupUserId() {
+        profileIdSeparator.visibility = View.VISIBLE
+        profileId.visibility = View.VISIBLE
+        profileId.text = getString(R.string.profile_user_id, userId)
     }
 
 }
