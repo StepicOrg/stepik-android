@@ -41,7 +41,7 @@
         <item name="android:textSize">20sp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/new_accent_color_alpha_30</item>
+        <item name="android:textColor">@color/text_color</item>
         <item name="android:layout_marginTop">@dimen/guideline_standard_padding</item>
         <item name="android:layout_marginLeft">@dimen/course_list_side_padding</item>
         <item name="android:layout_marginBottom">20dp</item>

@@ -456,7 +456,7 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
-    <string name="course_current_progress">Текущий прогресс %d%%</string>
+    <string name="course_current_progress">Текущий прогресс %d/%d</string>
     <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
     <string name="registration_remind_message">Завершите регистрацию и получите доступ к неограниченному числу бесплатных курсов!</string>
 
@@ -713,6 +713,7 @@
     <string name="step_quiz_matching_description">Сопоставьте значения из двух списков</string>
     <string name="step_quiz_choice_description_single">Выберите один элемент</string>
     <string name="step_quiz_choice_description_multiple">Выберите один или несколько элементов</string>
+    <string name="step_quiz_sql_description">Введите SQL запрос</string>
 
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
     <string name="step_quiz_text_invalid_number_reply">Ответ должен быть числом</string>
@@ -732,6 +733,9 @@
 
     <string name="step_quiz_unsupported_action">Пройти задание в web-версии</string>
     <string name="step_quiz_unsupported_message">Данный тип шага пока не поддерживается в приложении</string>
+
+    <string name="step_quiz_code_full_screen_instruction_tab">Условия</string>
+    <string name="step_quiz_code_full_screen_code_tab">Код</string>
 
     <string name="step_quiz_pycharm_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
