@@ -99,7 +99,7 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer, NextMovea
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions) {
             screenManager
-                .openComments(activity, stepWrapper.step.discussionProxy, stepWrapper.step.id, stepWrapper.step.discussionsCount == 0)
+                .openComments(activity, stepWrapper.step.discussionProxy, stepWrapper.step.id, null, stepWrapper.step.discussionsCount == 0)
         }
         stepDiscussionsDelegate.setDiscussions(stepWrapper.step.discussionProxy, stepWrapper.step.discussionsCount)
 

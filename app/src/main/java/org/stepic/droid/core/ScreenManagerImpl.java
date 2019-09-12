@@ -35,7 +35,6 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
-import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
@@ -552,12 +551,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openComments(Activity context, @Nullable String discussionProxyId, long stepId) {
-        openComments(context, discussionProxyId, stepId, false);
-    }
-
-    @Override
-    public void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm) {
+    public void openComments(Activity context, String discussionProxyId, long stepId, @Nullable Long discussionId, boolean needOpenForm) {
         if (discussionProxyId == null) {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
             Toast.makeText(context, R.string.comment_disabled, Toast.LENGTH_SHORT).show();
@@ -569,7 +563,7 @@ public class ScreenManagerImpl implements ScreenManager {
 //            bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
 //            bundle.putBoolean(CommentsActivity.Companion.getKeyNeedInstaOpenForm(), needOpenForm);
 //            intent.putExtras(bundle);
-            context.startActivity(org.stepik.android.view.comment.ui.activity.CommentsActivity.Companion.createIntent(context, stepId, discussionProxyId, null, needOpenForm));
+            context.startActivity(org.stepik.android.view.comment.ui.activity.CommentsActivity.Companion.createIntent(context, stepId, discussionProxyId, discussionId, needOpenForm));
         }
     }
 

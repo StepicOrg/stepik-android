@@ -30,4 +30,6 @@ interface CommentsView {
     }
 
     fun setState(state: State)
+    fun focusDiscussion(discussionId: Long)
+    fun showNetworkError()
 }

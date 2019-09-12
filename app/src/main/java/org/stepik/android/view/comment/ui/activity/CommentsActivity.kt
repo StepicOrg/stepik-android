@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.DividerItemDecoration
@@ -14,6 +15,7 @@ import android.support.v7.widget.SimpleItemAnimator
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
+import kotlinx.android.synthetic.main.activity_profile_edit_password.*
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -22,6 +24,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
@@ -260,5 +263,25 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
         ComposeCommentDialogFragment
             .newInstance(target = stepId, parent = parent, comment = comment)
             .show(supportFragmentManager, ComposeCommentDialogFragment.TAG)
+    }
+
+    override fun focusDiscussion(discussionId: Long) {
+        commentsRecycler.post {
+            val itemIndex = commentsAdapter
+                .items
+                .indexOfFirst { it is CommentItem.Data && it.id == discussionId }
+
+            if (itemIndex > 0) {
+                commentsRecycler.layoutManager
+                    ?.scrollToPosition(itemIndex)
+            }
+        }
+    }
+
+    override fun showNetworkError() {
+        Snackbar
+            .make(root, R.string.no_connection, Snackbar.LENGTH_SHORT)
+            .setTextColor(ContextCompat.getColor(this, R.color.white))
+            .show()
     }
 }

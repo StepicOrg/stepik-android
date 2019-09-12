@@ -86,7 +86,12 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
-                    onSuccess = { state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(it, commentsStateMapper.mapCommentDataItemsToRawItems(it))) },
+                    onSuccess = {
+                        state = newState.copy(commentsState = CommentsView.CommentsState.Loaded(it, commentsStateMapper.mapCommentDataItemsToRawItems(it)))
+                        if (discussionId != null) {
+                            view?.focusDiscussion(discussionId)
+                        }
+                    },
                     onError = { state = CommentsView.State.NetworkError }
                 )
         }
