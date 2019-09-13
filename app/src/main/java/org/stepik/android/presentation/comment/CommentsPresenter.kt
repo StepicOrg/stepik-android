@@ -218,7 +218,24 @@ constructor(
             )
     }
 
-    fun removeComment(commentDataItem: CommentItem.Data) {
+    fun removeComment(commentId: Long) {
+        val oldState = (state as? CommentsView.State.DiscussionLoaded)
+            ?: return
 
+        val commentsState = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
+            ?: return
+
+        val commentDataItem = commentsState.commentDataItems.find { it.id == commentId }
+            ?: return
+
+        state = oldState.copy(commentsState = commentsStateMapper.mapToRemovePending(commentsState, commentDataItem))
+        compositeDisposable += composeCommentInteractor
+            .removeComment(commentDataItem.id)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onComplete = { state = commentsStateMapper.mapFromRemovePendingToSuccess(state, commentId) },
+                onError = { state = commentsStateMapper.mapFromRemovePendingToError(state, commentDataItem); view?.showNetworkError() }
+            )
     }
 }

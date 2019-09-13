@@ -52,7 +52,6 @@ import org.stepic.droid.ui.dialogs.CertificateShareDialog
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
-import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment
@@ -225,8 +224,6 @@ interface AppCoreComponent {
     fun inject(wantMoveDataDialog: WantMoveDataDialog)
 
     fun inject(unauthorizedDialogFragment: UnauthorizedDialogFragment)
-
-    fun inject(dialogFragment: DeleteCommentDialogFragment)
 
     fun inject(certificateShareDialog: CertificateShareDialog)
 

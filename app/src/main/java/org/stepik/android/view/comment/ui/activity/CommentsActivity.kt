@@ -23,6 +23,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepik.android.view.comment.ui.dialog.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.base.PaginationDirection
@@ -44,7 +45,8 @@ import javax.inject.Inject
 class CommentsActivity :
     FragmentActivityBase(),
     CommentsView,
-    ComposeCommentDialogFragment.Callback {
+    ComposeCommentDialogFragment.Callback,
+    DeleteCommentDialogFragment.Callback {
     companion object {
         private const val EXTRA_DISCUSSION_PROXY = "discussion_proxy"
         private const val EXTRA_DISCUSSION_ID = "discussion_id"
@@ -115,7 +117,7 @@ class CommentsActivity :
                 }
 
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
-
+                    showDeleteCommentDialog(commentDataItem.id)
                 }
             }
         )
@@ -277,6 +279,18 @@ class CommentsActivity :
             .show(supportFragmentManager, ComposeCommentDialogFragment.TAG)
     }
 
+    private fun showDeleteCommentDialog(commentId: Long) {
+        val supportFragmentManager = supportFragmentManager
+            ?.takeIf { it.findFragmentByTag(DeleteCommentDialogFragment.TAG) == null }
+            ?: return
+
+        analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
+
+        DeleteCommentDialogFragment
+            .newInstance(commentId)
+            .show(supportFragmentManager, DeleteCommentDialogFragment.TAG)
+    }
+
     override fun focusDiscussion(discussionId: Long) {
         commentsRecycler.post {
             val itemIndex = commentsAdapter
@@ -303,5 +317,10 @@ class CommentsActivity :
         } else {
             commentsPresenter.onCommentUpdated(commentsData)
         }
+    }
+
+    override fun onDeleteComment(commentId: Long) {
+        analytic.reportEvent(Analytic.Comments.DELETE_COMMENT_CONFIRMATION)
+        commentsPresenter.removeComment(commentId)
     }
 }

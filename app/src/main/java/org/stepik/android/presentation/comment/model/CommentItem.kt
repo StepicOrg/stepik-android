@@ -41,6 +41,7 @@ sealed class CommentItem {
     }
 
     data class RemovePlaceholder(
-        override val id: Long
+        override val id: Long,
+        val isReply: Boolean
     ) : CommentItem(), Identifiable<Long>
 }

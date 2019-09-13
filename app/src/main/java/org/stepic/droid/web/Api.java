@@ -152,11 +152,7 @@ public interface Api {
 
     Call<Void> removeDevice(long deviceId);
 
-    Call<CommentResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
-
     Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
-
-    Call<CommentResponse> deleteComment(long commentId);
 
     Single<CertificateResponse> getCertificates(long userId, int page);
 

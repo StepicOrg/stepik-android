@@ -25,3 +25,9 @@ operator fun <E> PagedList<E>.plus(pagedList: PagedList<E>): PagedList<E> =
  */
 operator fun <E> PagedList<E>.plus(element: E): PagedList<E> =
     PagedList(this as List<E> + element, page = page, hasNext = hasNext, hasPrev = hasPrev)
+
+/**
+ * Returns a list containing all elements not matching the given [predicate].
+ */
+inline fun <E> PagedList<E>.filterNot(predicate: (E) -> Boolean): PagedList<E> =
+    PagedList((this as List<E>).filterNot(predicate), page = page, hasNext = hasNext, hasPrev = hasPrev)

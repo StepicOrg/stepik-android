@@ -4,6 +4,7 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
+import org.stepic.droid.util.filterNot
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
@@ -232,35 +233,40 @@ constructor() {
         commentsState.copy(
             commentItems = commentsState
                 .commentItems
-                .map { if (it == commentDataItem) CommentItem.RemovePlaceholder(commentDataItem.id) else it }
+                .map { if (it == commentDataItem) CommentItem.RemovePlaceholder(commentDataItem.id, isReply = commentDataItem.comment.parent != null) else it }
         )
 
-//    fun mapFromRemovePendingToSuccess(state: CommentsView.State, commentId: Long): CommentsView.State {
-//        if (state !is CommentsView.State.DiscussionLoaded ||
-//            state.commentsState !is CommentsView.CommentsState.Loaded) {
-//            return state
-//        }
-//
-//        return state.copy(
-//            discussionProxy =
-//                with(state.discussionProxy) {
-//                    copy(
-//                        discussions = discussions - commentId,
-//                        discussionsMostActive = discussionsMostActive - commentId,
-//                        discussionsMostLiked = discussionsMostLiked - commentId,
-//                        discussionsRecentActivity = discussionsRecentActivity - commentId
-//                    )
-//                },
-//            discussionId = state.discussionId.takeIf { it != commentId },
-//            commentsState =
-//                with(state.commentsState) {
-//                    copy(
-//                        commentDataItems = commentDataItems.filterNot { it.id == commentId },
-//                        commentItems = commentItems.filterNot { it is CommentItem.RemovePlaceholder && it.id == commentId || it is CommentItem.Data && it.comment.parent == commentId }
-//                    )
-//                }
-//        )
-//    }
+    fun mapFromRemovePendingToSuccess(state: CommentsView.State, commentId: Long): CommentsView.State {
+        if (state !is CommentsView.State.DiscussionLoaded ||
+            state.commentsState !is CommentsView.CommentsState.Loaded) {
+            return state
+        }
+
+        val commentsToRemove = state.commentsState
+            .commentDataItems
+            .mapNotNull { it.takeIf { it.id == commentId || it.comment.parent == commentId }?.id }
+            .plus(commentId)
+
+        return state.copy(
+            discussionProxy =
+                with(state.discussionProxy) {
+                    copy(
+                        discussions = discussions - commentsToRemove,
+                        discussionsMostActive = discussionsMostActive - commentsToRemove,
+                        discussionsMostLiked = discussionsMostLiked - commentsToRemove,
+                        discussionsRecentActivity = discussionsRecentActivity - commentsToRemove
+                    )
+                },
+            discussionId = state.discussionId.takeIf { it != commentId },
+            commentsState =
+                with(state.commentsState) {
+                    copy(
+                        commentDataItems = commentDataItems.filterNot { it.id in commentsToRemove },
+                        commentItems = commentItems.filterNot { it is CommentItem.RemovePlaceholder && it.id == commentId || it is CommentItem.Data && it.id in commentsToRemove }
+                    )
+                }
+        )
+    }
 
     fun mapFromRemovePendingToError(state: CommentsView.State, commentDataItem: CommentItem.Data): CommentsView.State {
         if (state !is CommentsView.State.DiscussionLoaded ||

@@ -24,10 +24,12 @@ class CommentPlaceholderAdapterDelegate : AdapterDelegate<CommentItem, DelegateV
             itemView.layoutParams =
                 (itemView.layoutParams as ViewGroup.MarginLayoutParams).apply {
                     leftMargin =
-                        if (data is CommentItem.Placeholder) {
-                            0
-                        } else {
+                        if (data is CommentItem.ReplyPlaceholder ||
+                            data is CommentItem.RemovePlaceholder && data.isReply
+                        ) {
                             replyOffset
+                        } else {
+                            0
                         }
                 }
         }

@@ -1,5 +1,6 @@
 package org.stepik.android.domain.comment.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
@@ -147,6 +148,9 @@ constructor(
                     }
             }
 
+    /**
+     * Edit comments
+     */
     fun onCommentChanged(commentsData: CommentsData): Single<CommentItem.Data> =
         Single
             .fromCallable {

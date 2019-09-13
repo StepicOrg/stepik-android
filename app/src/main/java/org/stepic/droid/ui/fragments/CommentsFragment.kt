@@ -32,7 +32,7 @@ import org.stepic.droid.core.presenters.contracts.VoteView
 import org.stepik.android.model.user.User
 import org.stepic.droid.model.comments.*
 import org.stepic.droid.ui.adapters.CommentsAdapter
-import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
+import org.stepik.android.view.comment.ui.dialog.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.*
@@ -50,7 +50,7 @@ class CommentsFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener,
         DiscussionView,
         CommentsListener,
-        DeleteCommentDialogFragment.DialogCallback,
+        DeleteCommentDialogFragment.Callback,
         VoteView,
         ComposeCommentDialogFragment.Callback {
     companion object {
@@ -554,18 +554,8 @@ class CommentsFragment : FragmentBase(),
         Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_SHORT).show()
     }
 
-    // begin  DeleteCommentDialogFragment.DialogCallback
+    override fun onDeleteComment(commentId: Long) {
 
-    override fun onFailDeleteComment() {
-        Toast.makeText(context, R.string.fail_delete_comment, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onDeleteConnectionProblem() {
-        onConnectionProblemBase()
-    }
-
-    override fun onCommentWasDeleted(comment: Comment) {
-        handleCommentCountWasUpdated(comment)
     }
 
     //     end DeleteCommentDialogFragment.DialogCallback

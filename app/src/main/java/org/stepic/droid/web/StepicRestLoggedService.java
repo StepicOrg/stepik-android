@@ -214,9 +214,6 @@ public interface StepicRestLoggedService {
     Single<CommentResponse> getComments(@Query("ids[]") long[] ids);
 
     @POST("api/comments")
-    Call<CommentResponse> postComment(@Body CommentRequest comment);
-
-    @POST("api/comments")
     Single<CommentResponse> createComment(@Body CommentRequest request);
 
     @PUT("api/comments/{commentId}")
@@ -230,9 +227,6 @@ public interface StepicRestLoggedService {
 
     @PUT("api/votes/{id}")
     Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
-
-    @DELETE("api/comments/{id}")
-    Call<CommentResponse> deleteComment(@Path("id") long commentId);
 
     @GET("api/certificates")
     Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);

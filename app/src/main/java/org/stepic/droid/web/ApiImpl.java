@@ -39,7 +39,6 @@ import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
@@ -62,7 +61,6 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.attempts.DatasetWrapper;
-import org.stepik.android.model.comments.Comment;
 import org.stepik.android.model.comments.Vote;
 import org.stepik.android.model.feedback.Feedback;
 import org.stepik.android.model.user.Profile;
@@ -71,8 +69,6 @@ import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
-import org.stepik.android.remote.comment.model.CommentRequest;
-import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -134,7 +130,6 @@ public class ApiImpl implements Api {
     private final Context context;
     private final SharedPreferenceHelper sharedPreference;
     private final Config config;
-    private final UserPreferences userPreferences;
     private final Analytic analytic;
     private final StepikLogoutManager stepikLogoutManager;
     private final ScreenManager screenManager;
@@ -152,7 +147,7 @@ public class ApiImpl implements Api {
     @Inject
     public ApiImpl(
             Context context, SharedPreferenceHelper sharedPreference,
-            Config config, UserPreferences userPreferences,
+            Config config,
             Analytic analytic, StepikLogoutManager stepikLogoutManager,
             ScreenManager screenManager,
             UserAgentProvider userAgentProvider,
@@ -162,7 +157,6 @@ public class ApiImpl implements Api {
         this.context = context;
         this.sharedPreference = sharedPreference;
         this.config = config;
-        this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.stepikLogoutManager = stepikLogoutManager;
         this.screenManager = screenManager;
@@ -799,21 +793,10 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CommentResponse> postComment(String text, long target, @Nullable Long parent) {
-        Comment comment = new Comment(target, text, parent);
-        return loggedService.postComment(new CommentRequest(comment));
-    }
-
-    @Override
     public Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue) {
         Vote vote = new Vote(voteId, voteValue);
         VoteRequest request = new VoteRequest(vote);
         return loggedService.postVote(voteId, request);
-    }
-
-    @Override
-    public Call<CommentResponse> deleteComment(long commentId) {
-        return loggedService.deleteComment(commentId);
     }
 
     @Override
