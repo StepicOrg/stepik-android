@@ -151,7 +151,7 @@ constructor(
     /**
      * Edit comments
      */
-    fun onCommentChanged(commentsData: CommentsData): Single<CommentItem.Data> =
+    fun mapCommentsDataToCommentItem(commentsData: CommentsData): Single<CommentItem.Data> =
         Single
             .fromCallable {
                 commentsDataMapper

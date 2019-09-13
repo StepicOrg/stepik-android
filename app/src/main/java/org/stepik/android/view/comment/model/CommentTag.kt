@@ -18,11 +18,11 @@ enum class CommentTag(
     @StringRes
     val textRes: Int
 ) {
-    STAFF_REPLIED(
-        backgroundRes = R.drawable.bg_comment_tag_staff_replied,
+    COURSE_TEAM(
+        backgroundRes = R.drawable.bg_comment_tag_course_team,
         textColorRes = R.color.white,
         compoundDrawableRes = -1,
-        textRes = R.string.comment_tag_staff_replied
+        textRes = R.string.comment_tag_course_team
     ),
     PINNED(
         backgroundRes = R.drawable.bg_comment_tag_pinned,

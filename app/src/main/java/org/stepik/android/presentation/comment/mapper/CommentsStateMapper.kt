@@ -284,4 +284,36 @@ constructor() {
                 }
         )
     }
+
+    /**
+     * Insert comment
+     */
+    fun insertCommentReply(state: CommentsView.State, commentDataItem: CommentItem.Data): CommentsView.State {
+        if (state !is CommentsView.State.DiscussionLoaded ||
+            state.commentsState !is CommentsView.CommentsState.Loaded) {
+            return state
+        }
+
+        val commentsState = state.commentsState
+        val parentId = commentDataItem.comment.parent
+
+        val rawIndex = commentsState.commentItems
+            .indexOfLast {
+                it is CommentItem.LoadMoreReplies && it.parentComment.id == parentId ||
+                it is CommentItem.Data && (it.id == parentId || it.comment.parent == parentId)
+            } + 1
+
+        val index = commentsState.commentItems
+            .indexOfLast { it is CommentItem.Data && (it.id == parentId || it.comment.parent == parentId) } + 1
+
+        return state.copy(
+            commentsState =
+                with(commentsState) {
+                    copy(
+                        commentItems = commentItems.mutate { add(rawIndex, commentDataItem) },
+                        commentDataItems = commentDataItems.mutate { add(index, commentDataItem) }
+                    )
+               }
+        )
+    }
 }

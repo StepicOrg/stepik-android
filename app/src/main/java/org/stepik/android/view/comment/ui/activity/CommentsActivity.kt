@@ -313,7 +313,7 @@ class CommentsActivity :
 
     override fun onCommentReplaced(commentsData: CommentsData, isCommentCreated: Boolean) {
         if (isCommentCreated) {
-//            commentsPresenter.o
+            commentsPresenter.onCommentCreated(commentsData)
         } else {
             commentsPresenter.onCommentUpdated(commentsData)
         }

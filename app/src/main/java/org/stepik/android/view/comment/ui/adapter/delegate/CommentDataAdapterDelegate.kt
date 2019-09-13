@@ -18,6 +18,7 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.model.UserRole
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.base.ui.mapper.DateMapper
@@ -117,7 +118,7 @@ class CommentDataAdapterDelegate(
 
             commentMenu.changeVisibility(data.isCurrentUser)
             commentTagsAdapter.items = listOfNotNull(
-                CommentTag.STAFF_REPLIED.takeIf { data.comment.isStaffReplied == true },
+                CommentTag.COURSE_TEAM.takeIf { data.comment.userRole == UserRole.TEACHER },
                 CommentTag.PINNED.takeIf { data.comment.isPinned }
             )
             commentTags.changeVisibility(needShow = commentTagsAdapter.itemCount > 0)
@@ -188,7 +189,7 @@ class CommentDataAdapterDelegate(
 
             when (view.id) {
                 R.id.commentReply ->
-                    actionListener.onReplyClicked(data.id)
+                    actionListener.onReplyClicked(data.comment.parent ?: data.id) // nested replies not supported
 
                 R.id.commentLike ->
                     actionListener.onVoteClicked(data, Vote.Value.LIKE)

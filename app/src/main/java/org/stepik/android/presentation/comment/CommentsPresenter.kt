@@ -207,9 +207,26 @@ constructor(
     /**
      * Edit logic
      */
+    fun onCommentCreated(commentsData: CommentsData) {
+        compositeDisposable += commentInteractor
+            .mapCommentsDataToCommentItem(commentsData)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onSuccess = { commentDataItem ->
+                    if (commentDataItem.comment.parent != null) {
+                        state = commentsStateMapper.insertCommentReply(state, commentDataItem)
+                    } else {
+
+                    }
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
     fun onCommentUpdated(commentsData: CommentsData) {
         compositeDisposable += commentInteractor
-            .onCommentChanged(commentsData)
+            .mapCommentsDataToCommentItem(commentsData)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(

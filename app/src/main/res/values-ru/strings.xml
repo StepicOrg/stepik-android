@@ -751,7 +751,7 @@
     <string name="comments_load_more_replies">Показать %s</string>
 
     <string name="comment_tag_pinned">Закреплен</string>
-    <string name="comment_tag_staff_replied">Команда курса</string>
+    <string name="comment_tag_course_team">Команда курса</string>
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>
