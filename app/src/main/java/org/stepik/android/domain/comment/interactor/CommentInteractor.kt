@@ -146,4 +146,16 @@ constructor(
                             .first()
                     }
             }
+
+    fun onCommentChanged(commentsData: CommentsData): Single<CommentItem.Data> =
+        Single
+            .fromCallable {
+                commentsDataMapper
+                    .mapToCommentDataItems(
+                        commentIds = commentsData.comments.first().let { longArrayOf(it.id) },
+                        commentsData = commentsData,
+                        currentUserId = userPreferences.userId
+                    )
+                    .first()
+            }
 }

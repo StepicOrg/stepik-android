@@ -579,7 +579,7 @@ class CommentsFragment : FragmentBase(),
         stepDiscussionSubject.onNext(stepId)
     }
 
-    override fun onCommentReplaced(commentsData: CommentsData) {
+    override fun onCommentReplaced(commentsData: CommentsData, isCommentCreated: Boolean) {
         commentsData
             .comments
             .firstOrNull()

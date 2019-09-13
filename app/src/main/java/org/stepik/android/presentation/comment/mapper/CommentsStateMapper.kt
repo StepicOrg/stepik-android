@@ -224,4 +224,58 @@ constructor() {
                 }
         ))
     }
+
+    /**
+     * Remove comment
+     */
+    fun mapToRemovePending(commentsState: CommentsView.CommentsState.Loaded, commentDataItem: CommentItem.Data): CommentsView.CommentsState =
+        commentsState.copy(
+            commentItems = commentsState
+                .commentItems
+                .map { if (it == commentDataItem) CommentItem.RemovePlaceholder(commentDataItem.id) else it }
+        )
+
+//    fun mapFromRemovePendingToSuccess(state: CommentsView.State, commentId: Long): CommentsView.State {
+//        if (state !is CommentsView.State.DiscussionLoaded ||
+//            state.commentsState !is CommentsView.CommentsState.Loaded) {
+//            return state
+//        }
+//
+//        return state.copy(
+//            discussionProxy =
+//                with(state.discussionProxy) {
+//                    copy(
+//                        discussions = discussions - commentId,
+//                        discussionsMostActive = discussionsMostActive - commentId,
+//                        discussionsMostLiked = discussionsMostLiked - commentId,
+//                        discussionsRecentActivity = discussionsRecentActivity - commentId
+//                    )
+//                },
+//            discussionId = state.discussionId.takeIf { it != commentId },
+//            commentsState =
+//                with(state.commentsState) {
+//                    copy(
+//                        commentDataItems = commentDataItems.filterNot { it.id == commentId },
+//                        commentItems = commentItems.filterNot { it is CommentItem.RemovePlaceholder && it.id == commentId || it is CommentItem.Data && it.comment.parent == commentId }
+//                    )
+//                }
+//        )
+//    }
+
+    fun mapFromRemovePendingToError(state: CommentsView.State, commentDataItem: CommentItem.Data): CommentsView.State {
+        if (state !is CommentsView.State.DiscussionLoaded ||
+            state.commentsState !is CommentsView.CommentsState.Loaded) {
+            return state
+        }
+
+        return state.copy(
+            commentsState =
+                with(state.commentsState) {
+                    copy(
+                        commentItems = commentItems
+                            .map { if (it is CommentItem.RemovePlaceholder && it.id == commentDataItem.id) commentDataItem else it }
+                    )
+                }
+        )
+    }
 }

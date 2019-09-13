@@ -1,10 +1,15 @@
 package org.stepik.android.view.comment.ui.adapter.delegate
 
 import android.graphics.BitmapFactory
+import android.support.v4.content.ContextCompat
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.layout_comment_actions.view.*
@@ -146,6 +151,37 @@ class CommentDataAdapterDelegate(
             }
         }
 
+        private fun showItemMenu(view: View) {
+            val commentDataItem = itemData as? CommentItem.Data
+                ?: return
+
+            val popupMenu = PopupMenu(context, view)
+            popupMenu.inflate(R.menu.comment_item_menu)
+
+            popupMenu
+                .menu
+                .findItem(R.id.comment_item_remove)
+                ?.let { menuItem ->
+                    val title = SpannableString(menuItem.title)
+                    title.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.new_red_color)), 0, title.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    menuItem.title = title
+                }
+
+            popupMenu
+                .setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.comment_item_edit ->
+                            actionListener.onEditCommentClicked(commentDataItem)
+
+                        R.id.comment_item_remove ->
+                            actionListener.onRemoveCommentClicked(commentDataItem)
+                    }
+                    true
+                }
+
+            popupMenu.show()
+        }
+
         override fun onClick(view: View) {
             val data = itemData as? CommentItem.Data
                 ?: return
@@ -159,6 +195,9 @@ class CommentDataAdapterDelegate(
 
                 R.id.commentDislike ->
                     actionListener.onVoteClicked(data, Vote.Value.DISLIKE)
+
+                R.id.commentMenu ->
+                    showItemMenu(view)
             }
         }
     }
@@ -166,5 +205,8 @@ class CommentDataAdapterDelegate(
     interface ActionListener {
         fun onReplyClicked(parentCommentId: Long)
         fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value)
+
+        fun onEditCommentClicked(commentDataItem: CommentItem.Data)
+        fun onRemoveCommentClicked(commentDataItem: CommentItem.Data)
     }
 }

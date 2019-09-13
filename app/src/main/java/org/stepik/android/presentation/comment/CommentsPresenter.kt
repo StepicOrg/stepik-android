@@ -5,9 +5,11 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
+import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.comment.model.DiscussionOrder
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
 import org.stepik.android.model.comments.DiscussionProxy
@@ -200,5 +202,23 @@ constructor(
                 onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
                 onError = { state = commentsStateMapper.mapFromVotePendingToError(state, commentDataItem.voteStatus.vote); view?.showNetworkError() }
             )
+    }
+
+    /**
+     * Edit logic
+     */
+    fun onCommentUpdated(commentsData: CommentsData) {
+        compositeDisposable += commentInteractor
+            .onCommentChanged(commentsData)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    fun removeComment(commentDataItem: CommentItem.Data) {
+
     }
 }

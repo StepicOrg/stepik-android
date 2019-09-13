@@ -39,22 +39,23 @@ constructor(
         replaceComment(
             composeCommentInteractor
                 .createComment(comment)
-                .doOnSuccess { analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY) }
+                .doOnSuccess { analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY) },
+            isCommentCreated = true
         )
     }
 
     fun updateComment(comment: Comment) {
-        replaceComment(composeCommentInteractor.saveComment(comment))
+        replaceComment(composeCommentInteractor.saveComment(comment), isCommentCreated = false)
     }
 
-    private fun replaceComment(commentSource: Single<CommentsData>) {
+    private fun replaceComment(commentSource: Single<CommentsData>, isCommentCreated: Boolean) {
         state = ComposeCommentView.State.Loading
         compositeDisposable += commentSource
             .doOnSubscribe { analytic.reportEvent(Analytic.Comments.CLICK_SEND_COMMENTS) }
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { state = ComposeCommentView.State.Complete(it) },
+                onSuccess = { state = ComposeCommentView.State.Complete(it, isCommentCreated) },
                 onError = { state = ComposeCommentView.State.Idle; view?.showNetworkError() }
             )
     }

@@ -26,6 +26,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsPresenter
@@ -40,7 +41,10 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import javax.inject.Inject
 
-class CommentsActivity : FragmentActivityBase(), CommentsView {
+class CommentsActivity :
+    FragmentActivityBase(),
+    CommentsView,
+    ComposeCommentDialogFragment.Callback {
     companion object {
         private const val EXTRA_DISCUSSION_PROXY = "discussion_proxy"
         private const val EXTRA_DISCUSSION_ID = "discussion_id"
@@ -104,6 +108,14 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
 
                 override fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
                     commentsPresenter.onChangeVote(commentDataItem, voteValue)
+                }
+
+                override fun onEditCommentClicked(commentDataItem: CommentItem.Data) {
+                    showCommentComposeDialog(stepId, commentDataItem.comment.parent, commentDataItem.comment)
+                }
+
+                override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
+
                 }
             }
         )
@@ -283,5 +295,13 @@ class CommentsActivity : FragmentActivityBase(), CommentsView {
             .make(root, R.string.no_connection, Snackbar.LENGTH_SHORT)
             .setTextColor(ContextCompat.getColor(this, R.color.white))
             .show()
+    }
+
+    override fun onCommentReplaced(commentsData: CommentsData, isCommentCreated: Boolean) {
+        if (isCommentCreated) {
+//            commentsPresenter.o
+        } else {
+            commentsPresenter.onCommentUpdated(commentsData)
+        }
     }
 }

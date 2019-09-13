@@ -158,7 +158,7 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
                 (activity as? Callback
                     ?: parentFragment as? Callback
                     ?: targetFragment as? Callback)
-                    ?.onCommentReplaced(state.commentsData)
+                    ?.onCommentReplaced(state.commentsData, state.isCommentCreated)
 
                 dismiss()
             }
@@ -170,6 +170,6 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
     }
 
     interface Callback {
-        fun onCommentReplaced(commentsData: CommentsData)
+        fun onCommentReplaced(commentsData: CommentsData, isCommentCreated: Boolean)
     }
 }

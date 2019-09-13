@@ -13,7 +13,8 @@ class CommentPlaceholderAdapterDelegate : AdapterDelegate<CommentItem, DelegateV
 
     override fun isForViewType(position: Int, data: CommentItem): Boolean =
         data is CommentItem.Placeholder ||
-        data is CommentItem.ReplyPlaceholder
+        data is CommentItem.ReplyPlaceholder ||
+        data is CommentItem.RemovePlaceholder
 
     private class ViewHolder(root: View) : DelegateViewHolder<CommentItem>(root) {
         private val replyOffset =

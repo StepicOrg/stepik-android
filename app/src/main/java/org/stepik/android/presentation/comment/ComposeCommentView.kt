@@ -6,7 +6,7 @@ interface ComposeCommentView {
     sealed class State {
         object Idle : State()
         object Loading : State()
-        class Complete(val commentsData: CommentsData) : State()
+        class Complete(val commentsData: CommentsData, val isCommentCreated: Boolean) : State()
     }
 
     fun setState(state: State)
