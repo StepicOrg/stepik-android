@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.fragment_course_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.util.argument
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_info.CourseInfoView
@@ -36,9 +35,6 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var fontsProvider: FontsProvider
-
-    @Inject
     lateinit var screenManager: ScreenManager
 
     private var courseId: Long by argument()
@@ -56,8 +52,6 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
         savedInstanceState?.let(courseInfoPresenter::onRestoreInstanceState)
 
         courseInfoAdapter = CourseInfoAdapter(
-            fontsProvider = fontsProvider,
-
             onVideoClicked = { mediaData ->
                 screenManager.showVideo(activity, mediaData)
             },

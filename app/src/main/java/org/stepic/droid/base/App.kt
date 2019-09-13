@@ -20,7 +20,6 @@ import org.stepic.droid.core.ComponentManagerImpl
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.DaggerAppCoreComponent
 import org.stepic.droid.di.storage.DaggerStorageComponent
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.StethoHelper
@@ -53,9 +52,6 @@ class App : MultiDexApplication() {
 
     @Inject
     internal lateinit var downloadsSyncronizer: DownloadsSyncronizer
-
-    @Inject
-    internal lateinit var fontsProvider: FontsProvider
 
     /**
      * Init split tests on app start

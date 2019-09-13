@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import kotlinx.android.synthetic.main.progressable_latex_supportable_frame_layout.view.*
 import org.stepic.droid.R
-import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
@@ -14,7 +13,6 @@ import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
 
 class ChoicesAdapterDelegate(
-    private val fontsProvider: FontsProvider,
     private val selectionHelper: SelectionHelper,
     private val onClick: (Choice) -> Unit
 ) : AdapterDelegate<Choice, DelegateViewHolder<Choice>>() {

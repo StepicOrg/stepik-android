@@ -20,7 +20,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.fonts.FontsProvider;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.NotificationsViewPusher;
 import org.stepic.droid.ui.util.CloseIconHolder;
@@ -55,9 +54,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
 
     @Inject
     protected ScreenManager screenManager;
-
-    @Inject
-    protected FontsProvider fontsProvider;
 
     @Inject
     protected NotificationsViewPusher notificationsViewPusher;

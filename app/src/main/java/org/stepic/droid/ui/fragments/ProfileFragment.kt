@@ -35,7 +35,6 @@ import org.stepic.droid.features.achievements.presenters.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity

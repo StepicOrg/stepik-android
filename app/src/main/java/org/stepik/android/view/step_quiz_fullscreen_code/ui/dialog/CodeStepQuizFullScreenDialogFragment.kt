@@ -25,7 +25,6 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
@@ -39,7 +38,6 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
-import javax.inject.Inject
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, ResetCodeDialogFragment.Callback {
     companion object {
@@ -59,9 +57,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
                     this.lessonData = lessonData
                 }
     }
-
-    @Inject
-    internal lateinit var fontsProvider: FontsProvider
 
     private lateinit var callback: Callback
 

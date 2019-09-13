@@ -6,7 +6,6 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_choice.view.*
 import org.stepic.droid.R
-import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -21,8 +20,7 @@ import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
 import ru.nobird.android.ui.adapterssupport.selection.SingleChoiceSelectionHelper
 
 class ChoiceStepQuizFormDelegate(
-    containerView: View,
-    private val fontsProvider: FontsProvider
+    containerView: View
 ) : StepQuizFormDelegate {
     private val context = containerView.context
 
@@ -64,7 +62,7 @@ class ChoiceStepQuizFormDelegate(
                 } else {
                     SingleChoiceSelectionHelper(choicesAdapter)
                 }
-            choicesAdapter += ChoicesAdapterDelegate(fontsProvider, selectionHelper, onClick = ::handleChoiceClick)
+            choicesAdapter += ChoicesAdapterDelegate(selectionHelper, onClick = ::handleChoiceClick)
         }
 
         choicesAdapter.items = choiceStepQuizOptionsMapper.mapChoices(

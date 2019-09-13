@@ -12,11 +12,9 @@ import android.util.TypedValue
 import android.view.Gravity
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
-import javax.inject.Inject
 
 class PlaceholderTextView
 @JvmOverloads
@@ -25,9 +23,6 @@ constructor(
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
 ) : android.support.v7.widget.AppCompatTextView(context, attrs, defStyleAttr) {
-
-    @Inject
-    lateinit var fontsProvider: FontsProvider
 
     private val wordCache = LruCache<CharSequence, SpannableString>(4)
 
