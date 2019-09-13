@@ -381,7 +381,7 @@ class   ProfileFragment : FragmentBase(),
                 shortBioSecondText.visibility = View.GONE
             } else {
                 shortBioSecondText.setPlainOrLaTeXTextWithCustomFontColored(
-                        information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color, false)
+                        information, R.font.roboto_light, R.color.new_accent_color, false)
                 shortBioSecondText.visibility = View.VISIBLE
             }
         }

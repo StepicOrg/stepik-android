@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import kotlinx.android.synthetic.main.progressable_latex_supportable_frame_layout.view.*
 import org.stepic.droid.R
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
@@ -78,7 +77,7 @@ class ChoicesAdapterDelegate(
             } else {
                 itemChoiceFeedback.visibility = View.VISIBLE
                 itemChoiceFeedback.setPlainOrLaTeXTextWithCustomFontColored(
-                    data.feedback, fontsProvider.provideFontPath(FontType.mono),
+                    data.feedback, R.font.pt_mono,
                     R.color.new_accent_color,
                     true
                 )

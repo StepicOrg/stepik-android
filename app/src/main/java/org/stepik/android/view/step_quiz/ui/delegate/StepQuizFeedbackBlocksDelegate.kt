@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
 import org.stepic.droid.R
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setTextViewBackgroundWithoutResettingPadding
@@ -113,7 +112,7 @@ class StepQuizFeedbackBlocksDelegate(
     ) {
         if (hint != null) {
             targetView.setTextViewBackgroundWithoutResettingPadding(hintedBackgroundRes)
-            stepQuizFeedbackHint.setPlainOrLaTeXTextWithCustomFontColored(hint, fontsProvider.provideFontPath(FontType.mono), R.color.new_accent_color, true)
+            stepQuizFeedbackHint.setPlainOrLaTeXTextWithCustomFontColored(hint, R.font.pt_mono, R.color.new_accent_color, true)
             stepQuizFeedbackHint.visibility = View.VISIBLE
         } else {
             targetView.setTextViewBackgroundWithoutResettingPadding(backgroundRes)
