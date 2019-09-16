@@ -17,6 +17,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.mutate
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.profile_edit.ProfileEditPresenter
@@ -41,6 +42,7 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var profile: Profile? = null
+    private lateinit var navigationItems: List<ProfileEditItem>
     private val viewStateDelegate =
         ViewStateDelegate<ProfileEditView.State>()
 
@@ -53,7 +55,7 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
             .get(ProfileEditPresenter::class.java)
         initCenteredToolbar(R.string.profile_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 
-        val navigationItems = listOf(
+        navigationItems = listOf(
             ProfileEditItem(ProfileEditItem.Type.PERSONAL_INFO, getString(R.string.profile_edit_info_title), getString(R.string.profile_edit_info_subtitle)),
             ProfileEditItem(ProfileEditItem.Type.PASSWORD, getString(R.string.profile_edit_password_title), getString(R.string.profile_edit_password_subtitle))
         )
@@ -130,7 +132,12 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
     override fun setState(state: ProfileEditView.State) {
         viewStateDelegate.switchState(state)
         if (state is ProfileEditView.State.ProfileLoaded) {
-            profile = state.profile
+            profile = state.profileWrapper.profile
+            state.profileWrapper.primaryEmailAddress?.email?.let {
+                navigationItems.mutate {
+                    add(1, ProfileEditItem(ProfileEditItem.Type.EMAIL, getString(R.string.email), it))
+                }
+            }
         }
     }
 

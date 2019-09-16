@@ -398,14 +398,6 @@ public class SharedPreferenceHelper {
         return null;
     }
 
-    public void setRotateAlways(boolean needRotate) {
-        put(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, needRotate);
-    }
-
-    public boolean needRotate() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, true);
-    }
-
     public void setNotificationDisabled(NotificationType type, boolean isNotificationDisabled) {
         String key = keyByNotificationType(type);
         if (key != null) {

@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.empty_login.*
@@ -48,6 +49,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.argument
+import org.stepic.droid.util.copyTextToClipboard
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
@@ -102,10 +104,10 @@ class   ProfileFragment : FragmentBase(),
 
     override fun injectComponent() {
         App
-                .component()
-                .profileComponentBuilder()
-                .build()
-                .inject(this)
+            .component()
+            .profileComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -307,6 +309,7 @@ class   ProfileFragment : FragmentBase(),
             profileSettingsRecyclerView.visibility = View.VISIBLE
 
             notificationIntervalChooserContainer.visibility = View.VISIBLE
+            setupUserId()
         } else {
             //show user info expanded for strangers
             if (!shortBioArrowImageView.isExpanded()) {
@@ -489,6 +492,17 @@ class   ProfileFragment : FragmentBase(),
         maxStreakSuffix.visibility = visibility
         maxStreakValue.visibility = visibility
         streakIndicator.visibility = visibility
+    }
+
+    private fun setupUserId() {
+        profileIdSeparator.visibility = View.VISIBLE
+        profileId.visibility = View.VISIBLE
+        profileId.text = getString(R.string.profile_user_id, userId)
+        profileId.setOnLongClickListener {
+            val textToCopy = (it as TextView).text.toString()
+            requireContext().copyTextToClipboard(textToCopy = textToCopy, toastMessage = getString(R.string.copied_to_clipboard_toast))
+            true
+        }
     }
 
 }

@@ -742,4 +742,6 @@
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>
+
+    <string name="copied_to_clipboard_toast">Скопировано в буфер</string>
 </resources>
