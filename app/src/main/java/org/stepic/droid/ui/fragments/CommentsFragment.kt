@@ -1,9 +1,5 @@
 package org.stepic.droid.ui.fragments
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
@@ -11,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.*
-import android.widget.Toast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.fragment_comments.*
@@ -136,7 +131,6 @@ class CommentsFragment : FragmentBase(),
 
     override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        menu?.setHeaderTitle(R.string.one_comment_title)
 
         val info = menuInfo as? ContextMenuRecyclerView.RecyclerViewContextMenuInfo ?: return
 
@@ -205,16 +199,6 @@ class CommentsFragment : FragmentBase(),
     override fun onContextItemSelected(item: MenuItem?): Boolean {
         val info = item?.menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
         when (item.itemId) {
-            replyMenuId -> {
-                replyToComment(info.position)
-                return true
-            }
-
-            copyTextMenuId -> {
-                copyTextToClipBoard(info.position)
-                return true
-            }
-
             userMenuId -> {
                 openUserProfile(info.position)
                 return true
@@ -243,32 +227,6 @@ class CommentsFragment : FragmentBase(),
 
     private fun clickLinkInComment(link: String) {
         screenManager.openInWeb(activity, link)
-    }
-
-    private fun copyTextToClipBoard(position: Int) {
-        val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
-        comment?.text?.let {
-
-            val label = getString(R.string.copy_text_label)
-            val plainText = textResolver.fromHtml(it)
-            val clipData = if (Build.VERSION.SDK_INT > 16) {
-                ClipData.newHtmlText(label, plainText, it)
-            } else {
-                ClipData.newPlainText(label, plainText)
-            }
-
-            val clipboardManager = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            clipboardManager.primaryClip = clipData
-
-            Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun replyToComment(position: Int) {
-        val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
-        comment?.let {
-            showCommentComposeDialog(parent = it.parent ?: it.id)
-        }
     }
 
     override fun onStop() {

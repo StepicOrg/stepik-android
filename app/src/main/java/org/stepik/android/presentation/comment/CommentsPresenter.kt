@@ -3,6 +3,7 @@ package org.stepik.android.presentation.comment
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.base.PaginationDirection
@@ -16,6 +17,7 @@ import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.comment.mapper.CommentsStateMapper
 import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.view.injection.step.StepDiscussionBus
 import javax.inject.Inject
 
 class CommentsPresenter
@@ -26,6 +28,9 @@ constructor(
     private val discussionProxyInteractor: DiscussionProxyInteractor,
 
     private val commentsStateMapper: CommentsStateMapper,
+
+    @StepDiscussionBus
+    private val stepDiscussionSubject: PublishSubject<Long>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -215,6 +220,7 @@ constructor(
             if (commentDataItem.comment.parent != null) {
                 commentsStateMapper.insertCommentReply(state, commentDataItem)
             } else {
+                stepDiscussionSubject.onNext(commentDataItem.comment.parent ?: -1)
                 commentsStateMapper.insertComment(state, commentDataItem)
             }
         view?.focusDiscussion(commentDataItem.id)

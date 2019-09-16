@@ -121,7 +121,6 @@
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
     <string name="comment_sent">Комментарий успешно отправлен</string>
     <string name="reply_title">Ответить</string>
-    <string name="one_comment_title">Комментарий</string>
     <string name="comment_is_deleted">Этот комментарий был удален</string>
     <string name="space_management_title">Управление памятью</string>
     <string name="clear_cache_explanation">Приложение поддерживает просмотр видео онлайн, но для
