@@ -117,11 +117,9 @@
     <string name="hint_for_idea">Напишите замечание или идею</string>
     <string name="feedback_from">От</string>
     <string name="load_more">ещё</string>
-    <string name="load_more_reply">Показать еще</string>
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
     <string name="comment_sent">Комментарий успешно отправлен</string>
     <string name="reply_title">Ответить</string>
-    <string name="comment_is_deleted">Этот комментарий был удален</string>
     <string name="space_management_title">Управление памятью</string>
     <string name="clear_cache_explanation">Приложение поддерживает просмотр видео онлайн, но для
         просмотра уроков без Интернет-подключения их необходимо сохранять. Большую часть памяти
@@ -153,9 +151,6 @@
     <string name="delete_label">Удалить</string>
     <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
     <string name="share_title">Поделиться</string>
-
-    <string name="staff_label">Команда Stepik.org</string>
-    <string name="teacher_label">Команда курса</string>
 
     <string name="last_discussion">Новые обсуждения</string>
     <string name="most_liked_discussion">Самые популярные</string>

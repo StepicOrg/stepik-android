@@ -12,7 +12,6 @@ import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.model.CoursesCarouselInfo;
-import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
