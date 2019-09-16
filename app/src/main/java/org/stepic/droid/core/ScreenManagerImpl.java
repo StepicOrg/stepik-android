@@ -64,6 +64,7 @@ import org.stepik.android.model.Unit;
 import org.stepik.android.model.Video;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
+import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
@@ -557,13 +558,7 @@ public class ScreenManagerImpl implements ScreenManager {
             Toast.makeText(context, R.string.comment_disabled, Toast.LENGTH_SHORT).show();
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
-//            Intent intent = new Intent(context, CommentsActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
-//            bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
-//            bundle.putBoolean(CommentsActivity.Companion.getKeyNeedInstaOpenForm(), needOpenForm);
-//            intent.putExtras(bundle);
-            context.startActivity(org.stepik.android.view.comment.ui.activity.CommentsActivity.Companion.createIntent(context, stepId, discussionProxyId, discussionId, needOpenForm));
+            context.startActivity(CommentsActivity.Companion.createIntent(context, stepId, discussionProxyId, discussionId, needOpenForm));
         }
     }
 

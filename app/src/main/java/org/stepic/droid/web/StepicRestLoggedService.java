@@ -225,9 +225,6 @@ public interface StepicRestLoggedService {
     @PUT("api/votes/{id}")
     Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 
-    @PUT("api/votes/{id}")
-    Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
-
     @GET("api/certificates")
     Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);
 

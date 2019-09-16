@@ -15,11 +15,9 @@ import org.stepik.android.model.Submission;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
-import org.stepik.android.model.comments.Vote;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
-import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -33,7 +31,6 @@ import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
-import org.stepik.android.remote.vote.model.VoteResponse;
 
 import java.util.List;
 
@@ -151,8 +148,6 @@ public interface Api {
     Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead);
 
     Call<Void> removeDevice(long deviceId);
-
-    Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
 
     Single<CertificateResponse> getCertificates(long userId, int page);
 

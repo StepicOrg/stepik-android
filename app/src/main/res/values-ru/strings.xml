@@ -347,7 +347,6 @@
     <string name="step_with_position">– Шаг %d</string>
     <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти
     </string>
-    <string name="anonymous_like_mark_comment">Чтобы оценивать комментарии Вам нужно Войти</string>
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>

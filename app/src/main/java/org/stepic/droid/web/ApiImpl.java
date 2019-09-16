@@ -61,7 +61,6 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.attempts.DatasetWrapper;
-import org.stepik.android.model.comments.Vote;
 import org.stepik.android.model.feedback.Feedback;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.RegistrationCredentials;
@@ -83,8 +82,6 @@ import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
-import org.stepik.android.remote.vote.model.VoteRequest;
-import org.stepik.android.remote.vote.model.VoteResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -790,13 +787,6 @@ public class ApiImpl implements Api {
     @Override
     public Call<Void> removeDevice(long deviceId) {
         return loggedService.removeDevice(deviceId);
-    }
-
-    @Override
-    public Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue) {
-        Vote vote = new Vote(voteId, voteValue);
-        VoteRequest request = new VoteRequest(vote);
-        return loggedService.postVote(voteId, request);
     }
 
     @Override

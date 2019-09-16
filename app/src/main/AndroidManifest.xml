@@ -147,16 +147,6 @@
             android:stopWithTask="true" />
 
         <activity
-            android:name=".ui.activities.CommentsActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName="org.stepik.android.view.lesson.ui.activity.LessonActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.stepik.android.view.lesson.ui.activity.LessonActivity" />
-        </activity>
-
-        <activity
             android:name="org.stepik.android.view.comment.ui.activity.CommentsActivity" />
 
         <activity

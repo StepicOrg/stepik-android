@@ -25,10 +25,6 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.core.commentcount.contract.CommentCountPoster
 import org.stepic.droid.core.comments.contract.CommentsListener
-import org.stepic.droid.core.presenters.DiscussionPresenter
-import org.stepic.droid.core.presenters.VotePresenter
-import org.stepic.droid.core.presenters.contracts.DiscussionView
-import org.stepic.droid.core.presenters.contracts.VoteView
 import org.stepik.android.model.user.User
 import org.stepic.droid.model.comments.*
 import org.stepic.droid.ui.adapters.CommentsAdapter
@@ -38,7 +34,6 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.*
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
-import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.injection.step.StepDiscussionBus
@@ -48,10 +43,8 @@ import javax.inject.Inject
 @SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"], justification = "false positive: commentManager is not null")
 class CommentsFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener,
-        DiscussionView,
         CommentsListener,
         DeleteCommentDialogFragment.Callback,
-        VoteView,
         ComposeCommentDialogFragment.Callback {
     companion object {
         private val replyMenuId = 100
@@ -83,13 +76,7 @@ class CommentsFragment : FragmentBase(),
     val links = ArrayList<String>()
 
     @Inject
-    lateinit var discussionPresenter: DiscussionPresenter
-
-    @Inject
     lateinit var commentsClient: Client<CommentsListener>
-
-    @Inject
-    lateinit var votePresenter: VotePresenter
 
     @Inject
     lateinit var commentCountPoster: CommentCountPoster
@@ -137,8 +124,6 @@ class CommentsFragment : FragmentBase(),
         initAddCommentButton()
 
         commentsClient.subscribe(this)
-        discussionPresenter.attachView(this)
-        votePresenter.attachView(this)
 
 
         //open form requested from caller
@@ -149,7 +134,6 @@ class CommentsFragment : FragmentBase(),
 
         showEmptyProgressOnCenter()
         if (commentManager.isEmpty()) {
-            loadDiscussionProxyById()
         } else {
             showEmptyProgressOnCenter(false)
         }
@@ -270,21 +254,6 @@ class CommentsFragment : FragmentBase(),
                 return true
             }
 
-            likeMenuId -> {
-                likeComment(info.position)
-                return true
-            }
-
-            unLikeMenuId -> {
-                unlikeComment(info.position)
-                return true
-            }
-
-            reportMenuId -> {
-                abuseComment(info.position)
-                return true
-            }
-
             deleteMenuId -> {
                 deleteComment(info.position)
                 return true
@@ -365,40 +334,6 @@ class CommentsFragment : FragmentBase(),
         }
     }
 
-    private fun likeComment(position: Int) {
-        vote(position, Vote.Value.LIKE)
-    }
-
-    private fun unlikeComment(position: Int) {
-        vote(position, null)
-    }
-
-    private fun abuseComment(position: Int) {
-        vote(position, Vote.Value.DISLIKE)
-    }
-
-    private fun vote(position: Int, voteValue: Vote.Value?) {
-        if (sharedPreferenceHelper.authResponseFromStore == null) {
-            Toast.makeText(context, R.string.anonymous_like_mark_comment, Toast.LENGTH_SHORT).show()
-            return
-        }
-
-
-        val comment = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
-        val voteId = comment.vote
-        val commentId = comment.id
-        voteId?.let {
-            val voteObject = Vote(voteId, voteValue)
-            votePresenter.doVote(voteObject, commentId)
-        }
-
-    }
-
-
-    private fun loadDiscussionProxyById(id: String = discussionId) {
-        discussionPresenter.loadDiscussion(id)
-    }
-
     override fun onStop() {
         super.onStop()
         cancelSwipeRefresh()
@@ -407,8 +342,6 @@ class CommentsFragment : FragmentBase(),
     override fun onDestroyView() {
         super.onDestroyView()
         commentsClient.unsubscribe(this)
-        discussionPresenter.detachView(this)
-        votePresenter.detachView(this)
 
         swipeRefreshLayoutComments.setOnRefreshListener(null)
         addNewCommentButton.setOnClickListener(null)
@@ -417,7 +350,6 @@ class CommentsFragment : FragmentBase(),
 
     override fun onRefresh() {
         commentManager.reset()
-        loadDiscussionProxyById()
     }
 
     private fun showEmptyProgressOnCenter(needShow: Boolean = true) {
@@ -494,28 +426,6 @@ class CommentsFragment : FragmentBase(),
         }
     }
 
-    //DiscussionView View:
-
-    override fun onInternetProblemInComments() {
-        onConnectionProblemBase()
-    }
-
-    override fun onEmptyComments(discussionProxy: DiscussionProxy) {
-        cancelSwipeRefresh()
-        if (!commentManager.isEmpty()) {
-            commentManager.resetAll(discussionProxy)
-            commentAdapter.notifyDataSetChanged()
-        }
-        showEmptyState()
-    }
-
-    override fun onLoaded(discussionProxy: DiscussionProxy) {
-        commentManager.setDiscussionProxy(discussionProxy)
-        activity?.invalidateOptionsMenu()
-        commentManager.loadComments()
-    }
-
-
     //CommentsListener
 
     override fun onCommentsLoaded() {
@@ -542,16 +452,6 @@ class CommentsFragment : FragmentBase(),
 
     override fun onCommentsConnectionProblem() {
         onConnectionProblemBase()
-    }
-
-    //VoteView
-    override fun onVoteSuccess(commentId: Long) {
-        commentManager.loadCommentsByIds(longArrayOf(commentId))
-        Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onVoteFail() {
-        Toast.makeText(context, R.string.internet_problem, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDeleteComment(commentId: Long) {
