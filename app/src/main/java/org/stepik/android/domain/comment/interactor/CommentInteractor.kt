@@ -1,14 +1,14 @@
 package org.stepik.android.domain.comment.interactor
 
-import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.mapper.CommentsDataMapper
 import org.stepik.android.domain.comment.model.CommentsData
-import org.stepik.android.domain.comment.model.DiscussionOrder
+import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.domain.comment.repository.CommentRepository
+import org.stepik.android.domain.discussion_proxy.mapper.getOrdering
 import org.stepik.android.domain.vote.repository.VoteRepository
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
@@ -42,7 +42,7 @@ constructor(
         cachedCommentItems: List<CommentItem.Data>
     ): Single<PagedList<CommentItem.Data>> =
         Single
-            .just(getOrderedCommentIds(discussionProxy, discussionOrder))
+            .just(discussionProxy.getOrdering(discussionOrder))
             .flatMap { orderedCommentIds ->
                 val index = orderedCommentIds.indexOf(discussionId)
                 val start = max(index - PAGE_SIZE / 2, 0)
@@ -72,7 +72,7 @@ constructor(
         lastCommentId: Long
     ): Single<PagedList<CommentItem.Data>> =
         getMore(
-            getOrderedCommentIds(discussionProxy, discussionOrder),
+            discussionProxy.getOrdering(discussionOrder),
             direction,
             lastCommentId
         )
@@ -119,21 +119,6 @@ constructor(
                 PagedList(comments, hasPrev = start > 0, hasNext = end < commentIds.size)
             }
     }
-
-    private fun getOrderedCommentIds(discussionProxy: DiscussionProxy, discussionOrder: DiscussionOrder): List<Long> =
-        when (discussionOrder) {
-            DiscussionOrder.LAST_DISCUSSION ->
-                discussionProxy.discussions
-
-            DiscussionOrder.MOST_LIKED ->
-                discussionProxy.discussionsMostLiked
-
-            DiscussionOrder.MOST_ACTIVE ->
-                discussionProxy.discussionsMostActive
-
-            DiscussionOrder.RECENT_ACTIVITY ->
-                discussionProxy.discussionsRecentActivity
-        }
 
     fun changeCommentVote(commentId: Long, vote: Vote): Single<CommentItem.Data> =
         voteRepository

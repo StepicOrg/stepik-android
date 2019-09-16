@@ -2,7 +2,7 @@ package org.stepik.android.view.comment.model
 
 import android.support.annotation.IdRes
 import org.stepic.droid.R
-import org.stepik.android.domain.comment.model.DiscussionOrder
+import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 
 enum class DiscussionOrderItem(
     @IdRes

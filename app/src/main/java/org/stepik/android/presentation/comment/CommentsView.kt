@@ -1,7 +1,7 @@
 package org.stepik.android.presentation.comment
 
 import org.stepic.droid.util.PagedList
-import org.stepik.android.domain.comment.model.DiscussionOrder
+import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.presentation.comment.model.CommentItem
 
