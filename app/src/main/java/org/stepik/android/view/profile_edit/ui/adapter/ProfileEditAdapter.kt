@@ -18,4 +18,11 @@ class ProfileEditAdapter(
 
     override fun getItemCount(): Int =
         items.size
+
+    override fun onBindViewHolder(holder: DelegateViewHolder<ProfileEditItem>, position: Int) {
+        super.onBindViewHolder(holder, position)
+        if (items[position].type == ProfileEditItem.Type.EMAIL) {
+            holder.itemView.isEnabled = false
+        }
+    }
 }
