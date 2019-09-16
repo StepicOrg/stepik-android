@@ -128,7 +128,15 @@ constructor() {
                 commentsState.commentItems.mutate {
                     removeAt(rawIndex)
                     addAll(rawIndex, items)
-                } // todo: handle LoadMoreReplies for next items
+
+                    // handle next LoadMoreReplies
+                    val lastCommentId =
+                        items.lastOrNull().takeIf { items.hasNext }?.id
+
+                    if (lastCommentId != null) {
+                        add(loadMoreReplies.copy(lastCommentId = lastCommentId, count = loadMoreReplies.count - items.size))
+                    }
+                }
 
             val commentDataItems =
                 commentsState.commentDataItems.mutate { addAll(index + 1, items) }

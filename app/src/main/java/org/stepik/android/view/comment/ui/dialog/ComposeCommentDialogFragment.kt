@@ -90,7 +90,7 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
         inflater.inflate(R.layout.dialog_compose_comment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbarTitle.setText(R.string.course_reviews_compose_title)
+        centeredToolbarTitle.setText(R.string.comment_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.comment_compose_menu)
