@@ -12,10 +12,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.model.comments.*
-import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.*
-import java.util.*
 import javax.inject.Inject
 
 @SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"], justification = "false positive: commentManager is not null")
@@ -32,10 +30,6 @@ class CommentsFragment : FragmentBase() {
     @Inject
     lateinit var commentManager: CommentManager
 
-    lateinit var commentAdapter: CommentsAdapter
-
-    val links = ArrayList<String>()
-
     private var discussionId: String by argument()
     private var stepId: Long by argument()
     private var needInstaOpen: Boolean by argument()
@@ -43,28 +37,22 @@ class CommentsFragment : FragmentBase() {
 
     override fun injectComponent() {
         App
-                .componentManager()
-                .stepComponent(stepId)
-                .commentsComponentBuilder()
-                .build()
-                .inject(this)
+            .componentManager()
+            .stepComponent(stepId)
+            .commentsComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onReleaseComponent() {
         super.onReleaseComponent()
         App
-                .componentManager()
-                .releaseStepComponent(stepId)
+            .componentManager()
+            .releaseStepComponent(stepId)
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        commentAdapter = CommentsAdapter(commentManager, context)
-    }
-
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-            inflater.inflate(R.layout.fragment_comments, container, false)
+        inflater.inflate(R.layout.fragment_comments, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -135,8 +123,6 @@ class CommentsFragment : FragmentBase() {
                 item.isChecked = true
 
                 commentManager.resetAll()
-                commentAdapter.notifyDataSetChanged()
-
 
                 showEmptyProgressOnCenter()
                 commentManager.loadComments()

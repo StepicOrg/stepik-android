@@ -10,13 +10,12 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.layout_comment_actions.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.model.UserRole
 import org.stepik.android.model.comments.Vote
@@ -39,6 +38,7 @@ class CommentDataAdapterDelegate(
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CommentItem>(root), View.OnClickListener {
         private val commentUserIcon = root.commentUserIcon
+        private val commentUserIconWrapper = commentUserIcon.wrapWithGlide()
         private val commentUserName = root.commentUserName
 
         private val commentText = root.commentText
@@ -49,9 +49,6 @@ class CommentDataAdapterDelegate(
         private val commentReply = root.commentReply
         private val commentLike = root.commentLike
         private val commentDislike = root.commentDislike
-
-        private val commentUserIconTarget = RoundedBitmapImageViewTarget(
-            context.resources.getDimension(R.dimen.course_image_radius), commentUserIcon)
 
         private val commentUserIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
@@ -111,11 +108,7 @@ class CommentDataAdapterDelegate(
 
             commentUserName.text = data.user.fullName
 
-            Glide.with(commentUserIcon)
-                .asBitmap()
-                .load(data.user.avatar)
-                .placeholder(commentUserIconPlaceholder)
-                .into(commentUserIconTarget)
+            commentUserIconWrapper.setImagePath(data.user.avatar ?: "", commentUserIconPlaceholder)
 
             commentText.setPlainOrLaTeXTextColored(data.comment.text, R.color.new_accent_color)
 

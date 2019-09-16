@@ -3,8 +3,6 @@ package org.stepic.droid.ui.adapters;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
-import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
@@ -15,13 +13,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
-import org.stepic.droid.base.App;
 import org.stepic.droid.core.CommentManager;
 import org.stepic.droid.model.CommentAdapterItem;
 import org.stepik.android.model.UserRole;
@@ -33,7 +26,6 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.util.glide.GlideSvgRequestFactory;
 
 import java.util.Locale;
 import java.util.TimeZone;
@@ -50,12 +42,9 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
     private final CommentManager commentManager;
     private final Context context;
 
-    private final Drawable placeholderUserIcon;
-
     public CommentsAdapter(CommentManager commentManager, Context context) {
         this.commentManager = commentManager;
         this.context = context;
-        placeholderUserIcon = ContextCompat.getDrawable(App.Companion.getAppContext(), R.drawable.general_placeholder);
     }
 
     @Override
@@ -223,7 +212,6 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
 
         Drawable likeActiveDrawable;
         Drawable likeEmptyDrawable;
-        final RequestBuilder<PictureDrawable> svgRequestBuilder;
 
         public GenericViewHolder(final View itemView) {
             super(itemView);
@@ -263,7 +251,6 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
 
             likeEmptyDrawable.setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.material_grey, context), PorterDuff.Mode.MULTIPLY);
             likeActiveDrawable.setColorFilter(ColorUtil.INSTANCE.getColorArgb(R.color.stepic_blue_ribbon, context), PorterDuff.Mode.MULTIPLY);
-            svgRequestBuilder = GlideSvgRequestFactory.create(itemView.getContext(), placeholderUserIcon);
         }
 
         private void onClickMoreLayout(int adapterPosition) {
@@ -336,20 +323,6 @@ public final class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.
                 if (userAvatar == null) {
                     userAvatar = "";
                 }
-            }
-
-            if (userAvatar.endsWith(AppConstants.SVG_EXTENSION)) {
-                Uri uri = Uri.parse(userAvatar);
-                svgRequestBuilder
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .load(uri)
-                        .into(userIcon);
-            } else {
-                Glide.with(App.Companion.getAppContext())
-                        .asBitmap()
-                        .load(userAvatar)
-                        .placeholder(placeholderUserIcon)
-                        .into(userIcon);
             }
 
             if (user != null) {
