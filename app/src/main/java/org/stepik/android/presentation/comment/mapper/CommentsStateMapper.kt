@@ -6,6 +6,8 @@ import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepic.droid.util.filterNot
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.discussion_proxy.mapper.getOrdering
+import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -123,7 +125,7 @@ constructor() {
         val rawIndex = commentsState.commentItems.indexOfFirst { (it as? CommentItem.ReplyPlaceholder)?.id == loadMoreReplies.id }
         val index = commentsState.commentDataItems.indexOfFirst { it.id == loadMoreReplies.lastCommentId }
 
-        return if (rawIndex > 0 && index > 0) {
+        return if (rawIndex >= 0 && index >= 0) {
             val commentItems =
                 commentsState.commentItems.mutate {
                     removeAt(rawIndex)
@@ -286,8 +288,33 @@ constructor() {
     }
 
     /**
-     * Insert comment
+     * Insert top level comment
      */
+    fun insertComment(state: CommentsView.State, commentDataItem: CommentItem.Data): CommentsView.State {
+        if (state !is CommentsView.State.DiscussionLoaded ||
+            state.commentsState !is CommentsView.CommentsState.Loaded) {
+            return state
+        }
+
+        val rawIndex = state.commentsState
+            .commentDataItems
+            .asSequence()
+            .drop(1)
+            .find { it.comment.parent == null }
+            ?.let(state.commentsState.commentItems::indexOf)
+            ?: state.commentsState.commentItems.size
+
+        return state.copy(
+            commentsState =
+                with(state.commentsState) {
+                    copy(
+                        commentDataItems = commentDataItems.mutate { add(1, commentDataItem) },
+                        commentItems = commentItems.mutate { add(rawIndex, commentDataItem) }
+                    )
+                }
+        )
+    }
+
     fun insertCommentReply(state: CommentsView.State, commentDataItem: CommentItem.Data): CommentsView.State {
         if (state !is CommentsView.State.DiscussionLoaded ||
             state.commentsState !is CommentsView.CommentsState.Loaded) {
@@ -303,8 +330,8 @@ constructor() {
                 it is CommentItem.Data && (it.id == parentId || it.comment.parent == parentId)
             } + 1
 
-        val index = commentsState.commentItems
-            .indexOfLast { it is CommentItem.Data && (it.id == parentId || it.comment.parent == parentId) } + 1
+        val index = commentsState.commentDataItems
+            .indexOfLast { it.id == parentId || it.comment.parent == parentId } + 1
 
         return state.copy(
             commentsState =

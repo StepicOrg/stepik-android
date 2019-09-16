@@ -10,7 +10,7 @@ import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.CommentsData
-import org.stepik.android.domain.comment.model.DiscussionOrder
+import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
@@ -214,11 +214,13 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { commentDataItem ->
-                    if (commentDataItem.comment.parent != null) {
-                        state = commentsStateMapper.insertCommentReply(state, commentDataItem)
-                    } else {
-
-                    }
+                    state =
+                        if (commentDataItem.comment.parent != null) {
+                            commentsStateMapper.insertCommentReply(state, commentDataItem)
+                        } else {
+                            commentsStateMapper.insertComment(state, commentDataItem)
+                        }
+                    view?.focusDiscussion(commentDataItem.id)
                 },
                 onError = emptyOnErrorStub
             )
