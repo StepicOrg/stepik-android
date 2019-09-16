@@ -297,27 +297,39 @@ constructor() {
      * Insert top level comment
      */
     fun insertComment(state: CommentsView.State, commentDataItem: CommentItem.Data): CommentsView.State {
-        if (state !is CommentsView.State.DiscussionLoaded ||
-            state.commentsState !is CommentsView.CommentsState.Loaded) {
+        if (state !is CommentsView.State.DiscussionLoaded) {
             return state
         }
 
-        val rawIndex = state.commentsState
-            .commentDataItems
-            .asSequence()
-            .drop(1)
-            .find { it.comment.parent == null }
-            ?.let(state.commentsState.commentItems::indexOf)
-            ?: state.commentsState.commentItems.size
-
         return state.copy(
             commentsState =
-                with(state.commentsState) {
-                    copy(
-                        commentDataItems = commentDataItems.mutate { add(1, commentDataItem) },
-                        commentItems = commentItems.mutate { add(rawIndex, commentDataItem) }
-                    )
+                when (state.commentsState) {
+                    is CommentsView.CommentsState.Loaded ->
+                        with(state.commentsState) {
+                            // index of second top comment item
+                            val rawIndexOfSecondTopComment = state.commentsState
+                                .commentDataItems
+                                .asSequence()
+                                .drop(1)
+                                .find { it.comment.parent == null }
+                                ?.let(state.commentsState.commentItems::indexOf)
+                                ?: state.commentsState.commentItems.size
+
+                            copy(
+                                commentDataItems = commentDataItems.mutate { add(1, commentDataItem) },
+                                commentItems = commentItems.mutate { add(rawIndexOfSecondTopComment, commentDataItem) }
+                            )
+                        }
+
+                    is CommentsView.CommentsState.EmptyComments -> {
+                        val commentsList = listOf(commentDataItem)
+                        CommentsView.CommentsState.Loaded(PagedList(commentsList), commentsList)
+                    }
+
+                    else ->
+                        state.commentsState
                 }
+
         )
     }
 
