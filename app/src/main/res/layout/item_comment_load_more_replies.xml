@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.AppCompatTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_step_quiz_code_details"
+
+    android:textSize="14sp"
+    android:textColor="@color/new_accent_color"
+    fontPath="fonts/Roboto-Medium.ttf"
+
+    android:gravity="center"
+    android:padding="16dp"
+
+    tools:text="@string/comments_load_more_replies" />

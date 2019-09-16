@@ -35,14 +35,12 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
-import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
-import org.stepic.droid.ui.activities.NewCommentActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
@@ -52,7 +50,6 @@ import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
-import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepic.droid.util.UriExtensionsKt;
@@ -67,6 +64,7 @@ import org.stepik.android.model.Unit;
 import org.stepik.android.model.Video;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
+import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
@@ -554,42 +552,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openComments(Activity context, @Nullable String discussionProxyId, long stepId) {
-        openComments(context, discussionProxyId, stepId, false);
-    }
-
-    @Override
-    public void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm) {
+    public void openComments(Activity context, String discussionProxyId, long stepId, @Nullable Long discussionId, boolean needOpenForm) {
         if (discussionProxyId == null) {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
-            Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.comment_disabled, Toast.LENGTH_SHORT).show();
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
-            Intent intent = new Intent(context, CommentsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
-            bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
-            bundle.putBoolean(CommentsActivity.Companion.getKeyNeedInstaOpenForm(), needOpenForm);
-            intent.putExtras(bundle);
-            context.startActivity(intent);
-        }
-    }
-
-
-    @Override
-    public void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent) {
-        if (sharedPreferences.getAuthResponseFromStore() != null) {
-            analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
-            Intent intent = new Intent(commentsFragment.getActivity(), NewCommentActivity.class);
-            Bundle bundle = new Bundle();
-            if (parent != null) {
-                bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
-            }
-            bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
-            intent.putExtras(bundle);
-            commentsFragment.startActivityForResult(intent, NewCommentActivity.Companion.getRequestCode());
-        } else {
-            Toast.makeText(commentsFragment.getContext(), R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
+            context.startActivity(CommentsActivity.Companion.createIntent(context, stepId, discussionProxyId, discussionId, needOpenForm));
         }
     }
 
@@ -604,7 +573,6 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson, backAnimation);
         sourceActivity.startActivity(intent);
     }
-
 
     @Override
     public void openStepInWeb(Context context, Step step) {

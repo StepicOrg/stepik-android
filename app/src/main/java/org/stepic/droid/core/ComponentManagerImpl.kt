@@ -6,9 +6,7 @@ import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
-import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
-import org.stepic.droid.di.step.StepComponent
 import org.stepic.droid.util.SuppressFBWarnings
 import org.stepik.android.view.injection.course.CourseComponent
 import timber.log.Timber
@@ -40,35 +38,6 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             }
 
     override fun downloadsComponent(): DownloadsComponent = downloadsComponent
-
-
-    // Step
-
-    private val stepComponentMap = HashMap<Long, StepComponent>()
-    private val stepComponentCountMap = HashMap<Long, Int>()
-
-    override fun stepComponent(stepId: Long): StepComponent {
-        val count = stepComponentCountMap[stepId] ?: 0
-        stepComponentCountMap[stepId] = count + 1
-        val routingComponent = routingComponent() //increment routing component by invoking method
-        return stepComponentMap.getOrPut(stepId) {
-            routingComponent
-                    .stepComponentBuilder()
-                    .build()
-        }
-    }
-
-    @SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_OF_NONNULL_VALUE"], justification = "false positive")
-    override fun releaseStepComponent(stepId: Long) {
-        releaseRoutingComponent()
-        val count: Int = stepComponentCountMap[stepId] ?: throw IllegalStateException("release step component, which is not allocated")
-        if (count == 1) {
-            //it is last
-            stepComponentMap.remove(stepId)
-        }
-        stepComponentCountMap[stepId] = count - 1
-    }
-
 
     // Adaptive courses
 
@@ -147,24 +116,6 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             mainScreenComponentProp = null
         }
     }
-
-    // Routing
-
-    private val routingComponentHolder = ComponentHolder<RoutingComponent>()
-
-    override fun routingComponent(): RoutingComponent {
-        return routingComponentHolder.get {
-            appCoreComponent
-                    .routingComponentBuilder()
-                    .build()
-        }
-    }
-
-
-    override fun releaseRoutingComponent() {
-        routingComponentHolder.release()
-    }
-
 
     // Course general
 

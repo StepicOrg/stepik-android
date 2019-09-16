@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
@@ -24,7 +23,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.setTextColor
+import org.stepic.droid.util.snackbar
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
@@ -180,13 +179,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     }
 
     override fun showNetworkError() {
-        val view = view
-            ?: return
-
-        Snackbar
-            .make(view, R.string.connectionProblems, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
-            .show()
+        snackbar(messageRes = R.string.connectionProblems)
     }
 
     private fun showCourseReviewEditDialog(courseReview: CourseReview?) {
