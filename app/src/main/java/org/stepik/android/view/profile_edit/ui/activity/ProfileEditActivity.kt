@@ -131,8 +131,8 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
     override fun setState(state: ProfileEditView.State) {
         viewStateDelegate.switchState(state)
         if (state is ProfileEditView.State.ProfileLoaded) {
-            profile = state.profile
-            state.profile.primaryEmailAdress?.email?.let {
+            profile = state.profileWrapper.profile
+            state.profileWrapper.primaryEmailAdress?.email?.let {
                 navigationItems.add(1, ProfileEditItem(ProfileEditItem.Type.EMAIL, getString(R.string.email), it))
             }
         }

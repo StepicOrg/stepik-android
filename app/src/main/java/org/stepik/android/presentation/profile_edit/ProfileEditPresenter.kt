@@ -8,6 +8,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.profile_edit.ProfileEditInteractor
 import org.stepik.android.model.user.Profile
+import org.stepik.android.model.user.ProfileWrapper
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -43,7 +44,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = {
-                    state = ProfileEditView.State.ProfileLoaded(it)
+                    state = ProfileEditView.State.ProfileLoaded(ProfileWrapper(it))
                 }
             )
     }
