@@ -44,7 +44,12 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = {
-                    state = ProfileEditView.State.ProfileLoaded(ProfileWrapper(it))
+                    val profileWrapper = (state as? ProfileEditView.State.ProfileLoaded)
+                        ?.profileWrapper
+                        ?.copy(profile = it)
+                        ?: ProfileWrapper(it)
+
+                    state = ProfileEditView.State.ProfileLoaded(profileWrapper)
                 }
             )
     }

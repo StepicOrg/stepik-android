@@ -7,7 +7,7 @@ interface ProfileEditView {
         object Idle : State()
         object Error : State()
         object Loading : State()
-        class ProfileLoaded(val profileWrapper: ProfileWrapper) : State()
+        data class ProfileLoaded(val profileWrapper: ProfileWrapper) : State()
     }
 
     fun setState(state: State)
