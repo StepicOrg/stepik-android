@@ -21,7 +21,6 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.network.NetworkModule
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
-import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
@@ -52,7 +51,6 @@ import org.stepic.droid.ui.dialogs.CertificateShareDialog
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
-import org.stepic.droid.ui.dialogs.DeleteCommentDialogFragment
 import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment
@@ -69,6 +67,8 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.certificate.CertificateComponent
+import org.stepik.android.view.injection.comment.CommentsComponent
+import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
@@ -154,8 +154,6 @@ interface AppCoreComponent {
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
 
-    fun routingComponentBuilder(): RoutingComponent.Builder
-
     fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
@@ -177,6 +175,10 @@ interface AppCoreComponent {
     fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder
 
     fun certificatesComponentBuilder(): CertificateComponent.Builder
+
+    fun composeCommentComponentBuilder(): ComposeCommentComponent.Builder
+
+    fun commentsComponentBuilder(): CommentsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
@@ -219,8 +221,6 @@ interface AppCoreComponent {
     fun inject(wantMoveDataDialog: WantMoveDataDialog)
 
     fun inject(unauthorizedDialogFragment: UnauthorizedDialogFragment)
-
-    fun inject(dialogFragment: DeleteCommentDialogFragment)
 
     fun inject(certificateShareDialog: CertificateShareDialog)
 

@@ -163,14 +163,6 @@ public class UserPreferences {
         sharedPreferenceHelper.setNotificationDisabled(type, !isEnabled);
     }
 
-    public boolean isRotateVideo() {
-        return sharedPreferenceHelper.needRotate();
-    }
-
-    public void setRotateVideo(boolean rotateVideo) {
-        sharedPreferenceHelper.setRotateAlways(rotateVideo);
-    }
-
     public void setStorageLocation(StorageLocation storageLocation) {
         sharedPreferenceHelper.setStorageLocation(storageLocation);
     }

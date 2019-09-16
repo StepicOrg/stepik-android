@@ -1,7 +1,5 @@
 package org.stepic.droid.ui.dialogs;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -17,11 +14,12 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
+import org.stepic.droid.util.ContextExtensionsKt;
+import org.stepic.droid.util.DisplayUtils;
+import org.stepic.droid.util.StringUtil;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
-import org.stepic.droid.util.DisplayUtils;
-import org.stepic.droid.util.StringUtil;
 
 import javax.inject.Inject;
 
@@ -87,10 +85,12 @@ public class StepShareDialog extends BottomSheetDialog {
             public void onClick(View view) {
                 dismiss();
                 analytic.reportEvent(Analytic.Steps.COPY_LINK);
-                ClipData clipData = ClipData.newPlainText(App.Companion.getAppContext().getString(R.string.copy_link_title), StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step));
-                ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getContext(), R.string.link_copied_title, Toast.LENGTH_SHORT).show();
+                ContextExtensionsKt.copyTextToClipboard(
+                        context,
+                        App.Companion.getAppContext().getString(R.string.copy_link_title),
+                        StringUtil.getUriForStep(config.getBaseUrl(), lesson, unit, step),
+                        context.getResources().getString(R.string.link_copied_title)
+                );
             }
         });
 

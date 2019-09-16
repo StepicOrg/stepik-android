@@ -116,17 +116,10 @@
     <string name="remove_all">Удалить все</string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
     <string name="feedback_from">От</string>
-    <string name="comments_title">Комментарии</string>
     <string name="load_more">ещё</string>
-    <string name="load_more_reply">Показать еще</string>
-    <string name="hint_for_new_comment">Оставьте комментарий</string>
-    <string name="new_comment_title">Новый комментарий</string>
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
     <string name="comment_sent">Комментарий успешно отправлен</string>
-    <string name="comment_denied">Извините, возможность оставлять комментарии отключена</string>
     <string name="reply_title">Ответить</string>
-    <string name="one_comment_title">Комментарий</string>
-    <string name="comment_is_deleted">Этот комментарий был удален</string>
     <string name="space_management_title">Управление памятью</string>
     <string name="clear_cache_explanation">Приложение поддерживает просмотр видео онлайн, но для
         просмотра уроков без Интернет-подключения их необходимо сохранять. Большую часть памяти
@@ -148,9 +141,6 @@
     <string name="move_data_explanation">Все ранее загруженные видео будут перенесены, новые видео
         будут сохраняться в выбранное место. Операция может занять несколько минут. Вы уверены?
     </string>
-    <string name="like_label">Нравится</string>
-    <string name="unlike_label">Больше не нравится</string>
-    <string name="report_label">Пожаловаться</string>
     <string name="done">Готово</string>
     <string name="moving">Перенос</string>
     <string name="fail_to_parse">К сожалению, курс не найден</string>
@@ -159,18 +149,13 @@
         зарегистрироваться. Вы хотите сделать это сейчас?
     </string>
     <string name="delete_label">Удалить</string>
-    <string name="delete_comment_detail">Удалить этот комментарий</string>
     <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
     <string name="share_title">Поделиться</string>
-
-    <string name="staff_label">Команда Stepik.org</string>
-    <string name="teacher_label">Команда курса</string>
 
     <string name="last_discussion">Новые обсуждения</string>
     <string name="most_liked_discussion">Самые популярные</string>
     <string name="most_active_discussion">Самые обсуждаемые</string>
     <string name="recent_activity_discussion">Свежие обновления</string>
-    <string name="copy_text_label">Скопировать текст</string>
     <string name="calendar_title">Календарь</string>
     <string name="calendar_detail">У заданий в данном курсе есть крайний срок сдачи. Для того, чтобы
         пройти задание вовремя и получить сертификат, мы рекомендуем добавить в календарь крайние
@@ -349,9 +334,6 @@
     <string name="content_course_logo">Логотип курса</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
     <string name="step_with_position">– Шаг %d</string>
-    <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти
-    </string>
-    <string name="anonymous_like_mark_comment">Чтобы оценивать комментарии Вам нужно Войти</string>
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
@@ -741,4 +723,25 @@
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
+
+    <!-- Comment -->
+    <string name="comment_compose_hint">Оставьте комментарий</string>
+    <string name="comment_compose_title">Комментарий</string>
+    <string name="comment_action_create">Написать комментарий</string>
+    <string name="comment_action_edit">Изменить</string>
+    <string name="comment_action_remove">Удалить</string>
+    <string name="comment_action_remove_description">Удалить этот комментарий</string>
+
+    <string name="comment_disabled">Комментарии отключены</string>
+
+    <string name="comments_title">Комментарии</string>
+    <string name="comments_load_more_replies">Показать %s</string>
+
+    <string name="comment_tag_pinned">Закреплен</string>
+    <string name="comment_tag_course_team">Команда курса</string>
+
+    <string name="relative_date_pattern">%s назад</string>
+    <string name="relative_date_now">сейчас</string>
+
+    <string name="copied_to_clipboard_toast">Скопировано в буфер</string>
 </resources>

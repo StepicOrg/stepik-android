@@ -133,11 +133,7 @@
     <string name="remove_all">Remove all</string>
     <string name="hint_for_idea">Type your suggestions, comments or ideas</string>
     <string name="feedback_from">From</string>
-    <string name="comments_title">Comments</string>
     <string name="load_more">more</string>
-    <string name="load_more_reply">Load more</string>
-    <string name="hint_for_new_comment">Add your comment</string>
-    <string name="new_comment_title">New comment</string>
     <string name="leave_first_comment">No discussions yet. Feel free to start one.</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
@@ -146,10 +142,7 @@
 
     <string name="open_comments_zero">No comments. Add your comment</string>
     <string name="comment_sent">Comment is sent successfully</string>
-    <string name="comment_denied">Comments are not available for this lesson</string>
     <string name="reply_title">Reply</string>
-    <string name="one_comment_title">Comment</string>
-    <string name="comment_is_deleted">This comment was deleted</string>
     <string name="space_management_title">Space management</string>
     <string name="clear_cache_explanation">The App supports viewing videos online, but to view the
         lessons without Internet connection it is necessary to download them. Most of the space is
@@ -174,9 +167,6 @@
         you
         sure?
     </string>
-    <string name="like_label">Like</string>
-    <string name="unlike_label">Unlike</string>
-    <string name="report_label">Report</string>
     <string name="done">Done</string>
     <string name="moving">Moving</string>
     <string name="fail_to_parse">Sorry, the course can not be found</string>
@@ -185,11 +175,8 @@
         this now?
     </string>
     <string name="delete_label">Delete</string>
-    <string name="delete_comment_detail">Delete this comment?</string>
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
-    <string name="staff_label">Stepik.org Team</string>
-    <string name="teacher_label">Course Staff</string>
 
     <string name="ok">Ok</string>
 
@@ -197,7 +184,6 @@
     <string name="most_liked_discussion">Most liked</string>
     <string name="most_active_discussion">Most active</string>
     <string name="recent_activity_discussion">Recent activity</string>
-    <string name="copy_text_label">Copy text</string>
     <string name="calendar_title">Calendar</string>
     <string name="calendar_detail">Modules in this course have deadlines. To complete this course
         and get a certificate, add deadlines to your calendar and get a reminder 2 days before the
@@ -353,8 +339,6 @@
     <string name="content_course_logo">Course logo</string>
     <string name="auth_inline_message">To save your progress please sign in first</string>
     <string name="step_with_position">– Step %d</string>
-    <string name="anonymous_write_comment">To join this discussion you have to Sign in</string>
-    <string name="anonymous_like_mark_comment">To rate the comments you have to Sign in</string>
     <string name="retry">Retry</string>
     <string name="retry_internet">@string/retry</string>
     <string name="accessibility_drag_and_drop">drag and drop</string>
@@ -388,6 +372,7 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
+    <string name="profile_user_id" translatable="false">User ID: %d</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
@@ -770,4 +755,25 @@
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
+
+    <!-- Comment -->
+    <string name="comment_compose_title">Comment</string>
+    <string name="comment_compose_hint">Add your comment</string>
+    <string name="comment_action_create">Write comment</string>
+    <string name="comment_action_edit">Edit</string>
+    <string name="comment_action_remove">Remove</string>
+    <string name="comment_action_remove_description">Remove this comment?</string>
+
+    <string name="comment_disabled">Comments disabled</string>
+
+    <string name="comments_title">Comments</string>
+    <string name="comments_load_more_replies">Show %s</string>
+
+    <string name="comment_tag_pinned">Pinned</string>
+    <string name="comment_tag_course_team">Course Team</string>
+
+    <string name="relative_date_pattern">%s ago</string>
+    <string name="relative_date_now">now</string>
+
+    <string name="copied_to_clipboard_toast">Copied to clipboard</string>
 </resources>
