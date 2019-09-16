@@ -14,36 +14,48 @@ import kotlin.reflect.KProperty
  * Inspired by Adam Powell, he mentioned it during his IO/17 talk about Kotlin
  */
 class FragmentArgumentDelegate<T : Any> : ReadWriteProperty<Fragment, T> {
-    var value: T? = null
+    private val bundleDelegate = BundleDelegate<T>()
 
     override operator fun getValue(thisRef: Fragment, property: KProperty<*>): T {
-        if (value == null) {
-            val args = thisRef.arguments ?: throw IllegalStateException("Cannot read property ${property.name} if no arguments have been set")
-            @Suppress("UNCHECKED_CAST")
-            value = args.get(property.name) as T
-        }
-        return value ?: throw IllegalStateException("Property ${property.name} could not be read")
+        val args = thisRef.arguments ?: throw IllegalStateException("Cannot read property ${property.name} if no arguments have been set")
+        return bundleDelegate.getValue(args, property)
     }
 
     override operator fun setValue(thisRef: Fragment, property: KProperty<*>, value: T) {
         val args = thisRef.arguments ?: Bundle().also(thisRef::setArguments)
+        bundleDelegate.setValue(args, property, value)
+    }
+}
+
+class BundleDelegate<T : Any> : ReadWriteProperty<Bundle, T> {
+    private var value: T? = null
+
+    override operator fun getValue(thisRef: Bundle, property: KProperty<*>): T {
+        if (value == null) {
+            @Suppress("UNCHECKED_CAST")
+            value = thisRef.get(property.name) as T
+        }
+        return value ?: throw IllegalStateException("Property ${property.name} could not be read")
+    }
+
+    override operator fun setValue(thisRef: Bundle, property: KProperty<*>, value: T) {
         val key = property.name
 
         when (value) {
-            is String -> args.putString(key, value)
-            is Int -> args.putInt(key, value)
-            is Short -> args.putShort(key, value)
-            is Long -> args.putLong(key, value)
-            is Byte -> args.putByte(key, value)
-            is ByteArray -> args.putByteArray(key, value)
-            is Char -> args.putChar(key, value)
-            is CharArray -> args.putCharArray(key, value)
-            is CharSequence -> args.putCharSequence(key, value)
-            is Float -> args.putFloat(key, value)
-            is Bundle -> args.putBundle(key, value)
-            is Binder -> BundleCompat.putBinder(args, key, value)
-            is android.os.Parcelable -> args.putParcelable(key, value)
-            is java.io.Serializable -> args.putSerializable(key, value)
+            is String -> thisRef.putString(key, value)
+            is Int -> thisRef.putInt(key, value)
+            is Short -> thisRef.putShort(key, value)
+            is Long -> thisRef.putLong(key, value)
+            is Byte -> thisRef.putByte(key, value)
+            is ByteArray -> thisRef.putByteArray(key, value)
+            is Char -> thisRef.putChar(key, value)
+            is CharArray -> thisRef.putCharArray(key, value)
+            is CharSequence -> thisRef.putCharSequence(key, value)
+            is Float -> thisRef.putFloat(key, value)
+            is Bundle -> thisRef.putBundle(key, value)
+            is Binder -> BundleCompat.putBinder(thisRef, key, value)
+            is android.os.Parcelable -> thisRef.putParcelable(key, value)
+            is java.io.Serializable -> thisRef.putSerializable(key, value)
             else -> throw IllegalStateException("Type ${value.javaClass.canonicalName} of property ${property.name} is not supported")
         }
 
@@ -51,4 +63,4 @@ class FragmentArgumentDelegate<T : Any> : ReadWriteProperty<Fragment, T> {
     }
 }
 
-fun <T : Any>Fragment.argument() = FragmentArgumentDelegate<T>()
+fun <T : Any> Fragment.argument() = FragmentArgumentDelegate<T>()

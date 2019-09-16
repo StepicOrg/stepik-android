@@ -19,14 +19,23 @@ class StepDiscussionsDelegate(
         stepDiscussions.setCompoundDrawables(start = R.drawable.ic_step_discussion)
     }
 
-    fun setDiscussionsCount(discussionsCount: Int) {
+    fun setDiscussions(discussionProxy: String?, discussionsCount: Int) {
         stepDiscussions.text =
-            if (discussionsCount > 0) {
-                containerView.context.getString(R.string.step_discussion_show, discussionsCount)
-            } else {
-                containerView.context.getString(R.string.step_discussion_write_first)
+            when {
+                discussionProxy == null ->
+                    containerView.context.getString(R.string.comment_disabled)
+
+                discussionsCount > 0 ->
+                    containerView.context.getString(R.string.step_discussion_show, discussionsCount)
+
+                else ->
+                    containerView.context.getString(R.string.step_discussion_write_first)
             }
 
+        stepDiscussions
+            .setCompoundDrawables(start = if (discussionProxy != null) R.drawable.ic_step_discussion else -1)
+
+        containerView.isEnabled = discussionProxy != null
         containerView.changeVisibility(needShow = true)
     }
 }

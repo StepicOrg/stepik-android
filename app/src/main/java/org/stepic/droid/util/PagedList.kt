@@ -10,3 +10,24 @@ class PagedList<E>(
 
 fun <E> List<E>.concatWithPagedList(pagedList: PagedList<E>): PagedList<E> =
     PagedList(this + pagedList, page = pagedList.page, hasNext = pagedList.hasNext, hasPrev = pagedList.hasPrev)
+
+inline fun <T, R> PagedList<T>.mapPaged(transform: (T) -> R): PagedList<R> =
+    PagedList(map(transform), page = page, hasNext = hasNext, hasPrev = hasPrev)
+
+/**
+ * Concatenate two paged lists
+ */
+operator fun <E> PagedList<E>.plus(pagedList: PagedList<E>): PagedList<E> =
+    PagedList(this as List<E> + pagedList, page = pagedList.page, hasNext = pagedList.hasNext, hasPrev = hasPrev)
+
+/**
+ * Adds element to the end of paged list and returns it
+ */
+operator fun <E> PagedList<E>.plus(element: E): PagedList<E> =
+    PagedList(this as List<E> + element, page = page, hasNext = hasNext, hasPrev = hasPrev)
+
+/**
+ * Returns a list containing all elements not matching the given [predicate].
+ */
+inline fun <E> PagedList<E>.filterNot(predicate: (E) -> Boolean): PagedList<E> =
+    PagedList((this as List<E>).filterNot(predicate), page = page, hasNext = hasNext, hasPrev = hasPrev)

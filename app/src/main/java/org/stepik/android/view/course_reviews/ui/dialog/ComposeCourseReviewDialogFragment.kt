@@ -6,9 +6,7 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +19,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.setTextColor
+import org.stepic.droid.util.snackbar
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewPresenter
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewView
@@ -107,6 +105,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         dialog
@@ -170,12 +169,6 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     }
 
     override fun showNetworkError() {
-        val view = view
-            ?: return
-
-        Snackbar
-            .make(view, R.string.connectionProblems, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
-            .show()
+        snackbar(messageRes = R.string.connectionProblems)
     }
 }

@@ -7,6 +7,7 @@ import org.solovyev.android.checkout.Sku
 import org.stepic.droid.testUtils.assertThatObjectParcelable
 import org.stepik.android.domain.billing.model.SkuSerializableWrapper
 import org.stepik.android.model.Course
+import org.stepik.android.model.Progress
 
 @RunWith(RobolectricTestRunner::class)
 class CourseHeaderDataTest {
@@ -28,7 +29,7 @@ class CourseHeaderDataTest {
             cover = "cover",
             learnersCount = 100,
             review = 1.0,
-            progress = 100,
+            progress = Progress(),
             readiness = 1.0,
             enrollmentState = EnrollmentState.NotEnrolledInApp(SkuSerializableWrapper(sku))
         )

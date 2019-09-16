@@ -280,8 +280,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     }
 
     override fun showComments(step: Step, discussionId: Long) {
-        // todo: use discussion id after comments refactor
-        screenManager.openComments(this, step.discussionProxy, step.id)
+        screenManager.openComments(this, step.discussionProxy, step.id, discussionId, false)
     }
 
     override fun showRateDialog() {

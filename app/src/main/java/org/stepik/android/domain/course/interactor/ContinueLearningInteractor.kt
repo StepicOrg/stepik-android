@@ -31,9 +31,7 @@ constructor(
     private fun requireAbilityToContinueCourse(course: Course): Completable =
         Completable
             .fromAction {
-                if (!course.canContinue) {
-                    throw IllegalStateException("Can continues course with id = ${course.id}")
-                }
+                check(course.canContinue) { "Can continues course with id = ${course.id}" }
             }
 
     private fun resolveCourseFirstStep(course: Course): Single<LastStep> =

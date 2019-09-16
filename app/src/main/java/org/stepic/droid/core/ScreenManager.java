@@ -12,7 +12,6 @@ import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.model.CoursesCarouselInfo;
-import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
@@ -51,12 +50,7 @@ public interface ScreenManager {
 
     void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
-    void openComments(Activity context, String discussionProxyId, long stepId);
-
-    void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm);
-
-    void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
-
+    void openComments(Activity context, String discussionProxyId, long stepId, @Nullable Long discussionId, boolean needOpenForm);
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 
