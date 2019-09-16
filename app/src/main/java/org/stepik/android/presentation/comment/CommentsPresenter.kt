@@ -224,7 +224,7 @@ constructor(
             if (commentDataItem.comment.parent != null) {
                 commentsStateMapper.insertCommentReply(state, commentDataItem)
             } else {
-                stepDiscussionSubject.onNext(commentDataItem.comment.parent ?: -1)
+                stepDiscussionSubject.onNext(commentDataItem.comment.target)
                 commentsStateMapper.insertComment(state, commentDataItem)
             }
         view?.focusDiscussion(commentDataItem.id)
@@ -253,6 +253,11 @@ constructor(
             .removeComment(commentDataItem.id)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
+            .doOnComplete {
+                if (commentDataItem.comment.parent == null) {
+                    stepDiscussionSubject.onNext(commentDataItem.comment.target)
+                }
+            }
             .subscribeBy(
                 onComplete = { state = commentsStateMapper.mapFromRemovePendingToSuccess(state, commentId) },
                 onError = { state = commentsStateMapper.mapFromRemovePendingToError(state, commentDataItem); view?.showNetworkError() }

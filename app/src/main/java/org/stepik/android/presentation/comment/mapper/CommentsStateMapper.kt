@@ -268,10 +268,17 @@ constructor() {
             discussionId = state.discussionId.takeIf { it != commentId },
             commentsState =
                 with(state.commentsState) {
-                    copy(
-                        commentDataItems = commentDataItems.filterNot { it.id in commentsToRemove },
-                        commentItems = commentItems.filterNot { it is CommentItem.RemovePlaceholder && it.id == commentId || it is CommentItem.Data && it.id in commentsToRemove }
-                    )
+                    val newCommentItems =
+                        commentItems.filterNot { it is CommentItem.RemovePlaceholder && it.id == commentId || it is CommentItem.Data && it.id in commentsToRemove }
+
+                    if (newCommentItems.isEmpty()) {
+                        CommentsView.CommentsState.EmptyComments
+                    } else {
+                        copy(
+                            commentDataItems = commentDataItems.filterNot { it.id in commentsToRemove },
+                            commentItems = newCommentItems
+                        )
+                    }
                 }
         )
     }
