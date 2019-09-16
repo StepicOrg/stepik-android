@@ -145,7 +145,7 @@
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="missingPrefix"
-        tools:text="≈ 2 min"/>
+        tools:text="≈ 2 mins"/>
 
     <org.stepik.android.view.course_content.ui.view.DownloadStatusView
         android:id="@+id/unitDownloadStatus"
