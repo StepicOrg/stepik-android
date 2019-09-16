@@ -181,7 +181,6 @@
         this now?
     </string>
     <string name="delete_label">Delete</string>
-    <string name="delete_comment_detail">Delete this comment?</string>
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
     <string name="staff_label">Stepik.org Team</string>
@@ -772,6 +771,7 @@
     <string name="comment_action_create">Write comment</string>
     <string name="comment_action_edit">Edit</string>
     <string name="comment_action_remove">Remove</string>
+    <string name="comment_action_remove_description">Remove this comment?</string>
 
     <string name="comment_disabled">Comments disabled</string>
 

@@ -28,7 +28,6 @@ import org.stepic.droid.core.comments.contract.CommentsListener
 import org.stepik.android.model.user.User
 import org.stepic.droid.model.comments.*
 import org.stepic.droid.ui.adapters.CommentsAdapter
-import org.stepik.android.view.comment.ui.dialog.DeleteCommentDialogFragment
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.*
@@ -44,7 +43,6 @@ import javax.inject.Inject
 class CommentsFragment : FragmentBase(),
         SwipeRefreshLayout.OnRefreshListener,
         CommentsListener,
-        DeleteCommentDialogFragment.Callback,
         ComposeCommentDialogFragment.Callback {
     companion object {
         private val replyMenuId = 100
@@ -254,11 +252,6 @@ class CommentsFragment : FragmentBase(),
                 return true
             }
 
-            deleteMenuId -> {
-                deleteComment(info.position)
-                return true
-            }
-
             copyTextMenuId -> {
                 copyTextToClipBoard(info.position)
                 return true
@@ -311,20 +304,6 @@ class CommentsFragment : FragmentBase(),
 
             Toast.makeText(context, R.string.done, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun deleteComment(position: Int) {
-        analytic.reportEvent(Analytic.Interaction.DELETE_COMMENT_TRIAL)
-        val comment: Comment? = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment
-        val commentId = comment?.id
-        commentId?.let {
-            val dialog = DeleteCommentDialogFragment.newInstance(it)
-            dialog.setTargetFragment(this, 0)
-            if (!dialog.isAdded) {
-                dialog.show(fragmentManager, null)
-            }
-        }
-
     }
 
     private fun replyToComment(position: Int) {
@@ -452,10 +431,6 @@ class CommentsFragment : FragmentBase(),
 
     override fun onCommentsConnectionProblem() {
         onConnectionProblemBase()
-    }
-
-    override fun onDeleteComment(commentId: Long) {
-
     }
 
     //     end DeleteCommentDialogFragment.DialogCallback

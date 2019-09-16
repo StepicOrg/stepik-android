@@ -23,7 +23,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepik.android.view.comment.ui.dialog.DeleteCommentDialogFragment
+import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.base.PaginationDirection
@@ -46,7 +46,7 @@ class CommentsActivity :
     FragmentActivityBase(),
     CommentsView,
     ComposeCommentDialogFragment.Callback,
-    DeleteCommentDialogFragment.Callback {
+    RemoveCommentDialogFragment.Callback {
     companion object {
         private const val EXTRA_DISCUSSION_PROXY = "discussion_proxy"
         private const val EXTRA_DISCUSSION_ID = "discussion_id"
@@ -117,7 +117,7 @@ class CommentsActivity :
                 }
 
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
-                    showDeleteCommentDialog(commentDataItem.id)
+                    showRemoveCommentDialog(commentDataItem.id)
                 }
             }
         )
@@ -279,16 +279,16 @@ class CommentsActivity :
             .show(supportFragmentManager, ComposeCommentDialogFragment.TAG)
     }
 
-    private fun showDeleteCommentDialog(commentId: Long) {
+    private fun showRemoveCommentDialog(commentId: Long) {
         val supportFragmentManager = supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(DeleteCommentDialogFragment.TAG) == null }
+            ?.takeIf { it.findFragmentByTag(RemoveCommentDialogFragment.TAG) == null }
             ?: return
 
-        analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
+        analytic.reportEvent(Analytic.Interaction.DELETE_COMMENT_TRIAL)
 
-        DeleteCommentDialogFragment
+        RemoveCommentDialogFragment
             .newInstance(commentId)
-            .show(supportFragmentManager, DeleteCommentDialogFragment.TAG)
+            .show(supportFragmentManager, RemoveCommentDialogFragment.TAG)
     }
 
     override fun focusDiscussion(discussionId: Long) {

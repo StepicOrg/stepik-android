@@ -7,12 +7,12 @@ import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 import org.stepic.droid.util.argument
 
-class DeleteCommentDialogFragment : DialogFragment() {
+class RemoveCommentDialogFragment : DialogFragment() {
     companion object {
-        const val TAG = "DeleteCommentDialogFragment"
+        const val TAG = "RemoveCommentDialogFragment"
 
         fun newInstance(commentId: Long): DialogFragment =
-            DeleteCommentDialogFragment().also {
+            RemoveCommentDialogFragment().also {
                 it.commentId = commentId
             }
     }
@@ -23,7 +23,7 @@ class DeleteCommentDialogFragment : DialogFragment() {
         AlertDialog
             .Builder(requireContext())
             .setTitle(R.string.title_confirmation)
-            .setMessage(R.string.delete_comment_detail)
+            .setMessage(R.string.comment_action_remove_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->
                 (activity as? Callback
                     ?: parentFragment as? Callback

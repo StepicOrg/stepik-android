@@ -7,15 +7,17 @@ import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
 
 class Actions(
-        val vote: Boolean = false,
-        val delete: Boolean = false,
+    @SerializedName("vote")
+    val vote: Boolean = false,
+    @SerializedName("delete")
+    val delete: Boolean = false,
 
-        @SerializedName("test_section")
-        val testSection: String? = null,
-        @SerializedName("do_review")
-        val doReview: String? = null,
-        @SerializedName("edit_instructions")
-        val editInstructions: String? = null
+    @SerializedName("test_section")
+    val testSection: String? = null,
+    @SerializedName("do_review")
+    val doReview: String? = null,
+    @SerializedName("edit_instructions")
+    val editInstructions: String? = null
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeBoolean(vote)
