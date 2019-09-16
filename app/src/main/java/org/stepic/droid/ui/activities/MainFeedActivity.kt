@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.ShortcutManager
 import android.graphics.Color
-import android.net.Uri
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
@@ -20,7 +19,6 @@ import com.facebook.login.LoginManager
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
-import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -172,15 +170,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         initGoogleApiClient(true)
 
         initNavigation()
-
-        Timber.d("Path: file:///android_asset/fonts/roboto_italic.ttf")
-        val uri = Uri.parse("android.resource://${BuildConfig.APPLICATION_ID}/${R.font.roboto_bold}")
-        Timber.d("Uri: ${uri.toString()}")
-
-        val id = R.font.roboto_bold
-
-        Timber.d(resources.getResourceEntryName(id))
-
 
         earlyStreakClient.subscribe(this)
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk) {

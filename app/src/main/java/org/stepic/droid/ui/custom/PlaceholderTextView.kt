@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
-import android.graphics.Typeface
 import android.support.annotation.StringRes
 import android.support.v4.content.res.ResourcesCompat
 import android.text.Spannable
@@ -68,8 +67,8 @@ constructor(
 
         val result = SpannableString(text)
 
-        val mediumTextTypeface = Typeface.create(ResourcesCompat.getFont(context, R.font.roboto_medium), Typeface.NORMAL)
-        val lightTextTypeface = Typeface.create(ResourcesCompat.getFont(context, R.font.roboto_light), Typeface.NORMAL)
+        val mediumTextTypeface = ResourcesCompat.getFont(context, R.font.roboto_medium)
+        val lightTextTypeface = ResourcesCompat.getFont(context, R.font.roboto_light)
 
         result.setSpan(TypefaceSpanCompat(mediumTextTypeface), 0, lengthOfFirstWord, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         result.setSpan(TypefaceSpanCompat(lightTextTypeface), lengthOfFirstWord, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

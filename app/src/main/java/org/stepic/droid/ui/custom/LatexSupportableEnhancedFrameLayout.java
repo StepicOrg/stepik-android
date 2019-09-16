@@ -140,7 +140,7 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private void setTextWebView(CharSequence text, boolean wantLaTeX, @FontRes Integer fontResId) {
         textView.setVisibility(GONE);
         webView.setVisibility(VISIBLE);
-        webView.setText(text, wantLaTeX, fontResId != null ? formFontUrl(fontResId) : null);
+        webView.setText(text, wantLaTeX, fontResId != null ? assetUrl + fontsDirectory + getResources().getResourceEntryName(fontResId) + fontFormat : null);
     }
 
     private void setTextWebViewOnlyForLaTeX(String text) {
@@ -180,14 +180,5 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
                 textView.setTypeface(ResourcesCompat.getFont(getContext(), fontResId));
             }
         }
-    }
-
-    private String formFontUrl(@FontRes Integer fontResId) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(assetUrl);
-        sb.append(fontsDirectory);
-        sb.append(getResources().getResourceEntryName(fontResId));
-        sb.append(fontFormat);
-        return sb.toString();
     }
 }
