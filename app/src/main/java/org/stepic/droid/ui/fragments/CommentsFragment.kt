@@ -20,30 +20,24 @@ import kotlinx.android.synthetic.main.error_no_connection.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.CommentManager
 import org.stepic.droid.core.commentcount.contract.CommentCountPoster
-import org.stepic.droid.core.comments.contract.CommentsListener
 import org.stepik.android.model.user.User
 import org.stepic.droid.model.comments.*
 import org.stepic.droid.ui.adapters.CommentsAdapter
 import org.stepic.droid.ui.util.ContextMenuRecyclerView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.*
-import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
-import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.injection.step.StepDiscussionBus
 import java.util.*
 import javax.inject.Inject
 
 @SuppressFBWarnings(value = ["RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE"], justification = "false positive: commentManager is not null")
 class CommentsFragment : FragmentBase(),
-        SwipeRefreshLayout.OnRefreshListener,
-        CommentsListener,
-        ComposeCommentDialogFragment.Callback {
+        SwipeRefreshLayout.OnRefreshListener {
     companion object {
         private val replyMenuId = 100
         private val likeMenuId = 101
@@ -72,9 +66,6 @@ class CommentsFragment : FragmentBase(),
 
     var needInsertOrUpdateLate: Comment? = null
     val links = ArrayList<String>()
-
-    @Inject
-    lateinit var commentsClient: Client<CommentsListener>
 
     @Inject
     lateinit var commentCountPoster: CommentCountPoster
@@ -119,16 +110,6 @@ class CommentsFragment : FragmentBase(),
         initToolbar()
         initSwipeRefreshLayout()
         initRecyclerView()
-        initAddCommentButton()
-
-        commentsClient.subscribe(this)
-
-
-        //open form requested from caller
-        if (needInstaOpen) {
-            showCommentComposeDialog()
-            needInstaOpen = false
-        }
 
         showEmptyProgressOnCenter()
         if (commentManager.isEmpty()) {
@@ -143,29 +124,6 @@ class CommentsFragment : FragmentBase(),
 
     private fun initSwipeRefreshLayout() {
         swipeRefreshLayoutComments.setOnRefreshListener(this)
-    }
-
-    private fun initAddCommentButton() {
-        addNewCommentButton.setOnClickListener {
-            showCommentComposeDialog()
-        }
-    }
-
-    private fun showCommentComposeDialog(parent: Long? = null, comment: Comment? = null) {
-        if (sharedPreferenceHelper.authResponseFromStore != null) {
-            val supportFragmentManager = activity
-                ?.supportFragmentManager
-                ?.takeIf { it.findFragmentByTag(ComposeCommentDialogFragment.TAG) == null }
-                ?: return
-
-            analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
-
-            ComposeCommentDialogFragment
-                .newInstance(target = stepId, parent = parent, comment = comment)
-                .show(supportFragmentManager, ComposeCommentDialogFragment.TAG)
-        } else {
-            snackbar(messageRes = R.string.anonymous_write_comment)
-        }
     }
 
     private fun initRecyclerView() {
@@ -320,8 +278,6 @@ class CommentsFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
-        commentsClient.unsubscribe(this)
-
         swipeRefreshLayoutComments.setOnRefreshListener(null)
         addNewCommentButton.setOnClickListener(null)
         unregisterForContextMenu(recyclerViewComments)
@@ -393,46 +349,6 @@ class CommentsFragment : FragmentBase(),
         return super.onOptionsItemSelected(item)
     }
 
-
-    private fun onConnectionProblemBase() {
-        cancelSwipeRefresh()
-        if (commentManager.isEmpty()) {
-            showInternetConnectionProblem()
-        } else {
-            Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
-            commentManager.clearAllLoadings()
-            commentAdapter.notifyDataSetChanged()
-        }
-    }
-
-    //CommentsListener
-
-    override fun onCommentsLoaded() {
-        cancelSwipeRefresh()
-        showEmptyProgressOnCenter(false)
-        showInternetConnectionProblem(false)
-        if (!commentManager.isEmpty()) {
-            showEmptyState(false)
-        }
-        val needInsertLocal: Comment? = needInsertOrUpdateLate
-        if (needInsertLocal != null &&
-                (!commentManager.isCommentCached(needInsertLocal.id) || (needInsertLocal.parent != null && !commentManager.isCommentCached(needInsertLocal.parent)))) {
-            val longArr = listOfNotNull(needInsertLocal.id, needInsertLocal.parent).toLongArray()
-            commentManager.loadCommentsByIds(longArr)
-        } else {
-            //we have only our comment.
-            if (needInsertLocal != null) {
-                commentManager.updateOnlyCommentsIfCachedSilent(listOf(needInsertLocal))
-            }
-            needInsertOrUpdateLate = null
-            commentAdapter.notifyDataSetChanged()
-        }
-    }
-
-    override fun onCommentsConnectionProblem() {
-        onConnectionProblemBase()
-    }
-
     //     end DeleteCommentDialogFragment.DialogCallback
 
     private fun handleCommentCountWasUpdated(comment: Comment) {
@@ -442,12 +358,5 @@ class CommentsFragment : FragmentBase(),
 
         commentCountPoster.updateCommentCount()//say to listeners, that count is updated
         stepDiscussionSubject.onNext(stepId)
-    }
-
-    override fun onCommentReplaced(commentsData: CommentsData, isCommentCreated: Boolean) {
-        commentsData
-            .comments
-            .firstOrNull()
-            ?.let(::handleCommentCountWasUpdated)
     }
 }
