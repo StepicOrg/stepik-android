@@ -14,7 +14,7 @@ object DateMapper {
             context.getString(R.string.relative_date_pattern, mapMinutesToRelativeDate(context, diff))
         }
     }
-    
+
     private fun mapMinutesToRelativeDate(context: Context, diffMinutes: Long): String {
         var diff = diffMinutes
 

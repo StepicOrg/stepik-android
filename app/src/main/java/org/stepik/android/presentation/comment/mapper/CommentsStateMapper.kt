@@ -6,8 +6,6 @@ import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepic.droid.util.filterNot
 import org.stepik.android.domain.base.PaginationDirection
-import org.stepik.android.domain.discussion_proxy.mapper.getOrdering
-import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -92,10 +90,10 @@ constructor() {
         val newItems =
             when (direction) {
                 PaginationDirection.UP ->
-                   state.commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
+                    state.commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
 
                 PaginationDirection.DOWN ->
-                   state.commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals)
+                    state.commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals)
             }
 
         return state.copy(commentsState = state.commentsState.copy(commentItems = newItems))
@@ -340,7 +338,7 @@ constructor() {
                         commentItems = commentItems.mutate { add(rawIndex, commentDataItem) },
                         commentDataItems = commentDataItems.mutate { add(index, commentDataItem) }
                     )
-               }
+                }
         )
     }
 }
