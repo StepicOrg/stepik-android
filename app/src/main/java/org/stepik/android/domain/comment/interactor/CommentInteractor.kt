@@ -1,7 +1,6 @@
 package org.stepik.android.domain.comment.interactor
 
 import io.reactivex.Single
-import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.mapper.CommentsDataMapper
@@ -24,8 +23,7 @@ constructor(
     private val commentRepository: CommentRepository,
     private val voteRepository: VoteRepository,
 
-    private val commentsDataMapper: CommentsDataMapper,
-    private val userPreferences: UserPreferences
+    private val commentsDataMapper: CommentsDataMapper
 ) {
     companion object {
         private const val PAGE_SIZE = 10
@@ -59,7 +57,7 @@ constructor(
 
                 commentRepository
                     .getComments(*(commentIds - cachedCommentIds).toLongArray())
-                    .map { commentsDataMapper.mapToCommentDataItems(commentIds.toLongArray(), it, userPreferences.userId, discussionId, cachedCommentItems) }
+                    .map { commentsDataMapper.mapToCommentDataItems(commentIds.toLongArray(), it, discussionId, cachedCommentItems) }
                     .map { comments ->
                         PagedList(comments, hasPrev = start > 0, hasNext = end < orderedCommentIds.size)
                     }
@@ -114,7 +112,7 @@ constructor(
 
         return commentRepository
             .getComments(*slicedCommentIds)
-            .map { commentsDataMapper.mapToCommentDataItems(slicedCommentIds, it, userPreferences.userId) }
+            .map { commentsDataMapper.mapToCommentDataItems(slicedCommentIds, it) }
             .map { comments ->
                 PagedList(comments, hasPrev = start > 0, hasNext = end < commentIds.size)
             }
@@ -128,7 +126,7 @@ constructor(
                     .getComments(commentId)
                     .map { commentsData ->
                         commentsDataMapper
-                            .mapToCommentDataItems(longArrayOf(commentId), commentsData, userPreferences.userId)
+                            .mapToCommentDataItems(longArrayOf(commentId), commentsData)
                             .first()
                     }
             }
@@ -136,15 +134,11 @@ constructor(
     /**
      * Edit comments
      */
-    fun mapCommentsDataToCommentItem(commentsData: CommentsData): Single<CommentItem.Data> =
-        Single
-            .fromCallable {
-                commentsDataMapper
-                    .mapToCommentDataItems(
-                        commentIds = commentsData.comments.first().let { longArrayOf(it.id) },
-                        commentsData = commentsData,
-                        currentUserId = userPreferences.userId
-                    )
-                    .first()
-            }
+    fun mapCommentsDataToCommentItem(commentsData: CommentsData): CommentItem.Data? =
+        commentsDataMapper
+            .mapToCommentDataItems(
+                commentIds = commentsData.comments.firstOrNull()?.let { longArrayOf(it.id) } ?: longArrayOf(),
+                commentsData = commentsData
+            )
+            .firstOrNull()
 }

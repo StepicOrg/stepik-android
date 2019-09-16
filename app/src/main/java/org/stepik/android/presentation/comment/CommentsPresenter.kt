@@ -5,7 +5,6 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
@@ -180,7 +179,7 @@ constructor(
      */
     fun onChangeVote(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
         if (commentDataItem.voteStatus !is CommentItem.Data.VoteStatus.Resolved ||
-            commentDataItem.isCurrentUser) {
+            commentDataItem.comment.actions?.vote != true) {
             return
         }
 
@@ -208,33 +207,25 @@ constructor(
      * Edit logic
      */
     fun onCommentCreated(commentsData: CommentsData) {
-        compositeDisposable += commentInteractor
+        val commentDataItem = commentInteractor
             .mapCommentsDataToCommentItem(commentsData)
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onSuccess = { commentDataItem ->
-                    state =
-                        if (commentDataItem.comment.parent != null) {
-                            commentsStateMapper.insertCommentReply(state, commentDataItem)
-                        } else {
-                            commentsStateMapper.insertComment(state, commentDataItem)
-                        }
-                    view?.focusDiscussion(commentDataItem.id)
-                },
-                onError = emptyOnErrorStub
-            )
+            ?: return
+
+        state =
+            if (commentDataItem.comment.parent != null) {
+                commentsStateMapper.insertCommentReply(state, commentDataItem)
+            } else {
+                commentsStateMapper.insertComment(state, commentDataItem)
+            }
+        view?.focusDiscussion(commentDataItem.id)
     }
 
     fun onCommentUpdated(commentsData: CommentsData) {
-        compositeDisposable += commentInteractor
+        val commentDataItem = commentInteractor
             .mapCommentsDataToCommentItem(commentsData)
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
-                onError = emptyOnErrorStub
-            )
+            ?: return
+
+        state = commentsStateMapper.mapFromVotePendingToSuccess(state, commentDataItem)
     }
 
     fun removeComment(commentId: Long) {

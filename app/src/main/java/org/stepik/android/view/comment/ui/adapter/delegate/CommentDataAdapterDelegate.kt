@@ -116,7 +116,9 @@ class CommentDataAdapterDelegate(
 
             commentText.setPlainOrLaTeXTextColored(data.comment.text, R.color.new_accent_color)
 
-            commentMenu.changeVisibility(data.isCurrentUser)
+            commentMenu.changeVisibility(
+                needShow = data.comment.actions?.delete == true || data.comment.actions?.edit == true)
+
             commentTagsAdapter.items = listOfNotNull(
                 CommentTag.COURSE_TEAM.takeIf { data.comment.userRole == UserRole.TEACHER },
                 CommentTag.PINNED.takeIf { data.comment.isPinned }
@@ -130,8 +132,8 @@ class CommentDataAdapterDelegate(
             commentLike.text = data.comment.epicCount.toString()
             commentDislike.text = data.comment.abuseCount.toString()
 
-            commentLike.isEnabled = !data.isCurrentUser
-            commentDislike.isEnabled = !data.isCurrentUser
+            commentLike.isEnabled = data.comment.actions?.vote == true
+            commentDislike.isEnabled = data.comment.actions?.vote == true
 
             if (data.voteStatus is CommentItem.Data.VoteStatus.Resolved) {
                 commentLike.alpha =
@@ -166,6 +168,14 @@ class CommentDataAdapterDelegate(
                     val title = SpannableString(menuItem.title)
                     title.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.new_red_color)), 0, title.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                     menuItem.title = title
+                    menuItem.isVisible = commentDataItem.comment.actions?.delete == true
+                }
+
+            popupMenu
+                .menu
+                .findItem(R.id.comment_item_remove)
+                ?.let { menuItem ->
+                    menuItem.isVisible = commentDataItem.comment.actions?.edit == true
                 }
 
             popupMenu
