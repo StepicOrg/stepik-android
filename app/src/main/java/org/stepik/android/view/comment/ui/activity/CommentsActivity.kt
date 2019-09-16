@@ -119,6 +119,10 @@ class CommentsActivity :
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
                     showRemoveCommentDialog(commentDataItem.id)
                 }
+
+                override fun onProfileClicked(commentDataItem: CommentItem.Data) {
+                    screenManager.openProfile(this@CommentsActivity, commentDataItem.comment.user ?: return)
+                }
             }
         )
         commentsAdapter += CommentLoadMoreRepliesAdapterDelegate(commentsPresenter::onLoadMoreReplies)

@@ -77,6 +77,9 @@ class CommentDataAdapterDelegate(
             commentDislike.setOnClickListener(this)
             commentMenu.setOnClickListener(this)
 
+            commentUserIcon.setOnClickListener(this)
+            commentUserIcon.setOnClickListener(this)
+
             commentLike.setCompoundDrawables(start = R.drawable.ic_comment_like)
             commentDislike.setCompoundDrawables(start = R.drawable.ic_comment_dislike)
 
@@ -209,11 +212,17 @@ class CommentDataAdapterDelegate(
 
                 R.id.commentMenu ->
                     showItemMenu(view)
+
+                R.id.commentUserIcon,
+                R.id.commentUserName ->
+                    actionListener.onProfileClicked(data)
             }
         }
     }
 
     interface ActionListener {
+        fun onProfileClicked(commentDataItem: CommentItem.Data)
+
         fun onReplyClicked(parentCommentId: Long)
         fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value)
 

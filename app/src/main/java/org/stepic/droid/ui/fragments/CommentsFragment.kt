@@ -196,39 +196,6 @@ class CommentsFragment : FragmentBase(),
         }
     }
 
-    override fun onContextItemSelected(item: MenuItem?): Boolean {
-        val info = item?.menuInfo as ContextMenuRecyclerView.RecyclerViewContextMenuInfo
-        when (item.itemId) {
-            userMenuId -> {
-                openUserProfile(info.position)
-                return true
-            }
-
-            in linksStartIndexId until linksStartIndexId + firstLinkShift -> {
-                val index = item.itemId
-                clickLinkInComment(links[index - linksStartIndexId])
-                return true
-            }
-
-            else -> return super.onContextItemSelected(item)
-        }
-    }
-
-    private fun openUserProfile(position: Int) {
-        if (position < 0 && position >= commentManager.getSize()) return
-
-        val commentUser = commentManager.getItemWithNeedUpdatingInfoByPosition(position).comment.user ?: return
-        val userId = commentManager.getUserById(commentUser)?.id
-        if (userId != null) {
-            analytic.reportEvent(Analytic.Profile.CLICK_USER_IN_COMMENT)
-            screenManager.openProfile(activity, userId.toLong())
-        }
-    }
-
-    private fun clickLinkInComment(link: String) {
-        screenManager.openInWeb(activity, link)
-    }
-
     override fun onStop() {
         super.onStop()
         cancelSwipeRefresh()
