@@ -143,9 +143,6 @@
     <string name="move_data_explanation">Все ранее загруженные видео будут перенесены, новые видео
         будут сохраняться в выбранное место. Операция может занять несколько минут. Вы уверены?
     </string>
-    <string name="like_label">Нравится</string>
-    <string name="unlike_label">Больше не нравится</string>
-    <string name="report_label">Пожаловаться</string>
     <string name="done">Готово</string>
     <string name="moving">Перенос</string>
     <string name="fail_to_parse">К сожалению, курс не найден</string>
@@ -164,7 +161,6 @@
     <string name="most_liked_discussion">Самые популярные</string>
     <string name="most_active_discussion">Самые обсуждаемые</string>
     <string name="recent_activity_discussion">Свежие обновления</string>
-    <string name="copy_text_label">Скопировать текст</string>
     <string name="calendar_title">Календарь</string>
     <string name="calendar_detail">У заданий в данном курсе есть крайний срок сдачи. Для того, чтобы
         пройти задание вовремя и получить сертификат, мы рекомендуем добавить в календарь крайние

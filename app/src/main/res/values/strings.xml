@@ -169,9 +169,6 @@
         you
         sure?
     </string>
-    <string name="like_label">Like</string>
-    <string name="unlike_label">Unlike</string>
-    <string name="report_label">Report</string>
     <string name="done">Done</string>
     <string name="moving">Moving</string>
     <string name="fail_to_parse">Sorry, the course can not be found</string>
@@ -191,7 +188,6 @@
     <string name="most_liked_discussion">Most liked</string>
     <string name="most_active_discussion">Most active</string>
     <string name="recent_activity_discussion">Recent activity</string>
-    <string name="copy_text_label">Copy text</string>
     <string name="calendar_title">Calendar</string>
     <string name="calendar_detail">Modules in this course have deadlines. To complete this course
         and get a certificate, add deadlines to your calendar and get a reminder 2 days before the

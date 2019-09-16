@@ -6,7 +6,7 @@ import org.stepic.droid.di.streak.StreakModule
 import org.stepik.android.view.injection.feedback.FeedbackDataModule
 
 @StepScope
-@Subcomponent(modules = [StreakModule::class, CommentCountModule::class, FeedbackDataModule::class])
+@Subcomponent(modules = [StreakModule::class, FeedbackDataModule::class])
 interface StepComponent {
     @Subcomponent.Builder
     interface Builder {
