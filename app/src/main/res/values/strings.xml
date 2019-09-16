@@ -452,7 +452,7 @@
         <item quantity="one">%d course</item>
         <item quantity="other">%d courses</item>
     </plurals>
-    <string name="course_current_progress">Current progress: %d%%</string>
+    <string name="course_current_progress">Current progress: %d/%d</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
 
     <string name="notification_badge_placeholder" translatable="false">99+</string>

@@ -24,11 +24,11 @@ import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.doOnPreDraw
-import org.stepic.droid.ui.util.PopupHelper
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -165,13 +165,25 @@ class CourseHeaderDelegate(
             courseRating.progress = courseHeaderData.review.roundToInt()
             courseRating.changeVisibility(courseHeaderData.review > 0)
 
-            val isNeedShowProgress = courseHeaderData.progress != null
+            val isNeedShowProgress = courseHeaderData.progress != null && courseHeaderData.progress.cost > 0
             courseProgress.changeVisibility(isNeedShowProgress)
             courseProgressText.changeVisibility(isNeedShowProgress)
 
-            if (courseHeaderData.progress != null) { // kotlin can't smart cast with isNeedShowProgress
-                courseProgress.progress = courseHeaderData.progress / 100f
-                courseProgressText.text = getString(R.string.percent_symbol, courseHeaderData.progress)
+            if (isNeedShowProgress) {
+                val score = courseHeaderData
+                    .progress
+                    ?.score
+                    ?.toFloatOrNull()
+                    ?.toLong()
+                    ?: 0L
+
+                val cost = courseHeaderData
+                    .progress
+                    ?.cost
+                    ?: 0L
+
+                courseProgress.progress = (score * 100 / cost) / 100f
+                courseProgressText.text = getString(R.string.course_content_text_progress, score, cost)
             }
 
             courseLearnersCount.text = courseHeaderData.learnersCount.toString()
