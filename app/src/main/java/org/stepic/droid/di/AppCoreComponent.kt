@@ -21,7 +21,6 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.network.NetworkModule
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
-import org.stepic.droid.di.routing.RoutingComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
@@ -154,8 +153,6 @@ interface AppCoreComponent {
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
-
-    fun routingComponentBuilder(): RoutingComponent.Builder
 
     fun catalogComponentBuilder(): CatalogComponent.Builder
 

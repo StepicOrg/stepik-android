@@ -4,8 +4,6 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.core.comments.contract.CommentsPoster
-import org.stepic.droid.di.comment.CommentsScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.CommentAdapterItem
@@ -19,12 +17,10 @@ import org.stepik.android.model.user.User
 import java.util.*
 import javax.inject.Inject
 
-@CommentsScope
 class CommentManager
 @Inject
 constructor(
     private val commentInteractor: CommentInteractor,
-    private val commentsPoster: CommentsPoster,
     private val sharedPrefs: SharedPreferenceHelper,
 
     @BackgroundScheduler
@@ -57,7 +53,6 @@ constructor(
             val sizeNeedLoad = Math.min((sumOfCachedParent + maxOfParentInQuery), orderOfComments.size)
             if (sizeNeedLoad == sumOfCachedParent || sizeNeedLoad == 0) {
                 // we don't need to load comments
-                commentsPoster.commentsLoaded()
                 return
             }
 
@@ -75,7 +70,6 @@ constructor(
 
             val sizeNeedLoad = Math.min(parentCommentReplies.size, countOfCachedReplies + maxOfRepliesInQuery)
             if (sizeNeedLoad == countOfCachedReplies || sizeNeedLoad == 0) {
-                commentsPoster.commentsLoaded()
                 return
             }
 
@@ -103,7 +97,6 @@ constructor(
         } else {
             commentIdIsLoading.clear()
         }
-        commentsPoster.commentsLoaded()
     }
 
     fun updateOnlyCommentsIfCachedSilent(comments: List<Comment>?) {
@@ -166,7 +159,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { addComments(it, fromReply) },
-                onError = { commentsPoster.connectionProblem() }
+                onError = {  }
             )
     }
 
@@ -245,12 +238,6 @@ constructor(
         sumOfCachedParent = 0
     }
 
-    fun isCommentCached(commentId: Long?): Boolean = if (commentId == null) {
-        false
-    } else {
-        cachedCommentsSetMap.containsKey(commentId)
-    }
-
     fun getVoteByVoteId(voteId: String): Vote? = voteMap[voteId]
 
     fun resetAll(dP: DiscussionProxy? = null) {
@@ -272,14 +259,4 @@ constructor(
         commentIdIsLoading.clear()
         voteMap.clear()
     }
-
-    fun clearAllLoadings() {
-        commentIdIsLoading.clear()
-        repliesIdIsLoading.clear()
-
-        compositeDisposable.clear()
-    }
-
-    fun isDiscussionProxyNull() = (discussionProxyId == null)
-
 }
