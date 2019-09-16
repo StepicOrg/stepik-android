@@ -58,6 +58,10 @@ constructor(
             return
         }
 
+        val discussionOrder = (state as? CommentsView.State.DiscussionLoaded)
+            ?.discussionOrder
+            ?: DiscussionOrder.LAST_DISCUSSION
+
         compositeDisposable.clear()
         state = CommentsView.State.Loading
         compositeDisposable += discussionProxyInteractor
@@ -65,7 +69,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { fetchComments(it, DiscussionOrder.LAST_DISCUSSION, discussionId) },
+                onSuccess = { fetchComments(it, discussionOrder, discussionId) },
                 onError = { state = CommentsView.State.NetworkError }
             )
     }
