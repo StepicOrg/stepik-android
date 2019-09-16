@@ -29,10 +29,6 @@ constructor(
         private const val PAGE_SIZE = 10
     }
 
-    fun getComments(vararg commentIds: Long): Single<CommentsData> =
-        commentRepository
-            .getComments(*commentIds)
-
     fun getComments(
         discussionProxy: DiscussionProxy,
         discussionOrder: DiscussionOrder,
