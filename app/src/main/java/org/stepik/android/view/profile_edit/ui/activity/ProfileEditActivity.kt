@@ -137,11 +137,11 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
         viewStateDelegate.switchState(state)
         if (state is ProfileEditView.State.ProfileLoaded) {
             profile = state.profileWrapper.profile
-            state.profileWrapper.primaryEmailAddress?.email?.let {
-                profileEditAdapter.items = navigationItems.mutate {
+            profileEditAdapter.items = state.profileWrapper.primaryEmailAddress?.email?.let {
+                navigationItems.mutate {
                     add(1, ProfileEditItem(ProfileEditItem.Type.EMAIL, getString(R.string.email), it))
                 }
-            }
+            } ?: navigationItems
         }
     }
 

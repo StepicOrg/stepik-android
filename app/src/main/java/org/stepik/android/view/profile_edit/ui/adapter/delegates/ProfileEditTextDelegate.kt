@@ -28,9 +28,7 @@ class ProfileEditTextDelegate(
         override fun onBind(data: ProfileEditItem) {
             title.text = data.title
             subtitle.text = data.subtitle
-            if (itemData?.type == ProfileEditItem.Type.EMAIL) {
-                itemView.isEnabled = false
-            }
+            itemView.isEnabled = itemData?.type != ProfileEditItem.Type.EMAIL
         }
     }
 }
