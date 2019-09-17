@@ -599,6 +599,7 @@
     <string name="course_content_timeline_deadline">Дедлайн</string>
 
     <string name="course_content_section_exam_description">Это экзаменационный модуль, который доступен только в веб версии. Нажмите, чтобы открыть его в браузере.</string>
+    <string name="course_content_section_requirements">Для открытия этого модуля необходимо набрать %s в модуле %s</string>
 
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
