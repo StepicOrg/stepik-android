@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.empty_login.*
@@ -34,7 +36,6 @@ import org.stepic.droid.features.achievements.presenters.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -48,6 +49,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.argument
+import org.stepic.droid.util.copyTextToClipboard
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import timber.log.Timber
@@ -102,10 +104,10 @@ class   ProfileFragment : FragmentBase(),
 
     override fun injectComponent() {
         App
-                .component()
-                .profileComponentBuilder()
-                .build()
-                .inject(this)
+            .component()
+            .profileComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -118,6 +120,8 @@ class   ProfileFragment : FragmentBase(),
         initToolbar()
         initTimezone()
 
+        // app:fontFamily doesn't work on this view
+        notificationStreakSwitch.typeface = ResourcesCompat.getFont(requireContext(), R.font.roboto_light)
         profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
         profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(requireActivity(), profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
@@ -307,6 +311,7 @@ class   ProfileFragment : FragmentBase(),
             profileSettingsRecyclerView.visibility = View.VISIBLE
 
             notificationIntervalChooserContainer.visibility = View.VISIBLE
+            setupUserId()
         } else {
             //show user info expanded for strangers
             if (!shortBioArrowImageView.isExpanded()) {
@@ -378,7 +383,7 @@ class   ProfileFragment : FragmentBase(),
                 shortBioSecondText.visibility = View.GONE
             } else {
                 shortBioSecondText.setPlainOrLaTeXTextWithCustomFontColored(
-                        information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color, false)
+                        information, R.font.roboto_light, R.color.new_accent_color, false)
                 shortBioSecondText.visibility = View.VISIBLE
             }
         }
@@ -489,6 +494,17 @@ class   ProfileFragment : FragmentBase(),
         maxStreakSuffix.visibility = visibility
         maxStreakValue.visibility = visibility
         streakIndicator.visibility = visibility
+    }
+
+    private fun setupUserId() {
+        profileIdSeparator.visibility = View.VISIBLE
+        profileId.visibility = View.VISIBLE
+        profileId.text = getString(R.string.profile_user_id, userId)
+        profileId.setOnLongClickListener {
+            val textToCopy = (it as TextView).text.toString()
+            requireContext().copyTextToClipboard(textToCopy = textToCopy, toastMessage = getString(R.string.copied_to_clipboard_toast))
+            true
+        }
     }
 
 }

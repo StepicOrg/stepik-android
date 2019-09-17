@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.stepic.droid.code.ui.CodeEditor
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<org.stepic.droid.code.ui.CodeEditor xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/codeEdit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,4 +15,4 @@
     android:paddingBottom="8dp"
     android:lineSpacingExtra="4dp"
 
-    fontPath="fonts/PT-Mono.ttf" />
+    app:fontFamily="@font/pt_mono" />

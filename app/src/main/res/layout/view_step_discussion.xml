@@ -9,15 +9,21 @@
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/stepDiscussionsCount"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:minHeight="48dp"
+        android:layout_height="48dp"
 
-        android:gravity="center"
+        android:gravity="start|center_vertical"
         android:layout_gravity="center"
 
-        android:textColor="@color/new_accent_color"
+        android:textColor="@color/color_step_discussion"
         android:textSize="16sp"
         android:drawablePadding="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+
+        android:ellipsize="end"
+        android:maxLines="2"
+
+        android:duplicateParentState="true"
 
         tools:drawableStart="@drawable/ic_step_discussion"
         tools:text="Открыть комментарии (1)" />

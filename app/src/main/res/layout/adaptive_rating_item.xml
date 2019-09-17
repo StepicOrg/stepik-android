@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
     android:background="@drawable/adaptive_rating_item_background">
 
@@ -34,7 +34,7 @@
         android:gravity="center"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        fontPath="fonts/Roboto-Bold.ttf"
+        app:fontFamily="@font/roboto_bold"
         tools:ignore="MissingPrefix" />
 
     <TextView
@@ -45,7 +45,7 @@
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         tools:ignore="MissingPrefix" />
 
     <TextView

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:textColor="@color/new_accent_color"
         android:textSize="12sp"
 
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         tools:ignore="missingPrefix" />
 
 </LinearLayout>

@@ -99,9 +99,9 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer, NextMovea
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions) {
             screenManager
-                .openComments(activity, stepWrapper.step.discussionProxy, stepWrapper.step.id, stepWrapper.step.discussionsCount == 0)
+                .openComments(activity, stepWrapper.step.discussionProxy, stepWrapper.step.id, null, stepWrapper.step.discussionsCount == 0)
         }
-        stepDiscussionsDelegate.setDiscussionsCount(stepWrapper.step.discussionsCount)
+        stepDiscussionsDelegate.setDiscussions(stepWrapper.step.discussionProxy, stepWrapper.step.discussionsCount)
 
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
         initStepContentFragment()
@@ -191,7 +191,7 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer, NextMovea
             val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block
 
             stepWrapper = state.stepWrapper
-            stepDiscussionsDelegate.setDiscussionsCount(state.stepWrapper.step.discussionsCount)
+            stepDiscussionsDelegate.setDiscussions(state.stepWrapper.step.discussionProxy, state.stepWrapper.step.discussionsCount)
             when (stepWrapper.step.status) {
                 Step.Status.READY ->
                     setStepQuizFragment(isNeedReloadQuiz)

@@ -30,6 +30,8 @@ import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
+import org.stepik.android.remote.vote.model.VoteRequest;
+import org.stepik.android.remote.vote.model.VoteResponse;
 
 import java.util.List;
 
@@ -209,19 +211,19 @@ public interface StepicRestLoggedService {
     Single<DiscussionProxyResponse> getDiscussionProxies(@Query("ids[]") String[] ids);
 
     @GET("api/comments")
-    Call<CommentResponse> getComments(@Query("ids[]") long[] ids);
-
-    @GET("api/comments")
-    Single<CommentResponse> getCommentsReactive(@Query("ids[]") long[] ids);
+    Single<CommentResponse> getComments(@Query("ids[]") long[] ids);
 
     @POST("api/comments")
-    Call<CommentResponse> postComment(@Body CommentRequest comment);
+    Single<CommentResponse> createComment(@Body CommentRequest request);
+
+    @PUT("api/comments/{commentId}")
+    Single<CommentResponse> saveComment(@Path("commentId") long commentId, @Body CommentRequest request);
+
+    @DELETE("api/comments/{commentId}")
+    Completable removeComment(@Path("commentId") long commentId);
 
     @PUT("api/votes/{id}")
-    Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
-
-    @DELETE("api/comments/{id}")
-    Call<CommentResponse> deleteComment(@Path("id") long commentId);
+    Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 
     @GET("api/certificates")
     Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);

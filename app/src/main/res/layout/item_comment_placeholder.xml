@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/commentUserIcon"
+        android:layout_width="@dimen/comment_user_image_size"
+        android:layout_height="@dimen/comment_user_image_size"
+        android:layout_marginStart="@dimen/comment_item_margin"
+        android:layout_marginLeft="@dimen/comment_item_margin"
+        android:layout_marginTop="@dimen/comment_item_margin"
+        android:layout_marginBottom="@dimen/comment_item_margin"
+        android:contentDescription="@null"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/commentUserName"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="@dimen/comment_item_margin"
+        android:layout_marginLeft="@dimen/comment_item_margin"
+        android:layout_marginEnd="@dimen/comment_item_margin"
+        android:layout_marginRight="@dimen/comment_item_margin"
+        app:layout_constraintBottom_toTopOf="@id/commentText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@+id/commentUserIcon"
+        app:layout_constraintTop_toTopOf="@+id/commentUserIcon"
+        app:layout_constraintWidth_max="320dp"
+
+        tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/commentText"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_marginStart="@dimen/comment_item_margin"
+        android:layout_marginLeft="@dimen/comment_item_margin"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="@dimen/comment_item_margin"
+        android:layout_marginRight="@dimen/comment_item_margin"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="@+id/commentUserIcon"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toEndOf="@+id/commentUserIcon"
+
+        app:layout_constraintTop_toBottomOf="@+id/commentUserName"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.4"
+        app:layout_constraintWidth_max="180dp" />
+
+</android.support.constraint.ConstraintLayout>

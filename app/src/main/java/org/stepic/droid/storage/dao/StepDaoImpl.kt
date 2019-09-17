@@ -54,7 +54,12 @@ constructor(
             discussionsCount = cursor.getInt(DbStructureStep.Column.DISCUSSION_COUNT),
             discussionProxy = cursor.getString(DbStructureStep.Column.DISCUSSION_PROXY),
 
-            actions = Actions(false, false, null, review, null)
+            actions = Actions(
+                vote = false, edit = false, delete = false, pin = false,
+                testSection = null,
+                doReview = review,
+                editInstructions = null
+            )
         )
     }
 

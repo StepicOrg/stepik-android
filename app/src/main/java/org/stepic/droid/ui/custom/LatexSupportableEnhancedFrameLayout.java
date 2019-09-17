@@ -5,8 +5,10 @@ import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.FontRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.support.v4.content.res.ResourcesCompat;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -24,11 +26,11 @@ import org.stepic.droid.util.resolvers.text.TextResult;
 
 import javax.inject.Inject;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils;
-
 @SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
 public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
     private final static String assetUrl = "file:///android_asset/";
+    private final static String fontsDirectory = "fonts/";
+    private final static String fontFormat = ".ttf";
     private TextView textView;
     private LatexSupportableWebView webView;
 
@@ -135,10 +137,10 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         return webView;
     }
 
-    private void setTextWebView(CharSequence text, boolean wantLaTeX, String fontPath) {
+    private void setTextWebView(CharSequence text, boolean wantLaTeX, @FontRes Integer fontResId) {
         textView.setVisibility(GONE);
         webView.setVisibility(VISIBLE);
-        webView.setText(text, wantLaTeX, fontPath != null ? assetUrl + fontPath : null);
+        webView.setText(text, wantLaTeX, fontResId != null ? assetUrl + fontsDirectory + getResources().getResourceEntryName(fontResId) + fontFormat : null);
     }
 
     private void setTextWebViewOnlyForLaTeX(String text) {
@@ -163,19 +165,19 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         setPlainOrLaTeXTextWithCustomFontColored(text, null, colorRes, true);
     }
 
-    public void setPlainOrLaTeXTextWithCustomFontColored(String text, String fontPath, @ColorRes int colorRes, boolean allowLaTeX) {
+    public void setPlainOrLaTeXTextWithCustomFontColored(String text, @FontRes Integer fontResId, @ColorRes int colorRes, boolean allowLaTeX) {
         @ColorInt
         int colorArgb = ColorUtil.INSTANCE.getColorArgb(colorRes, getContext());
         TextResult textResult = textResolver.resolveStepText(text);
         if (textResult.isNeedWebView()) {
             String hexColor = String.format("#%06X", (0xFFFFFF & colorArgb));
             String coloredText = "<font color='" + hexColor + "'>" + textResult.getText() + "</font>";
-            setTextWebView(coloredText, allowLaTeX && HtmlHelper.hasLaTeX(text), fontPath);
+            setTextWebView(coloredText, allowLaTeX && HtmlHelper.hasLaTeX(text), fontResId);
         } else {
             textView.setTextColor(colorArgb);
             setPlainText(textResult.getText());
-            if (fontPath != null) {
-                CalligraphyUtils.applyFontToTextView(getContext(), textView, fontPath);
+            if (fontResId != null) {
+                textView.setTypeface(ResourcesCompat.getFont(getContext(), fontResId));
             }
         }
     }

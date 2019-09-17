@@ -32,7 +32,7 @@
         android:textColor="@color/new_accent_color"
         android:textSize="8sp"
 
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/reviewIcon"
@@ -54,7 +54,7 @@
         android:textColor="@color/new_accent_color"
         android:textSize="14sp"
 
-        fontPath="fonts/Roboto-Medium.ttf"
+        app:fontFamily="@font/roboto_light"
 
         app:layout_constraintTop_toBottomOf="@id/reviewDate"
         app:layout_constraintStart_toEndOf="@id/reviewIcon"
@@ -87,7 +87,7 @@
         android:textSize="14sp"
         android:lineSpacingExtra="4sp"
 
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         tools:ignore="missingPrefix"
 
         android:layout_marginTop="8dp"
@@ -122,7 +122,7 @@
         android:textSize="12sp"
         android:text="@string/course_reviews_compose_hint"
         android:textColor="@color/color_violet_1"
-        fontPath="fonts/Roboto-Medium.ttf"
+        app:fontFamily="@font/roboto_medium"
         tools:ignore="missingPrefix"
         />
 

@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2034,
-        name                 : '1.92',
+        code                 : 2036,
+        name                 : '1.93',
 
         minSdk               : 16,
         targetSdk            : 26,
@@ -41,7 +41,6 @@ ext.versions = [
         branch               : '2.+',
         installreferrer      : '1.0',
 
-        calligraphy          : '2.1.0',
         lottie               : '2.3.1',
 
         googleauth           : '16.0.1',
@@ -144,7 +143,6 @@ ext.libraries = [
         branch               : "io.branch.sdk.android:library:$versions.branch",
         installreferrer      : "com.android.installreferrer:installreferrer:$versions.installreferrer",
 
-        calligraphy          : "uk.co.chrisjenx:calligraphy:$versions.calligraphy",
         lottie               : "com.airbnb.android:lottie:$versions.lottie",
 
         googleauth           : "com.google.android.gms:play-services-auth:$versions.googleauth",

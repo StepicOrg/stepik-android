@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -18,7 +18,7 @@
                 android:id="@+id/adaptiveLevelDialogTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                fontPath="fonts/Roboto-Light.ttf"
+                app:fontFamily="@font/roboto_light"
                 android:textSize="96sp"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"
@@ -27,7 +27,7 @@
                 android:id="@+id/adaptiveLevelDialogText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                fontPath="fonts/Roboto-Light.ttf"
+                app:fontFamily="@font/roboto_light"
                 android:textSize="24sp"
                 android:text="@string/adaptive_exp_level_title"
                 android:layout_gravity="center"

@@ -2,6 +2,7 @@ package org.stepic.droid.ui.custom
 
 import android.content.Context
 import android.support.annotation.StringRes
+import android.support.v4.content.res.ResourcesCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.util.AttributeSet
@@ -10,13 +11,9 @@ import android.util.TypedValue
 import android.view.Gravity
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.fonts.FontType
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.TextUtil
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
-import javax.inject.Inject
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 
 class PlaceholderTextView
 @JvmOverloads
@@ -25,9 +22,6 @@ constructor(
         attrs: AttributeSet? = null,
         defStyleAttr: Int = 0
 ) : android.support.v7.widget.AppCompatTextView(context, attrs, defStyleAttr) {
-
-    @Inject
-    lateinit var fontsProvider: FontsProvider
 
     private val wordCache = LruCache<CharSequence, SpannableString>(4)
 
@@ -72,12 +66,12 @@ constructor(
         val lengthOfFirstWord = TextUtil.getIndexOfFirstSpace(text)
 
         val result = SpannableString(text)
-        val mediumText = CalligraphyTypefaceSpan(TypefaceUtils.load(context.assets, fontsProvider.provideFontPath(FontType.medium)))
-        val lightText = CalligraphyTypefaceSpan(TypefaceUtils.load(context.assets, fontsProvider.provideFontPath(FontType.light)))
 
+        val mediumTextTypeface = ResourcesCompat.getFont(context, R.font.roboto_medium)
+        val lightTextTypeface = ResourcesCompat.getFont(context, R.font.roboto_light)
 
-        result.setSpan(mediumText, 0, lengthOfFirstWord, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        result.setSpan(lightText, lengthOfFirstWord, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        result.setSpan(TypefaceSpanCompat(mediumTextTypeface), 0, lengthOfFirstWord, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        result.setSpan(TypefaceSpanCompat(lightTextTypeface), lengthOfFirstWord, text.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         wordCache.put(text, result)
         return result

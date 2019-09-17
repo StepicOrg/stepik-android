@@ -29,7 +29,6 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.ProgressUtil
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import javax.inject.Inject
@@ -156,18 +155,31 @@ class FastContinueFragment : FragmentBase(),
 
     private fun setCourse(course: Course) {
         Glide
-                .with(requireContext())
-                .asBitmap()
-                .load(course.cover)
-                .placeholder(coursePlaceholderDrawable)
-                .fitCenter()
-                .into(courseCoverImageViewTarget)
+            .with(requireContext())
+            .asBitmap()
+            .load(course.cover)
+            .placeholder(coursePlaceholderDrawable)
+            .fitCenter()
+            .into(courseCoverImageViewTarget)
 
         fastContinueCourseName.text = course.title
 
-        val progress = ProgressUtil.getProgressPercent(course.progressObject) ?: 0
-        fastContinueCourseProgressText.text = getString(R.string.course_current_progress, progress)
-        fastContinueCourseProgress.progress = progress
+        val progress = course.progressObject
+        val needShow = if (progress != null && progress.cost > 0) {
+            val score = progress
+                .score
+                ?.toFloatOrNull()
+                ?.toLong()
+                ?: 0L
+
+            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score, progress.cost)
+            fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
+            true
+        } else {
+            fastContinueCourseProgress.progress = 0
+            false
+        }
+        fastContinueCourseProgressText.changeVisibility(needShow)
     }
 
     //ContinueCourseView

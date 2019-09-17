@@ -13,7 +13,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.StepikFilter;
-import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.persistence.model.StorageLocation;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
@@ -21,6 +20,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepikResponse;
+import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
 import org.stepik.android.model.user.EmailAddress;
 import org.stepik.android.model.user.Profile;
 
@@ -69,14 +69,13 @@ public class SharedPreferenceHelper {
     private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
     private final String VIDEO_QUALITY_KEY_FOR_PLAYING = "video_quality_key_for_playing";
-    private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual_with_badges"; // '_with_badges' suffix was added to force update of gcm token to enable silent push with badge count, see #188
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
-    private final String DISCUSSION_ORDER = "discussion_order";
+    private final String DISCUSSION_ORDER = "discussion_order_v2";
     private final String CALENDAR_WIDGET = "calenda_widget";
     private final String FIRST_TIME_VIDEO = "first_time_video";
     private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
@@ -399,14 +398,6 @@ public class SharedPreferenceHelper {
         return null;
     }
 
-    public void setRotateAlways(boolean needRotate) {
-        put(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, needRotate);
-    }
-
-    public boolean needRotate() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, true);
-    }
-
     public void setNotificationDisabled(NotificationType type, boolean isNotificationDisabled) {
         String key = keyByNotificationType(type);
         if (key != null) {
@@ -575,14 +566,13 @@ public class SharedPreferenceHelper {
     }
 
     public DiscussionOrder getDiscussionOrder() {
-        int orderId = getInt(PreferenceType.LOGIN, DISCUSSION_ORDER);
-        DiscussionOrder order = DiscussionOrder.Companion.getById(orderId);
+        DiscussionOrder order = DiscussionOrder.valueOf(getString(PreferenceType.LOGIN, DISCUSSION_ORDER));
         analytic.reportEvent(Analytic.Comments.ORDER_TREND, order.toString());
         return order;
     }
 
-    public void setDiscussionOrder(DiscussionOrder disscussionOrder) {
-        put(PreferenceType.LOGIN, DISCUSSION_ORDER, disscussionOrder.getId());
+    public void setDiscussionOrder(DiscussionOrder discussionOrder) {
+        put(PreferenceType.LOGIN, DISCUSSION_ORDER, discussionOrder.name());
     }
 
     public void setIsGcmTokenOk(boolean isGcmTokenOk) {

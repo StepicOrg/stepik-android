@@ -4,9 +4,9 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_profile_edit_navigation.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepik.android.view.profile_edit.model.ProfileEditItem
+import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 
 class ProfileEditTextDelegate(
     private val onItemClicked: (ProfileEditItem) -> Unit
@@ -28,6 +28,7 @@ class ProfileEditTextDelegate(
         override fun onBind(data: ProfileEditItem) {
             title.text = data.title
             subtitle.text = data.subtitle
+            itemView.isEnabled = itemData?.type != ProfileEditItem.Type.EMAIL
         }
     }
 }

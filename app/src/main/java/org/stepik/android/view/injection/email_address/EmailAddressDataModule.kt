@@ -3,7 +3,9 @@ package org.stepik.android.view.injection.email_address
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import org.stepik.android.cache.email_address.EmailAddressCacheDataSourceImpl
 import org.stepik.android.data.email_address.repository.EmailAddressRepositoryImpl
+import org.stepik.android.data.email_address.source.EmailAddressCacheDataSource
 import org.stepik.android.data.email_address.source.EmailAddressRemoteDataSource
 import org.stepik.android.domain.email_address.repository.EmailAddressRepository
 import org.stepik.android.remote.email_address.EmailAddressRemoteDataSourceImpl
@@ -22,6 +24,11 @@ abstract class EmailAddressDataModule {
     internal abstract fun bindEmailAddressRemoteDataSource(
         emailAddressRemoteDataSourceImpl: EmailAddressRemoteDataSourceImpl
     ): EmailAddressRemoteDataSource
+
+    @Binds
+    internal abstract fun bindEmailAddressCacheDataSource(
+        emailAddressCacheDataSourceImpl: EmailAddressCacheDataSourceImpl
+    ): EmailAddressCacheDataSource
 
     @Module
     companion object {

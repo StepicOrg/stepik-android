@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:background="@color/highlighted_elements_background"
+<LinearLayout android:background="@color/highlighted_elements_background"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
@@ -30,7 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/stepic_regular_text"
-                fontPath="fonts/Roboto-Light.ttf"
+                app:fontFamily="@font/roboto_light"
                 tools:ignore="MissingPrefix"
                 android:textSize="64sp" />
             <TextView

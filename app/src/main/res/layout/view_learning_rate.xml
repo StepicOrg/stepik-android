@@ -43,7 +43,7 @@
         android:textSize="24sp"
         android:textColor="@color/stepik_dark_web"
 
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         tools:ignore="MissingPrefix"
 
         android:layout_width="wrap_content"

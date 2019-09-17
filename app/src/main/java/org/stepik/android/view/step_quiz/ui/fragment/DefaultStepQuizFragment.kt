@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.util.argument
@@ -32,9 +31,6 @@ import javax.inject.Inject
 abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    internal lateinit var fontsProvider: FontsProvider
 
     @Inject
     internal lateinit var screenManager: ScreenManager
@@ -94,7 +90,6 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(
                         stepQuizFeedbackBlocks,
-                        fontsProvider,
                         stepWrapper.step.actions?.doReview != null
                     ) { screenManager.openStepInWeb(requireContext(), stepWrapper.step) },
                 stepQuizActionButton = stepQuizAction,
