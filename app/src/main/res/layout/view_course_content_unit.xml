@@ -69,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         tools:ignore="missingPrefix"
         tools:text="718k" />
 
@@ -107,13 +107,13 @@
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         tools:ignore="missingPrefix"
         tools:text="999" />
 
     <TextView
         android:id="@+id/unitTextProgress"
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
@@ -131,7 +131,7 @@
 
     <TextView
         android:id="@+id/unitTimeToComplete"
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/course_content_item_inner_margin"

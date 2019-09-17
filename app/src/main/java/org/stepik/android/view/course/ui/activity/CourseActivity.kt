@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.DialogFragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
@@ -28,7 +29,6 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.util.ProgressHelper
@@ -43,9 +43,8 @@ import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
-import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
@@ -191,8 +190,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     private fun initViewPager(courseId: Long) {
-        val lightFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.light))
-        val regularFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.regular))
+        val lightFont = ResourcesCompat.getFont(this, R.font.roboto_light)
+        val regularFont = ResourcesCompat.getFont(this, R.font.roboto_regular)
 
         val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter

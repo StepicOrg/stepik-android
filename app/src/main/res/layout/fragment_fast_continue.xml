@@ -82,7 +82,7 @@
                 android:id="@+id/fastContinueCourseName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                fontPath="fonts/Roboto-Light.ttf"
+                app:fontFamily="@font/roboto_light"
                 android:gravity="start"
                 android:textSize="@dimen/course_item_titles_text_size"
                 android:textColor="@color/white"

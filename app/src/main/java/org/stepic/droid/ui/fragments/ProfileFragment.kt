@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
@@ -35,7 +36,6 @@ import org.stepic.droid.features.achievements.presenters.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -120,6 +120,8 @@ class   ProfileFragment : FragmentBase(),
         initToolbar()
         initTimezone()
 
+        // app:fontFamily doesn't work on this view
+        notificationStreakSwitch.typeface = ResourcesCompat.getFont(requireContext(), R.font.roboto_light)
         profileSettingsRecyclerView.layoutManager = LinearLayoutManager(context)
         profileSettingsRecyclerView.adapter = ProfileSettingsAdapter(requireActivity(), profileSettingsList, screenManager, this, analytic)
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
@@ -381,7 +383,7 @@ class   ProfileFragment : FragmentBase(),
                 shortBioSecondText.visibility = View.GONE
             } else {
                 shortBioSecondText.setPlainOrLaTeXTextWithCustomFontColored(
-                        information, fontsProvider.provideFontPath(FontType.light), R.color.new_accent_color, false)
+                        information, R.font.roboto_light, R.color.new_accent_color, false)
                 shortBioSecondText.visibility = View.VISIBLE
             }
         }

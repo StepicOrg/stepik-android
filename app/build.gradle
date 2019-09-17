@@ -155,7 +155,6 @@ dependencies {
     implementation libraries.branch
     implementation libraries.installreferrer
 
-    implementation libraries.calligraphy
     implementation libraries.lottie
 
     implementation libraries.firebaseMessaging

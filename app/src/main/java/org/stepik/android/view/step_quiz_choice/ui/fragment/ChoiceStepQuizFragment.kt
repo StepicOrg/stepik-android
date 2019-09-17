@@ -28,5 +28,5 @@ class ChoiceStepQuizFragment : DefaultStepQuizFragment(), StepQuizView {
         get() = arrayOf(choicesRecycler)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
-        ChoiceStepQuizFormDelegate(view, fontsProvider)
+        ChoiceStepQuizFormDelegate(view)
 }

@@ -2,6 +2,7 @@ package org.stepic.droid.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
 import android.text.Spannable
@@ -19,7 +20,6 @@ import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
@@ -27,8 +27,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.toBundle
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import javax.inject.Inject
 
 class LoginActivity : SmartLockActivityBase(), LoginView {
@@ -153,9 +152,9 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         val signInWithPasswordSuffix = getString(R.string.sign_in_with_password_suffix)
 
         val spannableSignIn = SpannableString(signInString + signInWithPasswordSuffix)
-        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
+        val typeface = ResourcesCompat.getFont(this, R.font.roboto_medium)
 
-        spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableSignIn.setSpan(TypefaceSpanCompat(typeface), 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         signInText.text = spannableSignIn
     }

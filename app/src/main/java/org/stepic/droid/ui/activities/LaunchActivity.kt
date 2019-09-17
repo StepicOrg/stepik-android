@@ -2,8 +2,8 @@ package org.stepic.droid.ui.activities
 
 import android.app.Activity
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
+import android.support.v4.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.text.Spannable
 import android.text.SpannableString
@@ -31,7 +31,6 @@ import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.social.ISocialType
 import org.stepic.droid.social.SocialManager
@@ -41,8 +40,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.web.Api
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import javax.inject.Inject
 
 
@@ -95,7 +93,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
 
         val spannableSignIn = SpannableString(signInString + signInWithSocial)
-        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
+        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_medium))
 
         spannableSignIn.setSpan(typefaceSpan, 0, signInString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
