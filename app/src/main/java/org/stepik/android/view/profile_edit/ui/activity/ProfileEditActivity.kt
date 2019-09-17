@@ -23,8 +23,9 @@ import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.profile_edit.ProfileEditPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditView
 import org.stepik.android.view.profile_edit.model.ProfileEditItem
-import org.stepik.android.view.profile_edit.ui.adapter.ProfileEditAdapter
+import org.stepik.android.view.profile_edit.ui.adapter.delegates.ProfileEditTextDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import javax.inject.Inject
 
 class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
@@ -42,6 +43,7 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var profile: Profile? = null
+    private val profileEditAdapter: DefaultDelegateAdapter<ProfileEditItem> = DefaultDelegateAdapter()
     private lateinit var navigationItems: List<ProfileEditItem>
     private val viewStateDelegate =
         ViewStateDelegate<ProfileEditView.State>()
@@ -60,9 +62,8 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
             ProfileEditItem(ProfileEditItem.Type.PASSWORD, getString(R.string.profile_edit_password_title), getString(R.string.profile_edit_password_subtitle))
         )
 
-        navigationRecycler.layoutManager = LinearLayoutManager(this)
-        navigationRecycler.adapter = ProfileEditAdapter(navigationItems) { item ->
-            val profile = profile ?: return@ProfileEditAdapter
+        profileEditAdapter += ProfileEditTextDelegate { item ->
+            val profile = profile ?: return@ProfileEditTextDelegate
             when (item.type) {
                 ProfileEditItem.Type.PERSONAL_INFO ->
                     screenManager.showProfileEditInfo(this, profile)
@@ -70,6 +71,9 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
                     screenManager.showProfileEditPassword(this, profile.id)
             }
         }
+
+        navigationRecycler.layoutManager = LinearLayoutManager(this)
+        navigationRecycler.adapter = profileEditAdapter
 
         navigationRecycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL).apply {
             ContextCompat.getDrawable(this@ProfileEditActivity, R.drawable.list_divider_h)?.let(::setDrawable)
@@ -134,7 +138,7 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
         if (state is ProfileEditView.State.ProfileLoaded) {
             profile = state.profileWrapper.profile
             state.profileWrapper.primaryEmailAddress?.email?.let {
-                navigationItems.mutate {
+                profileEditAdapter.items = navigationItems.mutate {
                     add(1, ProfileEditItem(ProfileEditItem.Type.EMAIL, getString(R.string.email), it))
                 }
             }
