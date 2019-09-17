@@ -125,7 +125,7 @@ constructor(
 
                     else ->
                         null
-                }             
+                }
 
             is CourseContentItem.UnitItem ->
                 item.takeIf { it.progress?.id == progress.id }
