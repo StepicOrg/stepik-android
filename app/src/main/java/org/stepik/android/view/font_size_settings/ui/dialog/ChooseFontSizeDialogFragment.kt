@@ -17,7 +17,6 @@ import org.stepik.android.view.font_size_settings.model.FontItem
 import org.stepik.android.view.font_size_settings.ui.adapter.FontSizeDelegate
 import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapterssupport.selection.SingleChoiceSelectionHelper
-import timber.log.Timber
 import javax.inject.Inject
 
 class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
@@ -91,7 +90,6 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
     }
 
     override fun setCachedFontSize(fontSize: Float) {
-        Timber.d("Font size: $fontSize")
         selectionHelper.select(fontsAdapter.items.indexOfFirst { it.fontSize.size ==  fontSize })
     }
 }

@@ -13,7 +13,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginEnd="20dp"
-        android:text="Choose font size"
+        android:text="@string/proile_font_settings_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <android.support.v7.widget.RecyclerView
@@ -27,7 +27,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:text="OK"
+        android:text="@string/ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <Button
@@ -36,7 +36,7 @@
         android:layout_toLeftOf="@id/dialogPositiveButton"
         android:layout_toStartOf="@id/dialogPositiveButton"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:text="Cancel"
+        android:text="@string/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </RelativeLayout>
