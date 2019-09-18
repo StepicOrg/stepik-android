@@ -6,6 +6,7 @@
 
     <TextView
         android:id="@+id/video_quality_presence_text"
+        android:textSize="14sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -26,6 +27,7 @@
     <CheckBox
         android:id="@+id/video_quality_do_not_ask_checkbox"
         style="@style/SettingCompoundButton"
+        android:textSize="14sp"
         android:layout_below="@id/video_quality_list_choices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
