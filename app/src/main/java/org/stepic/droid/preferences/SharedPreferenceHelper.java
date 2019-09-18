@@ -94,6 +94,7 @@ public class SharedPreferenceHelper {
     private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
     private final String RATE_TIMES_SHOWN = "rate_times_shown";
     private final String RATE_WAS_HANDLED = "rate_was_handled";
+    private final String STEP_CONTENT_FONT_SIZE = "step_content_font_size";
 
     private final static String LAST_SESSION_TIMESTAMP = "last_session_timestamp";
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
@@ -552,7 +553,8 @@ public class SharedPreferenceHelper {
         VIDEO_SETTINGS("video_settings"),
         DEVICE_SPECIFIC("device_specific"),
         FEATURED_FILTER("featured_filter_prefs"),
-        NOTIFICATION("notification");
+        NOTIFICATION("notification"),
+        STEP_CONTENT("step_content");
 
         private String description;
 
@@ -782,6 +784,14 @@ public class SharedPreferenceHelper {
         return getLong(PreferenceType.NOTIFICATION, id);
     }
 
+    public void putStepContentFontSize(float fontSize) {
+        put(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, fontSize);
+    }
+
+    public float getStepContentFontSize() {
+        return getFloat(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 16f);
+    }
+
     private void put(PreferenceType type, String key, String value) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putString(key, value).apply();
@@ -800,6 +810,11 @@ public class SharedPreferenceHelper {
     private void put(PreferenceType type, String key, Boolean value) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value).apply();
+    }
+
+    private void put(PreferenceType type, String key, float value) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        editor.putFloat(key, value).apply();
     }
 
     private void clear(PreferenceType type) {
@@ -839,5 +854,15 @@ public class SharedPreferenceHelper {
     private boolean getBoolean(PreferenceType preferenceType, String key, boolean defaultValue) {
         return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getBoolean(key, defaultValue);
+    }
+
+    private float getFloat(PreferenceType preferenceType, String key, float defaultValue) {
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+                .getFloat(key, defaultValue);
+    }
+
+    private float getFloat(PreferenceType preferenceType, String key) {
+        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
+                .getFloat(key, 0f);
     }
 }
