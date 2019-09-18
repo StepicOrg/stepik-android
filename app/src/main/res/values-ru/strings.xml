@@ -45,6 +45,7 @@
     <string name="connectionProblems">Невозможно установить соединение с сервером</string>
     <string name="video_quality">Качество видео для загрузки</string>
     <string name="video_quality_playing">Качество видео для просмотра</string>
+    <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для</string>
 
     <string name="download_error">Ошибка при загрузке видео %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
@@ -208,7 +209,7 @@
     <string name="low_quality">Низкое</string>
     <string name="medium_quality">Среднее</string>
     <string name="high_quality">Высокое</string>
-    <string name="do_not_ask_me_again">Больше не спрашивать</string>
+    <string name="do_not_ask_me_again">Больше не спрашивать (вы всегда можете изменить качество видео в настройках)</string>
     <string name="discount_policy_inverse_title">После каждого неправильного решения баллы, которые
         можно получить за задание, будут уменьшены
     </string>
