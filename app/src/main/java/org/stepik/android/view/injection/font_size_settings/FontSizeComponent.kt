@@ -1,7 +1,7 @@
 package org.stepik.android.view.injection.font_size_settings
 
 import dagger.Subcomponent
-import org.stepik.android.view.font_size_settings.dialog.ChooseFontSizeDialogFragment
+import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
 
 @Subcomponent(modules = [
     FontSizeModule::class

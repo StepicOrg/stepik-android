@@ -52,7 +52,7 @@ import org.stepic.droid.util.argument
 import org.stepic.droid.util.copyTextToClipboard
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
-import org.stepik.android.view.font_size_settings.dialog.ChooseFontSizeDialogFragment
+import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
 import timber.log.Timber
 import java.util.ArrayList
 import java.util.Date
