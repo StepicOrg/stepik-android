@@ -66,12 +66,22 @@ class TextStepContentFragment : Fragment(), TextStepContentView {
                 ?.takeIf(String::isNotEmpty)
 
             view.changeVisibility(needShow = text != null)
-            view.setTextSize(16f)
+            presenter.onSetTextContentSize()
             if (text != null) {
                 view.setText(text)
                 view.setTextIsSelectable(true)
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.attachView(this)
+    }
+
+    override fun onStop() {
+        presenter.detachView(this)
+        super.onStop()
     }
 
     override fun onDestroy() {
