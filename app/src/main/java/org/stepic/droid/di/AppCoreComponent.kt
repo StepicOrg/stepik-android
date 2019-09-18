@@ -81,6 +81,7 @@ import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
+import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
 import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
@@ -173,6 +174,8 @@ interface AppCoreComponent {
     fun stepComponentBuilder(): StepComponent.Builder
 
     fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder
+
+    fun textStepContentComponentBuilder(): TextStepContentComponent.Builder
 
     fun certificatesComponentBuilder(): CertificateComponent.Builder
 
