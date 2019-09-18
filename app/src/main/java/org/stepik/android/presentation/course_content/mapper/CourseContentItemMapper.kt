@@ -7,6 +7,7 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.view.course_content.model.CourseContentItem
+import org.stepik.android.view.course_content.model.RequiredSection
 import javax.inject.Inject
 
 class CourseContentItemMapper
@@ -17,12 +18,31 @@ constructor(
     fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, progresses: List<Progress>): List<CourseContentItem> =
         sections
             .flatMap { section ->
-                mapSectionWithEmptyUnits(course, section, progresses.find { it.id == section.progress })
+                mapSectionWithEmptyUnits(course, section, progresses, sections)
             }
 
-    private fun mapSectionWithEmptyUnits(course: Course, section: Section, progress: Progress?): List<CourseContentItem> =
-        listOf(CourseContentItem.SectionItem(section, sectionDatesMapper.mapSectionDates(section), progress, section.hasUserAccess(course))) +
-                section.units.map(CourseContentItem::UnitItemPlaceholder)
+    private fun mapSectionWithEmptyUnits(course: Course, section: Section, progresses: List<Progress>, sections: List<Section>): List<CourseContentItem> =
+        listOf(CourseContentItem.SectionItem(
+            section = section,
+            dates = sectionDatesMapper.mapSectionDates(section),
+            progress = progresses.find { it.id == section.progress },
+            isEnabled = section.hasUserAccess(course),
+            requiredSection = mapRequiredSection(section, sections, progresses)
+        )) + section.units.map(CourseContentItem::UnitItemPlaceholder)
+
+    private fun mapRequiredSection(section: Section, sections: List<Section>, progresses: List<Progress>): RequiredSection? =
+        if (!section.isRequirementSatisfied) {
+            val requiredSection = sections.find { it.id == section.requiredSection }
+            val progress = progresses.find { it.id == requiredSection?.progress }
+
+            if (requiredSection != null && progress != null) {
+                RequiredSection(requiredSection, progress)
+            } else {
+                null
+            }
+        } else {
+            null
+        }
 
     fun mapUnits(sectionItems: List<CourseContentItem.SectionItem>, units: List<Unit>, lessons: List<Lesson>, progresses: List<Progress>): List<CourseContentItem.UnitItem> =
         units.mapNotNull { unit ->
