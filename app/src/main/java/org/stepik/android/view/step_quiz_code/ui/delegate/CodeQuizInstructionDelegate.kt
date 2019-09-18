@@ -32,7 +32,6 @@ class CodeQuizInstructionDelegate(
         stepQuizCodeDetailsAdapter += CodeDetailLimitAdapterDelegate()
 
         with(stepQuizCodeDetailsContent) {
-            visibility = View.GONE
             layoutManager = LinearLayoutManager(context)
             adapter = stepQuizCodeDetailsAdapter
             isNestedScrollingEnabled = false
@@ -58,6 +57,6 @@ class CodeQuizInstructionDelegate(
 
     fun setCodeDetailsData(step: Step, lang: String?) {
         stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
-        stepQuizCodeDetails.changeVisibility(stepQuizCodeDetailsAdapter.items.isEmpty())
+        stepQuizCodeDetails.changeVisibility(stepQuizCodeDetailsAdapter.items.isNotEmpty())
     }
 }
