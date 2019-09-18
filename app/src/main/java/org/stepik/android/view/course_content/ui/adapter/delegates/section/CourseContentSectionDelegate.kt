@@ -35,6 +35,7 @@ class CourseContentSectionDelegate(
         private val sectionTextProgress    = root.sectionTextProgress
         private val sectionDownloadStatus  = root.sectionDownloadStatus
         private val sectionExamDescription = root.sectionExamDescription
+        private val sectionRequirementsDescription = root.sectionRequirementsDescription
 
         private val sectionTimeLineAdapter =
             CourseContentTimelineAdapter()
@@ -111,6 +112,21 @@ class CourseContentSectionDelegate(
                 sectionTimeline.alpha = alpha
 
                 sectionExamDescription.changeVisibility(section.isExam)
+
+                if (requiredSection != null) {
+                    val requiredPoints = requiredSection.progress.cost * requiredSection.section.requiredPercent / 100
+
+                    sectionRequirementsDescription.text =
+                        context.getString(
+                            R.string.course_content_section_requirements,
+                            context.resources.getQuantityString(R.plurals.points, requiredPoints.toInt(), requiredPoints),
+                            requiredSection.section.title
+                        )
+
+                    sectionRequirementsDescription.changeVisibility(needShow = true)
+                } else {
+                    sectionRequirementsDescription.changeVisibility(needShow = false)
+                }
             }
         }
     }
