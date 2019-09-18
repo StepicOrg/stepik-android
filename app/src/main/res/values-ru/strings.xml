@@ -745,4 +745,10 @@
     <string name="relative_date_now">сейчас</string>
 
     <string name="copied_to_clipboard_toast">Скопировано в буфер</string>
+
+    <!-- Main screen -->
+    <string name="main_tab_home">Обучение</string>
+    <string name="main_tab_catalog">Каталог</string>
+    <string name="main_tab_profile">Профиль</string>
+    <string name="main_tab_notifications">Уведомления</string>
 </resources>
