@@ -73,6 +73,7 @@ import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
+import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
@@ -182,6 +183,8 @@ interface AppCoreComponent {
     fun composeCommentComponentBuilder(): ComposeCommentComponent.Builder
 
     fun commentsComponentBuilder(): CommentsComponent.Builder
+
+    fun fontSizeComponentBuilder(): FontSizeComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

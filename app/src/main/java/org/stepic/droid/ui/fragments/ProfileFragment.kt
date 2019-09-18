@@ -52,6 +52,7 @@ import org.stepic.droid.util.argument
 import org.stepic.droid.util.copyTextToClipboard
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
+import org.stepik.android.view.font_size_settings.dialog.ChooseFontSizeDialogFragment
 import timber.log.Timber
 import java.util.ArrayList
 import java.util.Date
@@ -168,6 +169,7 @@ class   ProfileFragment : FragmentBase(),
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
 
         certificatesTitleContainer.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
+        fontSizeContainer.setOnClickListener { showFontSizeDialog() }
     }
 
     override fun onDestroyView() {
@@ -311,6 +313,7 @@ class   ProfileFragment : FragmentBase(),
             profileSettingsRecyclerView.visibility = View.VISIBLE
 
             notificationIntervalChooserContainer.visibility = View.VISIBLE
+            fontSizeContainer.visibility = View.VISIBLE
             setupUserId()
         } else {
             //show user info expanded for strangers
@@ -506,6 +509,16 @@ class   ProfileFragment : FragmentBase(),
             requireContext().copyTextToClipboard(textToCopy = textToCopy, toastMessage = getString(R.string.copied_to_clipboard_toast))
             true
         }
+    }
+
+    private fun showFontSizeDialog() {
+        val fragmentManager = fragmentManager
+            ?.takeIf { it.findFragmentByTag(ChooseFontSizeDialogFragment.TAG) == null }
+            ?: return
+
+        ChooseFontSizeDialogFragment
+            .newInstance()
+            .show(fragmentManager, ChooseFontSizeDialogFragment.TAG)
     }
 
 }
