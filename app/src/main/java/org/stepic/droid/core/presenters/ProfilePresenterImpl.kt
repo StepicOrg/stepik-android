@@ -132,6 +132,7 @@ constructor(
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
                     isPrivate = user.isPrivate,
+                    isOrganization = user.isOrganization,
                     id = userId)
             this.userViewModel = userViewModelLocal
 
@@ -187,6 +188,7 @@ constructor(
                 information = stringOrEmpty(profile.details),
                 isMyProfile = isMyProfile,
                 isPrivate = profile.isPrivate,
+                isOrganization = false,
                 id = profile.id)
         this.userViewModel = userViewModelLocal
 
