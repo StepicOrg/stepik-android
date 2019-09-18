@@ -22,6 +22,7 @@ import javax.inject.Inject
 class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
     companion object {
         const val TAG = "ChooseFontSizeDialogFragment"
+        private const val CHOSEN_POSITION = "CHOSEN_POSITION"
 
         fun newInstance(): DialogFragment =
             ChooseFontSizeDialogFragment()
@@ -72,7 +73,11 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
             val selectedPosition = (0 until fontsAdapter.itemCount).find { selectionHelper.isSelected(it) } ?: 0
             presenter.onFontSizeChosen(fontsAdapter.items[selectedPosition].fontSize.size)
         }
-        presenter.fetchFontSize()
+        if (savedInstanceState == null) {
+            presenter.fetchFontSize()
+        } else {
+            selectionHelper.select(savedInstanceState.getInt(CHOSEN_POSITION))
+        }
     }
 
     override fun onStart() {
@@ -83,6 +88,11 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
     override fun onStop() {
         presenter.detachView(this)
         super.onStop()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(CHOSEN_POSITION, (0 until fontsAdapter.itemCount).find { selectionHelper.isSelected(it) } ?: 0)
     }
 
     override fun onFontSizeChosen() {
