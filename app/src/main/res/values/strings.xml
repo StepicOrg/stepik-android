@@ -629,6 +629,7 @@
     <string name="course_content_timeline_deadline">Deadline</string>
 
     <string name="course_content_section_exam_description">This is an exam module, you can only solve it in the web version. Press to open it in the web browser.</string>
+    <string name="course_content_section_requirements">To unlock this module you need to score %s in module %s</string>
 
     <string name="course_control_schedule">Schedule</string>
     <string name="course_control_filter">Filter by</string>
