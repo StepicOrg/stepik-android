@@ -319,8 +319,9 @@ class   ProfileFragment : FragmentBase(),
             }
         }
 
-        if (!userViewModel.isPrivate) {
+        if (!userViewModel.isPrivate && !userViewModel.isOrganization) {
             achievementsPresenter.showAchievementsForUser(userViewModel.id, MAX_ACHIEVEMENTS_TO_DISPLAY)
+            certificatesTitleContainer.visibility = View.VISIBLE
         }
 
         mainInfoRoot.visibility = View.VISIBLE
