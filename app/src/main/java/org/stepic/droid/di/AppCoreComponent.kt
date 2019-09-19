@@ -51,7 +51,6 @@ import org.stepic.droid.ui.dialogs.CertificateShareDialog
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
-import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialog
@@ -189,8 +188,6 @@ interface AppCoreComponent {
     fun inject(adapter: Course)
 
     fun inject(baseFragment: FragmentBase)
-
-    fun inject(dialogFragment: DiscountingPolicyDialogFragment)
 
     fun inject(dialogFragment: LogoutAreYouSureDialog)
 
