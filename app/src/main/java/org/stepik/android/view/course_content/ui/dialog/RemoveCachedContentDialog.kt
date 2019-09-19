@@ -3,6 +3,7 @@ package org.stepik.android.view.course_content.ui.dialog
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import org.stepic.droid.R
 import org.stepik.android.model.Course
@@ -56,6 +57,15 @@ class RemoveCachedContentDialog : DialogFragment() {
                 dismiss()
             }
             .create()
+            .apply {
+                setOnShowListener {
+                    getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setTextColor(ContextCompat.getColor(context, R.color.new_red_color))
+
+                    getButton(AlertDialog.BUTTON_NEGATIVE)
+                        .setTextColor(ContextCompat.getColor(context, R.color.new_accent_color))
+                }
+            }
 
     interface Callback {
         fun onRemoveCourseDownloadConfirmed(course: Course)
