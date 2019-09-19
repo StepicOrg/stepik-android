@@ -16,6 +16,10 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 class DownloadStatusView
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
+    companion object {
+        private const val SMALLEST_FORMAT_UNIT = 1024 * 1024L // 1 mb
+    }
+
     var status: DownloadProgress.Status = DownloadProgress.Status.Pending
         set(value) {
             field = value
@@ -24,7 +28,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             isEnabled = status !is DownloadProgress.Status.Pending
             when (value) {
                 is DownloadProgress.Status.Cached ->
-                    statusCached.text = TextUtil.formatBytes(value.bytesTotal)
+                    statusCached.text = TextUtil.formatBytes(value.bytesTotal, SMALLEST_FORMAT_UNIT)
 
                 is DownloadProgress.Status.InProgress ->
                     statusProgress.progress = (value.progress * statusProgress.max).toInt()
