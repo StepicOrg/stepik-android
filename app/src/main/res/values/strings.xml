@@ -59,6 +59,7 @@
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality of downloading</string>
     <string name="video_quality_playing">Video quality of playing</string>
+    <string name="video_quality_presence_message">Please choose a video quality for downloading all further video courses:</string>
 
     <string name="download_error">An error occurred while downloading video %s</string>
     <string name="download_error_insufficient_storage">: insufficient storage</string>
@@ -231,7 +232,7 @@
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
     <string name="high_quality">High</string>
-    <string name="do_not_ask_me_again">Do not ask me again</string>
+    <string name="do_not_ask_me_again">Do not ask me again (you can always change the quality in your settings)</string>
     <string name="discount_policy_inverse_title">After every wrong submission your maximum points
         will be reduced
     </string>
@@ -642,6 +643,9 @@
     <string name="course_content_calendar_no_calendars_error">Calendars not found</string>
     <string name="course_content_calendar_permission_error">Grant permission to use calendar manually in settings</string>
 
+    <string name="course_content_remove_item_title">Delete item?</string>
+    <string name="course_content_remove_item_description">This item will be deleted from your device</string>
+
     <string name="course_restore_purchase">Restore purchase</string>
     <string name="course_payments_purchase_in_app">Buy for %s</string>
     <string name="course_payments_purchase_in_web">Buy in web version</string>
@@ -779,4 +783,10 @@
     <string name="relative_date_now">now</string>
 
     <string name="copied_to_clipboard_toast">Copied to clipboard</string>
+
+    <!-- Main screen -->
+    <string name="main_tab_home">Home</string>
+    <string name="main_tab_catalog">Catalog</string>
+    <string name="main_tab_profile">Profile</string>
+    <string name="main_tab_notifications">Notifications</string>
 </resources>
