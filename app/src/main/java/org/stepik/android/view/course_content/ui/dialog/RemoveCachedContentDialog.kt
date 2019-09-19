@@ -40,7 +40,8 @@ class RemoveCachedContentDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog
             .Builder(requireContext())
-            .setMessage(R.string.deleted_key)
+            .setTitle(R.string.course_content_remove_item_title)
+            .setMessage(R.string.course_content_remove_item_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->
                 val callback = targetFragment as? Callback
                     ?: parentFragment as? Callback
