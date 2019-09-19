@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/listChoices"
-    android:layout_below="@id/video_quality_presence_text"
-    android:divider="@null"
-    android:dividerHeight="0dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content" />

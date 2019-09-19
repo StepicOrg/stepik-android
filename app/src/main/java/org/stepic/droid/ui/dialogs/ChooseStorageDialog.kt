@@ -4,9 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v7.app.AlertDialog
-import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.ListView
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -46,23 +44,17 @@ class ChooseStorageDialog: DialogFragment() {
         val youWantMoveDataDialog = WantMoveDataDialog.newInstance()
         youWantMoveDataDialog.setTargetFragment(targetFragment, WantMoveDataDialog.REQUEST_CODE)
 
-        val view = View.inflate(context, R.layout.dialog_listview, null)
-        val selectionItems = view.findViewById<ListView>(R.id.listChoices)
-
-        selectionItems.adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, headers)
-        selectionItems.choiceMode = ListView.CHOICE_MODE_SINGLE
-        selectionItems.setItemChecked(indexChosen, true)
-        selectionItems.setOnItemClickListener { _, _, position, _ ->
-            if (position != indexChosen && !youWantMoveDataDialog.isAdded) {
-                youWantMoveDataDialog.targetLocation = storageOptions[position]
-                youWantMoveDataDialog.show(fragmentManager, null)
-            }
-            dismiss()
-        }
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, headers)
 
         return AlertDialog.Builder(requireContext())
                 .setTitle(R.string.choose_storage_title)
-                .setView(view)
+                .setSingleChoiceItems(adapter, indexChosen) { _, which ->
+                    if (which != indexChosen && !youWantMoveDataDialog.isAdded) {
+                        youWantMoveDataDialog.targetLocation = storageOptions[which]
+                        youWantMoveDataDialog.show(fragmentManager, null)
+                    }
+                    dismiss()
+                }
                 .setNegativeButton(R.string.cancel) { _, _ -> analytic.reportEvent(Analytic.Interaction.CANCEL_CHOOSE_STORE_CLICK) }
                 .create()
     }

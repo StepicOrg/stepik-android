@@ -3,9 +3,7 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.ListView
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -36,9 +34,6 @@ class VideoQualityDialog : VideoQualityDialogBase() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         init()
 
-        val view = View.inflate(context, R.layout.dialog_listview, null)
-        val selectionItems = view.findViewById<ListView>(R.id.listChoices)
-
         val qualityValue = if (forPlaying) {
             userPreferences.qualityVideoForPlaying
         } else {
@@ -47,22 +42,7 @@ class VideoQualityDialog : VideoQualityDialogBase() {
 
         val chosenOptionPosition = qualityToPositionMap[qualityValue]!!
 
-        selectionItems.adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.video_quality))
-        selectionItems.choiceMode = ListView.CHOICE_MODE_SINGLE
-        selectionItems.setItemChecked(chosenOptionPosition, true)
-        selectionItems.setOnItemClickListener { _, _, position, _ ->
-            val qualityString = positionToQualityMap[position]
-            analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, position.toString(), qualityString)
-
-            threadPoolExecutor.execute {
-                if (forPlaying) {
-                    userPreferences.saveVideoQualityForPlaying(qualityString)
-                } else {
-                    userPreferences.storeQualityVideo(qualityString)
-                }
-            }
-            dialog.dismiss()
-        }
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.video_quality))
 
         val builder = AlertDialog.Builder(requireContext())
         builder
@@ -74,7 +54,19 @@ class VideoQualityDialog : VideoQualityDialogBase() {
                     R.string.video_quality
                 }
             )
-            .setView(view)
+            .setSingleChoiceItems(adapter, chosenOptionPosition) { _, which ->
+                val qualityString = positionToQualityMap[which]
+                analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
+
+                threadPoolExecutor.execute {
+                    if (forPlaying) {
+                        userPreferences.saveVideoQualityForPlaying(qualityString)
+                    } else {
+                        userPreferences.storeQualityVideo(qualityString)
+                    }
+                }
+                dialog.dismiss()
+            }
             .setNegativeButton(R.string.cancel) { _, _ ->
                 analytic.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY)
             }
