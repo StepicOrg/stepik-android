@@ -4,6 +4,7 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toFlowable
+import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.*
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
@@ -16,7 +17,9 @@ abstract class DownloadProgressProviderBase<T>(
 
         private val systemDownloadsDao: SystemDownloadsDao,
         private val persistentItemDao: PersistentItemDao,
-        private val persistentStateManager: PersistentStateManager
+        private val persistentStateManager: PersistentStateManager,
+
+        private val externalStorageManager: ExternalStorageManager
 ): DownloadProgressProvider<T> {
     private companion object {
         private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
@@ -47,7 +50,7 @@ abstract class DownloadProgressProviderBase<T>(
                         getPersistentObservable(itemId)
                                 .concatMap(::fetchSystemDownloads)
                                 .map { (persistentItems, downloadItems) ->   // count progresses
-                                    DownloadProgress(itemId, countItemProgress(persistentItems, downloadItems, state))
+                                    DownloadProgress(itemId, countItemProgress(externalStorageManager, persistentItems, downloadItems, state))
                                 }
                 }
             }
