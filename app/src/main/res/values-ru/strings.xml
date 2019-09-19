@@ -609,6 +609,9 @@
     <string name="course_content_calendar_no_calendars_error">Календари не найдены</string>
     <string name="course_content_calendar_permission_error">Включите разрешение для использования календаря в настройках</string>
 
+    <string name="course_content_remove_item_title">Удалить элемент?</string>
+    <string name="course_content_remove_item_description">Этот элемент будет удален с вашего устройства</string>
+
     <string name="course_restore_purchase">Восстановить покупку</string>
     <string name="course_payments_purchase_in_app">Купить за %s</string>
     <string name="course_payments_purchase_in_web">Купить в веб версии</string>
