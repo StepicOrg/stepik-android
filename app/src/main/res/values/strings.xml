@@ -780,4 +780,10 @@
     <string name="relative_date_now">now</string>
 
     <string name="copied_to_clipboard_toast">Copied to clipboard</string>
+
+    <!-- Main screen -->
+    <string name="main_tab_home">Home</string>
+    <string name="main_tab_catalog">Catalog</string>
+    <string name="main_tab_profile">Profile</string>
+    <string name="main_tab_notifications">Notifications</string>
 </resources>
