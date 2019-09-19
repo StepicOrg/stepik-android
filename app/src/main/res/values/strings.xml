@@ -59,6 +59,7 @@
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality of downloading</string>
     <string name="video_quality_playing">Video quality of playing</string>
+    <string name="video_quality_presence_message">Please choose a video quality for downloading all further video courses:</string>
 
     <string name="download_error">An error occurred while downloading video %s</string>
     <string name="download_error_insufficient_storage">: insufficient storage</string>
@@ -231,7 +232,7 @@
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
     <string name="high_quality">High</string>
-    <string name="do_not_ask_me_again">Do not ask me again</string>
+    <string name="do_not_ask_me_again">Do not ask me again (you can always change the quality in your settings)</string>
     <string name="discount_policy_inverse_title">After every wrong submission your maximum points
         will be reduced
     </string>

@@ -3,16 +3,16 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.widget.ArrayAdapter
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepik.android.model.Video
-import org.stepik.android.model.VideoUrl
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.greaterThanMaxQuality
+import org.stepik.android.model.Video
+import org.stepik.android.model.VideoUrl
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
-import kotlin.IllegalStateException
 
 class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
@@ -95,25 +95,27 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
                 .map { it.url }
                 .indexOf(nowPlayingUrl)
 
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, listOfPresentedQuality.toTypedArray())
+
         val builder = AlertDialog.Builder(requireContext())
         builder
-                .setTitle(R.string.video_quality_playing)
-                .setNegativeButton(R.string.cancel) { _, _ ->
-                    analytic.reportEvent(Analytic.Video.CANCEL_VIDEO_QUALITY)
-                }
-                .setSingleChoiceItems(listOfPresentedQuality.toTypedArray(), position) { dialog, which ->
-                    val urlQuality = listOfVideoUrl[which]
-                    (activity as? Callback)?.onQualityChanged(newUrlQuality = urlQuality)
-                    dialog.dismiss()
+            .setTitle(R.string.video_quality_playing)
+            .setSingleChoiceItems(adapter, position) { _, which ->
+                val urlQuality = listOfVideoUrl[which]
+                (activity as? Callback)?.onQualityChanged(newUrlQuality = urlQuality)
+                dialog.dismiss()
 
-                    val qualityForPlaying = listOfPresentedQuality[which]
-                    threadPoolExecutor.execute {
-                        val toSave = findNearest(qualityForPlaying, qualityToPositionMap.keys)
-                        if (toSave != null) {
-                            userPreferences.saveVideoQualityForPlaying(toSave)
-                        }
+                val qualityForPlaying = listOfPresentedQuality[which]
+                threadPoolExecutor.execute {
+                    val toSave = findNearest(qualityForPlaying, qualityToPositionMap.keys)
+                    if (toSave != null) {
+                        userPreferences.saveVideoQualityForPlaying(toSave)
                     }
                 }
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                analytic.reportEvent(Analytic.Video.CANCEL_VIDEO_QUALITY)
+            }
 
         return builder.create()
     }

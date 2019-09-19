@@ -7,7 +7,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
+import android.widget.ListView
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -62,10 +64,18 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         init()
         val layoutInflater = LayoutInflater.from(context)
-        val explanationView = layoutInflater.inflate(R.layout.not_ask_again_view, null)
-        val checkbox = explanationView.findViewById<CheckBox>(R.id.do_not_ask_checkbox)
+        val explanationView = layoutInflater.inflate(R.layout.dialog_video_quality_detailed, null)
+        val checkbox = explanationView.findViewById<CheckBox>(R.id.video_quality_do_not_ask_checkbox)
+        val selectionItems = explanationView.findViewById<ListView>(R.id.video_quality_list_choices)
 
         var chosenOptionPosition = qualityToPositionMap[userPreferences.qualityVideo]!!
+
+        selectionItems.adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.video_quality))
+        selectionItems.choiceMode = ListView.CHOICE_MODE_SINGLE
+        selectionItems.setItemChecked(chosenOptionPosition, true)
+        selectionItems.setOnItemClickListener { _, _, position, _ ->
+            chosenOptionPosition = position
+        }
 
         val builder = AlertDialog.Builder(requireContext())
         builder
@@ -73,9 +83,6 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
                 .setView(explanationView)
                 .setNegativeButton(R.string.cancel) { _, _ ->
                     analytic.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY_DETAILED)
-                }
-                .setSingleChoiceItems(R.array.video_quality, qualityToPositionMap[userPreferences.qualityVideo]!!) { _, which ->
-                    chosenOptionPosition = which
                 }
                 .setPositiveButton(R.string.ok) { _, _ ->
                     val qualityString = positionToQualityMap[chosenOptionPosition]
