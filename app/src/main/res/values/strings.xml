@@ -621,6 +621,7 @@
     <string name="course_content_time_to_complete_minutes_unit">%d min</string>
     <string name="course_content_time_to_complete_hours_unit">%d h</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
+    <string name="course_content_text_progress_points" translatable="false">%d/%d points</string>
 
     <string name="course_content_timeline_begin_date">Begin date</string>
     <string name="course_content_timeline_end_date">End date</string>
