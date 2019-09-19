@@ -21,7 +21,7 @@ internal fun countItemProgress(
         return when(itemState) {
             PersistentState.State.NOT_CACHED  -> DownloadProgress.Status.NotCached
             PersistentState.State.IN_PROGRESS -> DownloadProgress.Status.Pending
-            PersistentState.State.CACHED      -> DownloadProgress.Status.Cached
+            PersistentState.State.CACHED      -> DownloadProgress.Status.Cached(bytesTotal = 0)
         }
     }
 
@@ -72,6 +72,6 @@ internal fun countItemProgress(
             DownloadProgress.Status.NotCached
 
         else ->
-            DownloadProgress.Status.Cached
+            DownloadProgress.Status.Cached(persistentItems.size * 10L)
     }
 }

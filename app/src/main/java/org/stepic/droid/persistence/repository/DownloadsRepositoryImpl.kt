@@ -136,7 +136,7 @@ constructor(
             }
 
             else -> {
-                DownloadProgress.Status.Cached
+                DownloadProgress.Status.Cached(bytesTotal)
             }
         }
 

@@ -45,7 +45,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             DownloadProgress.Status.NotCached ->
                 statusNotCached
 
-            DownloadProgress.Status.Cached ->
+            is DownloadProgress.Status.Cached ->
                 statusCached
 
             DownloadProgress.Status.Pending -> {
