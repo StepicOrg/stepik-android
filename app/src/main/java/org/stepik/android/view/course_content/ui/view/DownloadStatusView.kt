@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.view_download_status.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.hideAllChildren
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 
 class DownloadStatusView
 @JvmOverloads
@@ -17,46 +18,30 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     var status: DownloadProgress.Status = DownloadProgress.Status.Pending
         set(value) {
             field = value
-            invalidateStatus()
-        }
+            viewStateDelegate.switchState(status)
 
-    private val statusNotCached: View
-    private val statusCached: View
-    private val statusPending: View
-    private val statusInProgress: View
+            isEnabled = status !is DownloadProgress.Status.Pending
+            when (value) {
+                is DownloadProgress.Status.Cached -> {
+                    // show mb
+                }
+
+                is DownloadProgress.Status.InProgress ->
+                    statusProgress.progress = (value.progress * statusProgress.max).toInt()
+            }
+        }
 
     private val statusProgress: ProgressBar
 
+    private val viewStateDelegate = ViewStateDelegate<DownloadProgress.Status>()
+
     init {
         val view = LayoutInflater.from(context).inflate(R.layout.view_download_status, this, true)
-        statusNotCached  = view.statusNotCached
-        statusCached     = view.statusCached
-        statusPending    = view.statusPending
-        statusInProgress = view.statusInProgress
+        viewStateDelegate.addState<DownloadProgress.Status.NotCached>(view.statusNotCached)
+        viewStateDelegate.addState<DownloadProgress.Status.Cached>(view.statusCached)
+        viewStateDelegate.addState<DownloadProgress.Status.Pending>(view.statusPending)
+        viewStateDelegate.addState<DownloadProgress.Status.InProgress>(view.statusInProgress)
 
-        statusProgress   = view.statusProgress
-    }
-
-    private fun invalidateStatus() {
-        hideAllChildren()
-        isEnabled = true
-        val status = this.status
-        when (status) {
-            DownloadProgress.Status.NotCached ->
-                statusNotCached
-
-            is DownloadProgress.Status.Cached ->
-                statusCached
-
-            DownloadProgress.Status.Pending -> {
-                isEnabled = false
-                statusPending
-            }
-
-            is DownloadProgress.Status.InProgress -> {
-                statusProgress.progress = (status.progress * statusProgress.max).toInt()
-                statusInProgress
-            }
-        }.visibility = View.VISIBLE
+        statusProgress = view.statusProgress
     }
 }
