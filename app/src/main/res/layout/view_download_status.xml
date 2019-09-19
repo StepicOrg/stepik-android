@@ -30,8 +30,8 @@
 
     <ImageView
         android:id="@+id/statusNotCached"
-        android:layout_width="@dimen/course_content_download_status_inner_size"
-        android:layout_height="@dimen/course_content_download_status_inner_size"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:contentDescription="@null"
         android:layout_gravity="center"
         app:srcCompat="@drawable/ic_download"
