@@ -15,7 +15,6 @@ import android.support.v7.widget.SimpleItemAnimator
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
-import kotlinx.android.synthetic.main.activity_profile_edit_password.*
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
