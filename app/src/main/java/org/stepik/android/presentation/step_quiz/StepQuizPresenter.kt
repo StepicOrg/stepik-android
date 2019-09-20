@@ -101,7 +101,7 @@ constructor(
     /**
      * Submissions
      */
-    fun createSubmission(reply: Reply) {
+    fun createSubmission(step: Step, reply: Reply) {
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
 
