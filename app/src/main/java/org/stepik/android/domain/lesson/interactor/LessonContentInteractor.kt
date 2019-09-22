@@ -5,9 +5,9 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.content.StepContentResolver
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.util.getProgresses
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.lesson.model.StepItem
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.model.Assignment
