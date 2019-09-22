@@ -22,8 +22,8 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.snackbar
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
@@ -179,7 +179,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     }
 
     override fun showNetworkError() {
-        snackbar(messageRes = R.string.connectionProblems)
+        view?.snackbar(messageRes = R.string.connectionProblems)
     }
 
     private fun showCourseReviewEditDialog(courseReview: CourseReview?) {

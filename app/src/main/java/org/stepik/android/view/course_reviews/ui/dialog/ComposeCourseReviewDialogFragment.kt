@@ -17,9 +17,9 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.hideKeyboard
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.snackbar
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewPresenter
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewView
@@ -169,6 +169,6 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     }
 
     override fun showNetworkError() {
-        snackbar(messageRes = R.string.connectionProblems)
+        view?.snackbar(messageRes = R.string.connectionProblems)
     }
 }

@@ -5,8 +5,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
@@ -20,7 +18,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.util.setTextColor
+import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.presentation.certificate.CertificatesPresenter
 import org.stepik.android.presentation.certificate.CertificatesView
 import org.stepik.android.view.certificate.ui.adapter.CertificatesAdapterDelegate
@@ -152,10 +150,7 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
     }
 
     override fun showNetworkError() {
-        Snackbar
-            .make(root, R.string.connectionProblems, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(this, R.color.white))
-            .show()
+        root.snackbar(messageRes = R.string.connectionProblems)
     }
 
     private fun onNeedShowShareDialog(certificateViewItem: CertificateViewItem?) {
