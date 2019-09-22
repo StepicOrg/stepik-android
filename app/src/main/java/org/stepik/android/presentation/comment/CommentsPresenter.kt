@@ -17,6 +17,7 @@ import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.comment.mapper.CommentsStateMapper
 import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.presentation.vote.transition.ChangeVoteTransition
 import org.stepik.android.view.injection.step.StepDiscussionBus
 import javax.inject.Inject
 
@@ -28,6 +29,8 @@ constructor(
     private val discussionProxyInteractor: DiscussionProxyInteractor,
 
     private val commentsStateMapper: CommentsStateMapper,
+
+    private val changeVoteTransition: ChangeVoteTransition,
 
     @StepDiscussionBus
     private val stepDiscussionSubject: PublishSubject<Long>,
@@ -187,29 +190,31 @@ constructor(
      * if [voteValue] is equal to current value new value will be null
      */
     fun onChangeVote(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
-        if (commentDataItem.voteStatus !is CommentItem.Data.VoteStatus.Resolved ||
-            commentDataItem.comment.actions?.vote != true) {
-            return
-        }
-
-        val oldState = (state as? CommentsView.State.DiscussionLoaded)
-            ?: return
-
-        val commentsState = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
-            ?: return
-
-        val newVote = commentDataItem.voteStatus.vote
-            .copy(value = voteValue.takeIf { it != commentDataItem.voteStatus.vote.value })
-
-        state = oldState.copy(commentsState = commentsStateMapper.mapToVotePending(commentsState, commentDataItem))
-        compositeDisposable += commentInteractor
-            .changeCommentVote(commentDataItem.id, newVote)
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
-                onError = { state = commentsStateMapper.mapFromVotePendingToError(state, commentDataItem.voteStatus.vote); view?.showNetworkError() }
-            )
+        changeVoteTransition(commentDataItem, voteValue)
+//
+//        if (commentDataItem.voteStatus !is CommentItem.Data.VoteStatus.Resolved ||
+//            commentDataItem.comment.actions?.vote != true) {
+//            return
+//        }
+//
+//        val oldState = (state as? CommentsView.State.DiscussionLoaded)
+//            ?: return
+//
+//        val commentsState = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
+//            ?: return
+//
+//        val newVote = commentDataItem.voteStatus.vote
+//            .copy(value = voteValue.takeIf { it != commentDataItem.voteStatus.vote.value })
+//
+//        state = oldState.copy(commentsState = commentsStateMapper.mapToVotePending(commentsState, commentDataItem))
+//        compositeDisposable += commentInteractor
+//            .changeCommentVote(commentDataItem.id, newVote)
+//            .observeOn(mainScheduler)
+//            .subscribeOn(backgroundScheduler)
+//            .subscribeBy(
+//                onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
+//                onError = { state = commentsStateMapper.mapFromVotePendingToError(state, commentDataItem.voteStatus.vote); view?.showNetworkError() }
+//            )
     }
 
     /**

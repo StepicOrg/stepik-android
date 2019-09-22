@@ -9,6 +9,7 @@ import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.presentation.vote.model.VoteStatus
 import javax.inject.Inject
 
 class CommentsStateMapper
@@ -171,7 +172,7 @@ constructor() {
         commentsState.copy(
             commentItems = commentsState
                 .commentItems
-                .map { if (it == commentDataItem) commentDataItem.copy(voteStatus = CommentItem.Data.VoteStatus.Pending) else it }
+                .map { if (it == commentDataItem) commentDataItem.copy(voteStatus = VoteStatus.Pending) else it }
         )
 
     fun mapFromVotePendingToSuccess(state: CommentsView.State, commentDataItem: CommentItem.Data): CommentsView.State {
@@ -217,7 +218,7 @@ constructor() {
                 .map { item ->
                     if (item is CommentItem.Data &&
                         item.comment.vote == vote.id) {
-                        item.copy(voteStatus = CommentItem.Data.VoteStatus.Resolved(vote))
+                        item.copy(voteStatus = VoteStatus.Resolved(vote))
                     } else {
                         item
                     }
@@ -226,7 +227,7 @@ constructor() {
             commentDataItems = commentsState.commentDataItems
                 .mapPaged { item ->
                     if (item.comment.vote == vote.id) {
-                        item.copy(voteStatus = CommentItem.Data.VoteStatus.Resolved(vote))
+                        item.copy(voteStatus = VoteStatus.Resolved(vote))
                     } else {
                         item
                     }

@@ -1,24 +1,23 @@
 package org.stepik.android.presentation.comment.model
 
 import org.stepik.android.model.comments.Comment
-import org.stepik.android.model.comments.Vote
 import org.stepik.android.model.user.User
+import org.stepik.android.presentation.vote.model.Votable
+import org.stepik.android.presentation.vote.model.VoteStatus
 import ru.nobird.android.core.model.Identifiable
 
 sealed class CommentItem {
     data class Data(
         val comment: Comment,
         val user: User,
-        val voteStatus: VoteStatus,
+        override val voteStatus: VoteStatus,
         val isFocused: Boolean
-    ) : CommentItem(), Identifiable<Long> {
+    ) : CommentItem(), Identifiable<Long>, Votable<Data> {
         override val id: Long =
             comment.id
 
-        sealed class VoteStatus {
-            data class Resolved(val vote: Vote) : VoteStatus()
-            object Pending : VoteStatus()
-        }
+        override fun mutate(voteStatus: VoteStatus): Data =
+            copy(voteStatus = voteStatus)
     }
 
     data class LoadMoreReplies(
