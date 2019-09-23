@@ -10,6 +10,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialog
+import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
 
 class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback {
     companion object {
@@ -85,6 +86,16 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
 
         langWidgetActionButton.setOnClickListener {
             CoursesLangDialog.newInstance().show(fragmentManager, null)
+        }
+
+        fontSizeSettingsButton.setOnClickListener {
+            val fragmentManager = fragmentManager
+                ?.takeIf { it.findFragmentByTag(ChooseFontSizeDialogFragment.TAG) == null }
+                ?: return@setOnClickListener
+
+            ChooseFontSizeDialogFragment
+                .newInstance()
+                .show(fragmentManager, ChooseFontSizeDialogFragment.TAG)
         }
     }
 

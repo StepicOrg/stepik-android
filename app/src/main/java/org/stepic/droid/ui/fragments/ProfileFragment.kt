@@ -507,5 +507,4 @@ class   ProfileFragment : FragmentBase(),
             true
         }
     }
-
 }
