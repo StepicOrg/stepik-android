@@ -48,6 +48,7 @@ constructor(
     private val unitDownloadInteractor: DownloadInteractor<Unit>,
 
     private val courseDownloadProgressProvider: DownloadProgressProvider<Course>,
+    private val courseDownloadInteractor: DownloadInteractor<Course>,
 
     private val videoQualityInteractor: VideoQualityInteractor,
 
@@ -78,6 +79,7 @@ constructor(
     private val downloadsDisposable = CompositeDisposable()
     private val deadlinesDisposable = CompositeDisposable()
 
+    private val pendingCourses = mutableSetOf<Long>()
     private val pendingUnits = mutableSetOf<Long>()
     private val pendingSections = mutableSetOf<Long>()
 
@@ -153,7 +155,7 @@ constructor(
             .toLongArray()
 
         subscribeForUnitsProgress(*unitIds)
-        subscribeForCourseUpdates()
+        subscribeForCourseUpdates(courseId)
     }
 
     private fun subscribeForSectionsProgress(vararg sectionIds: Long, limit: Long = -1) {
@@ -192,18 +194,22 @@ constructor(
             )
     }
 
-    private fun subscribeForCourseUpdates() {
+    private fun subscribeForCourseUpdates(vararg courseIds: Long, limit: Long = -1) {
         downloadsDisposable += courseDownloadProgressProvider
-            .getProgress(courseId)
+            .getProgress(*courseIds)
+            .let { stream ->
+                limit
+                    .takeUnless { it < 0 }
+                    ?.let(stream::take)
+                    ?: stream
+            }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
+            .filter { it.id !in pendingCourses }
             .subscribeBy(
-                onError = { it.printStackTrace(); },
-                onNext = {
-                    // view?.updateCourseDownloadProgress(it)
-                }
+                onError = { it.printStackTrace(); resolveDownloadProgressSubscription() }, // resub on error
+                onNext = { view?.updateCourseDownloadProgress(it) }
             )
-
     }
 
     /**
@@ -214,12 +220,40 @@ constructor(
             ?: videoQualityInteractor.getVideoQuality()
             ?: return view?.showVideoQualityDialog(course = course) ?: kotlin.Unit
 
-        (state as? CourseContentView.State.CourseContentLoaded)
-            ?.courseContent
-            ?.filterIsInstance<CourseContentItem.SectionItem>()
-            ?.forEach { sectionItem ->
-                addSectionDownloadTask(sectionItem.section, quality)
+        pendingCourses += course.id
+        view?.updateCourseDownloadProgress(DownloadProgress(course.id, DownloadProgress.Status.Pending))
+
+        compositeDisposable += courseDownloadInteractor
+            .addTask(courseId, configuration = DownloadConfiguration(videoQuality = quality))
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doFinally {
+                pendingCourses -= course.id
+                subscribeForCourseUpdates(courseId, limit = 1)
             }
+            .subscribeBy(
+                onError = {
+                    if (it is NetworkRequirementsNotSatisfiedException) {
+                        view?.showChangeDownloadNetworkType()
+                    }
+                }
+            )
+    }
+
+    fun removeCourseDownloadTask(course: Course) {
+        if (course.id in pendingCourses) return
+        pendingCourses += courseId
+        view?.updateCourseDownloadProgress(DownloadProgress(course.id, DownloadProgress.Status.Pending))
+
+        compositeDisposable += courseDownloadInteractor
+            .removeTask(course)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doFinally {
+                pendingCourses -= course.id
+                subscribeForCourseUpdates(course.id, limit = 1)
+            }
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     fun addUnitDownloadTask(unit: Unit, videoQuality: String? = null) {

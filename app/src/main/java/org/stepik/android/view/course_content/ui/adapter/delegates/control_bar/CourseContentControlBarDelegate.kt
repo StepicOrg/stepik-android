@@ -10,6 +10,7 @@ import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
+import timber.log.Timber
 
 class CourseContentControlBarDelegate(
     private val controlBarClickListener: CourseContentControlBarClickListener
@@ -66,6 +67,7 @@ class CourseContentControlBarDelegate(
             controlBar.changeItemVisibility(R.id.course_control_schedule, isScheduleVisible)
             controlBar.changeItemVisibility(R.id.course_control_download_all, data.course != null)
             controlBar.setHeight(if (data.isEnabled) controlBarHeight else 0)
+            Timber.d("hELLO there")
         }
 
         private fun handleScheduleClick(data: CourseContentItem.ControlBar) {

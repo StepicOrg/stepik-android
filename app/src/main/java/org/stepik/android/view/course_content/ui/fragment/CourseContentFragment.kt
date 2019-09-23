@@ -242,7 +242,7 @@ class CourseContentFragment :
     }
 
     override fun updateCourseDownloadProgress(downloadProgress: DownloadProgress) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        contentAdapter.updateCourseDownloadProgress(downloadProgress)
     }
 
     override fun showChangeDownloadNetworkType() {
