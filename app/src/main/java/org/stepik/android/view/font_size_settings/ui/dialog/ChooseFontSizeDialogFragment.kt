@@ -33,6 +33,7 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
         presenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(FontSizePresenter::class.java)
+        presenter.fetchFontSize()
     }
 
     private fun injectComponent() {
@@ -42,20 +43,19 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
             .inject(this)
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.step_content_font_size))
-
-        val builder = AlertDialog.Builder(requireContext())
-        builder
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        AlertDialog
+            .Builder(requireContext())
             .setTitle(R.string.proile_font_settings_dialog_title)
-            .setSingleChoiceItems(adapter, -1) { _, which ->
+            .setSingleChoiceItems(
+                ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.step_content_font_size)),
+                -1
+            ) { _, which ->
                 val fontSize = FontSize.values()[which]
                 presenter.onFontSizeChosen(fontSize)
                 dismiss()
             }
-        presenter.fetchFontSize()
-        return builder.create()
-    }
+            .create()
 
     override fun onStart() {
         super.onStart()
