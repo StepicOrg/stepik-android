@@ -3,12 +3,12 @@ package org.stepic.droid.persistence.downloads.resolvers.structure
 import io.reactivex.Observable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.Structure
-import org.stepic.droid.util.getProgresses
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.then
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository

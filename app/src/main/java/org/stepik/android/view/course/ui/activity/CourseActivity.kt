@@ -6,10 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
 import android.support.design.widget.TabLayout
 import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatDelegate
@@ -31,8 +29,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
@@ -333,17 +331,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                     R.string.course_purchase_billing_no_purchases_to_restore
             }
 
-        Snackbar
-            .make(coursePager, errorMessage, Snackbar.LENGTH_LONG)
-            .setTextColor(ContextCompat.getColor(this, R.color.white))
-            .show()
+        coursePager.snackbar(messageRes = errorMessage)
     }
 
     override fun showContinueLearningError() {
-        Snackbar
-            .make(coursePager, R.string.course_error_continue_learning, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(this, R.color.white))
-            .show()
+        coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
     }
 
     override fun continueCourse(lastStep: LastStep) {

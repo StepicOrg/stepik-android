@@ -17,11 +17,11 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
-import org.stepic.droid.util.getProgresses
 import org.stepic.droid.web.Api
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary

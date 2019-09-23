@@ -15,9 +15,9 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.hideKeyboard
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.snackbar
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
@@ -166,7 +166,7 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
     }
 
     override fun showNetworkError() {
-        snackbar(messageRes = R.string.connectionProblems)
+        view?.snackbar(messageRes = R.string.connectionProblems)
     }
 
     interface Callback {

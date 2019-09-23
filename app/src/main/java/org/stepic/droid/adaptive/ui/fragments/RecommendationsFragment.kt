@@ -20,7 +20,6 @@ import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepik.android.model.Course
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.MathUtli
 import javax.inject.Inject
 
 class RecommendationsFragment : FragmentBase(), RecommendationsView {
@@ -104,7 +103,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     override fun onLoading() {
         progress.visibility = View.VISIBLE
         error.visibility = View.GONE
-        loadingPlaceholder.text = loadingPlaceholders[MathUtli.randomBetween(0, loadingPlaceholders.size - 1)]
+        loadingPlaceholder.text = loadingPlaceholders.random()
     }
 
     override fun onCardLoaded() {

@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
@@ -17,8 +16,8 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.mutate
-import org.stepic.droid.util.setTextColor
 import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.profile_edit.ProfileEditPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditView
@@ -114,18 +113,12 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
         when (requestCode) {
             ProfileEditInfoActivity.REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    Snackbar
-                        .make(root, R.string.profile_edit_change_success_info, Snackbar.LENGTH_SHORT)
-                        .setTextColor(ContextCompat.getColor(this, R.color.white))
-                        .show()
+                    root.snackbar(messageRes = R.string.profile_edit_change_success_info)
                 }
 
             ProfileEditPasswordActivity.REQUEST_CODE ->
                 if (resultCode == Activity.RESULT_OK) {
-                    Snackbar
-                        .make(root, R.string.profile_edit_change_success_password, Snackbar.LENGTH_SHORT)
-                        .setTextColor(ContextCompat.getColor(this, R.color.white))
-                        .show()
+                    root.snackbar(messageRes = R.string.profile_edit_change_success_password)
                 }
 
             else ->

@@ -67,7 +67,7 @@ class CourseContentUnitDelegate(
                     is DownloadProgress.Status.InProgress ->
                         unitClickListener.onItemCancelClicked(item)
 
-                    DownloadProgress.Status.Cached ->
+                    is DownloadProgress.Status.Cached ->
                         unitClickListener.onItemRemoveClicked(item)
                 }
             }
@@ -84,7 +84,7 @@ class CourseContentUnitDelegate(
                         ?.toLong()
                         ?: 0L
 
-                    unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
+                    unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
                         score, progress.cost)
 
                     unitProgress.progress = score / progress.cost.toFloat()

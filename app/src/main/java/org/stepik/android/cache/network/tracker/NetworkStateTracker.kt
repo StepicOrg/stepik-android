@@ -81,7 +81,7 @@ constructor(
                 ?.let(connectivityManager::getNetworkCapabilities)
                 ?: return EnumSet.noneOf(DownloadConfiguration.NetworkType::class.java)
 
-            return EnumSet.copyOf(listOfNotNull(
+            val networkTypes = listOfNotNull(
                 DownloadConfiguration.NetworkType.WIFI
                     ?.takeIf {
                         networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
@@ -90,7 +90,13 @@ constructor(
 
                 DownloadConfiguration.NetworkType.MOBILE
                     ?.takeIf { networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) }
-            ))
+            )
+
+            return if (networkTypes.isEmpty()) {
+                EnumSet.noneOf(DownloadConfiguration.NetworkType::class.java)
+            } else {
+                EnumSet.copyOf(networkTypes)
+            }
         }
     }
 
