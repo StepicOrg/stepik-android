@@ -789,8 +789,9 @@ public class SharedPreferenceHelper {
         put(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, fontSize.ordinal());
     }
 
-    public int getStepContentFontSize() {
-        return getInt(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 1);
+    public FontSize getStepContentFontSize() {
+        int ordinal = getInt(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 1);
+        return FontSize.values()[ordinal];
     }
 
     private void put(PreferenceType type, String key, String value) {

@@ -38,7 +38,6 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = {},
                 onError = emptyOnErrorStub
             )
     }

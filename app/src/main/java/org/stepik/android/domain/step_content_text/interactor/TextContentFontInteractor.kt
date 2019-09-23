@@ -13,8 +13,7 @@ constructor(
 ) {
     fun fetchTextContentFontSize(): Single<FontSize> =
         Single.fromCallable {
-            val ordinal = sharedPreferenceHelper.stepContentFontSize
-            FontSize.values()[ordinal]
+            sharedPreferenceHelper.stepContentFontSize
         }
 
     fun setTextContentFontSize(fontSize: FontSize): Completable =
