@@ -365,7 +365,7 @@
     <!--Profile screen-->
     <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
     <string name="profile_font_settings_title">Размер шрифта</string>
-    <string name="proile_font_settings_dialog_title">Выберите размер шрифта</string>
+    <string name="profile_font_settings_dialog_title">Выберите размер шрифта</string>
 
     <!--Home screen-->
     <string name="catalog_title">Каталог</string>

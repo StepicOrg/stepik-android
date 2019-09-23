@@ -46,7 +46,7 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog
             .Builder(requireContext())
-            .setTitle(R.string.proile_font_settings_dialog_title)
+            .setTitle(R.string.profile_font_settings_dialog_title)
             .setSingleChoiceItems(
                 ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.step_content_font_size)),
                 -1

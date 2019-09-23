@@ -375,7 +375,7 @@
     <string name="short_bio_and_info">Short bio &amp; Info</string>
     <string name="profile_user_id" translatable="false">User ID: %d</string>
     <string name="profile_font_settings_title">Font size</string>
-    <string name="proile_font_settings_dialog_title">Choose font size</string>
+    <string name="profile_font_settings_dialog_title">Choose font size</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
