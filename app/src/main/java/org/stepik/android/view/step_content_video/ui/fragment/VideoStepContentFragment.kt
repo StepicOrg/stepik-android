@@ -3,9 +3,7 @@ package org.stepik.android.view.step_content_video.ui.fragment
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,8 +17,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.changeVisibility
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
@@ -89,10 +87,7 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView {
     private fun openVideoPlayer() {
         if (stepWrapper.cachedVideo == null && stepWrapper.step.block?.video == null) {
             analytic.reportEventWithName(Analytic.Error.ILLEGAL_STATE_VIDEO_STEP_PLAY, stepWrapper.step.id.toString())
-            Snackbar
-                .make(videoStepContent, R.string.step_content_video_no_video, Snackbar.LENGTH_SHORT)
-                .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                .show()
+            videoStepContent.snackbar(messageRes = R.string.step_content_video_no_video)
         } else {
             val thumbnail = stepWrapper.cachedVideo?.thumbnail
                 ?: stepWrapper.step.block?.video?.thumbnail

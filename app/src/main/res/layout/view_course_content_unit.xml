@@ -151,10 +151,9 @@
 
     <org.stepik.android.view.course_content.ui.view.DownloadStatusView
         android:id="@+id/unitDownloadStatus"
-        android:background="@drawable/circle_selector"
+        android:background="?selectableItemBackgroundBorderless"
         android:layout_width="@dimen/course_content_download_status_size"
-        android:layout_height="@dimen/course_content_download_status_size"
-        android:padding="@dimen/course_content_download_status_padding"
+        android:layout_height="wrap_content"
 
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"

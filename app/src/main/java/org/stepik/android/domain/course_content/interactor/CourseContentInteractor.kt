@@ -4,10 +4,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.util.concat
-import org.stepic.droid.util.getProgresses
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository

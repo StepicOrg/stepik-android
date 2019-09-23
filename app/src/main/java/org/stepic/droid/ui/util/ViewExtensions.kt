@@ -7,6 +7,9 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
+import android.support.annotation.StringRes
+import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat
 import android.support.v7.content.res.AppCompatResources
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +17,8 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import org.stepic.droid.R
+import org.stepic.droid.util.setTextColor
 
 fun View.changeVisibility(needShow: Boolean) {
     if (needShow) {
@@ -120,4 +125,15 @@ inline fun <T : View> T.doOnGlobalLayout(crossinline action: (view: T) -> Unit) 
 fun View.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(windowToken, 0)
+}
+
+fun View.snackbar(@StringRes messageRes: Int, length: Int = Snackbar.LENGTH_SHORT) {
+    snackbar(context.getString(messageRes), length)
+}
+
+fun View.snackbar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
+    Snackbar
+        .make(this, message, length)
+        .setTextColor(ContextCompat.getColor(context, R.color.white))
+        .show()
 }
