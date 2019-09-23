@@ -438,7 +438,7 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
-    <string name="course_current_progress">Текущий прогресс %d/%d</string>
+    <string name="course_current_progress">Текущий прогресс %d/%d баллов</string>
     <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
     <string name="registration_remind_message">Завершите регистрацию и получите доступ к неограниченному числу бесплатных курсов!</string>
 
