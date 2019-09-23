@@ -604,7 +604,7 @@
 
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
-    <string name="course_control_download_all">Скачать все</string>
+    <string name="course_control_download_all">Скачать</string>
 
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
     <string name="course_content_calendar_no_calendars_error">Календари не найдены</string>
