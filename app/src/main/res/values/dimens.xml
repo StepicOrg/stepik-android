@@ -206,6 +206,7 @@
     <dimen name="course_content_item_inner_margin">12dp</dimen>
 
     <dimen name="course_content_download_status_size">48dp</dimen>
+    <dimen name="course_content_download_status_inner_size">20dp</dimen>
     <dimen name="course_content_download_status_padding">14dp</dimen>
 
     <!-- Course reviews -->

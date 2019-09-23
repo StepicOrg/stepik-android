@@ -31,9 +31,17 @@ object TextUtil {
         return text.length
     }
 
+    /**
+     * Format [bytes] to human readable format. If [bytes] < [smallestUnit] returns bytes in form "< smallestUnit".
+     */
     @JvmStatic
-    fun formatBytes(bytes: Long): String {
+    fun formatBytes(bytes: Long, smallestUnit: Long = 0): String {
         val unit = 1024
+
+        if (smallestUnit > 0 && bytes < smallestUnit) {
+            return "<" + formatBytes(bytes = smallestUnit)
+        }
+
         if (bytes < unit) return "$bytes B"
         val exp = log(bytes.toFloat(), unit.toFloat()).toInt()
         val letter = "kMGTPE"[exp - 1]
