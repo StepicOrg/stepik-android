@@ -8,8 +8,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.domain.personal_deadlines.model.Deadline
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
@@ -20,6 +18,8 @@ import org.stepik.android.domain.course_calendar.interactor.CourseCalendarIntera
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
 import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfiedException
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
+import org.stepik.android.domain.personal_deadlines.model.Deadline
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.domain.settings.interactor.VideoQualityInteractor
 import org.stepik.android.model.Course
@@ -46,6 +46,8 @@ constructor(
 
     private val unitDownloadProgressProvider: DownloadProgressProvider<Unit>,
     private val unitDownloadInteractor: DownloadInteractor<Unit>,
+
+    private val courseDownloadProgressProvider: DownloadProgressProvider<Course>,
 
     private val videoQualityInteractor: VideoQualityInteractor,
 
@@ -151,6 +153,7 @@ constructor(
             .toLongArray()
 
         subscribeForUnitsProgress(*unitIds)
+        subscribeForCourseUpdates()
     }
 
     private fun subscribeForSectionsProgress(vararg sectionIds: Long, limit: Long = -1) {
@@ -187,6 +190,20 @@ constructor(
                 onError = { it.printStackTrace(); resolveDownloadProgressSubscription() }, // resub on error
                 onNext  = { view?.updateUnitDownloadProgress(it) }
             )
+    }
+
+    private fun subscribeForCourseUpdates() {
+        downloadsDisposable += courseDownloadProgressProvider
+            .getProgress(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = { it.printStackTrace(); },
+                onNext = {
+                    // view?.updateCourseDownloadProgress(it)
+                }
+            )
+
     }
 
     /**

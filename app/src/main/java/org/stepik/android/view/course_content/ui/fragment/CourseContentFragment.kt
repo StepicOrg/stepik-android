@@ -241,6 +241,10 @@ class CourseContentFragment :
         contentAdapter.updateUnitDownloadProgress(downloadProgress)
     }
 
+    override fun updateCourseDownloadProgress(downloadProgress: DownloadProgress) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun showChangeDownloadNetworkType() {
         val view = view
             ?: return
