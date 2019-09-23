@@ -7,6 +7,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.step_content_text.interactor.TextContentFontInteractor
+import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -31,9 +32,9 @@ constructor(
             )
     }
 
-    fun onFontSizeChosen(fontSizeIndex: Int) {
+    fun onFontSizeChosen(fontSize: FontSize) {
         compositeDisposable += textContentFontInteractor
-            .setTextContentFontSize(fontSizeIndex)
+            .setTextContentFontSize(fontSize)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

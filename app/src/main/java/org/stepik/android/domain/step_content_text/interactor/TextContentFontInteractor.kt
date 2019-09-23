@@ -3,6 +3,7 @@ package org.stepik.android.domain.step_content_text.interactor
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.domain.step_content_text.model.FontSize
 import javax.inject.Inject
 
 class TextContentFontInteractor
@@ -10,13 +11,14 @@ class TextContentFontInteractor
 constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
-    fun fetchTextContentFontSize(): Single<Int> =
+    fun fetchTextContentFontSize(): Single<FontSize> =
         Single.fromCallable {
-            sharedPreferenceHelper.stepContentFontSizeIndex
+            val ordinal = sharedPreferenceHelper.stepContentFontSize
+            FontSize.values()[ordinal]
         }
 
-    fun setTextContentFontSize(fontSizeIndex: Int): Completable =
+    fun setTextContentFontSize(fontSize: FontSize): Completable =
         Completable.fromAction {
-            sharedPreferenceHelper.putStepContentFontSizeIndex(fontSizeIndex)
+            sharedPreferenceHelper.putStepContentFontSize(fontSize)
         }
 }

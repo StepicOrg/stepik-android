@@ -21,6 +21,7 @@ import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepikResponse;
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
+import org.stepik.android.domain.step_content_text.model.FontSize;
 import org.stepik.android.model.user.EmailAddress;
 import org.stepik.android.model.user.Profile;
 
@@ -784,11 +785,11 @@ public class SharedPreferenceHelper {
         return getLong(PreferenceType.NOTIFICATION, id);
     }
 
-    public void putStepContentFontSizeIndex(int fontSize) {
-        put(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, fontSize);
+    public void putStepContentFontSize(FontSize fontSize) {
+        put(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, fontSize.ordinal());
     }
 
-    public int getStepContentFontSizeIndex() {
+    public int getStepContentFontSize() {
         return getInt(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 1);
     }
 

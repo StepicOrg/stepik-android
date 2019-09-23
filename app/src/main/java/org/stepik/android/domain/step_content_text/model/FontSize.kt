@@ -1,4 +1,4 @@
-package org.stepik.android.view.font_size_settings.model
+package org.stepik.android.domain.step_content_text.model
 
 enum class FontSize(val size: Float) {
     SMALL(14f),

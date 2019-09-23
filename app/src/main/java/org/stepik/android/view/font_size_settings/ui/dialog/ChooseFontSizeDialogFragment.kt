@@ -9,9 +9,9 @@ import android.support.v4.app.DialogFragment
 import android.widget.ArrayAdapter
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.font_size_settings.FontSizePresenter
 import org.stepik.android.presentation.font_size_settings.FontSizeView
-import org.stepik.android.view.font_size_settings.model.FontSize
 import javax.inject.Inject
 
 class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
@@ -50,7 +50,7 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
             .setTitle(R.string.proile_font_settings_dialog_title)
             .setSingleChoiceItems(adapter, -1) { _, which ->
                 val fontSize = FontSize.values()[which]
-                presenter.onFontSizeChosen(fontSize.ordinal)
+                presenter.onFontSizeChosen(fontSize)
                 dismiss()
             }
         presenter.fetchFontSize()
@@ -67,7 +67,7 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
         super.onStop()
     }
 
-    override fun setCachedFontSize(fontSizeIndex: Int) {
-        (dialog as AlertDialog).listView.setItemChecked(fontSizeIndex, true)
+    override fun setCachedFontSize(fontSize: FontSize) {
+        (dialog as AlertDialog).listView.setItemChecked(fontSize.ordinal, true)
     }
 }
