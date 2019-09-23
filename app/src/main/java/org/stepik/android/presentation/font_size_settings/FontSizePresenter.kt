@@ -31,13 +31,13 @@ constructor(
             )
     }
 
-    fun onFontSizeChosen(fontSize: Float) {
+    fun onFontSizeChosen(fontSizeIndex: Int) {
         compositeDisposable += textContentFontInteractor
-            .setTextContentFontSize(fontSize)
+            .setTextContentFontSize(fontSizeIndex)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = { view?.onFontSizeChosen() },
+                onComplete = {},
                 onError = emptyOnErrorStub
             )
     }

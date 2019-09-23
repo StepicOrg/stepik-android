@@ -15,6 +15,7 @@ import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.argument
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
 import org.stepik.android.presentation.step_content_text.TextStepContentView
+import org.stepik.android.view.font_size_settings.model.FontSize
 import javax.inject.Inject
 
 class TextStepContentFragment : Fragment(), TextStepContentView {
@@ -89,7 +90,7 @@ class TextStepContentFragment : Fragment(), TextStepContentView {
         super.onDestroy()
     }
 
-    override fun setTextContentFontSize(fontSize: Float) {
-        latexLayout?.setTextSize(fontSize) ?: return
+    override fun setTextContentFontSize(fontSizeIndex: Int) {
+        latexLayout?.setTextSize(FontSize.values()[fontSizeIndex].size) ?: return
     }
 }

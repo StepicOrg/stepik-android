@@ -10,13 +10,13 @@ class TextContentFontInteractor
 constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
-    fun fetchTextContentFontSize(): Single<Float> =
+    fun fetchTextContentFontSize(): Single<Int> =
         Single.fromCallable {
-            sharedPreferenceHelper.stepContentFontSize
+            sharedPreferenceHelper.stepContentFontSizeIndex
         }
 
-    fun setTextContentFontSize(fontSize: Float): Completable =
+    fun setTextContentFontSize(fontSizeIndex: Int): Completable =
         Completable.fromAction {
-            sharedPreferenceHelper.putStepContentFontSize(fontSize)
+            sharedPreferenceHelper.putStepContentFontSizeIndex(fontSizeIndex)
         }
 }

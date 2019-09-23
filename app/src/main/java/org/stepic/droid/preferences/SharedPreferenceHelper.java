@@ -784,12 +784,12 @@ public class SharedPreferenceHelper {
         return getLong(PreferenceType.NOTIFICATION, id);
     }
 
-    public void putStepContentFontSize(float fontSize) {
+    public void putStepContentFontSizeIndex(int fontSize) {
         put(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, fontSize);
     }
 
-    public float getStepContentFontSize() {
-        return getFloat(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 16f);
+    public int getStepContentFontSizeIndex() {
+        return getInt(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 1);
     }
 
     private void put(PreferenceType type, String key, String value) {
@@ -854,15 +854,5 @@ public class SharedPreferenceHelper {
     private boolean getBoolean(PreferenceType preferenceType, String key, boolean defaultValue) {
         return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getBoolean(key, defaultValue);
-    }
-
-    private float getFloat(PreferenceType preferenceType, String key, float defaultValue) {
-        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
-                .getFloat(key, defaultValue);
-    }
-
-    private float getFloat(PreferenceType preferenceType, String key) {
-        return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
-                .getFloat(key, 0f);
     }
 }
