@@ -24,9 +24,6 @@ class Submission(
     @SerializedName("feedback")
     val feedback: Feedback? = null
 ) {
-    @Deprecated("this compatibility constructor will be removed after rewriting StepAttemptFragment in Kotlin")
-    constructor(reply: Reply?, attempt: Long, status: Status?): this(id = 0, reply = reply, attempt = attempt, status = status)
-
     @SerializedName("reply")
     private val replyWrapper: ReplyWrapper? = reply?.let(::ReplyWrapper)
 
