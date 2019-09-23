@@ -454,7 +454,7 @@
         <item quantity="one">%d course</item>
         <item quantity="other">%d courses</item>
     </plurals>
-    <string name="course_current_progress">Current progress: %d/%d</string>
+    <string name="course_current_progress">Current progress: %d/%d points</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
 
     <string name="notification_badge_placeholder" translatable="false">99+</string>
@@ -622,6 +622,7 @@
     <string name="course_content_time_to_complete_minutes_unit">%d min</string>
     <string name="course_content_time_to_complete_hours_unit">%d h</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
+    <string name="course_content_text_progress_points">%d/%d points</string>
 
     <string name="course_content_timeline_begin_date">Begin date</string>
     <string name="course_content_timeline_end_date">End date</string>

@@ -35,6 +35,44 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
 
+    <TextView
+        android:id="@+id/unitTextProgress"
+        app:fontFamily="@font/roboto_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="missingPrefix"
+        tools:text="6/10" />
+
+    <TextView
+        android:id="@+id/unitTimeToComplete"
+        app:fontFamily="@font/roboto_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/unitTextProgress"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="missingPrefix"
+        tools:text="≈ 2 min"/>
+
+
+
     <ImageView
         android:id="@+id/unitViewCountIcon"
         android:layout_width="10dp"
@@ -47,7 +85,7 @@
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
         android:layout_marginBottom="@dimen/course_content_item_margin"
 
-        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintStart_toEndOf="@+id/unitTimeToComplete"
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -110,42 +148,6 @@
         app:fontFamily="@font/roboto_light"
         tools:ignore="missingPrefix"
         tools:text="999" />
-
-    <TextView
-        android:id="@+id/unitTextProgress"
-        app:fontFamily="@font/roboto_light"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/course_content_item_inner_margin"
-        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
-        android:layout_marginTop="@dimen/course_content_item_inner_margin"
-        android:layout_marginBottom="@dimen/course_content_item_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/unitRating"
-        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="missingPrefix"
-        tools:text="6/10" />
-
-    <TextView
-        android:id="@+id/unitTimeToComplete"
-        app:fontFamily="@font/roboto_light"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/course_content_item_inner_margin"
-        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
-        android:layout_marginTop="@dimen/course_content_item_inner_margin"
-        android:layout_marginBottom="@dimen/course_content_item_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/unitTextProgress"
-        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="missingPrefix"
-        tools:text="≈ 2 min"/>
 
     <org.stepik.android.view.course_content.ui.view.DownloadStatusView
         android:id="@+id/unitDownloadStatus"
