@@ -3,6 +3,7 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
+import android.widget.ArrayAdapter
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -39,32 +40,36 @@ class VideoQualityDialog : VideoQualityDialogBase() {
             userPreferences.qualityVideo
         }
 
+        val chosenOptionPosition = qualityToPositionMap[qualityValue]!!
+
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.video_quality))
+
         val builder = AlertDialog.Builder(requireContext())
         builder
-                .setTitle(
+            .setTitle(
                 if (forPlaying) {
                     R.string.video_quality_playing
                 }
                 else {
                     R.string.video_quality
                 }
-                )
-                .setNegativeButton(R.string.cancel) { _, _ ->
-                    analytic.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY)
-                }
-                .setSingleChoiceItems(R.array.video_quality, qualityToPositionMap[qualityValue]!!) { dialog, which ->
-                    val qualityString = positionToQualityMap[which]
-                    analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
+            )
+            .setSingleChoiceItems(adapter, chosenOptionPosition) { _, which ->
+                val qualityString = positionToQualityMap[which]
+                analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
 
-                    threadPoolExecutor.execute {
-                        if (forPlaying) {
-                            userPreferences.saveVideoQualityForPlaying(qualityString)
-                        } else {
-                            userPreferences.storeQualityVideo(qualityString)
-                        }
+                threadPoolExecutor.execute {
+                    if (forPlaying) {
+                        userPreferences.saveVideoQualityForPlaying(qualityString)
+                    } else {
+                        userPreferences.storeQualityVideo(qualityString)
                     }
-                    dialog.dismiss()
                 }
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                analytic.reportEvent(Analytic.Interaction.CANCEL_VIDEO_QUALITY)
+            }
 
         return builder.create()
     }
