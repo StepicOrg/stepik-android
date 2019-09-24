@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.dialog_compose_comment.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.ui.util.snackbar
@@ -26,7 +27,11 @@ import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
 import javax.inject.Inject
 
-class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
+class ComposeCommentDialogFragment :
+    DialogFragment(),
+    ComposeCommentView,
+    DiscardTextDialogFragment.Callback {
+
     companion object {
         const val TAG = "ComposeCommentDialogFragment"
 
@@ -194,6 +199,18 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
     }
 
     private fun onClose() {
+        if (commentEditText.text.isNullOrEmpty()) {
+            super.dismiss()
+        } else {
+            if (childFragmentManager.findFragmentByTag(DiscardTextDialogFragment.TAG) == null) {
+                DiscardTextDialogFragment
+                    .newInstance()
+                    .show(childFragmentManager, DiscardTextDialogFragment.TAG)
+            }
+        }
+    }
+
+    override fun onDiscardConfirmed() {
         super.dismiss()
     }
 
