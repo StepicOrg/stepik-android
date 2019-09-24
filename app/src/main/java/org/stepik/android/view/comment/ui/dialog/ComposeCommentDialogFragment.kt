@@ -62,7 +62,11 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
         LoadingProgressDialogFragment.newInstance()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
+        val dialog = object : Dialog(requireContext(), theme) {
+            override fun onBackPressed() {
+                onClose()
+            }
+        }
 
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
@@ -176,13 +180,21 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
                     ?: targetFragment as? Callback)
                     ?.onCommentReplaced(state.commentsData, state.isCommentCreated)
 
-                dismiss()
+                super.dismiss()
             }
         }
     }
 
     override fun showNetworkError() {
         view?.snackbar(messageRes = R.string.connectionProblems)
+    }
+
+    override fun dismiss() {
+        onClose()
+    }
+
+    private fun onClose() {
+        super.dismiss()
     }
 
     interface Callback {
