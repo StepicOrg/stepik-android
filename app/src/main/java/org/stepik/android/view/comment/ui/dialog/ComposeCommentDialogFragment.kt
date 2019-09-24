@@ -5,6 +5,8 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -106,6 +108,20 @@ class ComposeCommentDialogFragment : DialogFragment(), ComposeCommentView {
         if (savedInstanceState == null) {
             commentEditText.setText(comment?.text)
         }
+        invalidateMenuState()
+
+        commentEditText.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                invalidateMenuState()
+            }
+        })
+    }
+
+    private fun invalidateMenuState() {
+        centeredToolbar.menu.findItem(R.id.comment_submit)?.isEnabled =
+            !commentEditText.text.isNullOrEmpty()
     }
 
     override fun onStart() {
