@@ -51,7 +51,6 @@ import org.stepic.droid.ui.dialogs.CertificateShareDialog
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
-import org.stepic.droid.ui.dialogs.DiscountingPolicyDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialog
@@ -73,6 +72,7 @@ import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
+import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
@@ -81,6 +81,7 @@ import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
+import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
 import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
@@ -174,11 +175,15 @@ interface AppCoreComponent {
 
     fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder
 
+    fun textStepContentComponentBuilder(): TextStepContentComponent.Builder
+
     fun certificatesComponentBuilder(): CertificateComponent.Builder
 
     fun composeCommentComponentBuilder(): ComposeCommentComponent.Builder
 
     fun commentsComponentBuilder(): CommentsComponent.Builder
+
+    fun fontSizeComponentBuilder(): FontSizeComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
@@ -189,8 +194,6 @@ interface AppCoreComponent {
     fun inject(adapter: Course)
 
     fun inject(baseFragment: FragmentBase)
-
-    fun inject(dialogFragment: DiscountingPolicyDialogFragment)
 
     fun inject(dialogFragment: LogoutAreYouSureDialog)
 

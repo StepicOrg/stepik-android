@@ -206,11 +206,10 @@
     </style>
 
     <style name="SettingHeaderTextView">
-        <item name="android:textSize">@dimen/text_header</item>
-        <item name="android:textColor">?colorAccent</item>
-        <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/violet1</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:padding">@dimen/guideline_standard_padding</item>
     </style>
 
     <style name="SettingCardStyle">
@@ -221,10 +220,11 @@
         <item name="android:textColor">@color/stepic_regular_text</item>
         <item name="android:textSize">@dimen/text_header</item>
         <item name="android:layout_marginLeft">@dimen/guideline_standard_padding</item>
+        <item name="android:layout_marginRight">@dimen/guideline_standard_padding</item>
         <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
         <item name="android:paddingLeft">@dimen/half_padding</item>
         <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingRight">@dimen/half_padding</item>
     </style>
 
     <style name="SettingSwitch">

@@ -6,9 +6,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -17,8 +15,8 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.setTextColor
 import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.profile_edit.ProfileEditInfoPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditInfoView
@@ -126,21 +124,15 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
     }
 
     override fun showNetworkError() {
-        Snackbar
-            .make(root, R.string.no_connection, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(this, R.color.white))
-            .show()
+        root.snackbar(messageRes = R.string.no_connection)
     }
 
     override fun showInfoError() {
-        Snackbar
-            .make(root, R.string.profile_edit_error_info, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(this, R.color.white))
-            .show()
+        root.snackbar(messageRes = R.string.profile_edit_error_info)
     }
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+        overridePendingTransition(R.anim.no_transition, R.anim.push_down)
     }
 }

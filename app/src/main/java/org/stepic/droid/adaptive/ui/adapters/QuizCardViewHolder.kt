@@ -1,8 +1,6 @@
 package org.stepic.droid.adaptive.ui.adapters
 
-import android.graphics.Color
 import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
@@ -23,6 +21,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.quiz.QuizDelegate
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import javax.inject.Inject
 
@@ -182,9 +181,9 @@ class QuizCardViewHolder(
     override fun onSubmissionRequestError() = onSubmissionError(R.string.request_error)
 
     private fun onSubmissionError(@StringRes errorMessage: Int) {
-        if (root.parent != null) {
-            Snackbar.make(root.parent as ViewGroup, errorMessage, Snackbar.LENGTH_SHORT).show()
-        }
+        (root.parent as? ViewGroup)
+            ?.snackbar(messageRes = errorMessage)
+
         container.isEnabled = true
         quizDelegate.isEnabled = true
         resetSupplementalActions()

@@ -57,7 +57,7 @@ class StepQuizDelegate(
         } else {
             when (val replyResult = stepQuizFormDelegate.createReply()) {
                 is ReplyResult.Success ->
-                    stepQuizPresenter.createSubmission(replyResult.reply)
+                    stepQuizPresenter.createSubmission(step, replyResult.reply)
 
                 is ReplyResult.Error ->
                     stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.message))

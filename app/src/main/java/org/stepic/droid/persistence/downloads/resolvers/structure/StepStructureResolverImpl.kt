@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.Structure
-import org.stepic.droid.util.getProgresses
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.step.repository.StepRepository
 import javax.inject.Inject
@@ -34,7 +34,7 @@ constructor(
 
                 progressRepository
                     .getProgresses(*steps.getProgresses())
-                    .toCompletable()
+                    .ignoreElement()
                     .andThen(observables)
             }
 }

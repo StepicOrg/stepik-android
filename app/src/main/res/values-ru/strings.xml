@@ -45,6 +45,7 @@
     <string name="connectionProblems">Невозможно установить соединение с сервером</string>
     <string name="video_quality">Качество видео для загрузки</string>
     <string name="video_quality_playing">Качество видео для просмотра</string>
+    <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для последующих загрузок:</string>
 
     <string name="download_error">Ошибка при загрузке видео %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
@@ -208,7 +209,7 @@
     <string name="low_quality">Низкое</string>
     <string name="medium_quality">Среднее</string>
     <string name="high_quality">Высокое</string>
-    <string name="do_not_ask_me_again">Больше не спрашивать</string>
+    <string name="do_not_ask_me_again">Больше не спрашивать (вы всегда можете изменить качество видео в настройках)</string>
     <string name="discount_policy_inverse_title">После каждого неправильного решения баллы, которые
         можно получить за задание, будут уменьшены
     </string>
@@ -363,6 +364,8 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
+    <string name="profile_font_settings_title">Размер шрифта</string>
+    <string name="profile_font_settings_dialog_title">Выберите размер шрифта</string>
 
     <!--Home screen-->
     <string name="catalog_title">Каталог</string>
@@ -438,7 +441,7 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
-    <string name="course_current_progress">Текущий прогресс %d/%d</string>
+    <string name="course_current_progress">Текущий прогресс %d/%d баллов</string>
     <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
     <string name="registration_remind_message">Завершите регистрацию и получите доступ к неограниченному числу бесплатных курсов!</string>
 
@@ -591,6 +594,7 @@
 
     <string name="course_content_time_to_complete_minutes_unit">%d мин</string>
     <string name="course_content_time_to_complete_hours_unit">%d ч</string>
+    <string name="course_content_text_progress_points">%d/%d баллов</string>
 
     <string name="course_content_timeline_begin_date">Дата начала</string>
     <string name="course_content_timeline_end_date">Дата закрытия</string>
@@ -599,6 +603,7 @@
     <string name="course_content_timeline_deadline">Дедлайн</string>
 
     <string name="course_content_section_exam_description">Это экзаменационный модуль, который доступен только в веб версии. Нажмите, чтобы открыть его в браузере.</string>
+    <string name="course_content_section_requirements">Для открытия этого модуля необходимо набрать %s в модуле %s</string>
 
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
@@ -607,6 +612,9 @@
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
     <string name="course_content_calendar_no_calendars_error">Календари не найдены</string>
     <string name="course_content_calendar_permission_error">Включите разрешение для использования календаря в настройках</string>
+
+    <string name="course_content_remove_item_title">Удалить элемент?</string>
+    <string name="course_content_remove_item_description">Этот элемент будет удален с вашего устройства</string>
 
     <string name="course_restore_purchase">Восстановить покупку</string>
     <string name="course_payments_purchase_in_app">Купить за %s</string>
@@ -744,4 +752,10 @@
     <string name="relative_date_now">сейчас</string>
 
     <string name="copied_to_clipboard_toast">Скопировано в буфер</string>
+
+    <!-- Main screen -->
+    <string name="main_tab_home">Обучение</string>
+    <string name="main_tab_catalog">Каталог</string>
+    <string name="main_tab_profile">Профиль</string>
+    <string name="main_tab_notifications">Уведомления</string>
 </resources>

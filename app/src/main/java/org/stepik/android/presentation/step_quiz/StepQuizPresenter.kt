@@ -5,10 +5,13 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Reply
@@ -20,6 +23,7 @@ import javax.inject.Inject
 class StepQuizPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val stepQuizInteractor: StepQuizInteractor,
 
     @BackgroundScheduler
@@ -101,7 +105,7 @@ constructor(
     /**
      * Submissions
      */
-    fun createSubmission(reply: Reply) {
+    fun createSubmission(step: Step, reply: Reply) {
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
 
@@ -119,6 +123,18 @@ constructor(
                             submissionState = StepQuizView.SubmissionState.Loaded(newSubmission),
                             restrictions = oldState.restrictions.copy(submissionCount = oldState.restrictions.submissionCount + 1)
                         )
+
+                    val params =
+                        mutableMapOf(
+                            AmplitudeAnalytic.Steps.Params.STEP to step.id,
+                            AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType()
+                        )
+                    newSubmission.reply?.language
+                        ?.let { lang ->
+                            params[AmplitudeAnalytic.Steps.Params.LANGUAGE] = lang
+                        }
+
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.SUBMISSION_MADE, params)
                 },
                 onError = { state = oldState; view?.showNetworkError() }
             )

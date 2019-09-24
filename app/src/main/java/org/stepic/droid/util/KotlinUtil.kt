@@ -5,14 +5,8 @@ import java.text.DecimalFormat
 import java.util.*
 
 object KotlinUtil {
-    fun getListOldPlusUpdated(oldList: List<Course>, newList: List<Course>)
-            = mergeTwoCourseList(newList = newList, oldList = oldList)
-
-    fun getNiceFormatOfDouble(number: Double): String {
-        val format = DecimalFormat("0.##");
-        return format.format(number)
-    }
-
+    fun getListOldPlusUpdated(oldList: List<Course>, newList: List<Course>) =
+        mergeTwoCourseList(newList = newList, oldList = oldList)
 
     //oldList should be first, and after that newList, but if exists 2 elements with the same ID, get from newList at position of oldList
     private fun mergeTwoCourseList(oldList: List<Course>, newList: List<Course>): List<Course> {

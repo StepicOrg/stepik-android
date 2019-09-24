@@ -3,7 +3,6 @@ package org.stepic.droid.ui.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -25,8 +24,8 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.model.Video
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
 
@@ -154,8 +153,6 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
     }
 
     override fun onCantRemoveVideo() {
-        view?.let {
-            Snackbar.make(it, R.string.downloads_view_cant_remove, Snackbar.LENGTH_SHORT).show()
-        }
+        view?.snackbar(messageRes = R.string.downloads_view_cant_remove)
     }
 }

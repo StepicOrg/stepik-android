@@ -232,7 +232,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         navigationAdapter = AHBottomNavigationAdapter(this, R.menu.drawer_menu)
         navigationAdapter.setupWithBottomNavigation(navigationView)
 
-        navigationView.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
+        navigationView.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
         navigationView.setOnTabSelectedListener { position, wasSelected ->
             val menuItem = navigationAdapter.getMenuItem(position)
             if (wasSelected) {

@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.annotation.LayoutRes
-import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,8 +16,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.listeners.NextMoveable
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.argument
-import org.stepic.droid.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
@@ -126,6 +125,6 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     }
 
     override fun showNetworkError() {
-        snackbar(messageRes = R.string.no_connection, length = Snackbar.LENGTH_SHORT)
+        view?.snackbar(messageRes = R.string.no_connection)
     }
 }

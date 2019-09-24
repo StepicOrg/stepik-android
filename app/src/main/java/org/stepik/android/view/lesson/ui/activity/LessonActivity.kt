@@ -31,12 +31,11 @@ import org.stepic.droid.ui.adapters.StepFragmentAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.DeviceInfoUtil
 import org.stepic.droid.util.RatingUtil
 import org.stepic.droid.util.reportRateEvent
 import org.stepic.droid.util.resolvers.StepTypeResolver
-import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Lesson
@@ -365,9 +364,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         lessonPresenter.setStreakTime(chosenInterval)
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, chosenInterval.toString())
-        Snackbar.make(lessonPager, R.string.streak_notification_enabled_successfully, Snackbar.LENGTH_LONG)
-            .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
-            .show()
+        lessonPager.snackbar(messageRes = R.string.streak_notification_enabled_successfully, length = Snackbar.LENGTH_LONG)
     }
 
     private fun setupTextFeedback() {
@@ -379,8 +376,6 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
 
     private fun onStreakDialogCancelled() {
         analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
-        Snackbar.make(lessonPager, R.string.streak_notification_canceled, Snackbar.LENGTH_LONG)
-            .setTextColor(ColorUtil.getColorArgb(R.color.white, baseContext))
-            .show()
+        lessonPager.snackbar(messageRes = R.string.streak_notification_canceled, length = Snackbar.LENGTH_LONG)
     }
 }

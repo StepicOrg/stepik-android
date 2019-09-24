@@ -2,6 +2,7 @@ package org.stepic.droid.persistence.downloads.progress
 
 import io.reactivex.Observable
 import org.stepic.droid.persistence.di.PersistenceScope
+import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.PersistentState
 import org.stepic.droid.persistence.model.Structure
@@ -21,8 +22,9 @@ constructor(
 
         systemDownloadsDao: SystemDownloadsDao,
         persistentItemDao: PersistentItemDao,
-        persistentStateManager: PersistentStateManager
-): DownloadProgressProviderBase<Unit>(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao, persistentStateManager), DownloadProgressProvider<Unit> {
+        persistentStateManager: PersistentStateManager,
+        externalStorageManager: ExternalStorageManager
+): DownloadProgressProviderBase<Unit>(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao, persistentStateManager, externalStorageManager), DownloadProgressProvider<Unit> {
     override fun Unit.getId(): Long = id
 
     override val Structure.keyFieldValue: Long
