@@ -24,6 +24,12 @@ enum class CommentTag(
         compoundDrawableRes = -1,
         textRes = R.string.comment_tag_course_team
     ),
+    STUFF(
+        backgroundRes = R.drawable.bg_comment_tag_course_team,
+        textColorRes = R.color.white,
+        compoundDrawableRes = -1,
+        textRes = R.string.comment_tag_stuff
+    ),
     PINNED(
         backgroundRes = R.drawable.bg_comment_tag_pinned,
         textColorRes = R.color.white,

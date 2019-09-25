@@ -779,6 +779,7 @@
 
     <string name="comment_tag_pinned">Pinned</string>
     <string name="comment_tag_course_team">Course Team</string>
+    <string name="comment_tag_stuff">Stepik Team</string>
 
     <string name="relative_date_pattern">%s ago</string>
     <string name="relative_date_now">now</string>
