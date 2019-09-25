@@ -758,4 +758,7 @@
     <string name="main_tab_catalog">Каталог</string>
     <string name="main_tab_profile">Профиль</string>
     <string name="main_tab_notifications">Уведомления</string>
+
+    <!-- Downloads -->
+    <string name="downloads_title">Загруженные курсы</string>
 </resources>

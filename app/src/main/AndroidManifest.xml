@@ -344,6 +344,9 @@
         <activity
             android:name="org.stepik.android.view.certificate.ui.activity.CertificatesActivity" />
 
+        <activity
+            android:name="org.stepik.android.view.downloads.ui.DownloadActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">

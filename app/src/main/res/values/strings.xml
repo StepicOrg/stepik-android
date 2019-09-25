@@ -790,4 +790,7 @@
     <string name="main_tab_catalog">Catalog</string>
     <string name="main_tab_profile">Profile</string>
     <string name="main_tab_notifications">Notifications</string>
+
+    <!-- Downloads -->
+    <string name="downloads_title">Downloaded courses</string>
 </resources>
