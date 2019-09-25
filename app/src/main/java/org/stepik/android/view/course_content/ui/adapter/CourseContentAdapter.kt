@@ -14,7 +14,6 @@ import org.stepik.android.view.course_content.ui.adapter.delegates.section.Cours
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitDelegate
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitPlaceholderDelegate
-import timber.log.Timber
 
 class CourseContentAdapter(
     sectionClickListener: CourseContentSectionClickListener,
@@ -23,6 +22,7 @@ class CourseContentAdapter(
 ) : DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
     private val headers = mutableListOf(CourseContentItem.ControlBar(false,  PersonalDeadlinesState.Idle, null, false))
 
+    private val courseDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
     private val sectionDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
     private val unitDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
 
@@ -35,7 +35,7 @@ class CourseContentAdapter(
         }
 
     init {
-        addDelegate(CourseContentControlBarDelegate(controlBarClickListener))
+        addDelegate(CourseContentControlBarDelegate(controlBarClickListener, courseDownloadStatuses))
         addDelegate(CourseContentSectionDelegate(sectionClickListener, sectionDownloadStatuses))
         addDelegate(CourseContentUnitDelegate(unitClickListener, unitDownloadStatuses))
         addDelegate(CourseContentUnitPlaceholderDelegate())
@@ -64,7 +64,8 @@ class CourseContentAdapter(
     }
 
     fun updateCourseDownloadProgress(downloadProgress: DownloadProgress) {
-        Timber.d("Status: ${downloadProgress.status}")
+        courseDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
+        notifyItemChanged(0)
     }
 
     fun setControlBar(controlBar: CourseContentItem.ControlBar) {

@@ -1,7 +1,7 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.control_bar
 
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.web.storage.model.StorageRecord
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.model.Course
 
 interface CourseContentControlBarClickListener {
@@ -11,4 +11,5 @@ interface CourseContentControlBarClickListener {
     fun onExportScheduleClicked()
 
     fun onDownloadAllClicked(course: Course)
+    fun onRemoveAllClicked(course: Course)
 }

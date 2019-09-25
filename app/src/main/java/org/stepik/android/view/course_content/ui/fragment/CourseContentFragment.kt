@@ -166,6 +166,10 @@ class CourseContentFragment :
                                 )
                             )
                         }
+
+                        override fun onRemoveAllClicked(course: Course) {
+                            courseContentPresenter.removeCourseDownloadTask(course)
+                        }
                     }
                 )
 
