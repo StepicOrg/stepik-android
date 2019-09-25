@@ -13,6 +13,7 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.setHeight
+import org.stepic.droid.util.TextUtil
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 
@@ -20,6 +21,9 @@ class CourseContentControlBarDelegate(
     private val controlBarClickListener: CourseContentControlBarClickListener,
     private val courseDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
+    companion object {
+        private const val SMALLEST_FORMAT_UNIT = 1024 * 1024L // 1 mb
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
         ViewHolder(createView(parent, R.layout.view_course_content_control_bar))
@@ -102,7 +106,10 @@ class CourseContentControlBarDelegate(
                         downloadDrawable.setImageDrawable(progressDrawable)
                     }
                     is DownloadProgress.Status.Cached -> {
-                        downloadText.text = context.resources.getString(R.string.course_control_downloaded_for_offline)
+                        downloadText.text = context.resources.getString(
+                            R.string.course_control_downloaded_for_offline,
+                            TextUtil.formatBytes((status as DownloadProgress.Status.Cached).bytesTotal, SMALLEST_FORMAT_UNIT)
+                        )
                         downloadDrawable.setImageResource(R.drawable.ic_download_remove)
                     }
                     is DownloadProgress.Status.NotCached -> {
