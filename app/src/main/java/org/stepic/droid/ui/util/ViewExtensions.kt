@@ -39,7 +39,7 @@ fun ViewGroup.children(): Iterable<View> =
             private var position = 0
 
             override fun hasNext(): Boolean =
-                position + 1 < this@children.childCount
+                position < this@children.childCount
 
             override fun next(): View =
                 this@children.getChildAt(position++)
