@@ -71,6 +71,7 @@ import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
+import org.stepik.android.view.injection.download.DownloadComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
@@ -178,6 +179,8 @@ interface AppCoreComponent {
     fun composeCommentComponentBuilder(): ComposeCommentComponent.Builder
 
     fun commentsComponentBuilder(): CommentsComponent.Builder
+
+    fun downloadComponentBuilder(): DownloadComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
