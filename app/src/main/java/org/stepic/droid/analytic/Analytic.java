@@ -520,6 +520,8 @@ public interface Analytic {
         String ADD_TASK_ERROR = "downloader_v2_add_task_error";
         String REMOVE_TASK_ERROR = "downloader_v2_remove_task_error";
 
+        String FILE_TRANSFER_ERROR = "downloader_v2_file_transfer_error";
+
         interface Params {
             String DOWNLOAD_STATUS = "status";
         }
