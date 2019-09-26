@@ -517,6 +517,9 @@ public interface Analytic {
 
         String SYSTEM_DOWNLOAD_ERROR = "downloader_v2_system_download_error";
 
+        String ADD_TASK_ERROR = "downloader_v2_add_task_error";
+        String REMOVE_TASK_ERROR = "downloader_v2_remove_task_error";
+
         interface Params {
             String DOWNLOAD_STATUS = "status";
         }
