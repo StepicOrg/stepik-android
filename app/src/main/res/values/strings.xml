@@ -793,4 +793,5 @@
 
     <!-- Downloads -->
     <string name="downloads_title">Downloaded courses</string>
+    <string name="download_course_delete_label">Delete information</string>
 </resources>

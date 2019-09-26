@@ -1,7 +1,7 @@
 package org.stepik.android.view.injection.download
 
 import dagger.Subcomponent
-import org.stepik.android.view.download.ui.DownloadActivity
+import org.stepik.android.view.download.ui.activity.DownloadActivity
 import org.stepik.android.view.injection.course.CourseDataModule
 
 @Subcomponent(modules = [

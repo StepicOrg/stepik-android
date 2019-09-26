@@ -761,4 +761,5 @@
 
     <!-- Downloads -->
     <string name="downloads_title">Загруженные курсы</string>
+    <string name="download_course_delete_label">Информация про удаление</string>
 </resources>

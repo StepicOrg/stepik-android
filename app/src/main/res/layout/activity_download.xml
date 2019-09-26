@@ -8,18 +8,19 @@
 
     <include layout="@layout/view_centered_appbar"/>
 
+    <include layout="@layout/progress_bar_on_empty_screen"/>
+
     <FrameLayout
         android:id="@+id/downloadsRootView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/old_cover">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/downloadsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:divider="@color/transparent"
+            android:divider="@color/bpRed"
             android:visibility="gone"
             android:scrollbarStyle="outsideOverlay"/>
 

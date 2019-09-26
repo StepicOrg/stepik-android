@@ -66,7 +66,7 @@ import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
-import org.stepik.android.view.download.ui.DownloadActivity;
+import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
