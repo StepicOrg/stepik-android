@@ -117,7 +117,7 @@ class CommentDataAdapterDelegate(
 
             commentTagsAdapter.items = listOfNotNull(
                 CommentTag.COURSE_TEAM.takeIf { data.comment.userRole == UserRole.TEACHER },
-                CommentTag.STUFF.takeIf { data.comment.userRole == UserRole.STUFF },
+                CommentTag.STAFF.takeIf { data.comment.userRole == UserRole.STAFF },
                 CommentTag.PINNED.takeIf { data.comment.isPinned }
             )
             commentTags.changeVisibility(needShow = commentTagsAdapter.itemCount > 0)

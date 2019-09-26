@@ -749,7 +749,7 @@
 
     <string name="comment_tag_pinned">Закреплен</string>
     <string name="comment_tag_course_team">Команда курса</string>
-    <string name="comment_tag_stuff">Команда Stepik</string>
+    <string name="comment_tag_staff">Команда Stepik</string>
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>
