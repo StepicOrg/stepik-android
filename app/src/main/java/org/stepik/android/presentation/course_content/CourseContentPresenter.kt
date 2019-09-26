@@ -8,8 +8,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.domain.personal_deadlines.model.Deadline
-import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
@@ -20,6 +18,8 @@ import org.stepik.android.domain.course_calendar.interactor.CourseCalendarIntera
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
 import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfiedException
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesInteractor
+import org.stepik.android.domain.personal_deadlines.model.Deadline
+import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.domain.personal_deadlines.model.LearningRate
 import org.stepik.android.domain.settings.interactor.VideoQualityInteractor
 import org.stepik.android.model.Course
@@ -46,6 +46,9 @@ constructor(
 
     private val unitDownloadProgressProvider: DownloadProgressProvider<Unit>,
     private val unitDownloadInteractor: DownloadInteractor<Unit>,
+
+    private val courseDownloadProgressProvider: DownloadProgressProvider<Course>,
+    private val courseDownloadInteractor: DownloadInteractor<Course>,
 
     private val videoQualityInteractor: VideoQualityInteractor,
 
@@ -76,6 +79,7 @@ constructor(
     private val downloadsDisposable = CompositeDisposable()
     private val deadlinesDisposable = CompositeDisposable()
 
+    private val pendingCourses = mutableSetOf<Long>()
     private val pendingUnits = mutableSetOf<Long>()
     private val pendingSections = mutableSetOf<Long>()
 
@@ -151,6 +155,7 @@ constructor(
             .toLongArray()
 
         subscribeForUnitsProgress(*unitIds)
+        subscribeForCourseUpdates(courseId)
     }
 
     private fun subscribeForSectionsProgress(vararg sectionIds: Long, limit: Long = -1) {
@@ -189,6 +194,24 @@ constructor(
             )
     }
 
+    private fun subscribeForCourseUpdates(vararg courseIds: Long, limit: Long = -1) {
+        downloadsDisposable += courseDownloadProgressProvider
+            .getProgress(*courseIds)
+            .let { stream ->
+                limit
+                    .takeUnless { it < 0 }
+                    ?.let(stream::take)
+                    ?: stream
+            }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .filter { it.id !in pendingCourses }
+            .subscribeBy(
+                onError = { it.printStackTrace(); resolveDownloadProgressSubscription() }, // resub on error
+                onNext = { view?.updateCourseDownloadProgress(it) }
+            )
+    }
+
     /**
      * Download tasks
      */
@@ -197,12 +220,40 @@ constructor(
             ?: videoQualityInteractor.getVideoQuality()
             ?: return view?.showVideoQualityDialog(course = course) ?: kotlin.Unit
 
-        (state as? CourseContentView.State.CourseContentLoaded)
-            ?.courseContent
-            ?.filterIsInstance<CourseContentItem.SectionItem>()
-            ?.forEach { sectionItem ->
-                addSectionDownloadTask(sectionItem.section, quality)
+        pendingCourses += course.id
+        view?.updateCourseDownloadProgress(DownloadProgress(course.id, DownloadProgress.Status.Pending))
+
+        compositeDisposable += courseDownloadInteractor
+            .addTask(courseId, configuration = DownloadConfiguration(videoQuality = quality))
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doFinally {
+                pendingCourses -= course.id
+                subscribeForCourseUpdates(courseId, limit = 1)
             }
+            .subscribeBy(
+                onError = {
+                    if (it is NetworkRequirementsNotSatisfiedException) {
+                        view?.showChangeDownloadNetworkType()
+                    }
+                }
+            )
+    }
+
+    fun removeCourseDownloadTask(course: Course) {
+        if (course.id in pendingCourses) return
+        pendingCourses += courseId
+        view?.updateCourseDownloadProgress(DownloadProgress(course.id, DownloadProgress.Status.Pending))
+
+        compositeDisposable += courseDownloadInteractor
+            .removeTask(course)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doFinally {
+                pendingCourses -= course.id
+                subscribeForCourseUpdates(course.id, limit = 1)
+            }
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     fun addUnitDownloadTask(unit: Unit, videoQuality: String? = null) {
