@@ -7,7 +7,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.SimpleItemAnimator
@@ -32,6 +31,7 @@ import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.comment.model.DiscussionOrderItem
+import org.stepik.android.view.comment.ui.adapter.decorator.CommentItemDecoration
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentDataAdapterDelegate
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentLoadMoreRepliesAdapterDelegate
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAdapterDelegate
@@ -129,9 +129,19 @@ class CommentsActivity :
             adapter = commentsAdapter
             layoutManager = LinearLayoutManager(context)
 
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
-            })
+            addItemDecoration(CommentItemDecoration(
+                separatorColor = ContextCompat.getColor(context, R.color.grey04),
+                bigSeparatorBounds =
+                    CommentItemDecoration.SeparatorBounds(
+                        size = resources.getDimensionPixelSize(R.dimen.comment_item_separator_big),
+                        offset = 0
+                    ),
+                smallSeparatorBounds =
+                    CommentItemDecoration.SeparatorBounds(
+                        size = resources.getDimensionPixelSize(R.dimen.comment_item_separator_small),
+                        offset = resources.getDimensionPixelOffset(R.dimen.comment_item_reply_separator_offset)
+                    )
+            ))
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
