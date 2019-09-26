@@ -45,7 +45,7 @@
     <string name="connectionProblems">Невозможно установить соединение с сервером</string>
     <string name="video_quality">Качество видео для загрузки</string>
     <string name="video_quality_playing">Качество видео для просмотра</string>
-    <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для</string>
+    <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для последующих загрузок:</string>
 
     <string name="download_error">Ошибка при загрузке видео %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
@@ -364,6 +364,8 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
+    <string name="profile_font_settings_title">Размер шрифта</string>
+    <string name="profile_font_settings_dialog_title">Выберите размер шрифта</string>
 
     <!--Home screen-->
     <string name="catalog_title">Каталог</string>
