@@ -1,5 +1,6 @@
 package org.stepik.android.view.video_player.ui.activity
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.content.ComponentName
@@ -43,16 +44,20 @@ import javax.inject.Inject
 
 class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDialogInPlayer.Callback {
     companion object {
+        const val REQUEST_CODE = 1535
+
         private const val TIMEOUT_BEFORE_HIDE = 4000
         private const val JUMP_TIME_MILLIS = 10000
 
         private const val IN_BACKGROUND_POPUP_TIMEOUT_MS = 3000L
 
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
+        private const val EXTRA_VIDEO_AUTOPLAY = "video_player_autoplay"
 
-        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData): Intent =
+        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
+                .putExtra(EXTRA_VIDEO_AUTOPLAY, isAutoplayEnabled)
     }
 
     @Inject
@@ -60,6 +65,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val isAutoplayEnabled: Boolean by lazy { intent.getBooleanExtra(EXTRA_VIDEO_AUTOPLAY, false) }
 
     private val videoServiceConnection =
         object : ServiceConnection {
@@ -87,6 +94,13 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                     analytic.reportError(Analytic.Video.CONNECTION_ERROR, error)
                 } else {
                     analytic.reportError(Analytic.Video.ERROR, error)
+                }
+            }
+
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                if (isAutoplayEnabled && playbackState == Player.STATE_ENDED) {
+                    setResult(Activity.RESULT_OK)
+                    finish()
                 }
             }
         }

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.FileProvider;
@@ -324,7 +325,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(Activity sourceActivity, @NotNull VideoPlayerMediaData videoPlayerMediaData) {
+    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -333,8 +334,13 @@ public class ScreenManagerImpl implements ScreenManager {
             analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
+        final Context context = sourceFragment.requireContext();
+
         if (!isOpenExternal) {
-            sourceActivity.startActivity(VideoPlayerActivity.Companion.createIntent(sourceActivity, videoPlayerMediaData));
+            sourceFragment.startActivityForResult(
+                    VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled),
+                    VideoPlayerActivity.REQUEST_CODE
+            );
         } else {
             @Nullable
             final Video cachedVideo = videoPlayerMediaData.getCachedVideo();
@@ -352,7 +358,7 @@ public class ScreenManagerImpl implements ScreenManager {
             String scheme = videoUri.getScheme();
             if (scheme == null && videoPath != null) {
                 final File file = new File(videoPath);
-                videoUri = FileProvider.getUriForFile(sourceActivity, sourceActivity.getApplicationContext().getPackageName() + AppConstants.FILE_PROVIDER_AUTHORITY, file);
+                videoUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + AppConstants.FILE_PROVIDER_AUTHORITY, file);
             }
             Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
             intent.setDataAndType(videoUri, "video/*");
@@ -360,10 +366,10 @@ public class ScreenManagerImpl implements ScreenManager {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
             try {
-                sourceActivity.startActivity(intent);
+                sourceFragment.startActivity(intent);
             } catch (Exception ex) {
                 analytic.reportError(Analytic.Error.NOT_PLAYER, ex);
-                Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
             }
         }
     }

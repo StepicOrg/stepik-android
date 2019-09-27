@@ -1,7 +1,9 @@
 package org.stepik.android.view.step_content_video.ui.fragment
 
+import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -16,6 +18,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.argument
@@ -23,6 +26,7 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
+import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
 import javax.inject.Inject
 
 class VideoStepContentFragment : Fragment(), VideoStepContentView {
@@ -91,12 +95,12 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView {
         } else {
             val thumbnail = stepWrapper.cachedVideo?.thumbnail
                 ?: stepWrapper.step.block?.video?.thumbnail
-            screenManager.showVideo(activity, VideoPlayerMediaData(
+            screenManager.showVideo(this, VideoPlayerMediaData(
                 thumbnail = thumbnail,
                 title = lessonData.lesson.title ?: "",
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
-            ))
+            ), true)
         }
     }
 
@@ -116,5 +120,13 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView {
 
         videoLength.changeVisibility(needShow = videoLengthText != null)
         videoLength.text = videoLengthText
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == VideoPlayerActivity.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            (parentFragment as? NextMoveable)
+                ?.moveNext()
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

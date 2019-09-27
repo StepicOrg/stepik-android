@@ -53,7 +53,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
 
         courseInfoAdapter = CourseInfoAdapter(
             onVideoClicked = { mediaData ->
-                screenManager.showVideo(activity, mediaData)
+                screenManager.showVideo(this, mediaData, false)
             },
             onUserClicked = { user ->
                 screenManager.openProfile(activity, user.id)
