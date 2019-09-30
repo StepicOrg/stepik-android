@@ -121,10 +121,11 @@ class DownloadCompleteService: JobIntentService() {
             ))
 
             downloadManager.remove(downloadRecord.id)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             persistentItemObserver.update(persistentItem.copy(
                     status = PersistentItem.Status.TRANSFER_ERROR
             ))
+            analytic.reportError(Analytic.DownloaderV2.MOVE_DOWNLOADED_FILE_ERROR, e)
         }
     }
 }

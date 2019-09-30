@@ -166,6 +166,16 @@ class CourseContentFragment :
                                 )
                             )
                         }
+
+                        override fun onRemoveAllClicked(course: Course) {
+                            val fragmentManager = childFragmentManager
+                                .takeIf { it.findFragmentByTag(RemoveCachedContentDialog.TAG) == null }
+                                ?: return
+
+                            RemoveCachedContentDialog
+                                .newInstance(course = course)
+                                .show(fragmentManager, RemoveCachedContentDialog.TAG)
+                        }
                     }
                 )
 
@@ -239,6 +249,10 @@ class CourseContentFragment :
 
     override fun updateUnitDownloadProgress(downloadProgress: DownloadProgress) {
         contentAdapter.updateUnitDownloadProgress(downloadProgress)
+    }
+
+    override fun updateCourseDownloadProgress(downloadProgress: DownloadProgress) {
+        contentAdapter.updateCourseDownloadProgress(downloadProgress)
     }
 
     override fun showChangeDownloadNetworkType() {
@@ -451,7 +465,15 @@ class CourseContentFragment :
     /**
      * RemoveCachedContentDialog.Callback
      */
-    override fun onRemoveCourseDownloadConfirmed(course: Course) {}
+    override fun onRemoveCourseDownloadConfirmed(course: Course) {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.DELETED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE
+            )
+        )
+        courseContentPresenter.removeCourseDownloadTask(course)
+    }
 
     override fun onRemoveSectionDownloadConfirmed(section: Section) {
         analytic.reportAmplitudeEvent(

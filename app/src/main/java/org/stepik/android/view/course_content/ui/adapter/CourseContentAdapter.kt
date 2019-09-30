@@ -20,8 +20,9 @@ class CourseContentAdapter(
     unitClickListener: CourseContentUnitClickListener,
     controlBarClickListener: CourseContentControlBarClickListener
 ) : DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
-    private val headers = mutableListOf(CourseContentItem.ControlBar(false, PersonalDeadlinesState.Idle, null, false))
+    private val headers = mutableListOf(CourseContentItem.ControlBar(false,  PersonalDeadlinesState.Idle, null, false))
 
+    private val courseDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
     private val sectionDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
     private val unitDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
 
@@ -34,7 +35,7 @@ class CourseContentAdapter(
         }
 
     init {
-        addDelegate(CourseContentControlBarDelegate(controlBarClickListener))
+        addDelegate(CourseContentControlBarDelegate(controlBarClickListener, courseDownloadStatuses))
         addDelegate(CourseContentSectionDelegate(sectionClickListener, sectionDownloadStatuses))
         addDelegate(CourseContentUnitDelegate(unitClickListener, unitDownloadStatuses))
         addDelegate(CourseContentUnitPlaceholderDelegate())
@@ -60,6 +61,11 @@ class CourseContentAdapter(
 
         unitDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
         notifyItemChanged(unitPosition + headers.size)
+    }
+
+    fun updateCourseDownloadProgress(downloadProgress: DownloadProgress) {
+        courseDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
+        notifyItemChanged(0)
     }
 
     fun setControlBar(controlBar: CourseContentItem.ControlBar) {

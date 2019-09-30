@@ -513,6 +513,15 @@ public interface Analytic {
         String RECEIVE_BAD_DOWNLOAD_STATUS = "downloader_v2_bad_download_status";
         String FILE_NOT_FOND = "downloader_v2_file_not_fond";
 
+        String MOVE_DOWNLOADED_FILE_ERROR = "downloader_v2_move_downloaded_file";
+
+        String SYSTEM_DOWNLOAD_ERROR = "downloader_v2_system_download_error";
+
+        String ADD_TASK_ERROR = "downloader_v2_add_task_error";
+        String REMOVE_TASK_ERROR = "downloader_v2_remove_task_error";
+
+        String FILE_TRANSFER_ERROR = "downloader_v2_file_transfer_error";
+
         interface Params {
             String DOWNLOAD_STATUS = "status";
         }

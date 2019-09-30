@@ -29,6 +29,7 @@ interface CourseContentView {
 
     fun updateSectionDownloadProgress(downloadProgress: DownloadProgress)
     fun updateUnitDownloadProgress(downloadProgress: DownloadProgress)
+    fun updateCourseDownloadProgress(downloadProgress: DownloadProgress)
     fun showChangeDownloadNetworkType()
     fun showVideoQualityDialog(course: Course? = null, section: Section? = null, unit: Unit? = null)
 
