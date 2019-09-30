@@ -62,6 +62,9 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.FontSize.FONT_SIZE_SELECTED, mapOf(
                     AmplitudeAnalytic.FontSize.Params.SIZE to fontSize.name.toLowerCase(Locale.US)
                 ))
+                analytic.reportEvent(Analytic.FontSize.FONT_SIZE_SELECTED, Bundle().apply {
+                    putString(Analytic.FontSize.Params.SIZE, fontSize.name.toLowerCase(Locale.US))
+                })
                 dismiss()
             }
             .create()
