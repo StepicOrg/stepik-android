@@ -14,8 +14,8 @@ import org.stepic.droid.persistence.downloads.helpers.AddDownloadTaskHelper
 import org.stepic.droid.persistence.downloads.helpers.AddDownloadTaskHelperImpl
 import org.stepic.droid.persistence.downloads.helpers.RemoveDownloadTaskHelper
 import org.stepic.droid.persistence.downloads.helpers.RemoveDownloadTaskHelperImpl
-import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusContentMapper
 import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapper
+import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapperImpl
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolverImpl
 import org.stepic.droid.persistence.files.ExternalStorageManager
@@ -102,7 +102,8 @@ abstract class PersistenceModule {
 
     @Binds
     @PersistenceScope
-    abstract fun bindDownloadProgressStatusMapper(downloadProgressStatusContentMapper: DownloadProgressStatusContentMapper): DownloadProgressStatusMapper
+    @PersistenceProgressStatusMapper
+    abstract fun bindDownloadProgressStatusMapper(downloadProgressStatusMapperImpl: DownloadProgressStatusMapperImpl): DownloadProgressStatusMapper
 
     @Module
     companion object {

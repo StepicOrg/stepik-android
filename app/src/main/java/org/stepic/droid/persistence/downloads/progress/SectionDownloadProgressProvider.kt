@@ -1,6 +1,7 @@
 package org.stepic.droid.persistence.downloads.progress
 
 import io.reactivex.Observable
+import org.stepic.droid.persistence.di.PersistenceProgressStatusMapper
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapper
 import org.stepic.droid.persistence.model.PersistentState
@@ -22,6 +23,7 @@ constructor(
         systemDownloadsDao: SystemDownloadsDao,
         persistentItemDao: PersistentItemDao,
         persistentStateManager: PersistentStateManager,
+        @PersistenceProgressStatusMapper
         downloadStatusProgressStatusMapper: DownloadProgressStatusMapper
 ): DownloadProgressProviderBase<Section>(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao, persistentStateManager, downloadStatusProgressStatusMapper), DownloadProgressProvider<Section> {
     override fun Section.getId(): Long = id

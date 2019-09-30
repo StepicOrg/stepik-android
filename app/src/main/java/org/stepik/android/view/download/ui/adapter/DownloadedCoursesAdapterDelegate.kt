@@ -22,7 +22,7 @@ class DownloadedCoursesAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<Course> =
         ViewHolder(createView(parent, R.layout.downloaded_course_item))
 
-    private inner class ViewHolder(root: View): DelegateViewHolder<Course>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<Course>(root) {
 
         private val downloadedCourseTitle = root.downloadedCourseName
         private val downloadedCourseImage = root.downloadedCourseImage
@@ -36,7 +36,6 @@ class DownloadedCoursesAdapterDelegate(
             context.resources,
             coursePlaceholderBitmap
         )
-
 
         private val imageViewTarget: BitmapImageViewTarget =  RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), downloadedCourseImage)
 

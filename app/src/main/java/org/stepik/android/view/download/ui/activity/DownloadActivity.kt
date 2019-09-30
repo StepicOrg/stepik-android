@@ -58,7 +58,6 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
             addItemDecoration(DividerItemDecoration(this@DownloadActivity, LinearLayoutManager.VERTICAL))
         }
 
-
         initViewStateDelegate()
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
         downloadPresenter.fetchDownloadedCourses()

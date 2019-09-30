@@ -9,7 +9,7 @@ import java.io.File
 import javax.inject.Inject
 import kotlin.math.max
 
-class DownloadProgressStatusContentMapper
+class DownloadProgressStatusMapperImpl
 @Inject
 constructor(
     private val externalStorageManager: ExternalStorageManager
