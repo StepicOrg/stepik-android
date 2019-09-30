@@ -58,7 +58,6 @@ constructor(
         private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
         private const val SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000L
         private const val MILLIS_IN_SECOND = 1000L
-        private const val TRACE_MY_COURSES_LOADING = "my_courses_loading"
     }
 
     private val currentPage = AtomicInteger(1)
@@ -102,7 +101,7 @@ constructor(
     @WorkerThread
     private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: CourseListType) {
         if (courseType == CourseListType.ENROLLED) {
-            myCoursesTrace = FirebasePerformance.startTrace(TRACE_MY_COURSES_LOADING)
+            myCoursesTrace = FirebasePerformance.startTrace(Analytic.Traces.MY_COURSES_LOADING)
         }
         if (!isLoadMore) {
             mainHandler.post {
