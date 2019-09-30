@@ -23,4 +23,7 @@ interface PersistentItemDao: IDao<PersistentItem> {
 
     fun getItemsByStatus(status: PersistentItem.Status) =
             getItems(mapOf(DBStructurePersistentItem.Columns.STATUS to status.name))
+
+    fun getItemsByCourse(course: Long) =
+            getItems(mapOf(DBStructurePersistentItem.Columns.COURSE to course.toString()))
 }

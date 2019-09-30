@@ -170,13 +170,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.DownloadsActivity" />
-
         <activity android:name=".ui.activities.CourseListActivity" />
-
-        <activity
-            android:name=".ui.activities.CodePlaygroundActivity"
-            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"

@@ -14,7 +14,6 @@ import org.stepic.droid.di.analytic.AnalyticModule
 import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
 import org.stepic.droid.di.course_general.CourseGeneralComponent
-import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
@@ -36,7 +35,6 @@ import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
 import org.stepic.droid.ui.adapters.CoursesAdapter
-import org.stepic.droid.ui.adapters.DownloadsAdapter
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
@@ -140,8 +138,6 @@ interface AppCoreComponent {
 
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
-    fun downloadsComponentBuilder(): DownloadsComponent.Builder
-
     fun loginComponentBuilder(): LoginComponent.Builder
 
     fun profileComponentBuilder(): ProfileComponent.Builder
@@ -201,8 +197,6 @@ interface AppCoreComponent {
     fun inject(internetConnectionEnabledReceiver: InternetConnectionEnabledReceiver)
 
     fun inject(socialAuthAdapter: SocialAuthAdapter)
-
-    fun inject(downloadsAdapter: DownloadsAdapter)
 
     fun inject(clearVideosDialog: ClearVideosDialog)
 

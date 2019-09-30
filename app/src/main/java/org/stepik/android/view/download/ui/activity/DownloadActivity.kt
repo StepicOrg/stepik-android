@@ -60,7 +60,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
 
         initViewStateDelegate()
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
-        downloadPresenter.fetchDownloadedCourses()
+        // downloadPresenter.fetchDownloadedCourses()
     }
 
     private fun injectComponent() {

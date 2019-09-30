@@ -21,8 +21,6 @@ import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolverImp
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.files.ExternalStorageManagerImpl
 import org.stepic.droid.persistence.model.Structure
-import org.stepic.droid.persistence.repository.DownloadsRepository
-import org.stepic.droid.persistence.repository.DownloadsRepositoryImpl
 import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.persistence.storage.PersistentItemObserver
 import org.stepic.droid.persistence.storage.PersistentItemObserverImpl
@@ -70,10 +68,6 @@ abstract class PersistenceModule {
 
     @Binds
     @PersistenceScope
-    abstract fun bindDownloadsRepository(downloadsRepositoryImpl: DownloadsRepositoryImpl): DownloadsRepository
-
-    @Binds
-    @PersistenceScope
     abstract fun bindExternalStorageManager(externalStorageManagerImpl: ExternalStorageManagerImpl): ExternalStorageManager
 
     @Binds
@@ -102,7 +96,6 @@ abstract class PersistenceModule {
 
     @Binds
     @PersistenceScope
-    @PersistenceProgressStatusMapper
     abstract fun bindDownloadProgressStatusMapper(downloadProgressStatusMapperImpl: DownloadProgressStatusMapperImpl): DownloadProgressStatusMapper
 
     @Module
