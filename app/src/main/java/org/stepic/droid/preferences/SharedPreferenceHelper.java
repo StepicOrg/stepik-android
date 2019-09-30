@@ -21,6 +21,7 @@ import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepikResponse;
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
+import org.stepik.android.domain.step_content_text.model.FontSize;
 import org.stepik.android.model.user.EmailAddress;
 import org.stepik.android.model.user.Profile;
 
@@ -94,6 +95,7 @@ public class SharedPreferenceHelper {
     private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
     private final String RATE_TIMES_SHOWN = "rate_times_shown";
     private final String RATE_WAS_HANDLED = "rate_was_handled";
+    private final String STEP_CONTENT_FONT_SIZE = "step_content_font_size";
 
     private final static String LAST_SESSION_TIMESTAMP = "last_session_timestamp";
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
@@ -552,7 +554,8 @@ public class SharedPreferenceHelper {
         VIDEO_SETTINGS("video_settings"),
         DEVICE_SPECIFIC("device_specific"),
         FEATURED_FILTER("featured_filter_prefs"),
-        NOTIFICATION("notification");
+        NOTIFICATION("notification"),
+        STEP_CONTENT("step_content");
 
         private String description;
 
@@ -782,6 +785,15 @@ public class SharedPreferenceHelper {
         return getLong(PreferenceType.NOTIFICATION, id);
     }
 
+    public void putStepContentFontSize(FontSize fontSize) {
+        put(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, fontSize.ordinal());
+    }
+
+    public FontSize getStepContentFontSize() {
+        int ordinal = getInt(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 1);
+        return FontSize.values()[ordinal];
+    }
+
     private void put(PreferenceType type, String key, String value) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putString(key, value).apply();
@@ -800,6 +812,11 @@ public class SharedPreferenceHelper {
     private void put(PreferenceType type, String key, Boolean value) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value).apply();
+    }
+
+    private void put(PreferenceType type, String key, float value) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        editor.putFloat(key, value).apply();
     }
 
     private void clear(PreferenceType type) {

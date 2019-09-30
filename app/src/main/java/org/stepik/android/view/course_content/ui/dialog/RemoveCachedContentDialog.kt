@@ -53,9 +53,7 @@ class RemoveCachedContentDialog : DialogFragment() {
                 section?.let(callback::onRemoveSectionDownloadConfirmed)
                 unit?.let(callback::onRemoveUnitDownloadConfirmed)
             }
-            .setNegativeButton(R.string.cancel) { _, _ ->
-                dismiss()
-            }
+            .setNegativeButton(R.string.cancel, null)
             .create()
             .apply {
                 setOnShowListener {

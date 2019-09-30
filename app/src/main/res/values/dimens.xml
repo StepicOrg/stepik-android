@@ -247,7 +247,11 @@
     <dimen name="comment_user_image_size">36dp</dimen>
     <dimen name="comment_item_margin">16dp</dimen>
     <dimen name="comment_item_reply_offset">20dp</dimen>
+    <dimen name="comment_item_reply_separator_offset">36dp</dimen>
 
     <dimen name="comment_item_action_size">28dp</dimen>
     <dimen name="comment_tag_radius">12dp</dimen>
+
+    <dimen name="comment_item_separator_small">1dp</dimen>
+    <dimen name="comment_item_separator_big">4dp</dimen>
 </resources>
