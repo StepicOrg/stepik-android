@@ -166,4 +166,12 @@ interface AmplitudeAnalytic {
             const val TO_RATING = "to_rating"
         }
     }
+
+    object FontSize {
+        const val FONT_SIZE_SELECTED = "Font size selected"
+
+        object Params {
+            const val SIZE = "size"
+        }
+    }
 }

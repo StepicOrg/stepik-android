@@ -528,6 +528,14 @@ public interface Analytic {
 
     }
 
+    interface FontSize {
+        String FONT_SIZE_SELECTED = "font_size_selected";
+
+        interface Params {
+            String SIZE = "size";
+        }
+    }
+
     void reportEvent(String eventName, Bundle bundle);
 
     void reportEvent(String eventName, String id);
