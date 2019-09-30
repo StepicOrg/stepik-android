@@ -71,6 +71,7 @@ import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.download.DownloadComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
+import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
@@ -79,6 +80,7 @@ import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
+import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
 import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
@@ -170,6 +172,8 @@ interface AppCoreComponent {
 
     fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder
 
+    fun textStepContentComponentBuilder(): TextStepContentComponent.Builder
+
     fun certificatesComponentBuilder(): CertificateComponent.Builder
 
     fun composeCommentComponentBuilder(): ComposeCommentComponent.Builder
@@ -177,6 +181,8 @@ interface AppCoreComponent {
     fun commentsComponentBuilder(): CommentsComponent.Builder
 
     fun downloadComponentBuilder(): DownloadComponent.Builder
+
+    fun fontSizeComponentBuilder(): FontSizeComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

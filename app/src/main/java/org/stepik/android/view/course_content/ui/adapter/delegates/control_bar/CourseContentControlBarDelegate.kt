@@ -100,6 +100,7 @@ class CourseContentControlBarDelegate(
 
             if (data.course != null) {
                 status = courseDownloadStatuses[data.course.id] ?: DownloadProgress.Status.Pending
+                downloadControl.isEnabled = status is DownloadProgress.Status.Cached || status is DownloadProgress.Status.NotCached
                 when (status) {
                     is DownloadProgress.Status.InProgress, DownloadProgress.Status.Pending -> {
                         downloadText.text = context.resources.getString(R.string.course_control_processing)

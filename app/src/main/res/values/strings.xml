@@ -374,6 +374,8 @@
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
     <string name="profile_user_id" translatable="false">User ID: %d</string>
+    <string name="profile_font_settings_title">Font size</string>
+    <string name="profile_font_settings_dialog_title">Choose font size</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
@@ -779,6 +781,7 @@
 
     <string name="comment_tag_pinned">Pinned</string>
     <string name="comment_tag_course_team">Course Team</string>
+    <string name="comment_tag_staff">Stepik Team</string>
 
     <string name="relative_date_pattern">%s ago</string>
     <string name="relative_date_now">now</string>

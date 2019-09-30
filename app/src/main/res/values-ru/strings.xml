@@ -45,7 +45,7 @@
     <string name="connectionProblems">Невозможно установить соединение с сервером</string>
     <string name="video_quality">Качество видео для загрузки</string>
     <string name="video_quality_playing">Качество видео для просмотра</string>
-    <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для</string>
+    <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для последующих загрузок:</string>
 
     <string name="download_error">Ошибка при загрузке видео %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
@@ -364,6 +364,8 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
+    <string name="profile_font_settings_title">Размер шрифта</string>
+    <string name="profile_font_settings_dialog_title">Выберите размер шрифта</string>
 
     <!--Home screen-->
     <string name="catalog_title">Каталог</string>
@@ -606,7 +608,7 @@
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
     <string name="course_control_download_all">Скачать</string>
-    <string name="course_control_downloaded_for_offline">Скачано (%s)</string>
+    <string name="course_control_downloaded_for_offline">Загружено (%s)</string>
     <string name="course_control_processing">Обработка</string>
 
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
@@ -747,6 +749,7 @@
 
     <string name="comment_tag_pinned">Закреплен</string>
     <string name="comment_tag_course_team">Команда курса</string>
+    <string name="comment_tag_staff">Команда Stepik</string>
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>

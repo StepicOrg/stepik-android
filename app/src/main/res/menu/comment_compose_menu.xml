@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/comment_submit"
-        android:icon="@drawable/ic_profile_edit_save"
+        android:icon="@drawable/ic_comment_submit"
         android:title="@string/comment_action_create"
         app:showAsAction="ifRoom" />
 </menu>

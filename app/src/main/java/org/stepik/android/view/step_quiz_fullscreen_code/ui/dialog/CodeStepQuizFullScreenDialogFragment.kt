@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.layout_step_quiz_code_keyboard_extension.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
 import org.stepic.droid.R
-import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -94,14 +93,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
-        injectComponent()
-    }
-
-    private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
-            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

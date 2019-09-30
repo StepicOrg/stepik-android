@@ -5,6 +5,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -38,6 +39,8 @@ class CourseContentPresenter
 constructor(
     @CourseId
     private val courseId: Long,
+
+    private val analytic: Analytic,
 
     private val courseContentInteractor: CourseContentInteractor,
 
@@ -236,6 +239,7 @@ constructor(
                     if (it is NetworkRequirementsNotSatisfiedException) {
                         view?.showChangeDownloadNetworkType()
                     }
+                    analytic.reportError(Analytic.DownloaderV2.ADD_TASK_ERROR, it)
                 }
             )
     }
@@ -253,7 +257,9 @@ constructor(
                 pendingCourses -= course.id
                 subscribeForCourseUpdates(course.id, limit = 1)
             }
-            .subscribeBy(onError = emptyOnErrorStub)
+            .subscribeBy(onError = {
+                analytic.reportError(Analytic.DownloaderV2.REMOVE_TASK_ERROR, it)
+            })
     }
 
     fun addUnitDownloadTask(unit: Unit, videoQuality: String? = null) {
@@ -279,6 +285,7 @@ constructor(
                     if (it is NetworkRequirementsNotSatisfiedException) {
                         view?.showChangeDownloadNetworkType()
                     }
+                    analytic.reportError(Analytic.DownloaderV2.ADD_TASK_ERROR, it)
                 }
             )
     }
@@ -296,7 +303,9 @@ constructor(
                 pendingUnits -= unit.id
                 subscribeForUnitsProgress(unit.id, limit = 1)
             }
-            .subscribeBy(onError = emptyOnErrorStub)
+            .subscribeBy(onError = {
+                analytic.reportError(Analytic.DownloaderV2.REMOVE_TASK_ERROR, it)
+            })
     }
 
     fun addSectionDownloadTask(section: Section, videoQuality: String? = null) {
@@ -322,6 +331,7 @@ constructor(
                     if (it is NetworkRequirementsNotSatisfiedException) {
                         view?.showChangeDownloadNetworkType()
                     }
+                    analytic.reportError(Analytic.DownloaderV2.ADD_TASK_ERROR, it)
                 }
             )
     }
@@ -339,7 +349,9 @@ constructor(
                 pendingSections -= section.id
                 subscribeForSectionsProgress(section.id, limit = 1)
             }
-            .subscribeBy(onError = emptyOnErrorStub)
+            .subscribeBy(onError = {
+                analytic.reportError(Analytic.DownloaderV2.REMOVE_TASK_ERROR, it)
+            })
     }
 
     /*
