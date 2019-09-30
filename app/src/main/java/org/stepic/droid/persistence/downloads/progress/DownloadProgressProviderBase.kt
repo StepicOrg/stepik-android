@@ -4,8 +4,12 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toFlowable
-import org.stepic.droid.persistence.files.ExternalStorageManager
-import org.stepic.droid.persistence.model.*
+import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapper
+import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.PersistentState
+import org.stepic.droid.persistence.model.Structure
+import org.stepic.droid.persistence.model.isCorrect
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
@@ -19,7 +23,7 @@ abstract class DownloadProgressProviderBase<T>(
         private val persistentItemDao: PersistentItemDao,
         private val persistentStateManager: PersistentStateManager,
 
-        private val externalStorageManager: ExternalStorageManager
+        private val downloadProgressStatusMapper: DownloadProgressStatusMapper
 ): DownloadProgressProvider<T> {
     private companion object {
         private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
@@ -50,7 +54,7 @@ abstract class DownloadProgressProviderBase<T>(
                         getPersistentObservable(itemId)
                                 .concatMap(::fetchSystemDownloads)
                                 .map { (persistentItems, downloadItems) ->   // count progresses
-                                    DownloadProgress(itemId, countItemProgress(externalStorageManager, persistentItems, downloadItems, state))
+                                    DownloadProgress(itemId, downloadProgressStatusMapper.countItemProgress(persistentItems, downloadItems, state))
                                 }
                 }
             }

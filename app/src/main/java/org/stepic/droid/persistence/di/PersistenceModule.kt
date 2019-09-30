@@ -14,6 +14,8 @@ import org.stepic.droid.persistence.downloads.helpers.AddDownloadTaskHelper
 import org.stepic.droid.persistence.downloads.helpers.AddDownloadTaskHelperImpl
 import org.stepic.droid.persistence.downloads.helpers.RemoveDownloadTaskHelper
 import org.stepic.droid.persistence.downloads.helpers.RemoveDownloadTaskHelperImpl
+import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusContentMapper
+import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapper
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolverImpl
 import org.stepic.droid.persistence.files.ExternalStorageManager
@@ -31,7 +33,6 @@ import org.stepic.droid.persistence.storage.dao.SystemDownloadsDaoImpl
 import org.stepik.android.view.injection.assignment.AssignmentDataModule
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.lesson.LessonDataModule
-import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.section.SectionDataModule
 import org.stepik.android.view.injection.step.StepDataModule
@@ -98,6 +99,10 @@ abstract class PersistenceModule {
     @Binds
     @PersistenceScope
     abstract fun bindRemoveDownloadTasksHelper(removeDownloadTasksHelperImpl: RemoveDownloadTaskHelperImpl): RemoveDownloadTaskHelper
+
+    @Binds
+    @PersistenceScope
+    abstract fun bindDownloadProgressStatusMapper(downloadProgressStatusContentMapper: DownloadProgressStatusContentMapper): DownloadProgressStatusMapper
 
     @Module
     companion object {
