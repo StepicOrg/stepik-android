@@ -1,20 +1,15 @@
 package org.stepik.android.domain.download.interactor
 
-import org.stepic.droid.persistence.downloads.progress.CourseDownloadProgressProvider
-import org.stepik.android.domain.course.repository.CourseRepository
+import io.reactivex.Observable
+import org.stepic.droid.persistence.model.DownloadItem
 import org.stepik.android.domain.download.repository.DownloadRepository
+import javax.inject.Inject
 
-class DownloadInteractor(
-    private val downloadRepository: DownloadRepository,
-    private val courseRepository: CourseRepository,
-    private val courseDownloadProgressProvider: CourseDownloadProgressProvider
+class DownloadInteractor
+@Inject
+constructor(
+    private val downloadRepository: DownloadRepository
 ) {
-//    fun fetchDownloadedCoursesIds(): Single<List<Long>> =
-//        downloadRepository.getDownloadedCoursesIds()
-//
-//    fun fetchDownloadCourses(): Single<List<Course>> =
-//        downloadRepository.getDownloadedCoursesIds()
-//            .flatMap { courseIds ->
-//                courseRepository.getCourses(*courseIds.toLongArray(), primarySourceType = DataSourceType.CACHE)
-//            }
+    fun fetchDownloadItems(): Observable<DownloadItem> =
+        downloadRepository.getDownloads()
 }

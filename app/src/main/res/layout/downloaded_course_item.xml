@@ -41,7 +41,6 @@
         android:id="@+id/downloadedCourseSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="5.00MB"
         android:layout_marginEnd="@dimen/course_item_space_between_items"
         android:layout_marginLeft="@dimen/course_item_space_between_items"
         android:layout_marginRight="@dimen/course_item_space_between_items"

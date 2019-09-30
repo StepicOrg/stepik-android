@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.download.DownloadPresenter
@@ -34,7 +35,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
 
     private lateinit var downloadPresenter: DownloadPresenter
 
-    private val downloadedCoursesAdapter: DefaultDelegateAdapter<Course> = DefaultDelegateAdapter()
+    private val downloadedCoursesAdapter: DefaultDelegateAdapter<DownloadItem> = DefaultDelegateAdapter()
 
     private val viewStateDelegate =
         ViewStateDelegate<DownloadView.State>()
@@ -50,7 +51,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
 
         initCenteredToolbar(R.string.downloads_title, showHomeButton = true)
 
-        downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate { screenManager.showCourseModules(this, it) }
+        downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate { screenManager.showCourseModules(this, it.course) }
 
         with(downloadsRecyclerView) {
             adapter = downloadedCoursesAdapter
@@ -60,7 +61,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
 
         initViewStateDelegate()
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
-        // downloadPresenter.fetchDownloadedCourses()
+        downloadPresenter.fetchDownloadedCourses()
     }
 
     private fun injectComponent() {

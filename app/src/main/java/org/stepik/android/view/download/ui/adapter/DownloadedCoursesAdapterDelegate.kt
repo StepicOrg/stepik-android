@@ -8,24 +8,30 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.downloaded_course_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.persistence.model.DownloadItem
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepik.android.model.Course
+import org.stepic.droid.util.TextUtil
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
 
 class DownloadedCoursesAdapterDelegate(
-    private val onItemClick: (Course) -> Unit
-) : AdapterDelegate<Course, DelegateViewHolder<Course>>() {
-    override fun isForViewType(position: Int, data: Course): Boolean =
+    private val onItemClick: (DownloadItem) -> Unit
+) : AdapterDelegate<DownloadItem, DelegateViewHolder<DownloadItem>>() {
+    companion object {
+        private const val SMALLEST_FORMAT_UNIT = 1024 * 1024L // 1 mb
+    }
+    override fun isForViewType(position: Int, data: DownloadItem): Boolean =
         true
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<Course> =
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<DownloadItem> =
         ViewHolder(createView(parent, R.layout.downloaded_course_item))
 
-    private inner class ViewHolder(root: View) : DelegateViewHolder<Course>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<DownloadItem>(root) {
 
         private val downloadedCourseTitle = root.downloadedCourseName
         private val downloadedCourseImage = root.downloadedCourseImage
+        private val downloadedCourseSize = root.downloadedCourseSize
 
         private val coursePlaceholderBitmap = BitmapFactory.decodeResource(
             context.resources,
@@ -40,16 +46,17 @@ class DownloadedCoursesAdapterDelegate(
         private val imageViewTarget: BitmapImageViewTarget =  RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), downloadedCourseImage)
 
         init {
-            root.setOnClickListener { onItemClick(itemData as Course) }
+            root.setOnClickListener { onItemClick(itemData as DownloadItem) }
             circularBitmapDrawable.cornerRadius = context.resources.getDimension(R.dimen.course_image_radius)
         }
 
-        override fun onBind(data: Course) {
-            downloadedCourseTitle.text = data.title
+        override fun onBind(data: DownloadItem) {
+            downloadedCourseTitle.text = data.course.title
+            downloadedCourseSize.text = TextUtil.formatBytes((data.status as DownloadProgress.Status.Cached).bytesTotal, SMALLEST_FORMAT_UNIT)
 
             Glide.with(context)
                 .asBitmap()
-                .load(data.cover)
+                .load(data.course.cover)
                 .placeholder(circularBitmapDrawable)
                 .fitCenter()
                 .into(imageViewTarget)

@@ -70,8 +70,7 @@ constructor(
             }
 
             hasItemsInProgress -> {
-                val progress = if (bytesTotal <= 0) 0f else bytesDownloaded.toFloat() / bytesTotal
-                DownloadProgress.Status.InProgress(progress)
+                DownloadProgress.Status.Cached(bytesDownloaded)
             }
 
             else -> {
