@@ -538,6 +538,7 @@ public interface Analytic {
 
     interface Traces {
         String COURSE_CONTENT_LOADING = "course_content_loading";
+        String MY_COURSES_LOADING = "my_courses_loading";
     }
 
     void reportEvent(String eventName, Bundle bundle);
