@@ -97,7 +97,7 @@ class StepFragment : Fragment(), StepView,
         inflater.inflate(R.layout.fragment_step, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        stepNavigationDelegate = StepNavigationDelegate(stepNavigation, stepPresenter::onStepDirectionClicked)
+        stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions) {
             screenManager
@@ -228,17 +228,17 @@ class StepFragment : Fragment(), StepView,
             }
     }
 
-    override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData) {
+    override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData, isAutoplayEnabled: Boolean) {
         val unit = lessonData.unit ?: return
         val section = lessonData.section ?: return
 
-        screenManager.showSteps(activity, unit, lessonData.lesson, direction == StepNavigationDirection.PREV, section)
+        screenManager.showSteps(activity, unit, lessonData.lesson, section, direction == StepNavigationDirection.PREV, isAutoplayEnabled)
         activity?.finish()
     }
 
     override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
         if ((activity as? NextMoveable)?.moveNext(isAutoplayEnabled) != true) {
-            stepPresenter.onStepDirectionClicked(StepNavigationDirection.NEXT)
+            stepPresenter.onStepDirectionClicked(StepNavigationDirection.NEXT, isAutoplayEnabled)
         }
         return true
     }

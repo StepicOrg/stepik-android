@@ -60,15 +60,17 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         private const val EXTRA_UNIT = "unit"
         private const val EXTRA_LESSON = "lesson"
         private const val EXTRA_BACK_ANIMATION = "back_animation"
+        private const val EXTRA_AUTOPLAY = "autoplay"
 
         private const val EXTRA_LAST_STEP = "last_step"
 
-        fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false): Intent =
+        fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_SECTION, section)
                 .putExtra(EXTRA_UNIT, unit)
                 .putExtra(EXTRA_LESSON, lesson)
                 .putExtra(EXTRA_BACK_ANIMATION, isNeedBackAnimation)
+                .putExtra(EXTRA_AUTOPLAY, isAutoplayEnabled)
 
         fun createIntent(context: Context, lastStep: LastStep): Intent =
             Intent(context, LessonActivity::class.java)
@@ -224,12 +226,16 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 centeredToolbarTitle.text = state.lessonData.lesson.title
 
                 stepsAdapter.lessonData = state.lessonData
-                stepsAdapter.items =
-                    if (state.stepsState is LessonView.StepsState.Loaded) {
-                        state.stepsState.stepItems
-                    } else {
-                        emptyList()
+                if (state.stepsState is LessonView.StepsState.Loaded) {
+                    stepsAdapter.items = state.stepsState.stepItems
+
+                    if (intent.getBooleanExtra(EXTRA_AUTOPLAY, false)) {
+                        lessonPager.post { playCurrentStep() }
+                        intent.removeExtra(EXTRA_AUTOPLAY)
                     }
+                } else {
+                    stepsAdapter.items = emptyList()
+                }
 
                 invalidateTabLayout()
             }
@@ -275,12 +281,16 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         if (isNotLastItem) {
             lessonPager.currentItem++
             if (isAutoplayEnabled) {
-                (stepsAdapter.activeFragments[lessonPager.currentItem] as? Playable)
-                    ?.play()
+                playCurrentStep()
             }
         }
 
         return isNotLastItem
+    }
+
+    private fun playCurrentStep() {
+        (stepsAdapter.activeFragments[lessonPager.currentItem] as? Playable)
+            ?.play()
     }
 
     override fun showComments(step: Step, discussionId: Long) {

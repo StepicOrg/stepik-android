@@ -570,13 +570,13 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section) {
-        showSteps(sourceActivity, unit, lesson, false, section);
+        showSteps(sourceActivity, unit, lesson, section, false, false);
     }
 
     @Override
-    public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section) {
+    public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section, boolean backAnimation, boolean isAutoplayEnabled) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
-        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson, backAnimation);
+        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson, backAnimation, isAutoplayEnabled);
         sourceActivity.startActivity(intent);
     }
 
