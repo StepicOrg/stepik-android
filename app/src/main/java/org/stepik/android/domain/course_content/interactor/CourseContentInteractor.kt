@@ -45,6 +45,7 @@ constructor(
     private fun getContent(course: Course): Observable<Pair<Course, List<CourseContentItem>>> {
         val courseContentLoadingTrace = FirebasePerformance.getInstance().newTrace(Analytic.Traces.COURSE_CONTENT_LOADING)
         courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.COURSE, course.id.toString())
+        courseContentLoadingTrace.start()
 
         return getSectionsOfCourse(course)
             .flatMap { populateSections(course, it) }
