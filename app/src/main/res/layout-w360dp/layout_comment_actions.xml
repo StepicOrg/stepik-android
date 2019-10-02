@@ -9,15 +9,15 @@
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/commentTime"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/comment_item_action_size"
+        android:layout_height="wrap_content"
 
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
         android:alpha="0.7"
         android:textColor="@color/new_accent_color"
         android:textSize="12sp"
-        android:gravity="center_vertical"
 
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
@@ -36,9 +36,14 @@
 
         android:padding="4dp"
 
-        app:layout_constraintTop_toBottomOf="@id/commentTime"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/commentTime"
+        app:layout_constraintEnd_toStartOf="@id/commentLike"
+        app:layout_constraintHorizontal_bias="0"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp" />
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/commentLike"
@@ -57,6 +62,7 @@
         android:layout_marginRight="8dp"
 
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/commentDislike"
 
         tools:drawableStart="@drawable/ic_comment_like"
@@ -76,6 +82,7 @@
         android:drawablePadding="4dp"
 
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/commentVoteProgress"
 
         tools:drawableStart="@drawable/ic_comment_dislike"
@@ -86,6 +93,7 @@
         android:layout_width="@dimen/comment_item_action_size"
         android:layout_height="@dimen/comment_item_action_size"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

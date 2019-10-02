@@ -1,8 +1,11 @@
 package org.stepik.android.domain.course_content.interactor
 
+import com.google.firebase.perf.FirebasePerformance
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.util.concat
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
@@ -39,14 +42,22 @@ constructor(
     private fun getEmptySections(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable.just(course to emptyList())
 
-    private fun getContent(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
-        getSectionsOfCourse(course)
+    private fun getContent(course: Course): Observable<Pair<Course, List<CourseContentItem>>> {
+        val courseContentLoadingTrace = FirebasePerformance.getInstance().newTrace(Analytic.Traces.COURSE_CONTENT_LOADING)
+        courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.COURSE, course.id.toString())
+        courseContentLoadingTrace.start()
+
+        return getSectionsOfCourse(course)
             .flatMap { populateSections(course, it) }
             .flatMapObservable { items ->
                 Single
                     .concat(Single.just(course to items), loadUnits(course, items))
                     .toObservable()
             }
+            .doOnComplete {
+                courseContentLoadingTrace.stop()
+            }
+    }
 
     private fun getSectionsOfCourse(course: Course): Single<List<Section>> =
         sectionRepository

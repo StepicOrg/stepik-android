@@ -607,7 +607,9 @@
 
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
-    <string name="course_control_download_all">Скачать все</string>
+    <string name="course_control_download_all">Скачать</string>
+    <string name="course_control_downloaded_for_offline">Загружено (%s)</string>
+    <string name="course_control_processing">Обработка</string>
 
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
     <string name="course_content_calendar_no_calendars_error">Календари не найдены</string>
@@ -747,6 +749,7 @@
 
     <string name="comment_tag_pinned">Закреплен</string>
     <string name="comment_tag_course_team">Команда курса</string>
+    <string name="comment_tag_staff">Команда Stepik</string>
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>

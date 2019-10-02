@@ -637,7 +637,9 @@
 
     <string name="course_control_schedule">Schedule</string>
     <string name="course_control_filter">Filter by</string>
-    <string name="course_control_download_all">Download all</string>
+    <string name="course_control_download_all">Download</string>
+    <string name="course_control_downloaded_for_offline">Downloaded (%s)</string>
+    <string name="course_control_processing">Processing</string>
 
     <string name="course_content_calendar_title" translatable="false">%s – %s</string>
     <string name="course_content_calendar_sync_success">Dates successfully exported to calendar</string>
@@ -779,6 +781,7 @@
 
     <string name="comment_tag_pinned">Pinned</string>
     <string name="comment_tag_course_team">Course Team</string>
+    <string name="comment_tag_staff">Stepik Team</string>
 
     <string name="relative_date_pattern">%s ago</string>
     <string name="relative_date_now">now</string>

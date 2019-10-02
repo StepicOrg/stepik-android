@@ -8,10 +8,13 @@ import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.ArrayAdapter
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.font_size_settings.FontSizePresenter
 import org.stepik.android.presentation.font_size_settings.FontSizeView
+import java.util.Locale
 import javax.inject.Inject
 
 class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
@@ -24,6 +27,9 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     private lateinit var presenter: FontSizePresenter
 
@@ -53,6 +59,12 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
             ) { _, which ->
                 val fontSize = FontSize.values()[which]
                 presenter.onFontSizeChosen(fontSize)
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.FontSize.FONT_SIZE_SELECTED, mapOf(
+                    AmplitudeAnalytic.FontSize.Params.SIZE to fontSize.name.toLowerCase(Locale.US)
+                ))
+                analytic.reportEvent(Analytic.FontSize.FONT_SIZE_SELECTED, Bundle().apply {
+                    putString(Analytic.FontSize.Params.SIZE, fontSize.name.toLowerCase(Locale.US))
+                })
                 dismiss()
             }
             .create()
