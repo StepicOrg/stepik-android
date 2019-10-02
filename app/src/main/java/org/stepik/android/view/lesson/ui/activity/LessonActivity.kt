@@ -29,7 +29,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.listeners.NextMoveable
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.DeviceInfoUtil
@@ -49,10 +49,12 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
+import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateAppDialog.Companion.Callback, TimeIntervalPickerDialogFragment.Companion.Callback {
+class LessonActivity : FragmentActivityBase(), LessonView,
+    NextMoveable, RateAppDialog.Companion.Callback, TimeIntervalPickerDialogFragment.Companion.Callback {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -262,7 +264,7 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
             .showLessonInfoTooltip(stepScore, stepCost, lessonTimeToComplete, certificateThreshold)
     }
 
-    override fun moveNext(): Boolean {
+    override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
         val itemCount = lessonPager
             .adapter
             ?.count
@@ -272,6 +274,10 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
 
         if (isNotLastItem) {
             lessonPager.currentItem++
+            if (isAutoplayEnabled) {
+                (stepsAdapter.activeFragments[lessonPager.currentItem] as? Playable)
+                    ?.play()
+            }
         }
 
         return isNotLastItem
@@ -283,8 +289,8 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable, RateApp
 
     override fun showRateDialog() {
         val supportFragmentManager = supportFragmentManager
-                ?.takeIf { it.findFragmentByTag(RateAppDialog.TAG) == null }
-                ?: return
+            ?.takeIf { it.findFragmentByTag(RateAppDialog.TAG) == null }
+            ?: return
 
         val dialog = RateAppDialog.newInstance()
         analytic.reportEvent(Analytic.Rating.SHOWN)

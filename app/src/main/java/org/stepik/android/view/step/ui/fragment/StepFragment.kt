@@ -21,7 +21,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
-import org.stepic.droid.ui.listeners.NextMoveable
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
@@ -31,13 +31,16 @@ import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import javax.inject.Inject
 
-class StepFragment : Fragment(), StepView, NextMoveable {
+class StepFragment : Fragment(), StepView,
+    NextMoveable,
+    Playable {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -233,10 +236,15 @@ class StepFragment : Fragment(), StepView, NextMoveable {
         activity?.finish()
     }
 
-    override fun moveNext(): Boolean {
-        if ((activity as? NextMoveable)?.moveNext() != true) {
+    override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
+        if ((activity as? NextMoveable)?.moveNext(isAutoplayEnabled) != true) {
             stepPresenter.onStepDirectionClicked(StepNavigationDirection.NEXT)
         }
         return true
     }
+
+    override fun play(): Boolean =
+        (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) as? Playable)
+            ?.play()
+            ?: false
 }
