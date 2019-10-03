@@ -175,7 +175,7 @@ constructor(
                 VideoPlayerView.State.Idle ->
                     if (playbackState == Player.STATE_ENDED && isAutoplayAllowed) {
                         if (isAutoplayEnabled) {
-                            VideoPlayerView.State.NextPending
+                            VideoPlayerView.State.NextPending(0)
                         } else {
                             VideoPlayerView.State.NextCancelled
                         }
@@ -192,9 +192,18 @@ constructor(
             }
     }
 
+    fun onAutoplayProgressChanged(progress: Int) {
+        state =
+            if (state is VideoPlayerView.State.NextPending) {
+                VideoPlayerView.State.NextPending(progress)
+            } else {
+                state
+            }
+    }
+
     fun onNext() {
         state =
-            if (state == VideoPlayerView.State.NextPending || state == VideoPlayerView.State.NextCancelled) {
+            if (state is VideoPlayerView.State.NextPending || state == VideoPlayerView.State.NextCancelled) {
                 VideoPlayerView.State.Next
             } else {
                 state

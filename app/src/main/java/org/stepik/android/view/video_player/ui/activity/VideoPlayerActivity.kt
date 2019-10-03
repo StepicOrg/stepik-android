@@ -127,7 +127,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<VideoPlayerView.State>
 
-    private var animator: Animator? = null
+    private var animator: ValueAnimator? = null
 
     private var playerInBackroundPopup: PopupWindow? = null
 
@@ -189,19 +189,21 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             .inject(this)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         videoPlayerPresenter.attachView(this)
         bindService(VideoPlayerForegroundService.createBindingIntent(this), videoServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
-    override fun onStop() {
+    override fun onPause() {
         playerInBackroundPopup?.dismiss()
         exoPlayer?.let { player ->
             videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
         }
 
         videoPlayerPresenter.detachView(this)
+        animator?.cancel()
+        animator = null
 
         unbindService(videoServiceConnection)
         exoPlayer = null
@@ -210,34 +212,48 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             stopService(VideoPlayerForegroundService.createBindingIntent(this))
         }
 
-        super.onStop()
+        super.onPause()
     }
 
     override fun setState(state: VideoPlayerView.State) {
         viewStateDelegate.switchState(state)
 
-        animator?.cancel()
-        animator = null
-
         when (state) {
-            VideoPlayerView.State.NextPending -> {
-                animator = ValueAnimator.ofInt(0, AUTOPLAY_PROGRESS_MAX)
-                    .apply {
-                        addUpdateListener {
-                            autoplayProgress.progress = it.animatedValue as Int
-                        }
-                        addListener(object : AnimatorListenerAdapter() {
-                            override fun onAnimationEnd(animation: Animator?) {
-                                videoPlayerPresenter.onNext()
-                            }
-                        })
-                        duration = AUTOPLAY_ANIMATION_DURATION_MS
-                        start()
-                    }
+            VideoPlayerView.State.Idle -> {
+                animator?.cancel()
+                animator = null
             }
 
-            VideoPlayerView.State.NextCancelled ->
-                autoplayProgress.progress = 100
+            is VideoPlayerView.State.NextPending -> {
+                if (animator == null) {
+                    animator = ValueAnimator.ofInt(state.progress, AUTOPLAY_PROGRESS_MAX)
+                    animator
+                        ?.apply {
+                            addUpdateListener {
+                                videoPlayerPresenter.onAutoplayProgressChanged(it.animatedValue as Int)
+                            }
+                            addListener(object : AnimatorListenerAdapter() {
+                                override fun onAnimationCancel(animation: Animator) {
+                                    animation.removeAllListeners()
+                                }
+
+                                override fun onAnimationEnd(animation: Animator) {
+                                    videoPlayerPresenter.onNext()
+                                }
+                            })
+                            duration = ((1f - state.progress.toFloat() / AUTOPLAY_PROGRESS_MAX) * AUTOPLAY_ANIMATION_DURATION_MS).toLong()
+                            start()
+                        }
+                }
+                autoplayProgress.progress = state.progress
+            }
+
+            VideoPlayerView.State.NextCancelled -> {
+                animator?.cancel()
+                animator = null
+
+                autoplayProgress.progress = AUTOPLAY_PROGRESS_MAX
+            }
 
             VideoPlayerView.State.Next -> {
                 setResult(Activity.RESULT_OK)
