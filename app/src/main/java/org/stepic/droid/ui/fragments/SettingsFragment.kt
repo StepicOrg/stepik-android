@@ -49,6 +49,8 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
 
         fragmentSettingsDiscountingPolicySwitch.setOnCheckedChangeListener { _, isChecked -> userPreferences.isShowDiscountingPolicyWarning = isChecked }
 
+        fragmentSettingsAutoplay.isChecked = userPreferences.isAutoplayEnabled
+        fragmentSettingsAutoplay.setOnCheckedChangeListener { _, isChecked -> userPreferences.isAutoplayEnabled = isChecked }
 
         fragmentSettingsWifiEnableSwitch.setOnCheckedChangeListener { _, newCheckedState ->
             if (fragmentSettingsWifiEnableSwitch.isUserTriggered) {

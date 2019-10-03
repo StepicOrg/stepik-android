@@ -364,8 +364,6 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
-    <string name="profile_font_settings_title">Размер шрифта</string>
-    <string name="profile_font_settings_dialog_title">Выберите размер шрифта</string>
 
     <!--Home screen-->
     <string name="catalog_title">Каталог</string>
@@ -761,4 +759,13 @@
     <string name="main_tab_catalog">Каталог</string>
     <string name="main_tab_profile">Профиль</string>
     <string name="main_tab_notifications">Уведомления</string>
+
+    <!-- Settings -->
+    <string name="setting_section_learning">Обучение</string>
+
+    <string name="setting_autoplay">Автопереход на следующий шаг по окончании видео</string>
+    <string name="setting_autoplay_short">Автопереход на следующий шаг</string>
+
+    <string name="setting_font_size">Размер шрифта в шагах</string>
+    <string name="setting_font_size_dialog_title">Выберите размер шрифта</string>
 </resources>

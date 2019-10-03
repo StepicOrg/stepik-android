@@ -156,8 +156,11 @@
         android:id="@+id/autoplayCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/autoplay_controller_panel"
+
+        android:layout_above="@id/bottom_controller_panel"
         android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/guideline_standard_padding"
+
         android:text="@string/cancel"
         android:textColor="@color/white"
         style="@style/Adaptive.BorderlessButton" />
@@ -167,13 +170,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:foreground="@drawable/selectable_item_rounded_background"
-        android:layout_margin="16dp"
-        android:layout_above="@id/bottom_controller_panel"
+        android:layout_margin="@dimen/guideline_standard_padding"
+        android:padding="@dimen/guideline_standard_padding"
         android:layout_centerHorizontal="true"
+        android:layout_below="@id/autoplay_controller_panel"
+        app:switchPadding="8dp"
+
+        android:text="@string/setting_autoplay_short"
         android:textColor="@color/white"
-        android:text="@string/cancel"
-        app:thumbTint="@color/violet1"
-        android:padding="@dimen/guideline_standard_padding" />
+        app:thumbTint="@color/color_switch_accent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/bottom_controller_panel"
