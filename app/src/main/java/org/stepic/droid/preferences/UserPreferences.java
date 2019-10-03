@@ -1,7 +1,5 @@
 package org.stepic.droid.preferences;
 
-import android.os.Bundle;
-
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
