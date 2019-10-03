@@ -177,7 +177,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
         autoplayCancel.setOnClickListener { videoPlayerPresenter.cancelPendingAutoplay() }
         autoplaySwitch.setOnCheckedChangeListener { _, isChecked ->
-            videoPlayerPresenter.setAutoplayEnabled(isChecked)
+            if (autoplaySwitch.isUserTriggered) {
+                videoPlayerPresenter.setAutoplayEnabled(isChecked)
+            }
         }
 
         viewStateDelegate = ViewStateDelegate()
@@ -250,7 +252,11 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                         }
                 }
                 autoplayProgress.progress = state.progress
-                autoplaySwitch.isChecked = true
+
+                // without if switch will stuck in one position
+                if (!autoplaySwitch.isChecked) {
+                    autoplaySwitch.isChecked = true
+                }
             }
 
             VideoPlayerView.State.NextCancelled -> {
@@ -258,7 +264,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 animator = null
 
                 autoplayProgress.progress = AUTOPLAY_PROGRESS_MAX
-                autoplaySwitch.isChecked = false
+                if (autoplaySwitch.isChecked) {
+                    autoplaySwitch.isChecked = false
+                }
             }
 
             VideoPlayerView.State.Next -> {
