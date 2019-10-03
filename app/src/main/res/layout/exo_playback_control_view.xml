@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
     android:fitsSystemWindows="true">
 
@@ -118,6 +118,39 @@
             android:padding="4dp"
             android:src="@drawable/ic_forward_10_white_48dp"/>
     </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/autoplay_controller_panel"
+        android:layout_width="@dimen/play_pause_button_size"
+        android:layout_height="@dimen/play_pause_button_size"
+        android:background="?selectableItemBackgroundBorderless"
+        android:layout_centerInParent="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:duplicateParentState="true" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_player_next" />
+
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/autoplayProgress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:mpb_progressTint="@color/white"
+            app:mpb_useIntrinsicPadding="false"
+            app:mpb_progressBackgroundTint="@color/white"
+            android:indeterminate="false"
+            android:indeterminateOnly="false"
+            android:padding="0dp"
+            android:max="3600"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding" />
+    </FrameLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/bottom_controller_panel"

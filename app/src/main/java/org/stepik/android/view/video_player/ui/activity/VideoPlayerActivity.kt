@@ -1,5 +1,8 @@
 package org.stepik.android.view.video_player.ui.activity
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
@@ -37,6 +40,7 @@ import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
 import org.stepik.android.presentation.video_player.VideoPlayerView
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
@@ -50,6 +54,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         private const val JUMP_TIME_MILLIS = 10000
 
         private const val IN_BACKGROUND_POPUP_TIMEOUT_MS = 3000L
+
+        private const val AUTOPLAY_PROGRESS_MAX = 3600
+        private const val AUTOPLAY_ANIMATION_DURATION_MS = 7200L
 
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
         private const val EXTRA_VIDEO_AUTOPLAY = "video_player_autoplay"
@@ -98,10 +105,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             }
 
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                if (isAutoplayEnabled && playbackState == Player.STATE_ENDED) {
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
+                videoPlayerPresenter.onPlayerStateChanged(playbackState, isAutoplayEnabled)
             }
         }
 
@@ -109,13 +113,21 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         set(value) {
             field?.removeListener(exoPlayerListener)
             field = value
-            field?.addListener(exoPlayerListener)
+
+            if (value != null) {
+                value.addListener(exoPlayerListener)
+
+                videoPlayerPresenter.onPlayerStateChanged(value.playbackState, isAutoplayEnabled)
+            }
 
             playerView?.player = value
         }
     private var isLandscapeVideo = false
 
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
+    private lateinit var viewStateDelegate: ViewStateDelegate<VideoPlayerView.State>
+
+    private var animator: Animator? = null
 
     private var playerInBackroundPopup: PopupWindow? = null
 
@@ -160,6 +172,14 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 NavigationBarUtil.hideNavigationBar(true, this)
             }
         }
+
+        autoplay_controller_panel.setOnClickListener { videoPlayerPresenter.onNext() }
+        autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
+
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<VideoPlayerView.State.Idle>(center_controller_panel)
+        viewStateDelegate.addState<VideoPlayerView.State.NextPending>(autoplay_controller_panel)
+        viewStateDelegate.addState<VideoPlayerView.State.NextCancelled>(autoplay_controller_panel)
     }
 
     private fun injectComponent() {
@@ -191,6 +211,39 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
 
         super.onStop()
+    }
+
+    override fun setState(state: VideoPlayerView.State) {
+        viewStateDelegate.switchState(state)
+
+        animator?.cancel()
+        animator = null
+
+        when (state) {
+            VideoPlayerView.State.NextPending -> {
+                animator = ValueAnimator.ofInt(0, AUTOPLAY_PROGRESS_MAX)
+                    .apply {
+                        addUpdateListener {
+                            autoplayProgress.progress = it.animatedValue as Int
+                        }
+                        addListener(object : AnimatorListenerAdapter() {
+                            override fun onAnimationEnd(animation: Animator?) {
+                                videoPlayerPresenter.onNext()
+                            }
+                        })
+                        duration = AUTOPLAY_ANIMATION_DURATION_MS
+                        start()
+                    }
+            }
+
+            VideoPlayerView.State.NextCancelled ->
+                autoplayProgress.progress = 100
+
+            VideoPlayerView.State.Next -> {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
+        }
     }
 
     override fun setVideoPlayerData(videoPlayerData: VideoPlayerData) {

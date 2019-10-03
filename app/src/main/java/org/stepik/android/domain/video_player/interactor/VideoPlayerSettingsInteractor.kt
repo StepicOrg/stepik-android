@@ -69,4 +69,8 @@ constructor(
 
             isFirstTime
         }
+
+    fun isAutoplayEnabled(): Boolean =
+        true
+
 }
