@@ -71,6 +71,10 @@ constructor(
         }
 
     fun isAutoplayEnabled(): Boolean =
-        true
+        userPreferences.isAutoplayEnabled
+
+    fun setAutoplayEnabled(isEnabled: Boolean) {
+        userPreferences.isAutoplayEnabled = isEnabled
+    }
 
 }

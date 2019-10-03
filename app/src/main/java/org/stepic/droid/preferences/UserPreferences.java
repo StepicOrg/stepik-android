@@ -155,6 +155,14 @@ public class UserPreferences {
         }
     }
 
+    public boolean isAutoplayEnabled() {
+        return sharedPreferenceHelper.isAutoplayEnabled();
+    }
+
+    public void setAutoplayEnabled(boolean isEnabled) {
+        sharedPreferenceHelper.setAutoplayEnabled(isEnabled);
+    }
+
     public boolean isNotificationEnabled(NotificationType type) {
         return !sharedPreferenceHelper.isNotificationDisabled(type);
     }

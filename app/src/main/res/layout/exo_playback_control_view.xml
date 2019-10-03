@@ -152,6 +152,29 @@
             style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding" />
     </FrameLayout>
 
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/autoplayCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/autoplay_controller_panel"
+        android:layout_centerHorizontal="true"
+        android:text="@string/cancel"
+        android:textColor="@color/white"
+        style="@style/Adaptive.BorderlessButton" />
+
+    <org.stepic.droid.ui.custom.BetterSwitch
+        android:id="@+id/autoplaySwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:foreground="@drawable/selectable_item_rounded_background"
+        android:layout_margin="16dp"
+        android:layout_above="@id/bottom_controller_panel"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:text="@string/cancel"
+        app:thumbTint="@color/violet1"
+        android:padding="@dimen/guideline_standard_padding" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/bottom_controller_panel"
         android:layout_width="match_parent"
@@ -184,7 +207,6 @@
             tools:progress="20"
             tools:secondaryProgress="60"
             tools:targetApi="17"/>
-
 
         <TextView
             android:id="@+id/exo_position"
@@ -236,9 +258,6 @@
                 app:srcCompat="@drawable/ic_fullscreen"/>
 
         </FrameLayout>
-
     </android.support.constraint.ConstraintLayout>
-
-
 </RelativeLayout>
 

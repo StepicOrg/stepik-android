@@ -210,6 +210,25 @@ constructor(
             }
     }
 
+    fun cancelPendingAutoplay() {
+        state = VideoPlayerView.State.Idle
+    }
+
+    fun setAutoplayEnabled(isEnabled: Boolean) {
+        videoPlayerSettingsInteractor.setAutoplayEnabled(isEnabled)
+        state =
+            when (state) {
+                is VideoPlayerView.State.NextPending ->
+                    VideoPlayerView.State.NextCancelled
+
+                is VideoPlayerView.State.NextCancelled ->
+                    VideoPlayerView.State.NextPending(0)
+
+                else ->
+                    state
+            }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(VIDEO_PLAYER_DATA, videoPlayerData)
         outState.putBoolean(FULLSCREEN_DATA, isLandscapeVideo)

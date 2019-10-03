@@ -175,11 +175,15 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         autoplay_controller_panel.setOnClickListener { videoPlayerPresenter.onNext() }
         autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
+        autoplayCancel.setOnClickListener { videoPlayerPresenter.cancelPendingAutoplay() }
+        autoplaySwitch.setOnCheckedChangeListener { _, isChecked ->
+            videoPlayerPresenter.setAutoplayEnabled(isChecked)
+        }
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<VideoPlayerView.State.Idle>(center_controller_panel)
-        viewStateDelegate.addState<VideoPlayerView.State.NextPending>(autoplay_controller_panel)
-        viewStateDelegate.addState<VideoPlayerView.State.NextCancelled>(autoplay_controller_panel)
+        viewStateDelegate.addState<VideoPlayerView.State.NextPending>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
+        viewStateDelegate.addState<VideoPlayerView.State.NextCancelled>(autoplay_controller_panel, autoplaySwitch)
     }
 
     private fun injectComponent() {
@@ -246,6 +250,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                         }
                 }
                 autoplayProgress.progress = state.progress
+                autoplaySwitch.isChecked = true
             }
 
             VideoPlayerView.State.NextCancelled -> {
@@ -253,6 +258,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 animator = null
 
                 autoplayProgress.progress = AUTOPLAY_PROGRESS_MAX
+                autoplaySwitch.isChecked = false
             }
 
             VideoPlayerView.State.Next -> {
