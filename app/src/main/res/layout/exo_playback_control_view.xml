@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_controller_panel"
         android:layout_below="@+id/topControllerPanel"
-        android:background="#25000000"/>
+        android:background="#55000000"/>
 
     <RelativeLayout
         android:id="@+id/topControllerPanel"
@@ -161,7 +161,7 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/guideline_standard_padding"
 
-        android:text="@string/cancel"
+        android:text="@string/video_player_autoplay_cancel"
         android:textColor="@color/white"
         style="@style/Adaptive.BorderlessButton" />
 

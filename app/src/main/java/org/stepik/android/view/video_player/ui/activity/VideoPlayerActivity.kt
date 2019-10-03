@@ -185,7 +185,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<VideoPlayerView.State.Idle>(center_controller_panel)
         viewStateDelegate.addState<VideoPlayerView.State.NextPending>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
-        viewStateDelegate.addState<VideoPlayerView.State.NextCancelled>(autoplay_controller_panel, autoplaySwitch)
+        viewStateDelegate.addState<VideoPlayerView.State.NextCancelled>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
     }
 
     private fun injectComponent() {
