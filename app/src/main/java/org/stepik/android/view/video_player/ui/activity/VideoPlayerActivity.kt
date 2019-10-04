@@ -173,9 +173,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             }
         }
 
-        autoplay_controller_panel.setOnClickListener { videoPlayerPresenter.onNext() }
+        autoplay_controller_panel.setOnClickListener { videoPlayerPresenter.onAutoplayNext() }
         autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
-        autoplayCancel.setOnClickListener { videoPlayerPresenter.cancelPendingAutoplay() }
+        autoplayCancel.setOnClickListener { videoPlayerPresenter.stayOnThisStep() }
         autoplaySwitch.setOnCheckedChangeListener { _, isChecked ->
             if (autoplaySwitch.isUserTriggered) {
                 videoPlayerPresenter.setAutoplayEnabled(isChecked)
@@ -184,8 +184,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<VideoPlayerView.State.Idle>(center_controller_panel)
-        viewStateDelegate.addState<VideoPlayerView.State.NextPending>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
-        viewStateDelegate.addState<VideoPlayerView.State.NextCancelled>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
+        viewStateDelegate.addState<VideoPlayerView.State.AutoplayPending>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
+        viewStateDelegate.addState<VideoPlayerView.State.AutoplayCancelled>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
     }
 
     private fun injectComponent() {
@@ -230,7 +230,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 animator = null
             }
 
-            is VideoPlayerView.State.NextPending -> {
+            is VideoPlayerView.State.AutoplayPending -> {
                 if (animator == null) {
                     animator = ValueAnimator.ofInt(state.progress, AUTOPLAY_PROGRESS_MAX)
                     animator
@@ -244,7 +244,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                                 }
 
                                 override fun onAnimationEnd(animation: Animator) {
-                                    videoPlayerPresenter.onNext()
+                                    videoPlayerPresenter.onAutoplayNext()
                                 }
                             })
                             duration = ((1f - state.progress.toFloat() / AUTOPLAY_PROGRESS_MAX) * AUTOPLAY_ANIMATION_DURATION_MS).toLong()
@@ -259,7 +259,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 }
             }
 
-            VideoPlayerView.State.NextCancelled -> {
+            VideoPlayerView.State.AutoplayCancelled -> {
                 animator?.cancel()
                 animator = null
 
@@ -269,7 +269,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 }
             }
 
-            VideoPlayerView.State.Next -> {
+            VideoPlayerView.State.AutoplayNext -> {
                 setResult(Activity.RESULT_OK)
                 finish()
             }

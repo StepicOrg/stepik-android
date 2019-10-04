@@ -175,9 +175,9 @@ constructor(
                 VideoPlayerView.State.Idle ->
                     if (playbackState == Player.STATE_ENDED && isAutoplayAllowed) {
                         if (isAutoplayEnabled) {
-                            VideoPlayerView.State.NextPending(0)
+                            VideoPlayerView.State.AutoplayPending(0)
                         } else {
-                            VideoPlayerView.State.NextCancelled
+                            VideoPlayerView.State.AutoplayCancelled
                         }
                     } else {
                         VideoPlayerView.State.Idle
@@ -194,23 +194,23 @@ constructor(
 
     fun onAutoplayProgressChanged(progress: Int) {
         state =
-            if (state is VideoPlayerView.State.NextPending) {
-                VideoPlayerView.State.NextPending(progress)
+            if (state is VideoPlayerView.State.AutoplayPending) {
+                VideoPlayerView.State.AutoplayPending(progress)
             } else {
                 state
             }
     }
 
-    fun onNext() {
+    fun onAutoplayNext() {
         state =
-            if (state is VideoPlayerView.State.NextPending || state == VideoPlayerView.State.NextCancelled) {
-                VideoPlayerView.State.Next
+            if (state is VideoPlayerView.State.AutoplayPending || state == VideoPlayerView.State.AutoplayCancelled) {
+                VideoPlayerView.State.AutoplayNext
             } else {
                 state
             }
     }
 
-    fun cancelPendingAutoplay() {
+    fun stayOnThisStep() {
         state = VideoPlayerView.State.Idle
     }
 
@@ -218,11 +218,11 @@ constructor(
         videoPlayerSettingsInteractor.setAutoplayEnabled(isEnabled)
         state =
             when (state) {
-                is VideoPlayerView.State.NextPending ->
-                    VideoPlayerView.State.NextCancelled
+                is VideoPlayerView.State.AutoplayPending ->
+                    VideoPlayerView.State.AutoplayCancelled
 
-                is VideoPlayerView.State.NextCancelled ->
-                    VideoPlayerView.State.NextPending(0)
+                is VideoPlayerView.State.AutoplayCancelled ->
+                    VideoPlayerView.State.AutoplayPending(0)
 
                 else ->
                     state

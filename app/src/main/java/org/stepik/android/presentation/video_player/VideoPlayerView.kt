@@ -5,9 +5,9 @@ import org.stepik.android.view.video_player.model.VideoPlayerData
 interface VideoPlayerView {
     sealed class State {
         object Idle : State()
-        data class NextPending(val progress: Int) : State()
-        object NextCancelled : State()
-        object Next : State()
+        data class AutoplayPending(val progress: Int) : State()
+        object AutoplayCancelled : State()
+        object AutoplayNext : State()
     }
 
     fun setState(state: State)
