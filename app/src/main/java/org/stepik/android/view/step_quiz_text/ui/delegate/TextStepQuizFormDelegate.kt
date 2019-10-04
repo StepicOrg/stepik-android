@@ -110,7 +110,7 @@ class TextStepQuizFormDelegate(
                     R.drawable.ic_step_quiz_text_correct
 
                 Submission.Status.WRONG ->
-                    R.drawable.ic_step_quiz_text_wrong
+                    R.drawable.ic_step_quiz_wrong
 
                 else ->
                     null
