@@ -21,8 +21,6 @@ import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.model.user.User
 import org.stepik.android.view.base.ui.mapper.DateMapper
-import java.util.Date
-import java.util.TimeZone
 
 class CourseReviewDataDelegate(
     private val onUserClicked: (User) -> Unit,
