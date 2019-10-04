@@ -33,6 +33,7 @@ class SortingOptionAdapterDelegate(
         }
 
         override fun onBind(data: SortingOption) {
+            itemView.isEnabled = data.isEnabled
             stepQuizSortingOption.setPlainOrLaTeXText(data.option)
 
             stepQuizSortingOptionUp.isEnabled = data.isEnabled && adapterPosition != 0
