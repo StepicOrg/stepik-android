@@ -159,7 +159,6 @@
 
         android:layout_above="@id/bottom_controller_panel"
         android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/guideline_standard_padding"
 
         android:text="@string/video_player_autoplay_cancel"
         android:textColor="@color/white"
@@ -170,8 +169,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:foreground="@drawable/selectable_item_rounded_background"
-        android:layout_margin="@dimen/guideline_standard_padding"
-        android:padding="@dimen/guideline_standard_padding"
+        android:layout_margin="8dp"
+        android:padding="8dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/autoplay_controller_panel"
         app:switchPadding="8dp"
