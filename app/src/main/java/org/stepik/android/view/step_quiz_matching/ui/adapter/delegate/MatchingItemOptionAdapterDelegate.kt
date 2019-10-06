@@ -39,6 +39,7 @@ class MatchingItemOptionAdapterDelegate(
 
         override fun onBind(data: MatchingItem) {
             data as MatchingItem.Option
+            itemView.isEnabled = data.isEnabled
 
             stepQuizSortingOption.setPlainOrLaTeXText(data.text)
 

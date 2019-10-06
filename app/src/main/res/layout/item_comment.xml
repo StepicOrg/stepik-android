@@ -65,7 +65,7 @@
         android:textSize="16sp"
         android:textColor="@color/new_accent_color"
 
-        fontPath="fonts/Roboto-Bold.ttf"
+        app:fontFamily="@font/roboto_bold"
 
         app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
         app:layout_constraintTop_toBottomOf="@id/commentTags"
