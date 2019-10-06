@@ -8,7 +8,9 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.FontRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.Px;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -92,6 +94,10 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         textView = findViewById(getTextViewId());
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         webView = findViewById(getWebViewId());
+    }
+
+    public void setLineHeight(@Px int lineHeight) {
+        TextViewCompat.setLineHeight(textView, lineHeight);
     }
 
     public void setTextSize(float textSize) {

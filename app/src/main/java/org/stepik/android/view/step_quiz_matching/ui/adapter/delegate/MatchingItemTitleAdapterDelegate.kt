@@ -36,6 +36,8 @@ class MatchingItemTitleAdapterDelegate : AdapterDelegate<MatchingItem, DelegateV
 
         override fun onBind(data: MatchingItem) {
             data as MatchingItem.Title
+            itemView.isEnabled = data.isEnabled
+
             stepQuizSortingOption.setPlainOrLaTeXText(data.text)
 
             val elevation = if (data.isEnabled) context.resources.getDimension(R.dimen.step_quiz_sorting_item_elevation) else 0f

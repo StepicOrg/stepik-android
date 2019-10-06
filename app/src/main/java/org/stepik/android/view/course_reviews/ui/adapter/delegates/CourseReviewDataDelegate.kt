@@ -20,8 +20,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.model.user.User
-import java.util.Date
-import java.util.TimeZone
+import org.stepik.android.view.base.ui.mapper.DateMapper
 
 class CourseReviewDataDelegate(
     private val onUserClicked: (User) -> Unit,
@@ -74,8 +73,7 @@ class CourseReviewDataDelegate(
 
             reviewName.text = data.user.fullName
 
-            reviewDate.text = DateTimeHelper
-                .getPrintableDate(data.courseReview.updateDate ?: Date(), DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
+            reviewDate.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.courseReview.updateDate?.time ?: 0)
 
             reviewRating.progress = data.courseReview.score
             reviewRating.total = 5
