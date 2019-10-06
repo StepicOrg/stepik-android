@@ -109,7 +109,7 @@
             android:ellipsize="end"
 
             android:textSize="16sp"
-            android:textColor="@color/new_accent_color"
+            android:textColor="@color/color_step_quiz_code_lang"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical|start"
 
