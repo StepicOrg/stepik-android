@@ -21,7 +21,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
-import org.stepic.droid.ui.listeners.NextMoveable
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
@@ -31,14 +31,16 @@ import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
-import org.stepik.android.view.base.ui.interfaces.KeyboardExtensionContainer
+import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import javax.inject.Inject
 
-class StepFragment : Fragment(), StepView, KeyboardExtensionContainer, NextMoveable {
+class StepFragment : Fragment(), StepView,
+    NextMoveable,
+    Playable {
     companion object {
         private const val STEP_CONTENT_FRAGMENT_TAG = "step_content"
         private const val STEP_QUIZ_FRAGMENT_TAG = "step_quiz"
@@ -95,7 +97,7 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer, NextMovea
         inflater.inflate(R.layout.fragment_step, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        stepNavigationDelegate = StepNavigationDelegate(stepNavigation, stepPresenter::onStepDirectionClicked)
+        stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions) {
             screenManager
@@ -226,21 +228,23 @@ class StepFragment : Fragment(), StepView, KeyboardExtensionContainer, NextMovea
             }
     }
 
-    override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData) {
+    override fun showLesson(direction: StepNavigationDirection, lessonData: LessonData, isAutoplayEnabled: Boolean) {
         val unit = lessonData.unit ?: return
         val section = lessonData.section ?: return
 
-        screenManager.showSteps(activity, unit, lessonData.lesson, direction == StepNavigationDirection.PREV, section)
+        screenManager.showSteps(activity, unit, lessonData.lesson, section, direction == StepNavigationDirection.PREV, isAutoplayEnabled)
         activity?.finish()
     }
 
-    override fun getKeyboardExtensionViewContainer(): ViewGroup =
-        stepContainer
-
-    override fun moveNext(): Boolean {
-        if ((activity as? NextMoveable)?.moveNext() != true) {
-            stepPresenter.onStepDirectionClicked(StepNavigationDirection.NEXT)
+    override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
+        if ((activity as? NextMoveable)?.moveNext(isAutoplayEnabled) != true) {
+            stepPresenter.onStepDirectionClicked(StepNavigationDirection.NEXT, isAutoplayEnabled)
         }
         return true
     }
+
+    override fun play(): Boolean =
+        (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) as? Playable)
+            ?.play()
+            ?: false
 }

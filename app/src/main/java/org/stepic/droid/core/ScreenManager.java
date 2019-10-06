@@ -3,6 +3,7 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
@@ -54,7 +55,7 @@ public interface ScreenManager {
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 
-    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section);
+    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section, boolean backAnimation, boolean isAutoplayEnabled);
 
     void openStepInWeb(Context context, Step step);
 
@@ -74,7 +75,7 @@ public interface ScreenManager {
 
     Intent getCatalogIntent(Context context);
 
-    void showVideo(Activity sourceActivity, @NotNull VideoPlayerMediaData videoPlayerMediaData);
+    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled);
 
     void showSettings(Activity sourceActivity);
 

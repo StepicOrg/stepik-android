@@ -374,8 +374,6 @@
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
     <string name="profile_user_id" translatable="false">User ID: %d</string>
-    <string name="profile_font_settings_title">Font size</string>
-    <string name="profile_font_settings_dialog_title">Choose font size</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
@@ -665,6 +663,7 @@
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
     <string name="video_player_in_background_popup">You can play video in background</string>
+    <string name="video_player_autoplay_cancel">Stay on this step</string>
 
 
     <string name="retention_notification_day1_title">Don\'t slow down</string>
@@ -793,4 +792,13 @@
     <string name="main_tab_catalog">Catalog</string>
     <string name="main_tab_profile">Profile</string>
     <string name="main_tab_notifications">Notifications</string>
+
+    <!-- Settings -->
+    <string name="setting_section_learning">Learning</string>
+
+    <string name="setting_autoplay">Auto-transition to next step on video end</string>
+    <string name="setting_autoplay_short">Auto-transition to next step</string>
+
+    <string name="setting_font_size">Font size in steps</string>
+    <string name="setting_font_size_dialog_title">Choose font size</string>
 </resources>

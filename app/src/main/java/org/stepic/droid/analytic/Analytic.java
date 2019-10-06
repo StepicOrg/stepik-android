@@ -231,6 +231,8 @@ public interface Analytic {
         String NOW_PLAYING_WAS_NULL = "video_player_now_playing_null";
 
         String VIDEO_FILE_RESTORED = "video_file_restored";
+
+        String VIDEO_AUTOPLAY_CHANGED = "video_autoplay_changed";
     }
 
     interface AppIndexing {

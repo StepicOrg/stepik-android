@@ -69,4 +69,11 @@ constructor(
 
             isFirstTime
         }
+
+    fun isAutoplayEnabled(): Boolean =
+        userPreferences.isAutoplayEnabled
+
+    fun setAutoplayEnabled(isEnabled: Boolean) {
+        userPreferences.isAutoplayEnabled = isEnabled
+    }
 }

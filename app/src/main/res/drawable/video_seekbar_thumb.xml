@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
        android:shape="oval">
-    <solid android:color="@color/stepic_blue_ribbon"/>
-    <stroke android:color="@color/stepic_blue_ribbon"/>
+    <solid android:color="@color/green01"/>
+    <stroke android:color="@color/green01"/>
     <size
         android:width="@dimen/thumb_size"
         android:height="@dimen/thumb_size"/>
