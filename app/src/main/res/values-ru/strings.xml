@@ -364,8 +364,6 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
-    <string name="profile_font_settings_title">Размер шрифта</string>
-    <string name="profile_font_settings_dialog_title">Выберите размер шрифта</string>
 
     <!--Home screen-->
     <string name="catalog_title">Каталог</string>
@@ -634,6 +632,7 @@
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
     <string name="video_player_in_background_popup">Вы можете продолжить воспроизведение видео в фоне</string>
+    <string name="video_player_autoplay_cancel">Остаться на этом шаге</string>
 
 
     <string name="retention_notification_day1_title">Не сбавляем темп</string>
@@ -694,7 +693,7 @@
 
     <string name="step_quiz_feedback_evaluation">Проверка…</string>
     <string name="step_quiz_feedback_correct_free_answer">Любой ответ будет оценен как правильный</string>
-    <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз!</string>
+    <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз</string>
     <string name="step_quiz_feedback_wrong_last_try">Неверно</string>
 
     <string name="step_quiz_number_description">Введите численный ответ</string>
@@ -761,4 +760,13 @@
     <string name="main_tab_catalog">Каталог</string>
     <string name="main_tab_profile">Профиль</string>
     <string name="main_tab_notifications">Уведомления</string>
+
+    <!-- Settings -->
+    <string name="setting_section_learning">Обучение</string>
+
+    <string name="setting_autoplay">Автопереход на следующий шаг по окончании видео</string>
+    <string name="setting_autoplay_short">Автопереход на следующий шаг</string>
+
+    <string name="setting_font_size">Размер шрифта в шагах</string>
+    <string name="setting_font_size_dialog_title">Выберите размер шрифта</string>
 </resources>

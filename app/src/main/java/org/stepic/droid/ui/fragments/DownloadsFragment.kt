@@ -108,7 +108,7 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
             }
 
     override fun showVideo(videoPlayerMediaData: VideoPlayerMediaData) {
-        screenManager.showVideo(activity, videoPlayerMediaData)
+        screenManager.showVideo(this, videoPlayerMediaData, false)
     }
 
     override fun onStart() {

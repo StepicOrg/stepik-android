@@ -104,7 +104,7 @@ constructor(
             )
     }
 
-    fun onStepDirectionClicked(stepNavigationDirection: StepNavigationDirection) {
+    fun onStepDirectionClicked(stepNavigationDirection: StepNavigationDirection, isAutoplayEnabled: Boolean = false) {
         val state = (state as? StepView.State.Loaded)
             ?: return
 
@@ -115,7 +115,7 @@ constructor(
             .doOnSubscribe { isBlockingLoading = true }
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onSuccess = { view?.showLesson(stepNavigationDirection, lessonData = it) },
+                onSuccess = { view?.showLesson(stepNavigationDirection, lessonData = it, isAutoplayEnabled = isAutoplayEnabled) },
                 onError = emptyOnErrorStub
             )
     }

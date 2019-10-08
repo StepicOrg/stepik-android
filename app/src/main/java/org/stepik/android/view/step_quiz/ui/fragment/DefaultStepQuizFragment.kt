@@ -15,7 +15,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.listeners.NextMoveable
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData

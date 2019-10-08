@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.video_player
 
 import android.os.Bundle
+import com.google.android.exoplayer2.Player
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -35,6 +36,12 @@ constructor(
         private const val TIMESTAMP_EPS = 1000L
     }
 
+    private var state: VideoPlayerView.State = VideoPlayerView.State.Idle
+        set(value) {
+            field = value
+            view?.setState(value)
+        }
+
     private var videoPlayerData: VideoPlayerData? = null
         set(value) {
             field = value
@@ -54,6 +61,7 @@ constructor(
         super.attachView(view)
         videoPlayerData?.let(view::setVideoPlayerData)
         view.setIsLandscapeVideo(isLandscapeVideo)
+        view.setState(state)
     }
 
     /**
@@ -153,6 +161,72 @@ constructor(
             .saveVideoTimestamp(playerData.videoId, timestamp)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(onError = emptyOnErrorStub)
+    }
+
+    /**
+     * Video player states
+     *
+     * [isAutoplayAllowed] - allowed for video
+     */
+    fun onPlayerStateChanged(playbackState: Int, isAutoplayAllowed: Boolean) {
+        val isAutoplayEnabled = videoPlayerSettingsInteractor.isAutoplayEnabled()
+        state =
+            when (val state = state) {
+                VideoPlayerView.State.Idle ->
+                    if (playbackState == Player.STATE_ENDED && isAutoplayAllowed) {
+                        if (isAutoplayEnabled) {
+                            VideoPlayerView.State.AutoplayPending(0)
+                        } else {
+                            VideoPlayerView.State.AutoplayCancelled
+                        }
+                    } else {
+                        VideoPlayerView.State.Idle
+                    }
+
+                else ->
+                    if (playbackState != Player.STATE_ENDED) {
+                        VideoPlayerView.State.Idle
+                    } else {
+                        state
+                    }
+            }
+    }
+
+    fun onAutoplayProgressChanged(progress: Int) {
+        state =
+            if (state is VideoPlayerView.State.AutoplayPending) {
+                VideoPlayerView.State.AutoplayPending(progress)
+            } else {
+                state
+            }
+    }
+
+    fun onAutoplayNext() {
+        state =
+            if (state is VideoPlayerView.State.AutoplayPending || state == VideoPlayerView.State.AutoplayCancelled) {
+                VideoPlayerView.State.AutoplayNext
+            } else {
+                state
+            }
+    }
+
+    fun stayOnThisStep() {
+        state = VideoPlayerView.State.Idle
+    }
+
+    fun setAutoplayEnabled(isEnabled: Boolean) {
+        videoPlayerSettingsInteractor.setAutoplayEnabled(isEnabled)
+        state =
+            when (state) {
+                is VideoPlayerView.State.AutoplayPending ->
+                    VideoPlayerView.State.AutoplayCancelled
+
+                is VideoPlayerView.State.AutoplayCancelled ->
+                    VideoPlayerView.State.AutoplayPending(0)
+
+                else ->
+                    state
+            }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
