@@ -22,11 +22,19 @@ ext.versions = [
         rxKotlin             : '2.3.0',
 
         supportLibs          : '28.0.0',
-        archComponents       : '1.1.1',
-        multidex             : '1.0.3',
-        constraintLayout     : '1.1.3',
         exoPlayer            : '2.9.3',
-        ktx                  : '1.0.0',
+
+        appCompat            : '1.1.0',
+        ktx                  : '1.1.0',
+        recyclerview         : '1.0.0',
+        viewPager            : '1.0.0',
+        cardView             : '1.0.0',
+        constraintLayout     : '1.1.3',
+
+        archComponents       : '2.1.0',
+        multidex             : '2.0.1',
+        adapterDelegates     : '1.0.1',
+        adapters             : '1.0.1',
 
         retrofit             : '2.6.1',
         gson                 : '2.8.5',
@@ -112,19 +120,22 @@ ext.libraries = [
         rxAndroid            : "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid",
         rxKotlin             : "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin",
 
-        supportAppCompat     : "com.android.support:appcompat-v7:$versions.supportLibs",
-        supportDesign        : "com.android.support:design:$versions.supportLibs",
-        supportRecyclerView  : "com.android.support:recyclerview-v7:$versions.supportLibs",
-        supportCardView      : "com.android.support:cardview-v7:$versions.supportLibs",
-        multidex             : "com.android.support:multidex:$versions.multidex",
-        constraintLayout     : "com.android.support.constraint:constraint-layout:$versions.constraintLayout",
         exoPlayerCore        : "com.google.android.exoplayer:exoplayer-core:$versions.exoPlayer",
         exoPlayerUI          : "com.google.android.exoplayer:exoplayer-ui:$versions.exoPlayer",
         exoPlayerMediaSession: "com.google.android.exoplayer:extension-mediasession:$versions.exoPlayer",
-        ktxCore              : "androidx.core:core-ktx:$versions.ktx",
 
-        archExtensions       : "android.arch.lifecycle:extensions:$versions.archComponents",
-        archViewModel        : "android.arch.lifecycle:viewmodel:$versions.archComponents",
+        appCompat            : "androidx.appcompat:appcompat:$versions.appCompat",
+        ktx                  : "androidx.core:core-ktx:$versions.ktx",
+        recyclerview         : "androidx.recyclerview:recyclerview:$versions.recyclerview",
+        viewPager            : "androidx.viewpager:viewpager:$versions.viewPager",
+        cardView             : "androidx.cardview:cardview:$versions.cardView",
+        constraintLayout     : "androidx.constraintlayout:constraintlayout:$versions.constraintLayout",
+
+        archExtensions       : "androidx.lifecycle:lifecycle-extensions:$versions.archComponents",
+        archViewModel        : "androidx.lifecycle:lifecycle-viewmodel:$versions.archComponents",
+        multidex             : "androidx.multidex:multidex:$versions.multidex",
+        adapterDelegates     : "ru.nobird.android.ui:AdapterDelegates:$versions.adapterDelegates",
+        adapters             : "ru.nobird.android.ui:Adapters:$versions.adapters",
 
         retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",
@@ -175,8 +186,6 @@ ext.libraries = [
 
         shortcutBadger       : "me.leolin:ShortcutBadger:$versions.shortcutBadger",
         StoriesKit           : "ru.nobird.android:StoriesKitSupport:$versions.StoriesKit",
-        AdapterDelegates     : "ru.nobird.android.ui:AdapterDelegatesSupport:$versions.AdapterDelegates",
-        Adapters             : "ru.nobird.android.ui:AdaptersSupport:$versions.Adapters",
 
         // Developer Tools
         leakCanary           : "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary",
