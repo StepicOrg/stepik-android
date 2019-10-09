@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_step_quiz_sorting.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.step_quiz_sorting.ui.model.SortingOption
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class SortingOptionAdapterDelegate(

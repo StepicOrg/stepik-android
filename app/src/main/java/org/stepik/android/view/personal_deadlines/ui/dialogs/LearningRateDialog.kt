@@ -8,7 +8,7 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.DialogFragment
 import androidx.core.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme

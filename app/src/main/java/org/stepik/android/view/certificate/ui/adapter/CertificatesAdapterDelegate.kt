@@ -8,8 +8,8 @@ import kotlinx.android.synthetic.main.certificate_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.CertificateViewItem
 import org.stepik.android.model.Certificate
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CertificatesAdapterDelegate(
     private val onItemClick: (String) -> Unit,

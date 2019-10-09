@@ -2,7 +2,7 @@ package org.stepic.droid.features.achievements.ui.fragments
 
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +21,7 @@ import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setHeight
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class AchievementsListFragment: FragmentBase(), AchievementsView {

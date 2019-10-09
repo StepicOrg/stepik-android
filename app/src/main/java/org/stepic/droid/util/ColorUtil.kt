@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 
 import org.stepic.droid.base.App
 
-object   ColorUtil {
+object ColorUtil {
     @ColorInt
     fun getColorArgb(@ColorRes resourceColor: Int, context: Context = App.getAppContext()): Int {
         return ContextCompat.getColor(context, resourceColor)

@@ -1,6 +1,6 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.control_bar
 
-import androidx.core.util.LongSparseArray
+import androidx.collection.LongSparseArray
 import androidx.core.widget.CircularProgressDrawable
 import android.view.View
 import android.view.ViewGroup

@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
 import androidx.appcompat.content.res.AppCompatResources
-import android.support.v7.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*

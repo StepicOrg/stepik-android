@@ -18,11 +18,11 @@ import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewPresenter
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewView
-import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewView {

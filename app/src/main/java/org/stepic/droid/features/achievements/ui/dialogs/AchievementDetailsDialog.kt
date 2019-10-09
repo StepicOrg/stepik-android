@@ -14,7 +14,7 @@ import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.wrapWithGlide
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class AchievementDetailsDialog: DialogFragment() {

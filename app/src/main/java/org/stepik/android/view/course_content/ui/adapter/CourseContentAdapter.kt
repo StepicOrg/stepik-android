@@ -1,6 +1,6 @@
 package org.stepik.android.view.course_content.ui.adapter
 
-import androidx.core.util.LongSparseArray
+import androidx.collection.LongSparseArray
 import android.support.v7.util.DiffUtil
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter

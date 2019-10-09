@@ -11,7 +11,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.setCompoundDrawables
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class UnsupportedStepQuizFragment : Fragment() {

@@ -9,7 +9,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.model.OnboardingType
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 
 class OnboardingFragment : FragmentBase() {
     companion object {

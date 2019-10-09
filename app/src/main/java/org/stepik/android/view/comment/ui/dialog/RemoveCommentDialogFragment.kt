@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.appcompat.app.AlertDialog
 import org.stepic.droid.R
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 
 class RemoveCommentDialogFragment : DialogFragment() {
     companion object {

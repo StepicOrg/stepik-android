@@ -9,7 +9,6 @@ import com.bumptech.glide.load.model.ModelLoaderFactory;
 import com.bumptech.glide.load.model.MultiModelLoaderFactory;
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader;
 
-import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 
 import java.io.InputStream;

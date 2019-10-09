@@ -1,7 +1,6 @@
 package org.stepic.droid.util
 
-import androidx.core.util.LongSparseArray
-
+import androidx.collection.LongSparseArray
 
 fun <T: Comparable<T>> Array<T>.isOrdered(): Boolean =
         (0 until this.size - 1).none { this[it] > this[it + 1] }

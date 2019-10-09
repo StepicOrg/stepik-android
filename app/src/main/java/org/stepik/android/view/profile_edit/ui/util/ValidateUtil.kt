@@ -1,6 +1,6 @@
 package org.stepik.android.view.profile_edit.ui.util
 
-import android.support.design.widget.TextInputEditText
+import com.google.android.material.textfield.TextInputEditText
 import android.support.design.widget.TextInputLayout
 import android.text.TextUtils
 import org.stepic.droid.R

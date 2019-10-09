@@ -8,7 +8,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 

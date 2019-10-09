@@ -13,8 +13,4 @@ public interface TextResolver {
      */
     @NotNull
     CharSequence fromHtml(@Nullable String content);
-
-    @NotNull
-    String replaceWhitespaceToBr(@Nullable String answer);
-
 }

@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -37,7 +37,7 @@ import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import org.stepic.droid.util.checkSelfPermissions
 import org.stepic.droid.util.requestMultiplePermissions
 import org.stepic.droid.web.storage.model.StorageRecord

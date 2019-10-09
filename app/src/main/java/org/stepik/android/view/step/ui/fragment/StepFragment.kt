@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import android.support.v7.widget.LinearLayoutCompat
+import androidx.appcompat.widget.LinearLayoutCompat
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -24,8 +24,8 @@ import org.stepic.droid.ui.dialogs.StepShareDialogFragment
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.argument
 import org.stepic.droid.util.commitNow
+import ru.nobird.android.view.base.ui.extension.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step

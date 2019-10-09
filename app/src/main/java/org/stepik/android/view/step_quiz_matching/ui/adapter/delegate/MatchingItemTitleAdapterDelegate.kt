@@ -7,8 +7,8 @@ import kotlinx.android.synthetic.main.item_step_quiz_sorting.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class MatchingItemTitleAdapterDelegate : AdapterDelegate<MatchingItem, DelegateViewHolder<MatchingItem>>() {
     override fun isForViewType(position: Int, data: MatchingItem): Boolean =

@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.fragment_course_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_info.CourseInfoView
 import org.stepik.android.view.course_info.mapper.toSortedItems

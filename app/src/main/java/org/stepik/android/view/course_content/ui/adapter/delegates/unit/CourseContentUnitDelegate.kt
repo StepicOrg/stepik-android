@@ -4,7 +4,7 @@ import android.graphics.BitmapFactory
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.util.LongSparseArray
+import androidx.collection.LongSparseArray
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide

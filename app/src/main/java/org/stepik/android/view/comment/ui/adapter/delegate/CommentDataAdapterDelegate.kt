@@ -23,8 +23,8 @@ import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.base.ui.mapper.DateMapper
 import org.stepik.android.view.comment.model.CommentTag
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CommentDataAdapterDelegate(
