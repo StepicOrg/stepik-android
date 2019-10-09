@@ -3,7 +3,11 @@ package org.stepic.droid.adaptive.ui.custom.morphing
 import android.animation.*
 import android.view.animation.Interpolator
 
-class MorphingAnimation(private val view: MorphingView, private val to: MorphingView.MorphParams, val interpolator: Interpolator? = null) {
+class MorphingAnimation(
+    private val view: MorphingView,
+    private val to: MorphingView.MorphParams,
+    val interpolator: Interpolator? = null
+) {
     val set = AnimatorSet()
 
     fun initSet() {

@@ -6,10 +6,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.design.widget.TabLayout
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.ViewPager
+import com.google.android.material.tabs.TabLayout
+import androidx.core.app.DialogFragment
+import androidx.core.content.res.ResourcesCompat
+import androidx.viewpager.widget.ViewPager
 import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem

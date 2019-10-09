@@ -20,7 +20,7 @@ android {
         versionCode versions.code
         versionName versions.name
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true
@@ -134,6 +134,7 @@ dependencies {
     implementation libraries.multidex
     implementation libraries.adapterDelegates
     implementation libraries.adapters
+    implementation libraries.viewKit
 
     implementation libraries.exoPlayerCore
     implementation libraries.exoPlayerUI

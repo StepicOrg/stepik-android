@@ -3,7 +3,7 @@ package org.stepic.droid.ui.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.support.v7.widget.GridLayoutManager
 import android.text.Spannable
 import android.text.SpannableString

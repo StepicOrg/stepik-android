@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.support.annotation.ColorInt
 import android.support.annotation.DrawableRes
-import android.support.v4.widget.CircularProgressDrawable
+import androidx.core.widget.CircularProgressDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

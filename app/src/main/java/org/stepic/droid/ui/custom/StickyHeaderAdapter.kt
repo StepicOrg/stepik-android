@@ -16,7 +16,7 @@
 package org.stepic.droid.ui.custom
 
 import android.view.ViewGroup
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * The adapter to assist the [StickyHeaderDecoration] in creating and binding the header views.

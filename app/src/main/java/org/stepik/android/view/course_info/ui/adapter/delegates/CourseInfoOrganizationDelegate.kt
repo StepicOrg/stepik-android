@@ -1,6 +1,6 @@
 package org.stepik.android.view.course_info.ui.adapter.delegates
 
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View

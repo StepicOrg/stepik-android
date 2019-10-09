@@ -1,7 +1,7 @@
 package org.stepik.android.view.course_content.ui.fragment.listener
 
 import android.app.Activity
-import android.support.v4.app.FragmentManager
+import androidx.core.app.FragmentManager
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager

@@ -3,7 +3,7 @@ package org.stepic.droid.ui.fragments
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.support.annotation.StringRes
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

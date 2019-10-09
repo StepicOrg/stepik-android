@@ -9,7 +9,7 @@ import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
 import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.support.v7.content.res.AppCompatResources
 import android.view.LayoutInflater
 import android.view.View

@@ -1,6 +1,6 @@
 package org.stepik.android.view.comment.ui.adapter.delegate
 
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.ViewGroup
 import android.widget.TextView
 import org.stepic.droid.R

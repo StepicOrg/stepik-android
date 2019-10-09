@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.core.app.DialogFragment
 import android.widget.ArrayAdapter
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic

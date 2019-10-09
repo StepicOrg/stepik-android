@@ -3,7 +3,7 @@ package org.stepic.droid.ui.util
 import android.content.Context
 import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.support.annotation.DrawableRes
-import android.support.v4.widget.PopupWindowCompat
+import androidx.core.widget.PopupWindowCompat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View

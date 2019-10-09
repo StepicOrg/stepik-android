@@ -1,7 +1,7 @@
 package org.stepic.droid.util.resolvers.text
 
 import android.content.Context
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.text.SpannableString
 import android.text.style.URLSpan
 import org.stepic.droid.R

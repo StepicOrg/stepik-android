@@ -5,7 +5,7 @@ import android.app.SearchManager
 import android.content.Context
 import android.support.annotation.DrawableRes
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.support.v7.widget.SearchView
 import android.util.AttributeSet
 import android.view.LayoutInflater

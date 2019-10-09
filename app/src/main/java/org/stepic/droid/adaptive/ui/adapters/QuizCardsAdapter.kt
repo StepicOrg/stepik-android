@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.children
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
 import org.stepic.droid.adaptive.listeners.AnswerListener
@@ -12,20 +13,18 @@ import org.stepic.droid.adaptive.ui.custom.QuizCardsContainer
 import org.stepic.droid.core.presenters.CardPresenter
 import java.util.ArrayList
 
-
 open class QuizCardsAdapter(
-        private val listener: AdaptiveReactionListener?,
-        private val answerListener: AnswerListener?
+    private val listener: AdaptiveReactionListener?,
+    private val answerListener: AnswerListener?
 ): QuizCardsContainer.CardsAdapter<QuizCardViewHolder>() {
 
     companion object {
         @JvmStatic
         private fun changeVisibilityOfAllChildrenTo(viewGroup: ViewGroup, visibility: Int, exclude: List<Int>?) {
-            val count = viewGroup.childCount
-            (0 until count)
-                    .map { viewGroup.getChildAt(it) }
-                    .filterNot { exclude != null && exclude.contains(it.id) }
-                    .forEach { it.visibility = visibility }
+            viewGroup
+                .children
+                .filterNot { exclude != null && exclude.contains(it.id) }
+                .forEach { it.visibility = visibility }
         }
     }
 
@@ -73,9 +72,10 @@ open class QuizCardsAdapter(
         onDataAdded()
     }
 
-    fun isEmptyOrContainsOnlySwipedCard(lesson: Long) =
-            presenters.isEmpty() || presenters.size == 1 && presenters[0].card.lessonId == lesson
+    fun isEmptyOrContainsOnlySwipedCard(lesson: Long): Boolean =
+        presenters.isEmpty() || presenters.size == 1 && presenters[0].card.lessonId == lesson
 
-    override fun poll() =
-            presenters.removeAt(0).destroy()
+    override fun poll() {
+        presenters.removeAt(0).destroy()
+    }
 }

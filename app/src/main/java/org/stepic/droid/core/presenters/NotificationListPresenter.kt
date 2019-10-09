@@ -2,8 +2,8 @@ package org.stepic.droid.core.presenters
 
 import android.support.annotation.MainThread
 import android.support.annotation.WorkerThread
-import android.support.v4.util.ArraySet
-import android.support.v4.util.LongSparseArray
+import androidx.core.util.ArraySet
+import androidx.core.util.LongSparseArray
 import android.util.Patterns
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.Client

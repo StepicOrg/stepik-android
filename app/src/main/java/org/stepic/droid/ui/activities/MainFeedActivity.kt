@@ -7,8 +7,8 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.annotation.IdRes
 import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.app.Fragment
+import androidx.core.content.res.ResourcesCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan

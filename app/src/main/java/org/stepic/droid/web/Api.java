@@ -1,6 +1,6 @@
 package org.stepic.droid.web;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.core.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -81,7 +81,7 @@
         android:textSize="@dimen/course_carousel_title"
         tools:ignore="MissingPrefix"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/coursesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

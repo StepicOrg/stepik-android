@@ -2,7 +2,7 @@ package org.stepik.android.view.step_quiz_text.ui.delegate
 
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import android.support.v4.widget.TextViewCompat
+import androidx.core.widget.TextViewCompat
 import android.support.v7.content.res.AppCompatResources
 import android.text.InputType
 import android.view.Gravity

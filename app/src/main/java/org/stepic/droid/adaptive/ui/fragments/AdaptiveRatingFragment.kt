@@ -1,14 +1,14 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_adaptive_rating.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import org.stepic.droid.R
@@ -18,7 +18,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.AdaptiveRatingPresenter
 import org.stepic.droid.core.presenters.contracts.AdaptiveRatingView
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
@@ -35,8 +35,8 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
 
     override fun injectComponent() {
         App.componentManager()
-                .adaptiveCourseComponent(courseId)
-                .inject(this)
+            .adaptiveCourseComponent(courseId)
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =

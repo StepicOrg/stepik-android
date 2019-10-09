@@ -4,7 +4,7 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.support.v4.app.JobIntentService
+import androidx.core.app.JobIntentService
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.di.FSLock

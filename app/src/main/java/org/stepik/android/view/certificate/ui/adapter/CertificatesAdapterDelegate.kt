@@ -1,6 +1,6 @@
 package org.stepik.android.view.certificate.ui.adapter
 
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide

@@ -1,32 +1,38 @@
 package org.stepic.droid.ui.util
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 
 
 //Fragment's functions:
 
 @JvmOverloads
-fun Fragment.initCenteredToolbar(@StringRes titleRes: Int,
-                                 showHomeButton: Boolean = false,
-                                 @DrawableRes homeIndicatorRes: Int = -1) {
+fun Fragment.initCenteredToolbar(
+    @StringRes titleRes: Int,
+    showHomeButton: Boolean = false,
+    @DrawableRes homeIndicatorRes: Int = -1
+) {
     initCenteredToolbarBase(showHomeButton, homeIndicatorRes)
     centeredToolbarTitle.setText(titleRes)
 }
 
 @JvmOverloads
-fun Fragment.initCenteredToolbar(title: String,
-                                 showHomeButton: Boolean = false,
-                                 @DrawableRes homeIndicatorRes: Int = -1) {
+fun Fragment.initCenteredToolbar(
+    title: String,
+    showHomeButton: Boolean = false,
+    @DrawableRes homeIndicatorRes: Int = -1
+) {
     initCenteredToolbarBase(showHomeButton, homeIndicatorRes)
     centeredToolbarTitle.text = title
 }
 
-private fun Fragment.initCenteredToolbarBase(showHomeButton: Boolean,
-                                             @DrawableRes homeIndicatorRes: Int = -1) {
+private fun Fragment.initCenteredToolbarBase(
+    showHomeButton: Boolean,
+    @DrawableRes homeIndicatorRes: Int = -1
+) {
     val appCompatActivity = activity as AppCompatActivity
     appCompatActivity.initCenteredToolbarBase(showHomeButton, homeIndicatorRes)
 }
@@ -37,15 +43,19 @@ fun Fragment.setTitleToCenteredToolbar(title: String) {
 
 //Activity's functions:
 
-fun AppCompatActivity.initCenteredToolbar(@StringRes titleRes: Int,
-                                          showHomeButton: Boolean = false,
-                                          @DrawableRes homeIndicator: Int = -1) {
+fun AppCompatActivity.initCenteredToolbar(
+    @StringRes titleRes: Int,
+    showHomeButton: Boolean = false,
+    @DrawableRes homeIndicator: Int = -1
+) {
     initCenteredToolbarBase(showHomeButton, homeIndicator)
     centeredToolbarTitle.setText(titleRes)
 }
 
-private fun AppCompatActivity.initCenteredToolbarBase(showHomeButton: Boolean,
-                                                      @DrawableRes homeIndicatorRes: Int = -1) {
+private fun AppCompatActivity.initCenteredToolbarBase(
+    showHomeButton: Boolean,
+    @DrawableRes homeIndicatorRes: Int = -1
+) {
     this.setSupportActionBar(centeredToolbar)
 
     val actionBar = this.supportActionBar
@@ -58,7 +68,7 @@ private fun AppCompatActivity.initCenteredToolbarBase(showHomeButton: Boolean,
         actionBar.setDisplayHomeAsUpEnabled(true)
     }
 
-    if (homeIndicatorRes > 0) {
+    if (homeIndicatorRes != -1) {
         //is not default
         actionBar.setHomeAsUpIndicator(homeIndicatorRes)
     }

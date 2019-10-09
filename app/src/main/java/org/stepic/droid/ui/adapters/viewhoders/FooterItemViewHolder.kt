@@ -1,6 +1,6 @@
 package org.stepic.droid.ui.adapters.viewhoders
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.loading_view.view.*
 import org.stepic.droid.ui.util.changeVisibility

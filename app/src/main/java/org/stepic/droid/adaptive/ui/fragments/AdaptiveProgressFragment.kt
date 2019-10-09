@@ -1,27 +1,28 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveWeeksAdapter
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.AdaptiveProgressPresenter
 import org.stepic.droid.core.presenters.contracts.AdaptiveProgressView
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class AdaptiveProgressFragment : FragmentBase(), AdaptiveProgressView {
     companion object {
-        fun newInstance(courseId: Long) = AdaptiveProgressFragment().also {
-            it.courseId = courseId
-        }
+        fun newInstance(courseId: Long) = AdaptiveProgressFragment()
+            .apply {
+                this.courseId = courseId
+            }
     }
 
     private var courseId by argument<Long>()
@@ -33,8 +34,8 @@ class AdaptiveProgressFragment : FragmentBase(), AdaptiveProgressView {
 
     override fun injectComponent() {
         App.componentManager()
-                .adaptiveCourseComponent(courseId)
-                .inject(this)
+            .adaptiveCourseComponent(courseId)
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -66,7 +67,7 @@ class AdaptiveProgressFragment : FragmentBase(), AdaptiveProgressView {
 
     override fun onReleaseComponent() {
         App.componentManager()
-                .releaseAdaptiveCourseComponent(courseId)
+            .releaseAdaptiveCourseComponent(courseId)
     }
 
     override fun onDestroy() {

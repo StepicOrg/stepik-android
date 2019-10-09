@@ -60,7 +60,7 @@
         android:layout_height="1dp"
         android:background="@color/step_quiz_separator" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stepQuizCodeDetailsContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -86,7 +86,7 @@
 
         tools:drawableStart="@drawable/ic_step_quiz_code_lang" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stepQuizCodeLangChooser"
         android:layout_width="match_parent"
         android:layout_height="192dp"

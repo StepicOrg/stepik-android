@@ -3,7 +3,7 @@ package org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter
 import android.content.Context
 import android.support.annotation.LayoutRes
 import android.support.annotation.StringRes
-import android.support.v4.view.PagerAdapter
+import androidx.core.view.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
 import org.stepic.droid.R

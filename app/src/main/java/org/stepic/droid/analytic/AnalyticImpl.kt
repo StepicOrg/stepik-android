@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationManagerCompat
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
 import com.crashlytics.android.Crashlytics

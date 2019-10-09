@@ -3,8 +3,8 @@ package org.stepik.android.view.app_rating.ui.dialog
 import android.os.Bundle
 import android.support.annotation.ColorRes
 import android.support.annotation.StringRes
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.app.DialogFragment
+import androidx.core.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

@@ -3,7 +3,7 @@ package org.stepic.droid.ui.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+import androidx.core.app.DialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.CertificateViewItem;

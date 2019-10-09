@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz.ui.factory
 
-import android.support.v4.app.Fragment
+import androidx.core.app.Fragment
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.lesson.model.LessonData

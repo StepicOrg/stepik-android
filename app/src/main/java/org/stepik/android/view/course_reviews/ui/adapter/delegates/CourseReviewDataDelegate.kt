@@ -1,8 +1,8 @@
 package org.stepik.android.view.course_reviews.ui.adapter.delegates
 
 import android.graphics.BitmapFactory
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan

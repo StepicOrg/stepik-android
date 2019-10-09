@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.custom.adapter_delegates
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 abstract class DelegateViewHolder<D>(root: View) : RecyclerView.ViewHolder(root) {

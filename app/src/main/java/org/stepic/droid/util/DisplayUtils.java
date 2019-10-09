@@ -3,7 +3,7 @@ package org.stepic.droid.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.support.v4.widget.NestedScrollView;
+import androidx.core.widget.NestedScrollView;
 import android.view.View;
 
 public class DisplayUtils {

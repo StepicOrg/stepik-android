@@ -2,7 +2,7 @@ package org.stepic.droid.ui.custom.dragsortadapter;
 
 import android.graphics.PointF;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.View;
 

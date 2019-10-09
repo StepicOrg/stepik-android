@@ -2,8 +2,8 @@ package org.stepic.droid.adaptive.ui.animations
 
 import android.content.Context
 import android.graphics.Color
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.content.ContextCompat
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView

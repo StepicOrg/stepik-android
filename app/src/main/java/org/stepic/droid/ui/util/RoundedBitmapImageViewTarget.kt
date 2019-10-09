@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.util
 
 import android.graphics.Bitmap
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 

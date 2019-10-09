@@ -2,7 +2,7 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.core.app.DialogFragment
 
 class LoadingProgressDialogFragment : DialogFragment() {
     companion object {

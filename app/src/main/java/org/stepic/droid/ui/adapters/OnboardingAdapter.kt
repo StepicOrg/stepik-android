@@ -1,8 +1,8 @@
 package org.stepic.droid.ui.adapters
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.core.app.Fragment
+import androidx.core.app.FragmentManager
+import androidx.core.app.FragmentPagerAdapter
 import org.stepic.droid.model.OnboardingType
 import org.stepic.droid.ui.fragments.OnboardingFragment
 

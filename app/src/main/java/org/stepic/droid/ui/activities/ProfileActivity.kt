@@ -3,7 +3,7 @@ package org.stepic.droid.ui.activities
 import android.content.pm.ShortcutManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.core.app.Fragment
 import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
 import org.stepic.droid.R

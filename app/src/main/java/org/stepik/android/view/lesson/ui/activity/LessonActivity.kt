@@ -8,9 +8,9 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.ViewPager
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.viewpager.widget.ViewPager
 import android.support.v7.content.res.AppCompatResources
 import android.text.Spannable
 import android.text.SpannableString

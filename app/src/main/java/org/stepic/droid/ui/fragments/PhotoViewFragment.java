@@ -39,7 +39,7 @@ public class PhotoViewFragment extends FragmentBase {
     ImageView zoomableImageView;
 
     @BindView(R.id.toolbar)
-    android.support.v7.widget.Toolbar toolbar;
+    androidx.appcompat.widget.Toolbar toolbar;
 
     @BindView(R.id.retry_button)
     View retryButton;

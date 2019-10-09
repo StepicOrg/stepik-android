@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.core.app.Fragment
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuInflater

@@ -2,8 +2,8 @@ package org.stepic.droid.base
 
 import android.content.Context
 import android.os.Build
-import android.support.multidex.MultiDexApplication
 import android.webkit.WebView
+import androidx.multidex.MultiDexApplication
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.security.ProviderInstaller

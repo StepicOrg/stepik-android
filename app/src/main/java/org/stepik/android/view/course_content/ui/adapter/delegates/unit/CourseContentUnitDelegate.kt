@@ -3,8 +3,8 @@ package org.stepik.android.view.course_content.ui.adapter.delegates.unit
 import android.graphics.BitmapFactory
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v4.util.LongSparseArray
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.util.LongSparseArray
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide

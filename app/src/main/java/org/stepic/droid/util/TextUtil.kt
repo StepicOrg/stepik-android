@@ -1,7 +1,7 @@
 package org.stepic.droid.util
 
-import android.support.v4.text.HtmlCompat
-import android.support.v4.text.util.LinkifyCompat
+import androidx.core.text.HtmlCompat
+import androidx.core.text.util.LinkifyCompat
 import android.text.Html
 import android.text.SpannableString
 import android.text.util.Linkify

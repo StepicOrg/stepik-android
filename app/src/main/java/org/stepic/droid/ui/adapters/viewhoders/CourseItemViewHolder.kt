@@ -2,9 +2,9 @@ package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
 import android.graphics.drawable.Drawable
-import android.support.v4.text.HtmlCompat
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
+import androidx.core.text.HtmlCompat
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.ViewGroup

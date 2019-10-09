@@ -3,7 +3,7 @@ package org.stepic.droid.ui.dialogs;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import androidx.core.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
 import org.jetbrains.annotations.NotNull;

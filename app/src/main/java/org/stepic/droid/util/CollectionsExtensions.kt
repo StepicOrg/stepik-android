@@ -1,6 +1,6 @@
 package org.stepic.droid.util
 
-import android.support.v4.util.LongSparseArray
+import androidx.core.util.LongSparseArray
 
 
 fun <T: Comparable<T>> Array<T>.isOrdered(): Boolean =

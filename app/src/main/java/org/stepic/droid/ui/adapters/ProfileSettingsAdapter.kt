@@ -1,8 +1,8 @@
 package org.stepic.droid.ui.adapters
 
 import android.app.Activity
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
+import androidx.core.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

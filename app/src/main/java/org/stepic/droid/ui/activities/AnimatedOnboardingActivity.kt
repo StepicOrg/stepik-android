@@ -2,7 +2,7 @@ package org.stepic.droid.ui.activities
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic

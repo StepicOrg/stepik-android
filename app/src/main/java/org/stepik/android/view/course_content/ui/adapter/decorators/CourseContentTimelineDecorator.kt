@@ -1,7 +1,7 @@
 package org.stepik.android.view.course_content.ui.adapter.decorators
 
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 class CourseContentTimelineDecorator : RecyclerView.ItemDecoration() {

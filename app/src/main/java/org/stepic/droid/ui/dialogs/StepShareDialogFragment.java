@@ -4,7 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import androidx.core.app.DialogFragment;
 
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Step;

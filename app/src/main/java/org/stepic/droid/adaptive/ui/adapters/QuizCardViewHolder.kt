@@ -1,11 +1,11 @@
 package org.stepic.droid.adaptive.ui.adapters
 
-import android.support.annotation.StringRes
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
+import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
 import org.stepik.android.model.adaptive.Reaction
@@ -24,9 +24,10 @@ import org.stepic.droid.ui.quiz.QuizDelegate
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import javax.inject.Inject
+import kotlin.math.max
 
 class QuizCardViewHolder(
-        private val root: View
+    private val root: View
 ): ContainerView.ViewHolder(root), CardView {
     private val curtain = root.curtain
     private val answersProgress = root.answersProgress
@@ -48,7 +49,7 @@ class QuizCardViewHolder(
     private val hardReaction = root.reaction_hard
     private val easyReaction = root.reaction_easy
 
-    val cardView: android.support.v7.widget.CardView = root.card
+    val cardView: androidx.cardview.widget.CardView = root.card
 
     private lateinit var quizDelegate: QuizDelegate
 
@@ -99,8 +100,8 @@ class QuizCardViewHolder(
 
         container.setSwipeListener(object : SwipeableLayout.SwipeListener() {
             override fun onScroll(scrollProgress: Float) {
-                hardReaction.alpha = Math.max(2 * scrollProgress, 0f)
-                easyReaction.alpha = Math.max(2 * -scrollProgress, 0f)
+                hardReaction.alpha = max(2 * scrollProgress, 0f)
+                easyReaction.alpha = max(2 * -scrollProgress, 0f)
             }
 
             override fun onSwipeLeft() {

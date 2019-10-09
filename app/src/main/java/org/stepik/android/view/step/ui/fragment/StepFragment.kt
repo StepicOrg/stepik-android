@@ -3,8 +3,8 @@ package org.stepik.android.view.step.ui.fragment
 import android.arch.lifecycle.ViewModelProvider
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
+import androidx.core.app.DialogFragment
+import androidx.core.app.Fragment
 import android.support.v7.widget.LinearLayoutCompat
 import android.view.LayoutInflater
 import android.view.Menu

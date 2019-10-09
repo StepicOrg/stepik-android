@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView android:layout_width="match_parent"
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -49,7 +49,7 @@
             android:layout_height="1dp"
             android:background="@color/step_quiz_separator" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/stepQuizCodeDetailsContent"
             android:layout_below="@id/stepQuizCodeDetails"
             android:layout_width="match_parent"
@@ -58,4 +58,4 @@
             tools:listitem="@layout/item_step_quiz_code_detail_sample" />
 
     </RelativeLayout>
-</android.support.v4.widget.NestedScrollView>
+</androidx.core.widget.NestedScrollView>

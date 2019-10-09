@@ -2,9 +2,9 @@ package org.stepic.droid.ui.adapters
 
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
+import androidx.core.app.Fragment
+import androidx.core.app.FragmentManager
+import androidx.core.app.FragmentStatePagerAdapter
 import android.view.ViewGroup
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.lesson.model.LessonData

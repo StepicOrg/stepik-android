@@ -5,9 +5,9 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.DrawableRes
 import android.support.annotation.PluralsRes
 import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.widget.PopupWindowCompat
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.widget.PopupWindowCompat
 import android.support.v7.content.res.AppCompatResources
 import android.support.v7.widget.AppCompatTextView
 import android.view.Gravity

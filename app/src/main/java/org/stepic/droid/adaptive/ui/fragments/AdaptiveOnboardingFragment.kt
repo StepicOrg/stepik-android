@@ -1,10 +1,10 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
-import android.support.annotation.StringRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.fragment_adaptive_onboarding.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.Card

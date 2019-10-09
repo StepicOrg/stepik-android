@@ -10,7 +10,7 @@
         android:contentDescription="@string/close_screen"
         android:src="@drawable/ic_close_onboarding" />
 
-    <android.support.v4.view.StepikSlowViewPager
+    <androidx.core.view.StepikSlowViewPager
         android:id="@+id/onboardingViewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -1,8 +1,8 @@
 package org.stepic.droid.util;
 
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.core.app.DialogFragment;
+import androidx.core.app.FragmentManager;
+import androidx.core.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ProgressBar;
 

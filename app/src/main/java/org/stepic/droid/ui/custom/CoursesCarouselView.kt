@@ -4,8 +4,8 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.StringRes
-import android.support.v4.app.FragmentActivity
-import android.support.v4.view.ViewCompat
+import androidx.core.app.FragmentActivity
+import androidx.core.view.ViewCompat
 import android.support.v7.widget.GridLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater

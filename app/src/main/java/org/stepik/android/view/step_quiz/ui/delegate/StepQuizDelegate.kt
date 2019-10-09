@@ -2,7 +2,7 @@ package org.stepik.android.view.step_quiz.ui.delegate
 
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.TextView
 import org.stepic.droid.R

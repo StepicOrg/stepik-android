@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz_code.ui.adapter.delegate
 
-import android.support.v4.widget.TextViewCompat
+import androidx.core.widget.TextViewCompat
 import android.support.v7.content.res.AppCompatResources
 import android.view.Gravity
 import android.view.View

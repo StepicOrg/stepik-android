@@ -35,6 +35,7 @@ ext.versions = [
         multidex             : '2.0.1',
         adapterDelegates     : '1.0.1',
         adapters             : '1.0.1',
+        viewKit              : '1.0.1',
 
         retrofit             : '2.6.1',
         gson                 : '2.8.5',
@@ -136,6 +137,7 @@ ext.libraries = [
         multidex             : "androidx.multidex:multidex:$versions.multidex",
         adapterDelegates     : "ru.nobird.android.ui:AdapterDelegates:$versions.adapterDelegates",
         adapters             : "ru.nobird.android.ui:Adapters:$versions.adapters",
+        viewKit              : "ru.nobird.android:view:$versions.viewKit",
 
         retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",
@@ -202,11 +204,11 @@ ext.libraries = [
 
         //Android Test Dependencies
         supportAnnotations   : "com.android.support:support-annotations:$versions.supportLibs",
-        supportTestRunner    : "com.android.support.test:runner:$versions.supportTestRunner",
-        supportTestRules     : "com.android.support.test:rules:$versions.supportTestRunner",
-        espressoCore         : "com.android.support.test.espresso:espresso-core:$versions.espresso",
-        espressoContrib      : "com.android.support.test.espresso:espresso-contrib:$versions.espresso",
-        espressoIntents      : "com.android.support.test.espresso:espresso-intents:$versions.espresso",
+        supportTestRunner    : 'androidx.test.ext:junit:1.1.1',
+        supportTestRules     : 'androidx.test:rules:1.1.1',
+        espressoCore         : 'androidx.test.espresso:espresso-core:3.1.0',
+        espressoContrib      : 'androidx.test.espresso:espresso-contrib:3.1.0',
+        espressoIntents      : 'androidx.test.espresso:espresso-intents:3.1.0',
 
         ktlint               : "com.pinterest:ktlint:$versions.ktlint"
 ]

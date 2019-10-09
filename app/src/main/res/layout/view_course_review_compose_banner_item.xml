@@ -22,7 +22,7 @@
         android:textColor="@color/color_violet_1"
         android:text="@string/course_reviews_compose_banner_review_description" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bannerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

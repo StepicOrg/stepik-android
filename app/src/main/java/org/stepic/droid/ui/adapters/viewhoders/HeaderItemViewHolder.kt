@@ -1,6 +1,6 @@
 package org.stepic.droid.ui.adapters.viewhoders
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import org.stepic.droid.model.CoursesDescriptionContainer
 import org.stepic.droid.ui.custom.PlaceholderTextView

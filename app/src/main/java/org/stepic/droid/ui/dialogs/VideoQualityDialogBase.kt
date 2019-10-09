@@ -1,6 +1,6 @@
 package org.stepic.droid.ui.dialogs
 
-import android.support.v4.app.DialogFragment
+import androidx.core.app.DialogFragment
 import java.util.*
 
 abstract class VideoQualityDialogBase : DialogFragment() {

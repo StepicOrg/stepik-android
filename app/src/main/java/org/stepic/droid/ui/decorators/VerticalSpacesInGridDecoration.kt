@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.decorators
 
 import android.graphics.Rect
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 
 class VerticalSpacesInGridDecoration(private val spacePx: Int, private val rowNumber: Int) : RecyclerView.ItemDecoration() {
