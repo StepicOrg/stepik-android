@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.support.design.widget.Snackbar
 import androidx.core.app.ActivityCompat
 import androidx.core.app.DialogFragment

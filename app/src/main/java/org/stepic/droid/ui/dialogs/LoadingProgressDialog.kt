@@ -3,7 +3,7 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.view.Window
 import kotlinx.android.synthetic.main.dialog_progress.*
 

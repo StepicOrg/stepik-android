@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.DrawableRes
 import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.support.design.widget.Snackbar
 import androidx.core.content.ContextCompat
 import android.support.v7.content.res.AppCompatResources

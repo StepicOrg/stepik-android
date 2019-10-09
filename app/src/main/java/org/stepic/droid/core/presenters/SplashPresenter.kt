@@ -31,9 +31,9 @@ class SplashPresenter
 @Inject
 constructor(
     @MainScheduler
-        private val mainScheduler: Scheduler,
+    private val mainScheduler: Scheduler,
     @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
+    private val backgroundScheduler: Scheduler,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val googleApiChecker: GoogleApiChecker,

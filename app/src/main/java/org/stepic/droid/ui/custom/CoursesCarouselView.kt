@@ -3,7 +3,7 @@ package org.stepic.droid.ui.custom
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import androidx.core.app.FragmentActivity
 import androidx.core.view.ViewCompat
 import android.support.v7.widget.GridLayoutManager

@@ -3,7 +3,7 @@ package org.stepik.android.domain.personal_deadlines.model
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 

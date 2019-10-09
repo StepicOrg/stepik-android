@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz_choice.ui.delegate
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*

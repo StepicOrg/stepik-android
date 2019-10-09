@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import com.google.android.material.tabs.TabLayout
 import androidx.core.app.DialogFragment
 import androidx.core.content.res.ResourcesCompat

@@ -1,7 +1,7 @@
 package org.stepic.droid.util
 
 import android.app.Activity
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import androidx.core.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic

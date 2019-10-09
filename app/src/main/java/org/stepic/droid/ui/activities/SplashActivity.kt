@@ -8,7 +8,7 @@ import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import io.branch.referral.Branch
 import io.branch.referral.BranchError
 import org.json.JSONObject

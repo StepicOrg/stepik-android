@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import androidx.core.content.res.ResourcesCompat
 import android.text.Spannable
 import android.text.SpannableString

@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
 import org.stepic.droid.analytic.Analytic

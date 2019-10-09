@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.MainThread
+import androidx.annotation.MainThread
 import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
 import org.stepic.droid.R

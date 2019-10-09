@@ -1,10 +1,10 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.MainThread
-import android.support.annotation.WorkerThread
-import androidx.core.util.ArraySet
-import androidx.core.util.LongSparseArray
 import android.util.Patterns
+import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
+import androidx.collection.ArraySet
+import androidx.collection.LongSparseArray
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.Client
 import org.stepic.droid.concurrency.MainHandler
@@ -18,7 +18,6 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.not
-import org.stepic.droid.util.putIfAbsent
 import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.web.Api
 import org.stepik.android.view.notification.FcmNotificationHandler
