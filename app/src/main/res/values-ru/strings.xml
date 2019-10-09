@@ -631,6 +631,7 @@
 
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
+    <string name="video_player_control_notification_channel_description">Панель с управлением фоновым воспроизведеинем плеера</string>
     <string name="video_player_in_background_popup">Вы можете продолжить воспроизведение видео в фоне</string>
     <string name="video_player_autoplay_cancel">Остаться на этом шаге</string>
 

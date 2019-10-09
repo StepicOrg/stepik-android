@@ -129,7 +129,7 @@ class VideoPlayerForegroundService : Service() {
                 this,
                 PLAYER_CHANNEL_ID,
                 R.string.video_player_control_notification_channel_name,
-                0, // todo add description
+                R.string.video_player_control_notification_channel_description,
                 PLAYER_NOTIFICATION_ID,
                 videoPlayerMediaDescriptionAdapter,
                 notificationListener

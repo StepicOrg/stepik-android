@@ -208,19 +208,11 @@ dependencies {
     testImplementation libraries.jodaTime
     testImplementation libraries.hamcrest
 
-    androidTestImplementation(libraries.supportTestRunner) {
-        exclude group: 'com.android.support'
-    }
-    androidTestImplementation libraries.supportTestRules
-    androidTestImplementation(libraries.espressoCore) {
-        exclude group: 'com.android.support'
-    }
-    androidTestImplementation(libraries.espressoContrib) {
-        exclude group: 'com.android.support'
-    }
-    androidTestImplementation(libraries.espressoIntents) {
-        exclude group: 'com.android.support'
-    }
+    androidTestImplementation libraries.testRunner
+    androidTestImplementation libraries.testRules
+    androidTestImplementation libraries.espressoCore
+    androidTestImplementation libraries.espressoContrib
+    androidTestImplementation libraries.espressoIntents
 }
 
 apply plugin: 'com.google.gms.google-services'
