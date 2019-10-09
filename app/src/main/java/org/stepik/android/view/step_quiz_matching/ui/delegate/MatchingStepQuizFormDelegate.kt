@@ -1,8 +1,8 @@
 package org.stepik.android.view.step_quiz_matching.ui.delegate
 
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
-import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_sorting.view.*
 import org.stepic.droid.R

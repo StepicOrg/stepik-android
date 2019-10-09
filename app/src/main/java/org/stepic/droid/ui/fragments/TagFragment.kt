@@ -8,8 +8,8 @@ import org.stepic.droid.core.presenters.TagListPresenter
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.ui.util.initCenteredToolbar
-import ru.nobird.android.view.base.ui.extension.argument
 import org.stepik.android.model.Tag
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class TagFragment : CourseListFragmentBase(), CoursesView {

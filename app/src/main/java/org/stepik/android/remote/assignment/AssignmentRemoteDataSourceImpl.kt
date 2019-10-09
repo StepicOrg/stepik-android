@@ -3,9 +3,9 @@ package org.stepik.android.remote.assignment
 import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.stepic.droid.web.Api
-import org.stepik.android.remote.assignment.model.AssignmentResponse
 import org.stepik.android.data.assignment.source.AssignmentRemoteDataSource
 import org.stepik.android.model.Assignment
+import org.stepik.android.remote.assignment.model.AssignmentResponse
 import org.stepik.android.remote.base.chunkedSingleMap
 import javax.inject.Inject
 

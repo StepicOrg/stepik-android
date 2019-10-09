@@ -1,9 +1,9 @@
 package org.stepic.droid.code.ui
 
 import android.content.Context
-import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.core.widget.NestedScrollView
 import org.stepic.droid.R
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets

@@ -3,9 +3,10 @@ package org.stepic.droid.ui.dialogs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -20,8 +21,6 @@ import org.stepic.droid.util.ContextExtensionsKt;
 import org.stepic.droid.util.DisplayUtils;
 
 import javax.inject.Inject;
-
-import butterknife.ButterKnife;
 
 public class CertificateShareDialog extends BottomSheetDialog {
 

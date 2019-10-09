@@ -1,8 +1,6 @@
 package org.stepic.droid.ui.activities
 
 import android.os.Bundle
-import androidx.core.content.res.ResourcesCompat
-import androidx.appcompat.app.AppCompatDelegate
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -11,6 +9,8 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_register.*

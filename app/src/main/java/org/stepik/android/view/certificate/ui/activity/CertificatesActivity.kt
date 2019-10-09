@@ -1,13 +1,13 @@
 package org.stepik.android.view.certificate.ui.activity
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_certificates.*
 import kotlinx.android.synthetic.main.empty_certificates.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*

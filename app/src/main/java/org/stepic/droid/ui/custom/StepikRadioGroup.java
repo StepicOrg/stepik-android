@@ -2,12 +2,13 @@ package org.stepic.droid.ui.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.annotation.IdRes;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+
+import androidx.annotation.IdRes;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

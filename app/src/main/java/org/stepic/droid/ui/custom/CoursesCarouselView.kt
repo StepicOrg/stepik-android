@@ -4,15 +4,15 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.StringRes
-import androidx.fragment.app.FragmentActivity
-import androidx.core.view.ViewCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.core.view.ViewCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.view_courses_carousel.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -28,7 +28,10 @@ import org.stepic.droid.core.presenters.CourseCollectionPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
-import org.stepic.droid.model.*
+import org.stepic.droid.model.CollectionDescriptionColors
+import org.stepic.droid.model.CourseListType
+import org.stepic.droid.model.CoursesCarouselInfo
+import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -39,7 +42,8 @@ import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import java.util.*
+import java.util.ArrayList
+import java.util.EnumSet
 import javax.inject.Inject
 
 @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE", justification = "Kotlin adds null check for lateinit properties, but Findbugs highlights it as redundant")

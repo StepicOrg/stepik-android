@@ -3,11 +3,11 @@ package org.stepic.droid.ui.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_space_management.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -16,8 +16,13 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.StoreManagementPresenter
 import org.stepic.droid.core.presenters.contracts.StoreManagementView
 import org.stepic.droid.persistence.model.StorageLocation
-import org.stepic.droid.ui.dialogs.*
-import org.stepic.droid.util.*
+import org.stepic.droid.ui.dialogs.ChooseStorageDialog
+import org.stepic.droid.ui.dialogs.ClearVideosDialog
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.dialogs.MovingProgressDialogFragment
+import org.stepic.droid.ui.dialogs.WantMoveDataDialog
+import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.TextUtil
 import javax.inject.Inject
 
 class StoreManagementFragment : FragmentBase(), StoreManagementView {

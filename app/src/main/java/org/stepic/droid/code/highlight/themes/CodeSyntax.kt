@@ -1,7 +1,19 @@
 package org.stepic.droid.code.highlight.themes
 
 import androidx.annotation.ColorInt
-import org.stepic.droid.code.highlight.prettify.parser.Prettify.*
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_ATTRIB_NAME
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_ATTRIB_VALUE
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_COMMENT
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_DECLARATION
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_KEYWORD
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_LITERAL
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_NOCODE
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_PLAIN
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_PUNCTUATION
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_SOURCE
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_STRING
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_TAG
+import org.stepic.droid.code.highlight.prettify.parser.Prettify.PR_TYPE
 
 class CodeSyntax(
         @ColorInt val plain: Int,

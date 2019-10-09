@@ -1,8 +1,8 @@
 package org.stepik.android.view.step_quiz_matching.ui.adapter.delegate
 
-import androidx.core.view.ViewCompat
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import kotlinx.android.synthetic.main.item_step_quiz_sorting.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem

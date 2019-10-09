@@ -1,8 +1,8 @@
 package org.stepik.android.view.profile_edit.ui.util
 
+import android.text.TextUtils
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import android.text.TextUtils
 import org.stepic.droid.R
 
 object ValidateUtil {

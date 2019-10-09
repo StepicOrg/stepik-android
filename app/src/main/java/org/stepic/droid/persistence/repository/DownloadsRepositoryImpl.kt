@@ -6,10 +6,15 @@ import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
 import org.stepic.droid.persistence.files.ExternalStorageManager
-import org.stepic.droid.persistence.model.*
+import org.stepic.droid.persistence.model.DownloadItem
+import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.PersistentState
+import org.stepic.droid.persistence.model.Structure
+import org.stepic.droid.persistence.model.SystemDownloadRecord
 import org.stepic.droid.persistence.storage.PersistentStateManager
-import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
+import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.step.repository.StepRepository

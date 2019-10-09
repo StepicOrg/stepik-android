@@ -1,17 +1,17 @@
 package org.stepik.android.view.comment.ui.activity
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.content.ContextCompat
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import android.view.Menu
-import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.error_no_connection.*
@@ -20,7 +20,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
@@ -36,6 +35,7 @@ import org.stepik.android.view.comment.ui.adapter.delegate.CommentDataAdapterDel
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentLoadMoreRepliesAdapterDelegate
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAdapterDelegate
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
+import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists

@@ -1,10 +1,13 @@
 package org.stepic.droid.jsonHelpers.deserializers
 
-import com.google.gson.*
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.google.gson.JsonParseException
 import org.stepik.android.model.feedback.ChoiceFeedback
 import org.stepik.android.model.feedback.Feedback
 import org.stepik.android.model.feedback.StringFeedback
-import java.lang.Exception
 import java.lang.reflect.Type
 
 class FeedbackDeserializer : JsonDeserializer<Feedback> {

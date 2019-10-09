@@ -4,19 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
-import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import androidx.core.view.isVisible
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_story_plain_text_with_button.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.StoryTemplate
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
@@ -86,9 +86,9 @@ class PlainTextWithButtonStoryPartDelegate(
             storyTitle.text = text.title
             storyText.text = text.text
 
-            storyTextContainer.changeVisibility(true)
+            storyTextContainer.isVisible = true
         } else {
-            storyTextContainer.changeVisibility(false)
+            storyTextContainer.isVisible = false
         }
     }
 
@@ -115,9 +115,9 @@ class PlainTextWithButtonStoryPartDelegate(
                 }
             }
 
-            storyButton.changeVisibility(true)
+            storyButton.isVisible = true
         } else {
-            storyButton.changeVisibility(false)
+            storyButton.isVisible = false
         }
     }
 }

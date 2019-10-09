@@ -1,10 +1,9 @@
 package org.stepic.droid.util
 
-import androidx.core.text.HtmlCompat
-import androidx.core.text.util.LinkifyCompat
-import android.text.Html
 import android.text.SpannableString
 import android.text.util.Linkify
+import androidx.core.text.HtmlCompat
+import androidx.core.text.util.LinkifyCompat
 import kotlin.math.log
 import kotlin.math.pow
 

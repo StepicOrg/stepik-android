@@ -1,17 +1,17 @@
 package org.stepic.droid.ui.fragments;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -21,8 +21,8 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.presenters.NotificationListPresenter;
 import org.stepic.droid.core.presenters.contracts.NotificationListView;
-import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.model.NotificationCategory;
+import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.ui.adapters.NotificationAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.custom.StickyHeaderDecoration;

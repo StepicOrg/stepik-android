@@ -3,9 +3,9 @@ package org.stepic.droid.ui.activities
 import android.content.pm.ShortcutManager
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatDelegate
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity

@@ -1,19 +1,19 @@
 package org.stepik.android.view.course.ui.activity
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.StringRes
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.DialogFragment
-import androidx.core.content.res.ResourcesCompat
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*

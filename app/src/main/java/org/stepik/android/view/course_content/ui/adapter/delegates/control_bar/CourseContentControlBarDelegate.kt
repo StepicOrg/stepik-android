@@ -1,21 +1,21 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.control_bar
 
-import androidx.collection.LongSparseArray
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.collection.LongSparseArray
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import kotlinx.android.synthetic.main.view_course_content_control_bar.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import org.stepic.droid.ui.util.setHeight
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseContentControlBarDelegate(
     private val controlBarClickListener: CourseContentControlBarClickListener,

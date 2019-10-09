@@ -1,6 +1,6 @@
 package org.stepic.droid.ui.util
 
-import java.util.*
+import java.util.ArrayList
 
 object TimeIntervalUtil {
     val values: Array<String>

@@ -1,19 +1,19 @@
 package org.stepik.android.view.course_reviews.ui.adapter.delegates
 
 import android.graphics.BitmapFactory
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_reviews_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
@@ -80,8 +80,8 @@ class CourseReviewDataDelegate(
 
             reviewText.text = data.courseReview.text
 
-            reviewMenu.changeVisibility(data.isCurrentUserReview)
-            reviewMark.changeVisibility(data.isCurrentUserReview)
+            reviewMenu.isVisible = data.isCurrentUserReview
+            reviewMark.isVisible = data.isCurrentUserReview
         }
 
         private fun showReviewMenu(view: View) {

@@ -1,7 +1,6 @@
 package org.stepic.droid.web.storage
 
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.web.storage.model.StorageRequest
 import org.stepic.droid.web.storage.model.StorageResponse

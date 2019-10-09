@@ -1,8 +1,8 @@
 package org.stepik.android.view.comment.ui.adapter.delegate
 
-import androidx.core.content.ContextCompat
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.view.comment.model.CommentTag

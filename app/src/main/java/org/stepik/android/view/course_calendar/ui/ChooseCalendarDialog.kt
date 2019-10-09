@@ -5,9 +5,9 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.fragment.app.DialogFragment
-import androidx.appcompat.app.AlertDialog
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
 import org.stepik.android.domain.calendar.model.CalendarItem
 

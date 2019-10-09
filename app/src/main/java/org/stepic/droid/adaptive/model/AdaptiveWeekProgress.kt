@@ -1,6 +1,6 @@
 package org.stepic.droid.adaptive.model
 
-import java.util.*
+import java.util.Calendar
 
 class AdaptiveWeekProgress(
         val start: Calendar,

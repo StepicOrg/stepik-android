@@ -5,14 +5,15 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
-import androidx.annotation.ColorInt;
-import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;

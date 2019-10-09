@@ -1,10 +1,11 @@
 package org.stepic.droid.ui.util;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.ContextMenu;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ContextMenuRecyclerView extends RecyclerView {
 

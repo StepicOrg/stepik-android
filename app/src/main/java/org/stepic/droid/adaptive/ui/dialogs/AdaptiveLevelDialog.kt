@@ -3,9 +3,9 @@ package org.stepic.droid.adaptive.ui.dialogs
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.github.jinatonic.confetti.CommonConfetti
 import io.reactivex.Completable

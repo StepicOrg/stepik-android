@@ -1,19 +1,19 @@
 package org.stepik.android.view.comment.ui.adapter.delegate
 
 import android.graphics.BitmapFactory
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.layout_comment_actions.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
@@ -113,15 +113,15 @@ class CommentDataAdapterDelegate(
 
             commentText.setPlainOrLaTeXTextColored(data.comment.text, R.color.new_accent_color)
 
-            commentMenu.changeVisibility(
-                needShow = data.comment.actions?.delete == true || data.comment.actions?.edit == true)
+            commentMenu.isVisible =
+                data.comment.actions?.delete == true || data.comment.actions?.edit == true
 
             commentTagsAdapter.items = listOfNotNull(
                 CommentTag.COURSE_TEAM.takeIf { data.comment.userRole == UserRole.TEACHER },
                 CommentTag.STAFF.takeIf { data.comment.userRole == UserRole.STAFF },
                 CommentTag.PINNED.takeIf { data.comment.isPinned }
             )
-            commentTags.changeVisibility(needShow = commentTagsAdapter.itemCount > 0)
+            commentTags.isVisible = commentTagsAdapter.itemCount > 0
 
             commentTime.text = DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.comment.time?.time ?: 0)
 

@@ -1,11 +1,11 @@
 package org.stepik.android.view.step_quiz_matching.ui.adapter.delegate
 
-import androidx.core.view.ViewCompat
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_step_quiz_sorting.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -25,8 +25,8 @@ class MatchingItemTitleAdapterDelegate : AdapterDelegate<MatchingItem, DelegateV
         init {
             stepQuizSortingOption.setTextSize(16f)
 
-            stepQuizSortingOptionUp.changeVisibility(needShow = false)
-            stepQuizSortingOptionDown.changeVisibility(needShow = false)
+            stepQuizSortingOptionUp.isVisible = false
+            stepQuizSortingOptionDown.isVisible = false
 
             root.layoutParams =
                 (root.layoutParams as ViewGroup.MarginLayoutParams).apply {

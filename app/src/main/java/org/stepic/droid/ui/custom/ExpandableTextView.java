@@ -2,10 +2,11 @@ package org.stepic.droid.ui.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.View;
+
+import androidx.appcompat.widget.AppCompatTextView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;

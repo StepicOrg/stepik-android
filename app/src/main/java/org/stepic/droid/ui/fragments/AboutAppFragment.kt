@@ -1,11 +1,11 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_about_app.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic

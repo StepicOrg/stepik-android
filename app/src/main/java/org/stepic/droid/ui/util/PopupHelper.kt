@@ -2,13 +2,14 @@ package org.stepic.droid.ui.util
 
 import android.content.Context
 import android.content.Context.LAYOUT_INFLATER_SERVICE
-import androidx.annotation.DrawableRes
-import androidx.core.widget.PopupWindowCompat
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import androidx.annotation.DrawableRes
+import androidx.core.view.isVisible
+import androidx.core.widget.PopupWindowCompat
 import kotlinx.android.synthetic.main.popup_window.view.*
 import org.stepic.droid.R
 
@@ -52,7 +53,7 @@ object PopupHelper {
         popupTextView.setBackgroundResource(theme.backgroundRes)
 
         popupArrowView.setBackgroundResource(theme.arrowRes)
-        popupArrowView.changeVisibility(withArrow)
+        popupArrowView.isVisible = withArrow
 
         if (withArrow) {
             popupView.viewTreeObserver.addOnGlobalLayoutListener {

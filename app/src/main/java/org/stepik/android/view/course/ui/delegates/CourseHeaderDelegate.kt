@@ -4,20 +4,21 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
-import com.google.android.material.appbar.AppBarLayout
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.appcompat.content.res.AppCompatResources
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.appbar.AppBarLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
@@ -27,7 +28,6 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -164,11 +164,11 @@ class CourseHeaderDelegate(
 
             courseRating.total = 5
             courseRating.progress = courseHeaderData.review.roundToInt()
-            courseRating.changeVisibility(courseHeaderData.review > 0)
+            courseRating.isVisible = courseHeaderData.review > 0
 
             val isNeedShowProgress = courseHeaderData.progress != null && courseHeaderData.progress.cost > 0
-            courseProgress.changeVisibility(isNeedShowProgress)
-            courseProgressText.changeVisibility(isNeedShowProgress)
+            courseProgress.isVisible = isNeedShowProgress
+            courseProgressText.isVisible = isNeedShowProgress
 
             if (isNeedShowProgress) {
                 val score = courseHeaderData
@@ -188,14 +188,14 @@ class CourseHeaderDelegate(
             }
 
             courseLearnersCount.text = courseHeaderData.learnersCount.toString()
-            courseFeatured.changeVisibility(courseHeaderData.readiness > MIN_FEATURED_READINESS)
+            courseFeatured.isVisible = courseHeaderData.readiness > MIN_FEATURED_READINESS
 
             with(courseHeaderData.enrollmentState) {
-                courseEnrollAction.changeVisibility(this is EnrollmentState.NotEnrolledFree)
-                courseEnrollmentProgress.changeVisibility(this is EnrollmentState.Pending)
-                courseContinueAction.changeVisibility(this is EnrollmentState.Enrolled)
-                courseBuyInWebAction.changeVisibility(this is EnrollmentState.NotEnrolledWeb)
-                courseBuyInAppAction.changeVisibility(this is EnrollmentState.NotEnrolledInApp)
+                courseEnrollAction.isVisible = this is EnrollmentState.NotEnrolledFree
+                courseEnrollmentProgress.isVisible = this is EnrollmentState.Pending
+                courseContinueAction.isVisible = this is EnrollmentState.Enrolled
+                courseBuyInWebAction.isVisible = this is EnrollmentState.NotEnrolledWeb
+                courseBuyInAppAction.isVisible = this is EnrollmentState.NotEnrolledInApp
 
                 if (this is EnrollmentState.NotEnrolledInApp) {
                     courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)

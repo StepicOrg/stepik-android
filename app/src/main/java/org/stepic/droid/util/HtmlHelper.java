@@ -1,6 +1,7 @@
 package org.stepic.droid.util;
 
 import android.os.Build;
+
 import androidx.annotation.ColorInt;
 
 import org.jetbrains.annotations.NotNull;

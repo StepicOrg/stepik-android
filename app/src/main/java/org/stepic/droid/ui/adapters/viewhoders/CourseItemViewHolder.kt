@@ -2,12 +2,13 @@ package org.stepic.droid.ui.adapters.viewhoders
 
 import android.app.Activity
 import android.graphics.drawable.Drawable
-import androidx.core.text.HtmlCompat
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.RecyclerView
 import android.view.HapticFeedbackConstants
 import android.view.View
 import android.view.ViewGroup
+import androidx.cardview.widget.CardView
+import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.new_course_item.view.*
@@ -18,13 +19,13 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
-import org.stepik.android.model.Course
 import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepic.droid.ui.util.setCompoundDrawables
-import org.stepic.droid.util.*
+import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.model.Course
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import javax.inject.Inject
 
@@ -129,9 +130,9 @@ class CourseItemViewHolder(
             .fitCenter()
             .into(imageViewTarget)
 
-        courseContinueButton.changeVisibility(needShow = isEnrolled(course))
-        courseButtonSeparator.changeVisibility(needShow = isEnrolled(course))
-        courseDescription.changeVisibility(needShow = !isEnrolled(course))
+        courseContinueButton.isVisible = isEnrolled(course)
+        courseButtonSeparator.isVisible = isEnrolled(course)
+        courseDescription.isVisible = !isEnrolled(course)
 
         if (!isEnrolled(course)) {
             courseDescription.text = HtmlCompat.fromHtml(course.summary ?: "", HtmlCompat.FROM_HTML_MODE_COMPACT).toString()
@@ -140,7 +141,7 @@ class CourseItemViewHolder(
 
         coursePropertiesDelegate.setStats(course)
 
-        adaptiveCourseMarker.changeVisibility(adaptiveCoursesResolver.isAdaptive(course.id))
+        adaptiveCourseMarker.isVisible = adaptiveCoursesResolver.isAdaptive(course.id)
 
         this.course = course
     }

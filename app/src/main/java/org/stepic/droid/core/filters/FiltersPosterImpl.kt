@@ -4,7 +4,7 @@ import org.stepic.droid.base.ListenerContainer
 import org.stepic.droid.core.filters.contract.FiltersListener
 import org.stepic.droid.core.filters.contract.FiltersPoster
 import org.stepic.droid.model.StepikFilter
-import java.util.*
+import java.util.EnumSet
 import javax.inject.Inject
 
 class FiltersPosterImpl

@@ -1,8 +1,8 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
-import androidx.core.content.ContextCompat
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import org.stepic.droid.R
 

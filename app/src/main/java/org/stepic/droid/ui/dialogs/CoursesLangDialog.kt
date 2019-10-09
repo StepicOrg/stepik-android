@@ -12,7 +12,7 @@ import org.stepic.droid.core.presenters.FiltersPresenter
 import org.stepic.droid.core.presenters.contracts.FiltersView
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.adapters.SingleChoiceAdapter
-import java.util.*
+import java.util.EnumSet
 import javax.inject.Inject
 
 class CoursesLangDialog: DialogFragment(), FiltersView {

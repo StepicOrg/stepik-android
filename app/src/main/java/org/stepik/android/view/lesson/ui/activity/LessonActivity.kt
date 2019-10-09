@@ -1,23 +1,23 @@
 package org.stepik.android.view.lesson.ui.activity
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.content.res.AppCompatResources
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
@@ -29,7 +29,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.DeviceInfoUtil
@@ -49,6 +48,7 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard

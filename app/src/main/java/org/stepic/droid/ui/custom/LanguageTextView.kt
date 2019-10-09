@@ -4,12 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.appcompat.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Checkable
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatTextView
 import org.stepic.droid.R
 import org.stepic.droid.util.ColorUtil
 

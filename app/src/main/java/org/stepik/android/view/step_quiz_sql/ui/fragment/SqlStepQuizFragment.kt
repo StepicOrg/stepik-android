@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_sql.ui.fragment
 
-import androidx.fragment.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import org.stepic.droid.R
 import org.stepic.droid.model.code.ProgrammingLanguage

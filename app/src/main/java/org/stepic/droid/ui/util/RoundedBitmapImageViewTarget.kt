@@ -1,8 +1,8 @@
 package org.stepic.droid.ui.util
 
 import android.graphics.Bitmap
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import android.widget.ImageView
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 
 class RoundedBitmapImageViewTarget(

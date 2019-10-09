@@ -1,11 +1,14 @@
 package org.stepic.droid.util
 
-import io.reactivex.*
+import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Maybe
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
-import java.lang.IllegalStateException
 import java.util.concurrent.TimeUnit
 
 

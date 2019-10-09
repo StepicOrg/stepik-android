@@ -1,16 +1,16 @@
 package org.stepik.android.view.course_info.ui.adapter.delegates
 
-import androidx.core.content.ContextCompat
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.view_course_info_organization.view.*
 import org.stepic.droid.R
-import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 
 class CourseInfoOrganizationDelegate(
     private val onUserClicked: ((User) -> Unit)? = null

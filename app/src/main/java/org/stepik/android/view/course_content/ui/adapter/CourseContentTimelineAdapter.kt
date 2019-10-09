@@ -1,11 +1,11 @@
 package org.stepik.android.view.course_content.ui.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_course_content_section_date.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.safeDiv
@@ -43,7 +43,7 @@ class CourseContentTimelineAdapter : RecyclerView.Adapter<CourseContentTimelineA
             dateValue.text = DateTimeHelper.getPrintableDate(data.date, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
 
             val isNotLastItem = adapterPosition < itemCount - 1
-            dateProgress.changeVisibility(isNotLastItem)
+            dateProgress.isVisible = isNotLastItem
             if (isNotLastItem) {
                 val total = (dates[adapterPosition + 1].date.time - data.date.time)
                 val progress = (now.time - data.date.time) * 100 safeDiv total

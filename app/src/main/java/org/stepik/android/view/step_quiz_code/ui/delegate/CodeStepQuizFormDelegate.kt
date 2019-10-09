@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.codeStepLayout
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.stepQuizActions

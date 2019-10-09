@@ -1,11 +1,11 @@
 package org.stepik.android.view.step_quz_pycharm.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_step_quiz_pycharm.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables

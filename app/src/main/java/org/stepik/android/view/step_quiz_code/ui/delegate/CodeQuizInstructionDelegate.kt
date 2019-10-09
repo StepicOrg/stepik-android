@@ -1,13 +1,13 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.View
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.StepikAnimUtils
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.Step
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
@@ -57,6 +57,6 @@ class CodeQuizInstructionDelegate(
 
     fun setCodeDetailsData(step: Step, lang: String?) {
         stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
-        stepQuizCodeDetails.changeVisibility(stepQuizCodeDetailsAdapter.items.isNotEmpty())
+        stepQuizCodeDetails.isVisible = stepQuizCodeDetailsAdapter.items.isNotEmpty()
     }
 }

@@ -1,12 +1,12 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.appcompat.widget.SearchView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SearchCoursesPresenter

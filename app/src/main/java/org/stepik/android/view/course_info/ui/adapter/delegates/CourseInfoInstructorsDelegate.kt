@@ -1,16 +1,16 @@
 package org.stepik.android.view.course_info.ui.adapter.delegates
 
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.view_course_info_instructors_block.view.*
 import org.stepic.droid.R
-import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
 import org.stepik.android.view.course_info.ui.adapter.delegates.instructors.CourseInfoInstructorDataAdapterDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.instructors.CourseInfoInstructorPlaceholderAdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseInfoInstructorsDelegate(

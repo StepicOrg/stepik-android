@@ -1,16 +1,20 @@
 package org.stepic.droid.ui.custom.control_bar
 
 import android.content.Context
-import androidx.annotation.AttrRes
-import androidx.annotation.IdRes
-import androidx.annotation.LayoutRes
-import androidx.annotation.MenuRes
 import android.util.AttributeSet
-import android.view.*
+import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.annotation.AttrRes
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
+import androidx.annotation.MenuRes
 import org.stepic.droid.R
 import kotlin.math.max
 

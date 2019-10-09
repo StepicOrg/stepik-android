@@ -3,11 +3,12 @@ package org.stepic.droid.ui.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.empty_downloading.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.fragment_downloads.*
@@ -21,7 +22,6 @@ import org.stepic.droid.ui.adapters.DownloadsAdapter
 import org.stepic.droid.ui.dialogs.CancelVideosDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
@@ -60,7 +60,7 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
         nullifyActivityBackground()
         initCenteredToolbar(R.string.downloads, true)
 
-        needAuthView.changeVisibility(false)
+        needAuthView.isVisible = false
         authAction.setOnClickListener { screenManager.showLaunchScreen(context) }
 
         with(list_of_downloads) {
@@ -82,19 +82,19 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
             downloadsAdapter.removeDownload(downloadItem)
 
     override fun showEmptyAuth() {
-        needAuthView.changeVisibility(true)
+        needAuthView.isVisible = true
     }
 
     override fun invalidateEmptyDownloads() {
         if (downloadsAdapter.itemCount == 0) {
             if (empty_downloading.visibility != View.VISIBLE) {
                 container.hideAllChildren()
-                empty_downloading.changeVisibility(true)
+                empty_downloading.isVisible = true
             }
         } else {
             if (list_of_downloads.visibility != View.VISIBLE) {
                 container.hideAllChildren()
-                list_of_downloads.changeVisibility(true)
+                list_of_downloads.isVisible = true
             }
         }
     }

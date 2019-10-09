@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
-import androidx.annotation.Px
 import android.view.Gravity
+import androidx.annotation.Px
 
 class GravityDrawable(
     private val drawable: Drawable,

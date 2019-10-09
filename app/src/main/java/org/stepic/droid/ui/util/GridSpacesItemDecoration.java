@@ -1,9 +1,10 @@
 package org.stepic.droid.ui.util;
 
 import android.graphics.Rect;
+import android.view.View;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
 public class GridSpacesItemDecoration extends RecyclerView.ItemDecoration {
     private int space;

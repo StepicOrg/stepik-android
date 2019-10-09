@@ -8,7 +8,6 @@ import android.widget.Button
 import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
-import org.stepik.android.model.adaptive.Reaction
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
 import org.stepic.droid.adaptive.ui.custom.CardScrollView
 import org.stepic.droid.adaptive.ui.custom.SwipeableLayout
@@ -17,12 +16,13 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
-import org.stepik.android.model.Step
-import org.stepik.android.model.Submission
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.quiz.QuizDelegate
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
+import org.stepik.android.model.adaptive.Reaction
 import javax.inject.Inject
 import kotlin.math.max
 

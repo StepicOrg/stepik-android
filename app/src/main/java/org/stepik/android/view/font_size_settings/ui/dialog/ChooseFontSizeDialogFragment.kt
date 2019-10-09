@@ -2,11 +2,11 @@ package org.stepik.android.view.font_size_settings.ui.dialog
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.os.Bundle
+import android.widget.ArrayAdapter
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import android.os.Bundle
-import androidx.fragment.app.DialogFragment
-import android.widget.ArrayAdapter
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic

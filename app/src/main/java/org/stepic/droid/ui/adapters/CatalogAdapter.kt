@@ -1,12 +1,13 @@
 package org.stepic.droid.ui.adapters
 
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Checkable
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.catalog_item.view.*
 import kotlinx.android.synthetic.main.view_catalog_no_internet_clickable.view.*
 import kotlinx.android.synthetic.main.view_catalog_tags.view.*
@@ -16,13 +17,15 @@ import org.stepic.droid.R
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.features.stories.presentation.StoriesView
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
-import org.stepic.droid.model.*
+import org.stepic.droid.model.CollectionDescriptionColors
+import org.stepic.droid.model.CoursesCarouselInfo
+import org.stepic.droid.model.CoursesCarouselInfoConstants
+import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.custom.CoursesCarouselViewState
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.model.Tag
 import ru.nobird.android.stories.model.Story
-import java.util.*
+import java.util.EnumSet
 
 class CatalogAdapter(
     private val config: Config,
@@ -343,21 +346,21 @@ class CatalogAdapter(
             is StoriesView.State.Idle,
             is StoriesView.State.Empty -> {
                 itemView.setHeight(0)
-                recycler.changeVisibility(false)
-                loadingPlaceholder.changeVisibility(false)
+                recycler.isVisible = false
+                loadingPlaceholder.isVisible = false
             }
 
             is StoriesView.State.Loading -> {
                 itemView.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
-                recycler.changeVisibility(false)
-                loadingPlaceholder.changeVisibility(true)
+                recycler.isVisible = false
+                loadingPlaceholder.isVisible = true
             }
 
             is StoriesView.State.Success -> {
                 itemView.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
                 storiesAdapter.setData(state.stories, state.viewedStoriesIds)
-                recycler.changeVisibility(true)
-                loadingPlaceholder.changeVisibility(false)
+                recycler.isVisible = true
+                loadingPlaceholder.isVisible = false
             }
         }
     }

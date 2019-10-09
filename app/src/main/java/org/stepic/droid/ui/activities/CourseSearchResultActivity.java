@@ -3,10 +3,10 @@ package org.stepic.droid.ui.activities;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
-import android.view.MenuItem;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;

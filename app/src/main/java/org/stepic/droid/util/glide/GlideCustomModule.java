@@ -2,6 +2,7 @@ package org.stepic.droid.util.glide;
 
 import android.content.Context;
 import android.graphics.drawable.PictureDrawable;
+
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;

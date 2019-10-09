@@ -3,9 +3,9 @@ package org.stepik.android.view.course_info.ui.adapter.delegates.instructors
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import kotlinx.android.synthetic.main.view_course_info_instructor_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepik.android.model.user.User
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -44,7 +44,7 @@ class CourseInfoInstructorDataAdapterDelegate(
 
                 instructorTitle.text = data.fullName
                 instructorDescription.text = data.shortBio
-                instructorDescription.changeVisibility(!data.shortBio.isNullOrBlank())
+                instructorDescription.isGone = data.shortBio.isNullOrBlank()
             }
         }
     }

@@ -1,10 +1,10 @@
 package org.stepic.droid.ui.adapters
 
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.social_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.social.SocialMedia

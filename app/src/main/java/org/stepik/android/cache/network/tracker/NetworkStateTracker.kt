@@ -12,7 +12,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.DownloadConfiguration
-import java.lang.Exception
 import java.util.EnumSet
 import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject

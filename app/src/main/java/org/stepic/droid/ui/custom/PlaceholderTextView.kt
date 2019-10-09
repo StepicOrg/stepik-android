@@ -1,14 +1,14 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
-import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.util.AttributeSet
 import android.util.LruCache
 import android.util.TypedValue
 import android.view.Gravity
+import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.util.ColorUtil

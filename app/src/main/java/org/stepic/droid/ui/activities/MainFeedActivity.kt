@@ -5,13 +5,13 @@ import android.content.Intent
 import android.content.pm.ShortcutManager
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.core.content.res.ResourcesCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.MenuItem
 import androidx.annotation.IdRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.facebook.login.LoginManager

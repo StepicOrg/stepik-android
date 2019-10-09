@@ -2,6 +2,12 @@ package org.stepic.droid.ui.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,13 +15,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -28,8 +27,6 @@ import org.stepic.droid.core.presenters.ContinueCoursePresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.CourseListType;
-import org.stepik.android.domain.last_step.model.LastStep;
-import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
@@ -40,6 +37,8 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
+import org.stepik.android.domain.last_step.model.LastStep;
+import org.stepik.android.model.Course;
 import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate;
 
 import java.util.ArrayList;

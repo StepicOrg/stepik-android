@@ -1,13 +1,13 @@
 package org.stepik.android.view.step_quiz_text.ui.delegate
 
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.core.widget.TextViewCompat
-import androidx.appcompat.content.res.AppCompatResources
 import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_text.view.*
 import org.stepic.droid.R

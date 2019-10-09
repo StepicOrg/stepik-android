@@ -1,16 +1,16 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_adaptive_rating.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
+import kotlinx.android.synthetic.main.fragment_adaptive_rating.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
 import org.stepic.droid.analytic.AmplitudeAnalytic

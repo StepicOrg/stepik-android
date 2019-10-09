@@ -8,11 +8,11 @@ import org.stepic.droid.di.catalog.CatalogScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.mappers.Mapper
-import org.stepik.android.model.CourseCollection
 import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.web.Api
-import java.util.*
+import org.stepik.android.model.CourseCollection
+import java.util.EnumSet
 import javax.inject.Inject
 
 @CatalogScope

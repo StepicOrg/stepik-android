@@ -1,8 +1,8 @@
 package org.stepik.android.view.course_info.ui.adapter.decorators
 
 import android.graphics.Rect
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.recyclerview.widget.RecyclerView
 
 class CourseInfoBlockOffsetDecorator(
     private val offset: Int,

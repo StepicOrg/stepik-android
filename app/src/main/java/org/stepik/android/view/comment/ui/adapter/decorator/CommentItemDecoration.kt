@@ -3,10 +3,10 @@ package org.stepik.android.view.comment.ui.adapter.decorator
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import androidx.annotation.ColorInt
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
+import androidx.annotation.ColorInt
 import androidx.core.view.children
+import androidx.recyclerview.widget.RecyclerView
 import org.stepik.android.presentation.comment.model.CommentItem
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 

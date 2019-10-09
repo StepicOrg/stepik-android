@@ -4,29 +4,21 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
-import androidx.annotation.DrawableRes
-import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
-import androidx.appcompat.content.res.AppCompatResources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.google.android.material.snackbar.Snackbar
 import org.stepic.droid.R
 import ru.nobird.android.view.base.ui.extension.setTextColor
-
-fun View.changeVisibility(needShow: Boolean) {
-    if (needShow) {
-        this.visibility = View.VISIBLE
-    } else {
-        this.visibility = View.GONE
-    }
-}
 
 fun View.setHeight(height: Int) {
     layoutParams.height = height

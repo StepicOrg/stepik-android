@@ -4,16 +4,17 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewKt;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
@@ -29,8 +30,8 @@ import org.stepic.droid.ui.custom.StickyHeaderAdapter;
 import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
-import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
 import org.stepic.droid.util.glide.GlideSvgRequestFactory;
+import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +43,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import kotlin.text.StringsKt;
 import timber.log.Timber;
-
-import static org.stepic.droid.ui.util.ViewExtensionsKt.changeVisibility;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.GenericViewHolder> implements StickyHeaderAdapter<NotificationAdapter.DateHeaderViewHolder> {
 
@@ -198,7 +197,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindHeaderViewHolder(@NotNull DateHeaderViewHolder viewHolder, int position) {
         if (getHeaderId(position) == StickyHeaderDecoration.NO_HEADER_ID) {
-            changeVisibility(viewHolder.itemView, false);
+            ViewKt.setVisible(viewHolder.itemView, false);
         } else {
             Notification notification = notifications.get(position - headerCount);
 
@@ -206,7 +205,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             String day = DateTimeHelper.INSTANCE.getPrintableOfIsoDate(notification.getTime(), AppConstants.NOTIFICATIONS_GROUP_DAY, TimeZone.getDefault());
             viewHolder.sectionDate.setText(StringsKt.capitalize(date));
             viewHolder.sectionDay.setText(StringsKt.capitalize(day));
-            changeVisibility(viewHolder.itemView, true);
+            ViewKt.setVisible(viewHolder.itemView, true);
         }
     }
 
@@ -354,8 +353,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 isViewed = !unread;
             }
 
-            changeVisibility(checkViewRead, isViewed);
-            changeVisibility(checkViewUnread, !isViewed);
+            ViewKt.setVisible(checkViewRead, isViewed);
+            ViewKt.setVisible(checkViewUnread, !isViewed);
         }
 
     }

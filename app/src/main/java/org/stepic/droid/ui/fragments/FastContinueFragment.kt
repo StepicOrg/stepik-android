@@ -2,11 +2,12 @@ package org.stepic.droid.ui.fragments
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
@@ -27,7 +28,6 @@ import org.stepic.droid.model.CourseListType
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -179,7 +179,7 @@ class FastContinueFragment : FragmentBase(),
             fastContinueCourseProgress.progress = 0
             false
         }
-        fastContinueCourseProgressText.changeVisibility(needShow)
+        fastContinueCourseProgressText.isVisible = needShow
     }
 
     //ContinueCourseView
@@ -228,7 +228,7 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun showMainGroup(needShow: Boolean) {
-        fastContinueMask.changeVisibility(needShow)
+        fastContinueMask.isVisible = needShow
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {

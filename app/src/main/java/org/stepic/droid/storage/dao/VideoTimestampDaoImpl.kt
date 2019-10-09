@@ -2,9 +2,9 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureVideoTimestamp
+import org.stepik.android.cache.video_player.model.VideoTimestamp
 import javax.inject.Inject
 
 class VideoTimestampDaoImpl @Inject constructor(databaseOperations: DatabaseOperations) : DaoBase<VideoTimestamp>(databaseOperations) {

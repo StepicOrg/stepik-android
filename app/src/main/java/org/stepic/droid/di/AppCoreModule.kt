@@ -2,10 +2,10 @@ package org.stepic.droid.di
 
 import android.app.AlarmManager
 import android.app.NotificationManager
-import androidx.lifecycle.ViewModelProvider
 import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import dagger.Binds

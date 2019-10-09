@@ -22,7 +22,10 @@ import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.web.Api
 import org.stepik.android.view.notification.FcmNotificationHandler
 import timber.log.Timber
-import java.util.*
+import java.util.ArrayList
+import java.util.Calendar
+import java.util.HashMap
+import java.util.TimeZone
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger

@@ -2,8 +2,6 @@ package org.stepic.droid.ui.adapters
 
 import android.content.Context
 import android.graphics.Typeface
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
@@ -11,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.code.data.AutocompleteState
 import org.stepic.droid.model.code.symbolsForLanguage

@@ -2,8 +2,8 @@ package org.stepic.droid.util
 
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 
 fun Context.checkSelfPermissions(permissions: List<String>): Boolean =
     permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED }

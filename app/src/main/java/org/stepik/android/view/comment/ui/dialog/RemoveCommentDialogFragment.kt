@@ -2,8 +2,8 @@ package org.stepik.android.view.comment.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
 import ru.nobird.android.view.base.ui.extension.argument
 

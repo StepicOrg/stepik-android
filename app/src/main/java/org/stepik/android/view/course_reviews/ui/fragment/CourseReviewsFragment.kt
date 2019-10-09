@@ -1,18 +1,18 @@
 package org.stepik.android.view.course_reviews.ui.fragment
 
 import android.app.Activity
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.empty_default.view.*
 import kotlinx.android.synthetic.main.error_no_connection.*
@@ -23,7 +23,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.snackbar
-import ru.nobird.android.view.base.ui.extension.argument
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
@@ -34,6 +33,7 @@ import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviews
 import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class CourseReviewsFragment : Fragment(), CourseReviewsView {

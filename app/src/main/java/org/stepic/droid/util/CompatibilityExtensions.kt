@@ -4,7 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.res.Configuration
 import android.os.Build
-import java.util.*
+import java.util.Locale
 
 val Configuration.defaultLocale: Locale
     get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

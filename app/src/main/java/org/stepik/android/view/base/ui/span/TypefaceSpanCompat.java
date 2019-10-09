@@ -2,10 +2,11 @@ package org.stepik.android.view.base.ui.span;
 
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public class TypefaceSpanCompat extends MetricAffectingSpan {
 

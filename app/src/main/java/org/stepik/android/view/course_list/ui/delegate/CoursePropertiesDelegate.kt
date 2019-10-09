@@ -1,13 +1,12 @@
 package org.stepik.android.view.course_list.ui.delegate
 
-import androidx.annotation.ColorInt
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.model.Course
 import java.util.Locale
@@ -38,7 +37,7 @@ class CoursePropertiesDelegate(
         setProgress(course)
         setRating(course)
 
-        view.changeVisibility(needShow = view.children.any(View::isVisible))
+        view.isVisible = view.children.any(View::isVisible)
     }
 
     private fun setLearnersCount(learnersCount: Long) {
@@ -46,8 +45,8 @@ class CoursePropertiesDelegate(
         if (needShowLearners) {
             learnersCountText.text = String.format(Locale.getDefault(), "%d", learnersCount)
         }
-        learnersCountImage.changeVisibility(needShowLearners)
-        learnersCountText.changeVisibility(needShowLearners)
+        learnersCountImage.isVisible = needShowLearners
+        learnersCountText.isVisible = needShowLearners
     }
 
     private fun setProgress(course: Course) {
@@ -64,8 +63,8 @@ class CoursePropertiesDelegate(
         } else {
             false
         }
-        courseItemProgress.changeVisibility(needShow)
-        courseItemProgressTitle.changeVisibility(needShow)
+        courseItemProgress.isVisible = needShow
+        courseItemProgressTitle.isVisible = needShow
     }
 
     private fun prepareViewForProgress(score: Long, cost: Long) {
@@ -80,7 +79,7 @@ class CoursePropertiesDelegate(
         if (needShow) {
             courseRatingText.text = String.format(Locale.ROOT, view.resources.getString(R.string.course_rating_value), course.rating)
         }
-        courseRatingImage.changeVisibility(needShow)
-        courseRatingText.changeVisibility(needShow)
+        courseRatingImage.isVisible = needShow
+        courseRatingText.isVisible = needShow
     }
 }

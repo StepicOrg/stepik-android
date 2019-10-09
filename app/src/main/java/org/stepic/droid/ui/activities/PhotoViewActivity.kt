@@ -1,8 +1,7 @@
 package org.stepic.droid.ui.activities
 
-import androidx.fragment.app.Fragment
 import android.view.MenuItem
-
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.PhotoViewFragment

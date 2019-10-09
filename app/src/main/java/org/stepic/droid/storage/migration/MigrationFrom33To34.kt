@@ -5,7 +5,13 @@ import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.PersistentState
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentState
-import org.stepic.droid.storage.structure.*
+import org.stepic.droid.storage.structure.DbStructureBlock
+import org.stepic.droid.storage.structure.DbStructureCachedVideo
+import org.stepic.droid.storage.structure.DbStructureLesson
+import org.stepic.droid.storage.structure.DbStructureSections
+import org.stepic.droid.storage.structure.DbStructureStep
+import org.stepic.droid.storage.structure.DbStructureUnit
+import org.stepic.droid.storage.structure.DbStructureVideoUrl
 
 object MigrationFrom33To34 : Migration {
     override fun migrate(db: SQLiteDatabase) {

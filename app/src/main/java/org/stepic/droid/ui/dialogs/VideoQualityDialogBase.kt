@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.dialogs
 
 import androidx.fragment.app.DialogFragment
-import java.util.*
+import java.util.HashMap
 
 abstract class VideoQualityDialogBase : DialogFragment() {
     protected val qualityToPositionMap: MutableMap<String, Int> = HashMap()

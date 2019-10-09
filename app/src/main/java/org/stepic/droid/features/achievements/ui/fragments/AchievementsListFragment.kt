@@ -1,12 +1,13 @@
 package org.stepic.droid.features.achievements.ui.fragments
 
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_achievements_list.*
 import org.stepic.droid.R
@@ -18,7 +19,6 @@ import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
 import org.stepic.droid.model.AchievementFlatItem
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setHeight
 import ru.nobird.android.view.base.ui.extension.argument
@@ -91,22 +91,22 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
     }
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        recycler.changeVisibility(true)
-        progress.changeVisibility(false)
-        error.changeVisibility(false)
+        recycler.isVisible = true
+        progress.isVisible = false
+        error.isVisible = false
         (recycler.adapter as? BaseAchievementsAdapter)?.achievements = achievements
     }
 
     override fun onAchievementsLoadingError() {
-        recycler.changeVisibility(false)
-        progress.changeVisibility(false)
-        error.changeVisibility(true)
+        recycler.isVisible = false
+        progress.isVisible = false
+        error.isVisible = true
     }
 
     override fun onAchievementsLoading() {
-        recycler.changeVisibility(false)
-        progress.changeVisibility(true)
-        error.changeVisibility(false)
+        recycler.isVisible = false
+        progress.isVisible = true
+        error.isVisible = false
     }
 
     override fun onDestroyView() {

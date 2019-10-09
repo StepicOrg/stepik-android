@@ -13,8 +13,8 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.model.CourseListType;
-import org.stepik.android.model.Course;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
+import org.stepik.android.model.Course;
 
 import javax.inject.Inject;
 

@@ -1,10 +1,10 @@
 package org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter
 
 import android.content.Context
-import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.viewpager.widget.PagerAdapter
 import org.stepic.droid.R
 

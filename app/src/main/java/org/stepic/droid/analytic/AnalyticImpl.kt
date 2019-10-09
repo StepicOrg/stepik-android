@@ -14,7 +14,7 @@ import org.json.JSONObject
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
-import java.util.*
+import java.util.HashMap
 import javax.inject.Inject
 
 @AppSingleton

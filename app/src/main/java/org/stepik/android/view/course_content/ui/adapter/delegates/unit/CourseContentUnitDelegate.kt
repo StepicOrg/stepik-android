@@ -1,21 +1,22 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.unit
 
 import android.graphics.BitmapFactory
-import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.collection.LongSparseArray
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.collection.LongSparseArray
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.view.course_content.model.CourseContentItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import kotlin.math.abs
 
 class CourseContentUnitDelegate(
     private val unitClickListener: CourseContentUnitClickListener,
@@ -131,9 +132,9 @@ class CourseContentUnitDelegate(
                     }
 
                 unitRatingIcon.setImageResource(unitRatingDrawableRes)
-                unitRating.text = Math.abs(lesson.voteDelta).toString()
+                unitRating.text = abs(lesson.voteDelta).toString()
 
-                unitDownloadStatus.changeVisibility(isEnabled)
+                unitDownloadStatus.isVisible = isEnabled
                 itemView.isEnabled = isEnabled
 
                 val alpha = if (isEnabled) 1f else 0.4f

@@ -1,6 +1,7 @@
 package org.stepic.droid.social;
 
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.DrawableRes;
 import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
