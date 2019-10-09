@@ -10,7 +10,7 @@ import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
-import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
+import ru.nobird.android.ui.adapters.selection.SelectionHelper
 
 class ChoicesAdapterDelegate(
     private val selectionHelper: SelectionHelper,

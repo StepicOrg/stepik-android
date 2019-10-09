@@ -63,8 +63,8 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
         @SuppressLint("InflateParams") //it is dialog and it shoud not have any parent
         View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_remind_password, null, false);
-        emailTextWrapper = ButterKnife.findById(v, R.id.emailViewWrapper);
-        rootView = ButterKnife.findById(v, R.id.root_view_dialog);
+        emailTextWrapper = v.findViewById(R.id.emailViewWrapper);
+        rootView = v.findViewById(R.id.root_view_dialog);
         rootView.requestFocus();
 
         progressLogin = new LoadingProgressDialog(getContext());

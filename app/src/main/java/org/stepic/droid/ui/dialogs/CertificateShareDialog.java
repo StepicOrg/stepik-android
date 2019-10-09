@@ -54,9 +54,9 @@ public class CertificateShareDialog extends BottomSheetDialog {
         int dialogHeight = screenHeight - statusBarHeight;
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, dialogHeight == 0 ? ViewGroup.LayoutParams.MATCH_PARENT : dialogHeight);
 
-        View addLinkedIn = ButterKnife.findById(view, R.id.share_certificate_add_linkedin);
-        View copyLink = ButterKnife.findById(view, R.id.share_certificate_copy_link);
-        View shareAll = ButterKnife.findById(view, R.id.share_certificate_all);
+        View addLinkedIn = view.findViewById(R.id.share_certificate_add_linkedin);
+        View copyLink = view.findViewById(R.id.share_certificate_copy_link);
+        View shareAll = view.findViewById(R.id.share_certificate_all);
 
         addLinkedIn.setOnClickListener(new View.OnClickListener() {
             @Override

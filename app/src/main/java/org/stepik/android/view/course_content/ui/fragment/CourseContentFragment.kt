@@ -63,6 +63,8 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
+import ru.nobird.android.view.base.ui.extension.setTextColor
+import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
 
 class CourseContentFragment :
@@ -255,18 +257,14 @@ class CourseContentFragment :
     }
 
     override fun showChangeDownloadNetworkType() {
-        val view = view
-            ?: return
-
-        Snackbar
-            .make(view, R.string.allow_mobile_snack, Snackbar.LENGTH_LONG)
-            .setAction(R.string.settings_title) {
+        view?.snackbar(messageRes = R.string.allow_mobile_snack, length = Snackbar.LENGTH_LONG) {
+            setAction(R.string.settings_title) {
                 analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS)
                 screenManager.showSettings(activity)
             }
-            .setActionTextColor(ContextCompat.getColor(view.context, R.color.snack_action_color))
-            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
-            .show()
+            setActionTextColor(ContextCompat.getColor(view.context, R.color.snack_action_color))
+            setTextColor(ContextCompat.getColor(view.context, R.color.white))
+        }
     }
 
     override fun showVideoQualityDialog(course: Course?, section: Section?, unit: Unit?) {

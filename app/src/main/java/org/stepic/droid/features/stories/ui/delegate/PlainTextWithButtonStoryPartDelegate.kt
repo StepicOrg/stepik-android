@@ -4,10 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
-import android.os.Build
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import androidx.core.widget.CircularProgressDrawable
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

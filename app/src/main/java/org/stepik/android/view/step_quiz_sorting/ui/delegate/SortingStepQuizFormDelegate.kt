@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_sorting.ui.delegate
 
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.support.v7.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_sorting.view.*

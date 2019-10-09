@@ -71,7 +71,7 @@ class LearningRateDialog : DialogFragment() {
         dismiss()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_CLOSED)
     }

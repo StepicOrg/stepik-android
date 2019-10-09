@@ -30,7 +30,7 @@
         android:id="@+id/appBarLayout"
         layout="@layout/view_centered_appbar"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/composeCommentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

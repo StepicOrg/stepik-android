@@ -140,7 +140,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openImage(Context context, String path) {
         analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
         Intent intent = new Intent(context, PhotoViewActivity.class);
-        intent.putExtra(PhotoViewActivity.Companion.getPathKey(), path);
+        intent.putExtra(PhotoViewActivity.pathKey, path);
         context.startActivity(intent);
     }
 
@@ -432,7 +432,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openProfile(Activity activity, long userId) {
         final Intent intent = new Intent(activity, ProfileActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putLong(ProfileActivity.Companion.getOptionalUserIdKey(), userId);
+        bundle.putLong(ProfileActivity.optionalUserIdKey, userId);
         intent.putExtras(bundle);
         activity.startActivity(intent);
     }

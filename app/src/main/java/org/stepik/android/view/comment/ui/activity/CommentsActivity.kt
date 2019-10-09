@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.support.v7.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_comments.*
@@ -38,6 +38,7 @@ import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAda
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class CommentsActivity :
@@ -280,27 +281,19 @@ class CommentsActivity :
     }
 
     private fun showCommentComposeDialog(stepId: Long, parent: Long? = null, comment: Comment? = null) {
-        val supportFragmentManager = supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(ComposeCommentDialogFragment.TAG) == null }
-            ?: return
-
         analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
 
         ComposeCommentDialogFragment
             .newInstance(target = stepId, parent = parent, comment = comment)
-            .show(supportFragmentManager, ComposeCommentDialogFragment.TAG)
+            .showIfNotExists(supportFragmentManager, ComposeCommentDialogFragment.TAG)
     }
 
     private fun showRemoveCommentDialog(commentId: Long) {
-        val supportFragmentManager = supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(RemoveCommentDialogFragment.TAG) == null }
-            ?: return
-
         analytic.reportEvent(Analytic.Interaction.DELETE_COMMENT_TRIAL)
 
         RemoveCommentDialogFragment
             .newInstance(commentId)
-            .show(supportFragmentManager, RemoveCommentDialogFragment.TAG)
+            .showIfNotExists(supportFragmentManager, RemoveCommentDialogFragment.TAG)
     }
 
     override fun focusDiscussion(discussionId: Long) {

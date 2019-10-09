@@ -1,6 +1,6 @@
 package org.stepik.android.view.course_reviews.ui.adapter
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 
 class CourseReviewsDiffCallback(

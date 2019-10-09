@@ -66,9 +66,9 @@ public class StepShareDialog extends BottomSheetDialog {
         int dialogHeight = screenHeight - statusBarHeight;
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, dialogHeight == 0 ? ViewGroup.LayoutParams.MATCH_PARENT : dialogHeight);
 
-        View openInBrowser = ButterKnife.findById(view, R.id.share_open_in_browser);
-        View copyLink = ButterKnife.findById(view, R.id.share_certificate_copy_link);
-        View shareAll = ButterKnife.findById(view, R.id.share_certificate_all);
+        View openInBrowser = view.findViewById( R.id.share_open_in_browser);
+        View copyLink = view.findViewById(R.id.share_certificate_copy_link);
+        View shareAll = view.findViewById(R.id.share_certificate_all);
 
         openInBrowser.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -9,7 +9,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import java.lang.Exception

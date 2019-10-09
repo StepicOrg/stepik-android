@@ -15,9 +15,9 @@ import org.stepik.android.view.step_quiz_choice.mapper.ChoiceStepQuizOptionsMapp
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.adapter.ChoicesAdapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
-import ru.nobird.android.ui.adapterssupport.selection.MultipleChoiceSelectionHelper
-import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
-import ru.nobird.android.ui.adapterssupport.selection.SingleChoiceSelectionHelper
+import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
+import ru.nobird.android.ui.adapters.selection.SelectionHelper
+import ru.nobird.android.ui.adapters.selection.SingleChoiceSelectionHelper
 
 class ChoiceStepQuizFormDelegate(
     containerView: View

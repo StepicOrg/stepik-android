@@ -63,7 +63,7 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
                     val dialogFragment = AllowMobileDataDialogFragment.newInstance()
                     dialogFragment.setTargetFragment(this@SettingsFragment, 0)
                     if (!dialogFragment.isAdded) {
-                        dialogFragment.show(fragmentManager, null)
+                        dialogFragment.show(requireFragmentManager(), null)
                     }
                 }
             }
@@ -73,21 +73,21 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
         videoQualityView.setOnClickListener {
             val videoDialog = VideoQualityDialog.newInstance(forPlaying = false)
             if (!videoDialog.isAdded) {
-                videoDialog.show(fragmentManager, null)
+                videoDialog.show(requireFragmentManager(), null)
             }
         }
 
         videoPlayingQualityView.setOnClickListener {
             val videoDialog = VideoQualityDialog.newInstance(forPlaying = true)
             if (!videoDialog.isAdded) {
-                videoDialog.show(fragmentManager, null)
+                videoDialog.show(requireFragmentManager(), null)
             }
         }
 
         storageManagementButton.setOnClickListener { screenManager.showStorageManagement(activity) }
 
         langWidgetActionButton.setOnClickListener {
-            CoursesLangDialog.newInstance().show(fragmentManager, null)
+            CoursesLangDialog.newInstance().show(requireFragmentManager(), null)
         }
 
         fontSizeSettingsButton.setOnClickListener {
