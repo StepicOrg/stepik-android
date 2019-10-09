@@ -12,8 +12,6 @@ import android.widget.PopupMenu
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_reviews_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.DateTimeHelper
@@ -21,6 +19,8 @@ import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.model.user.User
 import org.stepik.android.view.base.ui.mapper.DateMapper
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseReviewDataDelegate(
     private val onUserClicked: (User) -> Unit,

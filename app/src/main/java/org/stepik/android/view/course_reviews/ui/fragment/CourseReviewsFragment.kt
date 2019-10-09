@@ -28,9 +28,12 @@ import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsView
-import org.stepik.android.view.course_reviews.ui.adapter.CourseReviewsAdapter
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewDataDelegate
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewPlaceholderDelegate
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewsComposeBannerDelegate
 import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import javax.inject.Inject
 
 class CourseReviewsFragment : Fragment(), CourseReviewsView {
@@ -52,7 +55,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     private var courseId: Long by argument()
 
-    private lateinit var courseReviewsAdapter: CourseReviewsAdapter
+    private lateinit var courseReviewsAdapter: DefaultDelegateAdapter<CourseReviewItem>
     private lateinit var courseReviewsPresenter: CourseReviewsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseReviewsView.State>
 
@@ -63,6 +66,17 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         injectComponent(courseId)
 
         courseReviewsPresenter = ViewModelProviders.of(this, viewModelFactory).get(CourseReviewsPresenter::class.java)
+
+        courseReviewsAdapter = DefaultDelegateAdapter()
+        courseReviewsAdapter +=
+            CourseReviewDataDelegate(
+                onUserClicked = { screenManager.openProfile(activity, it.id) },
+                onEditReviewClicked = ::showCourseReviewEditDialog,
+                onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
+            )
+        courseReviewsAdapter += CourseReviewPlaceholderDelegate()
+        courseReviewsAdapter +=
+            CourseReviewsComposeBannerDelegate { showCourseReviewEditDialog(null) }
 
         reportIsVisibleToUser()
     }
@@ -82,13 +96,6 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         inflater.inflate(R.layout.fragment_course_reviews, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        courseReviewsAdapter = CourseReviewsAdapter(
-            onUserClicked = { screenManager.openProfile(activity, it.id) },
-            onCreateReviewClicked = { showCourseReviewEditDialog(null) },
-            onEditReviewClicked = ::showCourseReviewEditDialog,
-            onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
-        )
-
         with(courseReviewsRecycler) {
             layoutManager = LinearLayoutManager(context)
             adapter = courseReviewsAdapter
