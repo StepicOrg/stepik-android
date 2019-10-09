@@ -6,8 +6,6 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.os.Parcelable
-import android.support.annotation.ColorInt
-import android.support.v7.widget.AppCompatEditText
 import android.text.Editable
 import android.text.Layout
 import android.text.Spannable
@@ -16,6 +14,8 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import android.view.ViewTreeObserver
+import androidx.annotation.ColorInt
+import androidx.appcompat.widget.AppCompatEditText
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
