@@ -122,11 +122,6 @@ inline fun <T : View> T.doOnGlobalLayout(crossinline action: (view: T) -> Unit) 
     })
 }
 
-fun View.hideKeyboard() {
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.hideSoftInputFromWindow(windowToken, 0)
-}
-
 fun View.snackbar(@StringRes messageRes: Int, length: Int = Snackbar.LENGTH_SHORT) {
     snackbar(context.getString(messageRes), length)
 }

@@ -4,10 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import androidx.core.app.FragmentActivity;
+
+import androidx.annotation.NonNull;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,11 +59,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final int courseListPadding;
 
-    public CoursesAdapter(FragmentActivity activity,
-                          List<Course> courses,
-                          @NotNull ContinueCoursePresenter continueCoursePresenter,
-                          boolean withPagination,
-                          CoursesCarouselColorType colorType
+    public CoursesAdapter(
+            FragmentActivity activity,
+            List<Course> courses,
+            @NotNull ContinueCoursePresenter continueCoursePresenter,
+            boolean withPagination,
+            CoursesCarouselColorType colorType
     ) {
         this.colorType = colorType;
         if (withPagination) {

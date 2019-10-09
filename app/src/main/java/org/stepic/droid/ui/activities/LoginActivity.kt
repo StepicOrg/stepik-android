@@ -28,6 +28,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.toBundle
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class LoginActivity : SmartLockActivityBase(), LoginView {
@@ -54,7 +55,7 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         progressLogin = LoadingProgressDialog(this)
         progressHandler = object : ProgressHandler {
             override fun activate() {
-                hideSoftKeypad()
+                currentFocus?.hideKeyboard()
                 ProgressHelper.activate(progressLogin)
             }
 

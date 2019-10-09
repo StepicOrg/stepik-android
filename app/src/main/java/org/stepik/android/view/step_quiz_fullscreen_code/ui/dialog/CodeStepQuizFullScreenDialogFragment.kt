@@ -3,11 +3,9 @@ package org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog
 import android.app.Dialog
 import android.os.Bundle
 import com.google.android.material.tabs.TabLayout
-import androidx.core.app.DialogFragment
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager.widget.ViewPager
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +13,8 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
@@ -30,13 +30,13 @@ import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
+import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, ResetCodeDialogFragment.Callback {
     companion object {

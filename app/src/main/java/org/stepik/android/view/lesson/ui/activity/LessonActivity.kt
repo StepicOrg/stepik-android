@@ -51,6 +51,7 @@ import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView,
@@ -145,7 +146,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonPager, stepsAdapter))
         lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
-                hideSoftKeypad()
+                currentFocus?.hideKeyboard()
                 lessonPresenter.onStepOpened(position)
             }
         })

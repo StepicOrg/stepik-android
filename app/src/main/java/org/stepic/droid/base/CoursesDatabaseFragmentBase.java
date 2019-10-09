@@ -1,9 +1,10 @@
 package org.stepic.droid.base;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;

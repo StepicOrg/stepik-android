@@ -36,6 +36,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class RegisterActivity : SmartLockActivityBase(), LoginView {
@@ -177,7 +178,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
     private fun createAccount(interactionType: LoginInteractionType) {
         analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
-        hideSoftKeypad()
+        currentFocus?.hideKeyboard()
 
         val firstName = firstNameField.text.toString().trim()
         val lastName = " " // registrationSecondName.text.toString().trim()
@@ -289,7 +290,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
     }
 
     override fun onLoadingWhileLogin() {
-        hideSoftKeypad()
+        currentFocus?.hideKeyboard()
         ProgressHelper.activate(progressBar)
     }
 

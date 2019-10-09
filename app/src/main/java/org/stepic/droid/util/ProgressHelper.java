@@ -1,10 +1,11 @@
 package org.stepic.droid.util;
 
-import androidx.core.app.DialogFragment;
-import androidx.core.app.FragmentManager;
-import androidx.core.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog;
 

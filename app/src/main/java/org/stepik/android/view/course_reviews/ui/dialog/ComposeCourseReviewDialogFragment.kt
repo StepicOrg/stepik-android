@@ -2,27 +2,27 @@ package org.stepik.android.view.course_reviews.ui.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.dialog_compose_course_review.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.argument
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewPresenter
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewView
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewView {
