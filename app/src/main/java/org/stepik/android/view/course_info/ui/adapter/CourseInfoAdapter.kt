@@ -4,8 +4,8 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_course_info_block.view.*
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.DelegateAdapter
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
@@ -16,7 +16,7 @@ import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
 class CourseInfoAdapter(
     onVideoClicked: ((VideoPlayerMediaData) -> Unit)? = null,
-    onUserClicked: ((User) -> Unit)? = null
+    onUserClicked: (User) -> Unit
 ) : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     private var blocks: List<CourseInfoItem> = emptyList()
         set(value) {

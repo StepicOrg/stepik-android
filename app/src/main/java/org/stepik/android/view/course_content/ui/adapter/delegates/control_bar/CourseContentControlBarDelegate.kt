@@ -10,8 +10,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.view_course_content_control_bar.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import org.stepic.droid.ui.util.setHeight
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState

@@ -11,11 +11,11 @@ import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.view.course_content.model.CourseContentItem
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseContentUnitDelegate(
     private val unitClickListener: CourseContentUnitClickListener,

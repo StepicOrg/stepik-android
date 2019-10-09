@@ -3,8 +3,8 @@ package org.stepik.android.view.course_content.ui.adapter
 import androidx.collection.LongSparseArray
 import androidx.recyclerview.widget.DiffUtil
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.DelegateAdapter
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
