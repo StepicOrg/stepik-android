@@ -12,6 +12,7 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
 import org.stepik.android.view.step_quiz_sql.ui.delegate.SqlStepQuizFormDelegate
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class SqlStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, CodeStepQuizFullScreenDialogFragment.Callback {
     companion object {
@@ -47,12 +48,8 @@ class SqlStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, CodeStepQui
     }
 
     private fun onFullScreenClicked(lang: String, code: String) {
-        val supportFragmentManager = fragmentManager
-            ?.takeIf { it.findFragmentByTag(CodeStepQuizFullScreenDialogFragment.TAG) == null }
-            ?: return
-
         val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, mapOf(ProgrammingLanguage.SQL.serverPrintableName to ""), stepWrapper, lessonData)
         dialog.setTargetFragment(this, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
-        dialog.show(supportFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
+        dialog.showIfNotExists(requireFragmentManager(), CodeStepQuizFullScreenDialogFragment.TAG)
     }
 }

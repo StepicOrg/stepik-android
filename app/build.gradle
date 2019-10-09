@@ -131,6 +131,7 @@ dependencies {
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel
+    implementation libraries.media
     implementation libraries.multidex
     implementation libraries.adapterDelegates
     implementation libraries.adapters
@@ -178,9 +179,7 @@ dependencies {
     implementation libraries.materialDialog
     implementation libraries.materialDialogCore
     implementation libraries.numberPicker
-    implementation (libraries.datePicker) {
-        exclude group: 'com.android.support'
-    }
+    implementation libraries.datePicker
     implementation libraries.photoView
     implementation libraries.recyclerAnimators
     implementation libraries.materialProgress

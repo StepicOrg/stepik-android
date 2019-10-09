@@ -64,6 +64,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.setTextColor
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
 
@@ -270,12 +271,11 @@ class CourseContentFragment :
     override fun showVideoQualityDialog(course: Course?, section: Section?, unit: Unit?) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(VideoQualityDetailedDialog.TAG) == null }
             ?: return
 
         val dialog = VideoQualityDetailedDialog.newInstance(course, section, unit)
         dialog.setTargetFragment(this, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE)
-        dialog.show(supportFragmentManager, VideoQualityDetailedDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, VideoQualityDetailedDialog.TAG)
     }
 
     /**
@@ -305,12 +305,11 @@ class CourseContentFragment :
     private fun showPersonalDeadlinesLearningRateDialog() {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(LearningRateDialog.TAG) == null }
             ?: return
 
         val dialog = LearningRateDialog.newInstance()
         dialog.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE)
-        dialog.show(supportFragmentManager, LearningRateDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, LearningRateDialog.TAG)
 
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.SCHEDULE_PRESSED)
     }
@@ -318,7 +317,6 @@ class CourseContentFragment :
     private fun showPersonalDeadlinesEditDialog(record: StorageRecord<DeadlinesWrapper>) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(EditDeadlinesDialog.TAG) == null }
             ?: return
 
         val sections = contentAdapter
@@ -330,18 +328,17 @@ class CourseContentFragment :
 
         val dialog = EditDeadlinesDialog.newInstance(sections, record)
         dialog.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE)
-        dialog.show(supportFragmentManager, EditDeadlinesDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, EditDeadlinesDialog.TAG)
     }
 
     override fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>) {
         val supportFragmentManager = activity
-                ?.supportFragmentManager
-                ?.takeIf { it.findFragmentByTag(ChooseCalendarDialog.TAG) == null }
-                ?: return
+            ?.supportFragmentManager
+            ?: return
 
         val dialog = ChooseCalendarDialog.newInstance(calendarItems)
         dialog.setTargetFragment(this, ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE)
-        dialog.show(supportFragmentManager, ChooseCalendarDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, ChooseCalendarDialog.TAG)
     }
 
     /**
@@ -351,12 +348,11 @@ class CourseContentFragment :
     private fun showExplainPermissionsDialog() {
         val supportFragmentManager = activity
                 ?.supportFragmentManager
-                ?.takeIf { it.findFragmentByTag(ExplainCalendarPermissionDialog.TAG) == null }
                 ?: return
 
         val dialog = ExplainCalendarPermissionDialog.newInstance()
         dialog.setTargetFragment(this@CourseContentFragment, 0)
-        dialog.show(supportFragmentManager, ExplainCalendarPermissionDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, ExplainCalendarPermissionDialog.TAG)
     }
 
     private fun syncCalendarDates() {

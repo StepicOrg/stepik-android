@@ -9,5 +9,5 @@ class SearchResolverImpl @Inject constructor() : SearchResolver {
             ?.filter { it.course > 0L }
             ?.map { it.course }
             ?.toLongArray()
-            ?: longArrayOf(0)
+            ?: longArrayOf()
 }

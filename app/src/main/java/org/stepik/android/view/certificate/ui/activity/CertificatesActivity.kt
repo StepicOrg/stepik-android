@@ -24,6 +24,7 @@ import org.stepik.android.presentation.certificate.CertificatesView
 import org.stepik.android.view.certificate.ui.adapter.CertificatesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class CertificatesActivity : FragmentActivityBase(), CertificatesView {
@@ -157,10 +158,8 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         if (certificateViewItem == null) {
             return
         }
-        val supportFragmentManager = supportFragmentManager
-            ?.takeIf { (it.findFragmentByTag(CertificateShareDialogFragment.TAG) == null) }
-            ?: return
-        val bottomSheetDialogFragment = CertificateShareDialogFragment.newInstance(certificateViewItem)
-        bottomSheetDialogFragment.show(supportFragmentManager, CertificateShareDialogFragment.TAG)
+        CertificateShareDialogFragment
+            .newInstance(certificateViewItem)
+            .showIfNotExists(supportFragmentManager, CertificateShareDialogFragment.TAG)
     }
 }

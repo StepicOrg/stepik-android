@@ -34,6 +34,7 @@ import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialo
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class CourseReviewsFragment : Fragment(), CourseReviewsView {
@@ -192,7 +193,6 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     private fun showCourseReviewEditDialog(courseReview: CourseReview?) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(ComposeCourseReviewDialogFragment.TAG) == null }
             ?: return
 
         val requestCode =
@@ -204,7 +204,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
         val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
         dialog.setTargetFragment(this, requestCode)
-        dialog.show(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
+        dialog.showIfNotExists(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

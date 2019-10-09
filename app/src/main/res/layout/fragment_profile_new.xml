@@ -43,7 +43,7 @@
                     tools:visibility="visible">
 
 
-                    <android.support.constraint.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/main_profile_avatar_half_size"
@@ -157,7 +157,7 @@
                             tools:visibility="visible" />
 
 
-                    </android.support.constraint.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profileImage"

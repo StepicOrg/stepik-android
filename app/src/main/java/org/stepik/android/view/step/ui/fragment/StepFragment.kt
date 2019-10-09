@@ -36,6 +36,7 @@ import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class StepFragment : Fragment(), StepView,
@@ -180,12 +181,11 @@ class StepFragment : Fragment(), StepView,
     private fun showShareDialog() {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(StepShareDialogFragment.TAG) == null }
             ?: return
 
         StepShareDialogFragment
             .newInstance(stepWrapper.step, lessonData.lesson, lessonData.unit)
-            .show(supportFragmentManager, StepShareDialogFragment.TAG)
+            .showIfNotExists(supportFragmentManager, StepShareDialogFragment.TAG)
     }
 
     override fun setState(state: StepView.State) {

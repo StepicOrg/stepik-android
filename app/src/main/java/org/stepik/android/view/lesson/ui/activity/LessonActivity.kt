@@ -52,6 +52,7 @@ import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView,
@@ -299,13 +300,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     override fun showRateDialog() {
-        val supportFragmentManager = supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(RateAppDialog.TAG) == null }
-            ?: return
-
-        val dialog = RateAppDialog.newInstance()
         analytic.reportEvent(Analytic.Rating.SHOWN)
-        dialog.show(supportFragmentManager, RateAppDialog.TAG)
+        RateAppDialog
+            .newInstance()
+            .showIfNotExists(supportFragmentManager, RateAppDialog.TAG)
     }
 
     override fun showStreakDialog(streakDays: Int) {
@@ -336,13 +334,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 .setNegativeText(R.string.later_tatle)
                 .setScrollable(true, 10) // number of lines lines
                 .onPositive { _, _ ->
-                    val supportFragmentManager = supportFragmentManager
-                        ?.takeIf { it.findFragmentByTag(RateAppDialog.TAG) == null }
-                        ?: return@onPositive
-
                     analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG)
-                    val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
-                    dialogFragment.show(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+                    TimeIntervalPickerDialogFragment
+                        .newInstance()
+                        .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
                 }
                 .onNegative { _, _ -> onStreakDialogCancelled() }
                 .build()
