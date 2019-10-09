@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/commentTime"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/comment_item_action_size"
@@ -24,7 +24,7 @@
 
         tools:text="Полгода назад" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/commentReply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/commentLike"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/comment_item_action_size"
@@ -62,7 +62,7 @@
         tools:drawableStart="@drawable/ic_comment_like"
         tools:text="3" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/commentDislike"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/comment_item_action_size"

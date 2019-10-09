@@ -1,6 +1,6 @@
 package org.stepik.android.view.base.ui.extension
 
-import androidx.core.app.Fragment
+import androidx.fragment.app.Fragment
 
 inline fun <reified T> Fragment.parentOfType(): T? =
     parentOfType(T::class.java)

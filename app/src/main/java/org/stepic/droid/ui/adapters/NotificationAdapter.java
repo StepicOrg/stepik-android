@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.PictureDrawable;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.method.LinkMovementMethod;
@@ -83,6 +85,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     @Override
+    @NonNull
     public GenericViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Timber.d("createViewHolder of NotificationAdapter, viewType = %d", viewType);
         final Context context = parent.getContext();

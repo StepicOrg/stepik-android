@@ -8,7 +8,7 @@ import org.stepic.droid.R
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
 import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class MatchingItemOptionAdapterDelegate(
     private val adapter: DefaultDelegateAdapter<MatchingItem>,

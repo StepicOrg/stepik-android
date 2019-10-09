@@ -10,9 +10,8 @@ import org.stepic.droid.ui.custom.StepikOptionView
 import org.stepic.droid.ui.custom.StepikRadioButton
 import org.stepic.droid.ui.custom.StepikRadioGroup
 import org.stepik.android.model.Reply
-import java.lang.Math.min
 import javax.inject.Inject
-
+import kotlin.math.min
 
 class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
     @Inject

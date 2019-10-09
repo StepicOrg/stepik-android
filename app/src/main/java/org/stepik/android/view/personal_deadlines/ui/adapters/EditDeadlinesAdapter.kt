@@ -23,7 +23,7 @@ class EditDeadlinesAdapter(
     override fun getItemCount(): Int =
         sections.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditDeadlinesAdapter.EditDeadlinesViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditDeadlinesViewHolder =
         EditDeadlinesViewHolder(parent.inflate(R.layout.view_edit_deadlines_item))
 
     override fun onBindViewHolder(holder: EditDeadlinesViewHolder, position: Int) {

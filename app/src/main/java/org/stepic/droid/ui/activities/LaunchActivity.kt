@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.text.Spannable
 import android.text.SpannableString
 import android.view.View
@@ -358,10 +358,10 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         screenManager.showMainFeedAfterLogin(this, courseFromExtra)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         val adapter = socialListRecyclerView.adapter
         if (adapter is SocialAuthAdapter) {
-            outState?.putSerializable(SOCIAL_ADAPTER_STATE_KEY, adapter.state)
+            outState.putSerializable(SOCIAL_ADAPTER_STATE_KEY, adapter.state)
         }
         super.onSaveInstanceState(outState)
     }

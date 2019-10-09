@@ -5,8 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -149,7 +149,7 @@ class   ProfileFragment : FragmentBase(),
             val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
             if (!dialogFragment.isAdded) {
                 dialogFragment.setTargetFragment(this@ProfileFragment, 0)
-                dialogFragment.show(fragmentManager, null)
+                dialogFragment.show(requireFragmentManager(), null)
             }
         }
 
@@ -446,30 +446,29 @@ class   ProfileFragment : FragmentBase(),
         notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (localUserViewModel != null) {
             inflater.inflate(R.menu.profile_menu, menu)
 
-            menu?.findItem(R.id.menu_item_edit)?.isVisible =
+            menu.findItem(R.id.menu_item_edit)?.isVisible =
                 localUserViewModel?.isMyProfile == true
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.menu_item_share -> {
                 shareProfile()
-                return true
+                true
             }
             R.id.menu_item_edit -> {
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)
                 screenManager.showProfileEdit(context)
-                return true
+                true
             }
+            else ->
+                false
         }
-        return false
-    }
 
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         streakPresenter.setStreakTime(chosenInterval)

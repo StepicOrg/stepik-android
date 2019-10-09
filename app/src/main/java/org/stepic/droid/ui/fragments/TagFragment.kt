@@ -2,6 +2,7 @@ package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.TagListPresenter
 import org.stepic.droid.core.presenters.contracts.CoursesView
@@ -14,8 +15,11 @@ import javax.inject.Inject
 class TagFragment : CourseListFragmentBase(), CoursesView {
 
     companion object {
-        fun newInstance(tag: Tag) =
-                TagFragment().also { it.tag = tag }
+        fun newInstance(tag: Tag): Fragment =
+            TagFragment()
+                .apply {
+                    this.tag = tag
+                }
     }
 
     private var tag: Tag by argument()

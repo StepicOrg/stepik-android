@@ -2,8 +2,8 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.core.app.DialogFragment
-import android.support.v7.widget.LinearLayoutManager
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
@@ -17,7 +17,8 @@ import javax.inject.Inject
 
 class CoursesLangDialog: DialogFragment(), FiltersView {
     companion object {
-        fun newInstance() = CoursesLangDialog()
+        fun newInstance(): DialogFragment =
+            CoursesLangDialog()
     }
 
     @Inject
@@ -40,15 +41,15 @@ class CoursesLangDialog: DialogFragment(), FiltersView {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         adapter.data = listOf(
-                getString(R.string.language_ru_filter),
-                getString(R.string.language_en_filter)
+            getString(R.string.language_ru_filter),
+            getString(R.string.language_en_filter)
         )
 
         return MaterialDialog.Builder(requireContext())
-                .theme(Theme.LIGHT)
-                .title(R.string.language_of_courses)
-                .adapter(adapter, LinearLayoutManager(context))
-                .build()
+            .theme(Theme.LIGHT)
+            .title(R.string.language_of_courses)
+            .adapter(adapter, LinearLayoutManager(context))
+            .build()
     }
 
     override fun onStart() {

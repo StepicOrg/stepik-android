@@ -1,12 +1,13 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import androidx.annotation.StringRes
-import androidx.core.app.FragmentActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.core.view.ViewCompat
-import android.support.v7.widget.GridLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -45,15 +46,15 @@ import javax.inject.Inject
 class CoursesCarouselView
 @JvmOverloads
 constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr),
-        ContinueCourseView,
-        CoursesView,
-        JoiningListener,
-        DroppingListener,
-        FiltersListener {
+    ContinueCourseView,
+    CoursesView,
+    JoiningListener,
+    DroppingListener,
+    FiltersListener {
 
     companion object {
         private const val DEFAULT_SCROLL_POSITION = -1
@@ -266,7 +267,7 @@ constructor(
     override fun showConnectionProblem() {
         if (courses.isEmpty()) {
             analytic.reportEvent(Analytic.CoursesCarousel.NO_INTERNET_SHOWN)
-            showPlaceholder(R.string.internet_problem) { _ ->
+            showPlaceholder(R.string.internet_problem) {
                 analytic.reportEvent(Analytic.CoursesCarousel.NO_INTERNET_CLICK)
                 if (StepikUtil.isInternetAvailable()) {
                     downloadData()
@@ -409,7 +410,7 @@ constructor(
     }
 
     public override fun onSaveInstanceState(): Parcelable {
-        val superState = super.onSaveInstanceState()
+        val superState = super.onSaveInstanceState() ?: Bundle.EMPTY
         val savedState = SavedState(superState)
 
         savedState.info = this._info

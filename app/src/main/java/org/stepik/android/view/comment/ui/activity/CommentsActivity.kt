@@ -1,13 +1,13 @@
 package org.stepik.android.view.comment.ui.activity
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.LinearLayoutManager
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.support.v7.widget.SimpleItemAnimator
 import android.view.Menu
@@ -37,7 +37,7 @@ import org.stepik.android.view.comment.ui.adapter.delegate.CommentLoadMoreReplie
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAdapterDelegate
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import javax.inject.Inject
 
 class CommentsActivity :

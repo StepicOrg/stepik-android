@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.codeStepLayout
@@ -17,7 +17,7 @@ import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizFormStateMapper
 import org.stepik.android.view.step_quiz_code.model.CodeStepQuizFormState
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeLangAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CodeStepQuizFormDelegate(
     containerView: View,

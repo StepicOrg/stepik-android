@@ -24,7 +24,7 @@
         android:background="@drawable/bg_step_quiz_code_details"
         android:layout_width="match_parent"
         android:layout_height="48dp">
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginLeft="16dp"
@@ -32,7 +32,7 @@
             android:layout_gravity="center_vertical"
             app:srcCompat="@drawable/ic_step_quiz_code_details" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical|start"
@@ -68,7 +68,7 @@
         tools:listitem="@layout/item_step_quiz_code_detail_sample"
         android:visibility="gone" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizCodeLangChooserTitle"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -100,7 +100,7 @@
         android:id="@+id/stepQuizActions"
         android:layout_width="match_parent"
         android:layout_height="48dp">
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/stepQuizActionChangeLang"
             android:layout_width="wrap_content"
             android:layout_height="48dp"

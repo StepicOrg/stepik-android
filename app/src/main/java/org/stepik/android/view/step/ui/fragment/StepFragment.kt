@@ -1,10 +1,10 @@
 package org.stepik.android.view.step.ui.fragment
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
-import androidx.core.app.DialogFragment
-import androidx.core.app.Fragment
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import android.support.v7.widget.LinearLayoutCompat
 import android.view.LayoutInflater
 import android.view.Menu

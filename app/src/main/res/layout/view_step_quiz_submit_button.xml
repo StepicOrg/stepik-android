@@ -6,7 +6,7 @@
     android:layout_height="@dimen/step_submit_button_height"
     android:orientation="horizontal">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/stepQuizRetry"
         android:layout_height="@dimen/step_submit_button_height"
         android:layout_width="@dimen/step_submit_button_height"
@@ -22,7 +22,7 @@
         app:tint="@color/new_accent_color_alpha_60"
         app:srcCompat="@drawable/ic_step_quiz_retry" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizAction"
         android:layout_width="match_parent"
         android:layout_height="@dimen/step_submit_button_height"

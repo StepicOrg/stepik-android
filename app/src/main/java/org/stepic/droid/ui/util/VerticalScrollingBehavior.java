@@ -2,7 +2,8 @@ package org.stepic.droid.ui.util;
 
 import android.content.Context;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
+
+import androidx.annotation.IntDef;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;

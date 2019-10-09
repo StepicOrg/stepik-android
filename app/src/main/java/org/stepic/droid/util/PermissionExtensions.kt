@@ -2,7 +2,7 @@ package org.stepic.droid.util
 
 import android.content.Context
 import android.content.pm.PackageManager
-import androidx.core.app.Fragment
+import androidx.fragment.app.Fragment
 import androidx.core.content.ContextCompat
 
 fun Context.checkSelfPermissions(permissions: List<String>): Boolean =

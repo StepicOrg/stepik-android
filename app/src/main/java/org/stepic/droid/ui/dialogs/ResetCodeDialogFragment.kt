@@ -2,13 +2,14 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.core.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AlertDialog
 import org.stepic.droid.R
 
 class ResetCodeDialogFragment : DialogFragment() {
     companion object {
-        fun newInstance(): ResetCodeDialogFragment = ResetCodeDialogFragment()
+        fun newInstance(): ResetCodeDialogFragment =
+            ResetCodeDialogFragment()
     }
 
     interface Callback {
@@ -16,12 +17,12 @@ class ResetCodeDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.reset_code_dialog_title)
-                    .setMessage(R.string.reset_code_dialog_explanation)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        (parentFragment as Callback).onReset()
-                    }
-                    .setNegativeButton(R.string.cancel, null)
-                    .create()
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.reset_code_dialog_title)
+            .setMessage(R.string.reset_code_dialog_explanation)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                (parentFragment as Callback).onReset()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
 }

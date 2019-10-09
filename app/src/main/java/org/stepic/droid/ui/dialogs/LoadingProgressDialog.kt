@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.dialog_progress.*
 
 import org.stepic.droid.R
 
-
 class LoadingProgressDialog
 @JvmOverloads
 constructor(

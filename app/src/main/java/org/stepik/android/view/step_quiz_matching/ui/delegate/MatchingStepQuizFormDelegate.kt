@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz_matching.ui.delegate
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.support.v7.widget.SimpleItemAnimator
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
@@ -16,7 +16,7 @@ import org.stepik.android.view.step_quiz_matching.ui.adapter.delegate.MatchingIt
 import org.stepik.android.view.step_quiz_matching.ui.adapter.delegate.MatchingItemTitleAdapterDelegate
 import org.stepik.android.view.step_quiz_matching.ui.mapper.MatchingItemMapper
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class MatchingStepQuizFormDelegate(
     containerView: View

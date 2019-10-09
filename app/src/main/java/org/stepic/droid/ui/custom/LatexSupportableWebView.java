@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.ColorInt;
+import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -71,12 +71,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     private void init() {
         App.Companion.component().inject(this);
         setBackgroundColor(Color.argb(1, 0, 0, 0));
-        setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
+        setOnLongClickListener(v -> true);
 
         setOnClickListener(this);
         setOnTouchListener(this);
@@ -141,12 +136,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, textColorHighlight, width, config.getBaseUrl());
         }
 
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadDataWithBaseURL(assetUrl, html, mimeType, encoding, "");
-            }
-        }, 0);
+        postDelayed(() -> loadDataWithBaseURL(assetUrl, html, mimeType, encoding, ""), 0);
     }
 
 

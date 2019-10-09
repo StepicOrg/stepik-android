@@ -2,7 +2,7 @@ package org.stepic.droid.ui.activities
 
 import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -275,7 +275,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
     override fun onSuccessLogin(credentials: Credentials?) {
         ProgressHelper.dismiss(progressBar)
-        if (credentials == null || !checkPlayServices() || !(googleApiClient?.isConnected ?: false)) {
+        if (credentials == null || !checkPlayServices() || googleApiClient?.isConnected != true) {
             openMainFeed()
         } else {
             //only if we have not null data (we can apply smart lock && google api client is connected and available

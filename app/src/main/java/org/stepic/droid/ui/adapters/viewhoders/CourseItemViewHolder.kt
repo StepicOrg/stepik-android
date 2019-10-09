@@ -32,11 +32,11 @@ import javax.inject.Inject
         justification = "Kotlin adds null check for lateinit properties, but" +
                 "Findbugs highlights it as redundant")
 class CourseItemViewHolder(
-        private val view: View,
-        private val contextActivity: Activity,
-        private val coursePlaceholder: Drawable,
-        private val continueCoursePresenter: ContinueCoursePresenter,
-        colorType: CoursesCarouselColorType
+    private val view: View,
+    private val contextActivity: Activity,
+    private val coursePlaceholder: Drawable,
+    private val continueCoursePresenter: ContinueCoursePresenter,
+    colorType: CoursesCarouselColorType
 ) : RecyclerView.ViewHolder(view) {
 
     @Inject
@@ -113,8 +113,8 @@ class CourseItemViewHolder(
     private fun onClickContinueLearning(course: Course) {
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                AmplitudeAnalytic.Course.Params.COURSE to course.id,
-                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
+            AmplitudeAnalytic.Course.Params.COURSE to course.id,
+            AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
         ))
         continueCoursePresenter.continueCourse(course) //provide position?
     }
@@ -122,12 +122,12 @@ class CourseItemViewHolder(
     fun setDataOnView(course: Course) {
         courseItemName.text = course.title
         Glide
-                .with(itemView.context)
-                .asBitmap()
-                .load(course.cover)
-                .placeholder(coursePlaceholder)
-                .fitCenter()
-                .into(imageViewTarget)
+            .with(itemView.context)
+            .asBitmap()
+            .load(course.cover)
+            .placeholder(coursePlaceholder)
+            .fitCenter()
+            .into(imageViewTarget)
 
         courseContinueButton.changeVisibility(needShow = isEnrolled(course))
         courseButtonSeparator.changeVisibility(needShow = isEnrolled(course))

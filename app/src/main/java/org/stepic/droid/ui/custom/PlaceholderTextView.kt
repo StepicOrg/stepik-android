@@ -18,10 +18,10 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 class PlaceholderTextView
 @JvmOverloads
 constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
-) : android.support.v7.widget.AppCompatTextView(context, attrs, defStyleAttr) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : androidx.appcompat.widget.AppCompatTextView(context, attrs, defStyleAttr) {
 
     private val wordCache = LruCache<CharSequence, SpannableString>(4)
 

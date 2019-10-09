@@ -3,7 +3,7 @@ package org.stepic.droid.storage.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

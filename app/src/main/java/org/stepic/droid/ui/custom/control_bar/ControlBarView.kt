@@ -1,10 +1,10 @@
 package org.stepic.droid.ui.custom.control_bar
 
 import android.content.Context
-import android.support.annotation.AttrRes
-import android.support.annotation.IdRes
-import android.support.annotation.LayoutRes
-import android.support.annotation.MenuRes
+import androidx.annotation.AttrRes
+import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
+import androidx.annotation.MenuRes
 import android.util.AttributeSet
 import android.view.*
 import android.widget.FrameLayout

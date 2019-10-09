@@ -29,7 +29,7 @@
         app:barrierDirection="start"
         app:constraint_referenced_ids="stepQuizSortingOptionUp,stepQuizSortingOptionDown" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/stepQuizSortingOptionUp"
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -49,7 +49,7 @@
 
         app:srcCompat="@drawable/ic_arrow_top" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/stepQuizSortingOptionDown"
         android:layout_width="48dp"
         android:layout_height="48dp"

@@ -2,9 +2,9 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.core.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import androidx.core.content.ContextCompat
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import org.stepic.droid.R
 
 class DiscardTextDialogFragment : DialogFragment() {

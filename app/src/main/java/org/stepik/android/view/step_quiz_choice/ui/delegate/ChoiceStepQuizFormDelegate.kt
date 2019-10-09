@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_choice.ui.delegate
 
 import androidx.annotation.StringRes
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_choice.view.*
@@ -14,7 +14,7 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.mapper.ChoiceStepQuizOptionsMapper
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.adapter.ChoicesAdapterDelegate
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapterssupport.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
 import ru.nobird.android.ui.adapterssupport.selection.SingleChoiceSelectionHelper

@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
 import android.graphics.drawable.AnimationDrawable
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import android.view.View
 import android.widget.TextView

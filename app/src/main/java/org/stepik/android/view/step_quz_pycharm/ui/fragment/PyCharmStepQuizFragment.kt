@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quz_pycharm.ui.fragment
 
 import android.os.Bundle
-import androidx.core.app.Fragment
+import androidx.fragment.app.Fragment
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View

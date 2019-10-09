@@ -2,7 +2,7 @@ package org.stepic.droid.features.stories.ui.adapter
 
 import android.content.Context
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v7.content.res.AppCompatResources
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View

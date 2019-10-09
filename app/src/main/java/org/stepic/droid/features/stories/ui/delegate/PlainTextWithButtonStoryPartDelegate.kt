@@ -5,8 +5,8 @@ import android.content.Intent
 import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Build
-import android.support.annotation.ColorInt
-import android.support.annotation.DrawableRes
+import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.core.widget.CircularProgressDrawable
 import android.view.LayoutInflater
 import android.view.View

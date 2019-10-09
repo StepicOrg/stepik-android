@@ -1,17 +1,19 @@
 package org.stepic.droid.ui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import androidx.core.app.DialogFragment;
-import androidx.core.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
+import androidx.recyclerview.widget.SimpleItemAnimator;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -27,13 +29,13 @@ import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.util.SnackbarExtensionKt;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import ru.nobird.android.view.base.ui.extension.SnackbarExtensionKt;
 import timber.log.Timber;
 
 public class NotificationListFragment extends FragmentBase implements NotificationListView, SwipeRefreshLayout.OnRefreshListener {
@@ -145,12 +147,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         };
         notificationRecyclerView.addOnScrollListener(recyclerViewScrollListener);
 
-        goToCatalog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                screenManager.showCatalog(getContext());
-            }
-        });
+        goToCatalog.setOnClickListener(v -> screenManager.showCatalog(getContext()));
 
         notificationListPresenter.attachView(this);
         notificationListPresenter.init(notificationCategory);
@@ -253,8 +250,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
                         Snackbar.make(notificationRecyclerView,
                                 R.string.connectionProblems,
                                 Snackbar.LENGTH_SHORT),
-                        ColorUtil.INSTANCE.getColorArgb(R.color.white,
-                                getContext()))
+                        ColorUtil.INSTANCE.getColorArgb(R.color.white, requireContext()))
                 .show();
     }
 

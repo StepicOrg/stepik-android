@@ -15,6 +15,7 @@ import org.stepic.droid.R
 import org.stepic.droid.code.data.AutocompleteState
 import org.stepic.droid.model.code.symbolsForLanguage
 import org.stepic.droid.ui.listeners.OnItemClickListener
+import kotlin.math.abs
 
 class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
@@ -121,7 +122,7 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
     private fun notifyDataChanged(start: Int, oldSize: Int, newSize: Int) {
         invalidateItems()
         val changed = minOf(oldSize, newSize)
-        var delta = Math.abs(oldSize - newSize)
+        var delta = abs(oldSize - newSize)
         var offset = start
 
         if (changed == 0 && delta != 0) { // separator should be added or removed

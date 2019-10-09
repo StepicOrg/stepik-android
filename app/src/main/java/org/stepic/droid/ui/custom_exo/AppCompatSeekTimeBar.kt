@@ -1,11 +1,11 @@
 package org.stepic.droid.ui.custom_exo
 
 import android.content.Context
-import android.support.v7.widget.AppCompatSeekBar
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.widget.SeekBar
+import androidx.appcompat.widget.AppCompatSeekBar
 import com.google.android.exoplayer2.ui.TimeBar
 import timber.log.Timber
 

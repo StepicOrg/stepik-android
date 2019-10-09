@@ -1,7 +1,7 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.unit
 
 import android.graphics.BitmapFactory
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.util.LongSparseArray

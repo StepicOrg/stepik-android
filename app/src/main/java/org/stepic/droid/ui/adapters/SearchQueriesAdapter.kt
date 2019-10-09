@@ -3,7 +3,7 @@ package org.stepic.droid.ui.adapters
 import android.content.Context
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import android.support.v7.widget.SearchView
+import androidx.appcompat.widget.SearchView
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan

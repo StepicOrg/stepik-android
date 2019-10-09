@@ -1,20 +1,19 @@
 package org.stepic.droid.ui.activities
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.FeedbackFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 
 class FeedbackActivity : SingleFragmentActivity() {
-    override fun createFragment() = FeedbackFragment.newInstance()
+    override fun createFragment(): Fragment =
+        FeedbackFragment.newInstance()
 
-    override fun getLayoutResId(): Int {
-        return R.layout.activity_container_with_bar
-    }
+    override fun getLayoutResId(): Int =
+        R.layout.activity_container_with_bar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,22 +24,22 @@ class FeedbackActivity : SingleFragmentActivity() {
 
     private fun setUpToolbar() {
         initCenteredToolbar(R.string.feedback_title,
-                showHomeButton = true,
-                homeIndicator = closeIconDrawableRes)
+            showHomeButton = true,
+            homeIndicator = closeIconDrawableRes)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
         when (item?.itemId) {
             android.R.id.home -> {
-                finish();
-                return true
+                finish()
+                true
             }
+            else ->
+                super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
-    }
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+        overridePendingTransition(R.anim.no_transition, R.anim.push_down)
     }
 }

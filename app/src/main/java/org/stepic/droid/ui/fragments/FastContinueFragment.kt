@@ -113,7 +113,7 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onAnonymous() {
         analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
-        showPlaceholder(R.string.placeholder_login) { _ ->
+        showPlaceholder(R.string.placeholder_login) {
             analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
             screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
         }
@@ -123,7 +123,7 @@ class FastContinueFragment : FragmentBase(),
         // tbh: courses might be not empty, but not active
         // we can show suggestion for enroll, but not write, that you have zero courses
         analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
-        showPlaceholder(R.string.placeholder_explore_courses) { _ ->
+        showPlaceholder(R.string.placeholder_explore_courses) {
             analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
             screenManager.showCatalog(context)
         }
@@ -187,7 +187,7 @@ class FastContinueFragment : FragmentBase(),
         fastContinueAction.isEnabled = false
         val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
         if (!loadingProgressDialogFragment.isAdded) {
-            loadingProgressDialogFragment.show(fragmentManager, CONTINUE_LOADING_TAG)
+            loadingProgressDialogFragment.show(requireFragmentManager(), CONTINUE_LOADING_TAG)
         }
     }
 

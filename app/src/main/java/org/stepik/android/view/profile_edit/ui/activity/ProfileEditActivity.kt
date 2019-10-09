@@ -1,15 +1,15 @@
 package org.stepik.android.view.profile_edit.ui.activity
 
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_profile_edit.*
 import org.stepic.droid.R
@@ -24,7 +24,7 @@ import org.stepik.android.presentation.profile_edit.ProfileEditView
 import org.stepik.android.view.profile_edit.model.ProfileEditItem
 import org.stepik.android.view.profile_edit.ui.adapter.delegates.ProfileEditTextDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import javax.inject.Inject
 
 class ProfileEditActivity : AppCompatActivity(), ProfileEditView {

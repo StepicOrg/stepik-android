@@ -1,11 +1,12 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.v7.widget.AppCompatTextView
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.AppCompatTextView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Checkable
@@ -15,23 +16,23 @@ import org.stepic.droid.util.ColorUtil
 class LanguageTextView
 @JvmOverloads
 constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = android.R.attr.textViewStyle
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = android.R.attr.textViewStyle
 ) : AppCompatTextView(context, attrs, defStyleAttr), Checkable {
 
     companion object {
         private enum class State(
-                @DrawableRes val background: Int,
-                @ColorRes val textColor: Int
+            @DrawableRes val background: Int,
+            @ColorRes val textColor: Int
         ) {
             CHECKED(
-                    R.drawable.language_checked_background,
-                    R.color.language_text_color_checked
+                R.drawable.language_checked_background,
+                R.color.language_text_color_checked
             ),
             UNCHECKED(
-                    R.drawable.language_unchecked_background,
-                    R.color.language_text_color_unchecked
+                R.drawable.language_unchecked_background,
+                R.color.language_text_color_unchecked
             )
         }
     }
@@ -40,7 +41,6 @@ constructor(
     init {
         isChecked = false
     }
-
 
     private var _isChecked: Boolean = false
 
@@ -71,7 +71,7 @@ constructor(
     }
 
     override fun onSaveInstanceState(): Parcelable {
-        val superState = super.onSaveInstanceState()
+        val superState = super.onSaveInstanceState() ?: Bundle.EMPTY
         val ownState = SavedState(superState)
         ownState.checked = isChecked
         return ownState

@@ -1,7 +1,7 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.section
 
 import androidx.core.util.LongSparseArray
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver

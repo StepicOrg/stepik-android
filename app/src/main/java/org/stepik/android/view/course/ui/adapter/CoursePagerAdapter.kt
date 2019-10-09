@@ -1,9 +1,9 @@
 package org.stepik.android.view.course.ui.adapter
 
 import android.content.Context
-import androidx.core.app.Fragment
-import androidx.core.app.FragmentManager
-import androidx.core.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import android.view.ViewGroup
 import org.stepic.droid.R
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment

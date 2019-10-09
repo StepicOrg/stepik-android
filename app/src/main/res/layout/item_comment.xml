@@ -15,14 +15,14 @@
         app:borderRadius="@dimen/course_image_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/commentUserIcon"
             android:layout_width="@dimen/comment_user_image_size"
             android:layout_height="@dimen/comment_user_image_size"
             android:contentDescription="@null" />
     </org.stepic.droid.ui.custom.RoundedBorderMaskView>
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/commentMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
 
         android:orientation="horizontal" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/commentUserName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

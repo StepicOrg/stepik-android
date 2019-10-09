@@ -1,6 +1,6 @@
 package org.stepik.android.view.comment.model
 
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import org.stepic.droid.R
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 

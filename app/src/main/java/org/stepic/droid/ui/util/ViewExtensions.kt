@@ -1,24 +1,24 @@
 package org.stepic.droid.ui.util
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Build
-import android.support.annotation.DrawableRes
-import android.support.annotation.LayoutRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
-import android.support.design.widget.Snackbar
 import androidx.core.content.ContextCompat
-import android.support.v7.content.res.AppCompatResources
+import androidx.appcompat.content.res.AppCompatResources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import androidx.core.view.children
+import androidx.core.view.isVisible
+import com.google.android.material.snackbar.Snackbar
 import org.stepic.droid.R
-import org.stepic.droid.util.setTextColor
+import ru.nobird.android.view.base.ui.extension.setTextColor
 
 fun View.changeVisibility(needShow: Boolean) {
     if (needShow) {
@@ -33,30 +33,15 @@ fun View.setHeight(height: Int) {
     layoutParams = layoutParams
 }
 
-fun ViewGroup.children(): Iterable<View> =
-    Iterable {
-        object : Iterator<View> {
-            private var position = 0
-
-            override fun hasNext(): Boolean =
-                position < this@children.childCount
-
-            override fun next(): View =
-                this@children.getChildAt(position++)
-        }
-    }
-
 fun ViewGroup.hideAllChildren() {
-    for (i in 0 until childCount) {
-        getChildAt(i).changeVisibility(false)
-    }
+    children.forEach { it.isVisible = false }
 }
 
 fun TextView.setCompoundDrawables(
-        @DrawableRes start: Int = -1,
-        @DrawableRes top: Int = -1,
-        @DrawableRes end: Int = -1,
-        @DrawableRes bottom: Int = -1
+    @DrawableRes start: Int = -1,
+    @DrawableRes top: Int = -1,
+    @DrawableRes end: Int = -1,
+    @DrawableRes bottom: Int = -1
 ) {
     fun TextView.getDrawableOrNull(@DrawableRes res: Int) =
         if (res != -1) AppCompatResources.getDrawable(context, res) else null
@@ -95,23 +80,6 @@ fun Drawable.toBitmap(width: Int = intrinsicWidth, height: Int = intrinsicHeight
 
 fun ViewGroup.inflate(@LayoutRes resId: Int, attachToRoot: Boolean = false): View =
     LayoutInflater.from(this.context).inflate(resId, this, attachToRoot)
-
-/**
- * Performs the given action when the view tree is about to be drawn.
- */
-inline fun <T : View> T.doOnPreDraw(crossinline action: (view: T) -> Unit) {
-    val vto = viewTreeObserver
-    vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-        override fun onPreDraw(): Boolean {
-            action(this@doOnPreDraw)
-            when {
-                vto.isAlive -> vto.removeOnPreDrawListener(this)
-                else -> viewTreeObserver.removeOnPreDrawListener(this)
-            }
-            return true
-        }
-    })
-}
 
 inline fun <T : View> T.doOnGlobalLayout(crossinline action: (view: T) -> Unit) {
     viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {

@@ -3,8 +3,8 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.core.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AlertDialog
 import org.stepic.droid.R
 import java.lang.IllegalStateException
 
@@ -20,7 +20,7 @@ class LogoutAreYouSureDialog : DialogFragment() {
 
     var listener: OnLogoutSuccessListener? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         listener = context as? OnLogoutSuccessListener
     }
@@ -31,12 +31,12 @@ class LogoutAreYouSureDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-            AlertDialog.Builder(requireContext())
-                    .setTitle(R.string.title_confirmation)
-                    .setMessage(R.string.are_you_sure_logout)
-                    .setPositiveButton(R.string.yes) { _, _ ->
-                        listener?.onLogout()
-                    }
-                    .setNegativeButton(R.string.no, null)
-                    .create()
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.title_confirmation)
+            .setMessage(R.string.are_you_sure_logout)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                listener?.onLogout()
+            }
+            .setNegativeButton(R.string.no, null)
+            .create()
 }

@@ -1,8 +1,8 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
-import androidx.core.app.Fragment
-import android.support.v7.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.appcompat.widget.SearchView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -36,11 +36,11 @@ class CourseSearchFragment: CourseListFragmentBase() {
 
     override fun injectComponent() {
         App
-                .componentManager()
-                .courseGeneralComponent()
-                .courseListComponentBuilder()
-                .build()
-                .inject(this)
+            .componentManager()
+            .courseGeneralComponent()
+            .courseListComponentBuilder()
+            .build()
+            .inject(this)
     }
 
 

@@ -128,7 +128,7 @@
         app:layout_constraintBottom_toTopOf="@id/bottomMargin"
 
         tools:paddingStart="52dp"
-        tools:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:orientation="horizontal"
         tools:listitem="@layout/view_course_content_section_date" />
 

@@ -1,6 +1,6 @@
 package org.stepic.droid.ui.activities
 
-import androidx.core.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.R
 import org.stepic.droid.ui.fragments.NotificationSettingsFragment
@@ -11,19 +11,20 @@ class NotificationSettingsActivity : SettingsActivity() {
 
     override fun setUpToolbar() {
         initCenteredToolbar(R.string.notification_settings_title,
-                true,
-                closeIconDrawableRes)
+            true,
+            closeIconDrawableRes)
     }
 
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean =
-            when (item?.itemId) {
-                android.R.id.home -> {
-                    // Respond to the action bar's Up/Home button
-                    finish()
-                    true
-                }
-                else -> super.onOptionsItemSelected(item)
+        when (item?.itemId) {
+            android.R.id.home -> {
+                // Respond to the action bar's Up/Home button
+                finish()
+                true
             }
+            else ->
+                super.onOptionsItemSelected(item)
+        }
 
 }

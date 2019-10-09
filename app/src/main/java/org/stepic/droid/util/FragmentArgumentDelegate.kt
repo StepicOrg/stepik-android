@@ -3,7 +3,7 @@ package org.stepic.droid.util
 import android.os.Binder
 import android.os.Bundle
 import androidx.core.app.BundleCompat
-import androidx.core.app.Fragment
+import androidx.fragment.app.Fragment
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

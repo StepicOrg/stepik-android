@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="bottom">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedback"
         style="@style/StepQuizFeedback"
 
@@ -19,7 +19,7 @@
 
         tools:drawableStart="@drawable/ic_step_quiz_validation" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizAction"
         android:layout_width="match_parent"
         android:layout_height="@dimen/step_submit_button_height"

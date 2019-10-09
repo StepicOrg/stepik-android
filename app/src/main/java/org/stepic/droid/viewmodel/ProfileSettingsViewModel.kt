@@ -1,6 +1,6 @@
 package org.stepic.droid.viewmodel
 
-import android.support.annotation.ColorRes
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import org.stepic.droid.R
 

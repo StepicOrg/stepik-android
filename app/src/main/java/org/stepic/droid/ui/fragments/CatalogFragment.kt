@@ -1,8 +1,8 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.appcompat.widget.SearchView
 import android.view.*
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import org.stepic.droid.R
@@ -71,16 +71,16 @@ class CatalogFragment : FragmentBase(),
 
     override fun injectComponent() {
         App
-                .component()
-                .catalogComponentBuilder()
-                .build()
-                .inject(this)
+            .component()
+            .catalogComponentBuilder()
+            .build()
+            .inject(this)
 
         needShowLangWidget = sharedPreferenceHelper.isNeedShowLangWidget
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_catalog, container, false)
+        inflater.inflate(R.layout.fragment_catalog, container, false)
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -2,8 +2,8 @@ package org.stepik.android.view.course_calendar.ui
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.core.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AlertDialog
 import org.stepic.droid.R
 
 class ExplainCalendarPermissionDialog : DialogFragment() {

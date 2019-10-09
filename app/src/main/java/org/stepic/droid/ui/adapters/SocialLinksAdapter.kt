@@ -1,14 +1,14 @@
 package org.stepic.droid.ui.adapters
 
-import android.support.v7.content.res.AppCompatResources
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import kotlinx.android.synthetic.main.social_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.social.SocialMedia
+import org.stepic.droid.ui.util.inflate
 
 class SocialLinksAdapter(
     private val socialLinks: Array<SocialMedia> = SocialMedia.values(),
@@ -16,9 +16,10 @@ class SocialLinksAdapter(
 ) : RecyclerView.Adapter<SocialLinksAdapter.SocialViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SocialViewHolder =
-        SocialViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.social_item, parent, false))
+        SocialViewHolder(parent.inflate(R.layout.social_item, false))
 
-    override fun getItemCount(): Int = socialLinks.size
+    override fun getItemCount(): Int =
+        socialLinks.size
 
     override fun onBindViewHolder(holder: SocialViewHolder, position: Int) {
         val socialType = socialLinks[position]

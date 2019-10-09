@@ -73,26 +73,13 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(R.string.remind_password)
                 .setView(v)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
+                .setPositiveButton(R.string.send, (dialog, which) -> {})
                 .setNegativeButton(R.string.cancel, null);
         final AlertDialog alertDialog = builder.create();
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                bindEmailChangeToButton(b);
-                b.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendEmail(alertDialog);
-                    }
-                });
-            }
+        alertDialog.setOnShowListener(dialog -> {
+            Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            bindEmailChangeToButton(b);
+            b.setOnClickListener(view -> sendEmail(alertDialog));
         });
 
         if (emailTextWrapper.getEditText() != null) {

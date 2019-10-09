@@ -2,7 +2,7 @@ package org.stepic.droid.ui.util
 
 import android.content.Context
 import android.content.Context.LAYOUT_INFLATER_SERVICE
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import androidx.core.widget.PopupWindowCompat
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -11,7 +11,6 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import kotlinx.android.synthetic.main.popup_window.view.*
 import org.stepic.droid.R
-
 
 object PopupHelper {
     enum class PopupTheme(

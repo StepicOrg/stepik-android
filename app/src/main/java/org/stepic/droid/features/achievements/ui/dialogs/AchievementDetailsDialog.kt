@@ -3,7 +3,7 @@ package org.stepic.droid.features.achievements.ui.dialogs
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.view.*
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme

@@ -2,7 +2,7 @@ package org.stepic.droid.di
 
 import android.app.AlarmManager
 import android.app.NotificationManager
-import android.arch.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider
 import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager

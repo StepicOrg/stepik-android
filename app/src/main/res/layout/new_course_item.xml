@@ -14,7 +14,7 @@
             android:layout_height="141dp"
             android:duplicateParentState="true">
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/courseItemImage"
                 android:layout_width="@dimen/new_course_image_size"
                 android:layout_height="@dimen/new_course_image_size"
@@ -29,7 +29,7 @@
 
                 tools:src="@drawable/general_placeholder"/>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/adaptiveCourseMarker"
                 android:text="@string/adaptive_course_marker"
                 android:textSize="7.5sp"
@@ -51,7 +51,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/courseItemImage"
                 app:layout_constraintStart_toStartOf="@+id/courseItemImage" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/courseItemName"
                 app:fontFamily="@font/roboto_regular"
                 android:layout_width="0dp"
@@ -82,7 +82,7 @@
                 layout="@layout/layout_course_properties"
                 tools:visibility="visible" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/courseDescription"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -115,7 +115,7 @@
                 android:layout_marginTop="@dimen/course_item_space_between_items"
                 app:layout_constraintTop_toBottomOf="@id/courseItemImage" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/courseContinueButton"
                 android:layout_width="0dp"
                 android:layout_height="44dp"

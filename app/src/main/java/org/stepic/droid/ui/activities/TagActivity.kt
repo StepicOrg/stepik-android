@@ -2,7 +2,7 @@ package org.stepic.droid.ui.activities
 
 import android.app.Activity
 import android.content.Intent
-import androidx.core.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.MenuItem
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.TagFragment

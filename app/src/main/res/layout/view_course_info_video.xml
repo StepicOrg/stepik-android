@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:contentDescription="@string/video_content_description">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/videoThumbnail"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:alpha="0.4" />
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/videoPlayButton"
         android:layout_width="25.3dp"
         android:layout_height="31.3dp"

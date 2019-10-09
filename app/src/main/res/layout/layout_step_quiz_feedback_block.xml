@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackWrong"
         style="@style/StepQuizFeedback"
         android:background="@drawable/bg_step_quiz_feedback_wrong"
@@ -16,7 +16,7 @@
         tools:text="@string/step_quiz_feedback_wrong_not_last_try"
         tools:drawableStart="@drawable/ic_step_quiz_wrong" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackCorrect"
         style="@style/StepQuizFeedback"
         android:background="@drawable/bg_step_quiz_feedback_correct"
@@ -26,7 +26,7 @@
         tools:text="@string/step_quiz_feedback_correct_free_answer"
         tools:drawableStart="@drawable/ic_step_quiz_correct" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackEvaluation"
         style="@style/StepQuizFeedback"
 
@@ -34,7 +34,7 @@
         android:text="@string/step_quiz_feedback_evaluation"
         android:textColor="@color/color_violet_1" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackValidation"
         style="@style/StepQuizFeedback"
 

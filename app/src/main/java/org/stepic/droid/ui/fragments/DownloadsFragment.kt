@@ -3,7 +3,7 @@ package org.stepic.droid.ui.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -45,9 +45,9 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
 
     override fun injectComponent() {
         App
-                .componentManager()
-                .downloadsComponent()
-                .inject(this)
+            .componentManager()
+            .downloadsComponent()
+            .inject(this)
 
         setHasOptionsMenu(true)
         downloadsAdapter = DownloadsAdapter(downloadsPresenter)
@@ -99,13 +99,13 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
-            if (item?.itemId == android.R.id.home) {
-                activity?.onBackPressed()
-                true
-            } else {
-                super.onOptionsItemSelected(item)
-            }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        if (item.itemId == android.R.id.home) {
+            activity?.onBackPressed()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
 
     override fun showVideo(videoPlayerMediaData: VideoPlayerMediaData) {
         screenManager.showVideo(this, videoPlayerMediaData, false)
@@ -124,13 +124,13 @@ class DownloadsFragment: FragmentBase(), DownloadsView {
     override fun askToCancelAllVideos() {
         val dialog = CancelVideosDialog.newInstance()
         dialog.setTargetFragment(this@DownloadsFragment, CancelVideosDialog.REQUEST_CODE)
-        dialog.show(fragmentManager, CancelVideosDialog.TAG)
+        dialog.show(requireFragmentManager(), CancelVideosDialog.TAG)
     }
 
     override fun askToRemoveAllCachedVideos() {
         val dialog = ClearVideosDialog.newInstance()
         dialog.setTargetFragment(this@DownloadsFragment, ClearVideosDialog.REQUEST_CODE)
-        dialog.show(fragmentManager, ClearVideosDialog.TAG)
+        dialog.show(requireFragmentManager(), ClearVideosDialog.TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) = when {

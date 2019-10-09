@@ -2,7 +2,7 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.widget.ArrayAdapter
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -15,9 +15,9 @@ import javax.inject.Inject
 class VideoQualityDialog : VideoQualityDialogBase() {
     companion object {
         fun newInstance(forPlaying: Boolean) =
-                VideoQualityDialog().also {
-                    it.forPlaying = forPlaying
-                }
+            VideoQualityDialog().also {
+                it.forPlaying = forPlaying
+            }
     }
 
     @Inject
@@ -54,7 +54,7 @@ class VideoQualityDialog : VideoQualityDialogBase() {
                     R.string.video_quality
                 }
             )
-            .setSingleChoiceItems(adapter, chosenOptionPosition) { _, which ->
+            .setSingleChoiceItems(adapter, chosenOptionPosition) { dialog, which ->
                 val qualityString = positionToQualityMap[which]
                 analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
 

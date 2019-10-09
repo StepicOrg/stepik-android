@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
@@ -115,7 +115,7 @@ class VideoQualityDetailedDialog : VideoQualityDialogBase() {
         return builder.create()
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         Timber.d("onDismiss")
 

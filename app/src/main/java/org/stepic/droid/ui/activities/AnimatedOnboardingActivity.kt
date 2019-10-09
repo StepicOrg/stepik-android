@@ -13,9 +13,7 @@ import org.stepic.droid.ui.adapters.OnboardingAdapter
 import org.stepic.droid.ui.custom.OnboardingPageTransformer
 import org.stepic.droid.ui.fragments.OnboardingFragment
 
-
 class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

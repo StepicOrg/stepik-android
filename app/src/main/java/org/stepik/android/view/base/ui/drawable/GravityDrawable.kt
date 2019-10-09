@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.drawable.Drawable
-import android.support.annotation.Px
+import androidx.annotation.Px
 import android.view.Gravity
 
 class GravityDrawable(

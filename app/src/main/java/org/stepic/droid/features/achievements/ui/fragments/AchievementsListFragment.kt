@@ -3,7 +3,7 @@ package org.stepic.droid.features.achievements.ui.fragments
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

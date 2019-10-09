@@ -4,8 +4,8 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -13,8 +13,8 @@ import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.IBinder
-import android.support.annotation.DrawableRes
-import android.support.v7.app.AppCompatActivity
+import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
 import android.support.v7.widget.PopupMenu
 import android.view.Gravity
 import android.view.View

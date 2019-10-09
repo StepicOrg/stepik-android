@@ -3,8 +3,8 @@ package org.stepic.droid.ui.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.DialogFragment
-import androidx.core.app.Fragment
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,9 +22,10 @@ import javax.inject.Inject
 
 class StoreManagementFragment : FragmentBase(), StoreManagementView {
     companion object {
-        fun newInstance(): Fragment = StoreManagementFragment()
-
         private const val LOADING_TAG = "loading_store_management"
+
+        fun newInstance(): Fragment =
+            StoreManagementFragment()
     }
 
     private var mClearCacheDialogFragment: DialogFragment? = null
@@ -79,7 +80,7 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView {
                 chooseStorageDialog.setTargetFragment(this, 0)
                 chooseStorageButton.setOnClickListener {
                     if (!chooseStorageDialog.isAdded) {
-                        chooseStorageDialog.show(fragmentManager, null)
+                        chooseStorageDialog.show(requireFragmentManager(), null)
                     }
                 }
             }
@@ -103,7 +104,7 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView {
             analytic.reportEvent(Analytic.Interaction.CLICK_CLEAR_CACHE)
 
             if (mClearCacheDialogFragment?.isAdded != true) {
-                mClearCacheDialogFragment?.show(fragmentManager, ClearVideosDialog.TAG)
+                mClearCacheDialogFragment?.show(requireFragmentManager(), ClearVideosDialog.TAG)
             }
         }
         clearCacheButton.isEnabled = false

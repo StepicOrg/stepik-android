@@ -1,6 +1,6 @@
 package org.stepik.android.view.course_info.ui.adapter.delegates
 
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.view_course_info_instructors_block.view.*

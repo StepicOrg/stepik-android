@@ -1,16 +1,16 @@
 package org.stepik.android.view.course.ui.activity
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.annotation.StringRes
 import com.google.android.material.tabs.TabLayout
-import androidx.core.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager.widget.ViewPager
-import android.support.v7.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView

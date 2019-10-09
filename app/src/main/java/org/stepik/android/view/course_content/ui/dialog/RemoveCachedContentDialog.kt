@@ -2,9 +2,9 @@ package org.stepik.android.view.course_content.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.core.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import androidx.core.content.ContextCompat
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import org.stepic.droid.R
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section

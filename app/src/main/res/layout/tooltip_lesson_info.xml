@@ -22,7 +22,7 @@
         android:background="@drawable/background_popup"
         android:padding="6dp">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/stepWorth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             tools:text="@string/lesson_info_points"
             tools:ignore="MissingPrefix" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/lessonTimeToComplete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             tools:text="@string/lesson_info_time_to_complete"
             tools:ignore="MissingPrefix" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/certificateThreshold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

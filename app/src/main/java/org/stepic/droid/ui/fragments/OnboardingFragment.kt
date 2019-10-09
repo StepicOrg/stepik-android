@@ -14,13 +14,16 @@ import org.stepic.droid.util.argument
 class OnboardingFragment : FragmentBase() {
     companion object {
         fun newInstance(onboardingType: OnboardingType): OnboardingFragment =
-                OnboardingFragment().apply { this.onboardingType = onboardingType }
+            OnboardingFragment()
+                .apply {
+                    this.onboardingType = onboardingType
+                }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_onboarding_page, container, false)
-
     private var onboardingType: OnboardingType by argument()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_onboarding_page, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

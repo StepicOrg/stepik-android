@@ -1,6 +1,6 @@
 package org.stepic.droid.code.highlight.themes
 
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import org.stepic.droid.code.highlight.prettify.parser.Prettify.*
 
 class CodeSyntax(

@@ -7,7 +7,7 @@ import androidx.fragment.app.DialogFragment
 class LoadingProgressDialogFragment : DialogFragment() {
     companion object {
         fun newInstance(): DialogFragment =
-                LoadingProgressDialogFragment()
+            LoadingProgressDialogFragment()
 
         const val TAG = "LoadingProgressDialogFragment"
     }

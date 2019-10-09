@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.util;
 
 import android.graphics.Rect;
-import android.support.v7.widget.GridLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 

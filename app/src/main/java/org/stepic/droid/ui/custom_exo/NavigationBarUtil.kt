@@ -7,7 +7,6 @@ import org.stepic.droid.util.AndroidDevices
 import org.stepic.droid.util.hasCombinationBar
 import org.stepic.droid.util.isKitKatOrLater
 
-
 object NavigationBarUtil {
 
     fun hideNavigationBar(needHide: Boolean = true, activity: Activity?) {

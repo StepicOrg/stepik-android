@@ -1,12 +1,13 @@
 package org.stepik.android.view.course_list.ui.delegate
 
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.children
 import org.stepic.droid.util.safeDiv
 import org.stepik.android.model.Course
 import java.util.Locale
@@ -37,7 +38,7 @@ class CoursePropertiesDelegate(
         setProgress(course)
         setRating(course)
 
-        view.changeVisibility(needShow = view.children().any { it.visibility == View.VISIBLE })
+        view.changeVisibility(needShow = view.children.any(View::isVisible))
     }
 
     private fun setLearnersCount(learnersCount: Long) {

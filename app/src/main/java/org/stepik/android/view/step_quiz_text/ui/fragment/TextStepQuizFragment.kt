@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz_text.ui.fragment
 
-import androidx.core.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.View
 import kotlinx.android.synthetic.main.layout_step_quiz_text.*
 import org.stepic.droid.R

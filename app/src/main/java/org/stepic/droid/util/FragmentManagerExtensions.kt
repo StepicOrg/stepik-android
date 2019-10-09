@@ -1,7 +1,7 @@
 package org.stepic.droid.util
 
-import androidx.core.app.FragmentManager
-import androidx.core.app.FragmentTransaction
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 
 /**
  * Run [body] in a [FragmentTransaction] which is automatically committed if it completes without
