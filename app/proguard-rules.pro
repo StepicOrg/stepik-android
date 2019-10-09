@@ -138,6 +138,11 @@
 -keeppackagenames org.jsoup.nodes
 
 -keepclassmembers enum * {
-public static **[] values();
-public static ** valueOf(java.lang.String);
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Prevent R8 from leaving Data object members always null
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
 }
