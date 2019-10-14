@@ -512,5 +512,8 @@ class   ProfileFragment : FragmentBase(),
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Profile.PROFILE_SCREEN_OPENED, mapOf(
             AmplitudeAnalytic.Profile.Params.STATE to state
         ))
+        analytic.reportEvent(Analytic.Profile.PROFILE_SCREEN_OPENED, Bundle().apply {
+            putString(Analytic.Profile.Params.STATE, state)
+        })
     }
 }
