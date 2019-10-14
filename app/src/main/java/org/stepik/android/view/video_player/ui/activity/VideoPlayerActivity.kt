@@ -157,7 +157,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             showChooseRateMenu(it)
         }
 
-        moreItemsView.isVisible = false
+        qualityView.isVisible = false
 
         playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
@@ -281,9 +281,17 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         videoRateChooser?.setImageDrawable(videoPlayerData.videoPlaybackRate.icon)
 
-        moreItemsView.isVisible = true
-        moreItemsView.setOnClickListener {
-            showMoreItemsPopup(it, videoPlayerData)
+        qualityView.isVisible = true
+        qualityView.text = getString(R.string.video_player_quality_icon, videoPlayerData.videoQuality)
+        qualityView.setOnClickListener {
+            val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
+            val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
+            val nowPlaying = videoPlayerData.videoUrl
+
+            val dialog = VideoQualityDialogInPlayer.newInstance(externalVideo, cachedVideo, nowPlaying)
+            if (!dialog.isAdded) {
+                dialog.show(supportFragmentManager, null)
+            }
         }
     }
 
@@ -299,35 +307,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             playerView.hideController()
         }
         popupMenu.show()
-        playerView.showController()
-    }
-
-    private fun showMoreItemsPopup(view: View, videoPlayerData: VideoPlayerData) {
-        val morePopupMenu = PopupMenu(this, view)
-        morePopupMenu.inflate(R.menu.video_more_menu)
-
-        morePopupMenu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.video_quality -> {
-                    val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
-                    val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
-                    val nowPlaying = videoPlayerData.videoUrl
-
-                    val dialog = VideoQualityDialogInPlayer.newInstance(externalVideo, cachedVideo, nowPlaying)
-                    if (!dialog.isAdded) {
-                        dialog.show(supportFragmentManager, null)
-                    }
-
-                    true
-                }
-                else -> false
-            }
-        }
-
-        morePopupMenu.setOnDismissListener {
-            playerView.hideController()
-        }
-        morePopupMenu.show()
         playerView.showController()
     }
 

@@ -30,7 +30,8 @@ constructor(
                 videoUrl = videoUrl,
                 videoPlaybackRate = playbackRate,
                 videoTimestamp = timestamp,
-                mediaData = videoPlayerMediaData
+                mediaData = videoPlayerMediaData,
+                videoQuality = getQualityVideoForPlaying()
             )
         }
 
@@ -76,4 +77,7 @@ constructor(
     fun setAutoplayEnabled(isEnabled: Boolean) {
         userPreferences.isAutoplayEnabled = isEnabled
     }
+
+    private fun getQualityVideoForPlaying(): String =
+        userPreferences.qualityVideoForPlaying
 }
