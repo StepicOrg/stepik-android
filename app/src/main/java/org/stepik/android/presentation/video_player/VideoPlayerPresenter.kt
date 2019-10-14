@@ -119,7 +119,11 @@ constructor(
             ?.url
             ?: return
 
-        videoPlayerData = playerData.copy(videoUrl = url)
+        val quality = videoUrl
+            .quality
+            ?: return
+
+        videoPlayerData = playerData.copy(videoUrl = url, videoQuality = quality)
     }
 
     fun changePlaybackRate(videoPlaybackRate: VideoPlaybackRate) {

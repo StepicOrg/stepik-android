@@ -43,24 +43,27 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="2dp"
             android:layout_marginRight="2dp"
-            android:layout_toLeftOf="@+id/moreItemsView"
-            android:layout_toStartOf="@+id/moreItemsView"
+            android:layout_toLeftOf="@+id/qualityView"
+            android:layout_toStartOf="@+id/qualityView"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:padding="4dp"
             tools:src="@drawable/ic_playbackrate_0_5_light"/>
 
-        <ImageView
-            android:id="@+id/moreItemsView"
-            android:layout_width="48dp"
+        <TextView
+            android:id="@+id/qualityView"
+            android:layout_width="64dp"
             android:layout_height="48dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:gravity="center"
+            android:textColor="@color/white"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:padding="@dimen/half_padding"
-            android:src="@drawable/ic_more_vert_white_48_include_padding"
+            android:textSize="16sp"
+            tools:text="1080p"
         />
 
 

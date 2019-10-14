@@ -9,7 +9,8 @@ data class VideoPlayerData(
     val videoUrl: String,
     val videoPlaybackRate: VideoPlaybackRate,
     val videoTimestamp: Long = 0,
-    val mediaData: VideoPlayerMediaData
+    val mediaData: VideoPlayerMediaData,
+    val videoQuality: String
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(videoId)
@@ -17,6 +18,7 @@ data class VideoPlayerData(
         parcel.writeInt(videoPlaybackRate.ordinal)
         parcel.writeLong(videoTimestamp)
         parcel.writeParcelable(mediaData, flags)
+        parcel.writeString(videoQuality)
     }
 
     override fun describeContents(): Int = 0
@@ -28,7 +30,8 @@ data class VideoPlayerData(
                 parcel.readString()!!,
                 VideoPlaybackRate.values()[parcel.readInt()],
                 parcel.readLong(),
-                parcel.readParcelable(VideoPlayerMediaData::class.java.classLoader)!!
+                parcel.readParcelable(VideoPlayerMediaData::class.java.classLoader)!!,
+                parcel.readString()!!
             )
 
         override fun newArray(size: Int): Array<VideoPlayerData?> =

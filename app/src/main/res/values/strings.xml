@@ -358,6 +358,8 @@
 
     <string name="video_content_description">Play video</string>
 
+    <string name="video_player_quality_icon" translatable="false">%sp</string>
+
     <!--Rate dialog-->
     <string name="rate_dialog_title">Do you like Stepik?</string>
     <string name="rate_dialog_google_play">Google Play</string>
