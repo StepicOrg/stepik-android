@@ -3,15 +3,14 @@ package org.stepic.droid.ui.activities;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.FragmentActivityBase;
 import org.stepic.droid.ui.fragments.CourseSearchFragment;
-
-import butterknife.ButterKnife;
 
 public class CourseSearchResultActivity extends FragmentActivityBase {
 

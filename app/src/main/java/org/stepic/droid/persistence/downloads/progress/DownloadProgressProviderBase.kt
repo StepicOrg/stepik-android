@@ -5,7 +5,11 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toFlowable
 import org.stepic.droid.persistence.files.ExternalStorageManager
-import org.stepic.droid.persistence.model.*
+import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.PersistentState
+import org.stepic.droid.persistence.model.Structure
+import org.stepic.droid.persistence.model.isCorrect
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao

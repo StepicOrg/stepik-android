@@ -1,18 +1,18 @@
 package org.stepik.android.view.course_reviews.ui.fragment
 
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.empty_default.view.*
 import kotlinx.android.synthetic.main.error_no_connection.*
@@ -23,14 +23,18 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.snackbar
-import org.stepic.droid.util.argument
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsView
-import org.stepik.android.view.course_reviews.ui.adapter.CourseReviewsAdapter
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewDataDelegate
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewPlaceholderDelegate
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewsComposeBannerDelegate
 import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class CourseReviewsFragment : Fragment(), CourseReviewsView {
@@ -52,7 +56,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     private var courseId: Long by argument()
 
-    private lateinit var courseReviewsAdapter: CourseReviewsAdapter
+    private lateinit var courseReviewsAdapter: DefaultDelegateAdapter<CourseReviewItem>
     private lateinit var courseReviewsPresenter: CourseReviewsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseReviewsView.State>
 
@@ -63,6 +67,17 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         injectComponent(courseId)
 
         courseReviewsPresenter = ViewModelProviders.of(this, viewModelFactory).get(CourseReviewsPresenter::class.java)
+
+        courseReviewsAdapter = DefaultDelegateAdapter()
+        courseReviewsAdapter +=
+            CourseReviewDataDelegate(
+                onUserClicked = { screenManager.openProfile(activity, it.id) },
+                onEditReviewClicked = ::showCourseReviewEditDialog,
+                onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
+            )
+        courseReviewsAdapter += CourseReviewPlaceholderDelegate()
+        courseReviewsAdapter +=
+            CourseReviewsComposeBannerDelegate { showCourseReviewEditDialog(null) }
 
         reportIsVisibleToUser()
     }
@@ -82,13 +97,6 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         inflater.inflate(R.layout.fragment_course_reviews, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        courseReviewsAdapter = CourseReviewsAdapter(
-            onUserClicked = { screenManager.openProfile(activity, it.id) },
-            onCreateReviewClicked = { showCourseReviewEditDialog(null) },
-            onEditReviewClicked = ::showCourseReviewEditDialog,
-            onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
-        )
-
         with(courseReviewsRecycler) {
             layoutManager = LinearLayoutManager(context)
             adapter = courseReviewsAdapter
@@ -185,7 +193,6 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     private fun showCourseReviewEditDialog(courseReview: CourseReview?) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(ComposeCourseReviewDialogFragment.TAG) == null }
             ?: return
 
         val requestCode =
@@ -197,7 +204,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
         val dialog = ComposeCourseReviewDialogFragment.newInstance(courseId, courseReview)
         dialog.setTargetFragment(this, requestCode)
-        dialog.show(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
+        dialog.showIfNotExists(supportFragmentManager, ComposeCourseReviewDialogFragment.TAG)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

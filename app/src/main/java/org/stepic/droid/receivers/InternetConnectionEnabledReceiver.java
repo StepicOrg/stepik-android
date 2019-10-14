@@ -5,16 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.WorkerThread;
+
+import androidx.annotation.WorkerThread;
 
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
-import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.web.Api;
+import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 
 import java.io.IOException;
 import java.util.List;

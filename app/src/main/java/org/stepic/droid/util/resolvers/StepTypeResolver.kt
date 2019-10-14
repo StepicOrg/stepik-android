@@ -1,7 +1,7 @@
 package org.stepic.droid.util.resolvers
 
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import org.stepic.droid.ui.quiz.QuizDelegate
 import org.stepik.android.model.Step
 

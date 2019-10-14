@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import org.stepic.droid.mappers.CourseItemToCarouselInfoMapper
 import org.stepic.droid.mappers.Mapper
-import org.stepik.android.model.CourseCollection
 import org.stepic.droid.model.CoursesCarouselInfo
+import org.stepik.android.model.CourseCollection
 
 @Module
 interface CatalogModule {

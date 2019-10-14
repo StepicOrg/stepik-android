@@ -5,18 +5,18 @@ import android.content.Intent
 import android.content.pm.ShortcutManager
 import android.graphics.Color
 import android.os.Bundle
-import android.support.annotation.IdRes
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
-import android.support.v4.content.res.ResourcesCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.MenuItem
+import androidx.annotation.IdRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.facebook.login.LoginManager
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
@@ -62,9 +62,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     companion object {
         const val CURRENT_INDEX_KEY = "currentIndexKey"
 
-        val reminderKey = "reminderKey"
+        const val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
-        private val progressLogoutTag = "progressLogoutTag"
+        private const val progressLogoutTag = "progressLogoutTag"
         private const val LOGGED_ACTION = "LOGGED_ACTION"
 
         private const val CATALOG_DEEPLINK = "catalog"
@@ -144,8 +144,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             } else if (action == AppConstants.OPEN_SHORTCUT_CATALOG) {
                 analytic.reportEvent(Analytic.Shortcut.OPEN_CATALOG)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-                    val shortcutManager = getSystemService(ShortcutManager::class.java)
-                    shortcutManager.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
+                    getSystemService(ShortcutManager::class.java)
+                        ?.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
                 }
 
             }
@@ -217,8 +217,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             setFragment(R.id.home)
         }
 
-        val wantedIndex = getFragmentIndexFromIntent(launchIntent)
-        when (wantedIndex) {
+        when (getFragmentIndexFromIntent(launchIntent)) {
             CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
             PROFILE_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.profile)
             NOTIFICATIONS_INDEX -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.notifications)

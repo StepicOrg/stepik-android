@@ -1,7 +1,11 @@
 package org.stepic.droid.util
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.GregorianCalendar
+import java.util.Locale
+import java.util.TimeZone
 
 object DateTimeHelper {
     const val DISPLAY_DATETIME_PATTERN = "dd MMMM yyyy HH:mm"

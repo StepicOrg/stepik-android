@@ -1,12 +1,6 @@
 package org.stepic.droid.ui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +8,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -62,15 +65,10 @@ public class NotificationsFragment extends FragmentBase {
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
-            authUserButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getScreenManager().showLaunchScreen(getActivity());
-                }
-            });
+            authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity()));
 //            toolbar.setVisibility(View.GONE); // FIXME: 15.08.17 hide, when it is needed
             tabLayout.setVisibility(View.GONE);
             needAuthRootView.setVisibility(View.VISIBLE);
@@ -101,7 +99,7 @@ public class NotificationsFragment extends FragmentBase {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.notification_center_menu, menu);
     }
 
@@ -124,6 +122,7 @@ public class NotificationsFragment extends FragmentBase {
         }
 
         @Override
+        @NonNull
         public Fragment getItem(int position) {
             Timber.d("getItem %d", position);
             return NotificationListFragment.newInstance(position);

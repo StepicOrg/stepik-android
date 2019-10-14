@@ -2,7 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import java.util.*
+import java.util.Arrays
 
 data class CoursesCarouselInfo(
     val colorType: CoursesCarouselColorType,

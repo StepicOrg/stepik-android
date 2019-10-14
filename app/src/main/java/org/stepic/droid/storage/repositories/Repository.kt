@@ -1,6 +1,6 @@
 package org.stepic.droid.storage.repositories
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 
 /**
  * T – type,

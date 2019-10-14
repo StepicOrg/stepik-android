@@ -1,16 +1,16 @@
 package org.stepik.android.view.step_quiz_code.ui.adapter.delegate
 
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.content.res.AppCompatResources
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.item_step_quiz_code_detail_sample.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.base.ui.drawable.GravityDrawable
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CodeDetailSampleAdapterDelegate : AdapterDelegate<CodeDetail, DelegateViewHolder<CodeDetail>>() {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CodeDetail> =

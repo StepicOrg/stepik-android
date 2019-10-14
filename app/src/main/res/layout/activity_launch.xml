@@ -8,7 +8,7 @@
     android:overScrollMode="never"
     tools:context=".ui.activities.LaunchActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -90,7 +90,7 @@
                 tools:text="Sign in with social accounts"
                 tools:ignore="MissingPrefix"/>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/socialListRecyclerView"
                 android:padding="12dp"
                 android:clipToPadding="false"
@@ -123,5 +123,5 @@
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -1,14 +1,15 @@
 package org.stepik.android.view.step_content_video.ui.fragment
 
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_step_content_video.*
 import kotlinx.android.synthetic.main.view_course_info_video.*
@@ -18,16 +19,15 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.snackbar
-import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
@@ -119,7 +119,7 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
         val videoLengthText = (state as? VideoStepContentView.State.Loaded)
             ?.videoLength
 
-        videoLength.changeVisibility(needShow = videoLengthText != null)
+        videoLength.isVisible = videoLengthText != null
         videoLength.text = videoLengthText
     }
 

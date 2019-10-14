@@ -11,6 +11,7 @@ import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialog
 import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback {
     companion object {
@@ -63,7 +64,7 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
                     val dialogFragment = AllowMobileDataDialogFragment.newInstance()
                     dialogFragment.setTargetFragment(this@SettingsFragment, 0)
                     if (!dialogFragment.isAdded) {
-                        dialogFragment.show(fragmentManager, null)
+                        dialogFragment.show(requireFragmentManager(), null)
                     }
                 }
             }
@@ -73,31 +74,27 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
         videoQualityView.setOnClickListener {
             val videoDialog = VideoQualityDialog.newInstance(forPlaying = false)
             if (!videoDialog.isAdded) {
-                videoDialog.show(fragmentManager, null)
+                videoDialog.show(requireFragmentManager(), null)
             }
         }
 
         videoPlayingQualityView.setOnClickListener {
             val videoDialog = VideoQualityDialog.newInstance(forPlaying = true)
             if (!videoDialog.isAdded) {
-                videoDialog.show(fragmentManager, null)
+                videoDialog.show(requireFragmentManager(), null)
             }
         }
 
         storageManagementButton.setOnClickListener { screenManager.showStorageManagement(activity) }
 
         langWidgetActionButton.setOnClickListener {
-            CoursesLangDialog.newInstance().show(fragmentManager, null)
+            CoursesLangDialog.newInstance().show(requireFragmentManager(), null)
         }
 
         fontSizeSettingsButton.setOnClickListener {
-            val fragmentManager = fragmentManager
-                ?.takeIf { it.findFragmentByTag(ChooseFontSizeDialogFragment.TAG) == null }
-                ?: return@setOnClickListener
-
             ChooseFontSizeDialogFragment
                 .newInstance()
-                .show(fragmentManager, ChooseFontSizeDialogFragment.TAG)
+                .showIfNotExists(requireFragmentManager(), ChooseFontSizeDialogFragment.TAG)
         }
     }
 

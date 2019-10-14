@@ -5,9 +5,9 @@ import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.mapper.CommentsDataMapper
 import org.stepik.android.domain.comment.model.CommentsData
-import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.domain.comment.repository.CommentRepository
 import org.stepik.android.domain.discussion_proxy.mapper.getOrdering
+import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.domain.vote.repository.VoteRepository
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy

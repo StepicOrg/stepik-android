@@ -125,8 +125,8 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putBoolean(RESOLVING_ACCOUNT_KEY, resolvingWasShown)
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putBoolean(RESOLVING_ACCOUNT_KEY, resolvingWasShown)
         super.onSaveInstanceState(outState)
     }
 

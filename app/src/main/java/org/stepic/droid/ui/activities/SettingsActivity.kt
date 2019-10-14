@@ -1,8 +1,8 @@
 package org.stepic.droid.ui.activities
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.MenuItem
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.SettingsFragment
@@ -38,6 +38,6 @@ open class SettingsActivity : SingleFragmentActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+        overridePendingTransition(R.anim.no_transition, R.anim.push_down)
     }
 }

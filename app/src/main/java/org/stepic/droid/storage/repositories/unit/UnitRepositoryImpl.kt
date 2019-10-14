@@ -1,9 +1,9 @@
 package org.stepic.droid.storage.repositories.unit
 
-import org.stepik.android.model.Unit
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.web.Api
+import org.stepik.android.model.Unit
 import javax.inject.Inject
 
 class UnitRepositoryImpl

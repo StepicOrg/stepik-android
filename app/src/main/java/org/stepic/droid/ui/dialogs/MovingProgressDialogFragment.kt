@@ -2,13 +2,13 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
 
 class MovingProgressDialogFragment : DialogFragment() {
     companion object {
         fun newInstance(): DialogFragment =
-                MovingProgressDialogFragment()
+            MovingProgressDialogFragment()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

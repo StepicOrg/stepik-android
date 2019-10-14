@@ -3,12 +3,12 @@ package org.stepik.android.view.comment.ui.adapter.decorator
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.support.annotation.ColorInt
-import android.support.v7.widget.RecyclerView
 import android.view.View
-import org.stepic.droid.ui.util.children
+import androidx.annotation.ColorInt
+import androidx.core.view.children
+import androidx.recyclerview.widget.RecyclerView
 import org.stepik.android.presentation.comment.model.CommentItem
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CommentItemDecoration(
     @ColorInt separatorColor: Int,
@@ -34,7 +34,7 @@ class CommentItemDecoration(
     }
 
     override fun onDrawOver(c: Canvas, parent: RecyclerView, state: RecyclerView.State) {
-        for (view in parent.children()) {
+        for (view in parent.children) {
             val separatorBounds = getItemSeparatorBounds(view, parent)
             paint.strokeWidth = separatorBounds.size.toFloat()
             val top = view.top - separatorBounds.size / 2f

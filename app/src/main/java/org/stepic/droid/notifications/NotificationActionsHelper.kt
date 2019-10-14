@@ -1,7 +1,7 @@
 package org.stepic.droid.notifications
 
 import org.stepic.droid.notifications.model.Notification
-import java.util.*
+import java.util.HashSet
 
 object NotificationActionsHelper {
     private val validActions = HashSet<String>(13)

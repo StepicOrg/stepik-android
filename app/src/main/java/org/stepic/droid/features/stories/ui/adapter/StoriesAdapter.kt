@@ -1,19 +1,19 @@
 package org.stepic.droid.features.stories.ui.adapter
 
 import android.content.Context
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_story_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.configuration.Config
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.toBitmap
 import ru.nobird.android.stories.model.Story
 import kotlin.properties.Delegates
@@ -109,13 +109,8 @@ class StoriesAdapter(
                     .centerCrop()
                     .into(coverTarget)
 
-            activeStoryMarker.changeVisibility(!viewedStoryIds.contains(story.id))
-
-            itemView.visibility = if (position == selected) {
-                View.INVISIBLE
-            } else {
-                View.VISIBLE
-            }
+            activeStoryMarker.isGone = story.id in viewedStoryIds
+            itemView.isInvisible = position == selected
         }
     }
 }

@@ -662,6 +662,7 @@
 
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
+    <string name="video_player_control_notification_channel_description">Control panel of video player</string>
     <string name="video_player_in_background_popup">You can play video in background</string>
     <string name="video_player_autoplay_cancel">Stay on this step</string>
 

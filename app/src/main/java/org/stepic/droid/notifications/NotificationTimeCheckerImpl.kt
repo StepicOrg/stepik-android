@@ -1,6 +1,6 @@
 package org.stepic.droid.notifications
 
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 class NotificationTimeCheckerImpl

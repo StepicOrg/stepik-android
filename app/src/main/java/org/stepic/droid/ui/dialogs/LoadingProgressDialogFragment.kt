@@ -2,12 +2,12 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 
 class LoadingProgressDialogFragment : DialogFragment() {
     companion object {
         fun newInstance(): DialogFragment =
-                LoadingProgressDialogFragment()
+            LoadingProgressDialogFragment()
 
         const val TAG = "LoadingProgressDialogFragment"
     }

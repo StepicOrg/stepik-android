@@ -1,9 +1,10 @@
 package org.stepic.droid.ui.adapters
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.cached_video_item.view.*
 import kotlinx.android.synthetic.main.cached_video_item.view.video_icon as cached_video_icon
@@ -16,13 +17,12 @@ import kotlinx.android.synthetic.main.load_imageview.view.*
 import org.stepic.droid.R
 import org.stepic.droid.core.presenters.DownloadsPresenter
 import org.stepic.droid.persistence.model.DownloadItem
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.util.TextUtil.formatBytes
 import org.stepic.droid.util.ThumbnailParser
 
 class DownloadsAdapter(
-        private val downloadsPresenter: DownloadsPresenter
+    private val downloadsPresenter: DownloadsPresenter
 ) : RecyclerView.Adapter<DownloadsAdapter.DownloadsViewHolder>() {
     companion object {
         private const val ACTIVE_DOWNLOAD_VIEW_TYPE = 1
@@ -186,7 +186,7 @@ class DownloadsAdapter(
                 item.bytesDownloaded.toFloat() / item.bytesTotal
             }
 
-            progressWheel.changeVisibility(true)
+            progressWheel.isVisible = true
             progressWheel.setProgressPortion(progress, needAnimation)
         }
     }
@@ -223,7 +223,7 @@ class DownloadsAdapter(
             cachedBytes.text = formatBytes(item.bytesTotal)
 
             loadButton.hideAllChildren()
-            deleteIcon.changeVisibility(true)
+            deleteIcon.isVisible = true
         }
     }
 

@@ -4,7 +4,13 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.LinearGradient
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Shader
 import android.os.Build
 import android.util.AttributeSet
 import android.view.View
@@ -66,7 +72,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         }
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             //we use clipPath in onDraw see https://stackoverflow.com/a/8895894/5222184
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+            setLayerType(LAYER_TYPE_SOFTWARE, null)
         }
 
         basePaint = Paint().apply {
@@ -109,7 +115,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
 
     @SuppressLint("SwitchIntDef")
-    override fun onVisibilityChanged(changedView: View?, visibility: Int) {
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
         //tbh, it may produce the unexpected start (View1->View2->thisView)
         //View2 - Gone

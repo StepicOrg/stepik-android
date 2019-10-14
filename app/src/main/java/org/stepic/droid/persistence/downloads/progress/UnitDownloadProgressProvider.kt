@@ -3,7 +3,6 @@ package org.stepic.droid.persistence.downloads.progress
 import io.reactivex.Observable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.files.ExternalStorageManager
-import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.PersistentState
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.storage.PersistentStateManager

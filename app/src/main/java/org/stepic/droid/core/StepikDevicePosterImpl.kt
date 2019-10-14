@@ -1,6 +1,6 @@
 package org.stepic.droid.core
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import com.google.firebase.iid.FirebaseInstanceId
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.AppSingleton

@@ -3,16 +3,17 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.model.CoursesCarouselInfo;
+import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;

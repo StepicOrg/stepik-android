@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:title=""
                 android:background="?attr/selectableItemBackground"
@@ -175,4 +176,4 @@
             <include layout="@layout/error_no_connection_with_button" />
         </FrameLayout>
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

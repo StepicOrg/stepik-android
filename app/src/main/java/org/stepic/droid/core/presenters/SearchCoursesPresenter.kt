@@ -4,12 +4,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
-import org.stepik.android.model.Course
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
-import java.util.*
+import org.stepik.android.model.Course
+import java.util.ArrayList
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger

@@ -6,9 +6,9 @@ import org.stepic.droid.util.isNotOrdered
  * Class for fast search strings with common prefix
  */
 class AutocompleteDictionary(
-        private val dict: Array<String>,
-        needSort: Boolean = true,
-        private val isCaseSensitive : Boolean = true
+    private val dict: Array<String>,
+    needSort: Boolean = true,
+    private val isCaseSensitive : Boolean = true
 ) {
     companion object {
         /**
@@ -36,18 +36,18 @@ class AutocompleteDictionary(
          * Kotlin's binarySearch provides element position or position where element should be multiplied by -1.
          * This method convert result in second case to positive position.
          */
-        private fun getBinarySearchPosition(pos: Int) =
-                if (pos < 0)
-                    -(pos + 1)
-                else
-                    pos
+        private fun getBinarySearchPosition(pos: Int): Int =
+            if (pos < 0)
+                -(pos + 1)
+            else
+                pos
     }
 
     init {
         if (needSort) {
             dict.sort()
         } else {
-            if (dict.isNotOrdered()) throw IllegalArgumentException("Given array should be sorted")
+            require(!dict.isNotOrdered()) { "Given array should be sorted" }
         }
     }
 

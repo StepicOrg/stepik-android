@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.custom
 
-import android.support.v4.view.ViewPager
 import android.view.View
+import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
 import org.stepic.droid.R
 

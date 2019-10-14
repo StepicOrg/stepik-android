@@ -10,12 +10,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -137,7 +139,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openImage(Context context, String path) {
         analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
         Intent intent = new Intent(context, PhotoViewActivity.class);
-        intent.putExtra(PhotoViewActivity.Companion.getPathKey(), path);
+        intent.putExtra(PhotoViewActivity.pathKey, path);
         context.startActivity(intent);
     }
 
@@ -429,7 +431,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openProfile(Activity activity, long userId) {
         final Intent intent = new Intent(activity, ProfileActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putLong(ProfileActivity.Companion.getOptionalUserIdKey(), userId);
+        bundle.putLong(ProfileActivity.optionalUserIdKey, userId);
         intent.putExtras(bundle);
         activity.startActivity(intent);
     }
@@ -636,7 +638,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void openRemindPassword(AppCompatActivity context) {
         analytic.reportEvent(Analytic.Screens.REMIND_PASSWORD);
-        android.support.v4.app.DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
+        DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
         dialogFragment.show(context.getSupportFragmentManager(), null);
     }
 

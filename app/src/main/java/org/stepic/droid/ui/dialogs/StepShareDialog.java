@@ -3,10 +3,12 @@ package org.stepic.droid.ui.dialogs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
@@ -22,8 +24,6 @@ import org.stepik.android.model.Step;
 import org.stepik.android.model.Unit;
 
 import javax.inject.Inject;
-
-import butterknife.ButterKnife;
 
 public class StepShareDialog extends BottomSheetDialog {
 
@@ -66,9 +66,9 @@ public class StepShareDialog extends BottomSheetDialog {
         int dialogHeight = screenHeight - statusBarHeight;
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, dialogHeight == 0 ? ViewGroup.LayoutParams.MATCH_PARENT : dialogHeight);
 
-        View openInBrowser = ButterKnife.findById(view, R.id.share_open_in_browser);
-        View copyLink = ButterKnife.findById(view, R.id.share_certificate_copy_link);
-        View shareAll = ButterKnife.findById(view, R.id.share_certificate_all);
+        View openInBrowser = view.findViewById( R.id.share_open_in_browser);
+        View copyLink = view.findViewById(R.id.share_certificate_copy_link);
+        View shareAll = view.findViewById(R.id.share_certificate_all);
 
         openInBrowser.setOnClickListener(new View.OnClickListener() {
             @Override

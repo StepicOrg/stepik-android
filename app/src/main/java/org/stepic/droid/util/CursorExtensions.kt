@@ -1,7 +1,7 @@
 package org.stepic.droid.util
 
 import android.database.Cursor
-import java.util.*
+import java.util.Date
 
 
 fun Cursor.getString(columnName: String): String? =

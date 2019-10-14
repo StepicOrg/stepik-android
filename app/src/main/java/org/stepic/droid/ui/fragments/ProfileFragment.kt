@@ -3,10 +3,6 @@ package org.stepic.droid.ui.fragments
 import android.annotation.SuppressLint
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -15,6 +11,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.empty_login.*
@@ -43,15 +45,14 @@ import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.StepikAnimUtils
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
-import org.stepic.droid.util.argument
 import org.stepic.droid.util.copyTextToClipboard
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
+import ru.nobird.android.view.base.ui.extension.argument
 import timber.log.Timber
 import java.util.ArrayList
 import java.util.Date
@@ -149,7 +150,7 @@ class   ProfileFragment : FragmentBase(),
             val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
             if (!dialogFragment.isAdded) {
                 dialogFragment.setTargetFragment(this@ProfileFragment, 0)
-                dialogFragment.show(fragmentManager, null)
+                dialogFragment.show(requireFragmentManager(), null)
             }
         }
 
@@ -247,24 +248,24 @@ class   ProfileFragment : FragmentBase(),
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
         (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
-        achievementsLoadingPlaceholder.changeVisibility(false)
-        achievementsLoadingError.changeVisibility(false)
-        achievementsTilesContainer.changeVisibility(true)
-        achievementsContainer.changeVisibility(true)
+        achievementsLoadingPlaceholder.isVisible = false
+        achievementsLoadingError.isVisible = false
+        achievementsTilesContainer.isVisible = true
+        achievementsContainer.isVisible = true
     }
 
     override fun onAchievementsLoadingError() {
-        achievementsContainer.changeVisibility(true)
-        achievementsLoadingPlaceholder.changeVisibility(false)
-        achievementsLoadingError.changeVisibility(true)
-        achievementsTilesContainer.changeVisibility(false)
+        achievementsContainer.isVisible = true
+        achievementsLoadingPlaceholder.isVisible = false
+        achievementsLoadingError.isVisible = true
+        achievementsTilesContainer.isVisible = false
     }
 
     override fun onAchievementsLoading() {
-        achievementsContainer.changeVisibility(true)
-        achievementsLoadingPlaceholder.changeVisibility(true)
-        achievementsLoadingError.changeVisibility(false)
-        achievementsTilesContainer.changeVisibility(false)
+        achievementsContainer.isVisible = true
+        achievementsLoadingPlaceholder.isVisible = true
+        achievementsLoadingError.isVisible = false
+        achievementsTilesContainer.isVisible = false
     }
 
     /**
@@ -358,8 +359,8 @@ class   ProfileFragment : FragmentBase(),
         }
 
         with(userViewModel) {
-            shortBioInfoContainer.changeVisibility(shortBio.isNotBlank() || information.isNotBlank())
-            shortBioSecondHeader.changeVisibility(shortBio.isNotBlank() && information.isNotBlank())
+            shortBioInfoContainer.isVisible = shortBio.isNotBlank() || information.isNotBlank()
+            shortBioSecondHeader.isVisible = shortBio.isNotBlank() && information.isNotBlank()
             when {
                 shortBio.isBlank() && information.isNotBlank() ->
                     shortBioFirstHeader.setText(R.string.user_info) //show header with 'information'
@@ -446,30 +447,29 @@ class   ProfileFragment : FragmentBase(),
         notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
     }
 
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (localUserViewModel != null) {
             inflater.inflate(R.menu.profile_menu, menu)
 
-            menu?.findItem(R.id.menu_item_edit)?.isVisible =
+            menu.findItem(R.id.menu_item_edit)?.isVisible =
                 localUserViewModel?.isMyProfile == true
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
             R.id.menu_item_share -> {
                 shareProfile()
-                return true
+                true
             }
             R.id.menu_item_edit -> {
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)
                 screenManager.showProfileEdit(context)
-                return true
+                true
             }
+            else ->
+                false
         }
-        return false
-    }
 
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         streakPresenter.setStreakTime(chosenInterval)
@@ -484,17 +484,11 @@ class   ProfileFragment : FragmentBase(),
     }
 
     private fun setStreakInfoVisibility(needShow: Boolean) {
-        val visibility = if (needShow) {
-            View.VISIBLE
-        } else {
-            View.INVISIBLE
-        }
-
-        currentStreakSuffix.visibility = visibility
-        currentStreakValue.visibility = visibility
-        maxStreakSuffix.visibility = visibility
-        maxStreakValue.visibility = visibility
-        streakIndicator.visibility = visibility
+        currentStreakSuffix.isInvisible = !needShow
+        currentStreakValue.isInvisible = !needShow
+        maxStreakSuffix.isInvisible = !needShow
+        maxStreakValue.isInvisible = !needShow
+        streakIndicator.isInvisible = !needShow
     }
 
     private fun setupUserId() {

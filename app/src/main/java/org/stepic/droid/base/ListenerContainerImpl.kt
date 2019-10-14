@@ -1,6 +1,6 @@
 package org.stepic.droid.base
 
-import java.util.*
+import java.util.HashSet
 import javax.inject.Inject
 
 class ListenerContainerImpl<T>

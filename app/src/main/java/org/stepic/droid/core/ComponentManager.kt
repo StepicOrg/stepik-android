@@ -1,6 +1,6 @@
 package org.stepic.droid.core
 
-import android.support.annotation.MainThread
+import androidx.annotation.MainThread
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.downloads.DownloadsComponent

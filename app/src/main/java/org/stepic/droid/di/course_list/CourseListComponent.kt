@@ -9,7 +9,6 @@ import org.stepic.droid.ui.fragments.CourseListFragmentBase
 import org.stepic.droid.ui.fragments.CourseSearchFragment
 import org.stepic.droid.ui.fragments.FastContinueFragment
 import org.stepik.android.view.injection.billing.BillingDataModule
-import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_list.CourseListDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule

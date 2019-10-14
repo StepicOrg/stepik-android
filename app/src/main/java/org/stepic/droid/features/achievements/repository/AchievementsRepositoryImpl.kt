@@ -4,9 +4,9 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.toObservable
-import org.stepik.android.model.achievements.Achievement
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.web.achievements.AchievementsService
+import org.stepik.android.model.achievements.Achievement
 import org.stepik.android.model.achievements.AchievementProgress
 import javax.inject.Inject
 import kotlin.math.min

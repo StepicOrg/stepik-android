@@ -1,15 +1,15 @@
 package org.stepik.android.view.certificate.ui.adapter
 
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.certificate_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.CertificateViewItem
 import org.stepik.android.model.Certificate
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CertificatesAdapterDelegate(
     private val onItemClick: (String) -> Unit,

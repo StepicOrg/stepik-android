@@ -3,16 +3,16 @@ package org.stepic.droid.ui.custom
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Context
-import android.support.annotation.DrawableRes
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SearchView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.DrawableRes
+import androidx.appcompat.widget.SearchView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SearchSuggestionsPresenter
@@ -21,7 +21,6 @@ import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 import javax.inject.Inject
-
 
 class AutoCompleteSearchView
 @JvmOverloads
