@@ -324,6 +324,8 @@ public interface Analytic {
         String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
         String STREAK_SWIPE_TO_CANCEL = "streak_swipe_to_cancel";
         String NIGHT_WITHOUT_SOUND_AND_VIBRATE = "notification_night_without_sound_and_vibrate";
+
+        String NOTIFICATION_SCREEN_OPENED = "notification_screen_opened";
     }
 
     interface Feedback {
@@ -400,6 +402,11 @@ public interface Analytic {
         String CLICK_STREAK_VALUE = "profile_click_streak";
         String CLICK_FULL_NAME = "profile_click_full_name";
         String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
+        String PROFILE_SCREEN_OPENED = "profile_screen_opened";
+
+        interface Params {
+            String STATE = "state";
+        }
     }
 
     interface Streak {
@@ -536,6 +543,14 @@ public interface Analytic {
         interface Params {
             String SIZE = "size";
         }
+    }
+
+    interface Home {
+        String HOME_SCREEN_OPENED = "home_screen_opened";
+    }
+
+    interface Catalog {
+        String CATALOG_SCREEN_OPENED = "catalog_screen_opened";
     }
 
     interface Traces {

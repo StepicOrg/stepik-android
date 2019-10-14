@@ -9,6 +9,8 @@ import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.home_streak_view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.HomeStreakPresenter
@@ -25,6 +27,12 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
     @Inject
     lateinit var homeStreakPresenter: HomeStreakPresenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Home.HOME_SCREEN_OPENED)
+        analytic.reportEvent(Analytic.Home.HOME_SCREEN_OPENED)
+    }
 
     override fun injectComponent() {
         App.component()
