@@ -374,6 +374,8 @@
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
     <string name="profile_user_id" translatable="false">User ID: %d</string>
+    <string name="profile_self_state" translatable="false">self</string>
+    <string name="profile_other_state" translatable="false">other</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>

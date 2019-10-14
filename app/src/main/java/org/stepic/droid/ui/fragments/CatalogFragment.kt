@@ -72,6 +72,8 @@ class CatalogFragment : FragmentBase(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
+        analytic.reportEvent(Analytic.Catalog.CATALOG_SCREEN_OPENED)
     }
 
     override fun injectComponent() {

@@ -176,4 +176,24 @@ interface AmplitudeAnalytic {
             const val SIZE = "size"
         }
     }
+
+    object Home {
+        const val HOME_SCREEN_OPENED = "Home screen opened"
+    }
+
+    object Catalog {
+        const val CATALOG_SCREEN_OPENED = "Catalog screen opened"
+    }
+
+    object Profile {
+        const val PROFILE_SCREEN_OPENED = "Profile screen opened"
+
+        object Params {
+            const val STATE = "state"
+        }
+    }
+
+    object Notifications {
+        const val NOTIFICATION_SCREEN_OPENED = "Notifications screen opened"
+    }
 }
