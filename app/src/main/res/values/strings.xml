@@ -802,4 +802,8 @@
 
     <string name="setting_font_size">Font size in steps</string>
     <string name="setting_font_size_dialog_title">Choose font size</string>
+
+    <!-- Profile -->
+    <string name="profile_self_state" translatable="false">self</string>
+    <string name="profile_other_state" translatable="false">other</string>
 </resources>

@@ -20,6 +20,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
@@ -56,6 +57,7 @@ public class NotificationsFragment extends FragmentBase {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         setHasOptionsMenu(true);
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Notifications.NOTIFICATION_SCREEN_OPENED);
     }
 
     @Nullable
