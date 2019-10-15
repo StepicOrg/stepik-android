@@ -1,10 +1,10 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.content.res.AppCompatResources
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.code.extensionForLanguage

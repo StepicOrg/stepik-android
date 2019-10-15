@@ -31,7 +31,6 @@ import org.stepic.droid.persistence.storage.dao.SystemDownloadsDaoImpl
 import org.stepik.android.view.injection.assignment.AssignmentDataModule
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.lesson.LessonDataModule
-import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.section.SectionDataModule
 import org.stepik.android.view.injection.step.StepDataModule

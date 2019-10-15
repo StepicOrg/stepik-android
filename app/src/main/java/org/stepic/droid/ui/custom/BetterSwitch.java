@@ -1,8 +1,10 @@
 package org.stepic.droid.ui.custom;
+
 import android.content.Context;
-import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+
+import androidx.appcompat.widget.SwitchCompat;
 
 public class BetterSwitch extends SwitchCompat {
     //Constructors here...

@@ -1,8 +1,6 @@
 package org.stepic.droid.ui.activities
 
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -11,6 +9,8 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_register.*
@@ -36,6 +36,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class RegisterActivity : SmartLockActivityBase(), LoginView {
@@ -177,7 +178,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
     private fun createAccount(interactionType: LoginInteractionType) {
         analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
-        hideSoftKeypad()
+        currentFocus?.hideKeyboard()
 
         val firstName = firstNameField.text.toString().trim()
         val lastName = " " // registrationSecondName.text.toString().trim()
@@ -274,7 +275,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
     override fun onSuccessLogin(credentials: Credentials?) {
         ProgressHelper.dismiss(progressBar)
-        if (credentials == null || !checkPlayServices() || !(googleApiClient?.isConnected ?: false)) {
+        if (credentials == null || !checkPlayServices() || googleApiClient?.isConnected != true) {
             openMainFeed()
         } else {
             //only if we have not null data (we can apply smart lock && google api client is connected and available
@@ -289,7 +290,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
     }
 
     override fun onLoadingWhileLogin() {
-        hideSoftKeypad()
+        currentFocus?.hideKeyboard()
         ProgressHelper.activate(progressBar)
     }
 

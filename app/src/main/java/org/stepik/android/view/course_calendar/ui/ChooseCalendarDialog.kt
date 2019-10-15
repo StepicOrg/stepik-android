@@ -5,9 +5,9 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
 import org.stepik.android.domain.calendar.model.CalendarItem
 
@@ -39,7 +39,7 @@ class ChooseCalendarDialog : DialogFragment() {
             .setTitle(R.string.choose_calendar_title)
             .setSingleChoiceItems(adapter, 0, null)
             .setNegativeButton(R.string.cancel, null)
-            .setPositiveButton(R.string.ok) { _, _ ->
+            .setPositiveButton(R.string.ok) { dialog, _ ->
                 dialog.dismiss()
                 val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
                 val chosenCalendarItem = calendarItems[selectedPosition]

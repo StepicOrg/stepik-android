@@ -7,9 +7,8 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.subjects.PublishSubject
 import io.reactivex.rxkotlin.zipWith
-import org.stepik.android.model.adaptive.RatingItem
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
 import org.stepic.droid.adaptive.util.RatingNamesGenerator
 import org.stepic.droid.core.presenters.contracts.AdaptiveRatingView
@@ -19,6 +18,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addDisposable
 import org.stepic.droid.web.Api
+import org.stepik.android.model.adaptive.RatingItem
 import org.stepik.android.remote.user.model.UserResponse
 import retrofit2.HttpException
 import javax.inject.Inject

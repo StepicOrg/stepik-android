@@ -1,7 +1,7 @@
 package org.stepic.droid.persistence.model
 
 import android.app.DownloadManager
-import java.util.*
+import java.util.EnumSet
 
 data class DownloadConfiguration(
     val allowedNetworkTypes: EnumSet<NetworkType> = EnumSet.noneOf(NetworkType::class.java),

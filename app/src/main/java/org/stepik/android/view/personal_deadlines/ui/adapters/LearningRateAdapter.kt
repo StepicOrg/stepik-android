@@ -1,10 +1,10 @@
 package org.stepik.android.view.personal_deadlines.ui.adapters
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_learning_rate.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.inflate

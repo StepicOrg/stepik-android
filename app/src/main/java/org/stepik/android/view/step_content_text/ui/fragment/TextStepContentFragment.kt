@@ -1,21 +1,21 @@
 package org.stepik.android.view.step_content_text.ui.fragment
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
-import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.util.argument
 import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
 import org.stepik.android.presentation.step_content_text.TextStepContentView
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class TextStepContentFragment : Fragment(), TextStepContentView {
@@ -66,7 +66,7 @@ class TextStepContentFragment : Fragment(), TextStepContentView {
                 ?.text
                 ?.takeIf(String::isNotEmpty)
 
-            view.changeVisibility(needShow = text != null)
+            view.isVisible = text != null
             presenter.onSetTextContentSize()
             if (text != null) {
                 view.setText(text)

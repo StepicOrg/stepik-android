@@ -1,10 +1,10 @@
 package org.stepic.droid.persistence.downloads.progress
 
 import org.stepic.droid.persistence.files.ExternalStorageManager
-import org.stepic.droid.persistence.model.SystemDownloadRecord
-import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.PersistentState
+import org.stepic.droid.persistence.model.SystemDownloadRecord
 import java.io.File
 import kotlin.math.max
 

@@ -86,7 +86,7 @@ class ProfileMainFeedPresenter
         view?.showLogoutLoading()
         profile = null
         view?.showAnonymous()
-        analytic.reportEvent(org.stepic.droid.analytic.Analytic.Interaction.CLICK_YES_LOGOUT)
+        analytic.reportEvent(Analytic.Interaction.CLICK_YES_LOGOUT)
         stepikLogoutManager.logout {
             view?.onLogoutSuccess()
         }

@@ -2,8 +2,8 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -100,7 +100,7 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
         val builder = AlertDialog.Builder(requireContext())
         builder
             .setTitle(R.string.video_quality_playing)
-            .setSingleChoiceItems(adapter, position) { _, which ->
+            .setSingleChoiceItems(adapter, position) { dialog, which ->
                 val urlQuality = listOfVideoUrl[which]
                 (activity as? Callback)?.onQualityChanged(newUrlQuality = urlQuality)
                 dialog.dismiss()

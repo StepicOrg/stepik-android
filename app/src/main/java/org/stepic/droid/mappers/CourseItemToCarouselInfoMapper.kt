@@ -1,8 +1,8 @@
 package org.stepic.droid.mappers
 
-import org.stepik.android.model.CourseCollection
 import org.stepic.droid.model.CoursesCarouselColorType
 import org.stepic.droid.model.CoursesCarouselInfo
+import org.stepik.android.model.CourseCollection
 import javax.inject.Inject
 
 class CourseItemToCarouselInfoMapper

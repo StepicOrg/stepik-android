@@ -21,7 +21,9 @@
 package org.stepic.droid.util;
 
 import android.os.Environment;
+
 import org.stepic.droid.base.App;
+
 import java.util.HashSet;
 
 public class AndroidDevices {

@@ -3,8 +3,9 @@ package org.stepic.droid.features.achievements.ui.dialogs
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.view.*
+import android.view.LayoutInflater
+import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
@@ -12,9 +13,8 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.wrapWithGlide
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class AchievementDetailsDialog: DialogFragment() {
@@ -61,7 +61,7 @@ class AchievementDetailsDialog: DialogFragment() {
             } else {
                 getString(R.string.achievement_remaining_exp, scoreDiff)
             }
-            achievementRest.changeVisibility(scoreDiff > 0)
+            achievementRest.isVisible = scoreDiff > 0
         }
 
         val builder = MaterialDialog.Builder(requireContext())

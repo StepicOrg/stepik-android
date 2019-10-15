@@ -2,12 +2,14 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-
-import org.stepik.android.model.Lesson
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.util.*
+import org.stepic.droid.util.DbParseHelper
+import org.stepic.droid.util.getBoolean
+import org.stepic.droid.util.getDate
+import org.stepic.droid.util.getLong
+import org.stepic.droid.util.getString
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
-
+import org.stepik.android.model.Lesson
 import javax.inject.Inject
 
 class LessonDaoImpl

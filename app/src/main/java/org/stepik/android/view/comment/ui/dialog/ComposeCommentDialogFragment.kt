@@ -1,30 +1,30 @@
 package org.stepik.android.view.comment.ui.dialog
 
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.dialog_compose_comment.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.argument
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
+import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class ComposeCommentDialogFragment :

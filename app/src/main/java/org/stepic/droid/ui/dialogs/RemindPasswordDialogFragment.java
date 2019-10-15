@@ -3,11 +3,7 @@ package org.stepic.droid.ui.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -19,6 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -61,36 +62,23 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
         @SuppressLint("InflateParams") //it is dialog and it shoud not have any parent
         View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_remind_password, null, false);
-        emailTextWrapper = ButterKnife.findById(v, R.id.emailViewWrapper);
-        rootView = ButterKnife.findById(v, R.id.root_view_dialog);
+        emailTextWrapper = v.findViewById(R.id.emailViewWrapper);
+        rootView = v.findViewById(R.id.root_view_dialog);
         rootView.requestFocus();
 
         progressLogin = new LoadingProgressDialog(getContext());
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setTitle(R.string.remind_password)
                 .setView(v)
-                .setPositiveButton(R.string.send, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
+                .setPositiveButton(R.string.send, (dialog, which) -> {})
                 .setNegativeButton(R.string.cancel, null);
         final AlertDialog alertDialog = builder.create();
-        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-                bindEmailChangeToButton(b);
-                b.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        sendEmail(alertDialog);
-                    }
-                });
-            }
+        alertDialog.setOnShowListener(dialog -> {
+            Button b = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            bindEmailChangeToButton(b);
+            b.setOnClickListener(view -> sendEmail(alertDialog));
         });
 
         if (emailTextWrapper.getEditText() != null) {

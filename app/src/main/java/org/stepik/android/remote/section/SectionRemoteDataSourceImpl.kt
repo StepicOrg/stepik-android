@@ -3,10 +3,10 @@ package org.stepik.android.remote.section
 import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.stepic.droid.web.Api
-import org.stepik.android.remote.section.model.SectionResponse
 import org.stepik.android.data.section.source.SectionRemoteDataSource
 import org.stepik.android.model.Section
 import org.stepik.android.remote.base.chunkedSingleMap
+import org.stepik.android.remote.section.model.SectionResponse
 import javax.inject.Inject
 
 class SectionRemoteDataSourceImpl

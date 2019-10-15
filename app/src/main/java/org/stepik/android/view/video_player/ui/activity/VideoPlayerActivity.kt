@@ -4,8 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -13,13 +11,16 @@ import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.IBinder
-import android.support.annotation.DrawableRes
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.PopupMenu
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -35,7 +36,6 @@ import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
@@ -157,7 +157,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             showChooseRateMenu(it)
         }
 
-        moreItemsView.changeVisibility(false)
+        qualityView.isVisible = false
 
         playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
@@ -281,9 +281,17 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         videoRateChooser?.setImageDrawable(videoPlayerData.videoPlaybackRate.icon)
 
-        moreItemsView.changeVisibility(true)
-        moreItemsView.setOnClickListener {
-            showMoreItemsPopup(it, videoPlayerData)
+        qualityView.isVisible = true
+        qualityView.text = getString(R.string.video_player_quality_icon, videoPlayerData.videoQuality)
+        qualityView.setOnClickListener {
+            val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
+            val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
+            val nowPlaying = videoPlayerData.videoUrl
+
+            val dialog = VideoQualityDialogInPlayer.newInstance(externalVideo, cachedVideo, nowPlaying)
+            if (!dialog.isAdded) {
+                dialog.show(supportFragmentManager, null)
+            }
         }
     }
 
@@ -299,35 +307,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             playerView.hideController()
         }
         popupMenu.show()
-        playerView.showController()
-    }
-
-    private fun showMoreItemsPopup(view: View, videoPlayerData: VideoPlayerData) {
-        val morePopupMenu = PopupMenu(this, view)
-        morePopupMenu.inflate(R.menu.video_more_menu)
-
-        morePopupMenu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.video_quality -> {
-                    val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
-                    val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
-                    val nowPlaying = videoPlayerData.videoUrl
-
-                    val dialog = VideoQualityDialogInPlayer.newInstance(externalVideo, cachedVideo, nowPlaying)
-                    if (!dialog.isAdded) {
-                        dialog.show(supportFragmentManager, null)
-                    }
-
-                    true
-                }
-                else -> false
-            }
-        }
-
-        morePopupMenu.setOnDismissListener {
-            playerView.hideController()
-        }
-        morePopupMenu.show()
         playerView.showController()
     }
 

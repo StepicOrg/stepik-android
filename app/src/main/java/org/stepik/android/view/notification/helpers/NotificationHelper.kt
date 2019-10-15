@@ -2,8 +2,8 @@ package org.stepik.android.view.notification.helpers
 
 import android.app.PendingIntent
 import android.graphics.Bitmap
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.TaskStackBuilder
+import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import org.stepic.droid.notifications.model.Notification
 import org.stepik.android.model.Course
 

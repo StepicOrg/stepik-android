@@ -1,14 +1,14 @@
 package org.stepik.android.view.step_quiz_matching.ui.adapter.delegate
 
-import android.support.v4.view.ViewCompat
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import kotlinx.android.synthetic.main.item_step_quiz_sorting.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class MatchingItemOptionAdapterDelegate(
     private val adapter: DefaultDelegateAdapter<MatchingItem>,

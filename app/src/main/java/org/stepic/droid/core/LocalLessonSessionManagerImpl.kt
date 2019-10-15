@@ -1,8 +1,8 @@
 package org.stepic.droid.core
 
-import org.stepik.android.model.attempts.Attempt
 import org.stepic.droid.model.LessonSession
 import org.stepik.android.model.Submission
+import org.stepik.android.model.attempts.Attempt
 import javax.inject.Inject
 
 class LocalLessonSessionManagerImpl

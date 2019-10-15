@@ -1,11 +1,6 @@
 package org.stepik.android.view.step.ui.fragment
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutCompat
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -13,6 +8,12 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_step.*
 import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
@@ -21,21 +22,21 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.argument
 import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
+import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class StepFragment : Fragment(), StepView,
@@ -134,9 +135,9 @@ class StepFragment : Fragment(), StepView,
 
     private fun setStepQuizFragment(isNeedReload: Boolean) {
         val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
-        stepContentSeparator.changeVisibility(isStepHasQuiz)
-        stepQuizContainer.changeVisibility(isStepHasQuiz)
-        stepQuizError.changeVisibility(false)
+        stepContentSeparator.isVisible = isStepHasQuiz
+        stepQuizContainer.isVisible = isStepHasQuiz
+        stepQuizError.isVisible = false
         if (isStepHasQuiz) {
             val isQuizFragmentEmpty = childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null
 
@@ -180,12 +181,11 @@ class StepFragment : Fragment(), StepView,
     private fun showShareDialog() {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(StepShareDialogFragment.TAG) == null }
             ?: return
 
         StepShareDialogFragment
             .newInstance(stepWrapper.step, lessonData.lesson, lessonData.unit)
-            .show(supportFragmentManager, StepShareDialogFragment.TAG)
+            .showIfNotExists(supportFragmentManager, StepShareDialogFragment.TAG)
     }
 
     override fun setState(state: StepView.State) {
@@ -199,9 +199,9 @@ class StepFragment : Fragment(), StepView,
                     setStepQuizFragment(isNeedReloadQuiz)
                 Step.Status.PREPARING,
                 Step.Status.ERROR -> {
-                    stepContentSeparator.changeVisibility(true)
-                    stepQuizContainer.changeVisibility(false)
-                    stepQuizError.changeVisibility(true)
+                    stepContentSeparator.isVisible = true
+                    stepQuizContainer.isVisible = false
+                    stepQuizError.isVisible = true
                 }
             }
         }

@@ -5,13 +5,12 @@ import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.support.annotation.ColorInt
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.ColorInt
 import org.stepic.droid.R
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DpPixelsHelper
-
 
 /**
  * this view has different implementation of onDraw, based on stroke of circle

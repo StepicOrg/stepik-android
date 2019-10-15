@@ -3,8 +3,9 @@ package org.stepic.droid.util;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.support.v4.widget.NestedScrollView;
 import android.view.View;
+
+import androidx.core.widget.NestedScrollView;
 
 public class DisplayUtils {
     // A method to find height of the status bar

@@ -1,23 +1,23 @@
 package org.stepik.android.view.lesson.ui.activity
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.content.res.AppCompatResources
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
@@ -29,7 +29,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.DeviceInfoUtil
@@ -49,8 +48,11 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView,
@@ -145,7 +147,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonPager, stepsAdapter))
         lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
-                hideSoftKeypad()
+                currentFocus?.hideKeyboard()
                 lessonPresenter.onStepOpened(position)
             }
         })
@@ -298,13 +300,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     override fun showRateDialog() {
-        val supportFragmentManager = supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(RateAppDialog.TAG) == null }
-            ?: return
-
-        val dialog = RateAppDialog.newInstance()
         analytic.reportEvent(Analytic.Rating.SHOWN)
-        dialog.show(supportFragmentManager, RateAppDialog.TAG)
+        RateAppDialog
+            .newInstance()
+            .showIfNotExists(supportFragmentManager, RateAppDialog.TAG)
     }
 
     override fun showStreakDialog(streakDays: Int) {
@@ -335,13 +334,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 .setNegativeText(R.string.later_tatle)
                 .setScrollable(true, 10) // number of lines lines
                 .onPositive { _, _ ->
-                    val supportFragmentManager = supportFragmentManager
-                        ?.takeIf { it.findFragmentByTag(RateAppDialog.TAG) == null }
-                        ?: return@onPositive
-
                     analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG)
-                    val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
-                    dialogFragment.show(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+                    TimeIntervalPickerDialogFragment
+                        .newInstance()
+                        .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
                 }
                 .onNegative { _, _ -> onStreakDialogCancelled() }
                 .build()

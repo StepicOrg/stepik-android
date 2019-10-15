@@ -1,12 +1,12 @@
 package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SearchCoursesPresenter
@@ -36,11 +36,11 @@ class CourseSearchFragment: CourseListFragmentBase() {
 
     override fun injectComponent() {
         App
-                .componentManager()
-                .courseGeneralComponent()
-                .courseListComponentBuilder()
-                .build()
-                .inject(this)
+            .componentManager()
+            .courseGeneralComponent()
+            .courseListComponentBuilder()
+            .build()
+            .inject(this)
     }
 
 

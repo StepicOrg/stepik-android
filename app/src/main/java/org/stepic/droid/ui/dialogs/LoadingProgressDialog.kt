@@ -3,12 +3,10 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.StringRes
 import android.view.Window
+import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.dialog_progress.*
-
 import org.stepic.droid.R
-
 
 class LoadingProgressDialog
 @JvmOverloads

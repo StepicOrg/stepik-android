@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_profile_edit_navigation.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.profile_edit.model.ProfileEditItem
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class ProfileEditTextDelegate(
     private val onItemClicked: (ProfileEditItem) -> Unit

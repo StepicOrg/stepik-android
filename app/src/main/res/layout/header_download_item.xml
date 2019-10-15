@@ -18,7 +18,7 @@
         android:layout_toStartOf="@+id/headerButton"
         tools:text="Скачивается..." />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/headerButton"
         style="@style/StepicSmallMaterialButton"
         android:layout_width="wrap_content"

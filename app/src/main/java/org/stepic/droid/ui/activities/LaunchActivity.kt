@@ -3,12 +3,12 @@ package org.stepic.droid.ui.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.widget.GridLayoutManager
 import android.text.Spannable
 import android.text.SpannableString
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -41,6 +41,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.web.Api
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 
@@ -101,7 +102,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
 
         progressHandler = object : ProgressHandler {
             override fun activate() {
-                hideSoftKeypad()
+                currentFocus?.hideKeyboard()
                 ProgressHelper.activate(progressLogin)
             }
 
@@ -357,10 +358,10 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         screenManager.showMainFeedAfterLogin(this, courseFromExtra)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         val adapter = socialListRecyclerView.adapter
         if (adapter is SocialAuthAdapter) {
-            outState?.putSerializable(SOCIAL_ADAPTER_STATE_KEY, adapter.state)
+            outState.putSerializable(SOCIAL_ADAPTER_STATE_KEY, adapter.state)
         }
         super.onSaveInstanceState(outState)
     }

@@ -10,13 +10,13 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.CourseUtil
+import org.stepic.droid.web.Api
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
-import org.stepic.droid.util.CourseUtil
-import org.stepic.droid.web.Api
-import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
 import org.stepik.android.remote.course.model.CourseResponse
+import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
 import org.stepik.android.remote.progress.model.ProgressResponse
 import javax.inject.Inject
 

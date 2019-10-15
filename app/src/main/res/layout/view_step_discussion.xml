@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_step_discussion_button">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepDiscussionsCount"
         android:layout_width="wrap_content"
         android:layout_height="48dp"

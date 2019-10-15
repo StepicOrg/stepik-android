@@ -1,8 +1,8 @@
 package org.stepik.android.view.comment.model
 
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import org.stepic.droid.R
 
 enum class CommentTag(

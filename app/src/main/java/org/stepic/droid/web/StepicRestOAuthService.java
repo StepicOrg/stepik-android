@@ -1,6 +1,6 @@
 package org.stepic.droid.web;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

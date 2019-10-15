@@ -9,7 +9,7 @@
     <include layout="@layout/view_centered_toolbar"/>
 
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/fullScreenCodeTabs"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
@@ -40,7 +40,7 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/fullScreenCodeViewPager"
         android:layout_below="@id/fullScreenCodeSeparator"
         android:layout_width="match_parent"

@@ -1,13 +1,13 @@
 package org.stepik.android.view.comment.ui.adapter.delegate
 
-import android.support.v4.content.ContextCompat
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.view.comment.model.CommentTag
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CommentTagsAdapterDelegate : AdapterDelegate<CommentTag, DelegateViewHolder<CommentTag>>() {
     override fun isForViewType(position: Int, data: CommentTag): Boolean =

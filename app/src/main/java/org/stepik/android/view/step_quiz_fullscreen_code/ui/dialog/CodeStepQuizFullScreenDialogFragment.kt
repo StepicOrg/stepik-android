@@ -2,12 +2,6 @@ package org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +9,13 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
@@ -29,14 +30,13 @@ import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
-import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
+import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, ResetCodeDialogFragment.Callback {
     companion object {
@@ -144,7 +144,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         retryButton = playgroundLayout.stepQuizRetry
         codeLayout = playgroundLayout.codeStepLayout
 
-        retryButton.changeVisibility(false)
+        retryButton.isVisible = false
         setupCodeToolAdapter()
         setupKeyboardExtension()
 
@@ -311,11 +311,11 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
      *  Hiding views upon opening keyboard
      */
     private fun setViewsVisibility(needShow: Boolean) {
-        submitButtonSeparator.changeVisibility(needShow)
-        codeSubmitButton.changeVisibility(needShow)
-        centeredToolbar.changeVisibility(needShow)
-        fullScreenCodeTabs.changeVisibility(needShow)
-        fullScreenCodeSeparator.changeVisibility(needShow)
+        submitButtonSeparator.isVisible = needShow
+        codeSubmitButton.isVisible = needShow
+        centeredToolbar.isVisible = needShow
+        fullScreenCodeTabs.isVisible = needShow
+        fullScreenCodeSeparator.isVisible = needShow
     }
 
     private fun onChangeLanguageClicked() {
