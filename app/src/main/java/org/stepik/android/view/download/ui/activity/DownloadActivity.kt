@@ -1,13 +1,13 @@
 package org.stepik.android.view.download.ui.activity
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_download.*
 import kotlinx.android.synthetic.main.empty_certificates.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
@@ -21,7 +21,7 @@ import org.stepik.android.presentation.download.DownloadPresenter
 import org.stepik.android.presentation.download.DownloadView
 import org.stepik.android.view.download.ui.adapter.DownloadedCoursesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import javax.inject.Inject
 
 class DownloadActivity : FragmentActivityBase(), DownloadView {

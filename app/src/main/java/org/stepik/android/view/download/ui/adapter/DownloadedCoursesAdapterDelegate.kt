@@ -1,9 +1,9 @@
 package org.stepik.android.view.download.ui.adapter
 
 import android.graphics.BitmapFactory
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.downloaded_course_item.view.*
@@ -12,8 +12,8 @@ import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.TextUtil
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class DownloadedCoursesAdapterDelegate(
     private val onItemClick: (DownloadItem) -> Unit
