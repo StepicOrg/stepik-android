@@ -33,9 +33,14 @@ class SqlStepQuizFormDelegate(
         ReplyResult.Success(Reply(solveSql = codeLayout.text.toString()))
 
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
-        val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
-            ?.submission
-        codeLayout.setText(submission?.reply?.solveSql ?: "")
+        val reply = when (state.submissionState) {
+            is StepQuizView.SubmissionState.Empty ->
+                state.submissionState.reply
+
+            is StepQuizView.SubmissionState.Loaded ->
+                state.submissionState.submission.reply
+        }
+        codeLayout.setText(reply?.solveSql ?: "")
         codeLayout.lang = ProgrammingLanguage.SQL.serverPrintableName
         codeLayout.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
     }
