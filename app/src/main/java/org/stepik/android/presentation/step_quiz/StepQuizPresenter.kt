@@ -71,7 +71,7 @@ constructor(
         stepQuizInteractor
             .getSubmission(attemptId)
             .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
-            .toSingle(StepQuizView.SubmissionState.Empty)
+            .toSingle(StepQuizView.SubmissionState.Empty())
 
     /**
      * Attempts
@@ -83,12 +83,16 @@ constructor(
         if (stepQuizInteractor.isNeedRecreateAttemptForNewSubmission(step)) {
             state = StepQuizView.State.Loading
 
+            val reply = (oldState.submissionState as? StepQuizView.SubmissionState.Loaded)
+                ?.submission
+                ?.reply
+
             compositeDisposable += stepQuizInteractor
                 .createAttempt(step.id)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty, oldState.restrictions) },
+                    onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty(reply = reply), oldState.restrictions) },
                     onError = { state = StepQuizView.State.NetworkError }
                 )
         } else {
@@ -96,7 +100,7 @@ constructor(
                 ?.submission
                 ?.let { Submission(id = it.id + 1, attempt = oldState.attempt.id, reply = it.reply, status = Submission.Status.LOCAL) }
                 ?.let { StepQuizView.SubmissionState.Loaded(it) }
-                ?: StepQuizView.SubmissionState.Empty
+                ?: StepQuizView.SubmissionState.Empty()
 
             state = oldState.copy(submissionState = submissionState)
         }
