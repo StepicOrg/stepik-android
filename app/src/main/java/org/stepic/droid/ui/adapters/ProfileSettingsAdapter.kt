@@ -1,12 +1,12 @@
 package org.stepic.droid.ui.adapters
 
 import android.app.Activity
-import android.support.v4.app.Fragment
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
@@ -15,11 +15,11 @@ import org.stepic.droid.util.clickProfileSettings
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 
 class ProfileSettingsAdapter(
-        private val activity: Activity,
-        private val profileSettingsList: ArrayList<ProfileSettingsViewModel>,
-        private val screenManager: ScreenManager,
-        private val fragment: Fragment,
-        private val analytic: Analytic
+    private val activity: Activity,
+    private val profileSettingsList: ArrayList<ProfileSettingsViewModel>,
+    private val screenManager: ScreenManager,
+    private val fragment: Fragment,
+    private val analytic: Analytic
 ) : RecyclerView.Adapter<ProfileSettingsAdapter.SettingsViewHolder>() {
 
 
@@ -34,12 +34,14 @@ class ProfileSettingsAdapter(
 
     override fun getItemCount(): Int = profileSettingsList.size
 
-    class SettingsViewHolder(itemView: View,
-                             private val profileSettingsList: ArrayList<ProfileSettingsViewModel>,
-                             private val screenManager: ScreenManager,
-                             private val activity: Activity,
-                             private val fragment: Fragment,
-                             private val analytic: Analytic)
+    class SettingsViewHolder(
+        itemView: View,
+        private val profileSettingsList: ArrayList<ProfileSettingsViewModel>,
+        private val screenManager: ScreenManager,
+        private val activity: Activity,
+        private val fragment: Fragment,
+        private val analytic: Analytic
+    )
         : RecyclerView.ViewHolder(itemView) {
 
         private val optionTitle = itemView.findViewById<TextView>(R.id.optionTitle)

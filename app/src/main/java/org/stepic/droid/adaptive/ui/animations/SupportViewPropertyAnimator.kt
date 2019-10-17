@@ -1,6 +1,10 @@
 package org.stepic.droid.adaptive.ui.animations
 
-import android.animation.*
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.animation.TimeInterpolator
 import android.view.View
 
 class SupportViewPropertyAnimator(private val view: View) {

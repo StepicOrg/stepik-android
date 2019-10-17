@@ -13,7 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
     }
 
@@ -32,10 +32,6 @@ dependencies {
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric
-    androidTestImplementation(libraries.supportTestRunner) {
-        exclude group: 'com.android.support'
-    }
-    androidTestImplementation(libraries.espressoCore) {
-        exclude group: 'com.android.support'
-    }
+    androidTestImplementation libraries.testRunner
+    androidTestImplementation libraries.espressoCore
 }

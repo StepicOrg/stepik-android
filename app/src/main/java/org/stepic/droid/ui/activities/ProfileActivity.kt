@@ -3,9 +3,9 @@ package org.stepic.droid.ui.activities
 import android.content.pm.ShortcutManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.SingleFragmentActivity
@@ -13,12 +13,11 @@ import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepic.droid.util.AppConstants
 
-
 class ProfileActivity : SingleFragmentActivity(),
-        CloseButtonInToolbar {
+    CloseButtonInToolbar {
 
     companion object {
-        val optionalUserIdKey = "optionalUserIdKey"
+        const val optionalUserIdKey = "optionalUserIdKey"
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
@@ -31,32 +30,32 @@ class ProfileActivity : SingleFragmentActivity(),
     }
 
     override fun createFragment(): Fragment {
-        if (intent?.action?.equals(AppConstants.OPEN_SHORTCUT_PROFILE) ?: false) {
+        if (intent?.action?.equals(AppConstants.OPEN_SHORTCUT_PROFILE) == true) {
             analytic.reportEvent(Analytic.Shortcut.OPEN_PROFILE)
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-                val shortcutManager = getSystemService(ShortcutManager::class.java)
-                shortcutManager.reportShortcutUsed(AppConstants.PROFILE_SHORTCUT_ID)
+                getSystemService(ShortcutManager::class.java)
+                    ?.reportShortcutUsed(AppConstants.PROFILE_SHORTCUT_ID)
             }
         }
 
         val userIdInternal: Long? = intent?.extras?.getLong(optionalUserIdKey)
-        if (userIdInternal != null && userIdInternal != 0L) {
-            return ProfileFragment.newInstance(userIdInternal)
+        return if (userIdInternal != null && userIdInternal != 0L) {
+            ProfileFragment.newInstance(userIdInternal)
         } else {
             val dataUri = intent?.data
             val userId = getUserId(dataUri)
-            return ProfileFragment.newInstance(userId)
+            ProfileFragment.newInstance(userId)
         }
     }
 
     private fun getUserId(dataUri: Uri?): Long {
-        if (dataUri == null) return 0;
+        if (dataUri == null) return 0
         analytic.reportEvent(Analytic.Profile.OPEN_BY_LINK)
         val pathSegments = dataUri.pathSegments
-        try {
-            return pathSegments[1].toLong()
+        return try {
+            pathSegments[1].toLong()
         } catch (exception: NumberFormatException) {
-            return -1;
+            -1
         }
     }
 
@@ -67,17 +66,16 @@ class ProfileActivity : SingleFragmentActivity(),
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(org.stepic.droid.R.anim.no_transition, org.stepic.droid.R.anim.push_down)
+        overridePendingTransition(R.anim.no_transition, R.anim.push_down)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean =
         when (item?.itemId) {
             android.R.id.home -> {
-                finish();
-                return true
+                finish()
+                true
             }
+            else ->
+                super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
-    }
-
 }

@@ -2,9 +2,9 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
 import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class ChooseStorageDialog: DialogFragment() {
     companion object {
         fun newInstance() =
-                ChooseStorageDialog()
+            ChooseStorageDialog()
     }
 
     @Inject
@@ -51,7 +51,7 @@ class ChooseStorageDialog: DialogFragment() {
                 .setSingleChoiceItems(adapter, indexChosen) { _, which ->
                     if (which != indexChosen && !youWantMoveDataDialog.isAdded) {
                         youWantMoveDataDialog.targetLocation = storageOptions[which]
-                        youWantMoveDataDialog.show(fragmentManager, null)
+                        youWantMoveDataDialog.show(requireFragmentManager(), null)
                     }
                     dismiss()
                 }

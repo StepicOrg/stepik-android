@@ -1,14 +1,14 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
-import android.support.annotation.StringRes
-import android.support.v4.content.res.ResourcesCompat
 import android.text.Spannable
 import android.text.SpannableString
 import android.util.AttributeSet
 import android.util.LruCache
 import android.util.TypedValue
 import android.view.Gravity
+import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.util.ColorUtil
@@ -18,10 +18,10 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 class PlaceholderTextView
 @JvmOverloads
 constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyleAttr: Int = 0
-) : android.support.v7.widget.AppCompatTextView(context, attrs, defStyleAttr) {
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : androidx.appcompat.widget.AppCompatTextView(context, attrs, defStyleAttr) {
 
     private val wordCache = LruCache<CharSequence, SpannableString>(4)
 

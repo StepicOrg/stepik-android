@@ -1,7 +1,7 @@
 package org.stepik.android.view.course_info.mapper
 
 import android.content.Context
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.stepic.droid.R
 import org.stepik.android.domain.course_info.model.CourseInfoData
 import org.stepik.android.view.course_info.model.CourseInfoItem

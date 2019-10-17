@@ -1,20 +1,20 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.section
 
-import android.support.v4.util.LongSparseArray
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.collection.LongSparseArray
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.StartSnapHelper
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseContentSectionDelegate(
     private val sectionClickListener: CourseContentSectionClickListener,
@@ -101,9 +101,9 @@ class CourseContentSectionDelegate(
 
                 sectionDownloadStatus.status = sectionDownloadStatuses[data.section.id] ?: DownloadProgress.Status.Pending
                 sectionTimeLineAdapter.dates = dates
-                sectionTimeline.changeVisibility(dates.isNotEmpty())
+                sectionTimeline.isVisible = dates.isNotEmpty()
 
-                sectionDownloadStatus.changeVisibility(isEnabled)
+                sectionDownloadStatus.isVisible = isEnabled
                 itemView.isEnabled = section.isExam
 
                 val alpha = if (isEnabled) 1f else 0.4f
@@ -111,7 +111,7 @@ class CourseContentSectionDelegate(
                 sectionPosition.alpha = alpha
                 sectionTimeline.alpha = alpha
 
-                sectionExamDescription.changeVisibility(section.isExam)
+                sectionExamDescription.isVisible = section.isExam
 
                 if (requiredSection != null) {
                     val requiredPoints = requiredSection.progress.cost * requiredSection.section.requiredPercent / 100
@@ -123,9 +123,9 @@ class CourseContentSectionDelegate(
                             requiredSection.section.title
                         )
 
-                    sectionRequirementsDescription.changeVisibility(needShow = true)
+                    sectionRequirementsDescription.isVisible = true
                 } else {
-                    sectionRequirementsDescription.changeVisibility(needShow = false)
+                    sectionRequirementsDescription.isVisible = false
                 }
             }
         }

@@ -2,7 +2,6 @@ package org.stepic.droid.adaptive.ui.custom.morphing
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.widget.FrameLayout

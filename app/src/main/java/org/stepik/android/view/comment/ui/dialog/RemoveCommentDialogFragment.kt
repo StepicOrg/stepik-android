@@ -2,10 +2,10 @@ package org.stepik.android.view.comment.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 
 class RemoveCommentDialogFragment : DialogFragment() {
     companion object {

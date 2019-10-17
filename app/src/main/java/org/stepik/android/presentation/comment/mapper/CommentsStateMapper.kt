@@ -1,10 +1,10 @@
 package org.stepik.android.presentation.comment.mapper
 
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.filterNot
 import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
-import org.stepic.droid.util.filterNot
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView

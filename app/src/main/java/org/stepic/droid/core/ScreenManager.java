@@ -3,15 +3,17 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.model.CoursesCarouselInfo;
+import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
@@ -54,7 +56,7 @@ public interface ScreenManager {
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 
-    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section);
+    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section, boolean backAnimation, boolean isAutoplayEnabled);
 
     void openStepInWeb(Context context, Step step);
 
@@ -74,7 +76,7 @@ public interface ScreenManager {
 
     Intent getCatalogIntent(Context context);
 
-    void showVideo(Activity sourceActivity, @NotNull VideoPlayerMediaData videoPlayerMediaData);
+    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled);
 
     void showSettings(Activity sourceActivity);
 

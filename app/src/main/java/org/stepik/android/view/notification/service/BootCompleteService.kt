@@ -2,7 +2,7 @@ package org.stepik.android.view.notification.service
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.JobIntentService
+import androidx.core.app.JobIntentService
 import org.stepic.droid.base.App
 import org.stepik.android.view.notification.NotificationDelegate
 import javax.inject.Inject

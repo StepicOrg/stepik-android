@@ -23,7 +23,7 @@ public class SearchResolverImplTest {
     @Test
     public void getCourseIdsFromSearchResults_null_resultEmptyArray() {
         long[] actual = searchResolver.getCourseIdsFromSearchResults(null);
-        assertTrue(actual.length == 0);
+        assertEquals(0, actual.length);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class SearchResolverImplTest {
         long[] actual = searchResolver.getCourseIdsFromSearchResults(input);
 
         assertTrue("input was not save empty state", input.isEmpty());
-        assertTrue("result was not empty on empty input", actual.length == 0);
+        assertEquals("result was not empty on empty input", 0, actual.length);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class SearchResolverImplTest {
         input.add(FakeSearchResultGenerator.INSTANCE.generate(0));
 
         long[] actual = searchResolver.getCourseIdsFromSearchResults(input);
-        assertTrue("result was not empty on search results with zero course ids", actual.length == 0);
+        assertEquals("result was not empty on search results with zero course ids", 0, actual.length);
     }
 
     @Test

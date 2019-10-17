@@ -3,17 +3,20 @@ package org.stepic.droid.ui.custom;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.annotation.FontRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
-import android.support.v4.content.res.ResourcesCompat;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
+import androidx.annotation.FontRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.Px;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.TextViewCompat;
 
 import org.jetbrains.annotations.Contract;
 import org.stepic.droid.R;
@@ -92,6 +95,10 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         textView = findViewById(getTextViewId());
         textView.setMovementMethod(LinkMovementMethod.getInstance());
         webView = findViewById(getWebViewId());
+    }
+
+    public void setLineHeight(@Px int lineHeight) {
+        TextViewCompat.setLineHeight(textView, lineHeight);
     }
 
     public void setTextSize(float textSize) {

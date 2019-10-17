@@ -5,7 +5,7 @@ import io.reactivex.Single
 import org.stepic.droid.persistence.downloads.helpers.AddDownloadTaskHelper
 import org.stepic.droid.persistence.downloads.helpers.RemoveDownloadTaskHelper
 import org.stepic.droid.persistence.downloads.resolvers.structure.StructureResolver
-import org.stepic.droid.persistence.model.*
+import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepik.android.domain.network.exception.NetworkRequirementsNotSatisfiedException
 import org.stepik.android.domain.network.repository.NetworkTypeRepository
 

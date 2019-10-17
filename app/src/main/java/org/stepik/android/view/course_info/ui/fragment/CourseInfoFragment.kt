@@ -1,18 +1,17 @@
 package org.stepik.android.view.course_info.ui.fragment
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_course_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.util.argument
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_info.CourseInfoView
 import org.stepik.android.view.course_info.mapper.toSortedItems
@@ -21,6 +20,7 @@ import org.stepik.android.view.course_info.ui.adapter.decorators.CourseInfoBlock
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class CourseInfoFragment : Fragment(), CourseInfoView {
@@ -53,7 +53,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
 
         courseInfoAdapter = CourseInfoAdapter(
             onVideoClicked = { mediaData ->
-                screenManager.showVideo(activity, mediaData)
+                screenManager.showVideo(this, mediaData, false)
             },
             onUserClicked = { user ->
                 screenManager.openProfile(activity, user.id)

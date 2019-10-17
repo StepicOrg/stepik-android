@@ -1,6 +1,6 @@
 package org.stepic.droid.model
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.stepic.droid.R
 
 enum class SearchQuerySource(@DrawableRes val iconRes: Int) {

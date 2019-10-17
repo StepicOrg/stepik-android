@@ -2,22 +2,22 @@ package org.stepik.android.view.lesson.ui.delegate
 
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.support.annotation.DrawableRes
-import android.support.annotation.PluralsRes
-import android.support.annotation.StringRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.widget.PopupWindowCompat
-import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.AppCompatTextView
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.PopupWindow
+import androidx.annotation.DrawableRes
+import androidx.annotation.PluralsRes
+import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.doOnPreDraw
+import androidx.core.widget.PopupWindowCompat
 import kotlinx.android.synthetic.main.tooltip_lesson_info.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.doOnPreDraw
 
 class LessonInfoTooltipDelegate(
     private val view: View

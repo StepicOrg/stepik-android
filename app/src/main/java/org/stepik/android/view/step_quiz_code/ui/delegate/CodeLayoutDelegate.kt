@@ -1,12 +1,15 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.code.extensionForLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
-import org.stepic.droid.ui.util.setCompoundDrawables
 
 class CodeLayoutDelegate(
     codeContainerView: View,
@@ -24,8 +27,22 @@ class CodeLayoutDelegate(
         /**
          * Actions
          */
-        stepQuizActionChangeLang.setOnClickListener { onChangeLanguageClicked() }
-        stepQuizActionChangeLang.setCompoundDrawables(end = R.drawable.ic_arrow_bottom)
+
+        if (codeTemplates.size > 1) {
+            val stepQuizActionChangeLangDrawable = AppCompatResources
+                .getDrawable(stepQuizActionChangeLang.context, R.drawable.ic_arrow_bottom)
+                ?.mutate()
+                ?.let(DrawableCompat::wrap)
+                ?.also {
+                    DrawableCompat
+                        .setTintList(it, ContextCompat.getColorStateList(stepQuizActionChangeLang.context, R.color.color_step_quiz_code_lang_arrow))
+                }
+
+            TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                stepQuizActionChangeLang, null, null, stepQuizActionChangeLangDrawable, null)
+
+            stepQuizActionChangeLang.setOnClickListener { onChangeLanguageClicked() }
+        }
     }
 
     /**

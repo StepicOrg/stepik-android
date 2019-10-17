@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.custom
 
-import android.util.AttributeSet
 import android.content.Context
+import android.util.AttributeSet
 import org.jetbrains.annotations.Contract
 import org.stepic.droid.R
 

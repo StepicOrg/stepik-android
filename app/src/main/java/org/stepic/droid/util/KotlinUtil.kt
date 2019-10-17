@@ -1,8 +1,8 @@
 package org.stepic.droid.util
 
 import org.stepik.android.model.Course
-import java.text.DecimalFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.HashSet
 
 object KotlinUtil {
     fun getListOldPlusUpdated(oldList: List<Course>, newList: List<Course>) =

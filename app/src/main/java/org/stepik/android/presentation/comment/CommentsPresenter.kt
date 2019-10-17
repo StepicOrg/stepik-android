@@ -10,8 +10,8 @@ import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.CommentsData
-import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
+import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.base.PresenterBase

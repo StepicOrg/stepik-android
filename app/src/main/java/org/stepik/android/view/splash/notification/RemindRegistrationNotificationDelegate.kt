@@ -2,7 +2,7 @@ package org.stepik.android.view.splash.notification
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.TaskStackBuilder
+import androidx.core.app.TaskStackBuilder
 import org.stepic.droid.R
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.SplashActivity

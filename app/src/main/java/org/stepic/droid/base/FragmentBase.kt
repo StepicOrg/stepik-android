@@ -3,12 +3,12 @@ package org.stepic.droid.base
 import android.app.DownloadManager
 import android.content.Context
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.v4.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.DrawableRes
+import androidx.fragment.app.Fragment
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import org.stepic.droid.analytic.Analytic

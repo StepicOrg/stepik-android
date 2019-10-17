@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_code.ui.fragment
 
-import android.support.v4.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -16,6 +16,7 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class CodeStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, CodeStepQuizFullScreenDialogFragment.Callback {
     companion object {
@@ -85,12 +86,8 @@ class CodeStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, ChangeCode
     }
 
     private fun onFullScreenClicked(lang: String, code: String) {
-        val supportFragmentManager = fragmentManager
-            ?.takeIf { it.findFragmentByTag(CodeStepQuizFullScreenDialogFragment.TAG) == null }
-            ?: return
-
         val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, codeOptions.codeTemplates, stepWrapper, lessonData)
         dialog.setTargetFragment(this, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
-        dialog.show(supportFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
+        dialog.showIfNotExists(requireFragmentManager(), CodeStepQuizFullScreenDialogFragment.TAG)
     }
 }

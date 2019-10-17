@@ -2,8 +2,8 @@ package org.stepic.droid.base
 
 import android.content.Context
 import android.os.Build
-import android.support.multidex.MultiDexApplication
 import android.webkit.WebView
+import androidx.multidex.MultiDexApplication
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.security.ProviderInstaller
@@ -23,8 +23,8 @@ import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.StethoHelper
-import org.stepic.droid.util.isMainProcess
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
+import ru.nobird.android.view.base.ui.extension.isMainProcess
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLContext

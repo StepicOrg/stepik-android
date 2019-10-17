@@ -30,16 +30,16 @@ class CourseCollectionFragment : CourseListFragmentBase() {
 
     override fun injectComponent() {
         App
-                .componentManager()
-                .courseGeneralComponent()
-                .courseListComponentBuilder()
-                .build()
-                .inject(this)
+            .componentManager()
+            .courseGeneralComponent()
+            .courseListComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initCenteredToolbar(getTitle())
+        initCenteredToolbar(arguments?.getString(TITLE_KEY) ?: "")
         courseCollectionPresenter.attachView(this)
         courseCollectionPresenter.onShowCollections(arguments?.getLongArray(COURSE_IDS) ?: longArrayOf())
 
@@ -68,6 +68,4 @@ class CourseCollectionFragment : CourseListFragmentBase() {
     override fun showEmptyScreen(isShown: Boolean) {
 
     }
-
-    fun getTitle(): String = arguments?.getString(TITLE_KEY) ?: ""
 }

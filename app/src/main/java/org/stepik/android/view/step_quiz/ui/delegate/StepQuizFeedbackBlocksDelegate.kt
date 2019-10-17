@@ -1,10 +1,10 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
 import android.graphics.drawable.AnimationDrawable
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables

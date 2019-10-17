@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             style="@style/SettingCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -80,9 +80,9 @@
                 </FrameLayout>
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/catalogContainer"
             style="@style/SettingCardStyle"
             android:layout_width="match_parent"
@@ -118,9 +118,78 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
+            style="@style/SettingCardStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/SettingHeaderTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/setting_section_learning" />
+
+                <FrameLayout
+                    android:id="@+id/fontSizeSettingsButton"
+                    style="@style/SettingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/non_radius_foreground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/setting_font_size"
+                        android:textSize="16sp"/>
+                </FrameLayout>
+
+                <org.stepic.droid.ui.custom.BetterSwitch
+                    android:id="@+id/fragmentSettingsAutoplay"
+                    style="@style/SettingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/setting_autoplay"
+                    android:text="@string/setting_autoplay"/>
+
+                <org.stepic.droid.ui.custom.BetterSwitch
+                    android:id="@+id/fragmentSettingsDiscountingPolicySwitch"
+                    style="@style/SettingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/discounting_policy_title_settings"
+                    android:text="@string/discounting_policy_title_settings"/>
+
+                <org.stepic.droid.ui.custom.BetterSwitch
+                    android:id="@+id/fragmentSettingsKeepScreenOnSwitch"
+                    style="@style/SettingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/keep_screen_on_title_settings"
+                    android:text="@string/keep_screen_on_title_settings"/>
+
+                <org.stepic.droid.ui.custom.BetterSwitch
+                    android:id="@+id/fragmentSettingsAdaptiveMode"
+                    style="@style/SettingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/adaptive_mode_settings"
+                    android:text="@string/adaptive_mode_settings"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/notificationContainer"
             style="@style/SettingCardStyle"
             android:layout_width="match_parent"
@@ -157,9 +226,9 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             style="@style/SettingCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -186,9 +255,9 @@
                     android:text="@string/calendar_setting_description"/>
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             style="@style/SettingCardStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -221,67 +290,7 @@
                 </FrameLayout>
 
             </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            style="@style/SettingCardStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/SettingHeaderTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/other_title"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsDiscountingPolicySwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/discounting_policy_title_settings"
-                    android:text="@string/discounting_policy_title_settings"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsKeepScreenOnSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/keep_screen_on_title_settings"
-                    android:text="@string/keep_screen_on_title_settings"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsAdaptiveMode"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/adaptive_mode_settings"
-                    android:text="@string/adaptive_mode_settings"/>
-
-                <FrameLayout
-                    android:id="@+id/fontSizeSettingsButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/profile_font_settings_title"
-                        android:textSize="16sp"/>
-                </FrameLayout>
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
     </LinearLayout>
 </ScrollView>

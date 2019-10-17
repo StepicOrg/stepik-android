@@ -17,7 +17,6 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
-import org.stepic.droid.BuildConfig;
 import org.stepic.droid.R;
 
 public class ProgressLatexView extends FrameLayout {

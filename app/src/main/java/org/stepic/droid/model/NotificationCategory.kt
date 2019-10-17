@@ -1,6 +1,6 @@
 package org.stepic.droid.model
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.stepic.droid.R
 
 enum class NotificationCategory(@StringRes val title: Int) {
