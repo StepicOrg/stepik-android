@@ -166,16 +166,26 @@ class StepFragment : Fragment(), StepView,
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.share_menu, menu)
+        inflater.inflate(R.menu.step_menu, menu)
+        menu.findItem(R.id.menu_item_edit)?.isVisible =
+            lessonData.lesson.actions?.editLesson != null
         super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        if (item.itemId == R.id.menu_item_share) {
-            showShareDialog()
-            true
-        } else {
-            super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.menu_item_share -> {
+                showShareDialog()
+                true
+            }
+
+            R.id.menu_item_edit -> {
+
+                true
+            }
+
+         else ->
+             super.onOptionsItemSelected(item)
         }
 
     private fun showShareDialog() {
