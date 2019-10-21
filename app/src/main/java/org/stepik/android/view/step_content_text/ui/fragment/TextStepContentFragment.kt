@@ -2,6 +2,9 @@ package org.stepik.android.view.step_content_text.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -12,18 +15,22 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
 import org.stepik.android.presentation.step_content_text.TextStepContentView
+import org.stepik.android.view.step_edit.ui.dialog.EditStepContentDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class TextStepContentFragment : Fragment(), TextStepContentView {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper): Fragment =
+        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
             TextStepContentFragment()
                 .apply {
                     this.stepWrapper = stepPersistentWrapper
+                    this.lessonData = lessonData
                 }
     }
 
@@ -33,17 +40,19 @@ class TextStepContentFragment : Fragment(), TextStepContentView {
     private lateinit var presenter: TextStepContentPresenter
 
     private var stepWrapper: StepPersistentWrapper by argument()
+    private var lessonData: LessonData by argument()
+
     private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
+
         injectComponent()
 
         presenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(TextStepContentPresenter::class.java)
-
-        retainInstance = true
     }
 
     private fun injectComponent() {
@@ -80,9 +89,47 @@ class TextStepContentFragment : Fragment(), TextStepContentView {
         presenter.attachView(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        setHasOptionsMenu(true)
+    }
+
+    override fun onPause() {
+        setHasOptionsMenu(false)
+        super.onPause()
+    }
+
     override fun onStop() {
         presenter.detachView(this)
         super.onStop()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.step_edit_menu, menu)
+        menu.findItem(R.id.menu_item_edit)?.isVisible =
+            lessonData.lesson.actions?.editLesson != null
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.menu_item_edit -> {
+                showStepEditDialog()
+                true
+            }
+
+            else ->
+                super.onOptionsItemSelected(item)
+        }
+
+    private fun showStepEditDialog() {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?: return
+
+        EditStepContentDialogFragment
+            .newInstance(stepWrapper, lessonData)
+            .showIfNotExists(supportFragmentManager, EditStepContentDialogFragment.TAG)
     }
 
     override fun onDestroy() {

@@ -5,10 +5,4 @@
         android:icon="@drawable/ic_share_dark"
         android:title="@string/share_title"
         app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/menu_item_edit"
-        android:icon="@drawable/ic_edit"
-        android:title="@string/step_action_edit_content"
-        app:showAsAction="ifRoom" />
 </menu>
