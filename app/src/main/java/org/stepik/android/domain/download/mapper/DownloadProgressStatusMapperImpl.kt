@@ -29,7 +29,7 @@ constructor(
         var hasUndownloadedItems = persistentItems.isEmpty()
 
         persistentItems.forEach { item ->
-            when(item.status) {
+            when (item.status) {
                 PersistentItem.Status.COMPLETED -> {
                     val filePath = externalStorageManager.resolvePathForPersistentItem(item)
                     if (filePath == null) {

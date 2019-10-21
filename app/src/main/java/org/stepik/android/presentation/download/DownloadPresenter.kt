@@ -5,7 +5,6 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.download.interactor.DownloadInteractor
 import org.stepik.android.presentation.base.PresenterBase
@@ -38,18 +37,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = {
-                    when(it.status) {
-                        is DownloadProgress.Status.Cached ->
-                            state = downloadItemsStateMapper.addDownloadItem(state as DownloadView.State.DownloadedCoursesLoaded, it) // view?.addCompletedDownload(it)
-
-                        is DownloadProgress.Status.NotCached ->
-                            state = downloadItemsStateMapper.addDownloadItem(state as DownloadView.State.DownloadedCoursesLoaded, it) // view?.removeDownload(it)
-
-                        else ->
-                            state = downloadItemsStateMapper.addDownloadItem(state as DownloadView.State.DownloadedCoursesLoaded, it)
-                    }
-                },
+                onNext = { state = downloadItemsStateMapper.addDownloadItem(state as DownloadView.State.DownloadedCoursesLoaded, it) },
                 onError = emptyOnErrorStub
             )
     }

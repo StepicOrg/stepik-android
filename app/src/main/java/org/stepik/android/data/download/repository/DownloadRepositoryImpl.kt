@@ -27,30 +27,19 @@ constructor(
 
     private val systemDownloadsDao: SystemDownloadsDao,
     private val persistentItemDao: PersistentItemDao,
-//    private val persistentStateManager: PersistentStateManager,
-//    private val stepRepository: StepRepository,
-//
-//    private val downloadTitleResolver: DownloadTitleResolver,
     private val externalStorageManager: ExternalStorageManager,
     private val courseRepository: CourseRepository
 ) : DownloadRepository {
-    override fun getDownloads(): Observable<DownloadItem> = (
-        persistentItemDao.getAllCorrectItems()
+    override fun getDownloads(): Observable<DownloadItem> =
+        (persistentItemDao.getAllCorrectItems()
             .flatMap { it.groupBy { item -> item.task.structure }.map { (a, b) -> a to b }.toObservable() } +
                 updatesObservable
                     .flatMap { structure -> persistentItemDao.getItemsByCourse(structure.course).map { structure to it } }
         )
-//        .map { (structure, items) ->
-//            structure to if (persistentStateManager.getState(structure.course, PersistentState.Type.COURSE) == PersistentState.State.CACHED) {
-//                items
-//            } else {
-//                emptyList()
-//            }
-//        }
         .flatMap { (structure, items) -> getDownloadItem(structure, items) }
 
-    private fun getDownloadItem(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> = (
-            resolveCourse(structure, items) +
+    private fun getDownloadItem(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> =
+        (resolveCourse(structure, items) +
                     intervalUpdatesObservable
                         .switchMap { persistentItemDao.getItemsByCourse(structure.course) }
                         .switchMap { resolveCourse(structure, it) }
@@ -65,22 +54,10 @@ constructor(
             resolveDownloadItem(course, items, records)
         }
 
-//    private fun resolveStep(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> =
-//        stepRepository
-//            .getStep(structure.step, primarySourceType = DataSourceType.CACHE)
-//            .flatMapObservable { step ->
-//                Observables.zip(
-//                    downloadTitleResolver.resolveTitle(step.lesson, step.id).toObservable(),
-//                    getStorageRecords(items)
-//                )
-//            }
-//            .map { (title, records) ->
-//                resolveDownloadItem(items, records)
-//            }
-//
-    private fun getStorageRecords(items: List<PersistentItem>) = Observable
-        .fromCallable { items.filter { it.status == PersistentItem.Status.IN_PROGRESS || it.status == PersistentItem.Status.FILE_TRANSFER } }
-        .flatMap { systemDownloadsDao.get(*it.map(PersistentItem::downloadId).toLongArray()) }
+    private fun getStorageRecords(items: List<PersistentItem>) =
+        Observable
+            .fromCallable { items.filter { it.status == PersistentItem.Status.IN_PROGRESS || it.status == PersistentItem.Status.FILE_TRANSFER } }
+            .flatMap { systemDownloadsDao.get(*it.map(PersistentItem::downloadId).toLongArray()) }
 
     private fun resolveDownloadItem(course: Course, items: List<PersistentItem>, records: List<SystemDownloadRecord>): DownloadItem {
         var bytesDownloaded = 0L
@@ -92,7 +69,7 @@ constructor(
         var hasUndownloadedItems = items.isEmpty()
 
         items.forEach { item ->
-            when(item.status) {
+            when (item.status) {
                 PersistentItem.Status.COMPLETED -> {
                     val filePath = externalStorageManager.resolvePathForPersistentItem(item)
                     if (filePath == null) {
@@ -141,7 +118,6 @@ constructor(
                 DownloadProgress.Status.Cached(bytesTotal)
             }
         }
-
         return DownloadItem(course, status)
     }
 }

@@ -3,11 +3,11 @@ package org.stepik.android.view.download.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_download.*
 import kotlinx.android.synthetic.main.empty_certificates.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
@@ -16,12 +16,12 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepik.android.model.Course
 import org.stepik.android.presentation.download.DownloadPresenter
 import org.stepik.android.presentation.download.DownloadView
 import org.stepik.android.view.download.ui.adapter.DownloadedCoursesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import timber.log.Timber
 import javax.inject.Inject
 
 class DownloadActivity : FragmentActivityBase(), DownloadView {
@@ -100,6 +100,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
     override fun setState(state: DownloadView.State) {
         viewStateDelegate.switchState(state)
         if (state is DownloadView.State.DownloadedCoursesLoaded) {
+            Timber.d("State courses: ${state.courses}")
             downloadedCoursesAdapter.items = state.courses
         }
     }
