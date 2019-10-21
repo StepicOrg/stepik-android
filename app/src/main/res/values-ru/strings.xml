@@ -684,6 +684,7 @@
     <string name="step_discussion_write_first">Написать первый комментарий</string>
 
     <string name="step_action_edit_content">Изменить текст шага</string>
+    <string name="step_action_edit_hint">Текст шага</string>
 
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 

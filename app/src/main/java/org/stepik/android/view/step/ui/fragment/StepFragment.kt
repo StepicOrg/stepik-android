@@ -22,6 +22,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialogFragment
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.lesson.model.LessonData
@@ -34,6 +35,7 @@ import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
+import org.stepik.android.view.step_edit.ui.dialog.EditStepContentDialogFragment
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -169,6 +171,9 @@ class StepFragment : Fragment(), StepView,
         inflater.inflate(R.menu.step_menu, menu)
         menu.findItem(R.id.menu_item_edit)?.isVisible =
             lessonData.lesson.actions?.editLesson != null
+//                    &&
+//            stepWrapper.step.block?.name != AppConstants.TYPE_VIDEO
+
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -180,7 +185,7 @@ class StepFragment : Fragment(), StepView,
             }
 
             R.id.menu_item_edit -> {
-
+                showStepEditDialog()
                 true
             }
 
@@ -196,6 +201,16 @@ class StepFragment : Fragment(), StepView,
         StepShareDialogFragment
             .newInstance(stepWrapper.step, lessonData.lesson, lessonData.unit)
             .showIfNotExists(supportFragmentManager, StepShareDialogFragment.TAG)
+    }
+
+    private fun showStepEditDialog() {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?: return
+
+        EditStepContentDialogFragment
+            .newInstance(stepWrapper, lessonData)
+            .showIfNotExists(supportFragmentManager, EditStepContentDialogFragment.TAG)
     }
 
     override fun setState(state: StepView.State) {
