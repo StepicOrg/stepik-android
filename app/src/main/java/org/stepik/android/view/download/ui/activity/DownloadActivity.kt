@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.activity_download.*
 import kotlinx.android.synthetic.main.empty_certificates.goToCatalog
 import kotlinx.android.synthetic.main.empty_downloading.*
@@ -55,6 +56,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
         downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate { screenManager.showCourseModules(this, it.course) }
 
         with(downloadsRecyclerView) {
+            (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
             adapter = downloadedCoursesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             addItemDecoration(DividerItemDecoration(this@DownloadActivity, LinearLayoutManager.VERTICAL))

@@ -18,10 +18,9 @@ constructor() {
         return if (item == null) {
             DownloadView.State.DownloadedCoursesLoaded(state.courses + downloadItem)
         } else {
-            val oldBytes = (item.status as DownloadProgress.Status.Cached).bytesTotal
             val newBytes = (downloadItem.status as DownloadProgress.Status.Cached).bytesTotal
             val a = courses - item
-            val b = a + downloadItem.copy(status = DownloadProgress.Status.Cached(oldBytes + newBytes))
+            val b = a + downloadItem.copy(status = DownloadProgress.Status.Cached(newBytes))
             DownloadView.State.DownloadedCoursesLoaded(b)
         }
     }
