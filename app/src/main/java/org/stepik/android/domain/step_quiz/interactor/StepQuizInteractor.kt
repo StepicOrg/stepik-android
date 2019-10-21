@@ -120,7 +120,6 @@ constructor(
             AppConstants.TYPE_MATH,
             AppConstants.TYPE_FREE_ANSWER,
             AppConstants.TYPE_CODE,
-            AppConstants.TYPE_SQL,
             AppConstants.TYPE_SORTING,
             AppConstants.TYPE_MATCHING ->
                 false
