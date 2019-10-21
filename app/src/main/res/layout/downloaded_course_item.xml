@@ -50,18 +50,4 @@
         app:layout_constraintBottom_toBottomOf="@id/downloadedCourseImage"
         android:textColor="@color/grey03" />
 
-    <TextView
-        android:id="@+id/downloadedCourseDownloadLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/download_course_delete_label"
-        android:layout_marginEnd="@dimen/course_item_space_between_items"
-        android:layout_marginLeft="@dimen/course_item_space_between_items"
-        android:layout_marginRight="@dimen/course_item_space_between_items"
-        android:layout_marginStart="@dimen/course_item_space_between_items"
-        android:layout_marginTop="@dimen/course_item_space_between_items"
-        app:layout_constraintEnd_toEndOf="@id/downloadedCourseName"
-        app:layout_constraintBottom_toBottomOf="@id/downloadedCourseImage"
-        android:textColor="@color/grey03" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
