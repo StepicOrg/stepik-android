@@ -23,7 +23,6 @@ import org.stepik.android.presentation.download.DownloadView
 import org.stepik.android.view.download.ui.adapter.DownloadedCoursesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
-import timber.log.Timber
 import javax.inject.Inject
 
 class DownloadActivity : FragmentActivityBase(), DownloadView {
@@ -104,7 +103,6 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
     override fun setState(state: DownloadView.State) {
         viewStateDelegate.switchState(state)
         if (state is DownloadView.State.DownloadedCoursesLoaded) {
-            Timber.d("State courses: ${state.courses}")
             downloadedCoursesAdapter.items = state.courses
         }
     }

@@ -2,26 +2,39 @@ package org.stepik.android.presentation.download.mapper
 
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
+import org.stepic.droid.util.mutate
 import org.stepik.android.presentation.download.DownloadView
-import timber.log.Timber
 import javax.inject.Inject
 
 class DownloadItemsStateMapper
 @Inject
 constructor() {
-    fun addDownloadItem(state: DownloadView.State.DownloadedCoursesLoaded, downloadItem: DownloadItem): DownloadView.State.DownloadedCoursesLoaded {
-        val courses = state.courses
-        val item = courses.find { it.course.id == downloadItem.course.id }
-        if (downloadItem.course.id == 76L) {
-            Timber.d("Download item: $downloadItem")
-        }
-        return if (item == null) {
-            DownloadView.State.DownloadedCoursesLoaded(state.courses + downloadItem)
+    fun addDownloadItem(state: DownloadView.State, downloadItem: DownloadItem): DownloadView.State {
+        val downloadedCourses = if (state is DownloadView.State.DownloadedCoursesLoaded) {
+            state.courses
         } else {
-            val newBytes = (downloadItem.status as DownloadProgress.Status.Cached).bytesTotal
-            val a = courses - item
-            val b = a + downloadItem.copy(status = DownloadProgress.Status.Cached(newBytes))
-            DownloadView.State.DownloadedCoursesLoaded(b)
+            emptyList()
+        }
+
+        val itemIndex = downloadedCourses.binarySearch { it.course.id.compareTo(downloadItem.course.id) }
+
+        val courses = downloadedCourses.mutate {
+            if (downloadItem.status is DownloadProgress.Status.Cached) {
+                if (itemIndex < 0) {
+                    add(-itemIndex - 1, downloadItem)
+                } else {
+                    set(itemIndex, downloadItem)
+                }
+            } else {
+                if (itemIndex > -1) {
+                    removeAt(itemIndex)
+                }
+            }
+        }
+        return if (courses.isEmpty()) {
+            DownloadView.State.Empty
+        } else {
+            DownloadView.State.DownloadedCoursesLoaded(courses)
         }
     }
 }

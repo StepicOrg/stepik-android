@@ -37,10 +37,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = {
-                    val stateParameter = state as? DownloadView.State.DownloadedCoursesLoaded ?: DownloadView.State.DownloadedCoursesLoaded(emptyList())
-                    state = downloadItemsStateMapper.addDownloadItem(stateParameter, it)
-                },
+                onNext = { state = downloadItemsStateMapper.addDownloadItem(state, it) },
                 onError = emptyOnErrorStub
             )
     }

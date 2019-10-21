@@ -33,14 +33,12 @@ constructor(
         val linksMap = mutableMapOf<String, String>()
 
         var hasItemsInProgress = false
-        var hasUndownloadedItems = persistentItems.isEmpty()
 
         persistentItems.forEach { item ->
             when (item.status) {
                 PersistentItem.Status.COMPLETED -> {
                     val filePath = externalStorageManager.resolvePathForPersistentItem(item)
                     if (filePath == null) {
-                        hasUndownloadedItems = true
                         return@forEach
                     } else {
                         val fileSize = File(filePath).length()
@@ -55,7 +53,6 @@ constructor(
                 PersistentItem.Status.FILE_TRANSFER -> {
                     val record = downloadRecords.find { it.id == item.downloadId }
                     if (record == null) {
-                        hasUndownloadedItems = true
                         return@forEach
                     } else {
                         bytesDownloaded += record.bytesDownloaded
@@ -65,20 +62,18 @@ constructor(
                 }
 
                 else -> {
-                    hasUndownloadedItems = true
                     return@forEach
                 }
             }
         }
 
         return when {
-            hasUndownloadedItems -> {
-                DownloadProgress.Status.NotCached
-            }
-
             hasItemsInProgress -> {
                 DownloadProgress.Status.Cached(bytesDownloaded)
             }
+
+            bytesTotal == 0L ->
+                DownloadProgress.Status.NotCached
 
             else -> {
                 DownloadProgress.Status.Cached(bytesTotal)
