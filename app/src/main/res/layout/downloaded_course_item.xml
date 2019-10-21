@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/downloadedCourseImage"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/new_course_image_size"
+        android:layout_height="@dimen/new_course_image_size"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="@dimen/course_item_space_between_items"

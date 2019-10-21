@@ -8,10 +8,10 @@ import org.stepik.android.data.download.repository.DownloadRepositoryImpl
 import org.stepik.android.data.download.source.DownloadCacheDataSource
 import org.stepik.android.domain.download.mapper.DownloadProgressStatusMapperImpl
 import org.stepik.android.domain.download.repository.DownloadRepository
-import javax.inject.Named
 
 @Module
 abstract class DownloadDataModule {
+
     @Binds
     internal abstract fun bindDownloadRepository(
         downloadRepositoryImpl: DownloadRepositoryImpl
@@ -23,7 +23,7 @@ abstract class DownloadDataModule {
     ): DownloadCacheDataSource
 
     @Binds
-    @Named("downloads")
+    @DownloadsProgressStatusMapper
     internal abstract fun bindDownloadProgressStatusMapper(
         downloadProgressStatusMapperImpl: DownloadProgressStatusMapperImpl
     ): DownloadProgressStatusMapper

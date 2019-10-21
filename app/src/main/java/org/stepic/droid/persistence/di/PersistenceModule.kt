@@ -8,6 +8,7 @@ import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.di.qualifiers.PersistenceProgressStatusMapper
 import org.stepic.droid.persistence.downloads.DownloadTaskManager
 import org.stepic.droid.persistence.downloads.DownloadTaskManagerImpl
 import org.stepic.droid.persistence.downloads.helpers.AddDownloadTaskHelper
@@ -37,7 +38,6 @@ import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.unit.UnitDataModule
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
-import javax.inject.Named
 
 @Module(includes = [
     ContentModule::class,
@@ -97,7 +97,7 @@ abstract class PersistenceModule {
 
     @Binds
     @PersistenceScope
-    @Named("content_screen")
+    @PersistenceProgressStatusMapper
     abstract fun bindDownloadProgressStatusMapper(downloadProgressStatusMapperImpl: DownloadProgressStatusMapperImpl): DownloadProgressStatusMapper
 
     @Module

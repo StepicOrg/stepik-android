@@ -6,6 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toFlowable
+import org.stepic.droid.di.qualifiers.PersistenceProgressStatusMapper
 import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapper
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.persistence.model.PersistentItem
@@ -15,7 +16,6 @@ import org.stepic.droid.persistence.model.isCorrect
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
-import javax.inject.Named
 
 abstract class DownloadProgressProviderBase<T>(
         private val updatesObservable: Observable<Structure>,
@@ -25,7 +25,7 @@ abstract class DownloadProgressProviderBase<T>(
         private val persistentItemDao: PersistentItemDao,
         private val persistentStateManager: PersistentStateManager,
 
-        @Named("content_screen")
+        @PersistenceProgressStatusMapper
         private val downloadProgressStatusMapper: DownloadProgressStatusMapper
 ): DownloadProgressProvider<T> {
     private companion object {

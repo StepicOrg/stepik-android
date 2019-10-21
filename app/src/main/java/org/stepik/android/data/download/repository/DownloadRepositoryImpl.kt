@@ -18,8 +18,8 @@ import org.stepic.droid.util.plus
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.download.repository.DownloadRepository
 import org.stepik.android.model.Course
+import org.stepik.android.view.injection.download.DownloadsProgressStatusMapper
 import javax.inject.Inject
-import javax.inject.Named
 
 class DownloadRepositoryImpl
 @Inject
@@ -30,7 +30,7 @@ constructor(
     private val systemDownloadsDao: SystemDownloadsDao,
     private val persistentItemDao: PersistentItemDao,
     private val courseRepository: CourseRepository,
-    @Named("downloads")
+    @DownloadsProgressStatusMapper
     private val downloadProgressStatusMapper: DownloadProgressStatusMapper
 ) : DownloadRepository {
     override fun getDownloads(): Observable<DownloadItem> =
