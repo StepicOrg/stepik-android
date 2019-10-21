@@ -15,9 +15,9 @@ import javax.inject.Inject
 class BlockDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations,
-        private val gson: Gson,
-        private val videoDao: VideoDao
+    databaseOperations: DatabaseOperations,
+    private val gson: Gson,
+    private val videoDao: VideoDao
 ) : DaoBase<BlockPersistentWrapper>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): BlockPersistentWrapper {
