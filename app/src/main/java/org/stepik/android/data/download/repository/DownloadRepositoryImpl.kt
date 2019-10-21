@@ -1,12 +1,14 @@
 package org.stepik.android.data.download.repository
 
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.Observables
+import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.toObservable
-import org.stepic.droid.persistence.files.ExternalStorageManager
+import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapper
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.PersistentState
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.model.SystemDownloadRecord
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
@@ -16,9 +18,8 @@ import org.stepic.droid.util.plus
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.download.repository.DownloadRepository
 import org.stepik.android.model.Course
-import java.io.File
 import javax.inject.Inject
-import kotlin.math.max
+import javax.inject.Named
 
 class DownloadRepositoryImpl
 @Inject
@@ -28,97 +29,39 @@ constructor(
 
     private val systemDownloadsDao: SystemDownloadsDao,
     private val persistentItemDao: PersistentItemDao,
-    private val externalStorageManager: ExternalStorageManager,
-    private val courseRepository: CourseRepository
+    private val courseRepository: CourseRepository,
+    @Named("downloads")
+    private val downloadProgressStatusMapper: DownloadProgressStatusMapper
 ) : DownloadRepository {
     override fun getDownloads(): Observable<DownloadItem> =
         (persistentItemDao.getAllCorrectItems()
-            .flatMap { it.groupBy { item -> item.task.structure }.toList().toObservable() } +
+            .flatMap { it.groupBy { item -> item.task.structure.course }.toList().toObservable() } +
                 updatesObservable
-                    .flatMap { structure -> persistentItemDao.getItemsByCourse(structure.course).map { structure to it } }
+                    .flatMap { structure -> persistentItemDao.getItemsByCourse(structure.course).map { structure.course to it } }
         )
-        .flatMap { (structure, items) -> getDownloadItem(structure, items) }
+        .flatMap { (courseId, items) -> getDownloadItem(courseId, items) }
 
-    private fun getDownloadItem(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> =
-        (resolveCourse(structure, items) +
+    private fun getDownloadItem(courseId: Long, items: List<PersistentItem>): Observable<DownloadItem> =
+        (resolveCourse(courseId, items).toObservable() +
                     intervalUpdatesObservable
-                        .switchMap { persistentItemDao.getItemsByCourse(structure.course) }
-                        .switchMap { resolveCourse(structure, it) }
+                        .switchMap { persistentItemDao.getItemsByCourse(courseId) }
+                        .switchMapSingle { resolveCourse(courseId, it) }
             )
         .takeUntil { it.status !is DownloadProgress.Status.InProgress }
 
-    private fun resolveCourse(structure: Structure, items: List<PersistentItem>): Observable<DownloadItem> =
-        Observables.zip(
-            courseRepository.getCourse(structure.course, canUseCache = true).toObservable(),
+    private fun resolveCourse(courseId: Long, items: List<PersistentItem>): Single<DownloadItem> =
+        Singles.zip(
+            courseRepository.getCourse(courseId, canUseCache = true).toSingle(),
             getStorageRecords(items)
         ) { course, records ->
             resolveDownloadItem(course, items, records)
         }
 
-    private fun getStorageRecords(items: List<PersistentItem>) =
-        Observable
+    private fun getStorageRecords(items: List<PersistentItem>): Single<List<SystemDownloadRecord>> =
+        Single
             .fromCallable { items.filter { it.status == PersistentItem.Status.IN_PROGRESS || it.status == PersistentItem.Status.FILE_TRANSFER } }
             .flatMap { systemDownloadsDao.get(*it.mapToLongArray(PersistentItem::downloadId)) }
 
-    private fun resolveDownloadItem(course: Course, items: List<PersistentItem>, records: List<SystemDownloadRecord>): DownloadItem {
-        var bytesDownloaded = 0L
-        var bytesTotal = 0L
-
-        val linksMap = mutableMapOf<String, String>()
-
-        var hasItemsInProgress = false
-        var hasUndownloadedItems = items.isEmpty()
-
-        items.forEach { item ->
-            when (item.status) {
-                PersistentItem.Status.COMPLETED -> {
-                    val filePath = externalStorageManager.resolvePathForPersistentItem(item)
-                    if (filePath == null) {
-                        hasUndownloadedItems = true
-                        return@forEach
-                    } else {
-                        val fileSize = File(filePath).length()
-                        bytesDownloaded += fileSize
-                        bytesTotal += fileSize
-
-                        linksMap[item.task.originalPath] = filePath
-                    }
-                }
-
-                PersistentItem.Status.IN_PROGRESS,
-                PersistentItem.Status.FILE_TRANSFER -> {
-                    val record = records.find { it.id == item.downloadId }
-                    if (record == null) {
-                        hasUndownloadedItems = true
-                        return@forEach
-                    } else {
-                        bytesDownloaded += record.bytesDownloaded
-                        bytesTotal += max(record.bytesDownloaded, record.bytesTotal) // total could be 0
-                        hasItemsInProgress = true
-                    }
-                }
-
-                else -> {
-                    hasUndownloadedItems = true
-                    return@forEach
-                }
-            }
-        }
-
-        val status = when {
-            hasUndownloadedItems -> {
-                DownloadProgress.Status.NotCached
-            }
-
-            hasItemsInProgress -> {
-                val progress = if (bytesTotal <= 0) 0f else bytesDownloaded.toFloat() / bytesTotal
-                DownloadProgress.Status.InProgress(progress)
-            }
-
-            else -> {
-                DownloadProgress.Status.Cached(bytesTotal)
-            }
-        }
-        return DownloadItem(course, status)
-    }
+    private fun resolveDownloadItem(course: Course, items: List<PersistentItem>, records: List<SystemDownloadRecord>): DownloadItem =
+        DownloadItem(course, downloadProgressStatusMapper.countItemProgress(items, records, PersistentState.State.CACHED))
 }

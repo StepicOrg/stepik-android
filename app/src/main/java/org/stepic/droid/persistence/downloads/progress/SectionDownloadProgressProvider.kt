@@ -11,6 +11,7 @@ import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
 import org.stepik.android.model.Section
 import javax.inject.Inject
+import javax.inject.Named
 
 @PersistenceScope
 class SectionDownloadProgressProvider
@@ -22,6 +23,7 @@ constructor(
         systemDownloadsDao: SystemDownloadsDao,
         persistentItemDao: PersistentItemDao,
         persistentStateManager: PersistentStateManager,
+        @Named("content_screen")
         downloadStatusProgressStatusMapper: DownloadProgressStatusMapper
 ): DownloadProgressProviderBase<Section>(updatesObservable, intervalUpdatesObservable, systemDownloadsDao, persistentItemDao, persistentStateManager, downloadStatusProgressStatusMapper), DownloadProgressProvider<Section> {
     override fun Section.getId(): Long = id

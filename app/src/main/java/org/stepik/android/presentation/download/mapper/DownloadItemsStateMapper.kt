@@ -12,8 +12,9 @@ constructor() {
     fun addDownloadItem(state: DownloadView.State.DownloadedCoursesLoaded, downloadItem: DownloadItem): DownloadView.State.DownloadedCoursesLoaded {
         val courses = state.courses
         val item = courses.find { it.course.id == downloadItem.course.id }
-        Timber.d("Item: $item")
-        Timber.d("Download item: $downloadItem")
+        if (downloadItem.course.id == 76L) {
+            Timber.d("Download item: $downloadItem")
+        }
         return if (item == null) {
             DownloadView.State.DownloadedCoursesLoaded(state.courses + downloadItem)
         } else {

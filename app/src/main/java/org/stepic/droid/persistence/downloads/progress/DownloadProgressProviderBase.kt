@@ -3,6 +3,8 @@ package org.stepic.droid.persistence.downloads.progress
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toFlowable
 import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapper
 import org.stepic.droid.persistence.model.DownloadProgress
@@ -13,7 +15,7 @@ import org.stepic.droid.persistence.model.isCorrect
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
-import org.stepic.droid.util.zip
+import javax.inject.Named
 
 abstract class DownloadProgressProviderBase<T>(
         private val updatesObservable: Observable<Structure>,
@@ -23,6 +25,7 @@ abstract class DownloadProgressProviderBase<T>(
         private val persistentItemDao: PersistentItemDao,
         private val persistentStateManager: PersistentStateManager,
 
+        @Named("content_screen")
         private val downloadProgressStatusMapper: DownloadProgressStatusMapper
 ): DownloadProgressProvider<T> {
     private companion object {
@@ -52,7 +55,7 @@ abstract class DownloadProgressProviderBase<T>(
                         Observable.just(DownloadProgress(itemId, DownloadProgress.Status.Pending))
                     else ->
                         getPersistentObservable(itemId)
-                                .concatMap(::fetchSystemDownloads)
+                                .concatMapSingle(::fetchSystemDownloads)
                                 .map { (persistentItems, downloadItems) ->   // count progresses
                                     DownloadProgress(itemId, downloadProgressStatusMapper.countItemProgress(persistentItems, downloadItems, state))
                                 }
@@ -63,7 +66,7 @@ abstract class DownloadProgressProviderBase<T>(
             persistentItemDao.getItems(mapOf(persistentItemKeyFieldColumn to itemId.toString()))
 
     private fun fetchSystemDownloads(items: List<PersistentItem>) =
-            Observable.just(items) zip systemDownloadsDao.get(*items.getDownloadIdsOfCorrectItems())
+            zip(Single.just(items), systemDownloadsDao.get(*items.getDownloadIdsOfCorrectItems()))
 
     private fun getItemUpdateObservable(itemId: Long) =
             updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit }.startWith(kotlin.Unit)

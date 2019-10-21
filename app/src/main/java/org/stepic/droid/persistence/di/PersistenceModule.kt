@@ -37,6 +37,7 @@ import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.unit.UnitDataModule
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
+import javax.inject.Named
 
 @Module(includes = [
     ContentModule::class,
@@ -96,6 +97,7 @@ abstract class PersistenceModule {
 
     @Binds
     @PersistenceScope
+    @Named("content_screen")
     abstract fun bindDownloadProgressStatusMapper(downloadProgressStatusMapperImpl: DownloadProgressStatusMapperImpl): DownloadProgressStatusMapper
 
     @Module

@@ -20,6 +20,13 @@ constructor(
         downloadRecords: List<SystemDownloadRecord>,
         itemState: PersistentState.State
     ): DownloadProgress.Status {
+        if (persistentItems.isEmpty()) {
+            return when (itemState) {
+                PersistentState.State.NOT_CACHED  -> DownloadProgress.Status.NotCached
+                PersistentState.State.IN_PROGRESS -> DownloadProgress.Status.Pending
+                PersistentState.State.CACHED      -> DownloadProgress.Status.Cached(bytesTotal = 0)
+            }
+        }
         var bytesDownloaded = 0L
         var bytesTotal = 0L
 
