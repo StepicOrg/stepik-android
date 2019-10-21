@@ -11,6 +11,7 @@ import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.model.SystemDownloadRecord
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
+import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.download.repository.DownloadRepository
@@ -32,7 +33,7 @@ constructor(
 ) : DownloadRepository {
     override fun getDownloads(): Observable<DownloadItem> =
         (persistentItemDao.getAllCorrectItems()
-            .flatMap { it.groupBy { item -> item.task.structure }.map { (a, b) -> a to b }.toObservable() } +
+            .flatMap { it.groupBy { item -> item.task.structure }.toList().toObservable() } +
                 updatesObservable
                     .flatMap { structure -> persistentItemDao.getItemsByCourse(structure.course).map { structure to it } }
         )
@@ -57,7 +58,7 @@ constructor(
     private fun getStorageRecords(items: List<PersistentItem>) =
         Observable
             .fromCallable { items.filter { it.status == PersistentItem.Status.IN_PROGRESS || it.status == PersistentItem.Status.FILE_TRANSFER } }
-            .flatMap { systemDownloadsDao.get(*it.map(PersistentItem::downloadId).toLongArray()) }
+            .flatMap { systemDownloadsDao.get(*it.mapToLongArray(PersistentItem::downloadId)) }
 
     private fun resolveDownloadItem(course: Course, items: List<PersistentItem>, records: List<SystemDownloadRecord>): DownloadItem {
         var bytesDownloaded = 0L

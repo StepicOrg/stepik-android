@@ -18,12 +18,12 @@ interface PersistentItemDao: IDao<PersistentItem> {
      */
     fun getAllCorrectItems(): Observable<List<PersistentItem>>
 
-    fun getItemsByStep(step: Long) =
+    fun getItemsByStep(step: Long): Observable<List<PersistentItem>> =
             getItems(mapOf(DBStructurePersistentItem.Columns.STEP to step.toString()))
 
-    fun getItemsByStatus(status: PersistentItem.Status) =
+    fun getItemsByStatus(status: PersistentItem.Status): Observable<List<PersistentItem>> =
             getItems(mapOf(DBStructurePersistentItem.Columns.STATUS to status.name))
 
-    fun getItemsByCourse(course: Long) =
+    fun getItemsByCourse(course: Long): Observable<List<PersistentItem>> =
             getItems(mapOf(DBStructurePersistentItem.Columns.COURSE to course.toString()))
 }
