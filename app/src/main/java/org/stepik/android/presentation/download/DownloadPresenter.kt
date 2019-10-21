@@ -22,7 +22,7 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : PresenterBase<DownloadView>() {
-    private var state: DownloadView.State = DownloadView.State.Idle
+    private var state: DownloadView.State = DownloadView.State.DownloadedCoursesLoaded(emptyList())
         set(value) {
             field = value
             view?.setState(state)
@@ -34,10 +34,6 @@ constructor(
     }
 
     fun fetchDownloadedCourses() {
-        if (state != DownloadView.State.Idle) return
-
-        val stateParameter = DownloadView.State.DownloadedCoursesLoaded(emptyList())
-//        state = DownloadView.State.DownloadedCoursesLoaded(emptyList())
         compositeDisposable += downloadInteractor.fetchDownloadItems()
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -45,13 +41,13 @@ constructor(
                 onNext = {
                     when(it.status) {
                         is DownloadProgress.Status.Cached ->
-                            state = downloadItemsStateMapper.addDownloadItem(stateParameter, it) // view?.addCompletedDownload(it)
+                            state = downloadItemsStateMapper.addDownloadItem(state as DownloadView.State.DownloadedCoursesLoaded, it) // view?.addCompletedDownload(it)
 
                         is DownloadProgress.Status.NotCached ->
-                            state = downloadItemsStateMapper.removeDownloadItem(stateParameter, it) // view?.removeDownload(it)
+                            state = downloadItemsStateMapper.addDownloadItem(state as DownloadView.State.DownloadedCoursesLoaded, it) // view?.removeDownload(it)
 
                         else ->
-                            state = downloadItemsStateMapper.addDownloadItem(stateParameter, it)
+                            state = downloadItemsStateMapper.addDownloadItem(state as DownloadView.State.DownloadedCoursesLoaded, it)
                     }
                 },
                 onError = emptyOnErrorStub
