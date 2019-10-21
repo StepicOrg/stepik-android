@@ -63,7 +63,7 @@ class DownloadCompleteService: JobIntentService() {
         val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 .takeIf { it != -1L } ?: return
 
-        val download = systemDownloadsDao.get(downloadId).blockingFirst().firstOrNull()
+        val download = systemDownloadsDao.get(downloadId).blockingGet().firstOrNull()
         val persistentItem = persistentItemDao.get(mapOf(
                 DBStructurePersistentItem.Columns.DOWNLOAD_ID to downloadId.toString(),
                 DBStructurePersistentItem.Columns.STATUS      to PersistentItem.Status.IN_PROGRESS.name // move file only one time
