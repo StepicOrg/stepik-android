@@ -21,7 +21,7 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : PresenterBase<DownloadView>() {
-    private var state: DownloadView.State = DownloadView.State.DownloadedCoursesLoaded(emptyList())
+    private var state: DownloadView.State = DownloadView.State.Empty
         set(value) {
             field = value
             view?.setState(state)
@@ -37,7 +37,10 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = { state = downloadItemsStateMapper.addDownloadItem(state as DownloadView.State.DownloadedCoursesLoaded, it) },
+                onNext = {
+                    val stateParameter = state as? DownloadView.State.DownloadedCoursesLoaded ?: DownloadView.State.DownloadedCoursesLoaded(emptyList())
+                    state = downloadItemsStateMapper.addDownloadItem(stateParameter, it)
+                },
                 onError = emptyOnErrorStub
             )
     }

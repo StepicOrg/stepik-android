@@ -9,7 +9,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_download.*
-import kotlinx.android.synthetic.main.empty_certificates.*
+import kotlinx.android.synthetic.main.empty_certificates.goToCatalog
+import kotlinx.android.synthetic.main.empty_downloading.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -94,6 +95,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
     private fun initViewStateDelegate() {
         viewStateDelegate.addState<DownloadView.State.Idle>()
         viewStateDelegate.addState<DownloadView.State.Loading>(loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<DownloadView.State.Empty>(emptyDownloading)
         viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(downloadsRecyclerView)
     }
 
