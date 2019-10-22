@@ -24,7 +24,10 @@ import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class TextStepContentFragment : Fragment(), TextStepContentView {
+class TextStepContentFragment :
+    Fragment(),
+    TextStepContentView,
+    EditStepContentDialogFragment.Callback {
     companion object {
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
             TextStepContentFragment()
@@ -69,18 +72,24 @@ class TextStepContentFragment : Fragment(), TextStepContentView {
         if (latexLayout == null) {
             latexLayout = view as LatexSupportableEnhancedFrameLayout
 
-            val text = stepWrapper
-                .step
-                .block
-                ?.text
-                ?.takeIf(String::isNotEmpty)
+            invalidateText()
+        }
+    }
 
-            view.isVisible = text != null
-            presenter.onSetTextContentSize()
-            if (text != null) {
-                view.setText(text)
-                view.setTextIsSelectable(true)
-            }
+    private fun invalidateText() {
+        val text = stepWrapper
+            .step
+            .block
+            ?.text
+            ?.takeIf(String::isNotEmpty)
+
+        val view = latexLayout ?: return
+
+        view.isVisible = text != null
+        presenter.onSetTextContentSize()
+        if (text != null) {
+            view.setText(text)
+            view.setTextIsSelectable(true)
         }
     }
 
@@ -123,13 +132,9 @@ class TextStepContentFragment : Fragment(), TextStepContentView {
         }
 
     private fun showStepEditDialog() {
-        val supportFragmentManager = activity
-            ?.supportFragmentManager
-            ?: return
-
         EditStepContentDialogFragment
             .newInstance(stepWrapper, lessonData)
-            .showIfNotExists(supportFragmentManager, EditStepContentDialogFragment.TAG)
+            .showIfNotExists(childFragmentManager, EditStepContentDialogFragment.TAG)
     }
 
     override fun onDestroy() {
@@ -139,5 +144,10 @@ class TextStepContentFragment : Fragment(), TextStepContentView {
 
     override fun setTextContentFontSize(fontSize: FontSize) {
         latexLayout?.setTextSize(fontSize.size) ?: return
+    }
+
+    override fun onStepContentChanged(stepWrapper: StepPersistentWrapper) {
+        this.stepWrapper = stepWrapper
+        invalidateText()
     }
 }
