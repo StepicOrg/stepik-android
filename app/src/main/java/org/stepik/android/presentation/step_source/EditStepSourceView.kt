@@ -1,8 +1,8 @@
-package org.stepik.android.presentation.step_edit
+package org.stepik.android.presentation.step_source
 
 import org.stepik.android.model.Step
 
-interface EditStepContentView {
+interface EditStepSourceView {
     sealed class State {
         object Idle : State()
         object Loading : State()

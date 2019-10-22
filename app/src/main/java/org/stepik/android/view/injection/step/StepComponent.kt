@@ -3,9 +3,10 @@ package org.stepik.android.view.injection.step
 import dagger.Subcomponent
 import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.step_content.StepContentModule
-import org.stepik.android.view.injection.step_edit.StepEditModule
+import org.stepik.android.view.injection.step_source.StepSourceModule
 import org.stepik.android.view.injection.step_quiz.StepQuizModule
 import org.stepik.android.view.injection.step_quiz.StepQuizPresentationModule
+import org.stepik.android.view.injection.step_source.StepSourceDataModule
 import org.stepik.android.view.injection.submission.SubmissionDataModule
 import org.stepik.android.view.step.ui.fragment.StepFragment
 import org.stepik.android.view.step_edit.ui.dialog.EditStepContentDialogFragment
@@ -14,13 +15,14 @@ import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStep
 
 @Subcomponent(modules = [
     StepModule::class,
-    StepEditModule::class,
+    StepSourceModule::class,
     StepContentModule::class,
     StepQuizModule::class,
 
     StepQuizPresentationModule::class,
     AttemptDataModule::class,
-    SubmissionDataModule::class
+    SubmissionDataModule::class,
+    StepSourceDataModule::class
 ])
 interface StepComponent {
     @Subcomponent.Builder
