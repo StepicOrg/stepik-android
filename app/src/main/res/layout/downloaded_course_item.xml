@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="96dp"
+    android:background="?selectableItemBackground"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/downloadedCourseImage"
+        android:layout_width="@dimen/new_course_image_size"
+        android:layout_height="@dimen/new_course_image_size"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/course_item_space_between_items"
+        android:layout_marginLeft="@dimen/course_item_space_between_items"
+        android:layout_marginStart="@dimen/course_item_space_between_items"
+        tools:src="@drawable/general_placeholder" />
+
+    <TextView
+        android:id="@+id/downloadedCourseName"
+        app:fontFamily="@font/roboto_regular"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/course_item_space_between_items"
+        android:layout_marginLeft="@dimen/course_item_space_between_items"
+        android:layout_marginRight="@dimen/course_item_space_between_items"
+        android:layout_marginStart="@dimen/course_item_space_between_items"
+        android:layout_marginTop="@dimen/course_item_space_between_items"
+        android:textColor="@color/new_accent_color"
+        android:textSize="@dimen/course_item_titles_text_size"
+        app:layout_constraintLeft_toRightOf="@+id/downloadedCourseImage"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingPrefix"
+        android:ellipsize="end"
+        android:maxLines="2"
+        tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
+
+    <TextView
+        android:id="@+id/downloadedCourseSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/course_item_space_between_items"
+        android:layout_marginLeft="@dimen/course_item_space_between_items"
+        android:layout_marginRight="@dimen/course_item_space_between_items"
+        android:layout_marginStart="@dimen/course_item_space_between_items"
+        android:layout_marginTop="@dimen/course_item_space_between_items"
+        app:layout_constraintStart_toEndOf="@id/downloadedCourseImage"
+        app:layout_constraintBottom_toBottomOf="@id/downloadedCourseImage"
+        android:textColor="@color/grey03" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

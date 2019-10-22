@@ -170,13 +170,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.DownloadsActivity" />
-
         <activity android:name=".ui.activities.CourseListActivity" />
-
-        <activity
-            android:name=".ui.activities.CodePlaygroundActivity"
-            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
@@ -343,6 +337,9 @@
 
         <activity
             android:name="org.stepik.android.view.certificate.ui.activity.CertificatesActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.download.ui.activity.DownloadActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

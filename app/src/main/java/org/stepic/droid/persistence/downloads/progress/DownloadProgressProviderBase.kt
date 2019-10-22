@@ -3,8 +3,11 @@ package org.stepic.droid.persistence.downloads.progress
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toFlowable
-import org.stepic.droid.persistence.files.ExternalStorageManager
+import org.stepic.droid.di.qualifiers.PersistenceProgressStatusMapper
+import org.stepic.droid.persistence.downloads.progress.mapper.DownloadProgressStatusMapper
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.PersistentState
@@ -13,7 +16,6 @@ import org.stepic.droid.persistence.model.isCorrect
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
-import org.stepic.droid.util.zip
 
 abstract class DownloadProgressProviderBase<T>(
         private val updatesObservable: Observable<Structure>,
@@ -23,7 +25,8 @@ abstract class DownloadProgressProviderBase<T>(
         private val persistentItemDao: PersistentItemDao,
         private val persistentStateManager: PersistentStateManager,
 
-        private val externalStorageManager: ExternalStorageManager
+        @PersistenceProgressStatusMapper
+        private val downloadProgressStatusMapper: DownloadProgressStatusMapper
 ): DownloadProgressProvider<T> {
     private companion object {
         private fun List<PersistentItem>.getDownloadIdsOfCorrectItems() =
@@ -52,9 +55,9 @@ abstract class DownloadProgressProviderBase<T>(
                         Observable.just(DownloadProgress(itemId, DownloadProgress.Status.Pending))
                     else ->
                         getPersistentObservable(itemId)
-                                .concatMap(::fetchSystemDownloads)
+                                .concatMapSingle(::fetchSystemDownloads)
                                 .map { (persistentItems, downloadItems) ->   // count progresses
-                                    DownloadProgress(itemId, countItemProgress(externalStorageManager, persistentItems, downloadItems, state))
+                                    DownloadProgress(itemId, downloadProgressStatusMapper.countItemProgress(persistentItems, downloadItems, state))
                                 }
                 }
             }
@@ -63,7 +66,7 @@ abstract class DownloadProgressProviderBase<T>(
             persistentItemDao.getItems(mapOf(persistentItemKeyFieldColumn to itemId.toString()))
 
     private fun fetchSystemDownloads(items: List<PersistentItem>) =
-            Observable.just(items) zip systemDownloadsDao.get(*items.getDownloadIdsOfCorrectItems())
+            zip(Single.just(items), systemDownloadsDao.get(*items.getDownloadIdsOfCorrectItems()))
 
     private fun getItemUpdateObservable(itemId: Long) =
             updatesObservable.filter { it.keyFieldValue == itemId }.map { kotlin.Unit }.startWith(kotlin.Unit)
