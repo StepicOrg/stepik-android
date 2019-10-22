@@ -9,7 +9,7 @@ import org.stepik.android.view.injection.step_quiz.StepQuizPresentationModule
 import org.stepik.android.view.injection.step_source.StepSourceDataModule
 import org.stepik.android.view.injection.submission.SubmissionDataModule
 import org.stepik.android.view.step.ui.fragment.StepFragment
-import org.stepik.android.view.step_edit.ui.dialog.EditStepContentDialogFragment
+import org.stepik.android.view.step_source.ui.dialog.EditStepSourceDialogFragment
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
 import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStepQuizFragment
 
@@ -31,7 +31,7 @@ interface StepComponent {
     }
 
     fun inject(stepFragment: StepFragment)
-    fun inject(editStepContentDialogFragment: EditStepContentDialogFragment)
+    fun inject(editStepContentDialogFragment: EditStepSourceDialogFragment)
     fun inject(defaultStepQuizFragment: DefaultStepQuizFragment)
     fun inject(unsupportedStepQuizFragment: UnsupportedStepQuizFragment)
 }

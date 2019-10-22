@@ -19,7 +19,7 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
 import org.stepik.android.presentation.step_content_text.TextStepContentView
-import org.stepik.android.view.step_edit.ui.dialog.EditStepContentDialogFragment
+import org.stepik.android.view.step_source.ui.dialog.EditStepSourceDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class TextStepContentFragment :
     Fragment(),
     TextStepContentView,
-    EditStepContentDialogFragment.Callback {
+    EditStepSourceDialogFragment.Callback {
     companion object {
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
             TextStepContentFragment()
@@ -132,9 +132,9 @@ class TextStepContentFragment :
         }
 
     private fun showStepEditDialog() {
-        EditStepContentDialogFragment
+        EditStepSourceDialogFragment
             .newInstance(stepWrapper, lessonData)
-            .showIfNotExists(childFragmentManager, EditStepContentDialogFragment.TAG)
+            .showIfNotExists(childFragmentManager, EditStepSourceDialogFragment.TAG)
     }
 
     override fun onDestroy() {

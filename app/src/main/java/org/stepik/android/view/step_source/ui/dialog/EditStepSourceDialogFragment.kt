@@ -1,4 +1,4 @@
-package org.stepik.android.view.step_edit.ui.dialog
+package org.stepik.android.view.step_source.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
@@ -28,7 +28,7 @@ import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class EditStepContentDialogFragment :
+class EditStepSourceDialogFragment :
     DialogFragment(),
     EditStepSourceView,
     DiscardTextDialogFragment.Callback {
@@ -37,7 +37,7 @@ class EditStepContentDialogFragment :
         const val TAG = "ComposeCommentDialogFragment"
 
         fun newInstance(stepWrapper: StepPersistentWrapper, lessonData: LessonData): DialogFragment =
-            EditStepContentDialogFragment()
+            EditStepSourceDialogFragment()
                 .apply {
                     this.stepWrapper = stepWrapper
                     this.lessonData = lessonData
