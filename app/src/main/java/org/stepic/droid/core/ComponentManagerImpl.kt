@@ -3,7 +3,6 @@ package org.stepic.droid.core
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
-import org.stepic.droid.di.downloads.DownloadsComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
@@ -27,17 +26,6 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
     override fun releaseSplashComponent() {
         _splashComponent = null
     }
-
-    // Downloads
-
-    private val downloadsComponent
-            by lazy {
-                appCoreComponent
-                        .downloadsComponentBuilder()
-                        .build()
-            }
-
-    override fun downloadsComponent(): DownloadsComponent = downloadsComponent
 
     // Adaptive courses
 

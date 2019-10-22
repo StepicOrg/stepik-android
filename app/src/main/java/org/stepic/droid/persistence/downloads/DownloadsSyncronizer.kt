@@ -5,7 +5,9 @@ import android.content.Context
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -21,7 +23,6 @@ import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.then
-import org.stepic.droid.util.zip
 import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
 import kotlin.concurrent.withLock
@@ -67,8 +68,8 @@ constructor(
                         persistentItemDao.getItemsByStatus(PersistentItem.Status.IN_PROGRESS)
                     }
                     .takeWhile(List<PersistentItem>::isNotEmpty)
-                    .concatMap {
-                        Observable.just(it) zip systemDownloadsDao.get(*it.map(PersistentItem::downloadId).toLongArray())
+                    .concatMapSingle {
+                        zip(Single.just(it), systemDownloadsDao.get(*it.map(PersistentItem::downloadId).toLongArray()))
                     }
                     .map { (items, records) ->
                         syncPersistentItems(items, records)

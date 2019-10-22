@@ -111,8 +111,6 @@
     <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
     <string name="sound_title">Звук</string>
-    <string name="downloading_title">Скачивается…</string>
-    <string name="downloading_cancel_all">Отменить все</string>
     <string name="cached_title">Загружено</string>
     <string name="remove_all">Удалить все</string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
@@ -553,9 +551,6 @@
     <string name="achievement_share">Я получил достижение «%s» на Stepik.org. Попробуй обогнать!</string>
     <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения «%s», проверьте свой профиль.</string>
 
-
-    <string name="downloads_view_cant_remove">Невозможно удалить загрузку</string>
-
     <!-- Course -->
     <string name="course_verified">Проверенный</string>
     <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
@@ -770,4 +765,7 @@
 
     <string name="setting_font_size">Размер шрифта в шагах</string>
     <string name="setting_font_size_dialog_title">Выберите размер шрифта</string>
+
+    <!-- Downloads -->
+    <string name="downloads_title">Загруженные курсы</string>
 </resources>
