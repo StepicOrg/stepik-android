@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.downloads.helpers.RemoveDownloadTaskHelper
-import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import javax.inject.Inject
@@ -21,7 +20,4 @@ constructor(
                     .flatMap(List<PersistentItem>::toObservable)
                     .map { it.task.structure }
     )
-
-    fun removeDownloads(downloads: List<DownloadItem>): Completable =
-            removeDownloadTaskHelper.removeTasks(downloads.toObservable().map(DownloadItem::structure))
 }

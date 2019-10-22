@@ -2,7 +2,7 @@ package org.stepic.droid.persistence.storage.dao
 
 import android.app.DownloadManager
 import android.database.Cursor
-import io.reactivex.Observable
+import io.reactivex.Single
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.SystemDownloadRecord
 import javax.inject.Inject
@@ -13,11 +13,11 @@ class SystemDownloadsDaoImpl
 constructor(
     private val downloadManager: DownloadManager
 ): SystemDownloadsDao {
-    override fun get(vararg ids: Long): Observable<List<SystemDownloadRecord>> =
+    override fun get(vararg ids: Long): Single<List<SystemDownloadRecord>> =
         if (ids.isEmpty()) {
-            Observable.just(emptyList())
+            Single.just(emptyList())
         } else {
-            Observable
+            Single
                 .create<List<SystemDownloadRecord>> { emitter ->
                     val items = mutableListOf<SystemDownloadRecord>()
                     val cursor: Cursor? = downloadManager.query(DownloadManager.Query().setFilterById(*ids))
@@ -38,8 +38,7 @@ constructor(
                             }
                         }
                         if (!emitter.isDisposed) {
-                            emitter.onNext(items)
-                            emitter.onComplete()
+                            emitter.onSuccess(items)
                         }
                     } catch (e: Exception) {
                         if (!emitter.isDisposed) {
