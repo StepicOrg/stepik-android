@@ -177,8 +177,8 @@ class StepFragment : Fragment(), StepView,
                 true
             }
 
-         else ->
-             super.onOptionsItemSelected(item)
+            else ->
+                super.onOptionsItemSelected(item)
         }
 
     private fun showShareDialog() {
