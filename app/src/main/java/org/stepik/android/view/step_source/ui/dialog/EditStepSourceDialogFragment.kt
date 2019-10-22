@@ -8,10 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.dialog_step_content_edit.*
+import kotlinx.android.synthetic.main.dialog_step_source_edit.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -87,7 +88,7 @@ class EditStepSourceDialogFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.dialog_step_content_edit, container, false)
+        inflater.inflate(R.layout.dialog_step_source_edit, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.text = "${lessonData.lesson.title} - ${stepWrapper.step.position}"
@@ -129,6 +130,7 @@ class EditStepSourceDialogFragment :
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             }
 
         editStepContentPresenter.attachView(this)

@@ -721,7 +721,7 @@
 
     <string name="step_action_edit_content">Edit content</string>
     <string name="step_action_edit_hint">Step text</string>
-
+    <string name="step_action_edit_description">You can only edit the step\'s text, and only using raw HTML. To access full step editor please use web version of Stepik.</string>
 
     <string name="step_content_video_no_video">Video has not been uploaded or processed yet</string>
 
