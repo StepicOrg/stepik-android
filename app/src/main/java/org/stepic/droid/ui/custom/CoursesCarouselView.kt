@@ -174,6 +174,9 @@ constructor(
 
     private fun initCourseCarousel() {
         coursesCarouselCount.visibility = View.GONE
+        coursesCarouselDescription.setOnClickListener {
+            viewAll()
+        }
         coursesViewAll.setOnClickListener {
             viewAll()
         }

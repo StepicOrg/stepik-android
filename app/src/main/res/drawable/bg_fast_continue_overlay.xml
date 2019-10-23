@@ -4,7 +4,7 @@
         <shape
             android:shape="rectangle">
             <corners android:radius="@dimen/course_image_radius"/>
-            <solid android:color="@color/fast_continue_learning_opacity_pressed"/>
+            <solid android:color="#33000000"/>
         </shape>
     </item>
     <item>
