@@ -26,11 +26,28 @@ constructor() {
                     .find { it.id == comment.vote }
                     ?: return@mapNotNull null
 
+                val solution = comment
+                    .submission
+                    ?.let { submissionId ->
+                        commentsData
+                            .submissions
+                            .find { it.id == submissionId }
+                    }
+                    ?.let { submission ->
+                        commentsData
+                            .attempts
+                            .find { it.id == submission.attempt }
+                            ?.let { attempt ->
+                                CommentItem.Data.Solution(attempt, submission)
+                            }
+                    }
+
                 CommentItem.Data(
                     comment = comment,
                     user = user,
                     voteStatus = CommentItem.Data.VoteStatus.Resolved(vote),
-                    isFocused = discussionId == comment.id
+                    isFocused = discussionId == comment.id,
+                    solution = solution
                 )
             }
             .let { newItems ->

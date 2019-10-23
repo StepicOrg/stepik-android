@@ -1,5 +1,7 @@
 package org.stepik.android.presentation.comment.model
 
+import org.stepik.android.model.Submission
+import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.model.user.User
@@ -10,7 +12,8 @@ sealed class CommentItem {
         val comment: Comment,
         val user: User,
         val voteStatus: VoteStatus,
-        val isFocused: Boolean
+        val isFocused: Boolean,
+        val solution: Solution?
     ) : CommentItem(), Identifiable<Long> {
         override val id: Long =
             comment.id
@@ -19,6 +22,11 @@ sealed class CommentItem {
             data class Resolved(val vote: Vote) : VoteStatus()
             object Pending : VoteStatus()
         }
+
+        data class Solution(
+            val attempt: Attempt,
+            val submission: Submission
+        )
     }
 
     data class LoadMoreReplies(
