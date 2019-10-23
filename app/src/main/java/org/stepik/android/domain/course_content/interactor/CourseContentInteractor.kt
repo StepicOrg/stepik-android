@@ -8,6 +8,8 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.util.concat
 import org.stepic.droid.util.mapToLongArray
+import org.stepic.droid.util.plus
+import org.stepic.droid.util.reduce
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -50,9 +52,7 @@ constructor(
         return getSectionsOfCourse(course)
             .flatMap { populateSections(course, it) }
             .flatMapObservable { items ->
-                Single
-                    .concat(Single.just(course to items), loadUnits(course, items))
-                    .toObservable()
+                Observable.just(course to items) + loadUnits(course, items)
             }
             .doOnComplete {
                 courseContentLoadingTrace.stop()
@@ -70,19 +70,26 @@ constructor(
                 courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, progresses)
             }
 
-    private fun loadUnits(course: Course, items: List<CourseContentItem>): Single<Pair<Course, List<CourseContentItem>>> =
-        Single
+    private fun loadUnits(course: Course, items: List<CourseContentItem>): Observable<Pair<Course, List<CourseContentItem>>> =
+        Observable
             .just(courseContentItemMapper.getUnitPlaceholdersIds(items))
-            .flatMap(::getUnits)
-            .flatMap { units ->
-                val sectionItems = items
-                    .filterIsInstance<CourseContentItem.SectionItem>()
+            .flatMap { unitIds ->
+                val sources = unitIds
+                    .asIterable()
+                    .chunked(10)
+                    .map { getUnits(it.toLongArray()) }
 
-                populateUnits(sectionItems, units)
+                reduce(sources, items) { newItems, units ->
+                    val sectionItems = newItems
+                        .filterIsInstance<CourseContentItem.SectionItem>()
+
+                    populateUnits(sectionItems, units)
+                        .map { unitItems ->
+                            courseContentItemMapper.replaceUnitPlaceholders(newItems, unitItems)
+                        }
+                }
             }
-            .map { unitItems ->
-                course to courseContentItemMapper.replaceUnitPlaceholders(items, unitItems)
-            }
+            .map { course to it }
 
     private fun getUnits(unitIds: LongArray): Single<List<Unit>> =
         unitRepository
