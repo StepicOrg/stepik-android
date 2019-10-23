@@ -1,6 +1,6 @@
 package org.stepic.droid.util.resolvers;
 
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;

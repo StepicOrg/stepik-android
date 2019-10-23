@@ -27,7 +27,6 @@
     <color name="default_color_of_link">#0077CC</color>
     <color name="windowBackground">#eeeeee</color>
     <color name="correct_answer_background">#E9F9E9</color>
-    <color name="wrong_answer_background">#F5EBF2</color>
     <color name="disabled_button_color">#D3D7D7</color>
     <color name="feedback_bad_color">#D64338</color>
     <color name="feedback_good_color">#66CC66
@@ -155,6 +154,8 @@
     <color name="green01">#66CC66</color>
     <color name="green03">#54AD54</color>
     <color name="green04">#ACD1AC</color>
+    <color name="violet1">#6C7BDF</color>
+    <color name="violet2">#E9EBFA</color>
 
     <!--adaptive-->
     <color name="adaptive_color_easy">#227300</color>
@@ -213,14 +214,15 @@
     <color name="step_quiz_choice_correct">#e7f7e7</color>
     <color name="step_quiz_choice_wrong">#ffebe7</color>
 
-    <color name="step_quiz_choice_not_checked_border">#888888</color>
-    <color name="step_quiz_choice_checked_border">@color/color_violet_1</color>
-    <color name="step_quiz_choice_correct_border">#64cc64</color>
-    <color name="step_quiz_choice_wrong_border">#ff7965</color>
+    <color name="step_quiz_choice_not_checked_border">@color/grey03</color>
+    <color name="step_quiz_choice_checked_border">#806C7BDF</color>
+    <color name="step_quiz_choice_correct_border">#8064cc64</color>
+    <color name="step_quiz_choice_wrong_border">#80ff7965</color>
 
     <!-- Sorting quiz -->
     <color name="step_quiz_sorting_background">@color/white</color>
     <color name="step_quiz_sorting_stroke">@color/grey03</color>
+    <color name="step_quiz_sorting_stroke_disabled">#80CCCCCC</color>
 
     <!-- Course item -->
     <color name="course_item_separator_light">@color/grey04</color>

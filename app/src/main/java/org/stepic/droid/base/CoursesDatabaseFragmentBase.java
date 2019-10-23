@@ -1,9 +1,10 @@
 package org.stepic.droid.base;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -12,8 +13,8 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.dropping.contract.DroppingListener;
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter;
 import org.stepic.droid.model.CourseListType;
-import org.stepik.android.model.Course;
 import org.stepic.droid.ui.fragments.CourseListFragmentBase;
+import org.stepik.android.model.Course;
 
 import javax.inject.Inject;
 

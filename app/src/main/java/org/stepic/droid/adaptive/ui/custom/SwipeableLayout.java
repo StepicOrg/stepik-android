@@ -2,13 +2,13 @@ package org.stepic.droid.adaptive.ui.custom;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 
+import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.adaptive.math.LinearRegression;
 import org.stepic.droid.adaptive.ui.animations.CardAnimations;
 
@@ -217,7 +217,7 @@ public final class SwipeableLayout extends FrameLayout {
                 .start();
     }
 
-    public void setSwipeListener(@NonNull final SwipeListener listener) {
+    public void setSwipeListener(@NotNull final SwipeListener listener) {
         this.listeners.add(listener);
     }
 

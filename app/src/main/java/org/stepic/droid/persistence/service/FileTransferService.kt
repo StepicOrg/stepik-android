@@ -2,8 +2,9 @@ package org.stepic.droid.persistence.service
 
 import android.content.Context
 import android.content.Intent
-import android.support.v4.app.JobIntentService
+import androidx.core.app.JobIntentService
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.di.FSLock
 import org.stepic.droid.persistence.files.ExternalStorageManager
@@ -34,6 +35,9 @@ class FileTransferService: JobIntentService() {
     @Inject
     @field:FSLock
     lateinit var fsLock: ReentrantLock
+
+    @Inject
+    lateinit var analytic: Analytic
 
     @Inject
     lateinit var persistentItemObserver: PersistentItemObserver
@@ -93,8 +97,9 @@ class FileTransferService: JobIntentService() {
                     localFileDir = storage.path.canonicalPath,
                     isInAppInternalDir = storage.type == StorageLocation.Type.APP_INTERNAL
             ))
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             persistentItemObserver.update(persistentItem.copy(status = PersistentItem.Status.COMPLETED)) // means we are not moved file but it OK
+            analytic.reportError(Analytic.DownloaderV2.FILE_TRANSFER_ERROR, e)
         }
     }
 }

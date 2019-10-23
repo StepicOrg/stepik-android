@@ -6,14 +6,14 @@
     android:layout_height="wrap_content"
     android:gravity="center_horizontal">
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepStatusErrorMessage"
         style="@style/PlaceholderTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/step_quiz_not_ready"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         style="@style/PlaceholderButton"
         android:id="@+id/stepStatusTryAgain"
         android:layout_width="wrap_content"

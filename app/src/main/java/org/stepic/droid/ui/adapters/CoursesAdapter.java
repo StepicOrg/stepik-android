@@ -4,26 +4,27 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.model.CoursesDescriptionContainer;
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.HeaderItemViewHolder;
+import org.stepik.android.model.Course;
 
 import java.util.List;
 
@@ -58,11 +59,12 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private final int courseListPadding;
 
-    public CoursesAdapter(FragmentActivity activity,
-                          List<Course> courses,
-                          @NotNull ContinueCoursePresenter continueCoursePresenter,
-                          boolean withPagination,
-                          CoursesCarouselColorType colorType
+    public CoursesAdapter(
+            FragmentActivity activity,
+            List<Course> courses,
+            @NotNull ContinueCoursePresenter continueCoursePresenter,
+            boolean withPagination,
+            CoursesCarouselColorType colorType
     ) {
         this.colorType = colorType;
         if (withPagination) {

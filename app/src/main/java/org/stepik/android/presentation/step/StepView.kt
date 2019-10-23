@@ -18,5 +18,5 @@ interface StepView {
     fun setBlockingLoading(isLoading: Boolean)
 
     fun setNavigation(directions: Set<StepNavigationDirection>)
-    fun showLesson(direction: StepNavigationDirection, lessonData: LessonData)
+    fun showLesson(direction: StepNavigationDirection, lessonData: LessonData, isAutoplayEnabled: Boolean = false)
 }

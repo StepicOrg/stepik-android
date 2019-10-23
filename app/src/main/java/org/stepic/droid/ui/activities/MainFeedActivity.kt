@@ -5,17 +5,18 @@ import android.content.Intent
 import android.content.pm.ShortcutManager
 import android.graphics.Color
 import android.os.Bundle
-import android.support.annotation.IdRes
-import android.support.design.widget.BottomNavigationView
-import android.support.v4.app.Fragment
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.MenuItem
+import androidx.annotation.IdRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.Fragment
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.facebook.login.LoginManager
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
@@ -27,7 +28,6 @@ import org.stepic.droid.core.earlystreak.contract.EarlyStreakListener
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
@@ -43,9 +43,8 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.Course
 import org.stepik.android.model.user.Profile
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import timber.log.Timber
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -63,9 +62,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     companion object {
         const val CURRENT_INDEX_KEY = "currentIndexKey"
 
-        val reminderKey = "reminderKey"
+        const val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
-        private val progressLogoutTag = "progressLogoutTag"
+        private const val progressLogoutTag = "progressLogoutTag"
         private const val LOGGED_ACTION = "LOGGED_ACTION"
 
         private const val CATALOG_DEEPLINK = "catalog"
@@ -145,8 +144,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             } else if (action == AppConstants.OPEN_SHORTCUT_CATALOG) {
                 analytic.reportEvent(Analytic.Shortcut.OPEN_CATALOG)
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N_MR1) {
-                    val shortcutManager = getSystemService(ShortcutManager::class.java)
-                    shortcutManager.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
+                    getSystemService(ShortcutManager::class.java)
+                        ?.reportShortcutUsed(AppConstants.CATALOG_SHORTCUT_ID)
                 }
 
             }
@@ -171,7 +170,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         initGoogleApiClient(true)
 
         initNavigation()
-
 
         earlyStreakClient.subscribe(this)
         if (checkPlayServices() && !sharedPreferenceHelper.isGcmTokenOk) {
@@ -219,8 +217,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             setFragment(R.id.home)
         }
 
-        val wantedIndex = getFragmentIndexFromIntent(launchIntent)
-        when (wantedIndex) {
+        when (getFragmentIndexFromIntent(launchIntent)) {
             CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
             PROFILE_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.profile)
             NOTIFICATIONS_INDEX -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.notifications)
@@ -234,7 +231,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         navigationAdapter = AHBottomNavigationAdapter(this, R.menu.drawer_menu)
         navigationAdapter.setupWithBottomNavigation(navigationView)
 
-        navigationView.titleState = AHBottomNavigation.TitleState.ALWAYS_HIDE
+        navigationView.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
         navigationView.setOnTabSelectedListener { position, wasSelected ->
             val menuItem = navigationAdapter.getMenuItem(position)
             if (wasSelected) {
@@ -380,7 +377,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
             val streakTitle = SpannableString(getString(R.string.early_notification_title))
             streakTitle.setSpan(ForegroundColorSpan(Color.BLACK), 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(this.assets, fontsProvider.provideFontPath(FontType.bold)))
+            val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
             streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             val description = getString(R.string.early_notification_description)

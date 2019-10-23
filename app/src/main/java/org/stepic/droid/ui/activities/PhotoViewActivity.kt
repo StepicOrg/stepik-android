@@ -1,15 +1,14 @@
 package org.stepic.droid.ui.activities
 
-import android.support.v4.app.Fragment
 import android.view.MenuItem
-
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.PhotoViewFragment
 
 class PhotoViewActivity : SingleFragmentActivity() {
     companion object {
-        val pathKey = "pathKey"
+        const val pathKey = "pathKey"
     }
 
     override fun createFragment(): Fragment {
@@ -22,13 +21,13 @@ class PhotoViewActivity : SingleFragmentActivity() {
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else ->
+                super.onOptionsItemSelected(item)
         }
-    }
 }

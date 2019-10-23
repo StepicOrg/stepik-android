@@ -3,7 +3,7 @@ package org.stepic.droid.core
 import android.content.Context
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.util.defaultLocale
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 class DefaultFilterImpl

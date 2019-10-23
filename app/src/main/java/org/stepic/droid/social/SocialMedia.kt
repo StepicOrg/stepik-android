@@ -1,6 +1,6 @@
 package org.stepic.droid.social
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import org.stepic.droid.R
 
 

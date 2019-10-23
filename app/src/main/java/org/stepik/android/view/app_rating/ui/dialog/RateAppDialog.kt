@@ -1,25 +1,20 @@
 package org.stepik.android.view.app_rating.ui.dialog
 
-import android.content.Context
-import android.graphics.Typeface
 import android.os.Bundle
-import android.support.annotation.ColorRes
-import android.support.annotation.StringRes
-import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_rate_app.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.fonts.FontType
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.util.RatingUtil
 import org.stepic.droid.util.reportRateEvent
-import uk.co.chrisjenx.calligraphy.CalligraphyUtils
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
 import javax.inject.Inject
 
 class RateAppDialog : DialogFragment() {
@@ -42,21 +37,11 @@ class RateAppDialog : DialogFragment() {
             fun onClickSupport(starNumber: Int)
         }
     }
-
-    @Inject
-    lateinit var fontsProvider: FontsProvider
     @Inject
     lateinit var analytic: Analytic
 
-    private lateinit var boldTypeface: Typeface
-
     init {
         App.component().inject(this)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        boldTypeface = TypefaceUtils.load(context.assets, fontsProvider.provideFontPath(FontType.bold))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -64,9 +49,8 @@ class RateAppDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         isCancelable = false
-        CalligraphyUtils.applyFontToTextView(rateDialogPositive, boldTypeface)
+        rateDialogPositive.typeface = ResourcesCompat.getFont(requireContext(), R.font.roboto_bold)
 
         val callback = if (targetFragment != null) {
             targetFragment as Callback
@@ -75,12 +59,12 @@ class RateAppDialog : DialogFragment() {
         }
 
         rateDialogLater.setOnClickListener {
-            dialog.dismiss()
+            dialog?.dismiss()
             callback.onClickLater(rateDialogRatingBar.rating.toInt())
         }
 
         rateDialogPositive.setOnClickListener {
-            dialog.dismiss()
+            dialog?.dismiss()
             val rating = rateDialogRatingBar.rating.toInt()
             if (RatingUtil.isExcellent(rating)) {
                 callback.onClickGooglePlay(rating)

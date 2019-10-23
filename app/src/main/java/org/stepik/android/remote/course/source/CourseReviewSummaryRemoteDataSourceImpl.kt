@@ -2,11 +2,11 @@ package org.stepik.android.remote.course.source
 
 import io.reactivex.Single
 import io.reactivex.functions.Function
-import org.stepik.android.model.CourseReviewSummary
 import org.stepic.droid.web.Api
-import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
 import org.stepik.android.data.course.source.CourseReviewSummaryRemoteDataSource
+import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.remote.base.chunkedSingleMap
+import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
 import javax.inject.Inject
 
 class CourseReviewSummaryRemoteDataSourceImpl

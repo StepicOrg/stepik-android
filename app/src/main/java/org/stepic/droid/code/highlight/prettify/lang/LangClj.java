@@ -15,12 +15,13 @@
  */
 package org.stepic.droid.code.highlight.prettify.lang;
 
+import org.stepic.droid.code.highlight.prettify.parser.Prettify;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
-import org.stepic.droid.code.highlight.prettify.parser.Prettify;
 
 /**
  * This is similar to the lang-clj.js in JavaScript Prettify.

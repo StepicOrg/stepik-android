@@ -20,7 +20,7 @@ android {
         versionCode versions.code
         versionName versions.name
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
         multiDexEnabled true
@@ -77,7 +77,6 @@ android {
         }
         debug {
             minifyEnabled true
-            useProguard true
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro', 'proguard-rules-dev.pro'
@@ -123,18 +122,24 @@ dependencies {
     implementation libraries.rxJava2
     implementation libraries.rxKotlin
 
-    implementation libraries.supportAppCompat
-    implementation libraries.supportDesign
-    implementation libraries.supportRecyclerView
-    implementation libraries.supportCardView
-    implementation libraries.multidex
+    implementation libraries.appCompat
+    implementation libraries.ktx
+    implementation libraries.recyclerview
+    implementation libraries.viewPager
+    implementation libraries.cardView
     implementation libraries.constraintLayout
-    implementation libraries.exoPlayerCore
-    implementation libraries.exoPlayerUI
-    implementation libraries.exoPlayerMediaSession
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel
+    implementation libraries.media
+    implementation libraries.multidex
+    implementation libraries.adapterDelegates
+    implementation libraries.adapters
+    implementation libraries.viewKit
+
+    implementation libraries.exoPlayerCore
+    implementation libraries.exoPlayerUI
+    implementation libraries.exoPlayerMediaSession
 
     implementation libraries.gson
     implementation libraries.retrofit
@@ -155,7 +160,6 @@ dependencies {
     implementation libraries.branch
     implementation libraries.installreferrer
 
-    implementation libraries.calligraphy
     implementation libraries.lottie
 
     implementation libraries.firebaseMessaging
@@ -175,9 +179,7 @@ dependencies {
     implementation libraries.materialDialog
     implementation libraries.materialDialogCore
     implementation libraries.numberPicker
-    implementation (libraries.datePicker) {
-        exclude group: 'com.android.support'
-    }
+    implementation libraries.datePicker
     implementation libraries.photoView
     implementation libraries.recyclerAnimators
     implementation libraries.materialProgress
@@ -189,8 +191,6 @@ dependencies {
 
     implementation libraries.shortcutBadger
     implementation libraries.StoriesKit
-    implementation libraries.AdapterDelegates
-    implementation libraries.Adapters
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
@@ -207,19 +207,11 @@ dependencies {
     testImplementation libraries.jodaTime
     testImplementation libraries.hamcrest
 
-    androidTestImplementation(libraries.supportTestRunner) {
-        exclude group: 'com.android.support'
-    }
-    androidTestImplementation libraries.supportTestRules
-    androidTestImplementation(libraries.espressoCore) {
-        exclude group: 'com.android.support'
-    }
-    androidTestImplementation(libraries.espressoContrib) {
-        exclude group: 'com.android.support'
-    }
-    androidTestImplementation(libraries.espressoIntents) {
-        exclude group: 'com.android.support'
-    }
+    androidTestImplementation libraries.testRunner
+    androidTestImplementation libraries.testRules
+    androidTestImplementation libraries.espressoCore
+    androidTestImplementation libraries.espressoContrib
+    androidTestImplementation libraries.espressoIntents
 }
 
 apply plugin: 'com.google.gms.google-services'

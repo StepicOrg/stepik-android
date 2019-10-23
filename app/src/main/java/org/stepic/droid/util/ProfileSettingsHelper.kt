@@ -1,8 +1,8 @@
 package org.stepic.droid.util
 
 import android.app.Activity
-import android.support.annotation.StringRes
-import android.support.v4.app.Fragment
+import androidx.annotation.StringRes
+import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager

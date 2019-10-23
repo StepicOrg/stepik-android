@@ -1,19 +1,19 @@
 package org.stepik.android.view.step_quiz_code.ui.delegate
 
-import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.StepikAnimUtils
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.Step
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailLimitAdapterDelegate
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailSampleAdapterDelegate
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CodeQuizInstructionDelegate(
     detailsContainerView: View,
@@ -32,7 +32,6 @@ class CodeQuizInstructionDelegate(
         stepQuizCodeDetailsAdapter += CodeDetailLimitAdapterDelegate()
 
         with(stepQuizCodeDetailsContent) {
-            visibility = View.GONE
             layoutManager = LinearLayoutManager(context)
             adapter = stepQuizCodeDetailsAdapter
             isNestedScrollingEnabled = false
@@ -58,6 +57,6 @@ class CodeQuizInstructionDelegate(
 
     fun setCodeDetailsData(step: Step, lang: String?) {
         stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
-        stepQuizCodeDetails.changeVisibility(stepQuizCodeDetailsAdapter.items.isEmpty())
+        stepQuizCodeDetails.isVisible = stepQuizCodeDetailsAdapter.items.isNotEmpty()
     }
 }

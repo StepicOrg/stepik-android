@@ -4,11 +4,11 @@
     android:id="@+id/stepContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
-        <android.support.v7.widget.LinearLayoutCompat
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -49,6 +49,6 @@
                 android:id="@+id/stepDiscussions"
                 layout="@layout/view_step_discussion" />
 
-        </android.support.v7.widget.LinearLayoutCompat>
-    </android.support.v4.widget.NestedScrollView>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>

@@ -9,10 +9,9 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkInfo
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.DownloadConfiguration
-import java.lang.Exception
 import java.util.EnumSet
 import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
@@ -81,7 +80,7 @@ constructor(
                 ?.let(connectivityManager::getNetworkCapabilities)
                 ?: return EnumSet.noneOf(DownloadConfiguration.NetworkType::class.java)
 
-            return EnumSet.copyOf(listOfNotNull(
+            val networkTypes = listOfNotNull(
                 DownloadConfiguration.NetworkType.WIFI
                     ?.takeIf {
                         networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
@@ -90,7 +89,13 @@ constructor(
 
                 DownloadConfiguration.NetworkType.MOBILE
                     ?.takeIf { networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) }
-            ))
+            )
+
+            return if (networkTypes.isEmpty()) {
+                EnumSet.noneOf(DownloadConfiguration.NetworkType::class.java)
+            } else {
+                EnumSet.copyOf(networkTypes)
+            }
         }
     }
 

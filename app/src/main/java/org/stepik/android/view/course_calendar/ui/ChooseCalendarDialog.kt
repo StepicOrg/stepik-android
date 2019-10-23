@@ -5,8 +5,9 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
 import org.stepik.android.domain.calendar.model.CalendarItem
 
@@ -30,22 +31,24 @@ class ChooseCalendarDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val calendarItems = arguments?.getParcelableArrayList<CalendarItem>(parcelableArrayListKey) ?: arrayListOf()
-        val ownerTitles: Array<CharSequence> = calendarItems.map { it.owner }.toTypedArray()
+        val ownerTitles: Array<String> = calendarItems.map { it.owner }.toTypedArray()
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, ownerTitles)
 
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(R.string.choose_calendar_title)
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok) { _, _ ->
-                    dialog.dismiss()
-                    val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
-                    val chosenCalendarItem = calendarItems[selectedPosition]
-                    targetFragment?.onActivityResult(
-                            CHOOSE_CALENDAR_REQUEST_CODE,
-                            Activity.RESULT_OK,
-                            Intent().putExtra(KEY_CALENDAR_ITEM, chosenCalendarItem as Parcelable)
-                    )
-                }
-                .setSingleChoiceItems(ownerTitles, 0, null)
+        builder
+            .setTitle(R.string.choose_calendar_title)
+            .setSingleChoiceItems(adapter, 0, null)
+            .setNegativeButton(R.string.cancel, null)
+            .setPositiveButton(R.string.ok) { dialog, _ ->
+                dialog.dismiss()
+                val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
+                val chosenCalendarItem = calendarItems[selectedPosition]
+                targetFragment?.onActivityResult(
+                        CHOOSE_CALENDAR_REQUEST_CODE,
+                        Activity.RESULT_OK,
+                        Intent().putExtra(KEY_CALENDAR_ITEM, chosenCalendarItem as Parcelable)
+                )
+            }
         return builder.create()
     }
 }

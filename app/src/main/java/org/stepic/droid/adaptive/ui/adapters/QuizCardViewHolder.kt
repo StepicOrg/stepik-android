@@ -1,16 +1,13 @@
 package org.stepic.droid.adaptive.ui.adapters
 
-import android.graphics.Color
-import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
+import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
-import org.stepik.android.model.adaptive.Reaction
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
 import org.stepic.droid.adaptive.ui.custom.CardScrollView
 import org.stepic.droid.adaptive.ui.custom.SwipeableLayout
@@ -19,15 +16,18 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
-import org.stepik.android.model.Step
-import org.stepik.android.model.Submission
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.quiz.QuizDelegate
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
+import org.stepik.android.model.adaptive.Reaction
 import javax.inject.Inject
+import kotlin.math.max
 
 class QuizCardViewHolder(
-        private val root: View
+    private val root: View
 ): ContainerView.ViewHolder(root), CardView {
     private val curtain = root.curtain
     private val answersProgress = root.answersProgress
@@ -49,7 +49,7 @@ class QuizCardViewHolder(
     private val hardReaction = root.reaction_hard
     private val easyReaction = root.reaction_easy
 
-    val cardView: android.support.v7.widget.CardView = root.card
+    val cardView: androidx.cardview.widget.CardView = root.card
 
     private lateinit var quizDelegate: QuizDelegate
 
@@ -100,8 +100,8 @@ class QuizCardViewHolder(
 
         container.setSwipeListener(object : SwipeableLayout.SwipeListener() {
             override fun onScroll(scrollProgress: Float) {
-                hardReaction.alpha = Math.max(2 * scrollProgress, 0f)
-                easyReaction.alpha = Math.max(2 * -scrollProgress, 0f)
+                hardReaction.alpha = max(2 * scrollProgress, 0f)
+                easyReaction.alpha = max(2 * -scrollProgress, 0f)
             }
 
             override fun onSwipeLeft() {
@@ -182,9 +182,9 @@ class QuizCardViewHolder(
     override fun onSubmissionRequestError() = onSubmissionError(R.string.request_error)
 
     private fun onSubmissionError(@StringRes errorMessage: Int) {
-        if (root.parent != null) {
-            Snackbar.make(root.parent as ViewGroup, errorMessage, Snackbar.LENGTH_SHORT).show()
-        }
+        (root.parent as? ViewGroup)
+            ?.snackbar(messageRes = errorMessage)
+
         container.isEnabled = true
         quizDelegate.isEnabled = true
         resetSupplementalActions()

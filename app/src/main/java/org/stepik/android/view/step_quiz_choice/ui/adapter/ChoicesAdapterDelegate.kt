@@ -6,16 +6,13 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import kotlinx.android.synthetic.main.progressable_latex_supportable_frame_layout.view.*
 import org.stepic.droid.R
-import org.stepic.droid.fonts.FontType
-import org.stepic.droid.fonts.FontsProvider
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
-import ru.nobird.android.ui.adapterssupport.selection.SelectionHelper
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import ru.nobird.android.ui.adapters.selection.SelectionHelper
 
 class ChoicesAdapterDelegate(
-    private val fontsProvider: FontsProvider,
     private val selectionHelper: SelectionHelper,
     private val onClick: (Choice) -> Unit
 ) : AdapterDelegate<Choice, DelegateViewHolder<Choice>>() {
@@ -78,7 +75,7 @@ class ChoicesAdapterDelegate(
             } else {
                 itemChoiceFeedback.visibility = View.VISIBLE
                 itemChoiceFeedback.setPlainOrLaTeXTextWithCustomFontColored(
-                    data.feedback, fontsProvider.provideFontPath(FontType.mono),
+                    data.feedback, R.font.pt_mono,
                     R.color.new_accent_color,
                     true
                 )

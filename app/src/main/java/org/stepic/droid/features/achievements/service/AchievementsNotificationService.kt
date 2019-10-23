@@ -6,8 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.support.v4.app.JobIntentService
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.JobIntentService
+import androidx.core.app.NotificationCompat
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic

@@ -10,11 +10,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.TaskStackBuilder;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,14 +38,11 @@ import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
-import org.stepic.droid.ui.activities.CommentsActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
-import org.stepic.droid.ui.activities.DownloadsActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.LaunchActivity;
 import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
-import org.stepic.droid.ui.activities.NewCommentActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.ProfileActivity;
@@ -52,7 +52,6 @@ import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
-import org.stepic.droid.ui.fragments.CommentsFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepic.droid.util.UriExtensionsKt;
@@ -67,8 +66,10 @@ import org.stepik.android.model.Unit;
 import org.stepik.android.model.Video;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
+import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
+import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
@@ -138,7 +139,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openImage(Context context, String path) {
         analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
         Intent intent = new Intent(context, PhotoViewActivity.class);
-        intent.putExtra(PhotoViewActivity.Companion.getPathKey(), path);
+        intent.putExtra(PhotoViewActivity.pathKey, path);
         context.startActivity(intent);
     }
 
@@ -298,7 +299,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showDownloads(Context context) {
-        Intent intent = new Intent(context, DownloadsActivity.class);
+        Intent intent = DownloadActivity.Companion.createIntent(context);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -326,7 +327,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(Activity sourceActivity, @NotNull VideoPlayerMediaData videoPlayerMediaData) {
+    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -335,8 +336,13 @@ public class ScreenManagerImpl implements ScreenManager {
             analytic.reportEvent(Analytic.Video.OPEN_NATIVE);
         }
 
+        final Context context = sourceFragment.requireContext();
+
         if (!isOpenExternal) {
-            sourceActivity.startActivity(VideoPlayerActivity.Companion.createIntent(sourceActivity, videoPlayerMediaData));
+            sourceFragment.startActivityForResult(
+                    VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled),
+                    VideoPlayerActivity.REQUEST_CODE
+            );
         } else {
             @Nullable
             final Video cachedVideo = videoPlayerMediaData.getCachedVideo();
@@ -354,7 +360,7 @@ public class ScreenManagerImpl implements ScreenManager {
             String scheme = videoUri.getScheme();
             if (scheme == null && videoPath != null) {
                 final File file = new File(videoPath);
-                videoUri = FileProvider.getUriForFile(sourceActivity, sourceActivity.getApplicationContext().getPackageName() + AppConstants.FILE_PROVIDER_AUTHORITY, file);
+                videoUri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + AppConstants.FILE_PROVIDER_AUTHORITY, file);
             }
             Intent intent = new Intent(Intent.ACTION_VIEW, videoUri);
             intent.setDataAndType(videoUri, "video/*");
@@ -362,10 +368,10 @@ public class ScreenManagerImpl implements ScreenManager {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
             try {
-                sourceActivity.startActivity(intent);
+                sourceFragment.startActivity(intent);
             } catch (Exception ex) {
                 analytic.reportError(Analytic.Error.NOT_PLAYER, ex);
-                Toast.makeText(sourceActivity, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, R.string.not_video_player_error, Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -425,7 +431,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openProfile(Activity activity, long userId) {
         final Intent intent = new Intent(activity, ProfileActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putLong(ProfileActivity.Companion.getOptionalUserIdKey(), userId);
+        bundle.putLong(ProfileActivity.optionalUserIdKey, userId);
         intent.putExtras(bundle);
         activity.startActivity(intent);
     }
@@ -554,57 +560,27 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openComments(Activity context, @Nullable String discussionProxyId, long stepId) {
-        openComments(context, discussionProxyId, stepId, false);
-    }
-
-    @Override
-    public void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm) {
+    public void openComments(Activity context, String discussionProxyId, long stepId, @Nullable Long discussionId, boolean needOpenForm) {
         if (discussionProxyId == null) {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
-            Toast.makeText(context, R.string.comment_denied, Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.comment_disabled, Toast.LENGTH_SHORT).show();
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
-            Intent intent = new Intent(context, CommentsActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putString(CommentsActivity.Companion.getKeyDiscussionProxyId(), discussionProxyId);
-            bundle.putLong(CommentsActivity.Companion.getKeyStepId(), stepId);
-            bundle.putBoolean(CommentsActivity.Companion.getKeyNeedInstaOpenForm(), needOpenForm);
-            intent.putExtras(bundle);
-            context.startActivity(intent);
-        }
-    }
-
-
-    @Override
-    public void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent) {
-        if (sharedPreferences.getAuthResponseFromStore() != null) {
-            analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT);
-            Intent intent = new Intent(commentsFragment.getActivity(), NewCommentActivity.class);
-            Bundle bundle = new Bundle();
-            if (parent != null) {
-                bundle.putLong(NewCommentActivity.Companion.getKeyParent(), parent);
-            }
-            bundle.putLong(NewCommentActivity.Companion.getKeyTarget(), target);
-            intent.putExtras(bundle);
-            commentsFragment.startActivityForResult(intent, NewCommentActivity.Companion.getRequestCode());
-        } else {
-            Toast.makeText(commentsFragment.getContext(), R.string.anonymous_write_comment, Toast.LENGTH_SHORT).show();
+            context.startActivity(CommentsActivity.Companion.createIntent(context, stepId, discussionProxyId, discussionId, needOpenForm));
         }
     }
 
     @Override
     public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section) {
-        showSteps(sourceActivity, unit, lesson, false, section);
+        showSteps(sourceActivity, unit, lesson, section, false, false);
     }
 
     @Override
-    public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section) {
+    public void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section, boolean backAnimation, boolean isAutoplayEnabled) {
         analytic.reportEventWithIdName(Analytic.Screens.SHOW_STEP, lesson.getId() + "", lesson.getTitle());
-        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson, backAnimation);
+        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, section, unit, lesson, backAnimation, isAutoplayEnabled);
         sourceActivity.startActivity(intent);
     }
-
 
     @Override
     public void openStepInWeb(Context context, Step step) {
@@ -662,7 +638,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void openRemindPassword(AppCompatActivity context) {
         analytic.reportEvent(Analytic.Screens.REMIND_PASSWORD);
-        android.support.v4.app.DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
+        DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
         dialogFragment.show(context.getSupportFragmentManager(), null);
     }
 

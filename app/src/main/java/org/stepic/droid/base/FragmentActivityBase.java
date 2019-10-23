@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.DrawableRes;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
+
+import androidx.annotation.DrawableRes;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -20,20 +19,17 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
-import org.stepic.droid.fonts.FontsProvider;
-import org.stepik.android.model.Course;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.services.NotificationsViewPusher;
 import org.stepic.droid.ui.util.CloseIconHolder;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.resolvers.text.TextResolver;
+import org.stepik.android.model.Course;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class FragmentActivityBase extends AppCompatActivity {
 
@@ -59,9 +55,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     protected ScreenManager screenManager;
 
     @Inject
-    protected FontsProvider fontsProvider;
-
-    @Inject
     protected NotificationsViewPusher notificationsViewPusher;
 
     @Override
@@ -72,19 +65,6 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
         if (savedInstanceState == null && AppConstants.OPEN_NOTIFICATION.equals(getIntent().getAction())) {
             notificationsViewPusher.pushToViewedNotificationsQueue(
                     getIntent().getLongExtra(AppConstants.KEY_NOTIFICATION_ID, 0));
-        }
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
-
-    protected void hideSoftKeypad() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

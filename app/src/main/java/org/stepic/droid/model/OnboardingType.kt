@@ -2,7 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.stepic.droid.R
 
 private object AnimationPaths {

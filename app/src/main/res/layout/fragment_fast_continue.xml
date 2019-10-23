@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:borderRadius="@dimen/course_image_radius">
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
@@ -82,7 +82,7 @@
                 android:id="@+id/fastContinueCourseName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                fontPath="fonts/Roboto-Light.ttf"
+                app:fontFamily="@font/roboto_light"
                 android:gravity="start"
                 android:textSize="@dimen/course_item_titles_text_size"
                 android:textColor="@color/white"
@@ -129,7 +129,7 @@
                 app:mpb_useIntrinsicPadding="false"
                 app:mpb_showProgressBackground="false"
                 style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal.NoPadding" />
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </org.stepic.droid.ui.custom.RoundedBorderMaskView>
 
     <FrameLayout

@@ -1,20 +1,20 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.section
 
-import android.support.v4.util.LongSparseArray
-import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.collection.LongSparseArray
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.StartSnapHelper
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseContentSectionDelegate(
     private val sectionClickListener: CourseContentSectionClickListener,
@@ -35,6 +35,7 @@ class CourseContentSectionDelegate(
         private val sectionTextProgress    = root.sectionTextProgress
         private val sectionDownloadStatus  = root.sectionDownloadStatus
         private val sectionExamDescription = root.sectionExamDescription
+        private val sectionRequirementsDescription = root.sectionRequirementsDescription
 
         private val sectionTimeLineAdapter =
             CourseContentTimelineAdapter()
@@ -66,7 +67,7 @@ class CourseContentSectionDelegate(
                     is DownloadProgress.Status.InProgress ->
                         sectionClickListener.onItemCancelClicked(item)
 
-                    DownloadProgress.Status.Cached ->
+                    is DownloadProgress.Status.Cached ->
                         sectionClickListener.onItemRemoveClicked(item)
                 }
             }
@@ -90,7 +91,7 @@ class CourseContentSectionDelegate(
                         ?: 0L
 
                     sectionProgress.progress = score / progress.cost.toFloat()
-                    sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
+                    sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
                         score, progress.cost)
                     sectionTextProgress.visibility = View.VISIBLE
                 } else {
@@ -100,9 +101,9 @@ class CourseContentSectionDelegate(
 
                 sectionDownloadStatus.status = sectionDownloadStatuses[data.section.id] ?: DownloadProgress.Status.Pending
                 sectionTimeLineAdapter.dates = dates
-                sectionTimeline.changeVisibility(dates.isNotEmpty())
+                sectionTimeline.isVisible = dates.isNotEmpty()
 
-                sectionDownloadStatus.changeVisibility(isEnabled)
+                sectionDownloadStatus.isVisible = isEnabled
                 itemView.isEnabled = section.isExam
 
                 val alpha = if (isEnabled) 1f else 0.4f
@@ -110,7 +111,22 @@ class CourseContentSectionDelegate(
                 sectionPosition.alpha = alpha
                 sectionTimeline.alpha = alpha
 
-                sectionExamDescription.changeVisibility(section.isExam)
+                sectionExamDescription.isVisible = section.isExam
+
+                if (requiredSection != null) {
+                    val requiredPoints = requiredSection.progress.cost * requiredSection.section.requiredPercent / 100
+
+                    sectionRequirementsDescription.text =
+                        context.getString(
+                            R.string.course_content_section_requirements,
+                            context.resources.getQuantityString(R.plurals.points, requiredPoints.toInt(), requiredPoints),
+                            requiredSection.section.title
+                        )
+
+                    sectionRequirementsDescription.isVisible = true
+                } else {
+                    sectionRequirementsDescription.isVisible = false
+                }
             }
         }
     }

@@ -4,7 +4,11 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCourse
-import org.stepic.droid.util.*
+import org.stepic.droid.util.DbParseHelper
+import org.stepic.droid.util.getBoolean
+import org.stepic.droid.util.getDouble
+import org.stepic.droid.util.getLong
+import org.stepic.droid.util.getString
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.model.Course
 import org.stepik.android.model.Video

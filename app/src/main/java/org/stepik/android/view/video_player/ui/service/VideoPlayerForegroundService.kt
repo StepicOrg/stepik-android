@@ -10,8 +10,8 @@ import android.media.AudioManager
 import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
-import android.support.v4.media.session.MediaButtonReceiver
 import android.support.v4.media.session.MediaSessionCompat
+import androidx.media.session.MediaButtonReceiver
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.DefaultRenderersFactory
@@ -22,8 +22,8 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.audio.AudioAttributes
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector
-import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
@@ -113,27 +113,30 @@ class VideoPlayerForegroundService : Service() {
                 setAudioAttributes(audioAttributes, true)
             }
 
+        val notificationListener =
+            object : PlayerNotificationManager.NotificationListener {
+                override fun onNotificationCancelled(notificationId: Int) {
+                    stopSelf()
+                }
+
+                override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
+                    startForeground(notificationId, notification)
+                }
+            }
+
         playerNotificationManager = PlayerNotificationManager
             .createWithNotificationChannel(
                 this,
                 PLAYER_CHANNEL_ID,
                 R.string.video_player_control_notification_channel_name,
+                R.string.video_player_control_notification_channel_description,
                 PLAYER_NOTIFICATION_ID,
-                videoPlayerMediaDescriptionAdapter
+                videoPlayerMediaDescriptionAdapter,
+                notificationListener
             )
 
-        playerNotificationManager.setNotificationListener(object : PlayerNotificationManager.NotificationListener {
-            override fun onNotificationCancelled(notificationId: Int) {
-                stopSelf()
-            }
-
-            override fun onNotificationStarted(notificationId: Int, notification: Notification?) {
-                startForeground(notificationId, notification)
-            }
-        })
-
         playerNotificationManager.setSmallIcon(R.drawable.ic_player_notification)
-        playerNotificationManager.setStopAction(null)
+        playerNotificationManager.setUseStopAction(false)
         playerNotificationManager.setPlayer(player)
 
         mediaSession = MediaSessionCompat(this, MEDIA_SESSION_TAG, ComponentName(this, MediaButtonReceiver::class.java), null)
@@ -144,7 +147,7 @@ class VideoPlayerForegroundService : Service() {
         playerNotificationManager.setMediaSessionToken(mediaSession.sessionToken)
 
         mediaSessionConnector = MediaSessionConnector(mediaSession)
-        mediaSessionConnector.setPlayer(player, null)
+        mediaSessionConnector.setPlayer(player)
 
         registerReceiver(headphonesReceiver, IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY))
     }
@@ -182,10 +185,11 @@ class VideoPlayerForegroundService : Service() {
     }
 
     private fun getMediaSource(videoPlayerData: VideoPlayerData): MediaSource {
-        val bandwidthMeter = DefaultBandwidthMeter()
+        val bandwidthMeter = DefaultBandwidthMeter.Builder(this).build()
         val dataSourceFactory = DefaultDataSourceFactory(this, Util.getUserAgent(this, getString(R.string.app_name)), bandwidthMeter)
 
-        return ExtractorMediaSource.Factory(dataSourceFactory)
+        return ProgressiveMediaSource
+            .Factory(dataSourceFactory)
             .createMediaSource(Uri.parse(videoPlayerData.videoUrl))
     }
 
@@ -194,7 +198,7 @@ class VideoPlayerForegroundService : Service() {
         unregisterReceiver(mediaButtonReceiver)
 
         mediaSession.release()
-        mediaSessionConnector.setPlayer(null,  null)
+        mediaSessionConnector.setPlayer(null)
 
         playerNotificationManager.setPlayer(null)
         player?.release()

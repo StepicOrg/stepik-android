@@ -2,7 +2,7 @@ package org.stepic.droid.ui.activities
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.activity_onboarding.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -13,9 +13,7 @@ import org.stepic.droid.ui.adapters.OnboardingAdapter
 import org.stepic.droid.ui.custom.OnboardingPageTransformer
 import org.stepic.droid.ui.fragments.OnboardingFragment
 
-
 class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

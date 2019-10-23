@@ -1,13 +1,12 @@
 package org.stepic.droid.ui.adapters
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentPagerAdapter
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
 import org.stepic.droid.model.OnboardingType
 import org.stepic.droid.ui.fragments.OnboardingFragment
 
-class OnboardingAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
-
+class OnboardingAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     companion object {
         private const val TAB_COUNT = 4
     }
@@ -17,5 +16,6 @@ class OnboardingAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         return OnboardingFragment.newInstance(type)
     }
 
-    override fun getCount() = TAB_COUNT
+    override fun getCount(): Int =
+        TAB_COUNT
 }

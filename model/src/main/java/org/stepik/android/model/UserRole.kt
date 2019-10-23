@@ -6,7 +6,7 @@ enum class UserRole {
     @SerializedName("student")
     STUDENT,
     @SerializedName("staff")
-    STUFF,
+    STAFF,
     @SerializedName("teacher")
     TEACHER
 }

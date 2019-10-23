@@ -2,8 +2,8 @@ package org.stepik.android.cache.video_player
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.data.video_player.source.VideoTimestampCacheDataSource
 import javax.inject.Inject
 

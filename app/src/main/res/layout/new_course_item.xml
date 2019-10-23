@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,12 +9,12 @@
     app:cardElevation="4dp"
     app:cardCornerRadius="@dimen/course_item_radius">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="141dp"
             android:duplicateParentState="true">
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/courseItemImage"
                 android:layout_width="@dimen/new_course_image_size"
                 android:layout_height="@dimen/new_course_image_size"
@@ -29,13 +29,13 @@
 
                 tools:src="@drawable/general_placeholder"/>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/adaptiveCourseMarker"
                 android:text="@string/adaptive_course_marker"
                 android:textSize="7.5sp"
                 android:textColor="@color/new_accent_color"
                 android:gravity="center"
-                fontPath="fonts/Roboto-Bold.ttf"
+                app:fontFamily="@font/roboto_bold"
                 tools:ignore="MissingPrefix"
                 android:background="@drawable/gray_circle_small"
                 android:letterSpacing="0.1"
@@ -51,9 +51,9 @@
                 app:layout_constraintEnd_toEndOf="@+id/courseItemImage"
                 app:layout_constraintStart_toStartOf="@+id/courseItemImage" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/courseItemName"
-                fontPath="fonts/Roboto-Regular.ttf"
+                app:fontFamily="@font/roboto_regular"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/course_item_space_between_items"
@@ -82,7 +82,7 @@
                 layout="@layout/layout_course_properties"
                 tools:visibility="visible" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/courseDescription"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -115,7 +115,7 @@
                 android:layout_marginTop="@dimen/course_item_space_between_items"
                 app:layout_constraintTop_toBottomOf="@id/courseItemImage" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/courseContinueButton"
                 android:layout_width="0dp"
                 android:layout_height="44dp"
@@ -147,5 +147,5 @@
                 android:layout_height="match_parent"
                 android:duplicateParentState="true"
                 android:background="@drawable/selectable_item_rounded_background" />
-        </android.support.constraint.ConstraintLayout>
-</android.support.v7.widget.CardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

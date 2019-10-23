@@ -6,6 +6,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.maybeFirst
 import org.stepic.droid.util.toMaybe
@@ -30,7 +31,8 @@ constructor(
     private val stepQuizPublisher: PublishSubject<Long>,
 
     private val attemptRepository: AttemptRepository,
-    private val submissionRepository: SubmissionRepository
+    private val submissionRepository: SubmissionRepository,
+    private val sharedPreferenceHelper: SharedPreferenceHelper
 ) {
     fun getAttempt(stepId: Long): Single<Attempt> =
         attemptRepository
@@ -82,6 +84,7 @@ constructor(
                 if (newSubmission.status == Submission.Status.CORRECT) {
                     stepQuizPublisher.onNext(stepId)
                 }
+                sharedPreferenceHelper.incrementSubmissionsCount()
             }
 
     fun createLocalSubmission(submission: Submission): Single<Submission> =
@@ -117,7 +120,6 @@ constructor(
             AppConstants.TYPE_MATH,
             AppConstants.TYPE_FREE_ANSWER,
             AppConstants.TYPE_CODE,
-            AppConstants.TYPE_SQL,
             AppConstants.TYPE_SORTING,
             AppConstants.TYPE_MATCHING ->
                 false

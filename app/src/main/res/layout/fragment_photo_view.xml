@@ -39,7 +39,7 @@
     </LinearLayout>
 
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/abc_action_bar_default_height_material"

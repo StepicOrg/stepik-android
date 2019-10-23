@@ -7,8 +7,8 @@ import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import io.branch.referral.Branch
 import io.branch.referral.BranchError
 import org.json.JSONObject
@@ -21,7 +21,7 @@ import org.stepic.droid.core.presenters.SplashPresenter
 import org.stepic.droid.core.presenters.contracts.SplashView
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.view.routing.deeplink.BranchRoute
-import java.util.*
+import java.util.Arrays
 import javax.inject.Inject
 
 class SplashActivity : BackToExitActivityBase(), SplashView {

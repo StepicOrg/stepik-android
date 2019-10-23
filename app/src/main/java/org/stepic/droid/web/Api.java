@@ -1,6 +1,6 @@
 package org.stepic.droid.web;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -10,17 +10,14 @@ import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.Course;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.Submission;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
-import org.stepik.android.model.comments.Vote;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
-import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -151,16 +148,6 @@ public interface Api {
     Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead);
 
     Call<Void> removeDevice(long deviceId);
-
-    Call<CommentResponse> getCommentAnd20Replies(long commentId);
-
-    Call<CommentResponse> getCommentsByIds(long[] commentIds);
-
-    Call<CommentResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
-
-    Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
-
-    Call<CommentResponse> deleteComment(long commentId);
 
     Single<CertificateResponse> getCertificates(long userId, int page);
 

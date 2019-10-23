@@ -6,7 +6,7 @@ data class DownloadProgress(
 ) {
     sealed class Status {
         object NotCached: Status()
-        object Cached: Status()
+        data class Cached(val bytesTotal: Long): Status()
         object Pending: Status()
         data class InProgress(val progress: Float): Status()
     }

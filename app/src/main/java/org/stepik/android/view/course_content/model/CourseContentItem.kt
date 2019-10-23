@@ -19,7 +19,8 @@ sealed class CourseContentItem {
         val section: Section,
         val dates: List<CourseContentSectionDate>,
         val progress: Progress?,
-        val isEnabled: Boolean
+        val isEnabled: Boolean,
+        val requiredSection: RequiredSection? = null
     ) : CourseContentItem()
 
     class UnitItemPlaceholder(

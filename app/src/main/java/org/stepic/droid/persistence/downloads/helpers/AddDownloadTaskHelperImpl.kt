@@ -7,7 +7,13 @@ import org.stepic.droid.persistence.content.StepContentResolver
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.downloads.DownloadTaskManager
 import org.stepic.droid.persistence.downloads.resolvers.DownloadTitleResolver
-import org.stepic.droid.persistence.model.*
+import org.stepic.droid.persistence.model.DownloadConfiguration
+import org.stepic.droid.persistence.model.DownloadRequest
+import org.stepic.droid.persistence.model.DownloadTask
+import org.stepic.droid.persistence.model.PersistentItem
+import org.stepic.droid.persistence.model.PersistentState
+import org.stepic.droid.persistence.model.Structure
+import org.stepic.droid.persistence.model.isCorrect
 import org.stepic.droid.persistence.storage.PersistentStateManager
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem

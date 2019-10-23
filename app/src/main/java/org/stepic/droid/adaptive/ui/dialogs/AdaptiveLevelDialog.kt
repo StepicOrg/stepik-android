@@ -3,10 +3,10 @@ package org.stepic.droid.adaptive.ui.dialogs
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import com.github.jinatonic.confetti.CommonConfetti
 import io.reactivex.Completable
 import io.reactivex.Scheduler
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.dialog_adaptive_level.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 

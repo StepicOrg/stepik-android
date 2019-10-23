@@ -1,9 +1,9 @@
 package org.stepik.android.view.step.ui.delegate
 
 import android.view.View
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.view_step_discussion.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
 
 class StepDiscussionsDelegate(
@@ -13,20 +13,29 @@ class StepDiscussionsDelegate(
     private val stepDiscussions = containerView.stepDiscussionsCount
 
     init {
-        containerView.changeVisibility(needShow = false)
+        containerView.isVisible = false
         containerView.setOnClickListener { onDiscussionClicked() }
 
         stepDiscussions.setCompoundDrawables(start = R.drawable.ic_step_discussion)
     }
 
-    fun setDiscussionsCount(discussionsCount: Int) {
+    fun setDiscussions(discussionProxy: String?, discussionsCount: Int) {
         stepDiscussions.text =
-            if (discussionsCount > 0) {
-                containerView.context.getString(R.string.step_discussion_show, discussionsCount)
-            } else {
-                containerView.context.getString(R.string.step_discussion_write_first)
+            when {
+                discussionProxy == null ->
+                    containerView.context.getString(R.string.comment_disabled)
+
+                discussionsCount > 0 ->
+                    containerView.context.getString(R.string.step_discussion_show, discussionsCount)
+
+                else ->
+                    containerView.context.getString(R.string.step_discussion_write_first)
             }
 
-        containerView.changeVisibility(needShow = true)
+        stepDiscussions
+            .setCompoundDrawables(start = if (discussionProxy != null) R.drawable.ic_step_discussion else -1)
+
+        containerView.isEnabled = discussionProxy != null
+        containerView.isVisible = true
     }
 }

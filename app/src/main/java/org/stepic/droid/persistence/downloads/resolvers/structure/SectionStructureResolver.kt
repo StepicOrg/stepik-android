@@ -3,8 +3,8 @@ package org.stepic.droid.persistence.downloads.resolvers.structure
 import io.reactivex.Observable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.Structure
-import org.stepic.droid.util.getProgresses
 import org.stepic.droid.util.then
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.model.Section
@@ -26,7 +26,7 @@ constructor(
             }
 
     override fun resolveStructure(vararg items: Section): Observable<Structure> =
-        progressRepository.getProgresses(*items.asIterable().getProgresses()).toCompletable() then
+        progressRepository.getProgresses(*items.asIterable().getProgresses()).ignoreElement() then
                 Observable.concat(
                     items.map { section ->
                         unitStructureResolver.resolveStructure(section.course, section.id, unitIds = *section.units.toLongArray())

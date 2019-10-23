@@ -206,6 +206,7 @@
     <dimen name="course_content_item_inner_margin">12dp</dimen>
 
     <dimen name="course_content_download_status_size">48dp</dimen>
+    <dimen name="course_content_download_status_inner_size">20dp</dimen>
     <dimen name="course_content_download_status_padding">14dp</dimen>
 
     <!-- Course reviews -->
@@ -238,7 +239,20 @@
 
     <!-- Matching quiz -->
     <dimen name="step_quiz_matching_item_margin">64dp</dimen>
-    
+
     <!-- Code quiz -->
-    <dimen name="step_quiz_fullscreen_code_layout_bottom_padding">80dp</dimen>
+    <dimen name="step_quiz_fullscreen_code_layout_bottom_padding">80dp</dimen>]
+
+    <!-- Comments -->
+    <dimen name="comment_user_image_size">36dp</dimen>
+    <dimen name="comment_item_text_line">22sp</dimen>
+    <dimen name="comment_item_margin">16dp</dimen>
+    <dimen name="comment_item_reply_offset">20dp</dimen>
+    <dimen name="comment_item_reply_separator_offset">36dp</dimen>
+
+    <dimen name="comment_item_action_size">28dp</dimen>
+    <dimen name="comment_tag_radius">12dp</dimen>
+
+    <dimen name="comment_item_separator_small">1dp</dimen>
+    <dimen name="comment_item_separator_big">4dp</dimen>
 </resources>

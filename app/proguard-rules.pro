@@ -116,7 +116,7 @@
 -dontwarn org.stepic.droid.notifications.**
 
 #for saving search view https://stackoverflow.com/questions/18407171/searchview-getactionview-returning-null
--keep class android.support.v7.widget.SearchView { *; }
+-keep class androidx.appcompat.widget.SearchView { *; }
 -keep class org.stepic.droid.ui.custom.AutoCompleteSearchView { *; }
 
 #keep configs names
@@ -138,6 +138,11 @@
 -keeppackagenames org.jsoup.nodes
 
 -keepclassmembers enum * {
-public static **[] values();
-public static ** valueOf(java.lang.String);
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# Prevent R8 from leaving Data object members always null
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
 }

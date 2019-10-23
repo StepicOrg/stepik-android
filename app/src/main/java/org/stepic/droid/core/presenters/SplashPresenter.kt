@@ -19,11 +19,10 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.emptyOnErrorStub
-import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
-import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
-import java.lang.IllegalArgumentException
+import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
+import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
 import javax.inject.Inject
 
 @SplashScope
@@ -31,9 +30,9 @@ class SplashPresenter
 @Inject
 constructor(
     @MainScheduler
-        private val mainScheduler: Scheduler,
+    private val mainScheduler: Scheduler,
     @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
+    private val backgroundScheduler: Scheduler,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val googleApiChecker: GoogleApiChecker,

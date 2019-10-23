@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -35,6 +35,44 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
 
+    <TextView
+        android:id="@+id/unitTextProgress"
+        app:fontFamily="@font/roboto_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="missingPrefix"
+        tools:text="6/10" />
+
+    <TextView
+        android:id="@+id/unitTimeToComplete"
+        app:fontFamily="@font/roboto_light"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:lineSpacingExtra="4sp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/unitTextProgress"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="missingPrefix"
+        tools:text="≈ 2 min"/>
+
+
+
     <ImageView
         android:id="@+id/unitViewCountIcon"
         android:layout_width="10dp"
@@ -47,7 +85,7 @@
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
         android:layout_marginBottom="@dimen/course_content_item_margin"
 
-        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintStart_toEndOf="@+id/unitTimeToComplete"
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -69,7 +107,7 @@
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         tools:ignore="missingPrefix"
         tools:text="718k" />
 
@@ -107,52 +145,15 @@
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        fontPath="fonts/Roboto-Light.ttf"
+        app:fontFamily="@font/roboto_light"
         tools:ignore="missingPrefix"
         tools:text="999" />
 
-    <TextView
-        android:id="@+id/unitTextProgress"
-        fontPath="fonts/Roboto-Light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/course_content_item_inner_margin"
-        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
-        android:layout_marginTop="@dimen/course_content_item_inner_margin"
-        android:layout_marginBottom="@dimen/course_content_item_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/unitRating"
-        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="missingPrefix"
-        tools:text="6/10" />
-
-    <TextView
-        android:id="@+id/unitTimeToComplete"
-        fontPath="fonts/Roboto-Light.ttf"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/course_content_item_inner_margin"
-        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
-        android:layout_marginTop="@dimen/course_content_item_inner_margin"
-        android:layout_marginBottom="@dimen/course_content_item_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
-        app:layout_constraintStart_toEndOf="@+id/unitTextProgress"
-        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="missingPrefix"
-        tools:text="≈ 2 mins"/>
-
     <org.stepik.android.view.course_content.ui.view.DownloadStatusView
         android:id="@+id/unitDownloadStatus"
-        android:background="@drawable/circle_selector"
+        android:background="?selectableItemBackgroundBorderless"
         android:layout_width="@dimen/course_content_download_status_size"
-        android:layout_height="@dimen/course_content_download_status_size"
-        android:padding="@dimen/course_content_download_status_padding"
+        android:layout_height="wrap_content"
 
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
@@ -171,4 +172,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

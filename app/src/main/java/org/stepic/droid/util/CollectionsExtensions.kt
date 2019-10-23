@@ -1,23 +1,13 @@
 package org.stepic.droid.util
 
-import android.support.v4.util.LongSparseArray
-
-
 fun <T: Comparable<T>> Array<T>.isOrdered(): Boolean =
-        (0 until this.size - 1).none { this[it] > this[it + 1] }
+    (0 until this.size - 1).none { this[it] > this[it + 1] }
 
 fun <T: Comparable<T>> Array<T>.isNotOrdered(): Boolean =
-        !this.isOrdered()
+    !this.isOrdered()
 
 fun <T: Comparable<T>> Array<T>.isOrderedDesc(): Boolean =
-        (0 until this.size - 1).none { this[it] < this[it + 1] }
-
-
-fun <E> LongSparseArray<E>.putIfAbsent(key: Long, default: E) {
-    if (this[key] == null) {
-        this.put(key, default)
-    }
-}
+    (0 until this.size - 1).none { this[it] < this[it + 1] }
 
 
 inline fun <T> List<T>.mapToLongArray(transform: (T) -> Long): LongArray {
@@ -77,3 +67,15 @@ fun <T> List<T>.swap(i: Int, j: Int): List<T> {
         }
     }
 }
+
+/**
+ * Applies mutation to list
+ */
+inline fun <T> List<T>.mutate(mutation: MutableList<T>.() -> Unit): List<T> =
+    this.toMutableList().apply(mutation)
+
+/**
+ * Applies mutation to list
+ */
+inline fun <T> PagedList<T>.mutate(mutation: MutableList<T>.() -> Unit): PagedList<T> =
+    PagedList(this.toMutableList().apply(mutation), hasPrev = hasPrev, hasNext = hasNext, page = page)

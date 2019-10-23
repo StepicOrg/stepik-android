@@ -8,6 +8,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.profile_edit.ProfileEditInteractor
 import org.stepik.android.model.user.Profile
+import org.stepik.android.model.user.ProfileWrapper
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ constructor(
 
     init {
         compositeDisposable += profileEditInteractor
-            .getProfile()
+            .getProfileWithEmail()
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -43,7 +44,12 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = {
-                    state = ProfileEditView.State.ProfileLoaded(it)
+                    val profileWrapper = (state as? ProfileEditView.State.ProfileLoaded)
+                        ?.profileWrapper
+                        ?.copy(profile = it)
+                        ?: ProfileWrapper(it)
+
+                    state = ProfileEditView.State.ProfileLoaded(profileWrapper)
                 }
             )
     }

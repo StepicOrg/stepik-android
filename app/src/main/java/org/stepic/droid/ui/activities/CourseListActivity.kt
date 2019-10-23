@@ -1,6 +1,6 @@
 package org.stepic.droid.ui.activities
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.model.CourseListType

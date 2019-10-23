@@ -1,20 +1,19 @@
 package org.stepik.android.view.course.ui.activity
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
-import android.support.design.widget.TabLayout
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -28,11 +27,10 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
@@ -43,9 +41,8 @@ import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
-import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
@@ -191,8 +188,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     private fun initViewPager(courseId: Long) {
-        val lightFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.light))
-        val regularFont = TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.regular))
+        val lightFont = ResourcesCompat.getFont(this, R.font.roboto_light)
+        val regularFont = ResourcesCompat.getFont(this, R.font.roboto_regular)
 
         val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
@@ -334,17 +331,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                     R.string.course_purchase_billing_no_purchases_to_restore
             }
 
-        Snackbar
-            .make(coursePager, errorMessage, Snackbar.LENGTH_LONG)
-            .setTextColor(ContextCompat.getColor(this, R.color.white))
-            .show()
+        coursePager.snackbar(messageRes = errorMessage)
     }
 
     override fun showContinueLearningError() {
-        Snackbar
-            .make(coursePager, R.string.course_error_continue_learning, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(this, R.color.white))
-            .show()
+        coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
     }
 
     override fun continueCourse(lastStep: LastStep) {

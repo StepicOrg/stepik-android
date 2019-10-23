@@ -3,8 +3,8 @@ package org.stepic.droid.ui.dialogs
 import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
 
 class CancelVideosDialog : DialogFragment() {
@@ -15,7 +15,8 @@ class CancelVideosDialog : DialogFragment() {
         fun newInstance(): CancelVideosDialog = CancelVideosDialog()
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog = AlertDialog
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        AlertDialog
             .Builder(requireContext())
             .setTitle(R.string.title_confirmation)
             .setMessage(R.string.are_you_sure)

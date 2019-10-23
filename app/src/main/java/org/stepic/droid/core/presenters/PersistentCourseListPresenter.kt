@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
 import org.stepic.droid.analytic.Analytic
@@ -17,11 +17,11 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
-import org.stepic.droid.util.getProgresses
 import org.stepic.droid.web.Api
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
@@ -58,7 +58,6 @@ constructor(
         private const val MAX_CURRENT_NUMBER_OF_TASKS = 2
         private const val SEVEN_DAYS_MILLIS = 7 * 24 * 60 * 60 * 1000L
         private const val MILLIS_IN_SECOND = 1000L
-        private const val TRACE_MY_COURSES_LOADING = "my_courses_loading"
     }
 
     private val currentPage = AtomicInteger(1)
@@ -102,7 +101,7 @@ constructor(
     @WorkerThread
     private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: CourseListType) {
         if (courseType == CourseListType.ENROLLED) {
-            myCoursesTrace = FirebasePerformance.startTrace(TRACE_MY_COURSES_LOADING)
+            myCoursesTrace = FirebasePerformance.startTrace(Analytic.Traces.MY_COURSES_LOADING)
         }
         if (!isLoadMore) {
             mainHandler.post {

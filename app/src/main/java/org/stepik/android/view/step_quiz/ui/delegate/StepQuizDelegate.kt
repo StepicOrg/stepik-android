@@ -1,12 +1,12 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setTextViewBackgroundWithoutResettingPadding
 import org.stepik.android.domain.lesson.model.LessonData
@@ -57,7 +57,7 @@ class StepQuizDelegate(
         } else {
             when (val replyResult = stepQuizFormDelegate.createReply()) {
                 is ReplyResult.Success ->
-                    stepQuizPresenter.createSubmission(replyResult.reply)
+                    stepQuizPresenter.createSubmission(step, replyResult.reply)
 
                 is ReplyResult.Error ->
                     stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.message))
@@ -77,13 +77,13 @@ class StepQuizDelegate(
         stepQuizActionButton.setTextColor(ContextCompat.getColorStateList(context, resolveQuizActionTextColor(state)))
         stepQuizActionButton.setCompoundDrawables(start = resolveQuizActionCompoundDrawable(state))
 
-        stepRetryButton.changeVisibility(StepQuizFormResolver.canMoveToNextStep(step, lessonData, state))
+        stepRetryButton.isVisible = StepQuizFormResolver.canMoveToNextStep(step, lessonData, state)
 
         val isNeedShowDiscountingPolicy =
             state.restrictions.discountingPolicyType != DiscountingPolicyType.NoDiscount &&
             (state.submissionState as? StepQuizView.SubmissionState.Loaded)?.submission?.status != Submission.Status.CORRECT
 
-        stepQuizDiscountingPolicy.changeVisibility(isNeedShowDiscountingPolicy)
+        stepQuizDiscountingPolicy.isVisible = isNeedShowDiscountingPolicy
         stepQuizDiscountingPolicy.text = resolveQuizDiscountingPolicyText(state)
     }
 

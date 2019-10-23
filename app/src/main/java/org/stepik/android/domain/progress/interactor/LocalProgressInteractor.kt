@@ -6,11 +6,11 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.util.distinct
-import org.stepic.droid.util.getProgresses
-import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.flatten
+import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.step.repository.StepRepository
@@ -58,7 +58,7 @@ constructor(
             .doOnSuccess { progresses ->
                 progresses.forEach(progressesPublisher::onNext)
             }
-            .toCompletable()
+            .ignoreElement()
 
     private fun getAssignments(steps: List<Step>, units: List<Unit>): Single<List<Assignment>> =
         assignmentRepository

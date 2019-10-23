@@ -2,11 +2,6 @@ package org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +9,13 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager.widget.ViewPager
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
@@ -21,26 +23,20 @@ import kotlinx.android.synthetic.main.layout_step_quiz_code_keyboard_extension.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
 import org.stepic.droid.R
-import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
-import org.stepic.droid.fonts.FontType
-import org.stepic.droid.fonts.FontsProvider
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
-import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.hideKeyboard
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
-import javax.inject.Inject
+import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, ResetCodeDialogFragment.Callback {
     companion object {
@@ -60,9 +56,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
                     this.lessonData = lessonData
                 }
     }
-
-    @Inject
-    internal lateinit var fontsProvider: FontsProvider
 
     private lateinit var callback: Callback
 
@@ -100,14 +93,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
-        injectComponent()
-    }
-
-    private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
-            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -159,7 +144,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         retryButton = playgroundLayout.stepQuizRetry
         codeLayout = playgroundLayout.codeStepLayout
 
-        retryButton.changeVisibility(false)
+        retryButton.isVisible = false
         setupCodeToolAdapter()
         setupKeyboardExtension()
 
@@ -192,8 +177,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         val activity = activity
             ?: return
 
-        val lightFont = TypefaceUtils.load(activity.assets, fontsProvider.provideFontPath(FontType.light))
-        val regularFont = TypefaceUtils.load(activity.assets, fontsProvider.provideFontPath(FontType.regular))
+        val lightFont = ResourcesCompat.getFont(activity, R.font.roboto_light)
+        val regularFont = ResourcesCompat.getFont(activity, R.font.roboto_regular)
 
         val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity)
 
@@ -326,11 +311,11 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
      *  Hiding views upon opening keyboard
      */
     private fun setViewsVisibility(needShow: Boolean) {
-        submitButtonSeparator.changeVisibility(needShow)
-        codeSubmitButton.changeVisibility(needShow)
-        centeredToolbar.changeVisibility(needShow)
-        fullScreenCodeTabs.changeVisibility(needShow)
-        fullScreenCodeSeparator.changeVisibility(needShow)
+        submitButtonSeparator.isVisible = needShow
+        codeSubmitButton.isVisible = needShow
+        centeredToolbar.isVisible = needShow
+        fullScreenCodeTabs.isVisible = needShow
+        fullScreenCodeSeparator.isVisible = needShow
     }
 
     private fun onChangeLanguageClicked() {

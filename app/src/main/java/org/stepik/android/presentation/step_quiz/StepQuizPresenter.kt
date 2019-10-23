@@ -5,10 +5,13 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Reply
@@ -20,6 +23,7 @@ import javax.inject.Inject
 class StepQuizPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val stepQuizInteractor: StepQuizInteractor,
 
     @BackgroundScheduler
@@ -67,7 +71,7 @@ constructor(
         stepQuizInteractor
             .getSubmission(attemptId)
             .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
-            .toSingle(StepQuizView.SubmissionState.Empty)
+            .toSingle(StepQuizView.SubmissionState.Empty())
 
     /**
      * Attempts
@@ -79,12 +83,16 @@ constructor(
         if (stepQuizInteractor.isNeedRecreateAttemptForNewSubmission(step)) {
             state = StepQuizView.State.Loading
 
+            val reply = (oldState.submissionState as? StepQuizView.SubmissionState.Loaded)
+                ?.submission
+                ?.reply
+
             compositeDisposable += stepQuizInteractor
                 .createAttempt(step.id)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty, oldState.restrictions) },
+                    onSuccess = { state = StepQuizView.State.AttemptLoaded(it, StepQuizView.SubmissionState.Empty(reply = reply), oldState.restrictions) },
                     onError = { state = StepQuizView.State.NetworkError }
                 )
         } else {
@@ -92,7 +100,7 @@ constructor(
                 ?.submission
                 ?.let { Submission(id = it.id + 1, attempt = oldState.attempt.id, reply = it.reply, status = Submission.Status.LOCAL) }
                 ?.let { StepQuizView.SubmissionState.Loaded(it) }
-                ?: StepQuizView.SubmissionState.Empty
+                ?: StepQuizView.SubmissionState.Empty()
 
             state = oldState.copy(submissionState = submissionState)
         }
@@ -101,7 +109,7 @@ constructor(
     /**
      * Submissions
      */
-    fun createSubmission(reply: Reply) {
+    fun createSubmission(step: Step, reply: Reply) {
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
 
@@ -119,6 +127,18 @@ constructor(
                             submissionState = StepQuizView.SubmissionState.Loaded(newSubmission),
                             restrictions = oldState.restrictions.copy(submissionCount = oldState.restrictions.submissionCount + 1)
                         )
+
+                    val params =
+                        mutableMapOf(
+                            AmplitudeAnalytic.Steps.Params.STEP to step.id,
+                            AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType()
+                        )
+                    newSubmission.reply?.language
+                        ?.let { lang ->
+                            params[AmplitudeAnalytic.Steps.Params.LANGUAGE] = lang
+                        }
+
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.SUBMISSION_MADE, params)
                 },
                 onError = { state = oldState; view?.showNetworkError() }
             )
