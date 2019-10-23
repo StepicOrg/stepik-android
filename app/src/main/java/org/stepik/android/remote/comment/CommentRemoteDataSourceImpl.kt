@@ -20,14 +20,16 @@ constructor(
         CommentsData(
             comments = response.comments ?: emptyList(),
             users = response.users ?: emptyList(),
-            votes = response.votes ?: emptyList()
+            votes = response.votes ?: emptyList(),
+            attempts = response.attempts ?: emptyList(),
+            submissions = response.submissions ?: emptyList()
         )
     }
 
     override fun getComments(vararg commentIds: Long): Single<CommentsData> =
         if (commentIds.isEmpty()) {
             Single
-                .just(CommentsData(emptyList(), emptyList(), emptyList()))
+                .just(CommentsData())
         } else {
             loggedService
                 .getComments(commentIds)
