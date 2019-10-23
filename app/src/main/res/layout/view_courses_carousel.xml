@@ -69,6 +69,8 @@
         android:id="@+id/coursesViewAll"
         android:layout_width="48dp"
         android:layout_height="32dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_alignParentTop="true"
         app:srcCompat="@drawable/ic_arrow_forward"
         android:layout_alignParentEnd="true"
