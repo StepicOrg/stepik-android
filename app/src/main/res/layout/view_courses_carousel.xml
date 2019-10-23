@@ -23,12 +23,19 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
+    <RelativeLayout
+        android:id="@+id/coursesCarouselTitleContainer"
+        android:layout_below="@id/coursesCarouselDescription"
+        android:background="@drawable/selectable_item_rounded_background"
+        android:layout_marginTop="@dimen/course_carousel_title_top_padding"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <TextView
         android:id="@+id/coursesCarouselTitle"
         app:fontFamily="@font/roboto_regular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/coursesCarouselDescription"
         android:layout_marginLeft="@dimen/course_list_side_padding"
         android:layout_marginStart="@dimen/course_list_side_padding"
         android:layout_toLeftOf="@+id/coursesViewAll"
@@ -36,7 +43,6 @@
         android:ellipsize="end"
         android:lines="1"
         android:paddingBottom="@dimen/course_carousel_title_bottom_padding"
-        android:paddingTop="@dimen/course_carousel_title_top_padding"
         android:textColor="@color/text_color"
         android:textSize="@dimen/course_carousel_title"
         tools:ignore="MissingPrefix"
@@ -59,33 +65,22 @@
         tools:ignore="MissingPrefix"
         tools:text="10 courses"/>
 
-    <TextView
+    <ImageView
         android:id="@+id/coursesViewAll"
-        app:fontFamily="@font/roboto_regular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/coursesCarouselTitle"
+        android:layout_width="48dp"
+        android:layout_height="32dp"
+        android:layout_alignParentTop="true"
+        app:srcCompat="@drawable/ic_arrow_forward"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:paddingBottom="@dimen/course_carousel_title_bottom_padding"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingLeft="@dimen/guideline_standard_padding"
-        android:paddingRight="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
-        android:text="@string/view_all_courses"
-        android:textColor="@color/view_all_course_list_color"
-        android:textSize="@dimen/course_carousel_title"
-        tools:ignore="MissingPrefix"/>
+        android:layout_alignParentRight="true" />
+
+    </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/coursesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/coursesCarouselCount"
+        android:layout_below="@id/coursesCarouselTitleContainer"
         android:paddingBottom="@dimen/course_carousel_bottom_padding"
         android:paddingTop="@dimen/courses_carousel_top_margin"
         android:clipToPadding="false"
@@ -105,7 +100,7 @@
         layout="@layout/course_item_loading_view_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/coursesCarouselCount"
+        android:layout_below="@id/coursesCarouselTitleContainer"
         android:layout_marginBottom="@dimen/course_carousel_bottom_padding"
         android:layout_marginTop="@dimen/courses_carousel_top_margin"
         android:visibility="gone"/>
@@ -115,7 +110,7 @@
         android:id="@+id/coursesPlaceholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/coursesCarouselTitle"
+        android:layout_below="@id/coursesCarouselTitleContainer"
         android:layout_marginEnd="@dimen/course_list_side_padding"
         android:layout_marginLeft="@dimen/course_list_side_padding"
         android:layout_marginRight="@dimen/course_list_side_padding"
