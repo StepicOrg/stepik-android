@@ -118,3 +118,20 @@ fun <T : Any> Single<List<T>>.maybeFirst(): Maybe<T> =
  */
 fun <T : Any> Single<List<T>>.first(): Single<T> =
     map { it.first() }
+
+/**
+ * Performs reduce operation with [seed] over values in [sources] and emits every obtained value
+ */
+fun <T : Any, R : Any> reduce(sources: List<Single<T>>, seed: R, transform: (R, T) -> Single<R>): Observable<R> =
+    if (sources.isNotEmpty()) {
+        sources
+            .first()
+            .flatMapObservable { item ->
+                transform(seed, item)
+                    .flatMapObservable { value ->
+                        Observable.just(value) + reduce(sources.subList(1, sources.size), value, transform)
+                    }
+            }
+    } else {
+        Observable.empty<R>()
+    }
