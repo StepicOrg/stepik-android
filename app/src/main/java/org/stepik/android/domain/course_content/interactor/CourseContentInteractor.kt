@@ -34,6 +34,10 @@ constructor(
 
     private val courseContentItemMapper: CourseContentItemMapper
 ) {
+    companion object {
+        private const val UNITS_CHUNK_SIZE = 10
+    }
+
     fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> =
         courseObservableSource
             .skip(if (shouldSkipStoredValue) 1 else 0)
@@ -76,7 +80,7 @@ constructor(
             .flatMap { unitIds ->
                 val sources = unitIds
                     .asIterable()
-                    .chunked(10)
+                    .chunked(UNITS_CHUNK_SIZE)
                     .map { getUnits(it.toLongArray()) }
 
                 reduce(sources, items) { newItems, units ->
