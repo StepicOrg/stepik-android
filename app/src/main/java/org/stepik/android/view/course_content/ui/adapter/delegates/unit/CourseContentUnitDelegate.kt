@@ -4,7 +4,6 @@ import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
-import androidx.annotation.StringRes
 import androidx.collection.LongSparseArray
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
@@ -95,19 +94,19 @@ class CourseContentUnitDelegate(
                     unitTextProgress.visibility = View.GONE
                 }
 
-                val timeToComplete = lesson.timeToComplete.takeIf { it > 0 } ?: 0
+                val timeToComplete = lesson.timeToComplete.takeIf { it > 60 } ?: lesson.steps.size * 60L
 
                 if (timeToComplete > 0) {
                     unitTimeToComplete.visibility = View.VISIBLE
 
-                    val (timeValue, @StringRes timeUnit) =
-                        if (timeToComplete in 0 until 3600) {
-                            timeToComplete / 60 to R.string.course_content_time_to_complete_minutes_unit
-                        } else {
-                            timeToComplete / 3600 to R.string.course_content_time_to_complete_hours_unit
-                        }
+                    val timeToCompleteString = if (timeToComplete in 0 until 3600) {
+                        val timeValue = timeToComplete / 60
+                        context.resources.getQuantityString(R.plurals.min, timeValue.toInt(), timeValue)
+                    } else {
+                        context.resources.getString(R.string.course_content_time_to_complete_hours_unit, timeToComplete / 3600)
+                    }
 
-                    unitTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, context.getString(timeUnit, timeValue))
+                    unitTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, timeToCompleteString)
                 } else {
                     unitTimeToComplete.visibility = View.GONE
                 }
