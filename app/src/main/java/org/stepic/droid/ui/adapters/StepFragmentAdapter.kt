@@ -15,7 +15,7 @@ import org.stepik.android.view.step.ui.fragment.StepFragment
 class StepFragmentAdapter(
     fm: FragmentManager,
     private val stepTypeResolver: StepTypeResolver
-) : FragmentStatePagerAdapter(fm),
+) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT),
     ActiveFragmentPagerAdapter {
     
     var items: List<StepItem> = emptyList()

@@ -17,6 +17,6 @@ constructor() : StepContentFragmentFactory {
                 VideoStepContentFragment.newInstance(stepPersistentWrapper, lessonData)
 
             else ->
-                TextStepContentFragment.newInstance(stepPersistentWrapper)
+                TextStepContentFragment.newInstance(stepPersistentWrapper, lessonData)
         }
 }

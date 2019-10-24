@@ -354,6 +354,8 @@ public interface Analytic {
         String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
         String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
         String STEP_OPENED = "step_opened";
+        String STEP_EDIT_OPENED = "step_edit_opened";
+        String STEP_EDIT_COMPLETED = "step_edit_completed";
 
         //(message = "remove it, when click_send_submission will collect enough data")
         @Deprecated

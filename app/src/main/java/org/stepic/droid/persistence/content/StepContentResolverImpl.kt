@@ -1,6 +1,6 @@
 package org.stepic.droid.persistence.content
 
-import io.reactivex.Observable
+import io.reactivex.Single
 import org.stepic.droid.persistence.content.processors.StepContentProcessor
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.files.ExternalStorageManager
@@ -17,27 +17,27 @@ import javax.inject.Inject
 class StepContentResolverImpl
 @Inject
 constructor(
-        private val processors: Set<@JvmSuppressWildcards StepContentProcessor>,
+    private val processors: Set<@JvmSuppressWildcards StepContentProcessor>,
 
-        private val persistentItemDao: PersistentItemDao,
-        private val persistentItemObserver: PersistentItemObserver,
-        private val externalStorageManager: ExternalStorageManager
+    private val persistentItemDao: PersistentItemDao,
+    private val persistentItemObserver: PersistentItemObserver,
+    private val externalStorageManager: ExternalStorageManager
 ): StepContentResolver {
     override fun getDownloadableContentFromStep(step: Step, configuration: DownloadConfiguration): Set<String> =
-            processors.map { it.extractDownloadableContent(step, configuration) }.reduce { a, b -> a union b }
+        processors.map { it.extractDownloadableContent(step, configuration) }.reduce { a, b -> a union b }
 
-    override fun resolvePersistentContent(step: Step): Observable<StepPersistentWrapper> =
-            persistentItemDao
-                    .getItems(mapOf(
-                            DBStructurePersistentItem.Columns.STEP to step.id.toString(),
-                            DBStructurePersistentItem.Columns.STATUS to PersistentItem.Status.COMPLETED.name
-                    ))
-                    .map { items ->
-                        val linkMap = resolveLinksMap(items)
-                        processors.fold(StepPersistentWrapper(step)) { wrapper, processor ->
-                            processor.injectPersistentContent(wrapper, linkMap)
-                        }
-                    }
+    override fun resolvePersistentContent(step: Step): Single<StepPersistentWrapper> =
+        persistentItemDao
+            .getItems(mapOf(
+                DBStructurePersistentItem.Columns.STEP to step.id.toString(),
+                DBStructurePersistentItem.Columns.STATUS to PersistentItem.Status.COMPLETED.name
+            ))
+            .map { items ->
+                val linkMap = resolveLinksMap(items)
+                processors.fold(StepPersistentWrapper(step)) { wrapper, processor ->
+                    processor.injectPersistentContent(wrapper, linkMap)
+                }
+            }
 
     private fun resolveLinksMap(items: List<PersistentItem>): Map<String, String> {
         val map = mutableMapOf<String, String>()

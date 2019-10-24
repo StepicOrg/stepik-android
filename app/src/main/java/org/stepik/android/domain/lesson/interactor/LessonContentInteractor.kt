@@ -41,7 +41,7 @@ constructor(
         stepRepository
             .getSteps(*stepIds)
             .flatMapObservable { it.toObservable() }
-            .flatMap(stepContentResolver::resolvePersistentContent)
+            .flatMapSingle(stepContentResolver::resolvePersistentContent)
             .toList()
 
     private fun getAssignments(unit: Unit?): Single<List<Assignment>> =

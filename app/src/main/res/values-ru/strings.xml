@@ -600,7 +600,6 @@
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
     <string name="course_control_download_all">Скачать</string>
-    <string name="course_control_downloaded_for_offline">Загружено (%s)</string>
     <string name="course_control_processing">Обработка</string>
 
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
@@ -676,6 +675,10 @@
     <string name="step_navigation_prev">Предыдущий урок</string>
     <string name="step_discussion_show">Открыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
+
+    <string name="step_action_edit_content">Изменить текст шага</string>
+    <string name="step_action_edit_hint">Текст шага</string>
+    <string name="step_action_edit_description">Вы можете редактировать только текст шага и только в виде HTML кода. Для доступа к полноценному редактору шагов, пожалуйста, воспользуйтесь веб версией Stepik.</string>
 
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 
