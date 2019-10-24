@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
@@ -17,6 +18,7 @@ import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.model.Submission
 import org.stepik.android.model.UserRole
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -49,6 +51,8 @@ class CommentDataAdapterDelegate(
         private val commentReply = root.commentReply
         private val commentLike = root.commentLike
         private val commentDislike = root.commentDislike
+
+        private val commentSolution = root.commentSolution
 
         private val commentUserIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
@@ -149,6 +153,29 @@ class CommentDataAdapterDelegate(
                         else ->
                             0.5f
                     }
+            }
+
+            // solution
+            if (data.solution != null) {
+                commentSolution.text = data.solution.submission.id.toString()
+
+                @DrawableRes
+                val compoundDrawableRes =
+                    when (data.solution.submission.status) {
+                        Submission.Status.CORRECT ->
+                            R.drawable.ic_step_quiz_correct
+
+                        Submission.Status.WRONG ->
+                            R.drawable.ic_step_quiz_wrong
+
+                        else ->
+                            -1
+                    }
+                commentSolution.setCompoundDrawables(end = compoundDrawableRes)
+
+                commentSolution.isVisible = true
+            } else {
+                commentSolution.isVisible = false
             }
         }
 
