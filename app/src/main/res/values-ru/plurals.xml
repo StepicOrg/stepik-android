@@ -6,6 +6,12 @@
         <item quantity="many">Серия из %d ответов</item>
         <item quantity="other">Серия из %d ответов</item>
     </plurals>
+    <plurals name="min">
+        <item quantity="one">%d мин</item>
+        <item quantity="few">%d мин</item>
+        <item quantity="many">%d мин</item>
+        <item quantity="other">%d мин</item>
+    </plurals>
     <plurals name="minutes">
         <item quantity="one">%d минута</item>
         <item quantity="few">%d минуты</item>
