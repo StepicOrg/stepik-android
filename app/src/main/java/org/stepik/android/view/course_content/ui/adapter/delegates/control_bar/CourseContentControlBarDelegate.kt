@@ -107,10 +107,7 @@ class CourseContentControlBarDelegate(
                         downloadDrawable.setImageDrawable(progressDrawable)
                     }
                     is DownloadProgress.Status.Cached -> {
-                        downloadText.text = context.resources.getString(
-                            R.string.course_control_downloaded_for_offline,
-                            TextUtil.formatBytes((status as DownloadProgress.Status.Cached).bytesTotal, SMALLEST_FORMAT_UNIT)
-                        )
+                        downloadText.text = TextUtil.formatBytes((status as DownloadProgress.Status.Cached).bytesTotal, SMALLEST_FORMAT_UNIT)
                         downloadDrawable.setImageResource(R.drawable.ic_download_remove)
                     }
                     is DownloadProgress.Status.NotCached -> {

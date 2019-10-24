@@ -23,6 +23,9 @@ class Lesson(
     @SerializedName("steps")
     val steps: LongArray = longArrayOf(),
 
+    @SerializedName("actions")
+    val actions: LessonActions? = null,
+
     @SerializedName("is_featured")
     val isFeatured: Boolean = false,
     @SerializedName("progress")
@@ -57,7 +60,6 @@ class Lesson(
 
     @SerializedName("time_to_complete")
     val timeToComplete: Long = 0
-
 ) : Parcelable, Progressable {
 
     override fun describeContents(): Int = 0
@@ -68,6 +70,7 @@ class Lesson(
         dest.writeString(this.slug)
         dest.writeString(this.coverUrl)
         dest.writeLongArray(this.steps)
+        dest.writeParcelable(this.actions, 0)
         dest.writeBoolean(isFeatured)
         dest.writeString(this.progress)
         dest.writeLong(this.owner)
@@ -91,6 +94,7 @@ class Lesson(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.createLongArray() ?: longArrayOf(),
+                parcel.readParcelable(LessonActions::class.java.classLoader),
                 parcel.readBoolean(),
                 parcel.readString(),
                 parcel.readLong(),

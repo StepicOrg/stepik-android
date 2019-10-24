@@ -61,7 +61,7 @@ class FileTransferService: JobIntentService() {
 
     override fun onHandleWork(intent: Intent) = fsLock.withLock {
         val storage = externalStorageManager.getSelectedStorageLocation()
-        val items = persistentItemDao.getItemsByStatus(PersistentItem.Status.COMPLETED).blockingFirst()
+        val items = persistentItemDao.getItemsByStatus(PersistentItem.Status.COMPLETED).blockingGet()
 
         items.groupBy { it.task.structure.step }.entries.forEach { (_, downloads) ->
             val structure = downloads.first().task.structure

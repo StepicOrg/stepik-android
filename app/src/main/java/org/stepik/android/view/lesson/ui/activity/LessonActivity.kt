@@ -149,6 +149,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             override fun onPageSelected(position: Int) {
                 currentFocus?.hideKeyboard()
                 lessonPresenter.onStepOpened(position)
+                invalidateOptionsMenu()
             }
         })
         lessonTab.setupWithViewPager(lessonPager, true)
