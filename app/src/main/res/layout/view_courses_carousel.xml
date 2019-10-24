@@ -26,7 +26,7 @@
     <RelativeLayout
         android:id="@+id/coursesCarouselTitleContainer"
         android:layout_below="@id/coursesCarouselDescription"
-        android:background="@drawable/selectable_item_rounded_background"
+        android:background="?selectableItemBackground"
         android:layout_marginTop="@dimen/course_carousel_title_top_padding"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -67,8 +67,9 @@
 
     <ImageView
         android:id="@+id/coursesViewAll"
-        android:layout_width="48dp"
-        android:layout_height="32dp"
+        android:layout_width="32dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="2dp"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
         android:layout_alignParentTop="true"
