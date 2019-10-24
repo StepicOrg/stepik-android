@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
 
 abstract class PresenterBase<V> : PresenterContract<V> {
     @Volatile
@@ -11,9 +11,7 @@ abstract class PresenterBase<V> : PresenterContract<V> {
     override fun attachView(view: V) {
         val previousView = this.view
 
-        if (previousView != null) {
-            throw IllegalStateException("Previous view is not detached! previousView = " + previousView)
-        }
+        check(previousView == null) { "Previous view is not detached! previousView = $previousView" }
 
         this.view = view
     }

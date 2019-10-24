@@ -1,7 +1,7 @@
 package org.stepic.droid.preferences
 
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 

@@ -1,8 +1,15 @@
 package org.stepic.droid.ui.util
 
-import android.support.v7.widget.*
 import android.util.DisplayMetrics
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.OrientationHelper
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SnapHelper
+import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 class CoursesSnapHelper(private val rowCount: Int) : SnapHelper() {
 
@@ -85,33 +92,31 @@ class CoursesSnapHelper(private val rowCount: Int) : SnapHelper() {
     private fun getNextView(currentPosition: Int, layoutManager: RecyclerView.LayoutManager): View? {
         val lastPosition = layoutManager.itemCount - 1
         val currentPositionPlusRowCount = currentPosition + rowCount
-        val nextPosition = Math.min(lastPosition, currentPositionPlusRowCount)
+        val nextPosition = min(lastPosition, currentPositionPlusRowCount)
         return layoutManager.findViewByPosition(nextPosition)
     }
 
     private fun getPreviousView(currentPosition: Int, layoutManager: RecyclerView.LayoutManager): View? {
-        val previousPosition = Math.max(0, currentPosition)
+        val previousPosition = max(0, currentPosition)
         return layoutManager.findViewByPosition(previousPosition)
     }
 
-    override fun createScroller(layoutManager: RecyclerView.LayoutManager): RecyclerView.SmoothScroller? {
-        return object : LinearSmoothScroller(recyclerView?.context) {
-            override fun onTargetFound(targetView: View, state: RecyclerView.State, action: RecyclerView.SmoothScroller.Action) {
+    override fun createScroller(layoutManager: RecyclerView.LayoutManager): RecyclerView.SmoothScroller? =
+        object : LinearSmoothScroller(recyclerView?.context) {
+            override fun onTargetFound(targetView: View, state: RecyclerView.State, action: Action) {
                 val snapDistances = calculateDistanceToFinalSnap(layoutManager, targetView)
                 val dx = snapDistances[0]
                 val dy = snapDistances[1]
-                val time = calculateTimeForDeceleration(Math.max(Math.abs(dx), Math.abs(dy)))
+                val time = calculateTimeForDeceleration(max(abs(dx), abs(dy)))
                 if (time > 0) {
                     action.update(dx, dy, time, mDecelerateInterpolator)
                 }
             }
 
             override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float =
-                    MILLISECONDS_PER_INCH / displayMetrics.densityDpi
+                MILLISECONDS_PER_INCH / displayMetrics.densityDpi
 
             override fun calculateTimeForScrolling(dx: Int): Int =
-                    Math.min(MAX_DURATION_OF_SCROLL, super.calculateTimeForScrolling(dx))
+                min(MAX_DURATION_OF_SCROLL, super.calculateTimeForScrolling(dx))
         }
-    }
-
 }

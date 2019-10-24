@@ -1,6 +1,6 @@
 package org.stepik.android.view.fragment_pager
 
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 
 class FragmentDelegateScrollStateChangeListener(

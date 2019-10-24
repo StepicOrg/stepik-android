@@ -1,8 +1,8 @@
 package org.stepic.droid.core
 
 import org.stepic.droid.di.course_list.CourseGeneralScope
-import org.stepik.android.model.Course
 import org.stepic.droid.util.RxOptional
+import org.stepik.android.model.Course
 import javax.inject.Inject
 
 @CourseGeneralScope

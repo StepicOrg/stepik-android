@@ -1,7 +1,7 @@
 package org.stepik.android.view.base.ui.mapper
 
 import android.content.Context
-import android.support.annotation.PluralsRes
+import androidx.annotation.PluralsRes
 import org.stepic.droid.R
 
 object DateMapper {

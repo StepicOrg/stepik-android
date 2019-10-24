@@ -111,8 +111,6 @@
     <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
     <string name="sound_title">Звук</string>
-    <string name="downloading_title">Скачивается…</string>
-    <string name="downloading_cancel_all">Отменить все</string>
     <string name="cached_title">Загружено</string>
     <string name="remove_all">Удалить все</string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
@@ -364,8 +362,6 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Краткая биография &amp; Информация</string>
-    <string name="profile_font_settings_title">Размер шрифта</string>
-    <string name="profile_font_settings_dialog_title">Выберите размер шрифта</string>
 
     <!--Home screen-->
     <string name="catalog_title">Каталог</string>
@@ -555,9 +551,6 @@
     <string name="achievement_share">Я получил достижение «%s» на Stepik.org. Попробуй обогнать!</string>
     <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения «%s», проверьте свой профиль.</string>
 
-
-    <string name="downloads_view_cant_remove">Невозможно удалить загрузку</string>
-
     <!-- Course -->
     <string name="course_verified">Проверенный</string>
     <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
@@ -607,7 +600,8 @@
 
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
-    <string name="course_control_download_all">Скачать все</string>
+    <string name="course_control_download_all">Скачать</string>
+    <string name="course_control_processing">Обработка</string>
 
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
     <string name="course_content_calendar_no_calendars_error">Календари не найдены</string>
@@ -631,7 +625,9 @@
 
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
+    <string name="video_player_control_notification_channel_description">Панель с управлением фоновым воспроизведеинем плеера</string>
     <string name="video_player_in_background_popup">Вы можете продолжить воспроизведение видео в фоне</string>
+    <string name="video_player_autoplay_cancel">Остаться на этом шаге</string>
 
 
     <string name="retention_notification_day1_title">Не сбавляем темп</string>
@@ -681,6 +677,10 @@
     <string name="step_discussion_show">Открыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
 
+    <string name="step_action_edit_content">Изменить текст шага</string>
+    <string name="step_action_edit_hint">Текст шага</string>
+    <string name="step_action_edit_description">Вы можете редактировать только текст шага и только в виде HTML кода. Для доступа к полноценному редактору шагов, пожалуйста, воспользуйтесь веб версией Stepik.</string>
+
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 
     <string name="step_quiz_action_button_submit">Отправить</string>
@@ -692,7 +692,7 @@
 
     <string name="step_quiz_feedback_evaluation">Проверка…</string>
     <string name="step_quiz_feedback_correct_free_answer">Любой ответ будет оценен как правильный</string>
-    <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз!</string>
+    <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз</string>
     <string name="step_quiz_feedback_wrong_last_try">Неверно</string>
 
     <string name="step_quiz_number_description">Введите численный ответ</string>
@@ -747,6 +747,7 @@
 
     <string name="comment_tag_pinned">Закреплен</string>
     <string name="comment_tag_course_team">Команда курса</string>
+    <string name="comment_tag_staff">Команда Stepik</string>
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>
@@ -758,4 +759,16 @@
     <string name="main_tab_catalog">Каталог</string>
     <string name="main_tab_profile">Профиль</string>
     <string name="main_tab_notifications">Уведомления</string>
+
+    <!-- Settings -->
+    <string name="setting_section_learning">Обучение</string>
+
+    <string name="setting_autoplay">Автопереход на следующий шаг по окончании видео</string>
+    <string name="setting_autoplay_short">Автопереход на следующий шаг</string>
+
+    <string name="setting_font_size">Размер шрифта в шагах</string>
+    <string name="setting_font_size_dialog_title">Выберите размер шрифта</string>
+
+    <!-- Downloads -->
+    <string name="downloads_title">Загруженные курсы</string>
 </resources>

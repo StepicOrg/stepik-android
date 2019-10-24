@@ -1,7 +1,7 @@
 package org.stepik.android.view.step_quiz_matching.ui.fragment
 
-import android.support.v4.app.Fragment
 import android.view.View
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_sorting.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper

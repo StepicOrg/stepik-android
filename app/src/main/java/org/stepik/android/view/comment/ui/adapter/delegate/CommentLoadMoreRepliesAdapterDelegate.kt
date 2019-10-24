@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.stepic.droid.R
 import org.stepik.android.presentation.comment.model.CommentItem
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CommentLoadMoreRepliesAdapterDelegate(
     private val onItemClick: (CommentItem.LoadMoreReplies) -> Unit

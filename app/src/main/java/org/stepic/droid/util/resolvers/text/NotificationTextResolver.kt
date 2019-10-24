@@ -1,9 +1,9 @@
 package org.stepic.droid.util.resolvers.text
 
 import android.content.Context
-import android.support.v4.content.res.ResourcesCompat
 import android.text.SpannableString
 import android.text.style.URLSpan
+import androidx.core.content.res.ResourcesCompat
 import org.stepic.droid.R
 import org.stepic.droid.ui.custom.CustomFontURLSpan
 import javax.inject.Inject

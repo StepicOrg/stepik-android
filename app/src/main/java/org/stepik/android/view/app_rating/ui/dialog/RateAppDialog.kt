@@ -1,14 +1,14 @@
 package org.stepik.android.view.app_rating.ui.dialog
 
 import android.os.Bundle
-import android.support.annotation.ColorRes
-import android.support.annotation.StringRes
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.res.ResourcesCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_rate_app.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -59,12 +59,12 @@ class RateAppDialog : DialogFragment() {
         }
 
         rateDialogLater.setOnClickListener {
-            dialog.dismiss()
+            dialog?.dismiss()
             callback.onClickLater(rateDialogRatingBar.rating.toInt())
         }
 
         rateDialogPositive.setOnClickListener {
-            dialog.dismiss()
+            dialog?.dismiss()
             val rating = rateDialogRatingBar.rating.toInt()
             if (RatingUtil.isExcellent(rating)) {
                 callback.onClickGooglePlay(rating)

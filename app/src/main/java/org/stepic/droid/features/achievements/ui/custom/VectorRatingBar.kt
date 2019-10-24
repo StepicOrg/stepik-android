@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.support.annotation.DrawableRes
-import android.support.v7.content.res.AppCompatResources
 import android.util.AttributeSet
 import android.view.View
+import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.toBitmap
 import kotlin.math.max

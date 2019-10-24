@@ -2,7 +2,7 @@ package org.stepic.droid.notifications.model
 
 import android.app.NotificationManager
 import android.os.Build
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.stepic.droid.R
 
 private fun getImportanceCompat(): Int =

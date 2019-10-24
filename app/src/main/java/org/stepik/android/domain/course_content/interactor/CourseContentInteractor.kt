@@ -1,10 +1,15 @@
 package org.stepik.android.domain.course_content.interactor
 
+import com.google.firebase.perf.FirebasePerformance
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.util.concat
 import org.stepic.droid.util.mapToLongArray
+import org.stepic.droid.util.plus
+import org.stepic.droid.util.reduce
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -29,6 +34,10 @@ constructor(
 
     private val courseContentItemMapper: CourseContentItemMapper
 ) {
+    companion object {
+        private const val UNITS_CHUNK_SIZE = 10
+    }
+
     fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> =
         courseObservableSource
             .skip(if (shouldSkipStoredValue) 1 else 0)
@@ -39,14 +48,20 @@ constructor(
     private fun getEmptySections(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable.just(course to emptyList())
 
-    private fun getContent(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
-        getSectionsOfCourse(course)
+    private fun getContent(course: Course): Observable<Pair<Course, List<CourseContentItem>>> {
+        val courseContentLoadingTrace = FirebasePerformance.getInstance().newTrace(Analytic.Traces.COURSE_CONTENT_LOADING)
+        courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.COURSE, course.id.toString())
+        courseContentLoadingTrace.start()
+
+        return getSectionsOfCourse(course)
             .flatMap { populateSections(course, it) }
             .flatMapObservable { items ->
-                Single
-                    .concat(Single.just(course to items), loadUnits(course, items))
-                    .toObservable()
+                Observable.just(course to items) + loadUnits(course, items)
             }
+            .doOnComplete {
+                courseContentLoadingTrace.stop()
+            }
+    }
 
     private fun getSectionsOfCourse(course: Course): Single<List<Section>> =
         sectionRepository
@@ -59,19 +74,26 @@ constructor(
                 courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, progresses)
             }
 
-    private fun loadUnits(course: Course, items: List<CourseContentItem>): Single<Pair<Course, List<CourseContentItem>>> =
-        Single
+    private fun loadUnits(course: Course, items: List<CourseContentItem>): Observable<Pair<Course, List<CourseContentItem>>> =
+        Observable
             .just(courseContentItemMapper.getUnitPlaceholdersIds(items))
-            .flatMap(::getUnits)
-            .flatMap { units ->
-                val sectionItems = items
-                    .filterIsInstance<CourseContentItem.SectionItem>()
+            .flatMap { unitIds ->
+                val sources = unitIds
+                    .asIterable()
+                    .chunked(UNITS_CHUNK_SIZE)
+                    .map { getUnits(it.toLongArray()) }
 
-                populateUnits(sectionItems, units)
+                reduce(sources, items) { newItems, units ->
+                    val sectionItems = newItems
+                        .filterIsInstance<CourseContentItem.SectionItem>()
+
+                    populateUnits(sectionItems, units)
+                        .map { unitItems ->
+                            courseContentItemMapper.replaceUnitPlaceholders(newItems, unitItems)
+                        }
+                }
             }
-            .map { unitItems ->
-                course to courseContentItemMapper.replaceUnitPlaceholders(items, unitItems)
-            }
+            .map { course to it }
 
     private fun getUnits(unitIds: LongArray): Single<List<Unit>> =
         unitRepository

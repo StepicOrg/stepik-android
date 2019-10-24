@@ -126,8 +126,6 @@
     <string name="vibration_title">Vibration</string>
     <string name="empty_try_later">For now it\'s empty, try again later.</string>
     <string name="sound_title">Sound</string>
-    <string name="downloading_title">Downloading…</string>
-    <string name="downloading_cancel_all">Cancel all</string>
     <string name="percent_symbol" translatable="false">%d%%</string>
     <string name="cached_title">Cached</string>
     <string name="remove_all">Remove all</string>
@@ -356,6 +354,8 @@
 
     <string name="video_content_description">Play video</string>
 
+    <string name="video_player_quality_icon" translatable="false">%sp</string>
+
     <!--Rate dialog-->
     <string name="rate_dialog_title">Do you like Stepik?</string>
     <string name="rate_dialog_google_play">Google Play</string>
@@ -372,8 +372,8 @@
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
     <string name="profile_user_id" translatable="false">User ID: %d</string>
-    <string name="profile_font_settings_title">Font size</string>
-    <string name="profile_font_settings_dialog_title">Choose font size</string>
+    <string name="profile_self_state" translatable="false">self</string>
+    <string name="profile_other_state" translatable="false">other</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
@@ -573,9 +573,6 @@
     <string name="achievement_share">I\'ve unlocked achievement «%s» at Stepik.org. Join and beat my record!</string>
     <string name="achievement_notification_message">Congratulations! Obtained a new level of achievement «%s», check your profile.</string>
 
-
-    <string name="downloads_view_cant_remove">Can\'t remove item</string>
-
     <!-- Course -->
     <string name="course_verified">Verified</string>
     <string name="course_share_description">Share link with your friends to take this course together!</string>
@@ -635,7 +632,8 @@
 
     <string name="course_control_schedule">Schedule</string>
     <string name="course_control_filter">Filter by</string>
-    <string name="course_control_download_all">Download all</string>
+    <string name="course_control_download_all">Download</string>
+    <string name="course_control_processing">Processing</string>
 
     <string name="course_content_calendar_title" translatable="false">%s – %s</string>
     <string name="course_content_calendar_sync_success">Dates successfully exported to calendar</string>
@@ -660,7 +658,9 @@
 
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
+    <string name="video_player_control_notification_channel_description">Control panel of video player</string>
     <string name="video_player_in_background_popup">You can play video in background</string>
+    <string name="video_player_autoplay_cancel">Stay on this step</string>
 
 
     <string name="retention_notification_day1_title">Don\'t slow down</string>
@@ -710,6 +710,10 @@
     <string name="step_navigation_prev">Previous lesson</string>
     <string name="step_discussion_show">Show discussions (%d)</string>
     <string name="step_discussion_write_first">Leave a comment</string>
+
+    <string name="step_action_edit_content">Edit content</string>
+    <string name="step_action_edit_hint">Step text</string>
+    <string name="step_action_edit_description">You can only edit the step\'s text, and only using raw HTML. To access full step editor please use web version of Stepik.</string>
 
     <string name="step_content_video_no_video">Video has not been uploaded or processed yet</string>
 
@@ -777,6 +781,7 @@
 
     <string name="comment_tag_pinned">Pinned</string>
     <string name="comment_tag_course_team">Course Team</string>
+    <string name="comment_tag_staff">Stepik Team</string>
 
     <string name="relative_date_pattern">%s ago</string>
     <string name="relative_date_now">now</string>
@@ -788,4 +793,16 @@
     <string name="main_tab_catalog">Catalog</string>
     <string name="main_tab_profile">Profile</string>
     <string name="main_tab_notifications">Notifications</string>
+
+    <!-- Settings -->
+    <string name="setting_section_learning">Learning</string>
+
+    <string name="setting_autoplay">Auto-transition to next step on video end</string>
+    <string name="setting_autoplay_short">Auto-transition to next step</string>
+
+    <string name="setting_font_size">Font size in steps</string>
+    <string name="setting_font_size_dialog_title">Choose font size</string>
+
+    <!-- Downloads -->
+    <string name="downloads_title">Downloaded courses</string>
 </resources>

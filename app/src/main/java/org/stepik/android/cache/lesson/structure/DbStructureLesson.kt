@@ -11,6 +11,7 @@ object DbStructureLesson {
         const val SLUG = "slug"
         const val COVER_URL = "cover_url"
         const val STEPS = "steps"
+        const val ACTIONS = "actions"
         const val IS_FEATURED = "is_featured"
         const val PROGRESS = "progress"
         const val OWNER = "owner"

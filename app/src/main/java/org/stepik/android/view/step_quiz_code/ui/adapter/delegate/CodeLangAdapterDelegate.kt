@@ -3,8 +3,8 @@ package org.stepik.android.view.step_quiz_code.ui.adapter.delegate
 import android.view.ViewGroup
 import android.widget.TextView
 import org.stepic.droid.R
-import ru.nobird.android.ui.adapterdelegatessupport.AdapterDelegate
-import ru.nobird.android.ui.adapterdelegatessupport.DelegateViewHolder
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CodeLangAdapterDelegate(
     private val onCodeLangClicked: (String) -> Unit

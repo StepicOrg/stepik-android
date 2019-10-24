@@ -3,8 +3,8 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
 import android.widget.NumberPicker
+import androidx.fragment.app.DialogFragment
 import biz.kasual.materialnumberpicker.MaterialNumberPicker
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
@@ -66,19 +66,19 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         }
 
         return MaterialDialog.Builder(requireContext())
-                .theme(Theme.LIGHT)
-                .title(R.string.choose_notification_time_interval)
-                .customView(picker, false)
-                .positiveText(R.string.ok)
-                .negativeText(R.string.cancel)
-                .onPositive { _, _ ->
-                    //todo set result to Ok with position
-                    callback.onTimeIntervalPicked(picker.value)
-                }
-                .build()
+            .theme(Theme.LIGHT)
+            .title(R.string.choose_notification_time_interval)
+            .customView(picker, false)
+            .positiveText(R.string.ok)
+            .negativeText(R.string.cancel)
+            .onPositive { _, _ ->
+                //todo set result to Ok with position
+                callback.onTimeIntervalPicked(picker.value)
+            }
+            .build()
     }
 
-    override fun onCancel(dialog: DialogInterface?) {
+    override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
         // explicitly click Negative or cancel by back button || touch outside
         callback.onTimeIntervalPicked(sharedPreferences.timeNotificationCode)

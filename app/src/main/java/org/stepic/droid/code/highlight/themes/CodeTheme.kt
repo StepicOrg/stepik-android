@@ -1,8 +1,8 @@
 package org.stepic.droid.code.highlight.themes
 
-import android.support.annotation.ColorInt
-import org.stepic.droid.util.ColorUtil
+import androidx.annotation.ColorInt
 import org.stepic.droid.R
+import org.stepic.droid.util.ColorUtil
 
 class CodeTheme (
         val name: String,

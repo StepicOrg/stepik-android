@@ -4,7 +4,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import org.stepic.droid.R
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 
@@ -27,8 +27,10 @@ object NotificationChannelInitializer {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun initChannel(context: Context,
-                            stepikChannel: StepikNotificationChannel): NotificationChannel {
+    private fun initChannel(
+        context: Context,
+        stepikChannel: StepikNotificationChannel
+    ): NotificationChannel {
         val channelName = context.getString(stepikChannel.visibleChannelNameRes)
         val channel = NotificationChannel(stepikChannel.channelId, channelName, stepikChannel.importance)
         channel.description = context.getString(stepikChannel.visibleChannelDescriptionRes)

@@ -2,7 +2,7 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.ColorRes
+import androidx.annotation.ColorRes
 import org.stepic.droid.R
 
 enum class CoursesCarouselColorType(

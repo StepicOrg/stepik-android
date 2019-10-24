@@ -1,11 +1,11 @@
 package org.stepic.droid.ui.fragments
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_feedback.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App

@@ -9,7 +9,7 @@
     android:id="@+id/registerRootView"
     tools:context=".ui.activities.RegisterActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -112,7 +112,7 @@
 
                 <include layout="@layout/edit_text_separator" />
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:passwordToggleDrawable="@drawable/password_toggle"
@@ -127,7 +127,7 @@
                         android:imeOptions="flagNoFullscreen|actionSend"
                         android:inputType="textPassword"
                         android:maxLength="@integer/max_length_of_password"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -158,6 +158,6 @@
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

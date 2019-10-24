@@ -2,18 +2,28 @@ package org.stepik.android.view.course_content.ui.adapter.delegates.control_bar
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.TextView
+import androidx.collection.LongSparseArray
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import kotlinx.android.synthetic.main.view_course_content_control_bar.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
+import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.setHeight
+import org.stepic.droid.util.TextUtil
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseContentControlBarDelegate(
-    private val controlBarClickListener: CourseContentControlBarClickListener
+    private val controlBarClickListener: CourseContentControlBarClickListener,
+    private val courseDownloadStatuses: LongSparseArray<DownloadProgress.Status>
 ) : AdapterDelegate<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
+    companion object {
+        private const val SMALLEST_FORMAT_UNIT = 1024 * 1024L // 1 mb
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder =
         ViewHolder(createView(parent, R.layout.view_course_content_control_bar))
@@ -22,7 +32,19 @@ class CourseContentControlBarDelegate(
         data is CourseContentItem.ControlBar
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
+
         private val controlBar = root.controlBar
+        private lateinit var status: DownloadProgress.Status
+        private lateinit var downloadControl: View
+        private lateinit var downloadDrawable: ImageView
+        private lateinit var downloadText: TextView
+
+        private val progressDrawable = CircularProgressDrawable(context).apply {
+            strokeWidth = 5f
+            centerRadius = 20f
+            setColorSchemeColors(0x535366)
+            start()
+        }
 
         private val controlBarHeight: Int
 
@@ -38,7 +60,12 @@ class CourseContentControlBarDelegate(
 
                         R.id.course_control_download_all -> {
                             if (data.course != null) {
-                                controlBarClickListener.onDownloadAllClicked(data.course)
+                                when (status) {
+                                    is DownloadProgress.Status.NotCached ->
+                                        controlBarClickListener.onDownloadAllClicked(data.course)
+                                    is DownloadProgress.Status.Cached ->
+                                        controlBarClickListener.onRemoveAllClicked(data.course)
+                                }
                             }
                         }
                     }
@@ -66,6 +93,29 @@ class CourseContentControlBarDelegate(
             controlBar.changeItemVisibility(R.id.course_control_schedule, isScheduleVisible)
             controlBar.changeItemVisibility(R.id.course_control_download_all, data.course != null)
             controlBar.setHeight(if (data.isEnabled) controlBarHeight else 0)
+
+            downloadControl = controlBar.findViewById<View>(R.id.course_control_download_all)
+            downloadDrawable = downloadControl.findViewById(android.R.id.icon)
+            downloadText = downloadControl.findViewById(android.R.id.text1)
+
+            if (data.course != null) {
+                status = courseDownloadStatuses[data.course.id] ?: DownloadProgress.Status.Pending
+                downloadControl.isEnabled = status is DownloadProgress.Status.Cached || status is DownloadProgress.Status.NotCached
+                when (status) {
+                    is DownloadProgress.Status.InProgress, DownloadProgress.Status.Pending -> {
+                        downloadText.text = context.resources.getString(R.string.course_control_processing)
+                        downloadDrawable.setImageDrawable(progressDrawable)
+                    }
+                    is DownloadProgress.Status.Cached -> {
+                        downloadText.text = TextUtil.formatBytes((status as DownloadProgress.Status.Cached).bytesTotal, SMALLEST_FORMAT_UNIT)
+                        downloadDrawable.setImageResource(R.drawable.ic_download_remove)
+                    }
+                    is DownloadProgress.Status.NotCached -> {
+                        downloadText.text = context.resources.getString(R.string.course_control_download_all)
+                        downloadDrawable.setImageResource(R.drawable.ic_download)
+                    }
+                }
+            }
         }
 
         private fun handleScheduleClick(data: CourseContentItem.ControlBar) {

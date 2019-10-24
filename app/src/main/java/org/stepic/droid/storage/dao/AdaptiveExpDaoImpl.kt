@@ -8,7 +8,8 @@ import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import java.util.*
+import java.util.ArrayList
+import java.util.Calendar
 import javax.inject.Inject
 
 class AdaptiveExpDaoImpl

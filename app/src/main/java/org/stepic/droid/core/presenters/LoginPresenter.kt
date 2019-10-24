@@ -1,7 +1,7 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.MainThread
-import android.support.annotation.WorkerThread
+import androidx.annotation.MainThread
+import androidx.annotation.WorkerThread
 import com.google.android.gms.auth.api.credentials.Credential
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic

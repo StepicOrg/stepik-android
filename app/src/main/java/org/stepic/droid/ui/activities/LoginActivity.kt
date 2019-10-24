@@ -2,14 +2,14 @@ package org.stepic.droid.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.res.ResourcesCompat
-import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.gms.auth.api.credentials.Credential
 import kotlinx.android.synthetic.main.activity_login.*
 import org.stepic.droid.R
@@ -28,6 +28,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.toBundle
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class LoginActivity : SmartLockActivityBase(), LoginView {
@@ -54,7 +55,7 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         progressLogin = LoadingProgressDialog(this)
         progressHandler = object : ProgressHandler {
             override fun activate() {
-                hideSoftKeypad()
+                currentFocus?.hideKeyboard()
                 ProgressHelper.activate(progressLogin)
             }
 
@@ -169,7 +170,7 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
 
     private fun redirectFromSocial(intent: Intent) {
         try {
-            val code = intent.data.getQueryParameter("code")
+            val code = intent?.data.getQueryParameter("code")
             loginPresenter.loginWithCode(code)
         } catch (throwable: Throwable) {
             analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, throwable)
@@ -215,7 +216,7 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
 
     override fun onSuccessLogin(credentials: Credentials?) {
         progressHandler.dismiss()
-        if (credentials == null || !checkPlayServices() || !(googleApiClient?.isConnected ?: false)) {
+        if (credentials == null || !checkPlayServices() || googleApiClient?.isConnected != true) {
             openMainFeed()
         } else {
             //only if we have not null data (we can apply smart lock && google api client is connected and available

@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable

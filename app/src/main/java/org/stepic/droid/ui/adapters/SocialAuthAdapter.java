@@ -1,10 +1,12 @@
 package org.stepic.droid.ui.adapters;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
@@ -52,6 +54,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
 
     @Override
+    @NonNull
     public SocialViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.social_item, parent, false);
         return new SocialViewHolder(v, this);
@@ -102,12 +105,7 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    clickItemListener.onItemClick(getAdapterPosition());
-                }
-            });
+            rootView.setOnClickListener(v -> clickItemListener.onItemClick(getAdapterPosition()));
         }
     }
 }

@@ -24,6 +24,8 @@ import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.step_source.model.StepSourceRequest;
+import org.stepik.android.remote.step_source.model.StepSourceResponse;
 import org.stepik.android.remote.submission.model.SubmissionRequest;
 import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
@@ -322,5 +324,19 @@ public interface StepicRestLoggedService {
     @DELETE("api/course-reviews/{courseReviewId}")
     Completable removeCourseReview(
             @Path("courseReviewId") final long courseReviewId
+    );
+
+    /*
+     * Step sources
+     */
+    @GET("api/step-sources")
+    Single<StepSourceResponse> getStepSources(
+            @Query("ids[]") long[] ids
+    );
+
+    @PUT("api/step-sources/{stepId}")
+    Single<StepSourceResponse> saveStepSource(
+            @Path("stepId") final long stepId,
+            @Body StepSourceRequest request
     );
 }

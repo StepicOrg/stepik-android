@@ -2,11 +2,11 @@ package org.stepic.droid.adaptive.ui.animations
 
 import android.content.Context
 import android.graphics.Color
-import android.support.design.widget.CoordinatorLayout
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
+import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.core.content.ContextCompat
 import com.github.jinatonic.confetti.CommonConfetti
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.custom.morphing.MorphingHelper

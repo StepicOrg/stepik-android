@@ -2,8 +2,8 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import org.stepic.droid.R
 
 enum class CollectionDescriptionColors(

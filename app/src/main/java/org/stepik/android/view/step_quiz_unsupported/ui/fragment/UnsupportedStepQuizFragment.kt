@@ -1,17 +1,17 @@
 package org.stepik.android.view.step_quiz_unsupported.ui.fragment
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.setCompoundDrawables
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class UnsupportedStepQuizFragment : Fragment() {

@@ -2,9 +2,9 @@ package org.stepik.android.cache.personal_deadlines.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.operations.DatabaseOperations
+import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner
 import javax.inject.Inject
 
 class DeadlinesBannerDaoImpl

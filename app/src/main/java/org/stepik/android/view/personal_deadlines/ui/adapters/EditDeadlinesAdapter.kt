@@ -1,12 +1,12 @@
 package org.stepik.android.view.personal_deadlines.ui.adapters
 
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.view_edit_deadlines_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.personal_deadlines.model.Deadline
@@ -23,7 +23,7 @@ class EditDeadlinesAdapter(
     override fun getItemCount(): Int =
         sections.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditDeadlinesAdapter.EditDeadlinesViewHolder =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EditDeadlinesViewHolder =
         EditDeadlinesViewHolder(parent.inflate(R.layout.view_edit_deadlines_item))
 
     override fun onBindViewHolder(holder: EditDeadlinesViewHolder, position: Int) {
@@ -34,9 +34,9 @@ class EditDeadlinesAdapter(
         if (deadline != null) {
             holder.deadline.text = holder.itemView.context.getString(R.string.deadlines_section,
                     DateTimeHelper.getPrintableDate(deadline.deadline, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault()))
-            holder.deadline.changeVisibility(true)
+            holder.deadline.isVisible = true
         } else {
-            holder.deadline.changeVisibility(false)
+            holder.deadline.isVisible = false
         }
     }
 

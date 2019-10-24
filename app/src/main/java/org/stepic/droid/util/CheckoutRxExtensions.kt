@@ -2,7 +2,12 @@ package org.stepic.droid.util
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.solovyev.android.checkout.*
+import org.solovyev.android.checkout.BillingRequests
+import org.solovyev.android.checkout.Checkout
+import org.solovyev.android.checkout.Purchase
+import org.solovyev.android.checkout.RequestListener
+import org.solovyev.android.checkout.Sku
+import org.solovyev.android.checkout.UiCheckout
 
 fun UiCheckout.startPurchaseFlowRx(sku: Sku, payload: String?): Single<Purchase> =
     Single.create { emitter ->

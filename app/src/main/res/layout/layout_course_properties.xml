@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/learnersCountImage"
         style="@style/CourseWidgetPropertyImageView"
         android:layout_alignBaseline="@+id/learnersCountText"
@@ -16,14 +16,14 @@
         android:contentDescription="@string/learners_count"
         android:src="@drawable/ic_learners"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/learnersCountText"
         style="@style/CourseWidgetPropertyTextView"
         android:layout_toEndOf="@id/learnersCountImage"
         android:layout_toRightOf="@id/learnersCountImage"
         tools:text="999K"/>
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/courseRatingImage"
         style="@style/CourseWidgetPropertyImageView"
         android:layout_alignBaseline="@+id/courseRatingText"
@@ -33,7 +33,7 @@
         android:contentDescription="@string/course_rating"
         android:src="@drawable/ic_rating"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/courseRatingText"
         style="@style/CourseWidgetPropertyTextView"
         android:layout_toEndOf="@id/courseRatingImage"
@@ -49,7 +49,7 @@
         android:layout_toRightOf="@id/courseRatingText"
         app:progressBarStroke="@dimen/course_item_progress_bar_size" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/courseItemProgressTitle"
         style="@style/CourseWidgetPropertyTextView"
         android:layout_toEndOf="@id/courseItemProgressView"

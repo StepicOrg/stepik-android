@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_content.ui.factory
 
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.lesson.model.LessonData
@@ -17,6 +17,6 @@ constructor() : StepContentFragmentFactory {
                 VideoStepContentFragment.newInstance(stepPersistentWrapper, lessonData)
 
             else ->
-                TextStepContentFragment.newInstance(stepPersistentWrapper)
+                TextStepContentFragment.newInstance(stepPersistentWrapper, lessonData)
         }
 }

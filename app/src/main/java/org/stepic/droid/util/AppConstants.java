@@ -15,6 +15,7 @@ public class AppConstants {
     public static final String KEY_COURSE_BUNDLE = "course";
     public static final String KEY_COURSE_LONG_ID = "course_id_key";
     public static final String DEFAULT_QUALITY = "360";
+    public static final String HIGH_QUALITY = "720";
     public static final String MAX_QUALITY = "1080";
     public static final int MAX_QUALITY_INT = 1080;
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";

@@ -1,18 +1,17 @@
 package org.stepik.android.view.comment.ui.activity
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SimpleItemAnimator
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.empty_comments.*
 import kotlinx.android.synthetic.main.error_no_connection.*
@@ -21,7 +20,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
@@ -32,12 +30,15 @@ import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.comment.model.DiscussionOrderItem
+import org.stepik.android.view.comment.ui.adapter.decorator.CommentItemDecoration
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentDataAdapterDelegate
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentLoadMoreRepliesAdapterDelegate
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAdapterDelegate
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
+import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.ui.adapterssupport.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class CommentsActivity :
@@ -129,9 +130,19 @@ class CommentsActivity :
             adapter = commentsAdapter
             layoutManager = LinearLayoutManager(context)
 
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
-            })
+            addItemDecoration(CommentItemDecoration(
+                separatorColor = ContextCompat.getColor(context, R.color.grey04),
+                bigSeparatorBounds =
+                    CommentItemDecoration.SeparatorBounds(
+                        size = resources.getDimensionPixelSize(R.dimen.comment_item_separator_big),
+                        offset = 0
+                    ),
+                smallSeparatorBounds =
+                    CommentItemDecoration.SeparatorBounds(
+                        size = resources.getDimensionPixelSize(R.dimen.comment_item_separator_small),
+                        offset = resources.getDimensionPixelOffset(R.dimen.comment_item_reply_separator_offset)
+                    )
+            ))
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -270,27 +281,19 @@ class CommentsActivity :
     }
 
     private fun showCommentComposeDialog(stepId: Long, parent: Long? = null, comment: Comment? = null) {
-        val supportFragmentManager = supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(ComposeCommentDialogFragment.TAG) == null }
-            ?: return
-
         analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
 
         ComposeCommentDialogFragment
             .newInstance(target = stepId, parent = parent, comment = comment)
-            .show(supportFragmentManager, ComposeCommentDialogFragment.TAG)
+            .showIfNotExists(supportFragmentManager, ComposeCommentDialogFragment.TAG)
     }
 
     private fun showRemoveCommentDialog(commentId: Long) {
-        val supportFragmentManager = supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(RemoveCommentDialogFragment.TAG) == null }
-            ?: return
-
         analytic.reportEvent(Analytic.Interaction.DELETE_COMMENT_TRIAL)
 
         RemoveCommentDialogFragment
             .newInstance(commentId)
-            .show(supportFragmentManager, RemoveCommentDialogFragment.TAG)
+            .showIfNotExists(supportFragmentManager, RemoveCommentDialogFragment.TAG)
     }
 
     override fun focusDiscussion(discussionId: Long) {

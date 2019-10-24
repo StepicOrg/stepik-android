@@ -2,18 +2,23 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-
-import org.stepik.android.model.Lesson
+import com.google.gson.Gson
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.util.*
+import org.stepic.droid.util.DbParseHelper
+import org.stepic.droid.util.getBoolean
+import org.stepic.droid.util.getDate
+import org.stepic.droid.util.getLong
+import org.stepic.droid.util.getString
+import org.stepic.droid.util.toObject
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
-
+import org.stepik.android.model.Lesson
 import javax.inject.Inject
 
 class LessonDaoImpl
 @Inject
 constructor(
-    databaseOperations: DatabaseOperations
+    databaseOperations: DatabaseOperations,
+    private val gson: Gson
 ) : DaoBase<Lesson>(databaseOperations) {
     public override fun getDbName() =
         DbStructureLesson.TABLE_NAME
@@ -31,6 +36,7 @@ constructor(
             slug = cursor.getString(DbStructureLesson.Columns.SLUG),
             coverUrl = cursor.getString(DbStructureLesson.Columns.COVER_URL),
             steps = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureLesson.Columns.STEPS)) ?: longArrayOf(),
+            actions = cursor.getString(DbStructureLesson.Columns.ACTIONS)?.toObject(gson),
             isFeatured = cursor.getBoolean(DbStructureLesson.Columns.IS_FEATURED),
             progress = cursor.getString(DbStructureLesson.Columns.PROGRESS),
             owner = cursor.getLong(DbStructureLesson.Columns.OWNER),
@@ -55,6 +61,7 @@ constructor(
         values.put(DbStructureLesson.Columns.SLUG, lesson.slug)
         values.put(DbStructureLesson.Columns.COVER_URL, lesson.coverUrl)
         values.put(DbStructureLesson.Columns.STEPS, DbParseHelper.parseLongArrayToString(lesson.steps))
+        values.put(DbStructureLesson.Columns.ACTIONS, gson.toJson(lesson.actions))
         values.put(DbStructureLesson.Columns.IS_FEATURED, lesson.isFeatured)
         values.put(DbStructureLesson.Columns.PROGRESS, lesson.progress)
         values.put(DbStructureLesson.Columns.OWNER, lesson.owner)

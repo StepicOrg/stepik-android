@@ -1,11 +1,11 @@
 package org.stepic.droid.ui.adapters
 
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.StepItem
@@ -15,7 +15,7 @@ import org.stepik.android.view.step.ui.fragment.StepFragment
 class StepFragmentAdapter(
     fm: FragmentManager,
     private val stepTypeResolver: StepTypeResolver
-) : FragmentStatePagerAdapter(fm),
+) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT),
     ActiveFragmentPagerAdapter {
     
     var items: List<StepItem> = emptyList()

@@ -1,18 +1,18 @@
 package org.stepic.droid.features.achievements.ui.adapters.holders
 
 import android.view.View
+import androidx.core.view.isGone
 import kotlinx.android.synthetic.main.view_achievement_tile.view.*
 import org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
 import org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.adapters.viewhoders.GenericViewHolder
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.wrapWithGlide
 
 class AchievementTileViewHolder(
-        root: View,
-        private val achievementResourceResolver: AchievementResourceResolver
+    root: View,
+    private val achievementResourceResolver: AchievementResourceResolver
 ): GenericViewHolder<AchievementFlatItem>(root) {
     private val achievementLevels: VectorRatingBar = root.achievementLevels
     private val achievementLevelProgress: AchievementCircleProgressView = root.achievementLevelProgress
@@ -30,6 +30,6 @@ class AchievementTileViewHolder(
         achievementIcon.imageView.alpha = alpha
         achievementLevelProgress.alpha = alpha
 
-        achievementLevels.changeVisibility(!item.isLocked)
+        achievementLevels.isGone = item.isLocked
     }
 }

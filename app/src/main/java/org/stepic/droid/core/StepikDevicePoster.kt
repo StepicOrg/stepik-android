@@ -1,6 +1,6 @@
 package org.stepic.droid.core
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 
 interface StepikDevicePoster {
     @WorkerThread

@@ -13,8 +13,6 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.adaptive.listeners.AdaptiveReactionListener
 import org.stepic.droid.adaptive.listeners.AnswerListener
 import org.stepic.droid.adaptive.model.Card
-import org.stepik.android.model.adaptive.Reaction
-import org.stepik.android.model.adaptive.RecommendationReaction
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.adaptive.util.ExpHelper
@@ -32,8 +30,10 @@ import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
+import org.stepik.android.model.adaptive.Reaction
+import org.stepik.android.model.adaptive.RecommendationReaction
 import retrofit2.HttpException
-import java.util.*
+import java.util.ArrayDeque
 import javax.inject.Inject
 
 @AdaptiveCourseScope

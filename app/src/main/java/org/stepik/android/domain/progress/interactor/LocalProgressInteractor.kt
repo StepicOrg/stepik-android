@@ -6,8 +6,8 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.util.distinct
-import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.flatten
+import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.progress.mapper.getProgresses

@@ -214,14 +214,15 @@
     <color name="step_quiz_choice_correct">#e7f7e7</color>
     <color name="step_quiz_choice_wrong">#ffebe7</color>
 
-    <color name="step_quiz_choice_not_checked_border">#888888</color>
-    <color name="step_quiz_choice_checked_border">@color/color_violet_1</color>
-    <color name="step_quiz_choice_correct_border">#64cc64</color>
-    <color name="step_quiz_choice_wrong_border">#ff7965</color>
+    <color name="step_quiz_choice_not_checked_border">@color/grey03</color>
+    <color name="step_quiz_choice_checked_border">#806C7BDF</color>
+    <color name="step_quiz_choice_correct_border">#8064cc64</color>
+    <color name="step_quiz_choice_wrong_border">#80ff7965</color>
 
     <!-- Sorting quiz -->
     <color name="step_quiz_sorting_background">@color/white</color>
     <color name="step_quiz_sorting_stroke">@color/grey03</color>
+    <color name="step_quiz_sorting_stroke_disabled">#80CCCCCC</color>
 
     <!-- Course item -->
     <color name="course_item_separator_light">@color/grey04</color>

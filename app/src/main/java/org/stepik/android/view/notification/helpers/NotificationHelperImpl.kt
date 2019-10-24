@@ -7,9 +7,9 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.TaskStackBuilder
+import androidx.annotation.DrawableRes
+import androidx.core.app.NotificationCompat
+import androidx.core.app.TaskStackBuilder
 import com.bumptech.glide.Glide
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic

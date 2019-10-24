@@ -1,9 +1,9 @@
 package org.stepic.droid.storage.repositories.course
 
-import org.stepik.android.model.Course
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
 import org.stepic.droid.web.Api
+import org.stepik.android.model.Course
 import javax.inject.Inject
 
 class CourseRepositoryImpl

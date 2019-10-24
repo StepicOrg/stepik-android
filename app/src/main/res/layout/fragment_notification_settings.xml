@@ -7,7 +7,7 @@
     android:background="@color/old_cover"
     android:scrollbarStyle="outsideOverlay">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         style="@style/SettingCardStyle"
@@ -87,5 +87,5 @@
                 android:text="@string/other_title"/>
         </LinearLayout>
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </ScrollView>

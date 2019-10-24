@@ -1,13 +1,13 @@
 package org.stepik.android.view.step_quiz.ui.fragment
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.annotation.LayoutRes
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
@@ -15,16 +15,16 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.listeners.NextMoveable
 import org.stepic.droid.ui.util.snackbar
-import org.stepic.droid.util.argument
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
