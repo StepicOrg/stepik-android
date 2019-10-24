@@ -91,7 +91,7 @@ class EditStepSourceDialogFragment :
         inflater.inflate(R.layout.dialog_step_source_edit, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbarTitle.text = "${lessonData.lesson.title} - ${stepWrapper.step.position}"
+        centeredToolbarTitle.text = "${lessonData.lesson.title} - ${stepWrapper.originalStep.position}"
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.comment_compose_menu)
@@ -105,7 +105,7 @@ class EditStepSourceDialogFragment :
         }
 
         if (savedInstanceState == null) {
-            stepContentEditText.setText(stepWrapper.step.block?.text)
+            stepContentEditText.setText(stepWrapper.originalStep.block?.text)
         }
         invalidateMenuState()
 
@@ -120,7 +120,7 @@ class EditStepSourceDialogFragment :
 
     private fun invalidateMenuState() {
         centeredToolbar.menu.findItem(R.id.comment_submit)?.isEnabled =
-            stepContentEditText.text?.toString() != stepWrapper.step.block?.text
+            stepContentEditText.text?.toString() != stepWrapper.originalStep.block?.text
     }
 
     override fun onStart() {
@@ -143,7 +143,7 @@ class EditStepSourceDialogFragment :
 
     private fun submit() {
         stepContentEditText.hideKeyboard()
-        editStepContentPresenter.changeStepBlockText(stepWrapper.step, stepContentEditText.text.toString())
+        editStepContentPresenter.changeStepBlockText(stepWrapper.originalStep, stepContentEditText.text.toString())
     }
 
     override fun setState(state: EditStepSourceView.State) {
@@ -176,7 +176,7 @@ class EditStepSourceDialogFragment :
     }
 
     private fun onClose() {
-        if (stepContentEditText.text?.toString() == stepWrapper.step.block?.text) {
+        if (stepContentEditText.text?.toString() == stepWrapper.originalStep.block?.text) {
             super.dismiss()
         } else {
             DiscardTextDialogFragment
