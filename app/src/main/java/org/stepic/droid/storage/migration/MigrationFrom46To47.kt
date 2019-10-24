@@ -1,6 +1,7 @@
 package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
+import org.stepik.android.cache.discussion_thread.structure.DbStructureDiscussionThread
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.step.structure.DbStructureStep
 
@@ -13,5 +14,7 @@ object MigrationFrom46To47 : Migration {
         db.execSQL("""
             ALTER TABLE ${DbStructureStep.TABLE_NAME} ADD COLUMN ${DbStructureStep.Column.DISCUSSION_THREADS} TEXT
         """.trimIndent())
+
+        DbStructureDiscussionThread.createTable(db)
     }
 }
