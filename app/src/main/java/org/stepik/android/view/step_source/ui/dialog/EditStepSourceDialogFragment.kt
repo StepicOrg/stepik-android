@@ -160,7 +160,7 @@ class EditStepSourceDialogFragment :
                 (activity as? Callback
                     ?: parentFragment as? Callback
                     ?: targetFragment as? Callback)
-                    ?.onStepContentChanged(stepWrapper.copy(step = state.step))
+                    ?.onStepContentChanged(state.stepWrapper)
 
                 super.dismiss()
             }

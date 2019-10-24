@@ -1,12 +1,12 @@
 package org.stepik.android.presentation.step_source
 
-import org.stepik.android.model.Step
+import org.stepic.droid.persistence.model.StepPersistentWrapper
 
 interface EditStepSourceView {
     sealed class State {
         object Idle : State()
         object Loading : State()
-        class Complete(val step: Step) : State()
+        class Complete(val stepWrapper: StepPersistentWrapper) : State()
     }
 
     fun setState(state: State)
