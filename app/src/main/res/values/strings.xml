@@ -52,7 +52,7 @@
     <string name="explain_permission">To cache courses and play videos offline, 
         Stepik needs permission to access your phone\'s storage.
     </string>
-    <string name="explain_calendar_permission">To add deadlines, Stepnik needs
+    <string name="explain_calendar_permission">To add deadlines, Stepik needs
         permission to access your calendar. The app doesn\'t change or read your events.
     </string>
     <string name="allow_question">Allow?</string>
