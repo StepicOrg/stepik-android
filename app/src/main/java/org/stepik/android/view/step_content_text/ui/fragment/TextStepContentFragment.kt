@@ -12,11 +12,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_content_text.model.FontSize
+import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
 import org.stepik.android.presentation.step_content_text.TextStepContentView
 import org.stepik.android.view.step_source.ui.dialog.EditStepSourceDialogFragment
@@ -36,6 +40,9 @@ class TextStepContentFragment :
                     this.lessonData = lessonData
                 }
     }
+
+    @Inject
+    lateinit var analytic: Analytic
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -132,6 +139,8 @@ class TextStepContentFragment :
         }
 
     private fun showStepEditDialog() {
+        reportStepAction(Analytic.Steps.STEP_EDIT_OPENED, AmplitudeAnalytic.Steps.STEP_EDIT_OPENED, stepWrapper.step)
+
         EditStepSourceDialogFragment
             .newInstance(stepWrapper, lessonData)
             .showIfNotExists(childFragmentManager, EditStepSourceDialogFragment.TAG)
@@ -148,6 +157,17 @@ class TextStepContentFragment :
 
     override fun onStepContentChanged(stepWrapper: StepPersistentWrapper) {
         this.stepWrapper = stepWrapper
+        reportStepAction(Analytic.Steps.STEP_EDIT_COMPLETED, AmplitudeAnalytic.Steps.STEP_EDIT_COMPLETED, stepWrapper.step)
         invalidateText()
+    }
+
+    private fun reportStepAction(eventName: String, amplitudeEventName: String, step: Step) {
+        analytic.reportEventWithName(eventName, step.getStepType())
+        analytic.reportAmplitudeEvent(
+            amplitudeEventName, mapOf(
+                AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
+                AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
+                AmplitudeAnalytic.Steps.Params.STEP to step.id
+            ))
     }
 }

@@ -3,7 +3,6 @@ package org.stepik.android.presentation.step_source
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.step_source.interactor.StepSourceInteractor
@@ -14,8 +13,6 @@ import javax.inject.Inject
 class EditStepSourcePresenter
 @Inject
 constructor(
-    private val analytic: Analytic,
-
     private val stepSourceInteractor: StepSourceInteractor,
 
     @BackgroundScheduler
