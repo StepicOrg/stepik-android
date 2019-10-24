@@ -37,15 +37,15 @@ constructor(
         (persistentItemDao.getAllCorrectItems()
             .flatMap { it.groupBy { item -> item.task.structure.course }.toList().toObservable() } +
                 updatesObservable
-                    .flatMap { structure -> persistentItemDao.getItemsByCourse(structure.course).map { structure.course to it } }
+                    .flatMapSingle { structure -> persistentItemDao.getItemsByCourse(structure.course).map { structure.course to it } }
         )
         .flatMap { (courseId, items) -> getDownloadItem(courseId, items) }
 
     private fun getDownloadItem(courseId: Long, items: List<PersistentItem>): Observable<DownloadItem> =
         (resolveCourse(courseId, items).toObservable() +
-                    intervalUpdatesObservable
-                        .switchMap { persistentItemDao.getItemsByCourse(courseId) }
-                        .switchMapSingle { resolveCourse(courseId, it) }
+                intervalUpdatesObservable
+                    .switchMapSingle { persistentItemDao.getItemsByCourse(courseId) }
+                    .switchMapSingle { resolveCourse(courseId, it) }
             )
         .takeUntil { it.status !is DownloadProgress.Status.InProgress }
 

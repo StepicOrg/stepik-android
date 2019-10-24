@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.Single
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.persistence.model.DownloadTask
 import org.stepic.droid.persistence.model.PersistentItem
@@ -63,8 +64,8 @@ constructor(
             )
     )
 
-    override fun getItems(selector: Map<String, String>): Observable<List<PersistentItem>> =
-        Observable.fromCallable { if (selector.isEmpty()) getAll() else getAll(selector) }
+    override fun getItems(selector: Map<String, String>): Single<List<PersistentItem>> =
+        Single.fromCallable { if (selector.isEmpty()) getAll() else getAll(selector) }
 
     override fun getItem(selector: Map<String, String>): Maybe<PersistentItem> = Maybe.create { emitter ->
         get(selector)?.let(emitter::onSuccess) ?: emitter.onComplete()

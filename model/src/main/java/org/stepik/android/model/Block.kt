@@ -2,6 +2,7 @@ package org.stepik.android.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName
 
 import org.stepik.android.model.code.CodeOptions
@@ -16,7 +17,28 @@ data class Block(
     var video: Video? = null, //always external video
 
     @SerializedName("options")
-    val options: CodeOptions? = null
+    val options: CodeOptions? = null,
+
+    /**
+     * ignored fields only for step source
+     */
+    @SerializedName("subtitle_files")
+    val subtitleFiles: JsonElement? = null,
+
+    @SerializedName("subtitles")
+    val subtitles: JsonElement? = null,
+
+    @SerializedName("source")
+    val source: JsonElement? = null,
+
+    @SerializedName("tests_archive")
+    val testsArchive: JsonElement? = null,
+
+    @SerializedName("feedback_correct")
+    val feedbackCorrect: JsonElement? = null,
+
+    @SerializedName("feedback_wrong")
+    val feedbackWrong: JsonElement? = null
 ) : Parcelable {
     override fun describeContents(): Int = 0
 
