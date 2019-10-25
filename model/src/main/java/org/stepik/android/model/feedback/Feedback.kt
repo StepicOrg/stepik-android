@@ -1,3 +1,5 @@
 package org.stepik.android.model.feedback
 
-interface Feedback
+import java.io.Serializable
+
+interface Feedback : Serializable
