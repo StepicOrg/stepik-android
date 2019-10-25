@@ -122,6 +122,10 @@ class CommentsActivity :
                 override fun onProfileClicked(commentDataItem: CommentItem.Data) {
                     screenManager.openProfile(this@CommentsActivity, commentDataItem.comment.user ?: return)
                 }
+
+                override fun onSolutionClicked(commentDataItem: CommentItem.Data) {
+                    
+                }
             }
         )
         commentsAdapter += CommentLoadMoreRepliesAdapterDelegate(commentsPresenter::onLoadMoreReplies)

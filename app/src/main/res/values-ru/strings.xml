@@ -740,6 +740,8 @@
     <string name="comment_action_remove">Удалить</string>
     <string name="comment_action_remove_description">Удалить этот комментарий</string>
 
+    <string name="comment_solution_pattern">Решение %d</string>
+
     <string name="comment_disabled">Комментарии отключены</string>
 
     <string name="comments_title">Комментарии</string>

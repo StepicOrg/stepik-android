@@ -776,6 +776,8 @@
     <string name="comment_action_remove">Remove</string>
     <string name="comment_action_remove_description">Remove this comment?</string>
 
+    <string name="comment_solution_pattern">Solution %d</string>
+
     <string name="comment_disabled">Comments disabled</string>
 
     <string name="comments_title">Comments</string>

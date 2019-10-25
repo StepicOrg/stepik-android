@@ -5,5 +5,5 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.comments.DiscussionThread
 
 interface DiscussionThreadRepository {
-    fun getDiscussionThreads(vararg ids: String, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<DiscussionThread>>
+    fun getDiscussionThreads(vararg ids: String, primarySourceType: DataSourceType = DataSourceType.REMOTE): Single<List<DiscussionThread>>
 }

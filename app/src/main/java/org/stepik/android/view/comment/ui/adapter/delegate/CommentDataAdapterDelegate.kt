@@ -78,6 +78,7 @@ class CommentDataAdapterDelegate(
             commentLike.setOnClickListener(this)
             commentDislike.setOnClickListener(this)
             commentMenu.setOnClickListener(this)
+            commentSolution.setOnClickListener(this)
 
             commentUserIcon.setOnClickListener(this)
             commentUserIcon.setOnClickListener(this)
@@ -157,7 +158,7 @@ class CommentDataAdapterDelegate(
 
             // solution
             if (data.solution != null) {
-                commentSolution.text = data.solution.submission.id.toString()
+                commentSolution.text = context.getString(R.string.comment_solution_pattern, data.solution.submission.id)
 
                 @DrawableRes
                 val compoundDrawableRes =
@@ -171,7 +172,7 @@ class CommentDataAdapterDelegate(
                         else ->
                             -1
                     }
-                commentSolution.setCompoundDrawables(end = compoundDrawableRes)
+                commentSolution.setCompoundDrawables(start = compoundDrawableRes)
 
                 commentSolution.isVisible = true
             } else {
@@ -238,6 +239,9 @@ class CommentDataAdapterDelegate(
                 R.id.commentUserIcon,
                 R.id.commentUserName ->
                     actionListener.onProfileClicked(data)
+
+                R.id.commentSolution ->
+                    actionListener.onSolutionClicked(data)
             }
         }
     }
@@ -247,6 +251,7 @@ class CommentDataAdapterDelegate(
 
         fun onReplyClicked(parentCommentId: Long)
         fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value)
+        fun onSolutionClicked(commentDataItem: CommentItem.Data)
 
         fun onEditCommentClicked(commentDataItem: CommentItem.Data)
         fun onRemoveCommentClicked(commentDataItem: CommentItem.Data)
