@@ -297,7 +297,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     override fun showComments(step: Step, discussionId: Long) {
-        screenManager.openComments(this, step.discussionProxy, step.id, discussionId, false)
+        screenManager.openComments(this, step.discussionProxy, step, discussionId, false)
     }
 
     override fun showRateDialog() {

@@ -150,7 +150,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
         codeLayoutDelegate = CodeLayoutDelegate(
             codeContainerView = playgroundLayout,
-            stepWrapper = stepWrapper,
+            step = stepWrapper.step,
             codeTemplates = codeTemplates,
             codeQuizInstructionDelegate = CodeQuizInstructionDelegate(instructionsLayout, false),
             codeToolbarAdapter = codeToolbarAdapter,

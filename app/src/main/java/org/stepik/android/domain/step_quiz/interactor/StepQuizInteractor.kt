@@ -72,7 +72,7 @@ constructor(
 
     fun createSubmission(stepId: Long, attemptId: Long, reply: Reply): Single<Submission> =
         submissionRepository
-            .createSubmission(Submission(attempt = attemptId, reply = reply))
+            .createSubmission(Submission(attempt = attemptId, _reply = reply))
             .flatMapObservable {
                 Observable
                     .interval(1, TimeUnit.SECONDS)

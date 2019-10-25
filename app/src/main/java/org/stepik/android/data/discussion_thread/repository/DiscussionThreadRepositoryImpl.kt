@@ -13,8 +13,8 @@ import javax.inject.Inject
 class DiscussionThreadRepositoryImpl
 @Inject
 constructor(
-     private val discussionThreadRemoteDataSource: DiscussionThreadRemoteDataSource,
-     private val discussionThreadCacheDataSource: DiscussionThreadCacheDataSource
+    private val discussionThreadRemoteDataSource: DiscussionThreadRemoteDataSource,
+    private val discussionThreadCacheDataSource: DiscussionThreadCacheDataSource
 ) : DiscussionThreadRepository {
     override fun getDiscussionThreads(vararg ids: String, primarySourceType: DataSourceType): Single<List<DiscussionThread>> {
         val remoteSource = discussionThreadRemoteDataSource

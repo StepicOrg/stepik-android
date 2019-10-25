@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -52,7 +53,7 @@ public interface ScreenManager {
 
     void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
-    void openComments(Activity context, String discussionProxyId, long stepId, @Nullable Long discussionId, boolean needOpenForm);
+    void openComments(Activity context, String discussionProxyId, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm);
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 

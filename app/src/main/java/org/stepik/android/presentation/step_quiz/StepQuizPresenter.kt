@@ -98,7 +98,7 @@ constructor(
         } else {
             val submissionState = (oldState.submissionState as? StepQuizView.SubmissionState.Loaded)
                 ?.submission
-                ?.let { Submission(id = it.id + 1, attempt = oldState.attempt.id, reply = it.reply, status = Submission.Status.LOCAL) }
+                ?.let { Submission(id = it.id + 1, attempt = oldState.attempt.id, _reply = it.reply, status = Submission.Status.LOCAL) }
                 ?.let { StepQuizView.SubmissionState.Loaded(it) }
                 ?: StepQuizView.SubmissionState.Empty()
 
@@ -113,7 +113,7 @@ constructor(
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
 
-        val submission = Submission(attempt = oldState.attempt.id, reply = reply, status = Submission.Status.EVALUATION)
+        val submission = Submission(attempt = oldState.attempt.id, _reply = reply, status = Submission.Status.EVALUATION)
 
         state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))
         compositeDisposable += stepQuizInteractor
@@ -153,7 +153,7 @@ constructor(
             ?.id
             ?: 0
 
-        val submission = Submission(id = submissionId, attempt = oldState.attempt.id, reply = reply, status = Submission.Status.LOCAL)
+        val submission = Submission(id = submissionId, attempt = oldState.attempt.id, _reply = reply, status = Submission.Status.LOCAL)
         state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))
 
         compositeDisposable += stepQuizInteractor

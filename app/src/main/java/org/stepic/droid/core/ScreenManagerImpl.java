@@ -12,6 +12,7 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.FileProvider;
@@ -560,13 +561,13 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openComments(Activity context, String discussionProxyId, long stepId, @Nullable Long discussionId, boolean needOpenForm) {
+    public void openComments(Activity context, String discussionProxyId, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm) {
         if (discussionProxyId == null) {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
             Toast.makeText(context, R.string.comment_disabled, Toast.LENGTH_SHORT).show();
         } else {
             analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
-            context.startActivity(CommentsActivity.Companion.createIntent(context, stepId, discussionProxyId, discussionId, needOpenForm));
+            context.startActivity(CommentsActivity.Companion.createIntent(context, step, discussionProxyId, discussionId, needOpenForm));
         }
     }
 

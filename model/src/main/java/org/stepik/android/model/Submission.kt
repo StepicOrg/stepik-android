@@ -17,7 +17,7 @@ data class Submission(
     @SerializedName("time")
     val time: String? = null,
     @Transient
-    val reply: Reply? = null,
+    val _reply: Reply? = null,
     @SerializedName("attempt")
     val attempt: Long = 0,
     @SerializedName("session")
@@ -28,7 +28,10 @@ data class Submission(
     val feedback: Feedback? = null
 ) : Parcelable {
     @SerializedName("reply")
-    private val replyWrapper: ReplyWrapper? = reply?.let(::ReplyWrapper)
+    private val replyWrapper: ReplyWrapper? = _reply?.let(::ReplyWrapper)
+
+    val reply: Reply?
+        get() = replyWrapper?.reply
 
     enum class Status(val scope: String) {
         @SerializedName("correct")
@@ -50,7 +53,7 @@ data class Submission(
         parcel.writeString(score)
         parcel.writeString(hint)
         parcel.writeString(time)
-        parcel.writeParcelable(replyWrapper?.reply, flags)
+        parcel.writeParcelable(reply, flags)
         parcel.writeLong(attempt)
         parcel.writeString(session)
         parcel.writeString(eta)

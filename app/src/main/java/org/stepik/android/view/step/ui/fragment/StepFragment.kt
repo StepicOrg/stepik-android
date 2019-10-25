@@ -102,7 +102,13 @@ class StepFragment : Fragment(), StepView,
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(view) { discussionThread ->
             screenManager
-                .openComments(activity, discussionThread.discussionProxy, stepWrapper.step.id, null, stepWrapper.step.discussionsCount == 0)
+                .openComments(
+                    activity,
+                    discussionThread.discussionProxy,
+                    stepWrapper.step,
+                    null,
+                    stepWrapper.step.discussionsCount == 0
+                )
         }
 
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }

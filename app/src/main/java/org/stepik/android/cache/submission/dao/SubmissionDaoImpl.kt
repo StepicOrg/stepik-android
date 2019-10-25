@@ -49,7 +49,7 @@ constructor(
             score = cursor.getString(DbStructureSubmission.Columns.SCORE),
             hint = cursor.getString(DbStructureSubmission.Columns.HINT),
             time = cursor.getString(DbStructureSubmission.Columns.TIME),
-            reply = cursor.getString(DbStructureSubmission.Columns.REPLY)?.toObject(gson),
+            _reply = cursor.getString(DbStructureSubmission.Columns.REPLY)?.toObject(gson),
             attempt = cursor.getLong(DbStructureSubmission.Columns.ATTEMPT_ID),
             session = cursor.getString(DbStructureSubmission.Columns.SESSION),
             eta = cursor.getString(DbStructureSubmission.Columns.ETA),

@@ -73,7 +73,7 @@ constructor(
         values.put(DbStructureStep.Column.POSITION, step.position)
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.discussionsCount)
         values.put(DbStructureStep.Column.DISCUSSION_PROXY, step.discussionProxy)
-        values.put(DbStructureStep.Column.DISCUSSION_THREADS, DbParseHelper.parseStringArrayToString(step.subscriptions?.toTypedArray()))
+        values.put(DbStructureStep.Column.DISCUSSION_THREADS, DbParseHelper.parseStringArrayToString(step.discussionThreads?.toTypedArray()))
         values.put(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, step.hasSubmissionRestriction)
         values.put(DbStructureStep.Column.MAX_SUBMISSION_COUNT, step.maxSubmissionCount)
         values.put(DbStructureStep.Column.PEER_REVIEW, step.actions?.doReview)
