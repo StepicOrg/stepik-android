@@ -10,14 +10,19 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_comment_solution.*
 import kotlinx.android.synthetic.main.dialog_comment_solution.view.*
+import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
@@ -28,21 +33,29 @@ import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizForm
 import org.stepik.android.view.step_quiz_sql.ui.delegate.SqlStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import javax.inject.Inject
 
 class SolutionCommentDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "SolutionCommentDialogFragment"
 
-        fun newInstance(step: Step, attempt: Attempt, submission: Submission): DialogFragment =
+        fun newInstance(step: Step, discussionThread: DiscussionThread, discussionId: Long, attempt: Attempt, submission: Submission): DialogFragment =
             SolutionCommentDialogFragment()
                 .apply {
                     this.step = step
+                    this.discussionThread = discussionThread
+                    this.discussionId = discussionId
                     this.attempt = attempt
                     this.submission = submission
                 }
     }
 
+    @Inject
+    lateinit var screenManager: ScreenManager
+
     private var step: Step by argument()
+    private var discussionThread: DiscussionThread by argument()
+    private var discussionId: Long by argument()
     private var attempt: Attempt by argument()
     private var submission: Submission by argument()
 
@@ -59,6 +72,14 @@ class SolutionCommentDialogFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        injectComponent()
+    }
+
+    private fun injectComponent() {
+        App.component()
+            .commentsComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -79,8 +100,8 @@ class SolutionCommentDialogFragment : DialogFragment() {
             AppConstants.TYPE_CHOICE ->
                 R.layout.layout_step_quiz_choice
 
-            AppConstants.TYPE_CODE ->
-                R.layout.layout_step_quiz_code
+//            AppConstants.TYPE_CODE ->
+//                R.layout.layout_step_quiz_code
 
             AppConstants.TYPE_SORTING,
             AppConstants.TYPE_MATCHING ->
@@ -104,8 +125,15 @@ class SolutionCommentDialogFragment : DialogFragment() {
                 StepQuizView.SubmissionState.Loaded(submission),
                 StepQuizRestrictions(0, 0, DiscountingPolicyType.NoDiscount)
             )
-        getDelegateForStep(step.block?.name, view)
-            ?.setState(state)
+
+
+        val stepQuizFormDelegate = getDelegateForStep(step.block?.name, view)
+        if (stepQuizFormDelegate != null) {
+            stepQuizFormDelegate.setState(state)
+        } else {
+            stepQuizAction.setOnClickListener { screenManager.openDiscussionInWeb(context, step, discussionThread, discussionId) }
+            stepQuizFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
+        }
 
         StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, hasReview = false, onReviewClicked = {})
             .setState(StepQuizFeedbackMapper().mapToStepQuizFeedbackState(step.block?.name, state))

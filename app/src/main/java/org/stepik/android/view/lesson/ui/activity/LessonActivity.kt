@@ -41,6 +41,7 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
@@ -297,7 +298,22 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     override fun showComments(step: Step, discussionId: Long) {
-        screenManager.openComments(this, step.discussionProxy, step, discussionId, false)
+        val discussionThread =
+            step.discussionProxy
+                ?.let {
+                    DiscussionThread(
+                        id = step.discussionThreads?.firstOrNull() ?: "",
+                        thread = DiscussionThread.THREAD_DEFAULT,
+                        discussionsCount = step.discussionsCount,
+                        discussionProxy = it
+                    )
+                }
+        if (discussionThread != null) {
+            screenManager.openComments(this, discussionThread, step, discussionId, false)
+        } else {
+            analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE)
+            lessonPager.snackbar(messageRes = R.string.comment_disabled)
+        }
     }
 
     override fun showRateDialog() {

@@ -23,6 +23,7 @@ import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Unit;
+import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
@@ -53,13 +54,15 @@ public interface ScreenManager {
 
     void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
-    void openComments(Activity context, String discussionProxyId, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm);
+    void openComments(Activity context, @NonNull DiscussionThread discussionThread, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm);
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section, boolean backAnimation, boolean isAutoplayEnabled);
 
     void openStepInWeb(Context context, Step step);
+
+    void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId);
 
     void openRemindPassword(AppCompatActivity context);
 

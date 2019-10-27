@@ -104,7 +104,7 @@ class StepFragment : Fragment(), StepView,
             screenManager
                 .openComments(
                     activity,
-                    discussionThread.discussionProxy,
+                    discussionThread,
                     stepWrapper.step,
                     null,
                     stepWrapper.step.discussionsCount == 0

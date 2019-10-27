@@ -241,7 +241,7 @@ class CommentDataAdapterDelegate(
                     actionListener.onProfileClicked(data)
 
                 R.id.commentSolution ->
-                    data.solution?.let(actionListener::onSolutionClicked)
+                    data.solution?.let { actionListener.onSolutionClicked(data.id, it) }
             }
         }
     }
@@ -251,7 +251,7 @@ class CommentDataAdapterDelegate(
 
         fun onReplyClicked(parentCommentId: Long)
         fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value)
-        fun onSolutionClicked(solution: CommentItem.Data.Solution)
+        fun onSolutionClicked(discussionId: Long, solution: CommentItem.Data.Solution)
 
         fun onEditCommentClicked(commentDataItem: CommentItem.Data)
         fun onRemoveCommentClicked(commentDataItem: CommentItem.Data)

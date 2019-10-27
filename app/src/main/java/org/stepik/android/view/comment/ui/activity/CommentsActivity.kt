@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,6 +27,7 @@ import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.Step
 import org.stepik.android.model.comments.Comment
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
@@ -49,7 +51,7 @@ class CommentsActivity :
     ComposeCommentDialogFragment.Callback,
     RemoveCommentDialogFragment.Callback {
     companion object {
-        private const val EXTRA_DISCUSSION_PROXY = "discussion_proxy"
+        private const val EXTRA_DISCUSSION_THREAD = "discussion_thread"
         private const val EXTRA_DISCUSSION_ID = "discussion_id"
         private const val EXTRA_STEP = "step"
         private const val EXTRA_IS_NEED_OPEN_COMPOSE = "is_need_open_compose"
@@ -60,13 +62,13 @@ class CommentsActivity :
         fun createIntent(
             context: Context,
             step: Step,
-            discussionProxy: String,
+            discussionThread: DiscussionThread,
             discussionId: Long? = null,
             isNeedOpenCompose: Boolean = false
         ): Intent =
             Intent(context, CommentsActivity::class.java)
                 .putExtra(EXTRA_STEP, step)
-                .putExtra(EXTRA_DISCUSSION_PROXY, discussionProxy)
+                .putExtra(EXTRA_DISCUSSION_THREAD, discussionThread)
                 .putExtra(EXTRA_DISCUSSION_ID, discussionId ?: -1)
                 .putExtra(EXTRA_IS_NEED_OPEN_COMPOSE, isNeedOpenCompose)
     }
@@ -86,6 +88,7 @@ class CommentsActivity :
     private val commentPlaceholders = List(10) { CommentItem.Placeholder }
 
     private val step by lazy { intent.getParcelableExtra<Step>(EXTRA_STEP) }
+    private val discussionThread by lazy { intent.getParcelableExtra<DiscussionThread>(EXTRA_DISCUSSION_THREAD) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,8 +128,8 @@ class CommentsActivity :
                     screenManager.openProfile(this@CommentsActivity, commentDataItem.comment.user ?: return)
                 }
 
-                override fun onSolutionClicked(solution: CommentItem.Data.Solution) {
-                    showSolutionDialog(solution)
+                override fun onSolutionClicked(discussionId: Long, solution: CommentItem.Data.Solution) {
+                    showSolutionDialog(discussionId, solution)
                 }
             }
         )
@@ -188,6 +191,7 @@ class CommentsActivity :
 
         setDataToPresenter()
 
+        composeCommentButton.isVisible = discussionThread.thread == DiscussionThread.THREAD_DEFAULT
         composeCommentButton.setOnClickListener { showCommentComposeDialog(step.id) }
         commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
@@ -200,7 +204,6 @@ class CommentsActivity :
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
-        val discussionProxy = intent.getStringExtra(EXTRA_DISCUSSION_PROXY)
         val discussionId = intent.getLongExtra(EXTRA_DISCUSSION_ID, -1)
             .takeIf { it != -1L }
 
@@ -209,7 +212,7 @@ class CommentsActivity :
             intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
         }
 
-        commentsPresenter.onDiscussion(discussionProxy, discussionId, forceUpdate)
+        commentsPresenter.onDiscussion(discussionThread.discussionProxy, discussionId, forceUpdate)
     }
 
     override fun onStart() {
@@ -302,9 +305,9 @@ class CommentsActivity :
             .showIfNotExists(supportFragmentManager, RemoveCommentDialogFragment.TAG)
     }
 
-    private fun showSolutionDialog(solution: CommentItem.Data.Solution) {
+    private fun showSolutionDialog(discussionId: Long, solution: CommentItem.Data.Solution) {
         SolutionCommentDialogFragment
-            .newInstance(intent.getParcelableExtra(EXTRA_STEP), solution.attempt, solution.submission)
+            .newInstance(intent.getParcelableExtra(EXTRA_STEP), discussionThread, discussionId, solution.attempt, solution.submission)
             .showIfNotExists(supportFragmentManager, SolutionCommentDialogFragment.TAG)
     }
 

@@ -65,6 +65,7 @@ import org.stepik.android.model.Step;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Unit;
 import org.stepik.android.model.Video;
+import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
@@ -561,14 +562,9 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openComments(Activity context, String discussionProxyId, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm) {
-        if (discussionProxyId == null) {
-            analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE);
-            Toast.makeText(context, R.string.comment_disabled, Toast.LENGTH_SHORT).show();
-        } else {
-            analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
-            context.startActivity(CommentsActivity.Companion.createIntent(context, step, discussionProxyId, discussionId, needOpenForm));
-        }
+    public void openComments(Activity context, @NonNull DiscussionThread discussionThread, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm) {
+        analytic.reportEvent(Analytic.Screens.OPEN_COMMENT);
+        context.startActivity(CommentsActivity.Companion.createIntent(context, step, discussionThread, discussionId, needOpenForm));
     }
 
     @Override
@@ -587,6 +583,20 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openStepInWeb(Context context, Step step) {
         analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId() + "");
         String url = config.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId) {
+        String url =
+                config.getBaseUrl() +
+                        "/lesson/" + step.getLesson() +
+                        "/step/" + step.getPosition() +
+                        "/?from_mobile_app=true" +
+                        "&discussion=" + discussionId +
+                        "&thread=" + discussionThread.getThread()
+                ;
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
     }
