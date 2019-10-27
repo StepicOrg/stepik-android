@@ -758,7 +758,8 @@
     <string name="step_quiz_not_ready">Sorry, the quiz is not ready yet</string>
 
     <string name="step_quiz_unsupported_action">Open the web version to solve</string>
-    <string name="step_quiz_unsupported_message">Current step type is not supported in mobile app yet</string>
+    <string name="step_quiz_unsupported_solution_action">Open solution in the web version</string>
+    <string name="step_quiz_unsupported_message">Current quiz type is not supported in mobile app yet</string>
 
     <string name="step_quiz_code_full_screen_instruction_tab">Instruction</string>
     <string name="step_quiz_code_full_screen_code_tab">Code</string>

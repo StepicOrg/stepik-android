@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.LayoutRes
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_comment_solution.*
 import kotlinx.android.synthetic.main.dialog_comment_solution.view.*
@@ -130,13 +132,20 @@ class SolutionCommentDialogFragment : DialogFragment() {
         val stepQuizFormDelegate = getDelegateForStep(step.block?.name, view)
         if (stepQuizFormDelegate != null) {
             stepQuizFormDelegate.setState(state)
+
+            StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, hasReview = false, onReviewClicked = {})
+                .setState(StepQuizFeedbackMapper().mapToStepQuizFeedbackState(step.block?.name, state))
         } else {
             stepQuizAction.setOnClickListener { screenManager.openDiscussionInWeb(context, step, discussionThread, discussionId) }
-            stepQuizFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
-        }
+            stepQuizAction.setText(R.string.step_quiz_unsupported_solution_action)
+            stepQuizAction.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = resources.getDimensionPixelOffset(R.dimen.space_normal)
+            }
 
-        StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, hasReview = false, onReviewClicked = {})
-            .setState(StepQuizFeedbackMapper().mapToStepQuizFeedbackState(step.block?.name, state))
+            stepQuizFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
+
+            stepQuizFeedbackBlocks.isVisible = false
+        }
     }
 
     private fun getDelegateForStep(blockName: String?, view: View): StepQuizFormDelegate? =
