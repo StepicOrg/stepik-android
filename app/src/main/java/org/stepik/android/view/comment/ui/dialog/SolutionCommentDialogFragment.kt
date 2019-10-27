@@ -128,7 +128,6 @@ class SolutionCommentDialogFragment : DialogFragment() {
                 StepQuizRestrictions(0, 0, DiscountingPolicyType.NoDiscount)
             )
 
-
         val stepQuizFormDelegate = getDelegateForStep(step.block?.name, view)
         if (stepQuizFormDelegate != null) {
             stepQuizFormDelegate.setState(state)

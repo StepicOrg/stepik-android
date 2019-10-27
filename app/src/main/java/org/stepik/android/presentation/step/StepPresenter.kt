@@ -94,6 +94,7 @@ constructor(
                     val oldState = this.state
                     if (oldState is StepView.State.Loaded) {
                         this.state = oldState.copy(stepWrapper)
+                        fetchDiscussionThreads(stepWrapper)
                     }
                 },
                 onError = { subscribeForStepUpdates(stepId, shouldSkipFirstValue = true) }

@@ -107,7 +107,7 @@ class CommentsActivity :
                     R.string.solutions_title
                 } else {
                     R.string.comments_title
-                }, 
+                },
             showHomeButton = true
         )
         centeredToolbar.overflowIcon =
