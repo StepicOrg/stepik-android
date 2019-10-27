@@ -677,6 +677,9 @@
     <string name="step_discussion_show">Открыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
 
+    <string name="step_solutions_show">Форум решений (%d)</string>
+    <string name="step_solutions_empty">Решений пока нет</string>
+
     <string name="step_action_edit_content">Изменить текст шага</string>
     <string name="step_action_edit_hint">Текст шага</string>
     <string name="step_action_edit_description">Вы можете редактировать только текст шага и только в виде HTML кода. Для доступа к полноценному редактору шагов, пожалуйста, воспользуйтесь веб версией Stepik.</string>

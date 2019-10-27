@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.empty_comments.*
+import kotlinx.android.synthetic.main.empty_comments.view.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -190,6 +191,10 @@ class CommentsActivity :
         commentsViewStateDelegate.addState<CommentsView.CommentsState.EmptyComments>(emptyComments)
 
         setDataToPresenter()
+
+        if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) {
+            emptyComments.placeholderMessage.setText(R.string.step_solutions_empty)
+        }
 
         composeCommentButton.isVisible = discussionThread.thread == DiscussionThread.THREAD_DEFAULT
         composeCommentButton.setOnClickListener { showCommentComposeDialog(step.id) }
