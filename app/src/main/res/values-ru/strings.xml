@@ -749,6 +749,7 @@
     <string name="comment_disabled">Комментарии отключены</string>
 
     <string name="comments_title">Комментарии</string>
+    <string name="solutions_title">Решения</string>
     <string name="comments_load_more_replies">Показать %s</string>
 
     <string name="comment_tag_pinned">Закреплен</string>

@@ -101,7 +101,15 @@ class CommentsActivity :
             .of(this, viewModelFactory)
             .get(CommentsPresenter::class.java)
 
-        initCenteredToolbar(titleRes = R.string.comments_title, showHomeButton = true)
+        initCenteredToolbar(
+            titleRes =
+                if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) {
+                    R.string.solutions_title
+                } else {
+                    R.string.comments_title
+                }, 
+            showHomeButton = true
+        )
         centeredToolbar.overflowIcon =
             AppCompatResources.getDrawable(this, R.drawable.ic_comments_ordering)
 
