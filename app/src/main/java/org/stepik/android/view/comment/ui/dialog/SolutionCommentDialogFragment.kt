@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_comment_solution.*
 import kotlinx.android.synthetic.main.dialog_comment_solution.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
+import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -30,6 +31,9 @@ import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_sql.ui.delegate.SqlStepQuizFormDelegate
@@ -102,8 +106,8 @@ class SolutionCommentDialogFragment : DialogFragment() {
             AppConstants.TYPE_CHOICE ->
                 R.layout.layout_step_quiz_choice
 
-//            AppConstants.TYPE_CODE ->
-//                R.layout.layout_step_quiz_code
+            AppConstants.TYPE_CODE ->
+                R.layout.layout_step_quiz_code
 
             AppConstants.TYPE_SORTING,
             AppConstants.TYPE_MATCHING ->
@@ -134,6 +138,9 @@ class SolutionCommentDialogFragment : DialogFragment() {
 
             StepQuizFeedbackBlocksDelegate(stepQuizFeedbackBlocks, hasReview = false, onReviewClicked = {})
                 .setState(StepQuizFeedbackMapper().mapToStepQuizFeedbackState(step.block?.name, state))
+
+            stepQuizCodeContainer?.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = 0 }
+            codeStepLayout?.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
         } else {
             stepQuizAction.setOnClickListener { screenManager.openDiscussionInWeb(context, step, discussionThread, discussionId) }
             stepQuizAction.setText(R.string.step_quiz_unsupported_solution_action)
@@ -158,8 +165,20 @@ class SolutionCommentDialogFragment : DialogFragment() {
             AppConstants.TYPE_CHOICE ->
                 ChoiceStepQuizFormDelegate(view)
 
-//            AppConstants.TYPE_CODE ->
-//                CodeStepQuizFormDelegate(view, step.block?.options!!, CodeLayoutDelegate(view.codeStepLayout, step, )) { l, c -> }
+            AppConstants.TYPE_CODE ->
+                CodeStepQuizFormDelegate(
+                    containerView = view,
+                    codeOptions = step.block?.options!!,
+                    codeLayoutDelegate =
+                        CodeLayoutDelegate(
+                            codeContainerView = view,
+                            step = step,
+                            codeTemplates = emptyMap(),
+                            codeQuizInstructionDelegate = CodeQuizInstructionDelegate(view, isCollapseable = true),
+                            codeToolbarAdapter = null,
+                            onChangeLanguageClicked = {}
+                        )
+                ) { _, _ -> }
 
             AppConstants.TYPE_SORTING ->
                 SortingStepQuizFormDelegate(view)
@@ -168,7 +187,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
                 MatchingStepQuizFormDelegate(view)
 
             AppConstants.TYPE_SQL ->
-                SqlStepQuizFormDelegate(view) { l, c -> }
+                SqlStepQuizFormDelegate(view) { _, _ -> }
 
             else ->
                 null
