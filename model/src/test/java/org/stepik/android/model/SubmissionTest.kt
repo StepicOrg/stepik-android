@@ -16,7 +16,7 @@ class SubmissionTest {
                 score = "score",
                 hint = "hint",
                 time = "time",
-                reply = ReplyTest.createTestReply(),
+                _reply = ReplyTest.createTestReply(),
                 attempt = 999,
                 session = "session",
                 eta = "eta",
