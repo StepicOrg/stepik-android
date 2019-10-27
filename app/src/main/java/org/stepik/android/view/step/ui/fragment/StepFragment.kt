@@ -107,7 +107,7 @@ class StepFragment : Fragment(), StepView,
                     discussionThread,
                     stepWrapper.step,
                     null,
-                    stepWrapper.step.discussionsCount == 0
+                    discussionThread.discussionsCount == 0
                 )
         }
 
