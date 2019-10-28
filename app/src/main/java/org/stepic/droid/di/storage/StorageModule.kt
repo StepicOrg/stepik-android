@@ -48,6 +48,7 @@ import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.comment_banner.dao.CommentBannerDao
 import org.stepik.android.cache.comment_banner.dao.CommentBannerDaoImpl
+import org.stepik.android.cache.discussion_thread.dao.DiscussionThreadDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
@@ -75,6 +76,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
 import org.stepik.android.model.ViewAssignment
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
 
 @Module
@@ -214,6 +216,10 @@ abstract class StorageModule {
     @Binds
     internal abstract fun bindCertificateDao(certificateDaoImpl: CertificateDaoImpl): IDao<Certificate>
 
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindDiscussionThreadDao(discussionThreadDaoImpl: DiscussionThreadDaoImpl): IDao<DiscussionThread>
+
     @Module
     companion object {
 
@@ -221,9 +227,9 @@ abstract class StorageModule {
         @Provides
         @JvmStatic
         internal fun provideStorageGson(): Gson =
-                GsonBuilder()
-                        .enableComplexMapKeySerialization()
-                        .create()
+            GsonBuilder()
+                .enableComplexMapKeySerialization()
+                .create()
 
         @StorageSingleton
         @Provides

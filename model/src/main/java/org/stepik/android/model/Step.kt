@@ -43,6 +43,10 @@ data class Step(
     var discussionsCount: Int = 0,
     @SerializedName("discussion_proxy")
     var discussionProxy: String? = null,
+
+    @SerializedName("discussion_threads")
+    val discussionThreads: List<String>? = null,
+
     @SerializedName("has_submissions_restrictions")
     val hasSubmissionRestriction: Boolean = false,
     @SerializedName("max_submissions_count")
@@ -70,6 +74,10 @@ data class Step(
 
         dest.writeInt(this.discussionsCount)
         dest.writeString(this.discussionProxy)
+        dest.writeStringList(this.discussionThreads)
+
+        dest.writeBoolean(this.hasSubmissionRestriction)
+        dest.writeInt(this.maxSubmissionCount)
     }
 
     companion object CREATOR : Parcelable.Creator<Step> {
@@ -94,7 +102,11 @@ data class Step(
                 parcel.readParcelable(Actions::class.java.classLoader),
 
                 parcel.readInt(),
-                parcel.readString()
+                parcel.readString(),
+                parcel.createStringArrayList(),
+
+                parcel.readBoolean(),
+                parcel.readInt()
             )
 
         override fun newArray(size: Int): Array<out Step?> =

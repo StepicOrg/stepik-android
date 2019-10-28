@@ -10,7 +10,7 @@ data class StepPersistentWrapper(
     val step: Step,
     val originalStep: Step = step,
     val cachedVideo: Video? = null // maybe more abstract
-): Progressable, Parcelable {
+) : Progressable, Parcelable {
     override val progress: String?
         get() = step.progress
 

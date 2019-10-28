@@ -49,6 +49,15 @@
                 android:id="@+id/stepDiscussions"
                 layout="@layout/view_step_discussion" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/step_quiz_separator" />
+
+            <include
+                android:id="@+id/stepSolutions"
+                layout="@layout/view_step_discussion" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 </FrameLayout>

@@ -2,6 +2,7 @@ package org.stepik.android.view.injection.step
 
 import dagger.Subcomponent
 import org.stepik.android.view.injection.attempt.AttemptDataModule
+import org.stepik.android.view.injection.discussion_thread.DiscussionThreadDataModule
 import org.stepik.android.view.injection.step_content.StepContentModule
 import org.stepik.android.view.injection.step_source.StepSourceModule
 import org.stepik.android.view.injection.step_quiz.StepQuizModule
@@ -21,6 +22,7 @@ import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStep
 
     StepQuizPresentationModule::class,
     AttemptDataModule::class,
+    DiscussionThreadDataModule::class,
     SubmissionDataModule::class,
     StepSourceDataModule::class
 ])

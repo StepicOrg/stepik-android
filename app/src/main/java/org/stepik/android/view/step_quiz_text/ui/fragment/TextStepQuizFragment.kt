@@ -28,5 +28,5 @@ class TextStepQuizFragment : DefaultStepQuizFragment(), StepQuizView {
         get() = arrayOf(stringStepQuizField)
 
     override fun createStepQuizFormDelegate(view: View): StepQuizFormDelegate =
-        TextStepQuizFormDelegate(view, stepWrapper)
+        TextStepQuizFormDelegate(view, stepWrapper.step.block?.name)
 }

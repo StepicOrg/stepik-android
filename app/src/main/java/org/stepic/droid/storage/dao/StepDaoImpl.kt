@@ -46,6 +46,7 @@ constructor(
 
             discussionsCount = cursor.getInt(DbStructureStep.Column.DISCUSSION_COUNT),
             discussionProxy = cursor.getString(DbStructureStep.Column.DISCUSSION_PROXY),
+            discussionThreads = DbParseHelper.parseStringToStringList(cursor.getString(DbStructureStep.Column.DISCUSSION_THREADS)),
 
             actions = Actions(
                 vote = false, edit = false, delete = false, pin = false,
@@ -72,6 +73,7 @@ constructor(
         values.put(DbStructureStep.Column.POSITION, step.position)
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.discussionsCount)
         values.put(DbStructureStep.Column.DISCUSSION_PROXY, step.discussionProxy)
+        values.put(DbStructureStep.Column.DISCUSSION_THREADS, DbParseHelper.parseStringArrayToString(step.discussionThreads?.toTypedArray()))
         values.put(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, step.hasSubmissionRestriction)
         values.put(DbStructureStep.Column.MAX_SUBMISSION_COUNT, step.maxSubmissionCount)
         values.put(DbStructureStep.Column.PEER_REVIEW, step.actions?.doReview)

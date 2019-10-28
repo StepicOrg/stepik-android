@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.empty_comments.*
+import kotlinx.android.synthetic.main.empty_comments.view.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -24,7 +26,9 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.model.CommentsData
+import org.stepik.android.model.Step
 import org.stepik.android.model.comments.Comment
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
@@ -36,6 +40,7 @@ import org.stepik.android.view.comment.ui.adapter.delegate.CommentLoadMoreReplie
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentPlaceholderAdapterDelegate
 import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
+import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -47,9 +52,9 @@ class CommentsActivity :
     ComposeCommentDialogFragment.Callback,
     RemoveCommentDialogFragment.Callback {
     companion object {
-        private const val EXTRA_DISCUSSION_PROXY = "discussion_proxy"
+        private const val EXTRA_DISCUSSION_THREAD = "discussion_thread"
         private const val EXTRA_DISCUSSION_ID = "discussion_id"
-        private const val EXTRA_STEP_ID = "step_id"
+        private const val EXTRA_STEP = "step"
         private const val EXTRA_IS_NEED_OPEN_COMPOSE = "is_need_open_compose"
 
         /**
@@ -57,14 +62,14 @@ class CommentsActivity :
          */
         fun createIntent(
             context: Context,
-            stepId: Long,
-            discussionProxy: String,
+            step: Step,
+            discussionThread: DiscussionThread,
             discussionId: Long? = null,
             isNeedOpenCompose: Boolean = false
         ): Intent =
             Intent(context, CommentsActivity::class.java)
-                .putExtra(EXTRA_STEP_ID, stepId)
-                .putExtra(EXTRA_DISCUSSION_PROXY, discussionProxy)
+                .putExtra(EXTRA_STEP, step)
+                .putExtra(EXTRA_DISCUSSION_THREAD, discussionThread)
                 .putExtra(EXTRA_DISCUSSION_ID, discussionId ?: -1)
                 .putExtra(EXTRA_IS_NEED_OPEN_COMPOSE, isNeedOpenCompose)
     }
@@ -83,7 +88,8 @@ class CommentsActivity :
 
     private val commentPlaceholders = List(10) { CommentItem.Placeholder }
 
-    private val stepId by lazy { intent.getLongExtra(EXTRA_STEP_ID, -1) }
+    private val step by lazy { intent.getParcelableExtra<Step>(EXTRA_STEP) }
+    private val discussionThread by lazy { intent.getParcelableExtra<DiscussionThread>(EXTRA_DISCUSSION_THREAD) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +101,15 @@ class CommentsActivity :
             .of(this, viewModelFactory)
             .get(CommentsPresenter::class.java)
 
-        initCenteredToolbar(titleRes = R.string.comments_title, showHomeButton = true)
+        initCenteredToolbar(
+            titleRes =
+                if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) {
+                    R.string.solutions_title
+                } else {
+                    R.string.comments_title
+                },
+            showHomeButton = true
+        )
         centeredToolbar.overflowIcon =
             AppCompatResources.getDrawable(this, R.drawable.ic_comments_ordering)
 
@@ -104,7 +118,7 @@ class CommentsActivity :
         commentsAdapter += CommentDataAdapterDelegate(
             actionListener = object : CommentDataAdapterDelegate.ActionListener {
                 override fun onReplyClicked(parentCommentId: Long) {
-                    showCommentComposeDialog(stepId, parent = parentCommentId)
+                    showCommentComposeDialog(step.id, parent = parentCommentId)
                 }
 
                 override fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
@@ -112,7 +126,7 @@ class CommentsActivity :
                 }
 
                 override fun onEditCommentClicked(commentDataItem: CommentItem.Data) {
-                    showCommentComposeDialog(stepId, commentDataItem.comment.parent, commentDataItem.comment)
+                    showCommentComposeDialog(step.id, commentDataItem.comment.parent, commentDataItem.comment)
                 }
 
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
@@ -121,6 +135,10 @@ class CommentsActivity :
 
                 override fun onProfileClicked(commentDataItem: CommentItem.Data) {
                     screenManager.openProfile(this@CommentsActivity, commentDataItem.comment.user ?: return)
+                }
+
+                override fun onSolutionClicked(discussionId: Long, solution: CommentItem.Data.Solution) {
+                    showSolutionDialog(discussionId, solution)
                 }
             }
         )
@@ -182,7 +200,12 @@ class CommentsActivity :
 
         setDataToPresenter()
 
-        composeCommentButton.setOnClickListener { showCommentComposeDialog(stepId) }
+        if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) {
+            emptyComments.placeholderMessage.setText(R.string.step_solutions_empty)
+        }
+
+        composeCommentButton.isVisible = discussionThread.thread == DiscussionThread.THREAD_DEFAULT
+        composeCommentButton.setOnClickListener { showCommentComposeDialog(step.id) }
         commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
 
@@ -194,16 +217,15 @@ class CommentsActivity :
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
-        val discussionProxy = intent.getStringExtra(EXTRA_DISCUSSION_PROXY)
         val discussionId = intent.getLongExtra(EXTRA_DISCUSSION_ID, -1)
             .takeIf { it != -1L }
 
         if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
-            showCommentComposeDialog(stepId)
+            showCommentComposeDialog(step.id)
             intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
         }
 
-        commentsPresenter.onDiscussion(discussionProxy, discussionId, forceUpdate)
+        commentsPresenter.onDiscussion(discussionThread.discussionProxy, discussionId, forceUpdate)
     }
 
     override fun onStart() {
@@ -294,6 +316,12 @@ class CommentsActivity :
         RemoveCommentDialogFragment
             .newInstance(commentId)
             .showIfNotExists(supportFragmentManager, RemoveCommentDialogFragment.TAG)
+    }
+
+    private fun showSolutionDialog(discussionId: Long, solution: CommentItem.Data.Solution) {
+        SolutionCommentDialogFragment
+            .newInstance(intent.getParcelableExtra(EXTRA_STEP), discussionThread, discussionId, solution.attempt, solution.submission)
+            .showIfNotExists(supportFragmentManager, SolutionCommentDialogFragment.TAG)
     }
 
     override fun focusDiscussion(discussionId: Long) {

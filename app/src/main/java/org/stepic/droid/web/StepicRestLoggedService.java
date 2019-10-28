@@ -18,6 +18,7 @@ import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
 import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
+import org.stepik.android.remote.discussion_thread.model.DiscussionThreadResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
@@ -211,6 +212,9 @@ public interface StepicRestLoggedService {
 
     @GET("api/discussion-proxies")
     Single<DiscussionProxyResponse> getDiscussionProxies(@Query("ids[]") String[] ids);
+
+    @GET("api/discussion-threads")
+    Single<DiscussionThreadResponse> getDiscussionThreads(@Query("ids[]") String[] ids);
 
     @GET("api/comments")
     Single<CommentResponse> getComments(@Query("ids[]") long[] ids);

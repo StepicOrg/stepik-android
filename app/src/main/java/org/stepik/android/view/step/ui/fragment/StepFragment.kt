@@ -100,11 +100,16 @@ class StepFragment : Fragment(), StepView,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
 
-        stepDiscussionsDelegate = StepDiscussionsDelegate(stepDiscussions) {
+        stepDiscussionsDelegate = StepDiscussionsDelegate(view) { discussionThread ->
             screenManager
-                .openComments(activity, stepWrapper.step.discussionProxy, stepWrapper.step.id, null, stepWrapper.step.discussionsCount == 0)
+                .openComments(
+                    activity,
+                    discussionThread,
+                    stepWrapper.step,
+                    null,
+                    discussionThread.discussionsCount == 0
+                )
         }
-        stepDiscussionsDelegate.setDiscussions(stepWrapper.step.discussionProxy, stepWrapper.step.discussionsCount)
 
         stepStatusTryAgain.setOnClickListener { stepPresenter.fetchStepUpdate(stepWrapper.step.id) }
         initStepContentFragment()
@@ -196,7 +201,7 @@ class StepFragment : Fragment(), StepView,
             val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block
 
             stepWrapper = state.stepWrapper
-            stepDiscussionsDelegate.setDiscussions(state.stepWrapper.step.discussionProxy, state.stepWrapper.step.discussionsCount)
+            stepDiscussionsDelegate.setDiscussionThreads(state.discussionThreads)
             when (stepWrapper.step.status) {
                 Step.Status.READY ->
                     setStepQuizFragment(isNeedReloadQuiz)

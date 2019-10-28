@@ -27,6 +27,8 @@ data class Comment(
     val text: String? = "",
     @SerializedName("reply_count")
     val replyCount: Int? = null,
+    @SerializedName("submission")
+    val submission: Long? = null,
 
     @SerializedName("is_deleted")
     val isDeleted: Boolean? = null,
@@ -65,13 +67,6 @@ data class Comment(
     @SerializedName("vote")
     val vote: String? = null
 ) : Parcelable {
-    constructor(target: Long, text: String, parent: Long?) : this(
-        id = 0,
-        target = target,
-        text = text,
-        parent = parent
-    )
-
     override fun describeContents(): Int = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) {
@@ -82,6 +77,7 @@ data class Comment(
         dest.writeDate(time)
         dest.writeString(text)
         dest.writeValue(replyCount)
+        dest.writeValue(submission)
         dest.writeValue(isDeleted)
         dest.writeString(deletedBy)
         dest.writeString(deletedAt)
@@ -110,6 +106,7 @@ data class Comment(
                 parcel.readDate(),
                 parcel.readString() ?: "",
                 parcel.readValue(Int::class.java.classLoader) as Int?,
+                parcel.readValue(Long::class.java.classLoader) as Long?,
                 parcel.readValue(Boolean::class.java.classLoader) as Boolean?,
                 parcel.readString(),
                 parcel.readString(),

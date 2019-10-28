@@ -8,12 +8,12 @@ import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.code.extensionForLanguage
-import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
+import org.stepik.android.model.Step
 
 class CodeLayoutDelegate(
     codeContainerView: View,
-    private val stepWrapper: StepPersistentWrapper,
+    private val step: Step,
     private val codeTemplates: Map<String, String>,
     private val codeQuizInstructionDelegate: CodeQuizInstructionDelegate,
     private var codeToolbarAdapter: CodeToolbarAdapter?,
@@ -56,7 +56,7 @@ class CodeLayoutDelegate(
     }
 
     fun setDetailsContentData(lang: String?) {
-        codeQuizInstructionDelegate.setCodeDetailsData(stepWrapper.step, lang)
+        codeQuizInstructionDelegate.setCodeDetailsData(step, lang)
     }
 
     fun setEnabled(isEnabled: Boolean) {
