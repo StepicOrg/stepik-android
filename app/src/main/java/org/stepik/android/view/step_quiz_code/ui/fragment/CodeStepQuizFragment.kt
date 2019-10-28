@@ -46,7 +46,7 @@ class CodeStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, ChangeCode
             codeOptions = codeOptions,
             codeLayoutDelegate = CodeLayoutDelegate(
                 codeContainerView = view,
-                stepWrapper = stepWrapper,
+                step = stepWrapper.step,
                 codeTemplates = codeOptions.codeTemplates,
                 codeQuizInstructionDelegate = CodeQuizInstructionDelegate(view, true),
                 codeToolbarAdapter = null,

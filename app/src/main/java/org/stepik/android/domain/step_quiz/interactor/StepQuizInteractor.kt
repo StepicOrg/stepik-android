@@ -20,6 +20,7 @@ import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.view.injection.step.StepDiscussionBus
 import org.stepik.android.view.injection.step_quiz.StepQuizBus
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -29,6 +30,9 @@ class StepQuizInteractor
 constructor(
     @StepQuizBus
     private val stepQuizPublisher: PublishSubject<Long>,
+
+    @StepDiscussionBus
+    private val stepDiscussionSubject: PublishSubject<Long>,
 
     private val attemptRepository: AttemptRepository,
     private val submissionRepository: SubmissionRepository,
@@ -72,7 +76,7 @@ constructor(
 
     fun createSubmission(stepId: Long, attemptId: Long, reply: Reply): Single<Submission> =
         submissionRepository
-            .createSubmission(Submission(attempt = attemptId, reply = reply))
+            .createSubmission(Submission(attempt = attemptId, _reply = reply))
             .flatMapObservable {
                 Observable
                     .interval(1, TimeUnit.SECONDS)
@@ -84,6 +88,7 @@ constructor(
                 if (newSubmission.status == Submission.Status.CORRECT) {
                     stepQuizPublisher.onNext(stepId)
                 }
+                stepDiscussionSubject.onNext(stepId)
                 sharedPreferenceHelper.incrementSubmissionsCount()
             }
 

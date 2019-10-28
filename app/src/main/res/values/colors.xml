@@ -92,6 +92,7 @@
     <color name="join_button_pressed_color">#6666CC66</color>
 
     <color name="fast_continue_learning_opacity">#DA535366</color>
+    <color name="fast_continue_learning_opacity_pressed">#DA4A4A5B</color>
     <color name="home_streak_view_color">#1445b0ff</color>
     <color name="view_all_course_list_color">#CCCCD1</color>
     <color name="view_all_course_list_color_dark">#868694</color>

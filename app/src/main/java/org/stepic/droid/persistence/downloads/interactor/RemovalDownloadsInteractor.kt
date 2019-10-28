@@ -12,12 +12,14 @@ import javax.inject.Inject
 class RemovalDownloadsInteractor
 @Inject
 constructor(
-        private val persistentItemDao: PersistentItemDao,
-        private val removeDownloadTaskHelper: RemoveDownloadTaskHelper
+    private val persistentItemDao: PersistentItemDao,
+    private val removeDownloadTaskHelper: RemoveDownloadTaskHelper
 ) {
-    fun removeAllDownloads(): Completable = removeDownloadTaskHelper.removeTasks(
-            persistentItemDao.getItems(emptyMap())
-                    .flatMap(List<PersistentItem>::toObservable)
-                    .map { it.task.structure }
-    )
+    fun removeAllDownloads(): Completable =
+        removeDownloadTaskHelper.removeTasks(
+            persistentItemDao
+                .getItems(emptyMap())
+                .flatMapObservable(List<PersistentItem>::toObservable)
+                .map { it.task.structure }
+        )
 }

@@ -64,7 +64,7 @@ constructor(
             .switchMap { _ ->
                 intervalUpdatesObservable
                     .startWith(kotlin.Unit)
-                    .concatMap {
+                    .concatMapSingle {
                         persistentItemDao.getItemsByStatus(PersistentItem.Status.IN_PROGRESS)
                     }
                     .takeWhile(List<PersistentItem>::isNotEmpty)
@@ -87,7 +87,7 @@ constructor(
         }
 
     private fun fixInTransferItems() = fsLock.withLock {
-        val itemsInTransfer = persistentItemDao.getItemsByStatus(PersistentItem.Status.FILE_TRANSFER).blockingFirst()
+        val itemsInTransfer = persistentItemDao.getItemsByStatus(PersistentItem.Status.FILE_TRANSFER).blockingGet()
         itemsInTransfer.forEach { item ->
             val path = externalStorageManager.resolvePathForPersistentItem(item.copy(status = PersistentItem.Status.COMPLETED))
 

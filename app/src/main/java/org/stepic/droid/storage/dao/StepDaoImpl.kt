@@ -5,18 +5,14 @@ import android.database.Cursor
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
-import org.stepic.droid.storage.structure.DbStructureProgress
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.getBoolean
 import org.stepic.droid.util.getDate
 import org.stepic.droid.util.getInt
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
-import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.model.Actions
-import org.stepik.android.model.Assignment
-import org.stepik.android.model.Progress
 import org.stepik.android.model.Step
 import javax.inject.Inject
 
@@ -24,15 +20,12 @@ class StepDaoImpl
 @Inject
 constructor(
     databaseOperations: DatabaseOperations,
-    private val blockWrapperDao: IDao<BlockPersistentWrapper>,
-    private val assignmentDao: IDao<Assignment>,
-    private val progressDao: IDao<Progress>
+    private val blockWrapperDao: IDao<BlockPersistentWrapper>
 ) : DaoBase<Step>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): Step {
         val review = cursor.getString(DbStructureStep.Column.PEER_REVIEW)
 
-        //        step.setIs_custom_passed(isAssignmentByStepViewed(step.getId()));
         return Step(
             id = cursor.getLong(DbStructureStep.Column.ID),
             lesson = cursor.getLong(DbStructureStep.Column.LESSON_ID),
@@ -53,6 +46,7 @@ constructor(
 
             discussionsCount = cursor.getInt(DbStructureStep.Column.DISCUSSION_COUNT),
             discussionProxy = cursor.getString(DbStructureStep.Column.DISCUSSION_PROXY),
+            discussionThreads = DbParseHelper.parseStringToStringList(cursor.getString(DbStructureStep.Column.DISCUSSION_THREADS)),
 
             actions = Actions(
                 vote = false, edit = false, delete = false, pin = false,
@@ -79,6 +73,7 @@ constructor(
         values.put(DbStructureStep.Column.POSITION, step.position)
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.discussionsCount)
         values.put(DbStructureStep.Column.DISCUSSION_PROXY, step.discussionProxy)
+        values.put(DbStructureStep.Column.DISCUSSION_THREADS, DbParseHelper.parseStringArrayToString(step.discussionThreads?.toTypedArray()))
         values.put(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, step.hasSubmissionRestriction)
         values.put(DbStructureStep.Column.MAX_SUBMISSION_COUNT, step.maxSubmissionCount)
         values.put(DbStructureStep.Column.PEER_REVIEW, step.actions?.doReview)
@@ -102,26 +97,7 @@ constructor(
         super.getAllWithQuery(query, whereArgs).map(this::addInnerObjects)
 
     private fun addInnerObjects(step: Step): Step {
-        val blockPersistentWrapper = blockWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.id.toString())
-        if (blockPersistentWrapper != null) {
-            step.block = blockPersistentWrapper.block
-        }
-
-        val assignment = assignmentDao.get(DbStructureAssignment.Columns.STEP, step.id.toString())
-        if (assignment?.progress != null) {
-            val progress = progressDao.get(DbStructureProgress.Columns.ID, assignment.progress!!)
-            if (progress != null) {
-                step.isCustomPassed = progress.isPassed
-            }
-        } else {
-            if (step.progress != null) {
-                val progress = progressDao.get(DbStructureProgress.Columns.ID, step.progress!!)
-                if (progress != null) {
-                    step.isCustomPassed = progress.isPassed
-                }
-            }
-        }
-
+        step.block = blockWrapperDao.get(DbStructureBlock.Column.STEP_ID, step.id.toString())?.block
         return step
     }
 
