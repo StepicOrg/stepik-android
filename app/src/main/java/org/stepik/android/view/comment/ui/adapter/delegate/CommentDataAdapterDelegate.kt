@@ -167,7 +167,7 @@ class CommentDataAdapterDelegate(
                             R.drawable.ic_step_quiz_correct
 
                         Submission.Status.WRONG ->
-                            R.drawable.ic_step_quiz_wrong
+                            R.drawable.ic_step_quiz_wrong_wide
 
                         else ->
                             -1

@@ -112,7 +112,7 @@
         android:layout_marginLeft="@dimen/comment_item_margin"
         android:layout_marginRight="@dimen/comment_item_margin"
 
-        tools:drawableEnd="@drawable/ic_step_quiz_correct"
+        tools:drawableStart="@drawable/ic_step_quiz_wrong_wide"
 
         tools:text="Решение 31293193128392" />
 
