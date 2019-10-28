@@ -44,7 +44,7 @@ constructor(
                 updatesObservable
                     .map { it.course }
             )
-            .flatMap { courseId -> persistentItemDao.getItemsByCourse(courseId).map { courseId to it } }
+            .flatMapSingle { courseId -> persistentItemDao.getItemsByCourse(courseId).map { courseId to it } }
             .flatMap { (courseId, items) -> getDownloadItem(courseId, items) }
 
     private fun getDownloadItem(courseId: Long, items: List<PersistentItem>): Observable<DownloadItem> =
