@@ -585,7 +585,6 @@
     <string name="course_reviews_compose_banner_review_description">Чтобы оставить отзыв, пройдите больше 80% материалов</string>
     <string name="course_reviews_compose_banner_review_motivation">Поделитесь своим мнением</string>
 
-    <string name="course_content_time_to_complete_minutes_unit">%d мин</string>
     <string name="course_content_time_to_complete_hours_unit">%d ч</string>
     <string name="course_content_text_progress_points">%d/%d баллов</string>
 

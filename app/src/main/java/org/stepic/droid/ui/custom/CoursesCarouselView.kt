@@ -1,6 +1,7 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
@@ -10,6 +11,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -174,10 +176,12 @@ constructor(
 
     private fun initCourseCarousel() {
         coursesCarouselCount.visibility = View.GONE
-        coursesViewAll.setOnClickListener {
+        coursesCarouselTitleContainer.setOnClickListener {
             viewAll()
         }
-
+        coursesCarouselDescription.setOnClickListener {
+            viewAll()
+        }
         gridLayoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
         coursesRecycler.layoutManager = gridLayoutManager
 
@@ -191,7 +195,10 @@ constructor(
         coursesCarouselTitle.text = getCarouselTitle(info)
         coursesCarouselTitle.setTextColor(ColorUtil.getColorArgb(info.colorType.textColor))
         coursesCarouselRoot.setBackgroundColor(ColorUtil.getColorArgb(info.colorType.backgroundColorRes))
-        coursesViewAll.setTextColor(ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
+        val iconDrawable = coursesViewAll.drawable
+                .let(DrawableCompat::wrap)
+                .let(Drawable::mutate)
+        DrawableCompat.setTint(iconDrawable, ColorUtil.getColorArgb(info.colorType.viewAllColorRes, context))
         showDescription(info.description)
 
         coursesRecycler.adapter = CoursesAdapter(context as FragmentActivity, courses, continueCoursePresenter, false, info.colorType)
@@ -235,6 +242,8 @@ constructor(
             coursesPlaceholder.visibility = View.GONE
             coursesCarouselCount.visibility = View.GONE
             coursesLoadingView.visibility = View.VISIBLE
+            coursesCarouselTitleContainer.isEnabled = false
+            coursesCarouselDescription.isEnabled = false
         }
     }
 
@@ -291,6 +300,8 @@ constructor(
         showDescription(info.description)
         coursesRecycler.visibility = View.VISIBLE
         coursesViewAll.visibility = View.VISIBLE
+        coursesCarouselTitleContainer.isEnabled = true
+        coursesCarouselDescription.isEnabled = true
         this.courses.clear()
         this.courses.addAll(courses)
         (coursesRecycler.adapter as? CoursesAdapter)?.notifyDataSetChanged()
@@ -305,6 +316,8 @@ constructor(
         coursesPlaceholder.setPlaceholderText(stringRes)
         coursesPlaceholder.setOnClickListener(listener)
         coursesPlaceholder.visibility = View.VISIBLE
+        coursesCarouselTitleContainer.isEnabled = false
+        coursesCarouselDescription.isEnabled = false
     }
 
     override fun onSuccessDropCourse(course: Course) {

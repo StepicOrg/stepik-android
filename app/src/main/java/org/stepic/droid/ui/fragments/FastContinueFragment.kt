@@ -89,6 +89,7 @@ class FastContinueFragment : FragmentBase(),
         continueCoursePresenter.attachView(this)
         droppingClient.subscribe(this)
         joiningListenerClient.subscribe(this)
+        fastContinueOverlay.isEnabled = true
         fastContinueAction.isEnabled = true
     }
 
@@ -136,14 +137,8 @@ class FastContinueFragment : FragmentBase(),
         analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
         setCourse(course)
         showMainGroup(true)
-        fastContinueAction.setOnClickListener {
-            analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                    AmplitudeAnalytic.Course.Params.COURSE to course.id,
-                    AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
-            ))
-            continueCoursePresenter.continueCourse(course)
-        }
+        fastContinueOverlay.setOnClickListener { handleContinueCourseClick(course) }
+        fastContinueAction.setOnClickListener { handleContinueCourseClick(course) }
     }
 
     override fun onLoading() {
@@ -184,6 +179,7 @@ class FastContinueFragment : FragmentBase(),
 
     //ContinueCourseView
     override fun onShowContinueCourseLoadingDialog() {
+        fastContinueOverlay.isEnabled = false
         fastContinueAction.isEnabled = false
         val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
         if (!loadingProgressDialogFragment.isAdded) {
@@ -193,18 +189,21 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onOpenStep(courseId: Long, lastStep: LastStep) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+        fastContinueOverlay.isEnabled = true
         fastContinueAction.isEnabled = true
         screenManager.continueCourse(activity, courseId, lastStep)
     }
 
     override fun onOpenAdaptiveCourse(course: Course) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+        fastContinueOverlay.isEnabled = true
         fastContinueAction.isEnabled = true
         screenManager.continueAdaptiveCourse(activity, course)
     }
 
     override fun onAnyProblemWhileContinue(course: Course) {
         ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+        fastContinueOverlay.isEnabled = true
         fastContinueAction.isEnabled = true
         screenManager.showCourseModules(activity, course)
     }
@@ -233,5 +232,14 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onSuccessJoin(joinedCourse: Course) {
         onShowCourse(joinedCourse)
+    }
+
+    private fun handleContinueCourseClick(course: Course) {
+        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
+            AmplitudeAnalytic.Course.Params.COURSE to course.id,
+            AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
+        ))
+        continueCoursePresenter.continueCourse(course)
     }
 }
