@@ -63,6 +63,9 @@ interface AmplitudeAnalytic {
         const val SUBMISSION_MADE = "Submission made"
         const val STEP_OPENED = "Step opened"
 
+        const val STEP_EDIT_OPENED = "Step edit opened"
+        const val STEP_EDIT_COMPLETED = "Step edit completed"
+
         object Params {
             const val TYPE = "type"
             const val LANGUAGE = "language"

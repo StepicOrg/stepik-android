@@ -111,8 +111,6 @@
     <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
     <string name="sound_title">Звук</string>
-    <string name="downloading_title">Скачивается…</string>
-    <string name="downloading_cancel_all">Отменить все</string>
     <string name="cached_title">Загружено</string>
     <string name="remove_all">Удалить все</string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
@@ -553,9 +551,6 @@
     <string name="achievement_share">Я получил достижение «%s» на Stepik.org. Попробуй обогнать!</string>
     <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения «%s», проверьте свой профиль.</string>
 
-
-    <string name="downloads_view_cant_remove">Невозможно удалить загрузку</string>
-
     <!-- Course -->
     <string name="course_verified">Проверенный</string>
     <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
@@ -590,7 +585,6 @@
     <string name="course_reviews_compose_banner_review_description">Чтобы оставить отзыв, пройдите больше 80% материалов</string>
     <string name="course_reviews_compose_banner_review_motivation">Поделитесь своим мнением</string>
 
-    <string name="course_content_time_to_complete_minutes_unit">%d мин</string>
     <string name="course_content_time_to_complete_hours_unit">%d ч</string>
     <string name="course_content_text_progress_points">%d/%d баллов</string>
 
@@ -606,7 +600,6 @@
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
     <string name="course_control_download_all">Скачать</string>
-    <string name="course_control_downloaded_for_offline">Загружено (%s)</string>
     <string name="course_control_processing">Обработка</string>
 
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
@@ -682,6 +675,10 @@
     <string name="step_navigation_prev">Предыдущий урок</string>
     <string name="step_discussion_show">Открыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
+
+    <string name="step_action_edit_content">Изменить текст шага</string>
+    <string name="step_action_edit_hint">Текст шага</string>
+    <string name="step_action_edit_description">Вы можете редактировать только текст шага и только в виде HTML кода. Для доступа к полноценному редактору шагов, пожалуйста, воспользуйтесь веб версией Stepik.</string>
 
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 
@@ -770,4 +767,7 @@
 
     <string name="setting_font_size">Размер шрифта в шагах</string>
     <string name="setting_font_size_dialog_title">Выберите размер шрифта</string>
+
+    <!-- Downloads -->
+    <string name="downloads_title">Загруженные курсы</string>
 </resources>

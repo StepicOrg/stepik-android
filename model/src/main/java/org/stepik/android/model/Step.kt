@@ -36,7 +36,6 @@ data class Step(
     @SerializedName("update_date")
     val updateDate: Date? = null,
 
-    var isCustomPassed: Boolean = false,
     @SerializedName("actions")
     val actions: Actions? = null,
 
@@ -67,7 +66,6 @@ data class Step(
         dest.writeDate(this.createDate)
         dest.writeDate(this.updateDate)
 
-        dest.writeBoolean(isCustomPassed)
         dest.writeParcelable(this.actions, flags)
 
         dest.writeInt(this.discussionsCount)
@@ -93,7 +91,6 @@ data class Step(
                 parcel.readDate(),
                 parcel.readDate(),
 
-                parcel.readBoolean(),
                 parcel.readParcelable(Actions::class.java.classLoader),
 
                 parcel.readInt(),

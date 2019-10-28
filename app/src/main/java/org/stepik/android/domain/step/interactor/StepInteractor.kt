@@ -24,5 +24,5 @@ constructor(
             .skip(if (shouldSkipFirstValue) 1 else 0)
             .filter { it == stepId }
             .flatMapMaybe { stepRepository.getStep(stepId, DataSourceType.REMOTE) }
-            .flatMap(stepContentResolver::resolvePersistentContent)
+            .flatMapSingle(stepContentResolver::resolvePersistentContent)
 }
