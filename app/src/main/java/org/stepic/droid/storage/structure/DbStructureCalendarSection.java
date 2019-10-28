@@ -1,6 +1,7 @@
 package org.stepic.droid.storage.structure;
 
-public final     class DbStructureCalendarSection {
+@Deprecated
+public final class DbStructureCalendarSection {
     public static final String CALENDAR_SECTION = "calendar_section";
 
     public static final class Column {

@@ -5,7 +5,6 @@ import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.model.BlockPersistentWrapper
-import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.ViewedNotification
