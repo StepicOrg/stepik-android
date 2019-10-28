@@ -15,6 +15,7 @@ import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.plus
+import org.stepik.android.data.download.source.DownloadCacheDataSource
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.download.repository.DownloadRepository
 import org.stepik.android.model.Course
@@ -31,15 +32,20 @@ constructor(
     private val persistentItemDao: PersistentItemDao,
     private val courseRepository: CourseRepository,
     @DownloadsProgressStatusMapper
-    private val downloadProgressStatusMapper: DownloadProgressStatusMapper
+    private val downloadProgressStatusMapper: DownloadProgressStatusMapper,
+    private val downloadCacheDataSource: DownloadCacheDataSource
 ) : DownloadRepository {
     override fun getDownloads(): Observable<DownloadItem> =
-        (persistentItemDao.getAllCorrectItems()
-            .flatMap { it.groupBy { item -> item.task.structure.course }.toList().toObservable() } +
+        Observable
+            .merge(
+                downloadCacheDataSource
+                    .getDownloadedCoursesIds()
+                    .flatMapObservable { it.toObservable() },
                 updatesObservable
-                    .flatMap { structure -> persistentItemDao.getItemsByCourse(structure.course).map { structure.course to it } }
-        )
-        .flatMap { (courseId, items) -> getDownloadItem(courseId, items) }
+                    .map { it.course }
+            )
+            .flatMap { courseId -> persistentItemDao.getItemsByCourse(courseId).map { courseId to it } }
+            .flatMap { (courseId, items) -> getDownloadItem(courseId, items) }
 
     private fun getDownloadItem(courseId: Long, items: List<PersistentItem>): Observable<DownloadItem> =
         (resolveCourse(courseId, items).toObservable() +

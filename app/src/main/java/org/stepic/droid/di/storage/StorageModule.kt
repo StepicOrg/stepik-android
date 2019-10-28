@@ -48,6 +48,8 @@ import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.comment_banner.dao.CommentBannerDao
 import org.stepik.android.cache.comment_banner.dao.CommentBannerDaoImpl
+import org.stepik.android.cache.download.dao.DownloadedCoursesDao
+import org.stepik.android.cache.download.dao.DownloadedCoursesDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
@@ -213,6 +215,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindCertificateDao(certificateDaoImpl: CertificateDaoImpl): IDao<Certificate>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindDownloadeCoursesDao(downloadedCoursesDaoImpl: DownloadedCoursesDaoImpl): DownloadedCoursesDao
 
     @Module
     companion object {
