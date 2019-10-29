@@ -21,6 +21,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
 import ru.nobird.android.view.base.ui.extension.argument
@@ -39,17 +40,19 @@ class ComposeCommentDialogFragment :
         private const val ARG_PARENT = "parent"
 
         /**
+         * [discussionThread] - current discussion thread
          * [target] - comment target, e.g. step id
          * [parent] - parent comment id
          * [comment] - comment if comment should be edited
          */
-        fun newInstance(target: Long, parent: Long?, comment: Comment?): DialogFragment =
+        fun newInstance(discussionThread: DiscussionThread, target: Long, parent: Long?, comment: Comment?): DialogFragment =
             ComposeCommentDialogFragment().apply {
-                this.arguments = Bundle(3)
+                this.arguments = Bundle(4)
                     .also {
                         it.putLong(ARG_PARENT, parent ?: -1)
                         it.putParcelable(ARG_COMMENT, comment)
                     }
+                this.discussionThread = discussionThread
                 this.target = target
             }
     }
@@ -59,6 +62,7 @@ class ComposeCommentDialogFragment :
 
     private lateinit var composeCommentPresenter: ComposeCommentPresenter
 
+    private var discussionThread: DiscussionThread by argument()
     private var target: Long by argument()
     private val parent: Long? by lazy { arguments?.getLong(ARG_PARENT, -1)?.takeIf { it != -1L } }
     private val comment: Comment? by lazy { arguments?.getParcelable<Comment>(ARG_COMMENT) }
@@ -160,7 +164,8 @@ class ComposeCommentDialogFragment :
             val comment = Comment(
                 target = target,
                 parent = parent,
-                text = text
+                text = text,
+                thread = discussionThread.thread
             )
             composeCommentPresenter.createComment(comment)
         } else {
