@@ -1,8 +1,8 @@
 package org.stepic.droid.core
 
-import org.stepik.android.model.Course
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.model.Course
 import javax.inject.Inject
 
 class FilterApplicatorImpl

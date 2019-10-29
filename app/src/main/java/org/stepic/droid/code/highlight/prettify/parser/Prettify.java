@@ -14,15 +14,6 @@
 package org.stepic.droid.code.highlight.prettify.parser;
 
 import org.stepic.droid.code.highlight.prettify.lang.Lang;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
 import org.stepic.droid.code.highlight.prettify.lang.LangAppollo;
 import org.stepic.droid.code.highlight.prettify.lang.LangBasic;
 import org.stepic.droid.code.highlight.prettify.lang.LangClj;
@@ -49,6 +40,16 @@ import org.stepic.droid.code.highlight.prettify.lang.LangVb;
 import org.stepic.droid.code.highlight.prettify.lang.LangVhdl;
 import org.stepic.droid.code.highlight.prettify.lang.LangXq;
 import org.stepic.droid.code.highlight.prettify.lang.LangYaml;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  * This is similar to the prettify.js in JavaScript Prettify.

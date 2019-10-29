@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
@@ -132,6 +132,7 @@ constructor(
                     information = stringOrEmpty((user.details)),
                     isMyProfile = false,
                     isPrivate = user.isPrivate,
+                    isOrganization = user.isOrganization,
                     id = userId)
             this.userViewModel = userViewModelLocal
 
@@ -187,6 +188,7 @@ constructor(
                 information = stringOrEmpty(profile.details),
                 isMyProfile = isMyProfile,
                 isPrivate = profile.isPrivate,
+                isOrganization = false,
                 id = profile.id)
         this.userViewModel = userViewModelLocal
 

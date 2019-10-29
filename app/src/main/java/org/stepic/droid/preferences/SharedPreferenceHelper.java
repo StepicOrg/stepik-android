@@ -13,7 +13,6 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.core.DefaultFilter;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.StepikFilter;
-import org.stepic.droid.model.comments.DiscussionOrder;
 import org.stepic.droid.notifications.model.NotificationType;
 import org.stepic.droid.persistence.model.StorageLocation;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
@@ -21,6 +20,8 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
 import org.stepic.droid.web.AuthenticationStepikResponse;
+import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
+import org.stepik.android.domain.step_content_text.model.FontSize;
 import org.stepik.android.model.user.EmailAddress;
 import org.stepik.android.model.user.Profile;
 
@@ -37,6 +38,7 @@ public class SharedPreferenceHelper {
     private static final String DISCOUNTING_POLICY_DIALOG = "discounting_pol_dialog";
     private static final String KEEP_SCREEN_ON_STEPS = "keep_screen_on_steps";
     private static final String IS_ADAPTIVE_MODE_ENABLED = "is_adaptive_mode_enabled";
+    private static final String IS_AUTOPLAY_ENABLED = "is_adaptive_mode_enabled";
     private static final String IS_FIRST_ADAPTIVE_COURSE = "is_first_adaptive_course";
     private static final String IS_ADAPTIVE_EXP_TOOLTIP_WAS_SHOWN = "is_adaptive_exp_tooltip_was_shown";
     private static final String ROTATE_PREF = "rotate_pref";
@@ -69,14 +71,13 @@ public class SharedPreferenceHelper {
     private final String IS_SOCIAL = "is_social_key";
     private final String VIDEO_QUALITY_KEY = "video_quality_key";
     private final String VIDEO_QUALITY_KEY_FOR_PLAYING = "video_quality_key_for_playing";
-    private final String TEMP_POSITION_KEY = "temp_position_key";
     private final String VIDEO_RATE_PREF_KEY = "video_rate_pref_key";
     private final String VIDEO_EXTERNAL_PREF_KEY = "video_external_pref_key";
     private final String GCM_TOKEN_ACTUAL = "gcm_token_actual_with_badges"; // '_with_badges' suffix was added to force update of gcm token to enable silent push with badge count, see #188
     private final String SD_CHOSEN = "sd_chosen";
     private final String FIRST_TIME_LAUNCH = "first_time_launch";
     private final String SCHEDULED_LINK_CACHED = "scheduled_cached";
-    private final String DISCUSSION_ORDER = "discussion_order";
+    private final String DISCUSSION_ORDER = "discussion_order_v2";
     private final String CALENDAR_WIDGET = "calenda_widget";
     private final String FIRST_TIME_VIDEO = "first_time_video";
     private final String VIDEO_QUALITY_EXPLANATION = "video_quality_explanation";
@@ -95,6 +96,7 @@ public class SharedPreferenceHelper {
     private final String RATE_LAST_TIMESTAMP = "rate_last_timestamp";
     private final String RATE_TIMES_SHOWN = "rate_times_shown";
     private final String RATE_WAS_HANDLED = "rate_was_handled";
+    private final String STEP_CONTENT_FONT_SIZE = "step_content_font_size";
 
     private final static String LAST_SESSION_TIMESTAMP = "last_session_timestamp";
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
@@ -399,14 +401,6 @@ public class SharedPreferenceHelper {
         return null;
     }
 
-    public void setRotateAlways(boolean needRotate) {
-        put(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, needRotate);
-    }
-
-    public boolean needRotate() {
-        return getBoolean(PreferenceType.DEVICE_SPECIFIC, ROTATE_PREF, true);
-    }
-
     public void setNotificationDisabled(NotificationType type, boolean isNotificationDisabled) {
         String key = keyByNotificationType(type);
         if (key != null) {
@@ -485,6 +479,14 @@ public class SharedPreferenceHelper {
         put(PreferenceType.DEVICE_SPECIFIC, IS_ADAPTIVE_MODE_ENABLED, isEnabled);
     }
 
+    public boolean isAutoplayEnabled() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_AUTOPLAY_ENABLED, true);
+    }
+
+    public void setAutoplayEnabled(boolean isEnabled) {
+        put(PreferenceType.DEVICE_SPECIFIC, IS_AUTOPLAY_ENABLED, isEnabled);
+    }
+
     public void setNeedToShowVideoQualityExplanation(boolean needToShowCalendarWidget) {
         put(PreferenceType.DEVICE_SPECIFIC, VIDEO_QUALITY_EXPLANATION, needToShowCalendarWidget);
     }
@@ -561,7 +563,8 @@ public class SharedPreferenceHelper {
         VIDEO_SETTINGS("video_settings"),
         DEVICE_SPECIFIC("device_specific"),
         FEATURED_FILTER("featured_filter_prefs"),
-        NOTIFICATION("notification");
+        NOTIFICATION("notification"),
+        STEP_CONTENT("step_content");
 
         private String description;
 
@@ -575,14 +578,13 @@ public class SharedPreferenceHelper {
     }
 
     public DiscussionOrder getDiscussionOrder() {
-        int orderId = getInt(PreferenceType.LOGIN, DISCUSSION_ORDER);
-        DiscussionOrder order = DiscussionOrder.Companion.getById(orderId);
+        DiscussionOrder order = DiscussionOrder.valueOf(getString(PreferenceType.LOGIN, DISCUSSION_ORDER));
         analytic.reportEvent(Analytic.Comments.ORDER_TREND, order.toString());
         return order;
     }
 
-    public void setDiscussionOrder(DiscussionOrder disscussionOrder) {
-        put(PreferenceType.LOGIN, DISCUSSION_ORDER, disscussionOrder.getId());
+    public void setDiscussionOrder(DiscussionOrder discussionOrder) {
+        put(PreferenceType.LOGIN, DISCUSSION_ORDER, discussionOrder.name());
     }
 
     public void setIsGcmTokenOk(boolean isGcmTokenOk) {
@@ -704,7 +706,7 @@ public class SharedPreferenceHelper {
         String str = getString(PreferenceType.VIDEO_QUALITY, VIDEO_QUALITY_KEY_FOR_PLAYING);
         if (str == null) {
             //by default high
-            return AppConstants.MAX_QUALITY;
+            return AppConstants.HIGH_QUALITY;
         } else {
             return str;
         }
@@ -792,6 +794,15 @@ public class SharedPreferenceHelper {
         return getLong(PreferenceType.NOTIFICATION, id);
     }
 
+    public void putStepContentFontSize(FontSize fontSize) {
+        put(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, fontSize.ordinal());
+    }
+
+    public FontSize getStepContentFontSize() {
+        int ordinal = getInt(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 1);
+        return FontSize.values()[ordinal];
+    }
+
     private void put(PreferenceType type, String key, String value) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putString(key, value).apply();
@@ -810,6 +821,11 @@ public class SharedPreferenceHelper {
     private void put(PreferenceType type, String key, Boolean value) {
         SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
         editor.putBoolean(key, value).apply();
+    }
+
+    private void put(PreferenceType type, String key, float value) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(type.getStoreName(), Context.MODE_PRIVATE).edit();
+        editor.putFloat(key, value).apply();
     }
 
     private void clear(PreferenceType type) {

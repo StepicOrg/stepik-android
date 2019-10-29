@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="@string/internet_problem" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         style="@style/PlaceholderButton"
         android:id="@+id/tryAgain"
         android:layout_width="wrap_content"

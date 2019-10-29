@@ -1,19 +1,19 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
-import android.support.annotation.StringRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import kotlinx.android.synthetic.main.fragment_adaptive_onboarding.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.Card
 import org.stepic.droid.adaptive.ui.adapters.OnboardingQuizCardsAdapter
 import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.Block
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Step
-import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.attempts.Attempt
 
 class AdaptiveOnboardingFragment: FragmentBase() {

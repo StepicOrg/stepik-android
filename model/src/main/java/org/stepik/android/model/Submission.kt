@@ -1,8 +1,11 @@
 package org.stepik.android.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.feedback.Feedback
 
-class Submission(
+data class Submission(
     @SerializedName("id")
     val id: Long = 0,
     @SerializedName("status")
@@ -13,21 +16,21 @@ class Submission(
     val hint: String? = null,
     @SerializedName("time")
     val time: String? = null,
-    reply: Reply? = null,
+    @Transient
+    val _reply: Reply? = null,
     @SerializedName("attempt")
     val attempt: Long = 0,
     @SerializedName("session")
     val session: String? = null,
     @SerializedName("eta")
-    val eta: String? = null
-) {
-    @Deprecated("this compatibility constructor will be removed after rewriting StepAttemptFragment in Kotlin")
-    constructor(reply: Reply?, attempt: Long, status: Status?): this(id = 0, reply = reply, attempt = attempt, status = status)
-
+    val eta: String? = null,
+    @SerializedName("feedback")
+    val feedback: Feedback? = null
+) : Parcelable {
     @SerializedName("reply")
-    private val replyWrapper: ReplyWrapper? = reply?.let(::ReplyWrapper)
+    private val replyWrapper: ReplyWrapper? = _reply?.let(::ReplyWrapper)
 
-    val reply: Reply? // this virtual property allows to work with reply like it regular class field without additional wrapper
+    val reply: Reply?
         get() = replyWrapper?.reply
 
     enum class Status(val scope: String) {
@@ -42,5 +45,40 @@ class Submission(
 
         @SerializedName("local")
         LOCAL("local")
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeLong(id)
+        parcel.writeInt(status?.ordinal ?: -1)
+        parcel.writeString(score)
+        parcel.writeString(hint)
+        parcel.writeString(time)
+        parcel.writeParcelable(reply, flags)
+        parcel.writeLong(attempt)
+        parcel.writeString(session)
+        parcel.writeString(eta)
+        parcel.writeSerializable(feedback)
+    }
+
+    override fun describeContents(): Int = 0
+
+    companion object CREATOR : Parcelable.Creator<Submission> {
+        override fun createFromParcel(parcel: Parcel): Submission =
+            Submission(
+                parcel.readLong(),
+                Status.values().getOrNull(parcel.readInt()),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString(),
+
+                parcel.readParcelable(Reply::class.java.classLoader),
+                parcel.readLong(),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readSerializable() as? Feedback
+            )
+
+        override fun newArray(size: Int): Array<Submission?> =
+            arrayOfNulls(size)
     }
 }

@@ -22,6 +22,7 @@ object DbStructureStep {
 
         const val DISCUSSION_COUNT = "discussion_count"
         const val DISCUSSION_PROXY = "discussion_proxy"
+        const val DISCUSSION_THREADS = "discussion_threads"
         const val PEER_REVIEW = "has_peer_review"
         const val HAS_SUBMISSION_RESTRICTION = "has_submission_restriction"
         const val MAX_SUBMISSION_COUNT = "max_submission_count"

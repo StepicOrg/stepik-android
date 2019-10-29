@@ -9,12 +9,12 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 
 class GlideImageViewWrapper(
-        val imageView: ImageView
+    val imageView: ImageView
 ) {
     private val svgRequestBuilder by lazy {
         GlideSvgRequestFactory
-                .create(imageView.context, null)
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .create(imageView.context, null)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
     }
 
     fun setImagePath(path: String, placeholder: Drawable? = null) {

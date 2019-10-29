@@ -1,15 +1,14 @@
 package org.stepic.droid.ui.dialogs;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -18,11 +17,10 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.ShareHelper;
 import org.stepic.droid.model.CertificateViewItem;
+import org.stepic.droid.util.ContextExtensionsKt;
 import org.stepic.droid.util.DisplayUtils;
 
 import javax.inject.Inject;
-
-import butterknife.ButterKnife;
 
 public class CertificateShareDialog extends BottomSheetDialog {
 
@@ -55,9 +53,9 @@ public class CertificateShareDialog extends BottomSheetDialog {
         int dialogHeight = screenHeight - statusBarHeight;
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, dialogHeight == 0 ? ViewGroup.LayoutParams.MATCH_PARENT : dialogHeight);
 
-        View addLinkedIn = ButterKnife.findById(view, R.id.share_certificate_add_linkedin);
-        View copyLink = ButterKnife.findById(view, R.id.share_certificate_copy_link);
-        View shareAll = ButterKnife.findById(view, R.id.share_certificate_all);
+        View addLinkedIn = view.findViewById(R.id.share_certificate_add_linkedin);
+        View copyLink = view.findViewById(R.id.share_certificate_copy_link);
+        View shareAll = view.findViewById(R.id.share_certificate_all);
 
         addLinkedIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,10 +71,12 @@ public class CertificateShareDialog extends BottomSheetDialog {
             public void onClick(View view) {
                 dismiss();
                 analytic.reportEvent(Analytic.Certificate.COPY_LINK_CERTIFICATE);
-                ClipData clipData = ClipData.newPlainText(App.Companion.getAppContext().getString(R.string.copy_link_title), certificateViewItem.getFullPath());
-                ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getContext(), R.string.link_copied_title, Toast.LENGTH_SHORT).show();
+                ContextExtensionsKt.copyTextToClipboard(
+                        getContext(),
+                        App.Companion.getAppContext().getString(R.string.copy_link_title),
+                        certificateViewItem.getCertificate().getUrl(),
+                        getContext().getResources().getString(R.string.link_copied_title)
+                );
             }
         });
 

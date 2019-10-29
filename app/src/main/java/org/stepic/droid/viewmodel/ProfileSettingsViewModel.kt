@@ -1,7 +1,7 @@
 package org.stepic.droid.viewmodel
 
-import android.support.annotation.ColorRes
-import android.support.annotation.StringRes
+import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 import org.stepic.droid.R
 
 data class ProfileSettingsViewModel(

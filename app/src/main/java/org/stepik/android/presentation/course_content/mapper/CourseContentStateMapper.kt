@@ -43,8 +43,8 @@ constructor(
                 ?: courseContent
 
         val hasDates = content
-                .filterIsInstance<CourseContentItem.SectionItem>()
-                .any { sectionItem -> sectionItem.dates.isNotEmpty() }
+            .filterIsInstance<CourseContentItem.SectionItem>()
+            .any { sectionItem -> sectionItem.dates.isNotEmpty() }
 
         return CourseContentView.State.CourseContentLoaded(course, personalDeadlinesState, content, hasDates)
     }
@@ -77,14 +77,16 @@ constructor(
         courseContent
             .map { item ->
                 if (item is CourseContentItem.SectionItem) {
+                    val sectionDates = sectionDatesMapper.mapSectionDates(item.section)
                     val dates = deadlinesRecord
                         ?.data
                         ?.deadlines
                         ?.find { it.section == item.section.id }
                         ?.let { deadline ->
-                            listOf(CourseContentSectionDate(R.string.course_content_timeline_deadline, deadline.deadline))
+                            (listOf(CourseContentSectionDate(R.string.course_content_timeline_deadline, deadline.deadline)) + sectionDates)
+                                .sortedBy { it.date.time }
                         }
-                        ?: sectionDatesMapper.mapSectionDates(item.section)
+                        ?: sectionDates
                     item.copy(dates = dates)
                 } else {
                     item
@@ -102,7 +104,7 @@ constructor(
     private fun isItemContainsProgress(item: CourseContentItem, progress: Progress): Boolean =
         when (item) {
             is CourseContentItem.SectionItem ->
-                item.progress?.id == progress.id
+                item.progress?.id == progress.id || item.requiredSection?.progress?.id == progress.id
 
             is CourseContentItem.UnitItem ->
                 item.progress?.id == progress.id
@@ -114,8 +116,16 @@ constructor(
     private fun updateItemProgress(item: CourseContentItem, progress: Progress): CourseContentItem =
         when (item) {
             is CourseContentItem.SectionItem ->
-                item.takeIf { it.progress?.id == progress.id }
-                    ?.copy(progress = progress)
+                when {
+                    item.progress?.id == progress.id ->
+                        item.copy(progress = progress)
+
+                    item.requiredSection?.progress?.id == progress.id ->
+                        item.copy(requiredSection = item.requiredSection?.copy(progress = progress))
+
+                    else ->
+                        null
+                }
 
             is CourseContentItem.UnitItem ->
                 item.takeIf { it.progress?.id == progress.id }

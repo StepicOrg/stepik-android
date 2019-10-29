@@ -1,8 +1,8 @@
 package org.stepic.droid.adaptive.ui.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatDelegate
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatDelegate
 import kotlinx.android.synthetic.main.activity_adaptive_stats.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveStatsViewPagerAdapter

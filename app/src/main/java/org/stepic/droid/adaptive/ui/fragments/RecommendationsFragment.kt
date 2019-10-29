@@ -1,12 +1,12 @@
 package org.stepic.droid.adaptive.ui.fragments
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_recommendations.*
 import org.stepic.droid.R
@@ -17,10 +17,10 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
-import org.stepik.android.model.Course
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.MathUtli
+import org.stepik.android.model.Course
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class RecommendationsFragment : FragmentBase(), RecommendationsView {
@@ -59,8 +59,8 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     override fun injectComponent() {
         App.componentManager()
-                .adaptiveCourseComponent(course?.id ?: 0)
-                .inject(this)
+            .adaptiveCourseComponent(course?.id ?: 0)
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -104,7 +104,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     override fun onLoading() {
         progress.visibility = View.VISIBLE
         error.visibility = View.GONE
-        loadingPlaceholder.text = loadingPlaceholders[MathUtli.randomBetween(0, loadingPlaceholders.size - 1)]
+        loadingPlaceholder.text = loadingPlaceholders.random()
     }
 
     override fun onCardLoaded() {
@@ -144,11 +144,13 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         onCourseState()
     }
 
-    override fun updateExp(exp: Long,
-                           currentLevelExp: Long,
-                           nextLevelExp: Long,
+    override fun updateExp(
+        exp: Long,
+        currentLevelExp: Long,
+        nextLevelExp: Long,
 
-                           level: Long) {
+        level: Long
+    ) {
         expProgress.progress = (exp - currentLevelExp).toInt()
         expProgress.max = (nextLevelExp - currentLevelExp).toInt()
 
@@ -178,11 +180,15 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         expPopupWindow = PopupHelper.showPopupAnchoredToView(requireContext(), expBubble, getString(R.string.adaptive_exp_tooltip_text), withArrow = true)
     }
 
-    override fun onStreakLost() =
-            animations.playStreakFailedAnimation(streakFailed, expProgress)
+    override fun onStreakLost() {
+        animations.playStreakFailedAnimation(streakFailed, expProgress)
+    }
 
-    override fun showNewLevelDialog(level: Long) =
-            AdaptiveLevelDialog.newInstance(level).show(childFragmentManager, LEVEL_DIALOG_TAG)
+    override fun showNewLevelDialog(level: Long) {
+        AdaptiveLevelDialog
+            .newInstance(level)
+            .showIfNotExists(childFragmentManager, LEVEL_DIALOG_TAG)
+    }
 
     override fun onStart() {
         super.onStart()
@@ -196,7 +202,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
     override fun onReleaseComponent() {
         App.componentManager()
-                .releaseAdaptiveCourseComponent(course?.id ?: 0)
+            .releaseAdaptiveCourseComponent(course?.id ?: 0)
     }
 
     override fun onDestroy() {

@@ -3,9 +3,9 @@ package org.stepic.droid.ui.quiz
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import org.stepik.android.model.attempts.Attempt
-import org.stepik.android.model.Submission
 import org.stepik.android.model.Reply
+import org.stepik.android.model.Submission
+import org.stepik.android.model.attempts.Attempt
 
 abstract class QuizDelegate {
     abstract var isEnabled: Boolean

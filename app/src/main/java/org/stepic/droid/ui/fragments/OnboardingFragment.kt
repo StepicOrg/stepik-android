@@ -9,18 +9,21 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.model.OnboardingType
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
-import org.stepic.droid.util.argument
+import ru.nobird.android.view.base.ui.extension.argument
 
 class OnboardingFragment : FragmentBase() {
     companion object {
         fun newInstance(onboardingType: OnboardingType): OnboardingFragment =
-                OnboardingFragment().apply { this.onboardingType = onboardingType }
+            OnboardingFragment()
+                .apply {
+                    this.onboardingType = onboardingType
+                }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_onboarding_page, container, false)
-
     private var onboardingType: OnboardingType by argument()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_onboarding_page, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

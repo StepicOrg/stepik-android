@@ -7,6 +7,7 @@ import org.stepic.droid.util.countWhile
 import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.util.takeLastFromIndexWhile
 import javax.inject.Inject
+import kotlin.math.min
 
 /**
  * Class for smart code analyzing
@@ -45,8 +46,8 @@ constructor(private val autocompleteContainer: AutocompleteContainer) {
         return text.countWhile (prevLineStart + 1) { Character.isWhitespace(it) && it != LINE_BREAK }
     }
 
-    fun getIndentForLines(lines: List<String>) =
-            Math.min(lines.map { getIndentForCurrentLine(0, it) }.filter { it > 0 }.min() ?: CodeEditor.DEFAULT_INDENT_SIZE, CodeEditor.MAX_INDENT_SIZE)
+    fun getIndentForLines(lines: List<String>): Int =
+        min(lines.map { getIndentForCurrentLine(0, it) }.filter { it > 0 }.min() ?: CodeEditor.DEFAULT_INDENT_SIZE, CodeEditor.MAX_INDENT_SIZE)
 
 
     fun onTextInserted(start: Int, count: Int, codeEditor: CodeEditor) {

@@ -5,15 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.home_streak_view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.model.CoursesCarouselInfoConstants
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
 
@@ -26,15 +28,21 @@ class HomeFragment : FragmentBase(), HomeStreakView {
     @Inject
     lateinit var homeStreakPresenter: HomeStreakPresenter
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Home.HOME_SCREEN_OPENED)
+        analytic.reportEvent(Analytic.Home.HOME_SCREEN_OPENED)
+    }
+
     override fun injectComponent() {
         App.component()
-                .homeComponentBuilder()
-                .build()
-                .inject(this)
+            .homeComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_home, container, false)
+        inflater.inflate(R.layout.fragment_home, container, false)
 
     @SuppressLint("CommitTransaction")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -44,9 +52,9 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
         if (savedInstanceState == null) {
             childFragmentManager
-                    .beginTransaction() //false positive Lint: ... should completed with commit()
-                    .add(R.id.homeFastContinueContainer, FastContinueFragment.newInstance(), fastContinueTag)
-                    .commitNow()
+                .beginTransaction() //false positive Lint: ... should completed with commit()
+                .add(R.id.homeFastContinueContainer, FastContinueFragment.newInstance(), fastContinueTag)
+                .commitNow()
 
 
             myCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.myCourses)
@@ -69,10 +77,10 @@ class HomeFragment : FragmentBase(), HomeStreakView {
         val days = "$streak $daysPlural"
 
         streakText.text = textResolver.fromHtml(getString(R.string.home_streak_counter_text, days))
-        homeStreak.changeVisibility(true)
+        homeStreak.isVisible = true
     }
 
     override fun onEmptyStreak() {
-        homeStreak.changeVisibility(false)
+        homeStreak.isVisible = false
     }
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+            android:id="@+id/stepQuizCodeTextContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:padding="16dp" />
+
+        <FrameLayout
+            android:id="@+id/stepQuizCodeDetails"
+            android:background="@drawable/bg_step_quiz_code_details"
+            android:layout_below="@id/stepQuizCodeTextContent"
+            android:layout_width="match_parent"
+            android:layout_height="48dp">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@drawable/ic_step_quiz_code_details" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|start"
+
+                android:text="@string/step_quiz_code_details"
+                android:textColor="@color/new_accent_color"
+                android:textSize="16sp"
+
+                android:layout_marginStart="48dp"
+                android:layout_marginLeft="48dp"
+                android:layout_marginEnd="48dp"
+                android:layout_marginRight="48dp" />
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/step_quiz_separator" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/stepQuizCodeDetailsContent"
+            android:layout_below="@id/stepQuizCodeDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/new_primary_color"
+            tools:listitem="@layout/item_step_quiz_code_detail_sample" />
+
+    </RelativeLayout>
+</androidx.core.widget.NestedScrollView>

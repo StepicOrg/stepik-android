@@ -2,7 +2,6 @@ package org.stepic.droid.core.presenters.contracts
 
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.model.Section
 
 interface ContinueCourseView {
 

@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.video_player
 
 import android.os.Bundle
+import com.google.android.exoplayer2.Player
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -30,9 +31,16 @@ constructor(
 ) : PresenterBase<VideoPlayerView>() {
     companion object {
         private const val VIDEO_PLAYER_DATA = "video_player_data"
+        private const val FULLSCREEN_DATA = "fullscreen_data"
 
         private const val TIMESTAMP_EPS = 1000L
     }
+
+    private var state: VideoPlayerView.State = VideoPlayerView.State.Idle
+        set(value) {
+            field = value
+            view?.setState(value)
+        }
 
     private var videoPlayerData: VideoPlayerData? = null
         set(value) {
@@ -41,29 +49,19 @@ constructor(
                 view?.setVideoPlayerData(value)
             }
         }
-
-    private var isRotateVideo: Boolean? = null
+    private var isLandscapeVideo: Boolean = false
         set(value) {
             field = value
-            view?.setIsRotateVideo(value ?: false)
+            view?.setIsLandscapeVideo(value)
         }
 
     private var isLoading = false
 
-    init {
-        compositeDisposable += videoPlayerSettingsInteractor
-            .isRotateVideo()
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribe { isRotate ->
-                isRotateVideo = isRotate
-            }
-    }
-
     override fun attachView(view: VideoPlayerView) {
         super.attachView(view)
         videoPlayerData?.let(view::setVideoPlayerData)
-        view.setIsRotateVideo(isRotateVideo ?: false)
+        view.setIsLandscapeVideo(isLandscapeVideo)
+        view.setState(state)
     }
 
     /**
@@ -73,6 +71,7 @@ constructor(
         if (videoPlayerData == null) {
             videoPlayerData = savedInstanceState.getParcelable(VIDEO_PLAYER_DATA)
         }
+        isLandscapeVideo = savedInstanceState.getBoolean(FULLSCREEN_DATA)
     }
 
     fun onMediaData(mediaData: VideoPlayerMediaData) {
@@ -120,7 +119,11 @@ constructor(
             ?.url
             ?: return
 
-        videoPlayerData = playerData.copy(videoUrl = url)
+        val quality = videoUrl
+            .quality
+            ?: return
+
+        videoPlayerData = playerData.copy(videoUrl = url, videoQuality = quality)
     }
 
     fun changePlaybackRate(videoPlaybackRate: VideoPlaybackRate) {
@@ -144,12 +147,7 @@ constructor(
     }
 
     fun changeVideoRotation(isRotateVideo: Boolean) {
-        this.isRotateVideo = isRotateVideo
-
-        compositeDisposable += videoPlayerSettingsInteractor
-            .setRotateVideo(isRotateVideo)
-            .subscribeOn(backgroundScheduler)
-            .subscribe()
+        this.isLandscapeVideo = isRotateVideo
     }
 
     fun syncVideoTimestamp(currentPosition: Long, duration: Long) {
@@ -169,7 +167,74 @@ constructor(
             .subscribeBy(onError = emptyOnErrorStub)
     }
 
+    /**
+     * Video player states
+     *
+     * [isAutoplayAllowed] - allowed for video
+     */
+    fun onPlayerStateChanged(playbackState: Int, isAutoplayAllowed: Boolean) {
+        val isAutoplayEnabled = videoPlayerSettingsInteractor.isAutoplayEnabled()
+        state =
+            when (val state = state) {
+                VideoPlayerView.State.Idle ->
+                    if (playbackState == Player.STATE_ENDED && isAutoplayAllowed) {
+                        if (isAutoplayEnabled) {
+                            VideoPlayerView.State.AutoplayPending(0)
+                        } else {
+                            VideoPlayerView.State.AutoplayCancelled
+                        }
+                    } else {
+                        VideoPlayerView.State.Idle
+                    }
+
+                else ->
+                    if (playbackState != Player.STATE_ENDED) {
+                        VideoPlayerView.State.Idle
+                    } else {
+                        state
+                    }
+            }
+    }
+
+    fun onAutoplayProgressChanged(progress: Int) {
+        state =
+            if (state is VideoPlayerView.State.AutoplayPending) {
+                VideoPlayerView.State.AutoplayPending(progress)
+            } else {
+                state
+            }
+    }
+
+    fun onAutoplayNext() {
+        state =
+            if (state is VideoPlayerView.State.AutoplayPending || state == VideoPlayerView.State.AutoplayCancelled) {
+                VideoPlayerView.State.AutoplayNext
+            } else {
+                state
+            }
+    }
+
+    fun stayOnThisStep() {
+        state = VideoPlayerView.State.Idle
+    }
+
+    fun setAutoplayEnabled(isEnabled: Boolean) {
+        videoPlayerSettingsInteractor.setAutoplayEnabled(isEnabled)
+        state =
+            when (state) {
+                is VideoPlayerView.State.AutoplayPending ->
+                    VideoPlayerView.State.AutoplayCancelled
+
+                is VideoPlayerView.State.AutoplayCancelled ->
+                    VideoPlayerView.State.AutoplayPending(0)
+
+                else ->
+                    state
+            }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(VIDEO_PLAYER_DATA, videoPlayerData)
+        outState.putBoolean(FULLSCREEN_DATA, isLandscapeVideo)
     }
 }

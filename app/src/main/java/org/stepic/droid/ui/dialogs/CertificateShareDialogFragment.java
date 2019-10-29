@@ -2,14 +2,16 @@ package org.stepic.droid.ui.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.CertificateViewItem;
 
 public class CertificateShareDialogFragment extends DialogFragment {
 
+    public static final String TAG = "certificate_share_dialog";
     private static final String CERTIFICATE_VIEW_ITEM_KEY = "certificateViewItemKey";
 
     public static DialogFragment newInstance(@NotNull CertificateViewItem viewItem) {

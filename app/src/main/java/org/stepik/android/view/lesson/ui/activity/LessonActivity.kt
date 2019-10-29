@@ -1,56 +1,79 @@
 package org.stepik.android.view.lesson.ui.activity
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.ViewPager
-import android.support.v7.content.res.AppCompatResources
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
-import org.stepic.droid.ui.listeners.NextMoveable
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.snackbar
+import org.stepic.droid.util.DeviceInfoUtil
+import org.stepic.droid.util.RatingUtil
+import org.stepic.droid.util.reportRateEvent
 import org.stepic.droid.util.resolvers.StepTypeResolver
+import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
+import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
+import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
+import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
+class LessonActivity : FragmentActivityBase(), LessonView,
+    NextMoveable, RateAppDialog.Companion.Callback, TimeIntervalPickerDialogFragment.Companion.Callback {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
         private const val EXTRA_LESSON = "lesson"
         private const val EXTRA_BACK_ANIMATION = "back_animation"
+        private const val EXTRA_AUTOPLAY = "autoplay"
 
         private const val EXTRA_LAST_STEP = "last_step"
 
-        fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false): Intent =
+        fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_SECTION, section)
                 .putExtra(EXTRA_UNIT, unit)
                 .putExtra(EXTRA_LESSON, lesson)
                 .putExtra(EXTRA_BACK_ANIMATION, isNeedBackAnimation)
+                .putExtra(EXTRA_AUTOPLAY, isAutoplayEnabled)
 
         fun createIntent(context: Context, lastStep: LastStep): Intent =
             Intent(context, LessonActivity::class.java)
@@ -125,8 +148,9 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonPager, stepsAdapter))
         lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
-                hideSoftKeypad()
+                currentFocus?.hideKeyboard()
                 lessonPresenter.onStepOpened(position)
+                invalidateOptionsMenu()
             }
         })
         lessonTab.setupWithViewPager(lessonPager, true)
@@ -206,12 +230,16 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
                 centeredToolbarTitle.text = state.lessonData.lesson.title
 
                 stepsAdapter.lessonData = state.lessonData
-                stepsAdapter.items =
-                    if (state.stepsState is LessonView.StepsState.Loaded) {
-                        state.stepsState.stepItems
-                    } else {
-                        emptyList()
+                if (state.stepsState is LessonView.StepsState.Loaded) {
+                    stepsAdapter.items = state.stepsState.stepItems
+
+                    if (intent.getBooleanExtra(EXTRA_AUTOPLAY, false)) {
+                        lessonPager.post { playCurrentStep() }
+                        intent.removeExtra(EXTRA_AUTOPLAY)
                     }
+                } else {
+                    stepsAdapter.items = emptyList()
+                }
 
                 invalidateTabLayout()
             }
@@ -241,12 +269,12 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
         lessonPresenter.onStepOpened(position)
     }
 
-    override fun showLessonInfoTooltip(stepWorth: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
+    override fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
         lessonInfoTooltipDelegate
-            .showLessonInfoTooltip(stepWorth, lessonTimeToComplete, certificateThreshold)
+            .showLessonInfoTooltip(stepScore, stepCost, lessonTimeToComplete, certificateThreshold)
     }
 
-    override fun moveNext(): Boolean {
+    override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
         val itemCount = lessonPager
             .adapter
             ?.count
@@ -256,13 +284,127 @@ class LessonActivity : FragmentActivityBase(), LessonView, NextMoveable {
 
         if (isNotLastItem) {
             lessonPager.currentItem++
+            if (isAutoplayEnabled) {
+                playCurrentStep()
+            }
         }
 
         return isNotLastItem
     }
 
+    private fun playCurrentStep() {
+        (stepsAdapter.activeFragments[lessonPager.currentItem] as? Playable)
+            ?.play()
+    }
+
     override fun showComments(step: Step, discussionId: Long) {
-        // todo: use discussion id after comments refactor
-        screenManager.openComments(this, step.discussionProxy, step.id)
+        val discussionThread =
+            step.discussionProxy
+                ?.let {
+                    DiscussionThread(
+                        id = step.discussionThreads?.firstOrNull() ?: "",
+                        thread = DiscussionThread.THREAD_DEFAULT,
+                        discussionsCount = step.discussionsCount,
+                        discussionProxy = it
+                    )
+                }
+        if (discussionThread != null) {
+            screenManager.openComments(this, discussionThread, step, discussionId, false)
+        } else {
+            analytic.reportEvent(Analytic.Screens.OPEN_COMMENT_NOT_AVAILABLE)
+            lessonPager.snackbar(messageRes = R.string.comment_disabled)
+        }
+    }
+
+    override fun showRateDialog() {
+        analytic.reportEvent(Analytic.Rating.SHOWN)
+        RateAppDialog
+            .newInstance()
+            .showIfNotExists(supportFragmentManager, RateAppDialog.TAG)
+    }
+
+    override fun showStreakDialog(streakDays: Int) {
+        val streakTitle = SpannableString(getString(R.string.streak_dialog_title))
+        streakTitle.setSpan(
+            ForegroundColorSpan(Color.BLACK),
+            0,
+            streakTitle.length,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
+        streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        val description = if (streakDays > 0) {
+            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, streakDays.toString())
+            resources.getQuantityString(R.plurals.streak_description, streakDays, streakDays)
+        } else {
+            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, streakDays.toString())
+            getString(R.string.streak_description_not_positive)
+        }
+
+        analytic.reportEvent(Analytic.Streak.SHOWN_MATERIAL_DIALOG)
+        val dialog = MaterialStyledDialog.Builder(this)
+                .setTitle(streakTitle)
+                .setDescription(description)
+                .setHeaderDrawable(R.drawable.dialog_background)
+                .setPositiveText(R.string.ok)
+                .setNegativeText(R.string.later_tatle)
+                .setScrollable(true, 10) // number of lines lines
+                .onPositive { _, _ ->
+                    analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG)
+                    TimeIntervalPickerDialogFragment
+                        .newInstance()
+                        .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+                }
+                .onNegative { _, _ -> onStreakDialogCancelled() }
+                .build()
+        dialog.show()
+    }
+
+    override fun onClickLater(starNumber: Int) {
+        if (RatingUtil.isExcellent(starNumber)) {
+            analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_LATER)
+        } else {
+            analytic.reportRateEvent(starNumber, Analytic.Rating.NEGATIVE_LATER)
+        }
+    }
+
+    override fun onClickGooglePlay(starNumber: Int) {
+        lessonPresenter.onAppRateShow()
+        analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_APPSTORE)
+
+        if (config.isAppInStore) {
+            screenManager.showStoreWithApp(this)
+        } else {
+            setupTextFeedback()
+        }
+    }
+
+    override fun onClickSupport(starNumber: Int) {
+        lessonPresenter.onAppRateShow()
+        analytic.reportRateEvent(starNumber, Analytic.Rating.NEGATIVE_EMAIL)
+        setupTextFeedback()
+    }
+
+    override fun sendTextFeedback(supportEmailData: SupportEmailData) {
+        screenManager.openTextFeedBack(this, supportEmailData)
+    }
+
+    override fun onTimeIntervalPicked(chosenInterval: Int) {
+        lessonPresenter.setStreakTime(chosenInterval)
+        analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL, chosenInterval.toString())
+        lessonPager.snackbar(messageRes = R.string.streak_notification_enabled_successfully, length = Snackbar.LENGTH_LONG)
+    }
+
+    private fun setupTextFeedback() {
+        lessonPresenter.sendTextFeedback(
+            getString(R.string.feedback_subject),
+            DeviceInfoUtil.getInfosAboutDevice(this, "\n")
+        )
+    }
+
+    private fun onStreakDialogCancelled() {
+        analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
+        lessonPager.snackbar(messageRes = R.string.streak_notification_canceled, length = Snackbar.LENGTH_LONG)
     }
 }

@@ -137,15 +137,6 @@
         </activity>
 
         <activity
-            android:name=".ui.activities.TextFeedbackActivity"
-            android:parentActivityName="org.stepic.droid.ui.activities.MainFeedActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.MainFeedActivity" />
-        </activity>
-
-        <activity
             android:name="org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
@@ -156,24 +147,7 @@
             android:stopWithTask="true" />
 
         <activity
-            android:name=".ui.activities.CommentsActivity"
-            android:launchMode="singleTop"
-            android:parentActivityName="org.stepik.android.view.lesson.ui.activity.LessonActivity">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.stepik.android.view.lesson.ui.activity.LessonActivity" />
-        </activity>
-
-        <activity
-            android:name=".ui.activities.NewCommentActivity"
-            android:parentActivityName=".ui.activities.CommentsActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.CommentsActivity" />
-        </activity>
+            android:name="org.stepik.android.view.comment.ui.activity.CommentsActivity" />
 
         <activity
             android:name=".ui.activities.ProfileActivity"
@@ -196,15 +170,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.activities.DownloadsActivity" />
-
-        <activity android:name=".ui.activities.CertificatesActivity" />
-
         <activity android:name=".ui.activities.CourseListActivity" />
-
-        <activity
-            android:name=".ui.activities.CodePlaygroundActivity"
-            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
@@ -368,6 +334,12 @@
                 <data android:pathPattern="/lesson/.*/step/40" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="org.stepik.android.view.certificate.ui.activity.CertificatesActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.download.ui.activity.DownloadActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

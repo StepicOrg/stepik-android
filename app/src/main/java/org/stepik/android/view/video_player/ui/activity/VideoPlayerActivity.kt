@@ -1,7 +1,9 @@
 package org.stepik.android.view.video_player.ui.activity
 
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -9,12 +11,16 @@ import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.IBinder
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.PopupMenu
 import android.view.Gravity
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -30,11 +36,11 @@ import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.ui.util.changeVisibility
 import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
 import org.stepik.android.presentation.video_player.VideoPlayerView
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
@@ -42,16 +48,23 @@ import javax.inject.Inject
 
 class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDialogInPlayer.Callback {
     companion object {
+        const val REQUEST_CODE = 1535
+
         private const val TIMEOUT_BEFORE_HIDE = 4000
         private const val JUMP_TIME_MILLIS = 10000
 
         private const val IN_BACKGROUND_POPUP_TIMEOUT_MS = 3000L
 
-        private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
+        private const val AUTOPLAY_PROGRESS_MAX = 3600
+        private const val AUTOPLAY_ANIMATION_DURATION_MS = 7200L
 
-        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData): Intent =
+        private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
+        private const val EXTRA_VIDEO_AUTOPLAY = "video_player_autoplay"
+
+        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
+                .putExtra(EXTRA_VIDEO_AUTOPLAY, isAutoplayEnabled)
     }
 
     @Inject
@@ -59,6 +72,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val isAutoplayEnabled: Boolean by lazy { intent.getBooleanExtra(EXTRA_VIDEO_AUTOPLAY, false) }
 
     private val videoServiceConnection =
         object : ServiceConnection {
@@ -88,20 +103,31 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                     analytic.reportError(Analytic.Video.ERROR, error)
                 }
             }
+
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                videoPlayerPresenter.onPlayerStateChanged(playbackState, isAutoplayEnabled)
+            }
         }
 
     private var exoPlayer: ExoPlayer? = null
         set(value) {
             field?.removeListener(exoPlayerListener)
             field = value
-            field?.addListener(exoPlayerListener)
+
+            if (value != null) {
+                value.addListener(exoPlayerListener)
+
+                videoPlayerPresenter.onPlayerStateChanged(value.playbackState, isAutoplayEnabled)
+            }
 
             playerView?.player = value
         }
-
-    private var isRotateVideo = false
+    private var isLandscapeVideo = false
 
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
+    private lateinit var viewStateDelegate: ViewStateDelegate<VideoPlayerView.State>
+
+    private var animator: ValueAnimator? = null
 
     private var playerInBackroundPopup: PopupWindow? = null
 
@@ -131,11 +157,13 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             showChooseRateMenu(it)
         }
 
-        moreItemsView.changeVisibility(false)
+        qualityView.isVisible = false
 
         playerView.controllerShowTimeoutMs = TIMEOUT_BEFORE_HIDE
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
+
+        exo_fullscreen_icon_container.setOnClickListener { changeVideoRotation() }
 
         playerView.setControllerVisibilityListener { visibility ->
             if (visibility == View.VISIBLE) {
@@ -144,6 +172,20 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 NavigationBarUtil.hideNavigationBar(true, this)
             }
         }
+
+        autoplay_controller_panel.setOnClickListener { videoPlayerPresenter.onAutoplayNext() }
+        autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
+        autoplayCancel.setOnClickListener { videoPlayerPresenter.stayOnThisStep() }
+        autoplaySwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (autoplaySwitch.isUserTriggered) {
+                videoPlayerPresenter.setAutoplayEnabled(isChecked)
+            }
+        }
+
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<VideoPlayerView.State.Idle>(center_controller_panel)
+        viewStateDelegate.addState<VideoPlayerView.State.AutoplayPending>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
+        viewStateDelegate.addState<VideoPlayerView.State.AutoplayCancelled>(autoplay_controller_panel, autoplayCancel, autoplaySwitch)
     }
 
     private fun injectComponent() {
@@ -153,20 +195,21 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             .inject(this)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         videoPlayerPresenter.attachView(this)
         bindService(VideoPlayerForegroundService.createBindingIntent(this), videoServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
-    override fun onStop() {
+    override fun onPause() {
         playerInBackroundPopup?.dismiss()
-
         exoPlayer?.let { player ->
             videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
         }
 
         videoPlayerPresenter.detachView(this)
+        animator?.cancel()
+        animator = null
 
         unbindService(videoServiceConnection)
         exoPlayer = null
@@ -175,7 +218,62 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             stopService(VideoPlayerForegroundService.createBindingIntent(this))
         }
 
-        super.onStop()
+        super.onPause()
+    }
+
+    override fun setState(state: VideoPlayerView.State) {
+        viewStateDelegate.switchState(state)
+
+        when (state) {
+            VideoPlayerView.State.Idle -> {
+                animator?.cancel()
+                animator = null
+            }
+
+            is VideoPlayerView.State.AutoplayPending -> {
+                if (animator == null) {
+                    animator = ValueAnimator.ofInt(state.progress, AUTOPLAY_PROGRESS_MAX)
+                    animator
+                        ?.apply {
+                            addUpdateListener {
+                                videoPlayerPresenter.onAutoplayProgressChanged(it.animatedValue as Int)
+                            }
+                            addListener(object : AnimatorListenerAdapter() {
+                                override fun onAnimationCancel(animation: Animator) {
+                                    animation.removeAllListeners()
+                                }
+
+                                override fun onAnimationEnd(animation: Animator) {
+                                    videoPlayerPresenter.onAutoplayNext()
+                                }
+                            })
+                            duration = ((1f - state.progress.toFloat() / AUTOPLAY_PROGRESS_MAX) * AUTOPLAY_ANIMATION_DURATION_MS).toLong()
+                            start()
+                        }
+                }
+                autoplayProgress.progress = state.progress
+
+                // without if switch will stuck in one position
+                if (!autoplaySwitch.isChecked) {
+                    autoplaySwitch.isChecked = true
+                }
+            }
+
+            VideoPlayerView.State.AutoplayCancelled -> {
+                animator?.cancel()
+                animator = null
+
+                autoplayProgress.progress = AUTOPLAY_PROGRESS_MAX
+                if (autoplaySwitch.isChecked) {
+                    autoplaySwitch.isChecked = false
+                }
+            }
+
+            VideoPlayerView.State.AutoplayNext -> {
+                setResult(Activity.RESULT_OK)
+                finish()
+            }
+        }
     }
 
     override fun setVideoPlayerData(videoPlayerData: VideoPlayerData) {
@@ -183,9 +281,17 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         videoRateChooser?.setImageDrawable(videoPlayerData.videoPlaybackRate.icon)
 
-        moreItemsView.changeVisibility(true)
-        moreItemsView.setOnClickListener {
-            showMoreItemsPopup(it, videoPlayerData)
+        qualityView.isVisible = true
+        qualityView.text = getString(R.string.video_player_quality_icon, videoPlayerData.videoQuality)
+        qualityView.setOnClickListener {
+            val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
+            val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
+            val nowPlaying = videoPlayerData.videoUrl
+
+            val dialog = VideoQualityDialogInPlayer.newInstance(externalVideo, cachedVideo, nowPlaying)
+            if (!dialog.isAdded) {
+                dialog.show(supportFragmentManager, null)
+            }
         }
     }
 
@@ -204,55 +310,18 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.showController()
     }
 
-    private fun showMoreItemsPopup(view: View, videoPlayerData: VideoPlayerData) {
-        val morePopupMenu = PopupMenu(this, view)
-        morePopupMenu.inflate(R.menu.video_more_menu)
+    override fun setIsLandscapeVideo(isLandScapeVideo: Boolean) {
+        this.isLandscapeVideo = isLandScapeVideo
 
-        val menuItem = morePopupMenu.menu.findItem(R.id.orientation_flag)
-        menuItem.isChecked = isRotateVideo
-
-        morePopupMenu.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.orientation_flag -> {
-                    val oldValue = it.isChecked
-                    val newValue = !oldValue
-                    it.isChecked = newValue
-
-                    videoPlayerPresenter.changeVideoRotation(newValue)
-
-                    true
-                }
-                R.id.video_quality -> {
-                    val cachedVideo: Video? = videoPlayerData.mediaData.cachedVideo
-                    val externalVideo: Video? = videoPlayerData.mediaData.externalVideo
-                    val nowPlaying = videoPlayerData.videoUrl
-
-                    val dialog = VideoQualityDialogInPlayer.newInstance(externalVideo, cachedVideo, nowPlaying)
-                    if (!dialog.isAdded) {
-                        dialog.show(supportFragmentManager, null)
-                    }
-
-                    true
-                }
-                else -> false
-            }
-        }
-
-        morePopupMenu.setOnDismissListener {
-            playerView.hideController()
-        }
-        morePopupMenu.show()
-        playerView.showController()
-    }
-
-    override fun setIsRotateVideo(isRotateVideo: Boolean) {
-        this.isRotateVideo = isRotateVideo
-        requestedOrientation =
-            if (isRotateVideo) {
-                ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        @DrawableRes
+        val fullScreenIconRes =
+            if (isLandScapeVideo) {
+                R.drawable.ic_fullscreen_exit
             } else {
-                ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+                R.drawable.ic_fullscreen
             }
+
+        exo_fullscreen_icon.setImageResource(fullScreenIconRes)
     }
 
     override fun showPlayInBackgroundPopup() {
@@ -284,5 +353,23 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             exoPlayer?.playWhenReady == true) {
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Video.PLAY_IN_BACKGROUND)
         }
+    }
+
+    override fun onBackPressed() {
+        if (isLandscapeVideo) {
+            changeVideoRotation()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    private fun changeVideoRotation() {
+        isLandscapeVideo = !isLandscapeVideo
+        requestedOrientation = if (isLandscapeVideo) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+        videoPlayerPresenter.changeVideoRotation(isLandscapeVideo)
     }
 }

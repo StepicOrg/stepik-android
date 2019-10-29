@@ -2,10 +2,10 @@ package org.stepic.droid.di
 
 import android.app.AlarmManager
 import android.app.NotificationManager
-import android.arch.lifecycle.ViewModelProvider
 import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import dagger.Binds
@@ -24,18 +24,28 @@ import org.stepic.droid.base.ListenerContainer
 import org.stepic.droid.base.ListenerContainerImpl
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.MainHandlerImpl
-import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.configuration.ConfigImpl
-import org.stepic.droid.core.*
+import org.stepic.droid.core.DefaultFilter
+import org.stepic.droid.core.DefaultFilterImpl
+import org.stepic.droid.core.FilterApplicator
+import org.stepic.droid.core.FilterApplicatorImpl
+import org.stepic.droid.core.LessonSessionManager
+import org.stepic.droid.core.LocalLessonSessionManagerImpl
+import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.core.ScreenManagerImpl
+import org.stepic.droid.core.ShareHelper
+import org.stepic.droid.core.ShareHelperImpl
+import org.stepic.droid.core.StepikDevicePoster
+import org.stepic.droid.core.StepikDevicePosterImpl
 import org.stepic.droid.core.internetstate.InternetEnabledPosterImpl
 import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.fonts.FontsProvider
-import org.stepic.droid.fonts.FontsProviderImpl
-import org.stepic.droid.notifications.*
+import org.stepic.droid.notifications.BlockNotificationIntervalProvider
+import org.stepic.droid.notifications.NotificationTimeChecker
+import org.stepic.droid.notifications.NotificationTimeCheckerImpl
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.social.SocialManager
@@ -52,7 +62,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
-import javax.inject.Named
 
 
 @Module
@@ -112,10 +121,6 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
-    internal abstract fun provideFontProvider(fontsProvider: FontsProviderImpl): FontsProvider
-
-    @Binds
-    @AppSingleton
     abstract fun bindStepTypeResolver(stepTypeResolver: StepTypeResolverImpl): StepTypeResolver
 
     @Binds
@@ -123,8 +128,6 @@ abstract class AppCoreModule {
 
     @Module
     companion object {
-        const val SINGLE_THREAD_CODE_SAVER = "SINGLE_THREAD_CODE_SAVER"
-
         @Provides
         @JvmStatic
         @MainScheduler
@@ -161,13 +164,6 @@ abstract class AppCoreModule {
         internal fun provideSocialManager(): SocialManager {
             return SocialManager()
         }
-
-        @AppSingleton
-        @Provides
-        @JvmStatic
-        @Named(SINGLE_THREAD_CODE_SAVER)
-        internal fun provideSingleThreadExecutorForCode(): SingleThreadExecutor =
-                SingleThreadExecutor(Executors.newSingleThreadExecutor())
 
         //it is good for many short lived, which should do async
         @Provides

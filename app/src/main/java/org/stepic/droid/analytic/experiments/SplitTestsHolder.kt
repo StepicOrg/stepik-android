@@ -5,5 +5,5 @@ import javax.inject.Inject
 class SplitTestsHolder
 @Inject
 constructor(
-    splitTests: Set<@JvmSuppressWildcards SplitTest<*>>
+    // splitTests: Set<@JvmSuppressWildcards SplitTest<*>>
 )

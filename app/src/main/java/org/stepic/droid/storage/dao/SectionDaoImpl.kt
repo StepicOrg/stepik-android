@@ -2,14 +2,17 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
-
+import org.stepic.droid.storage.operations.DatabaseOperations
+import org.stepic.droid.util.DbParseHelper
+import org.stepic.droid.util.getBoolean
+import org.stepic.droid.util.getDate
+import org.stepic.droid.util.getInt
+import org.stepic.droid.util.getLong
+import org.stepic.droid.util.getString
+import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.model.Actions
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Section
-import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.util.*
-import org.stepik.android.cache.section.structure.DbStructureSection
-
 import javax.inject.Inject
 
 class SectionDaoImpl

@@ -4,10 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -15,6 +13,8 @@ import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import androidx.annotation.DrawableRes;
 
 import org.stepic.droid.R;
 
@@ -60,12 +60,7 @@ public abstract class StepikOptionView extends FrameLayout implements Checkable 
     }
 
     private void init() {
-        rippleEffectFrameLayout.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performClick();
-            }
-        });
+        rippleEffectFrameLayout.setOnClickListener(v -> performClick());
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -219,7 +214,7 @@ public abstract class StepikOptionView extends FrameLayout implements Checkable 
         }
     }
 
-    public static interface OnCheckedChangeListener {
+    public interface OnCheckedChangeListener {
         /**
          * Called when the checked state of a compound button has changed.
          *

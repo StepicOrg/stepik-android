@@ -1,7 +1,9 @@
 package org.stepic.droid.util
 
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 const val SQL_DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss"
 

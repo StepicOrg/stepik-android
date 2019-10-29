@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingEnd="8dp"
     android:paddingStart="8dp">
@@ -15,14 +15,14 @@
         android:layout_gravity="center_horizontal"
         android:background="@drawable/popup_arrow_up" />
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/background_popup"
         android:padding="6dp">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/stepWorth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,12 +31,12 @@
             android:drawablePadding="8dp"
             android:textColor="@color/white"
             android:textSize="16sp"
-            fontPath="fonts/Roboto-Medium.ttf"
+            app:fontFamily="@font/roboto_medium"
             android:letterSpacing="0.02"
             tools:text="@string/lesson_info_points"
             tools:ignore="MissingPrefix" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/lessonTimeToComplete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,12 +45,12 @@
             android:drawablePadding="8dp"
             android:textColor="@color/white"
             android:textSize="16sp"
-            fontPath="fonts/Roboto-Medium.ttf"
+            app:fontFamily="@font/roboto_medium"
             android:letterSpacing="0.02"
             tools:text="@string/lesson_info_time_to_complete"
             tools:ignore="MissingPrefix" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/certificateThreshold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -59,11 +59,11 @@
             android:drawablePadding="8dp"
             android:textColor="@color/white"
             android:textSize="16sp"
-            fontPath="fonts/Roboto-Medium.ttf"
+            app:fontFamily="@font/roboto_medium"
             android:letterSpacing="0.02"
             tools:text="@string/lesson_info_certificate_threshold"
             tools:ignore="MissingPrefix" />
 
 
-    </android.support.v7.widget.LinearLayoutCompat>
-</android.support.v7.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

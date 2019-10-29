@@ -14,11 +14,8 @@ public class AppConstants {
     public static final String KEY_EMAIL_BUNDLE = "email";
     public static final String KEY_COURSE_BUNDLE = "course";
     public static final String KEY_COURSE_LONG_ID = "course_id_key";
-    public static final String KEY_SECTION_BUNDLE = "section";
-    public static final String KEY_UNIT_BUNDLE = "unit";
-    public static final String KEY_LESSON_BUNDLE = "lesson";
-    public static final String KEY_STEP_BUNDLE = "step";
     public static final String DEFAULT_QUALITY = "360";
+    public static final String HIGH_QUALITY = "720";
     public static final String MAX_QUALITY = "1080";
     public static final int MAX_QUALITY_INT = 1080;
     public static final String COMMENT_DATE_TIME_PATTERN = "dd.MM.yyyy HH:mm";
@@ -34,14 +31,12 @@ public class AppConstants {
     public static final String TYPE_SORTING = "sorting";
     public static final String TYPE_MATH = "math";
     public static final String TYPE_FREE_ANSWER = "free-answer";
-    public static final String TYPE_TABLE = "table";
     public static final String TYPE_STRING = "string";
     public static final String TYPE_CHOICE = "choice";
     public static final String TYPE_NUMBER = "number";
     public static final String TYPE_DATASET = "dataset";
     public static final String TYPE_ANIMATION = "animation";
     public static final String TYPE_CHEMICAL = "chemical";
-    public static final String TYPE_FILL_BLANKS = "fill-blanks";
     public static final String TYPE_PUZZLE = "puzzle";
     public static final String TYPE_PYCHARM = "pycharm";
     public static final String TYPE_CODE = "code";
@@ -52,10 +47,8 @@ public class AppConstants {
     public static final String TYPE_NULL = "null_type";
 
     public static final int REQUEST_EXTERNAL_STORAGE = 13;
-    public static final String KEY_ASSIGNMENT_BUNDLE = "key_assignment";
     public static final String COURSE_ID_KEY = "course_id";
 
-    public static final String DELIMITER_TEXT_SCORE = "/";
     public static final String NOTIFICATION_CANCELED = "notification_canceled";
 
 
@@ -71,21 +64,13 @@ public class AppConstants {
 
     public static final String APP_INDEXING_COURSE_DETAIL_MANIFEST_HACK = "course_app";
     public static final String APP_INDEXING_SYLLABUS_MANIFEST = "syllabus";
-    public static final long TWO_DAY_IN_MINUTES = 2880L;
-    public static final long MILLIS_IN_1MONTH = 2592000000L;
     public static final String COMMA = ",";
-    public static final int REQUEST_CALENDAR_PERMISSION = 1122;
 
     public static final String LINKEDIN_ADD_URL = "https://www.linkedin.com/profile/add?";
     public static final String LINKEDIN_ED_ID = "0_uInsUtRlLF5qiDUg80Aftvf5K-uMiiQPc0IVksZ_0oh1hhPRasb5cWi8eD5WXfgDaSgvthvZk7wTBMS3S-m0L6A6mLjErM6PJiwMkk6nYZylU7__75hCVwJdOTZCAkdv";//// TODO: 02.08.16 add to configs?
 
     public static final int REQUEST_CODE_GOOGLE_SIGN_IN = 7007;
 
-    public static final int ENROLLED_FILTER = 1;
-    public static final int FEATURED_FILTER = 2;
-
-    public static final int DEFAULT_NUMBER_IDS_IN_QUERY = 100;
-    public static final String KEY_MODULE_POSITION = "section_long_id";
     public static final int LAUNCHES_FOR_EXPERT_USER = 20;
     public static final long MILLIS_IN_SEVEN_DAYS = 604800000L;
     public static final String NOTIFICATION_CANCELED_REMINDER = "notification_canceled_reminder";
@@ -106,5 +91,4 @@ public class AppConstants {
     public static final String csrfTokenHeaderName = "X-CSRFToken";
 
     public final static String FROM_MAIN_FEED_FLAG = "from_main_feed";
-    public final static String ANALYTIC_CODE_SCREEN_KEY = "size";
 }

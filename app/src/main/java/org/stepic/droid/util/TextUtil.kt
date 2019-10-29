@@ -1,5 +1,9 @@
 package org.stepic.droid.util
 
+import android.text.SpannableString
+import android.text.util.Linkify
+import androidx.core.text.HtmlCompat
+import androidx.core.text.util.LinkifyCompat
 import kotlin.math.log
 import kotlin.math.pow
 
@@ -26,12 +30,28 @@ object TextUtil {
         return text.length
     }
 
+    /**
+     * Format [bytes] to human readable format. If [bytes] < [smallestUnit] returns bytes in form "< smallestUnit".
+     */
     @JvmStatic
-    fun formatBytes(bytes: Long): String {
+    fun formatBytes(bytes: Long, smallestUnit: Long = 0): String {
         val unit = 1024
+
+        if (smallestUnit > 0 && bytes < smallestUnit) {
+            return "<" + formatBytes(bytes = smallestUnit)
+        }
+
         if (bytes < unit) return "$bytes B"
         val exp = log(bytes.toFloat(), unit.toFloat()).toInt()
         val letter = "kMGTPE"[exp - 1]
         return "%.1f %sB".format(bytes / unit.toDouble().pow(exp), letter)
     }
+
+    @JvmStatic
+    fun linkify(text: String): String =
+        SpannableString(HtmlCompat.fromHtml(text, HtmlCompat.FROM_HTML_MODE_COMPACT))
+            .let {
+                LinkifyCompat.addLinks(it, Linkify.WEB_URLS)
+                HtmlCompat.toHtml(it, HtmlCompat.TO_HTML_PARAGRAPH_LINES_CONSECUTIVE)
+            }
 }

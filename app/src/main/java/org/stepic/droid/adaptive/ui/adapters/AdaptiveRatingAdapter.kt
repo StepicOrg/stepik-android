@@ -2,23 +2,23 @@ package org.stepic.droid.adaptive.ui.adapters
 
 import android.content.Context
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adaptive_rating_item.view.*
 import org.stepic.droid.R
-import org.stepik.android.model.adaptive.RatingItem
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.model.adaptive.RatingItem
 
-class AdaptiveRatingAdapter (
-        context: Context,
-        sharedPreferenceHelper: SharedPreferenceHelper
+class AdaptiveRatingAdapter(
+    context: Context,
+    sharedPreferenceHelper: SharedPreferenceHelper
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private companion object {
         private const val RATING_ITEM_VIEW_TYPE = 1

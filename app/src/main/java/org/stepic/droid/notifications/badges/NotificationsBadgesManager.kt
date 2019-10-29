@@ -1,7 +1,7 @@
 package org.stepic.droid.notifications.badges
 
 import android.content.Context
-import android.support.annotation.MainThread
+import androidx.annotation.MainThread
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.Scheduler
 import io.reactivex.Single

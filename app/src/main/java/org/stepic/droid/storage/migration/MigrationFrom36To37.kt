@@ -1,7 +1,13 @@
 package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
-import org.stepic.droid.storage.structure.*
+import org.stepic.droid.storage.structure.DbStructureBlock
+import org.stepic.droid.storage.structure.DbStructureCourse
+import org.stepic.droid.storage.structure.DbStructureCourseList
+import org.stepic.droid.storage.structure.DbStructureLastStep
+import org.stepic.droid.storage.structure.DbStructureProgress
+import org.stepic.droid.storage.structure.DbStructureSections
+import org.stepic.droid.storage.structure.DbStructureVideoUrl
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.unit.structure.DbStructureUnit

@@ -1,6 +1,6 @@
 package org.stepik.android.view.course_content.model
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import java.util.Date
 
 data class CourseContentSectionDate(

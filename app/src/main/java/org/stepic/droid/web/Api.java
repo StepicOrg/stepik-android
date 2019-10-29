@@ -1,25 +1,23 @@
 package org.stepic.droid.web;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.adaptive.RatingItem;
-import org.stepik.android.model.Course;
 import org.stepic.droid.model.NotificationCategory;
-import org.stepik.android.model.Submission;
-import org.stepik.android.model.adaptive.RecommendationReaction;
-import org.stepik.android.model.comments.Vote;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
-import org.stepik.android.model.Tag;
+import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.Reply;
+import org.stepik.android.model.Submission;
+import org.stepik.android.model.Tag;
+import org.stepik.android.model.adaptive.RatingItem;
+import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
-import org.stepik.android.remote.comment.model.CommentResponse;
+import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -32,6 +30,7 @@ import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
+import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 
 import java.util.List;
 
@@ -69,9 +68,6 @@ public interface Api {
 
     Completable dropCourse(long courseId);
 
-    @Nullable
-    Call<Void> dropCourse(@NotNull Course course);
-
     Call<SectionResponse> getSections(long[] sectionsIds);
 
     Single<SectionResponse> getSectionsRx(long[] sectionsIds);
@@ -92,8 +88,6 @@ public interface Api {
     Single<LessonResponse> getLessons(long lessonId);
 
     Single<StepResponse> getSteps(long[] steps);
-
-    Single<StepResponse> getStepsReactive(long[] steps);
 
     Single<StepResponse> getStepsByLessonId(long lessonId);
 
@@ -155,17 +149,7 @@ public interface Api {
 
     Call<Void> removeDevice(long deviceId);
 
-    Call<CommentResponse> getCommentAnd20Replies(long commentId);
-
-    Call<CommentResponse> getCommentsByIds(long[] commentIds);
-
-    Call<CommentResponse> postComment(String text, long target /*for example, related step*/, @Nullable Long parent /*put if it is reply*/);
-
-    Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue);
-
-    Call<CommentResponse> deleteComment(long commentId);
-
-    Call<CertificateResponse> getCertificates();
+    Single<CertificateResponse> getCertificates(long userId, int page);
 
     Single<UnitResponse> getUnitsByLessonId(long lessonId);
 

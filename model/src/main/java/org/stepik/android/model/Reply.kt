@@ -1,8 +1,10 @@
 package org.stepik.android.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
-class Reply(
+data class Reply(
     @SerializedName("choices")
     val choices: List<Boolean>? = null,
     @SerializedName("text")
@@ -21,25 +23,39 @@ class Reply(
     val code: String? = null,
 
     @SerializedName("solve_sql")
-    val solveSql: String? = null,
+    val solveSql: String? = null
+) : Parcelable {
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeList(choices)
+        parcel.writeString(text)
+        parcel.writeTypedList(attachments)
+        parcel.writeString(formula)
+        parcel.writeString(number)
+        parcel.writeList(ordering)
+        parcel.writeString(language)
+        parcel.writeString(code)
+        parcel.writeString(solveSql)
+    }
 
-    @SerializedName("blanks")
-    val blanks: List<String>? = null,
-    var tableChoices: List<TableChoiceAnswer>? = null //this is not serialize by default, because  field 'choices' is already created by different type
-)
+    override fun describeContents(): Int = 0
 
-class ReplyWrapper(val reply: Reply?)
+    companion object CREATOR : Parcelable.Creator<Reply> {
+        override fun createFromParcel(parcel: Parcel): Reply =
+            Reply(
+                parcel.readArrayList(Boolean::class.java.classLoader) as? List<Boolean>,
+                parcel.readString(),
+                parcel.createTypedArrayList(Attachment),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readArrayList(Int::class.java.classLoader) as? List<Int>,
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readString()
+            )
 
-data class TableChoiceAnswer(
-    @SerializedName("name_row")
-    val nameRow: String,
-    @SerializedName("columns")
-    val columns: List<Cell>
-) {
-    data class Cell(
-        @SerializedName("name")
-        val name: String,
-        @SerializedName("answer")
-        var answer: Boolean
-    )
+        override fun newArray(size: Int): Array<Reply?> =
+            arrayOfNulls(size)
+    }
 }
+
+data class ReplyWrapper(val reply: Reply?)

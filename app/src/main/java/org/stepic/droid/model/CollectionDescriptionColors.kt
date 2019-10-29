@@ -2,8 +2,8 @@ package org.stepic.droid.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
+import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import org.stepic.droid.R
 
 enum class CollectionDescriptionColors(
@@ -14,8 +14,8 @@ enum class CollectionDescriptionColors(
         @ColorRes
         val textColorRes: Int
 ): Parcelable {
-    BLUE(R.drawable.gradient_background_blue, R.drawable.gradient_background_blue_squared, R.color.text_color_gradient_blue),
-    FIRE(R.drawable.gradient_background_fire, R.drawable.gradient_background_fire_squared, R.color.text_color_gradient_fire);
+    BLUE(R.drawable.bg_placeholder_blue, R.drawable.gradient_background_blue_squared, R.color.text_color_gradient_blue),
+    FIRE(R.drawable.bg_placeholder_fire, R.drawable.gradient_background_fire_squared, R.color.text_color_gradient_fire);
 
     override fun describeContents(): Int = 0
 

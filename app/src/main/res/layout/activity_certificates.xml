@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/view_centered_appbar"/>
+
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/certificateRootView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/new_cover">
+
+
+        <include layout="@layout/progress_bar_on_empty_screen"/>
+
+        <include layout="@layout/error_no_connection_with_button"/>
+
+        <include layout="@layout/empty_certificates"/>
+
+        <!--Remove this old cover, when redesign will be finished-->
+        <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
+            android:id="@+id/certificateSwipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/old_cover">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/certificateRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:divider="@color/transparent"
+                android:scrollbarStyle="outsideOverlay"/>
+
+        </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
+    </FrameLayout>
+</LinearLayout>

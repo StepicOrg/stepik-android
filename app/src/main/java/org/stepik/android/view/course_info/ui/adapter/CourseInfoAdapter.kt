@@ -4,9 +4,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.view_course_info_block.view.*
-import org.stepic.droid.fonts.FontsProvider
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
@@ -14,12 +11,12 @@ import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoOrgani
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoVideoBlockDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
+import ru.nobird.android.ui.adapterdelegates.DelegateAdapter
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseInfoAdapter(
-    fontsProvider: FontsProvider,
-
     onVideoClicked: ((VideoPlayerMediaData) -> Unit)? = null,
-    onUserClicked: ((User) -> Unit)? = null
+    onUserClicked: (User) -> Unit
 ) : DelegateAdapter<CourseInfoItem, CourseInfoAdapter.ViewHolder>() {
     private var blocks: List<CourseInfoItem> = emptyList()
         set(value) {
@@ -28,7 +25,7 @@ class CourseInfoAdapter(
         }
 
     init {
-        addDelegate(CourseInfoTextBlockDelegate(fontsProvider))
+        addDelegate(CourseInfoTextBlockDelegate())
         addDelegate(CourseInfoInstructorsDelegate(onUserClicked))
         addDelegate(CourseInfoVideoBlockDelegate(onVideoClicked))
         addDelegate(CourseInfoOrganizationDelegate(onUserClicked))

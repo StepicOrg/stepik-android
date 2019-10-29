@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.ColorInt;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,10 +12,12 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.annotation.ColorInt;
+import androidx.core.content.ContextCompat;
+
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
-import org.stepic.droid.ui.util.AssetSupportWebViewClient;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 
@@ -72,12 +72,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     private void init() {
         App.Companion.component().inject(this);
         setBackgroundColor(Color.argb(1, 0, 0, 0));
-        setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                return true;
-            }
-        });
+        setOnLongClickListener(v -> true);
 
         setOnClickListener(this);
         setOnTouchListener(this);
@@ -93,6 +88,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
             webSettings.setMediaPlaybackRequiresUserGesture(false);
         }
         addJavascriptInterface(new OnScrollWebListener(), HtmlHelper.HORIZONTAL_SCROLL_LISTENER);
+        setSoundEffectsEnabled(false);
     }
 
     public void setTextIsSelectable(boolean isSelectable) {
@@ -136,20 +132,12 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
         if (fontPath != null) {
             html = HtmlHelper.buildPageWithCustomFont(text, fontPath, textColorHighlight, width, config.getBaseUrl());
         } else if (wantLaTeX || HtmlHelper.hasLaTeX(textString)) {
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                setWebViewClient(new AssetSupportWebViewClient());
-            }
             html = HtmlHelper.buildMathPage(text, textColorHighlight, width, config.getBaseUrl());
         } else {
             html = HtmlHelper.buildPageWithAdjustingTextAndImage(text, textColorHighlight, width, config.getBaseUrl());
         }
 
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                loadDataWithBaseURL(assetUrl, html, mimeType, encoding, "");
-            }
-        }, 0);
+        postDelayed(() -> loadDataWithBaseURL(assetUrl, html, mimeType, encoding, ""), 0);
     }
 
 

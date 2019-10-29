@@ -4,9 +4,9 @@ import android.content.Context
 import android.graphics.drawable.Animatable
 import android.os.Bundle
 import android.os.Parcelable
-import android.support.annotation.MainThread
-import android.support.v7.widget.AppCompatImageView
 import android.util.AttributeSet
+import androidx.annotation.MainThread
+import androidx.appcompat.widget.AppCompatImageView
 import org.stepic.droid.R
 
 class ArrowImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
@@ -18,9 +18,9 @@ class ArrowImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
 
 
     companion object {
-        private val IS_ARROW_BOTTOM_DEFAULT = true
-        private val parentParcelableStateKey = "parentParcelableStateKey"
-        private val isArrowBottomKey = "isArrowBottomKey"
+        private const val IS_ARROW_BOTTOM_DEFAULT = true
+        private const val parentParcelableStateKey = "parentParcelableStateKey"
+        private const val isArrowBottomKey = "isArrowBottomKey"
     }
 
     val arrowBottomToTopRes = R.drawable.avd_arrow_bottom_to_top
@@ -69,7 +69,6 @@ class ArrowImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
         }
     }
 
-    fun isExpanded(): Boolean {
-        return !isArrowBottom
-    }
+    fun isExpanded(): Boolean =
+        !isArrowBottom
 }

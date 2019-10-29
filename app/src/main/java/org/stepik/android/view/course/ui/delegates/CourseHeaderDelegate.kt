@@ -4,19 +4,21 @@ import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
-import android.support.design.widget.AppBarLayout
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v7.content.res.AppCompatResources
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.doOnPreDraw
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.appbar.AppBarLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
@@ -26,8 +28,6 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.ui.util.doOnPreDraw
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -35,6 +35,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
@@ -80,7 +81,7 @@ class CourseHeaderDelegate(
             val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
 
             courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-                val ratio = Math.abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
+                val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
                 val targetTranslation = courseInfoMarginExpanded - (courseToolbar.height - courseInfoHeightExpanded) / 2
 
                 courseCover.alpha = 1f - ratio
@@ -163,26 +164,38 @@ class CourseHeaderDelegate(
 
             courseRating.total = 5
             courseRating.progress = courseHeaderData.review.roundToInt()
-            courseRating.changeVisibility(courseHeaderData.review > 0)
+            courseRating.isVisible = courseHeaderData.review > 0
 
-            val isNeedShowProgress = courseHeaderData.progress != null
-            courseProgress.changeVisibility(isNeedShowProgress)
-            courseProgressText.changeVisibility(isNeedShowProgress)
+            val isNeedShowProgress = courseHeaderData.progress != null && courseHeaderData.progress.cost > 0
+            courseProgress.isVisible = isNeedShowProgress
+            courseProgressText.isVisible = isNeedShowProgress
 
-            if (courseHeaderData.progress != null) { // kotlin can't smart cast with isNeedShowProgress
-                courseProgress.progress = courseHeaderData.progress / 100f
-                courseProgressText.text = getString(R.string.percent_symbol, courseHeaderData.progress)
+            if (isNeedShowProgress) {
+                val score = courseHeaderData
+                    .progress
+                    ?.score
+                    ?.toFloatOrNull()
+                    ?.toLong()
+                    ?: 0L
+
+                val cost = courseHeaderData
+                    .progress
+                    ?.cost
+                    ?: 0L
+
+                courseProgress.progress = (score * 100 / cost) / 100f
+                courseProgressText.text = getString(R.string.course_content_text_progress, score, cost)
             }
 
             courseLearnersCount.text = courseHeaderData.learnersCount.toString()
-            courseFeatured.changeVisibility(courseHeaderData.readiness > MIN_FEATURED_READINESS)
+            courseFeatured.isVisible = courseHeaderData.readiness > MIN_FEATURED_READINESS
 
             with(courseHeaderData.enrollmentState) {
-                courseEnrollAction.changeVisibility(this is EnrollmentState.NotEnrolledFree)
-                courseEnrollmentProgress.changeVisibility(this is EnrollmentState.Pending)
-                courseContinueAction.changeVisibility(this is EnrollmentState.Enrolled)
-                courseBuyInWebAction.changeVisibility(this is EnrollmentState.NotEnrolledWeb)
-                courseBuyInAppAction.changeVisibility(this is EnrollmentState.NotEnrolledInApp)
+                courseEnrollAction.isVisible = this is EnrollmentState.NotEnrolledFree
+                courseEnrollmentProgress.isVisible = this is EnrollmentState.Pending
+                courseContinueAction.isVisible = this is EnrollmentState.Enrolled
+                courseBuyInWebAction.isVisible = this is EnrollmentState.NotEnrolledWeb
+                courseBuyInAppAction.isVisible = this is EnrollmentState.NotEnrolledInApp
 
                 if (this is EnrollmentState.NotEnrolledInApp) {
                     courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
@@ -222,7 +235,8 @@ class CourseHeaderDelegate(
                 menuItemView,
                 courseActivity.getString(R.string.course_share_description),
                 theme = PopupHelper.PopupTheme.LIGHT,
-                cancelableOnTouchOutside = true
+                cancelableOnTouchOutside = true,
+                withArrow = true
             )
     }
 

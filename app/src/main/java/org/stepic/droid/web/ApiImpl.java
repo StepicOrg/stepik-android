@@ -6,11 +6,12 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -32,13 +33,13 @@ import org.stepic.droid.di.network.StethoInterceptor;
 import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
+import org.stepic.droid.jsonHelpers.deserializers.FeedbackDeserializer;
 import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer;
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
-import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.util.AppConstants;
@@ -54,7 +55,6 @@ import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepic.droid.web.storage.RemoteStorageService;
-import org.stepik.android.model.Course;
 import org.stepik.android.model.Reply;
 import org.stepik.android.model.ReplyWrapper;
 import org.stepik.android.model.Submission;
@@ -62,15 +62,13 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.attempts.DatasetWrapper;
-import org.stepik.android.model.comments.Comment;
-import org.stepik.android.model.comments.Vote;
+import org.stepik.android.model.feedback.Feedback;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.RegistrationCredentials;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
-import org.stepik.android.remote.comment.model.CommentRequest;
-import org.stepik.android.remote.comment.model.CommentResponse;
+import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -84,6 +82,7 @@ import org.stepik.android.remote.submission.model.SubmissionRequest;
 import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
+import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -129,7 +128,6 @@ public class ApiImpl implements Api {
     private final Context context;
     private final SharedPreferenceHelper sharedPreference;
     private final Config config;
-    private final UserPreferences userPreferences;
     private final Analytic analytic;
     private final StepikLogoutManager stepikLogoutManager;
     private final ScreenManager screenManager;
@@ -147,7 +145,7 @@ public class ApiImpl implements Api {
     @Inject
     public ApiImpl(
             Context context, SharedPreferenceHelper sharedPreference,
-            Config config, UserPreferences userPreferences,
+            Config config,
             Analytic analytic, StepikLogoutManager stepikLogoutManager,
             ScreenManager screenManager,
             UserAgentProvider userAgentProvider,
@@ -157,7 +155,6 @@ public class ApiImpl implements Api {
         this.context = context;
         this.sharedPreference = sharedPreference;
         this.config = config;
-        this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.stepikLogoutManager = stepikLogoutManager;
         this.screenManager = screenManager;
@@ -380,6 +377,7 @@ public class ApiImpl implements Api {
                 .registerTypeAdapter(ReplyWrapper.class, new ReplyDeserializer())
                 .registerTypeAdapter(ReplyWrapper.class, new ReplySerializer())
                 .registerTypeAdapter(Date.class, new UTCDateAdapter())
+                .registerTypeAdapter(Feedback.class, new FeedbackDeserializer())
                 .create();
         return GsonConverterFactory.create(gson);
     }
@@ -557,11 +555,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<StepResponse> getStepsReactive(long[] steps) {
-        return loggedService.getStepsReactive(steps);
-    }
-
-    @Override
     public Single<StepResponse> getStepsByLessonId(long lessonId) {
         return loggedService.getStepsByLessonId(lessonId);
     }
@@ -570,11 +563,6 @@ public class ApiImpl implements Api {
     public Completable dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
         return loggedService.dropCourse(courseId);
-    }
-
-    @Override
-    public Call<Void> dropCourse(@NotNull Course course) {
-        return loggedService.dropCourseLegacy(course.getId());
     }
 
     @Override
@@ -803,38 +791,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<CommentResponse> getCommentAnd20Replies(long commentId) {
-        long[] id = new long[]{commentId};
-        return loggedService.getComments(id);
-    }
-
-    @Override
-    public Call<CommentResponse> getCommentsByIds(long[] commentIds) {
-        return loggedService.getComments(commentIds);
-    }
-
-    @Override
-    public Call<CommentResponse> postComment(String text, long target, @Nullable Long parent) {
-        Comment comment = new Comment(target, text, parent);
-        return loggedService.postComment(new CommentRequest(comment));
-    }
-
-    @Override
-    public Call<VoteResponse> makeVote(String voteId, @Nullable Vote.Value voteValue) {
-        Vote vote = new Vote(voteId, voteValue);
-        VoteRequest request = new VoteRequest(vote);
-        return loggedService.postVote(voteId, request);
-    }
-
-    @Override
-    public Call<CommentResponse> deleteComment(long commentId) {
-        return loggedService.deleteComment(commentId);
-    }
-
-    @Override
-    public Call<CertificateResponse> getCertificates() {
-        long userId = userPreferences.getUserId();
-        return loggedService.getCertificates(userId);
+    public Single<CertificateResponse> getCertificates(long userId, int page) {
+        return loggedService.getCertificates(userId, page);
     }
 
     @Override

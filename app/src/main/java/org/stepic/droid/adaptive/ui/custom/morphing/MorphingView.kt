@@ -2,7 +2,6 @@ package org.stepic.droid.adaptive.ui.custom.morphing
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.widget.FrameLayout
@@ -19,12 +18,7 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
 
 
     init {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-            @Suppress("DEPRECATION")
-            setBackgroundDrawable(drawableWrapper.drawable)
-        } else {
-            background = drawableWrapper.drawable
-        }
+        background = drawableWrapper.drawable
     }
 
     fun setGradientDrawableParams(color: Int, cornerRadius: Float) {

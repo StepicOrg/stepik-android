@@ -4,18 +4,19 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Singles.zip
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
+import org.stepic.droid.util.CourseUtil
+import org.stepic.droid.web.Api
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
-import org.stepic.droid.util.CourseUtil
-import org.stepic.droid.web.Api
-import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
 import org.stepik.android.remote.course.model.CourseResponse
+import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
 import org.stepik.android.remote.progress.model.ProgressResponse
 import javax.inject.Inject
 
@@ -23,8 +24,6 @@ import javax.inject.Inject
 class CourseCollectionPresenter
 @Inject
 constructor(
-    private val coursePurchasesInteractor: CoursePurchasesInteractor,
-
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -41,8 +40,7 @@ constructor(
 
     fun onShowCollections(courseIds: LongArray) {
         view?.showLoading()
-        val disposable = api
-            .getCoursesReactive(DEFAULT_PAGE, courseIds)
+        compositeDisposable += api.getCoursesReactive(DEFAULT_PAGE, courseIds)
             .map(CourseResponse::courses)
             .flatMap {
                 val progressIds = it.map(Course::progress).toTypedArray()
@@ -54,46 +52,33 @@ constructor(
                     courses
                 }
             }
-            .flatMap { courseList ->
+            .map { courseList ->
                 val coursesMap = courseList.associateBy(Course::id)
-                val courses = courseIds
+                courseIds
                     .asIterable()
                     .mapNotNull(coursesMap::get)
-
-                zip(
-                    Single.just(courses),
-                    coursePurchasesInteractor.getCoursesSkuMap(courses),
-                    coursePurchasesInteractor.getCoursesPaymentsMap(courses)
-                )
             }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribe({ (courses, skus, coursePayments) ->
-                view?.showCourses(courses, skus, coursePayments)
-            }, {
-                view?.showConnectionProblem()
-            })
-
-        compositeDisposable.add(disposable)
+            .subscribeBy(
+                onSuccess = { view?.showCourses(it) },
+                onError = { view?.showConnectionProblem() }
+            )
     }
 
-    private fun getReviewsSingle(reviewIds: LongArray): Single<List<CourseReviewSummary>> {
-        return api.getCourseReviewSummaries(reviewIds)
-                .map(CourseReviewSummaryResponse::courseReviewSummaries)
-                .subscribeOn(backgroundScheduler)
-    }
+    private fun getReviewsSingle(reviewIds: LongArray): Single<List<CourseReviewSummary>> =
+        api.getCourseReviewSummaries(reviewIds)
+            .map(CourseReviewSummaryResponse::courseReviewSummaries)
+            .subscribeOn(backgroundScheduler)
 
-
-    private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> {
-        return api.getProgressesReactive(progressIds)
-                .map(ProgressResponse::progresses)
-                .map { it.associateBy(Progress::id) }
-                .subscribeOn(backgroundScheduler)
-    }
+    private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> =
+        api.getProgressesReactive(progressIds)
+            .map(ProgressResponse::progresses)
+            .map { it.associateBy(Progress::id) }
+            .subscribeOn(backgroundScheduler)
 
     override fun detachView(view: CoursesView) {
         super.detachView(view)
         compositeDisposable.clear()
     }
-
 }

@@ -3,21 +3,21 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import com.google.gson.Gson
-import org.stepic.droid.model.*
-import org.stepik.android.model.code.CodeOptions
+import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepic.droid.storage.operations.DatabaseOperations
-import org.stepic.droid.storage.structure.DbStructureBlock
+import org.stepik.android.cache.block.structure.DbStructureBlock
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.model.Block
 import org.stepik.android.model.Video
+import org.stepik.android.model.code.CodeOptions
 import javax.inject.Inject
 
 class BlockDaoImpl
 @Inject
 constructor(
-        databaseOperations: DatabaseOperations,
-        private val gson: Gson,
-        private val videoDao: VideoDao
+    databaseOperations: DatabaseOperations,
+    private val gson: Gson,
+    private val videoDao: VideoDao
 ) : DaoBase<BlockPersistentWrapper>(databaseOperations) {
 
     public override fun parsePersistentObject(cursor: Cursor): BlockPersistentWrapper {
@@ -78,7 +78,7 @@ constructor(
         return values
     }
 
-    public override fun getDbName() = DbStructureBlock.BLOCKS
+    public override fun getDbName() = DbStructureBlock.TABLE_NAME
 
     public override fun getDefaultPrimaryColumn() = DbStructureBlock.Column.STEP_ID
 

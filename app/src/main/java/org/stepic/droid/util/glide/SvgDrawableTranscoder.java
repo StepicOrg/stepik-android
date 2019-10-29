@@ -2,7 +2,8 @@ package org.stepic.droid.util.glide;
 
 import android.graphics.Picture;
 import android.graphics.drawable.PictureDrawable;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.engine.Resource;
