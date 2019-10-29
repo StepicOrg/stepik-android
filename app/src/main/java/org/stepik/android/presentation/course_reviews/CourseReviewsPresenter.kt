@@ -91,7 +91,13 @@ constructor(
     private fun fetchReviewsFromCache(): Maybe<CourseReviewsView.State> =
         courseReviewsInteractor
             .getCourseReviewItems(courseId, page = 1, sourceType = DataSourceType.CACHE)
-            .filter(List<CourseReviewItem>::isNotEmpty)
+            .filter { courseReviewItems ->
+                if (courseReviewItems.size == 1 && courseReviewItems.first() is CourseReviewItem.ComposeBanner) {
+                    false
+                } else {
+                    courseReviewItems.isNotEmpty()
+                }
+            }
             .map(CourseReviewsView.State::CourseReviewsCache)
 
     private fun fetchReviewsFromRemote(): Single<CourseReviewsView.State> =

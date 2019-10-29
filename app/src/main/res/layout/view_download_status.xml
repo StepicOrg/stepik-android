@@ -1,37 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/statusCached"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@null"
-        app:srcCompat="@drawable/ic_download_remove"
-        android:visibility="gone" />
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="10sp"
+        app:fontFamily="@font/roboto_medium"
+        android:drawablePadding="4dp"
+        tools:drawableTop="@drawable/ic_download_remove"
+        tools:text="150 MB" />
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         android:id="@+id/statusPending"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/course_content_download_status_inner_size"
+        android:layout_height="@dimen/course_content_download_status_inner_size"
         android:indeterminate="true"
+        android:layout_gravity="center"
         app:mpb_useIntrinsicPadding="false"
         style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/statusNotCached"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:contentDescription="@null"
+        android:layout_gravity="center"
         app:srcCompat="@drawable/ic_download"
         android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/statusInProgress"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/course_content_download_status_inner_size"
+        android:layout_height="@dimen/course_content_download_status_inner_size"
+        android:layout_gravity="center"
         android:visibility="gone">
 
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
@@ -56,5 +66,4 @@
             app:srcCompat="@drawable/ic_download_cancel" />
 
     </FrameLayout>
-
 </merge>

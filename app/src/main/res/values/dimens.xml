@@ -56,9 +56,6 @@
     <dimen name="login_button_radius">32dp</dimen>
     <dimen name="launch_button_text_size">18sp</dimen>
     <dimen name="onePx">1px</dimen>
-    <dimen name="fill_blanks_input_text_size">16sp</dimen>
-    <dimen name="sort_image_view_height">24dp</dimen>
-    <dimen name="padding_sort_controller">12dp</dimen>
     <dimen name="loading_size">56dp</dimen>
     <dimen name="loading_padding">16dp</dimen>
     <dimen name="progress_contour_size">1dp</dimen>
@@ -91,17 +88,21 @@
 
     <!--new course item-->
     <dimen name="new_course_image_size">80dp</dimen>
-    <dimen name="course_item_space_between_items">12dp</dimen>
+    <dimen name="course_item_space_between_items">8dp</dimen>
     <dimen name="course_item_titles_text_size">16sp</dimen>
     <dimen name="course_item_button_text_size">14sp</dimen>
-    <dimen name="course_widget_radius">7dp</dimen>
-    <dimen name="placeholder_radius">7dp</dimen>
-    <dimen name="course_image_radius">7dp</dimen>
-    <dimen name="course_list_side_padding">20dp</dimen>
-    <dimen name="course_list_side_right_padding">12dp</dimen>
-    <dimen name="course_list_between_items_padding">30dp</dimen>
-    <dimen name="course_list_bottom_padding">14dp</dimen>
-    <dimen name="extraPaddingRightCourseItem">8dp</dimen>
+    <dimen name="course_widget_radius">8dp</dimen>
+    <dimen name="placeholder_radius">8dp</dimen>
+    <dimen name="course_image_radius">8dp</dimen>
+
+    <dimen name="course_list_side_padding">20dp</dimen> <!-- Horizontal offset of content on HomeFragment & CatalogFragment -->
+
+    <dimen name="course_item_radius">8dp</dimen>
+    <dimen name="course_item_margin">8dp</dimen> <!-- Total offset is 8 + 8 = 16 -->
+    <dimen name="course_list_padding">8dp</dimen> <!-- Padding for regular course lists @see CourseListFragmentBase -->
+
+    <dimen name="course_carousel_left_padding">12dp</dimen>
+    <dimen name="course_carousel_bottom_padding">10dp</dimen> <!-- Bottom offset of course carousel -->
 
     <dimen name="fast_continue_course_image_size">40dp</dimen>
     <dimen name="fast_continue_inner_content_margin">20dp</dimen>
@@ -124,7 +125,6 @@
 
 
     <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
-    <dimen name="courseTitleRightPadding">28dp</dimen>
     <dimen name="home_right_recycler_padding">46dp</dimen>
     <!-- 'home_right_recycler_padding' minus 'course_list_side_right_padding'-->
     <dimen name="home_right_recycler_padding_without_extra">34dp</dimen>
@@ -143,7 +143,7 @@
 
     <dimen name="code_text_size_default">14sp</dimen>
     <dimen name="embedded_code_editor_height">150dp</dimen>
-    <dimen name="courses_carousel_top_margin">16dp</dimen>
+    <dimen name="courses_carousel_top_margin">12dp</dimen>
 
     <!-- popup windows -->
     <dimen name="popup_border_radius">7dp</dimen>
@@ -206,6 +206,7 @@
     <dimen name="course_content_item_inner_margin">12dp</dimen>
 
     <dimen name="course_content_download_status_size">48dp</dimen>
+    <dimen name="course_content_download_status_inner_size">20dp</dimen>
     <dimen name="course_content_download_status_padding">14dp</dimen>
 
     <!-- Course reviews -->
@@ -221,6 +222,37 @@
     <dimen name="step_submit_button_radius">@dimen/step_control_block_radius</dimen>
     <dimen name="step_submit_button_height">48dp</dimen>
 
-    <dimen name="step_quiz_text_field_radius">8dp</dimen>
+    <dimen name="step_quiz_item_radius">8dp</dimen>
+
+    <dimen name="step_quiz_text_field_radius">@dimen/step_quiz_item_radius</dimen>
     <dimen name="step_quiz_text_field_min_height">48dp</dimen>
+
+    <dimen name="step_quiz_code_sample_min_height">16dp</dimen>
+    <!-- Choice quiz -->
+    <dimen name="step_quiz_choice_option_stroke_width">1dp</dimen>
+    <dimen name="step_quiz_choice_option_view_radius">@dimen/step_quiz_item_radius</dimen>
+    <dimen name="step_quiz_choice_quiz_item_padding">16dp</dimen>
+
+    <!-- Sorting quiz -->
+    <dimen name="step_quiz_sorting_item_radius">@dimen/step_quiz_item_radius</dimen>
+    <dimen name="step_quiz_sorting_item_elevation">1dp</dimen>
+
+    <!-- Matching quiz -->
+    <dimen name="step_quiz_matching_item_margin">64dp</dimen>
+
+    <!-- Code quiz -->
+    <dimen name="step_quiz_fullscreen_code_layout_bottom_padding">80dp</dimen>]
+
+    <!-- Comments -->
+    <dimen name="comment_user_image_size">36dp</dimen>
+    <dimen name="comment_item_text_line">22sp</dimen>
+    <dimen name="comment_item_margin">16dp</dimen>
+    <dimen name="comment_item_reply_offset">20dp</dimen>
+    <dimen name="comment_item_reply_separator_offset">36dp</dimen>
+
+    <dimen name="comment_item_action_size">28dp</dimen>
+    <dimen name="comment_tag_radius">12dp</dimen>
+
+    <dimen name="comment_item_separator_small">1dp</dimen>
+    <dimen name="comment_item_separator_big">4dp</dimen>
 </resources>

@@ -1,6 +1,8 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.SingleThreadExecutor
@@ -9,20 +11,23 @@ import org.stepic.droid.core.FirstCoursePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
-import org.stepic.droid.features.course_purchases.domain.CoursePurchasesInteractor
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
-import org.stepic.droid.util.getProgresses
 import org.stepic.droid.web.Api
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
-import org.stepik.android.model.*
+import org.stepik.android.model.Course
+import org.stepik.android.model.CourseReviewSummary
+import org.stepik.android.model.Meta
+import org.stepik.android.model.Progress
+import org.stepik.android.model.UserCourse
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
@@ -31,8 +36,6 @@ import javax.inject.Inject
 class PersistentCourseListPresenter
 @Inject
 constructor(
-    private val coursePurchasesInteractor: CoursePurchasesInteractor,
-
     private val databaseFacade: DatabaseFacade,
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
@@ -61,6 +64,7 @@ constructor(
     private val hasNextPage = AtomicBoolean(true)
     private var currentNumberOfTasks: Int = 0 //only main thread
     private val isEmptyCourses = AtomicBoolean(false)
+    private var myCoursesTrace: Trace? = null
 
     fun restoreState() {
         if (isEmptyCourses.get() && !hasNextPage.get()) {
@@ -96,6 +100,9 @@ constructor(
 
     @WorkerThread
     private fun downloadDataPlain(isRefreshing: Boolean, isLoadMore: Boolean, courseType: CourseListType) {
+        if (courseType == CourseListType.ENROLLED) {
+            myCoursesTrace = FirebasePerformance.startTrace(Analytic.Traces.MY_COURSES_LOADING)
+        }
         if (!isLoadMore) {
             mainHandler.post {
                 view?.showLoading()
@@ -137,6 +144,9 @@ constructor(
                 }
             } catch (ex: Exception) {
                 null
+            } finally {
+                myCoursesTrace?.stop()
+                myCoursesTrace = null
             }?.distinctBy { it.id }
 
             if (coursesFromInternet == null) {
@@ -177,21 +187,13 @@ constructor(
             if (coursesForShow.size < MIN_COURSES_ON_SCREEN && hasNextPage.get()) {
                 //try to load next in loop
             } else {
-                val skus = coursePurchasesInteractor
-                    .getCoursesSkuMap(coursesForShow)
-                    .blockingGet()
-
-                val coursePayments = coursePurchasesInteractor
-                    .getCoursesPaymentsMap(coursesForShow)
-                    .blockingGet()
-
                 mainHandler.post {
                     postFirstCourse(courseType, coursesForShow)
                     if (coursesForShow.isEmpty()) {
                         isEmptyCourses.set(true)
                         view?.showEmptyCourses()
                     } else {
-                        view?.showCourses(coursesForShow, skus, coursePayments)
+                        view?.showCourses(coursesForShow)
                     }
                 }
                 break
@@ -213,7 +215,7 @@ constructor(
         bindsRatings(coursesForShow, DataSourceType.CACHE)
         if (coursesForShow.isNotEmpty()) {
             mainHandler.post {
-                view?.showCourses(coursesForShow, emptyMap(), emptyMap())
+                view?.showCourses(coursesForShow)
                 postFirstCourse(courseType, coursesForShow)
             }
         }

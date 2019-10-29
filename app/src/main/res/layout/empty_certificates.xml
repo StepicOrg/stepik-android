@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,14 +17,14 @@
         android:src="@drawable/ic_empty"
         android:adjustViewBounds="true"
         android:contentDescription="@string/empty_certificates"
-        app:layout_constraintBottom_toTopOf="@+id/placeholderMessage"
+        app:layout_constraintBottom_toTopOf="@+id/emptyCertificatesMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/placeholderMessage"
+        android:id="@+id/emptyCertificatesMessage"
         style="@style/PlaceholderTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         app:layout_constraintBottom_toTopOf="@+id/goToCatalog"
         app:layout_constraintTop_toBottomOf="@+id/placeholderIcon" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         style="@style/PlaceholderButton"
         android:id="@+id/goToCatalog"
         android:layout_width="wrap_content"
@@ -43,5 +43,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/placeholderMessage" />
-</android.support.constraint.ConstraintLayout>
+        app:layout_constraintTop_toBottomOf="@+id/emptyCertificatesMessage" />
+</androidx.constraintlayout.widget.ConstraintLayout>

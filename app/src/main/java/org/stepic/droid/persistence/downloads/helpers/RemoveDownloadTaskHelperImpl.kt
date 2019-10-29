@@ -15,24 +15,24 @@ import javax.inject.Inject
 class RemoveDownloadTaskHelperImpl
 @Inject
 constructor(
-        private val downloadTaskManager: DownloadTaskManager,
-        private val persistentStateManager: PersistentStateManager,
-        private val persistentItemDao: PersistentItemDao
+    private val downloadTaskManager: DownloadTaskManager,
+    private val persistentStateManager: PersistentStateManager,
+    private val persistentItemDao: PersistentItemDao
 ) : RemoveDownloadTaskHelper {
     override fun removeTasks(structureObservable: Observable<Structure>): Completable =
-            structureObservable
-                    .toList()
-                    .doOnSuccess { // in order to get rid of blinking on delete operation
-                        it.forEach { structure ->
-                            persistentStateManager.invalidateStructure(structure, PersistentState.State.IN_PROGRESS)
-                        }
+        structureObservable
+            .toList()
+            .doOnSuccess { // in order to get rid of blinking on delete operation
+                it.forEach { structure ->
+                    persistentStateManager.invalidateStructure(structure, PersistentState.State.IN_PROGRESS)
+                }
+            }
+            .flatMapObservable(List<Structure>::toObservable)
+            .flatMapCompletable { structure ->
+                persistentItemDao.getItemsByStep(structure.step) // as step is smallest atom
+                    .flatMapCompletable { downloadTaskManager.removeTasks(it) }
+                    .doFinally {
+                        persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
                     }
-                    .flatMapObservable(List<Structure>::toObservable)
-                    .flatMapCompletable { structure ->
-                        persistentItemDao.getItemsByStep(structure.step) // as step is smallest atom
-                                .concatMapCompletable { downloadTaskManager.removeTasks(it) }
-                                .doFinally {
-                                    persistentStateManager.invalidateStructure(structure, PersistentState.State.NOT_CACHED)
-                                }
-                    }
+            }
 }

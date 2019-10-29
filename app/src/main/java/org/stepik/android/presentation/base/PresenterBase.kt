@@ -1,8 +1,8 @@
 package org.stepik.android.presentation.base
 
-import android.arch.lifecycle.ViewModel
 import android.os.Bundle
-import android.support.annotation.CallSuper
+import androidx.annotation.CallSuper
+import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.core.presenters.PresenterContract
 
@@ -17,9 +17,7 @@ abstract class PresenterBase<V> : PresenterContract<V>, ViewModel() {
     override fun attachView(view: V) {
         val previousView = this.view
 
-        if (previousView != null) {
-            throw IllegalStateException("Previous view is not detached! previousView = $previousView")
-        }
+        check(previousView == null) { "Previous view is not detached! previousView = $previousView" }
 
         this.view = view
     }

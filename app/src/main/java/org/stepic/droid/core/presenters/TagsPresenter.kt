@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters
 
-import android.support.annotation.MainThread
+import androidx.annotation.MainThread
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
 import org.stepic.droid.core.presenters.contracts.TagsView
@@ -14,11 +14,11 @@ import javax.inject.Inject
 class TagsPresenter
 @Inject
 constructor(
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler,
-        private val api: Api
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler,
+    private val api: Api
 ) : PresenterBase<TagsView>() {
 
     private var disposable: Disposable? = null
@@ -28,16 +28,16 @@ constructor(
         disposable?.dispose()
 
         disposable = api
-                .featuredTags
-                .map {
-                    it.tags
-                }
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribe(
-                        { view?.onTagsFetched(it) },
-                        { view?.onTagsNotLoaded() }
-                )
+            .featuredTags
+            .map {
+                it.tags
+            }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribe(
+                { view?.onTagsFetched(it) },
+                { view?.onTagsNotLoaded() }
+            )
     }
 
     override fun detachView(view: TagsView) {

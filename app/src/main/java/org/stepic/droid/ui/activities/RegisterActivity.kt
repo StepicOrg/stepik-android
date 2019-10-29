@@ -1,7 +1,6 @@
 package org.stepic.droid.ui.activities
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatDelegate
 import android.text.Editable
 import android.text.Spannable
 import android.text.SpannableString
@@ -10,6 +9,8 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.res.ResourcesCompat
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_register.*
@@ -20,19 +21,22 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
-import org.stepic.droid.fonts.FontType
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepic.droid.util.*
+import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.ValidatorUtil
+import org.stepic.droid.util.getMessageFor
+import org.stepic.droid.util.stripUnderlinesFromLinks
+import org.stepic.droid.util.toBundle
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.RegistrationResponse
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import uk.co.chrisjenx.calligraphy.CalligraphyTypefaceSpan
-import uk.co.chrisjenx.calligraphy.TypefaceUtils
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class RegisterActivity : SmartLockActivityBase(), LoginView {
@@ -158,9 +162,9 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         val signUpSuffix = getString(R.string.sign_up_with_email_suffix)
 
         val spannableSignIn = SpannableString(signUpString + signUpSuffix)
-        val typefaceSpan = CalligraphyTypefaceSpan(TypefaceUtils.load(assets, fontsProvider.provideFontPath(FontType.medium)))
+        val typeface = ResourcesCompat.getFont(this, R.font.roboto_medium)
 
-        spannableSignIn.setSpan(typefaceSpan, 0, signUpString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableSignIn.setSpan(TypefaceSpanCompat(typeface), 0, signUpString.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         signUpText.text = spannableSignIn
     }
@@ -174,7 +178,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
     private fun createAccount(interactionType: LoginInteractionType) {
         analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
-        hideSoftKeypad()
+        currentFocus?.hideKeyboard()
 
         val firstName = firstNameField.text.toString().trim()
         val lastName = " " // registrationSecondName.text.toString().trim()
@@ -259,18 +263,10 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         showError(getErrorString(registrationResponse.password))
     }
 
-    private fun getErrorString(values: Array<String>?): String? {
-        if (values == null || values.isEmpty()) return null
-        val sb = StringBuilder()
-        for (i in values.indices) {
-            sb.append(values[i])
-            if (i != values.size - 1) {
-                sb.append(ERROR_DELIMITER)
-            }
-        }
-        return sb.toString()
-    }
-
+    private fun getErrorString(values: Array<String?>?): String? =
+        values
+            ?.takeIf { it.isNotEmpty() }
+            ?.joinToString(separator = ERROR_DELIMITER)
 
     override fun onFailLogin(type: LoginFailType, credential: Credential?) {
         ProgressHelper.dismiss(progressBar)
@@ -279,7 +275,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
     override fun onSuccessLogin(credentials: Credentials?) {
         ProgressHelper.dismiss(progressBar)
-        if (credentials == null || !checkPlayServices() || !(googleApiClient?.isConnected ?: false)) {
+        if (credentials == null || !checkPlayServices() || googleApiClient?.isConnected != true) {
             openMainFeed()
         } else {
             //only if we have not null data (we can apply smart lock && google api client is connected and available
@@ -294,7 +290,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
     }
 
     override fun onLoadingWhileLogin() {
-        hideSoftKeypad()
+        currentFocus?.hideKeyboard()
         ProgressHelper.activate(progressBar)
     }
 

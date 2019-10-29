@@ -1,10 +1,12 @@
 package org.stepik.android.remote.comment.model
 
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.user.User
+import org.stepik.android.model.Meta
+import org.stepik.android.model.Submission
+import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.Vote
-import org.stepik.android.model.Meta
+import org.stepik.android.model.user.User
 import org.stepik.android.remote.base.model.MetaResponse
 
 class CommentResponse(
@@ -23,5 +25,11 @@ class CommentResponse(
     val users: List<User>?,
 
     @SerializedName("votes")
-    val votes: List<Vote>?
+    val votes: List<Vote>?,
+
+    @SerializedName("attempts")
+    val attempts: List<Attempt>?,
+
+    @SerializedName("submissions")
+    val submissions: List<Submission>?
 ) : MetaResponse

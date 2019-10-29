@@ -1,10 +1,8 @@
 package org.stepik.android.view.course_content.ui.adapter
 
-import android.support.v4.util.LongSparseArray
-import android.support.v7.util.DiffUtil
+import androidx.collection.LongSparseArray
+import androidx.recyclerview.widget.DiffUtil
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateAdapter
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
@@ -14,14 +12,17 @@ import org.stepik.android.view.course_content.ui.adapter.delegates.section.Cours
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitClickListener
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitDelegate
 import org.stepik.android.view.course_content.ui.adapter.delegates.unit.CourseContentUnitPlaceholderDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateAdapter
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseContentAdapter(
     sectionClickListener: CourseContentSectionClickListener,
     unitClickListener: CourseContentUnitClickListener,
     controlBarClickListener: CourseContentControlBarClickListener
 ) : DelegateAdapter<CourseContentItem, DelegateViewHolder<CourseContentItem>>() {
-    private val headers = mutableListOf(CourseContentItem.ControlBar(false, PersonalDeadlinesState.Idle, null, false))
+    private val headers = mutableListOf(CourseContentItem.ControlBar(false,  PersonalDeadlinesState.Idle, null, false))
 
+    private val courseDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
     private val sectionDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
     private val unitDownloadStatuses = LongSparseArray<DownloadProgress.Status>()
 
@@ -34,7 +35,7 @@ class CourseContentAdapter(
         }
 
     init {
-        addDelegate(CourseContentControlBarDelegate(controlBarClickListener))
+        addDelegate(CourseContentControlBarDelegate(controlBarClickListener, courseDownloadStatuses))
         addDelegate(CourseContentSectionDelegate(sectionClickListener, sectionDownloadStatuses))
         addDelegate(CourseContentUnitDelegate(unitClickListener, unitDownloadStatuses))
         addDelegate(CourseContentUnitPlaceholderDelegate())
@@ -60,6 +61,11 @@ class CourseContentAdapter(
 
         unitDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
         notifyItemChanged(unitPosition + headers.size)
+    }
+
+    fun updateCourseDownloadProgress(downloadProgress: DownloadProgress) {
+        courseDownloadStatuses.append(downloadProgress.id, downloadProgress.status)
+        notifyItemChanged(0)
     }
 
     fun setControlBar(controlBar: CourseContentItem.ControlBar) {

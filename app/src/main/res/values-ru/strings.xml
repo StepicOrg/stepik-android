@@ -26,14 +26,12 @@
     <string name="title_confirmation">Подтверждение</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
-    <string name="open_web_to_solve">пройти задание в web-версии</string>
     <string name="allow_mobile_download_title">Разрешить загрузку через мобильный интернет</string>
     <string name="allow_mobile_message">Разрешить телефону загружать видео по мобильному интернету,
         когда Wi-Fi недоступен?
     </string>
     <string name="allow_mobile_snack">Загрузка через мобильный интернет недоступна</string>
     <string name="drop_course">Покинуть курс</string>
-    <string name="about_course">О курсе</string>
     <string name="you_dropped">Вы покинули %s</string>
     <string name="cancel">Отмена</string>
     <string name="save">Сохранить</string>
@@ -47,6 +45,7 @@
     <string name="connectionProblems">Невозможно установить соединение с сервером</string>
     <string name="video_quality">Качество видео для загрузки</string>
     <string name="video_quality_playing">Качество видео для просмотра</string>
+    <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для последующих загрузок:</string>
 
     <string name="download_error">Ошибка при загрузке видео %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
@@ -76,8 +75,6 @@
         включите интернет-соединение.
     </string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
-    <string name="py_message">
-        <![CDATA[Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="terms_message_register">
         <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
     <string name="review_warning">Это задание с рецензией. Нажмите, чтобы закончить задание в web и
@@ -100,9 +97,7 @@
     <string name="feedback_sent">Сообщение отправлено</string>
     <string name="feedback_fail">Упс… что-то пошло не так. Попробуйте позже</string>
     <string name="internet_problem">Интернет недоступен. Попробуйте позже</string>
-    <string name="internet_problem_short">Интернет недоступен</string>
     <string name="feedback_fill_fields">Заполните пустые поля</string>
-    <string name="cant_drop">Вы не можете покинуть курс</string>
     <string name="open_in_external_player">Открывать в системном плеере</string>
     <string name="notification_title">Уведомления</string>
     <string name="notification_learn_list">Дедлайны, новые модули, сертификаты</string>
@@ -116,23 +111,14 @@
     <string name="open_comments_zero">Нет комментариев. Оставьте первый.</string>
     <string name="empty_try_later">Сейчас здесь пусто, попробуйте позже.</string>
     <string name="sound_title">Звук</string>
-    <string name="downloading_title">Скачивается…</string>
-    <string name="downloading_cancel_all">Отменить все</string>
     <string name="cached_title">Загружено</string>
     <string name="remove_all">Удалить все</string>
     <string name="hint_for_idea">Напишите замечание или идею</string>
     <string name="feedback_from">От</string>
-    <string name="comments_title">Комментарии</string>
     <string name="load_more">ещё</string>
-    <string name="load_more_reply">Показать еще</string>
-    <string name="hint_for_new_comment">Оставьте комментарий</string>
-    <string name="new_comment_title">Новый комментарий</string>
     <string name="leave_first_comment">Нет обсуждений. Начните первое.</string>
     <string name="comment_sent">Комментарий успешно отправлен</string>
-    <string name="comment_denied">Извините, возможность оставлять комментарии отключена</string>
     <string name="reply_title">Ответить</string>
-    <string name="one_comment_title">Комментарий</string>
-    <string name="comment_is_deleted">Этот комментарий был удален</string>
     <string name="space_management_title">Управление памятью</string>
     <string name="clear_cache_explanation">Приложение поддерживает просмотр видео онлайн, но для
         просмотра уроков без Интернет-подключения их необходимо сохранять. Большую часть памяти
@@ -154,9 +140,6 @@
     <string name="move_data_explanation">Все ранее загруженные видео будут перенесены, новые видео
         будут сохраняться в выбранное место. Операция может занять несколько минут. Вы уверены?
     </string>
-    <string name="like_label">Нравится</string>
-    <string name="unlike_label">Больше не нравится</string>
-    <string name="report_label">Пожаловаться</string>
     <string name="done">Готово</string>
     <string name="moving">Перенос</string>
     <string name="fail_to_parse">К сожалению, курс не найден</string>
@@ -165,18 +148,13 @@
         зарегистрироваться. Вы хотите сделать это сейчас?
     </string>
     <string name="delete_label">Удалить</string>
-    <string name="delete_comment_detail">Удалить этот комментарий</string>
     <string name="fail_delete_comment">Извините, не удалось удалить комментарий</string>
     <string name="share_title">Поделиться</string>
-
-    <string name="staff_label">Команда Stepik.org</string>
-    <string name="teacher_label">Команда курса</string>
 
     <string name="last_discussion">Новые обсуждения</string>
     <string name="most_liked_discussion">Самые популярные</string>
     <string name="most_active_discussion">Самые обсуждаемые</string>
     <string name="recent_activity_discussion">Свежие обновления</string>
-    <string name="copy_text_label">Скопировать текст</string>
     <string name="calendar_title">Календарь</string>
     <string name="calendar_detail">У заданий в данном курсе есть крайний срок сдачи. Для того, чтобы
         пройти задание вовремя и получить сертификат, мы рекомендуем добавить в календарь крайние
@@ -204,7 +182,7 @@
     <string name="link_copied_title">Ссылка скопирована</string>
     <string name="certificate_share_share_link">Поделиться…</string>
     <string name="add_to_linkedin">Добавить в профиль LinkedIn</string>
-    <string name="empty_certificates">Пока вы не получили ни одного сертификата</string>
+    <string name="empty_certificates">Нет сертификатов</string>
     <string name="are_you_sure_remove_comment_text">Если Вы выйдите, эта запись будет потеряна
     </string>
 
@@ -229,7 +207,7 @@
     <string name="low_quality">Низкое</string>
     <string name="medium_quality">Среднее</string>
     <string name="high_quality">Высокое</string>
-    <string name="do_not_ask_me_again">Больше не спрашивать</string>
+    <string name="do_not_ask_me_again">Больше не спрашивать (вы всегда можете изменить качество видео в настройках)</string>
     <string name="discount_policy_inverse_title">После каждого неправильного решения баллы, которые
         можно получить за задание, будут уменьшены
     </string>
@@ -309,7 +287,7 @@
     <string name="empty_user_title">Пользователь не найден</string>
     <string name="streak_dialog_title">Поздравляем!</string>
     <string name="later_tatle">Позже</string>
-    <string name="choose_notification_time_interval">Выберите время напоминания</string>
+    <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
     <string name="notification_about_learning">Уведомления о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
@@ -353,18 +331,11 @@
     <string name="sign_in_with_password">Войти с e-mail</string>
     <string name="sign_in_with_password_suffix">" с e-mail"</string>
     <string name="content_course_logo">Логотип курса</string>
-    <string name="continue_course_title">Учиться</string>
     <string name="auth_inline_message">Войдите, чтобы мы запомнили Ваши успехи</string>
     <string name="step_with_position">– Шаг %d</string>
-    <string name="anonymous_write_comment">Чтобы присоединиться к этому обсуждению Вам нужно Войти
-    </string>
-    <string name="anonymous_like_mark_comment">Чтобы оценивать комментарии Вам нужно Войти</string>
     <string name="retry">Повторить попытку</string>
     <string name="retry_internet">Повторить</string>
     <string name="accessibility_drag_and_drop">Нажать и перетащить</string>
-    <string name="fill_blanks_select_value"><![CDATA[<Выберите значение>]]></string>
-    <string name="fill_blanks_type_text">Введите текст</string>
-    <string name="table_quiz_beta">Табличная задача β</string>
     <string name="logout_user_error">Доступ был отозван. Залогиньтесь снова</string>
     <string name="accessibility_video_cover">Обложка видео</string>
     <string name="close_screen">Закрыть</string>
@@ -416,10 +387,7 @@
 
     <string name="manage_notification_settings">Управлять уведомлениями</string>
 
-    <string name="course_item_more">Подробнее</string>
     <string name="course_item_join">Поступить на курс</string>
-    <string name="course_item_info">Инфо</string>
-    <string name="course_item_syllabus">План</string>
 
     <string name="learners_count">Количество студентов</string>
     <string name="continue_learning">Продолжить учиться</string>
@@ -443,7 +411,6 @@
 
     <string name="choose_language">Выберите язык</string>
     <string name="choose_action">Выбрать</string>
-    <string name="code_quiz_fullscreen">Развернуть</string>
     <string name="code_quiz_reset">Сброс</string>
     <string name="reset_code_dialog_title">Вы уверены?</string>
     <string name="reset_code_dialog_explanation">Ваш код будет утерян</string>
@@ -455,10 +422,6 @@
         <item quantity="many">%d секунд</item>
         <item quantity="other">%d секунд</item>
     </plurals>
-    <string name="code_quiz_limits">&lt;b>Временное ограничение:&lt;/b> %1$s\n&lt;b>Ограничение памяти:&lt;/b> %2$s MB</string>
-    <string name="sample_input">&lt;b>Пример входных данных %d:&lt;/b></string>
-    <string name="sample_output">&lt;b>Пример выходных данных %d:&lt;/b></string>
-    <string name="step_preparing">Шаг еще не обработан. Нажмите, чтобы перезагрузить</string>
     <string name="language_of_courses">Язык курсов</string>
     <string name="language_widget_hint">Это можно изменить в настройках</string>
 
@@ -474,7 +437,7 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
-    <string name="course_current_progress">Текущий прогресс %d%%</string>
+    <string name="course_current_progress">Текущий прогресс %d/%d баллов</string>
     <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
     <string name="registration_remind_message">Завершите регистрацию и получите доступ к неограниченному числу бесплатных курсов!</string>
 
@@ -588,9 +551,6 @@
     <string name="achievement_share">Я получил достижение «%s» на Stepik.org. Попробуй обогнать!</string>
     <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения «%s», проверьте свой профиль.</string>
 
-
-    <string name="downloads_view_cant_remove">Невозможно удалить загрузку</string>
-
     <!-- Course -->
     <string name="course_verified">Проверенный</string>
     <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
@@ -625,6 +585,9 @@
     <string name="course_reviews_compose_banner_review_description">Чтобы оставить отзыв, пройдите больше 80% материалов</string>
     <string name="course_reviews_compose_banner_review_motivation">Поделитесь своим мнением</string>
 
+    <string name="course_content_time_to_complete_hours_unit">%d ч</string>
+    <string name="course_content_text_progress_points">%d/%d баллов</string>
+
     <string name="course_content_timeline_begin_date">Дата начала</string>
     <string name="course_content_timeline_end_date">Дата закрытия</string>
     <string name="course_content_timeline_soft_deadline">Мягкий дедлайн</string>
@@ -632,14 +595,19 @@
     <string name="course_content_timeline_deadline">Дедлайн</string>
 
     <string name="course_content_section_exam_description">Это экзаменационный модуль, который доступен только в веб версии. Нажмите, чтобы открыть его в браузере.</string>
+    <string name="course_content_section_requirements">Для открытия этого модуля необходимо набрать %s в модуле %s</string>
 
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
-    <string name="course_control_download_all">Скачать все</string>
+    <string name="course_control_download_all">Скачать</string>
+    <string name="course_control_processing">Обработка</string>
 
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
     <string name="course_content_calendar_no_calendars_error">Календари не найдены</string>
     <string name="course_content_calendar_permission_error">Включите разрешение для использования календаря в настройках</string>
+
+    <string name="course_content_remove_item_title">Удалить элемент?</string>
+    <string name="course_content_remove_item_description">Этот элемент будет удален с вашего устройства</string>
 
     <string name="course_restore_purchase">Восстановить покупку</string>
     <string name="course_payments_purchase_in_app">Купить за %s</string>
@@ -656,15 +624,15 @@
 
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
+    <string name="video_player_control_notification_channel_description">Панель с управлением фоновым воспроизведеинем плеера</string>
     <string name="video_player_in_background_popup">Вы можете продолжить воспроизведение видео в фоне</string>
+    <string name="video_player_autoplay_cancel">Остаться на этом шаге</string>
 
 
     <string name="retention_notification_day1_title">Не сбавляем темп</string>
     <string name="retention_notification_day1_message">Вы проделали отличную работу вчера - это хороший повод зайти сегодня и продолжить учиться! 🚀</string>
     <string name="retention_notification_day3_title">Время учиться ‍🎓</string>
     <string name="retention_notification_day3_message">Вас давно не было. Заходите и учитесь новому! 💡</string>
-
-    <string name="step_comment_tooltip">Откройте комментарии, чтобы лучше понять материал или задать вопрос</string>
 
     <!-- Profile edit -->
     <string name="profile_edit_menu_item">Редактировать профиль</string>
@@ -696,7 +664,8 @@
     <string name="lesson_title">Урок</string>
     <string name="lesson_menu_info">Инфо</string>
 
-    <string name="lesson_info_points">%s за шаг</string>
+    <string name="lesson_info_points_with_score">Вы получили %s из %s за шаг</string>
+    <string name="lesson_info_points">Вы получите %s за шаг</string>
     <string name="lesson_info_time_to_complete">&#8776;%s на урок</string>
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
@@ -706,6 +675,13 @@
     <string name="step_navigation_prev">Предыдущий урок</string>
     <string name="step_discussion_show">Открыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
+
+    <string name="step_solutions_show">Форум решений (%d)</string>
+    <string name="step_solutions_empty">Решений пока нет</string>
+
+    <string name="step_action_edit_content">Изменить текст шага</string>
+    <string name="step_action_edit_hint">Текст шага</string>
+    <string name="step_action_edit_description">Вы можете редактировать только текст шага и только в виде HTML кода. Для доступа к полноценному редактору шагов, пожалуйста, воспользуйтесь веб версией Stepik.</string>
 
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 
@@ -718,18 +694,87 @@
 
     <string name="step_quiz_feedback_evaluation">Проверка…</string>
     <string name="step_quiz_feedback_correct_free_answer">Любой ответ будет оценен как правильный</string>
-    <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз!</string>
+    <string name="step_quiz_feedback_wrong_not_last_try">Пока неправильно, попробуйте еще раз</string>
     <string name="step_quiz_feedback_wrong_last_try">Неверно</string>
-
-    <string name="step_quiz_feedback_validation_fill_blanks">Необходимо заполнить все пробелы перед отправкой</string>
 
     <string name="step_quiz_number_description">Введите численный ответ</string>
     <string name="step_quiz_math_description">Введите математическую формулу</string>
     <string name="step_quiz_string_description">Напишите текст (строку)</string>
     <string name="step_quiz_free_answer_description">Напишите эссе</string>
+    <string name="step_quiz_sorting_description">Упорядочьте элементы списка</string>
+    <string name="step_quiz_matching_description">Сопоставьте значения из двух списков</string>
+    <string name="step_quiz_choice_description_single">Выберите один элемент</string>
+    <string name="step_quiz_choice_description_multiple">Выберите один или несколько элементов</string>
+    <string name="step_quiz_sql_description">Введите SQL запрос</string>
 
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
+    <string name="step_quiz_text_invalid_number_reply">Ответ должен быть числом</string>
+    <string name="step_quiz_choice_empty_reply">Выберите вариант</string>
+
+    <string name="step_quiz_code_details">Детали</string>
+    <string name="step_quiz_code_detail_sample_title">Пример данных %d:</string>
+
+    <string name="step_quiz_code_detail_limit_title_time">Ограничение по времени:</string>
+    <string name="step_quiz_code_detail_limit_title_memory">Ограничение по памяти:</string>
+    <string name="step_quiz_code_detail_limit_value_memory">%d МБ</string>
+
+    <string name="step_quiz_code_lang_chooser">Выберите язык</string>
+    <string name="step_quiz_code_empty_lang">Перед отправкой решения выберите язык программирования из списка</string>
+
+    <string name="step_quiz_not_ready">Извините, эта задача еще не готова</string>
+
+    <string name="step_quiz_unsupported_action">Пройти задание в web-версии</string>
+    <string name="step_quiz_unsupported_solution_action">Открыть решение в web-версии</string>
+    <string name="step_quiz_unsupported_message">Данный тип заданий пока не поддерживается в приложении</string>
+
+    <string name="step_quiz_code_full_screen_instruction_tab">Условия</string>
+    <string name="step_quiz_code_full_screen_code_tab">Код</string>
+
+    <string name="step_quiz_pycharm_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
+
+    <!-- Comment -->
+    <string name="comment_compose_hint">Оставьте комментарий</string>
+    <string name="comment_compose_title">Комментарий</string>
+    <string name="comment_action_create">Написать комментарий</string>
+    <string name="comment_action_edit">Изменить</string>
+    <string name="comment_action_remove">Удалить</string>
+    <string name="comment_action_remove_description">Удалить этот комментарий</string>
+
+    <string name="comment_solution_pattern">Решение %d</string>
+
+    <string name="comment_disabled">Комментарии отключены</string>
+
+    <string name="comments_title">Комментарии</string>
+    <string name="solutions_title">Решения</string>
+    <string name="comments_load_more_replies">Показать %s</string>
+
+    <string name="comment_tag_pinned">Закреплен</string>
+    <string name="comment_tag_course_team">Команда курса</string>
+    <string name="comment_tag_staff">Команда Stepik</string>
+
+    <string name="relative_date_pattern">%s назад</string>
+    <string name="relative_date_now">сейчас</string>
+
+    <string name="copied_to_clipboard_toast">Скопировано в буфер</string>
+
+    <!-- Main screen -->
+    <string name="main_tab_home">Обучение</string>
+    <string name="main_tab_catalog">Каталог</string>
+    <string name="main_tab_profile">Профиль</string>
+    <string name="main_tab_notifications">Уведомления</string>
+
+    <!-- Settings -->
+    <string name="setting_section_learning">Обучение</string>
+
+    <string name="setting_autoplay">Автопереход на следующий шаг по окончании видео</string>
+    <string name="setting_autoplay_short">Автопереход на следующий шаг</string>
+
+    <string name="setting_font_size">Размер шрифта в шагах</string>
+    <string name="setting_font_size_dialog_title">Выберите размер шрифта</string>
+
+    <!-- Downloads -->
+    <string name="downloads_title">Загруженные курсы</string>
 </resources>

@@ -3,10 +3,10 @@ package org.stepik.android.remote.course.source
 import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.stepic.droid.web.Api
-import org.stepik.android.remote.course.model.CourseResponse
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.remote.base.chunkedSingleMap
+import org.stepik.android.remote.course.model.CourseResponse
 import javax.inject.Inject
 
 class CourseRemoteDataSourceImpl

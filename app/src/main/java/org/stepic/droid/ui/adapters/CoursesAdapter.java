@@ -4,33 +4,29 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.checkout.Sku;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepic.droid.core.presenters.DroppingPresenter;
-import org.stepik.android.domain.course_payments.model.CoursePayment;
-import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.model.CoursesDescriptionContainer;
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.FooterItemViewHolder;
 import org.stepic.droid.ui.adapters.viewhoders.HeaderItemViewHolder;
+import org.stepik.android.model.Course;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -49,8 +45,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private FragmentActivity contextActivity;
     private final List<Course> courses;
     private final ContinueCoursePresenter continueCoursePresenter;
-    @NotNull
-    private final DroppingPresenter droppingPresenter;
 
     private CoursesDescriptionContainer descriptionContainer;
 
@@ -61,23 +55,17 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private int NUMBER_OF_PRE_ITEMS = 0;
     private final int NUMBER_OF_POST_ITEMS;
     private boolean isNeedShowFooter;
-    private final String continueTitle;
-    private final String joinTitle;
-    private final boolean showMore;
     private final CoursesCarouselColorType colorType;
 
-    private @NonNull Map<String, Sku> skus = new HashMap<>();
-    private @NonNull Map<Long, CoursePayment> coursePayments = new HashMap<>();
+    private final int courseListPadding;
 
-    public CoursesAdapter(FragmentActivity activity,
-                          List<Course> courses,
-                          @NotNull ContinueCoursePresenter continueCoursePresenter,
-                          @NotNull DroppingPresenter droppingPresenter,
-                          boolean withPagination,
-                          boolean showMore,
-                          CoursesCarouselColorType colorType
+    public CoursesAdapter(
+            FragmentActivity activity,
+            List<Course> courses,
+            @NotNull ContinueCoursePresenter continueCoursePresenter,
+            boolean withPagination,
+            CoursesCarouselColorType colorType
     ) {
-        this.showMore = showMore;
         this.colorType = colorType;
         if (withPagination) {
             NUMBER_OF_POST_ITEMS = 1;
@@ -85,9 +73,10 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             NUMBER_OF_POST_ITEMS = 0;
         }
         contextActivity = activity;
+        courseListPadding = activity.getResources().getDimensionPixelOffset(R.dimen.course_list_padding);
+
         this.courses = courses;
         this.continueCoursePresenter = continueCoursePresenter;
-        this.droppingPresenter = droppingPresenter;
         inflater = (LayoutInflater) contextActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         App.Companion.component().inject(this);
 
@@ -97,20 +86,16 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         circularBitmapDrawable.setCornerRadius(contextActivity.getResources().getDimension(R.dimen.course_image_radius));
         coursePlaceholder = circularBitmapDrawable;
 
-        continueTitle = contextActivity.getString(R.string.continue_course_title);
-        joinTitle = contextActivity.getString(R.string.course_item_join);
         isNeedShowFooter = false;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == HEADER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.course_collection_header_view, parent, false);
             ((RecyclerView.LayoutParams) view.getLayoutParams()).setMargins(
-                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_side_padding),
-                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_between_items_padding),
-                    -(int) contextActivity.getResources().getDimension(R.dimen.course_list_side_right_padding),
-                    0); // todo refactor layouts
+                    -courseListPadding, -courseListPadding, -courseListPadding, courseListPadding); // todo refactor layouts
             return new HeaderItemViewHolder(view);
         } else if (viewType == FOOTER_VIEW_TYPE) {
             View view = inflater.inflate(R.layout.loading_view, parent, false);
@@ -120,11 +105,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return new CourseItemViewHolder(
                     view,
                     contextActivity,
-                    showMore,
-                    joinTitle,
-                    continueTitle,
                     coursePlaceholder,
-                    droppingPresenter,
                     continueCoursePresenter,
                     colorType
             );
@@ -134,7 +115,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case HEADER_VIEW_TYPE: {
                 HeaderItemViewHolder headerItemViewHolder = (HeaderItemViewHolder) holder;
@@ -143,7 +124,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
             case ITEM_VIEW_TYPE: {
                 CourseItemViewHolder courseItemViewHolder = (CourseItemViewHolder) holder;
-                courseItemViewHolder.setDataOnView(courses.get(position - NUMBER_OF_PRE_ITEMS), skus, coursePayments);
+                courseItemViewHolder.setDataOnView(courses.get(position - NUMBER_OF_PRE_ITEMS));
                 break;
             }
             case FOOTER_VIEW_TYPE: {
@@ -198,13 +179,5 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 return Unit.INSTANCE;
             }
         });
-    }
-
-    public void setSkus(@NonNull Map<String, Sku> skus) {
-        this.skus = skus;
-    }
-
-    public void setCoursePayments(@NonNull Map<Long, CoursePayment> coursePayments) {
-        this.coursePayments = coursePayments;
     }
 }

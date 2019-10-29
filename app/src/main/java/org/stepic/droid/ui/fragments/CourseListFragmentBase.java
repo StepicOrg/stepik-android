@@ -2,22 +2,21 @@ package org.stepic.droid.ui.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
-import org.solovyev.android.checkout.Sku;
 import org.stepic.droid.R;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
@@ -25,30 +24,25 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.joining.contract.JoiningListener;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepic.droid.core.presenters.DroppingPresenter;
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
-import org.stepic.droid.core.presenters.contracts.DroppingView;
 import org.stepic.droid.model.CourseListType;
-import org.stepik.android.domain.course_payments.model.CoursePayment;
-import org.stepik.android.domain.last_step.model.LastStep;
-import org.stepik.android.model.Course;
 import org.stepic.droid.model.CoursesCarouselColorType;
 import org.stepic.droid.ui.activities.contracts.RootScreen;
 import org.stepic.droid.ui.adapters.CoursesAdapter;
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout;
 import org.stepic.droid.ui.custom.TouchDispatchableFrameLayout;
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager;
-import org.stepic.droid.ui.decorators.VerticalSpacesDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.KotlinUtil;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
+import org.stepik.android.domain.last_step.model.LastStep;
+import org.stepik.android.model.Course;
 import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -58,8 +52,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
         implements SwipeRefreshLayout.OnRefreshListener,
         CoursesView,
         ContinueCourseView,
-        JoiningListener,
-        DroppingView {
+        JoiningListener {
 
     private static final String continueLoadingTag = "continueLoadingTag";
 
@@ -109,9 +102,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
     Client<JoiningListener> joiningListenerClient;
 
     @Inject
-    protected DroppingPresenter droppingPresenter;
-
-    @Inject
     protected RemindAppNotificationDelegate remindAppNotificationDelegate;
 
     @Override
@@ -132,7 +122,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_courses, container, false);
     }
 
@@ -145,12 +135,10 @@ public abstract class CourseListFragmentBase extends FragmentBase
         swipeRefreshLayout.setOnRefreshListener(this);
 
         if (courses == null) courses = new ArrayList<>();
-        boolean showMore = getCourseType() == CourseListType.ENROLLED;
-        coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, droppingPresenter, true, showMore, CoursesCarouselColorType.Light);
+        coursesAdapter = new CoursesAdapter(getActivity(), courses, continueCoursePresenter, true, CoursesCarouselColorType.Light);
         listOfCoursesView.setAdapter(coursesAdapter);
         layoutManager = new WrapContentLinearLayoutManager(getContext());
         listOfCoursesView.setLayoutManager(layoutManager);
-        listOfCoursesView.addItemDecoration(new VerticalSpacesDecoration(getResources().getDimensionPixelSize(R.dimen.course_list_between_items_padding)));
 
         listOfCoursesViewListener = new RecyclerView.OnScrollListener() {
             @Override
@@ -197,7 +185,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         });
         joiningListenerClient.subscribe(this);
         continueCoursePresenter.attachView(this);
-        droppingPresenter.attachView(this);
 
         goToCatalog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -211,7 +198,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
     public void onDestroyView() {
         joiningListenerClient.unsubscribe(this);
         continueCoursePresenter.detachView(this);
-        droppingPresenter.detachView(this);
         if (listOfCoursesView != null) {
             // do not set adapter to null, because fade out animation for fragment will not working
             unregisterForContextMenu(listOfCoursesView);
@@ -286,7 +272,7 @@ public abstract class CourseListFragmentBase extends FragmentBase
     }
 
     @Override
-    public final void showCourses(@NonNull List<Course> courses, @NonNull Map<String, Sku> skus, @NonNull Map<Long, CoursePayment> coursePayments) {
+    public final void showCourses(@NonNull List<Course> courses) {
         ProgressHelper.dismiss(progressBarOnEmptyScreen);
         ProgressHelper.dismiss(swipeRefreshLayout);
         coursesAdapter.showLoadingFooter(false);
@@ -303,8 +289,6 @@ public abstract class CourseListFragmentBase extends FragmentBase
         this.courses.clear();
         this.courses.addAll(finalCourses);
 
-        coursesAdapter.setSkus(skus);
-        coursesAdapter.setCoursePayments(coursePayments);
         coursesAdapter.notifyDataSetChanged();
 
         if (oldSize >= updatedSize) {
@@ -351,10 +335,5 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void onSuccessJoin(@Nullable Course joinedCourse) {
         updateEnrollment(joinedCourse, joinedCourse.getEnrollment());
-    }
-
-    @Override
-    public final void onUserHasNotPermissionsToDrop() {
-        Toast.makeText(getContext(), R.string.cant_drop, Toast.LENGTH_SHORT).show();
     }
 }

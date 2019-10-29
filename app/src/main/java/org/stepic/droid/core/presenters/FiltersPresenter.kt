@@ -2,10 +2,9 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.core.filters.contract.FiltersPoster
 import org.stepic.droid.core.presenters.contracts.FiltersView
-import org.stepic.droid.di.catalog.CatalogScope
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import java.util.*
+import java.util.EnumSet
 import javax.inject.Inject
 
 class FiltersPresenter

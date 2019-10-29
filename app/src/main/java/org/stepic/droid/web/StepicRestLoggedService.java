@@ -7,6 +7,7 @@ import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.comment.model.CommentRequest;
 import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
@@ -17,17 +18,23 @@ import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
 import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
+import org.stepik.android.remote.discussion_thread.model.DiscussionThreadResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.step_source.model.StepSourceRequest;
+import org.stepik.android.remote.step_source.model.StepSourceResponse;
 import org.stepik.android.remote.submission.model.SubmissionRequest;
 import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
+import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
+import org.stepik.android.remote.vote.model.VoteRequest;
+import org.stepik.android.remote.vote.model.VoteResponse;
 
 import java.util.List;
 
@@ -105,17 +112,9 @@ public interface StepicRestLoggedService {
     );
 
     @GET("api/steps")
-    Single<StepResponse> getStepsReactive(
-            @Query("ids[]") long[] steps
-    );
-
-    @GET("api/steps")
     Single<StepResponse> getStepsByLessonId(
             @Query("lesson") long lessonId
     );
-
-    @DELETE("api/enrollments/{id}")
-    Call<Void> dropCourseLegacy(@Path("id") long courseId);
 
     @GET("api/progresses")
     Call<ProgressResponse> getProgresses(@Query("ids[]") String[] progresses);
@@ -214,23 +213,26 @@ public interface StepicRestLoggedService {
     @GET("api/discussion-proxies")
     Single<DiscussionProxyResponse> getDiscussionProxies(@Query("ids[]") String[] ids);
 
-    @GET("api/comments")
-    Call<CommentResponse> getComments(@Query("ids[]") long[] ids);
+    @GET("api/discussion-threads")
+    Single<DiscussionThreadResponse> getDiscussionThreads(@Query("ids[]") String[] ids);
 
     @GET("api/comments")
-    Single<CommentResponse> getCommentsReactive(@Query("ids[]") long[] ids);
+    Single<CommentResponse> getComments(@Query("ids[]") long[] ids);
 
     @POST("api/comments")
-    Call<CommentResponse> postComment(@Body CommentRequest comment);
+    Single<CommentResponse> createComment(@Body CommentRequest request);
+
+    @PUT("api/comments/{commentId}")
+    Single<CommentResponse> saveComment(@Path("commentId") long commentId, @Body CommentRequest request);
+
+    @DELETE("api/comments/{commentId}")
+    Completable removeComment(@Path("commentId") long commentId);
 
     @PUT("api/votes/{id}")
-    Call<VoteResponse> postVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
-
-    @DELETE("api/comments/{id}")
-    Call<CommentResponse> deleteComment(@Path("id") long commentId);
+    Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 
     @GET("api/certificates")
-    Call<CertificateResponse> getCertificates(@Query("user") long userId);
+    Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);
 
     @GET("api/units")
     Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
@@ -326,5 +328,19 @@ public interface StepicRestLoggedService {
     @DELETE("api/course-reviews/{courseReviewId}")
     Completable removeCourseReview(
             @Path("courseReviewId") final long courseReviewId
+    );
+
+    /*
+     * Step sources
+     */
+    @GET("api/step-sources")
+    Single<StepSourceResponse> getStepSources(
+            @Query("ids[]") long[] ids
+    );
+
+    @PUT("api/step-sources/{stepId}")
+    Single<StepSourceResponse> saveStepSource(
+            @Path("stepId") final long stepId,
+            @Body StepSourceRequest request
     );
 }

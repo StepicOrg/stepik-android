@@ -2,28 +2,26 @@ package org.stepic.droid.base
 
 import android.app.DownloadManager
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.support.annotation.DrawableRes
-import android.support.v4.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.DrawableRes
+import androidx.fragment.app.Fragment
 import butterknife.ButterKnife
 import butterknife.Unbinder
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.core.*
-import org.stepic.droid.fonts.FontsProvider
+import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.web.Api
-import org.stepik.android.domain.progress.interactor.LocalProgressInteractor
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -46,9 +44,6 @@ open class FragmentBase : Fragment() {
 
     @Inject
     lateinit var databaseFacade: DatabaseFacade
-
-    @Inject
-    lateinit var fontsProvider: FontsProvider
 
     @Inject
     lateinit var config: Config
@@ -140,13 +135,7 @@ open class FragmentBase : Fragment() {
      * Null is not used at Theme because of black background on pre-loading activity.
      */
     protected fun nullifyActivityBackground() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            activity?.window?.decorView?.background = null
-        } else {
-            //we use it for old version of device
-            @Suppress("DEPRECATION")
-            activity?.window?.decorView?.setBackgroundDrawable(null)
-        }
+        activity?.window?.decorView?.background = null
     }
 
     protected open fun getRootView(): ViewGroup? = null

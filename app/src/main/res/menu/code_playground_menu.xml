@@ -5,9 +5,4 @@
         android:id="@+id/action_reset_code"
         android:title="@string/code_quiz_reset"
         app:showAsAction="never"/>
-
-    <item
-        android:id="@+id/action_language_code"
-        android:title="@string/code_playground_language_title"
-        app:showAsAction="never"/>
 </menu>

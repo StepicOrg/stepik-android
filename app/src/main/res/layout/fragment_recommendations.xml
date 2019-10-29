@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:title=""
                 android:background="?attr/selectableItemBackground"
@@ -56,7 +57,7 @@
                     android:layout_height="match_parent"
                     android:textStyle="bold"
                     android:background="@drawable/gray_circle"
-                    fontPath="fonts/Roboto-Bold.ttf"
+                    app:fontFamily="@font/roboto_bold"
                     android:gravity="center"
                     tools:ignore="MissingPrefix" />
                 <TextView
@@ -66,7 +67,7 @@
                     android:layout_height="match_parent"
                     android:textStyle="bold"
                     android:background="@drawable/green_circle"
-                    fontPath="fonts/Roboto-Bold.ttf"
+                    app:fontFamily="@font/roboto_bold"
                     android:textColor="@android:color/white"
                     android:alpha="0"
                     android:gravity="center"
@@ -86,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:textColor="@android:color/white"
-                    fontPath="fonts/Roboto-Bold.ttf"
+                    app:fontFamily="@font/roboto_bold"
                     android:layout_gravity="center"
                     android:gravity="center"
                     tools:ignore="MissingPrefix" />
@@ -103,7 +104,7 @@
                 android:background="@color/adaptive_color_wrong"
                 android:textColor="@android:color/white"
                 android:layout_gravity="center"
-                fontPath="fonts/Roboto-Bold.ttf"
+                app:fontFamily="@font/roboto_bold"
                 android:gravity="center"
                 tools:ignore="MissingPrefix" />
         </FrameLayout>
@@ -175,4 +176,4 @@
             <include layout="@layout/error_no_connection_with_button" />
         </FrameLayout>
     </LinearLayout>
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

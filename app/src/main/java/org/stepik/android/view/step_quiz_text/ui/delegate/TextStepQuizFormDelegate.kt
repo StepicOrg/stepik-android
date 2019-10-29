@@ -1,17 +1,16 @@
 package org.stepik.android.view.step_quiz_text.ui.delegate
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
-import android.support.v4.widget.TextViewCompat
-import android.support.v7.content.res.AppCompatResources
 import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_text.view.*
 import org.stepic.droid.R
-import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
@@ -23,8 +22,17 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class TextStepQuizFormDelegate(
     containerView: View,
-    private val stepWrapper: StepPersistentWrapper
+    private val stepBlockName: String?
 ) : StepQuizFormDelegate {
+    companion object {
+        private const val MINUS = "-\\\u002D\u00AD\u2012\u2013\u2014\u2015\u02D7"
+        private const val PLUS = "+"
+        private const val POINT = ",\\."
+        private const val EXP = "eEеЕ"
+
+        private const val NUMBER_VALIDATION_REGEX = "^[$MINUS$PLUS]?[0-9]*[$POINT]?[0-9]+([$EXP][$$MINUS$PLUS]?[0-9]+)?$"
+    }
+
     private val context = containerView.context
 
     private val quizTextField = containerView.stringStepQuizField as TextView
@@ -32,12 +40,12 @@ class TextStepQuizFormDelegate(
 
     init {
         val (inputType, @StringRes descriptionTextRes) =
-            when (val blockName = stepWrapper.step.block?.name) {
+            when (val blockName = stepBlockName) {
                 AppConstants.TYPE_STRING ->
                     InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE to R.string.step_quiz_string_description
 
                 AppConstants.TYPE_NUMBER ->
-                    InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_NUMBER_FLAG_SIGNED to R.string.step_quiz_number_description
+                    InputType.TYPE_CLASS_TEXT to R.string.step_quiz_number_description
 
                 AppConstants.TYPE_MATH ->
                     InputType.TYPE_CLASS_TEXT to R.string.step_quiz_math_description
@@ -56,18 +64,20 @@ class TextStepQuizFormDelegate(
     override fun createReply(): ReplyResult =
         quizTextField.text.toString().let { value ->
             if (value.isNotEmpty()) {
-                val reply =
-                    when (stepWrapper.step.block?.name) {
-                        AppConstants.TYPE_NUMBER ->
-                            Reply(number = value)
+                when (stepBlockName) {
+                    AppConstants.TYPE_NUMBER ->
+                        if (value.matches(NUMBER_VALIDATION_REGEX.toRegex())) {
+                            ReplyResult.Success(Reply(number = value))
+                        } else {
+                            ReplyResult.Error(context.getString(R.string.step_quiz_text_invalid_number_reply))
+                        }
 
-                        AppConstants.TYPE_MATH ->
-                            Reply(formula = value)
+                    AppConstants.TYPE_MATH ->
+                        ReplyResult.Success(Reply(formula = value))
 
-                        else ->
-                            Reply(text = value)
-                    }
-                ReplyResult.Success(reply)
+                    else ->
+                        ReplyResult.Success(Reply(text = value))
+                }
             } else {
                 ReplyResult.Error(context.getString(R.string.step_quiz_text_empty_reply))
             }
@@ -81,7 +91,7 @@ class TextStepQuizFormDelegate(
 
         quizTextField.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
         quizTextField.text =
-            when (stepWrapper.step.block?.name) {
+            when (stepBlockName) {
                 AppConstants.TYPE_NUMBER ->
                     reply?.number
 
@@ -99,7 +109,7 @@ class TextStepQuizFormDelegate(
                     R.drawable.ic_step_quiz_text_correct
 
                 Submission.Status.WRONG ->
-                    R.drawable.ic_step_quiz_text_wrong
+                    R.drawable.ic_step_quiz_wrong
 
                 else ->
                     null

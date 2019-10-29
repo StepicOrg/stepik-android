@@ -6,7 +6,7 @@
         }]
     </string>
     <string name="local_remind_message">We noticed that you still have not selected any courses to
-        study. Don\'t delay, enroll for a free course right now!
+        study. Don\'t delay, enroll in a free course right now!
     </string>
     <string name="app_name" translatable="false">Stepik</string>
     <integer name="com_vk_sdk_AppId" translatable="false">5628680</integer>
@@ -38,29 +38,27 @@
     <string name="allow">Allow</string>
     <string name="deny">Deny</string>
     <string name="no">No</string>
-    <string name="open_web_to_solve">Open the web version to solve</string>
     <string name="allow_mobile_download_title">Allow mobile downloading</string>
     <string name="allow_mobile_message">Allow your device to download videos over your mobile
         connection when Wi-Fi is not available?
     </string>
     <string name="allow_mobile_snack">Mobile downloading is disabled. Turn on in settings</string>
     <string name="drop_course">Drop the course</string>
-    <string name="about_course">About the course</string>
     <string name="you_dropped">"You dropped %s"</string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
     <string name="connectionProblems">Connection was lost</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="explain_permission">For caching the course and playing the video offline Stepik
-        needs
-        permission to access the storage of the phone.
+    <string name="explain_permission">To cache courses and play videos offline, 
+        Stepik needs permission to access your phone\'s storage.
     </string>
-    <string name="explain_calendar_permission">To add deadlines the app needs
-        permission to the calendar. The app doesn\'t change and read your events.
+    <string name="explain_calendar_permission">To add deadlines, Stepik needs
+        permission to access your calendar. The app doesn\'t change or read your events.
     </string>
     <string name="allow_question">Allow?</string>
     <string name="video_quality">Video quality of downloading</string>
     <string name="video_quality_playing">Video quality of playing</string>
+    <string name="video_quality_presence_message">Please choose a video quality for downloading all further video courses:</string>
 
     <string name="download_error">An error occurred while downloading video %s</string>
     <string name="download_error_insufficient_storage">: insufficient storage</string>
@@ -68,7 +66,7 @@
     <string name="sync_problem">There was a problem syncing the data, please try again later
     </string>
     <string name="empty_courses">Looks like you haven\'t enrolled in any courses yet</string>
-    <string name="empty_courses_anonymous">Browse the courses without authorization or sign in to
+    <string name="empty_courses_anonymous">Browse the courses without authorization, or sign in to
         enroll
     </string>
     <string name="join_course_web_exception">Try to join the course in web</string>
@@ -87,13 +85,11 @@
     <string name="correct">Correct!</string>
     <string name="wrong">Wrong. Please, try again.</string>
     <string name="try_again">Try again</string>
-    <string name="step_only_online">Steps are available only online. Connect to the Internet and
+    <string name="step_only_online">Steps are only available online. Connect to the Internet and
         start
         completing the assignments.
     </string>
     <string name="correct_free_response">Your answer was saved.</string>
-    <string name="py_message">
-        <![CDATA[Please open this problem in your <a href="https://www.jetbrains.com/pycharm-educational/">PyCharm Educational Edition</a>]]></string>
     <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive
         the points.
     </string>
@@ -115,7 +111,6 @@
     <string name="feedback_sent">Feedback is sent</string>
     <string name="feedback_fail">Sorry, service is not available. Try later</string>
     <string name="internet_problem">Sorry, the connection is not available. Try again later</string>
-    <string name="internet_problem_short">Sorry, there is no connection</string>
     <string name="feedback_fill_fields">Fill empty fields</string>
     <string name="video_time_delimiter" translatable="false">/</string>
     <string name="x0_5" translatable="false">x0.5</string>
@@ -125,25 +120,18 @@
     <string name="x1_5" translatable="false">x1.5</string>
     <string name="x1_75" translatable="false">x1.75</string>
     <string name="x2_0" translatable="false">x2.0</string>
-    <string name="cant_drop">You can not drop this course</string>
     <string name="open_in_external_player">Open in an external player</string>
     <string name="notification_title">Notifications</string>
     <string name="notification_learn_list">Deadlines, new modules, certificates</string>
     <string name="vibration_title">Vibration</string>
     <string name="empty_try_later">For now it\'s empty, try again later.</string>
     <string name="sound_title">Sound</string>
-    <string name="downloading_title">Downloading…</string>
-    <string name="downloading_cancel_all">Cancel all</string>
     <string name="percent_symbol" translatable="false">%d%%</string>
     <string name="cached_title">Cached</string>
     <string name="remove_all">Remove all</string>
     <string name="hint_for_idea">Type your suggestions, comments or ideas</string>
     <string name="feedback_from">From</string>
-    <string name="comments_title">Comments</string>
     <string name="load_more">more</string>
-    <string name="load_more_reply">Load more</string>
-    <string name="hint_for_new_comment">Add your comment</string>
-    <string name="new_comment_title">New comment</string>
     <string name="leave_first_comment">No discussions yet. Feel free to start one.</string>
     <plurals name="notification_plural">
         <item quantity="one">%d new notification</item>
@@ -152,23 +140,20 @@
 
     <string name="open_comments_zero">No comments. Add your comment</string>
     <string name="comment_sent">Comment is sent successfully</string>
-    <string name="comment_denied">Comments are not available for this lesson</string>
     <string name="reply_title">Reply</string>
-    <string name="one_comment_title">Comment</string>
-    <string name="comment_is_deleted">This comment was deleted</string>
     <string name="space_management_title">Space management</string>
     <string name="clear_cache_explanation">The App supports viewing videos online, but to view the
-        lessons without Internet connection it is necessary to download them. Most of the space is
+        lessons without an Internet connection you\'ll need to download them. Most of the space is
         taken by
         the video tutorials. Deleting all downloaded videos can take a few minutes.
     </string>
     <string name="storage">Storage</string>
-    <string name="notMountExplanation">The SD card is not plugged in the device. To save the videos
-        to the SD card, plug it in the phone and restart the App.
+    <string name="notMountExplanation">The SD card is not plugged into the device. To save videos
+        to the SD card, plug it into the phone and restart the App.
     </string>
-    <string name="mountExplanation">You can save lessons on the SD-card or internal memory of your
+    <string name="mountExplanation">You can save lessons on an SD-card or the internal memory of your
         device.
-        Please note that when saving on SD-card, lessons will not be available, once you remove the
+        Please note that when saving on an SD-card, lessons will not be available if you remove the
         card.
     </string>
     <string name="choose_storage_title">Choose storage</string>
@@ -180,22 +165,16 @@
         you
         sure?
     </string>
-    <string name="like_label">Like</string>
-    <string name="unlike_label">Unlike</string>
-    <string name="report_label">Report</string>
     <string name="done">Done</string>
     <string name="moving">Moving</string>
-    <string name="fail_to_parse">Sorry, the course can not be found</string>
+    <string name="fail_to_parse">Sorry, the course cannot be found</string>
     <string name="authorization">Authorization</string>
     <string name="unauthorization_detail">To continue, you should be authorized. Do you want to do
         this now?
     </string>
     <string name="delete_label">Delete</string>
-    <string name="delete_comment_detail">Delete this comment?</string>
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
-    <string name="staff_label">Stepik.org Team</string>
-    <string name="teacher_label">Course Staff</string>
 
     <string name="ok">Ok</string>
 
@@ -203,7 +182,6 @@
     <string name="most_liked_discussion">Most liked</string>
     <string name="most_active_discussion">Most active</string>
     <string name="recent_activity_discussion">Recent activity</string>
-    <string name="copy_text_label">Copy text</string>
     <string name="calendar_title">Calendar</string>
     <string name="calendar_detail">Modules in this course have deadlines. To complete this course
         and get a certificate, add deadlines to your calendar and get a reminder 2 days before the
@@ -227,11 +205,11 @@
     <string name="link_copied_title">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
     <string name="add_to_linkedin">Add to LinkedIn</string>
-    <string name="empty_certificates">You don\'t have any certificates yet</string>
+    <string name="empty_certificates">There are no certificates</string>
     <string name="are_you_sure_remove_comment_text">If you go back, your post will be lost</string>
 
     <string name="auth_error_invalid_credentials">Login/password was incorrect</string>
-    <string name="auth_error_email_already_used">The e-mail is used for another account</string>
+    <string name="auth_error_email_already_used">This e-mail is already in use</string>
     <string name="auth_error_email_not_provided_by_social">Authorization error: email is not provided by social network</string>
     <string name="auth_error_unknown">Authorization error</string>
 
@@ -241,8 +219,8 @@
     <string name="previous_lesson">Previous lesson</string>
     <string name="language_ru_filter">Russian</string>
     <string name="language_en_filter">English</string>
-    <string name="lesson_not_found_or_not_access">The lesson does not exist or you don\'t have the
-        permission
+    <string name="lesson_not_found_or_not_access">The lesson does not exist or you don\'t have
+        permission to view it
     </string>
     <string name="not_auth_message">Sign in to continue</string>
     <string name="auth_action_title">Sign in</string>
@@ -251,7 +229,7 @@
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
     <string name="high_quality">High</string>
-    <string name="do_not_ask_me_again">Do not ask me again</string>
+    <string name="do_not_ask_me_again">Do not ask me again (you can always change the quality in your settings)</string>
     <string name="discount_policy_inverse_title">After every wrong submission your maximum points
         will be reduced
     </string>
@@ -268,7 +246,7 @@
         will not be able
         to receive any points for this task. Are you sure?
     </string>
-    <string name="keep_screen_on_title_settings">Keep the screen on, while solving steps</string>
+    <string name="keep_screen_on_title_settings">Keep the screen on while solving steps</string>
     <string name="adaptive_mode_settings">@string/adaptive_courses</string>
     <string name="all_title">All</string>
     <string name="learning_title">Learning</string>
@@ -284,7 +262,7 @@
     <string name="get_license_message">New license</string>
     <string name="added_to_group_title">Adding to group</string>
     <string name="notification_comment_list">Comments and replies</string>
-    <string name="restriction_submission_enough">The step cannot be submitted, because the number of
+    <string name="restriction_submission_enough">The step cannot be submitted because the number of
         possible
         attempts has been exceeded
     </string>
@@ -294,7 +272,7 @@
     <string name="max_streak">Max streak</string>
     <string name="short_bio">Short biography</string>
     <string name="user_info">Info</string>
-    <string name="empty_user_title">User is not found</string>
+    <string name="empty_user_title">User not found</string>
     <string name="streak_dialog_title">Congratulations!</string>
     <string name="later_tatle">Later</string>
     <plurals name="restriction_submission">
@@ -306,33 +284,32 @@
         <item quantity="other">days</item>
     </plurals>
     <plurals name="streak_description">
-        <item quantity="one">It is the %d day you are active without a break. Solve assignments
+        <item quantity="one">You\'ve been active for %d day without a break. Solve assignments
             every day
-            in order to improve your record. We suggest you turn on the reminders.
+            to improve your record. We suggest you turn on reminders.
         </item>
-        <item quantity="other">It is the %d days you are active without a break. Solve every
-            day in order to improve your record. We suggest you turn on the reminders.
+        <item quantity="other">You\'ve been active for %d days without a break. Solve assignments every
+            day to improve your record. We suggest you turn on reminders.
         </item>
     </plurals>
-    <string name="choose_notification_time_interval">Choose notification interval</string>
+    <string name="choose_notification_time_interval">Change notification interval</string>
     <string name="notification_time">Notification time: %s</string>
     <string name="notification_about_learning">Notifications about learning</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
-    <string name="streak_description_not_positive">Correct! Solve assignments every day in order to
-        improve
-        your record. You can also turn on the reminders!
+    <string name="streak_description_not_positive">Correct! Solve assignments every day to improve
+        your record. You can also turn on reminders!
     </string>
     <plurals name="streak_notification_message_call_to_action">
-        <item quantity="one">Well done! You solve %d day without a break. Do not stop, solve another
+        <item quantity="one">Well done! You solved for %d day without a break. Don\'t stop, solve another
             assignment now!
         </item>
-        <item quantity="other">Well done! You solve %d day without a break. Do not stop, solve
+        <item quantity="other">Well done! You solved for %d day without a break. Don\'t stop, solve
             another
             assignment now!
         </item>
     </plurals>
-    <string name="streak_notification_message_improvement">Good job! Current streak was increased to
-        %d. Keep it up!
+    <string name="streak_notification_message_improvement">Good job! Current streak is now at %d. 
+        Keep it up!
     </string>
     <string name="streak_notification_empty_number">Learning requires daily practice. Solve another
         assignment
@@ -357,17 +334,11 @@
     <string name="sign_in_with_password">Sign in with e-mail</string>
     <string name="sign_in_with_password_suffix">" with e-mail"</string>
     <string name="content_course_logo">Course logo</string>
-    <string name="continue_course_title">Continue</string>
-    <string name="auth_inline_message">To save your progress please sign in first</string>
+    <string name="auth_inline_message">To save your progress please sign in</string>
     <string name="step_with_position">– Step %d</string>
-    <string name="anonymous_write_comment">To join this discussion you have to Sign in</string>
-    <string name="anonymous_like_mark_comment">To rate the comments you have to Sign in</string>
     <string name="retry">Retry</string>
     <string name="retry_internet">@string/retry</string>
     <string name="accessibility_drag_and_drop">drag and drop</string>
-    <string name="fill_blanks_select_value"><![CDATA[<Select value>]]></string>
-    <string name="fill_blanks_type_text">Type text</string>
-    <string name="table_quiz_beta">Table problem β</string>
     <string name="logout_user_error">Access was revoked. Login again</string>
     <string name="google_services_late">Update Google Play Services for signing in with it</string>
     <string name="accessibility_video_cover">Video cover</string>
@@ -379,16 +350,18 @@
     <string name="video_player_quality">Video quality</string>
     <string name="video_player_device_orientation_title">Rotate video</string>
     <string name="video_player_downloaded_quality">Downloaded (%s)</string>
-    <string name="video_url_incorrect">Sorry, video is not found</string>
+    <string name="video_url_incorrect">Sorry, video not found</string>
 
     <string name="video_content_description">Play video</string>
+
+    <string name="video_player_quality_icon" translatable="false">%sp</string>
 
     <!--Rate dialog-->
     <string name="rate_dialog_title">Do you like Stepik?</string>
     <string name="rate_dialog_google_play">Google Play</string>
     <string name="rate_dialog_support">Support</string>
     <string name="rate_dialog_later">Later</string>
-    <string name="rate_dialog_hint_positive">Please, leave your feedback in the Google Play</string>
+    <string name="rate_dialog_hint_positive">Please, leave your feedback on Google Play</string>
     <string name="rate_dialog_hint_negative">Please, write your feedback to Support</string>
     <string name="rate_dialog_thanks">Thanks!</string>
 
@@ -398,6 +371,9 @@
 
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
+    <string name="profile_user_id" translatable="false">User ID: %d</string>
+    <string name="profile_self_state" translatable="false">self</string>
+    <string name="profile_other_state" translatable="false">other</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
@@ -411,7 +387,7 @@
     <string name="other_channel_name">Other</string>
     <string name="user_channel_name">User\'s Notifications</string>
 
-    <string name="comments_channel_description">Notifications about replying on your comments</string>
+    <string name="comments_channel_description">Notifications about replies to your comments</string>
     <string name="review_channel_description">Notifications about getting peer-review</string>
     <string name="teach_channel_description">Notifications about teaching activities at platform</string>
     <string name="learn_channel_description">Notifications about deadlines and opening new modules</string>
@@ -423,10 +399,7 @@
 
     <string name="manage_notification_settings">Manage notifications</string>
 
-    <string name="course_item_more">More</string>
     <string name="course_item_join">Join course</string>
-    <string name="course_item_info">Info</string>
-    <string name="course_item_syllabus">Syllabus</string>
 
     <string name="learners_count">Learners count</string>
 
@@ -448,11 +421,10 @@
     <string name="placeholder_login">Login and start learning right now</string>
 
     <string name="courses_carousel_my_courses_empty">Enroll for free courses and they will be here</string>
-    <string name="empty_courses_popular">Open courses are on vacation. Please, see later</string>
+    <string name="empty_courses_popular">Open courses are on vacation. Please check back later</string>
 
     <string name="choose_language">Choose language</string>
     <string name="choose_action">Choose</string>
-    <string name="code_quiz_fullscreen">Fullscreen</string>
     <string name="code_quiz_reset">Reset</string>
     <string name="reset_code_dialog_title">Are you sure?</string>
     <string name="reset_code_dialog_explanation">Your code will be lost</string>
@@ -465,10 +437,6 @@
         <item quantity="one">%d second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
-    <string name="code_quiz_limits">&lt;b>Time limit:&lt;/b> %1$s\n&lt;b>Memory limit:&lt;/b>%2$s MB</string>
-    <string name="sample_input">&lt;b>Sample input %d:&lt;/b></string>
-    <string name="sample_output">&lt;b>Sample output %d:&lt;/b></string>
-    <string name="step_preparing">Step is not prepared yet. Tap to reload</string>
     <string name="course_rating">Course rating</string>
     <string name="course_rating_value" translatable="false">%.1f</string>
 
@@ -478,7 +446,7 @@
     <string name="language_widget_hint">This can be also changed in settings</string>
 
     <string name="course_collection_empty">Sorry, this collection is on vacation</string>
-    <string name="internet_problem_catalog">Enable internet for see our Course Collections</string>
+    <string name="internet_problem_catalog">Enable internet to see our Course Collections</string>
     <string name="trending_topics">Trending topics</string>
     <string name="early_notification_description">App will help complete course and get certificate. Enable everyday notifications for continuous learning!</string>
     <string name="early_notification_title">Greetings!</string>
@@ -486,7 +454,7 @@
         <item quantity="one">%d course</item>
         <item quantity="other">%d courses</item>
     </plurals>
-    <string name="course_current_progress">Current progress: %d%%</string>
+    <string name="course_current_progress">Current progress: %d/%d points</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
 
     <string name="notification_badge_placeholder" translatable="false">99+</string>
@@ -499,7 +467,7 @@
     <string name="onboarding_first_title">Choose</string>
     <string name="onboarding_first_subtitle">Browse through all the courses available on Stepik and choose what suits you</string>
     <string name="onboarding_second_title">Download</string>
-    <string name="onboarding_second_subtitle">Watch the video lectures online or download them for access without the connection</string>
+    <string name="onboarding_second_subtitle">Watch the video lectures online or download them for access without a connection</string>
     <string name="onboarding_third_title">Solve</string>
     <string name="onboarding_third_subtitle">Complete the assignments using your mobile device</string>
     <string name="onboarding_fourth_title">Complete</string>
@@ -535,8 +503,8 @@
     ]]></string>
     <string name="adaptive_onboarding_card_title_2">Hard question</string>
     <string name="adaptive_onboarding_card_question_2"><![CDATA[
-        <p>Imagine that this card contains some hard question and you don\'t know answer. You can postpone hard question by swiping card to <b>right</b>.</p>
-        <p>Try to swipe this card to <b>right</b>.</p>
+        <p>Imagine that this card contains some hard question and you don\'t know the answer. You can postpone hard questions by swiping the card to the <b>right</b>.</p>
+        <p>Try swiping this card to the <b>right</b>.</p>
         <div class="center">
             <div class="padding-box">
                 <img src="file:///android_asset/web/images/arrow_right.svg" />
@@ -545,8 +513,8 @@
     ]]></string>
     <string name="adaptive_onboarding_card_title_3">Easy question</string>
     <string name="adaptive_onboarding_card_question_3"><![CDATA[
-        <p>Now imagine that this card contains very easy question. You can skip it by swiping card to <b>left</b>. You\'ll <b>never</b> see it again.</p>
-        <p>Try to swipe this card to <b>left</b>.</p>
+        <p>Now imagine that this card contains a very easy question. You can skip it by swiping card to the <b>left</b>. You\'ll <b>never</b> see it again.</p>
+        <p>Try to swipe this card to the <b>left</b>.</p>
         <div class="center">
             <div class="padding-box">
                 <img src="file:///android_asset/web/images/arrow_left.svg" />
@@ -555,7 +523,7 @@
     ]]></string>
     <string name="adaptive_onboarding_card_title_4">Settings</string>
     <string name="adaptive_onboarding_card_question_4"><![CDATA[
-        <p>You can disable adaptive courses in settings (<b>Settings</b> -> <b>Other</b> -> <b>Adaptive courses</b>) and continue studying in usual mode.</p>
+        <p>You can disable adaptive courses in settings (<b>Settings</b> -> <b>Other</b> -> <b>Adaptive courses</b>) and continue studying in normal mode.</p>
     ]]></string>
 
 
@@ -571,7 +539,7 @@
     <string name="adaptive_rating">Rating</string>
     <string name="adaptive_rating_you_placeholder"><b>You</b></string>
 
-    <string name="adaptive_exp_tooltip_text">You can view your stats by pressing on toolbar</string>
+    <string name="adaptive_exp_tooltip_text">You can view your stats by pressing on the toolbar</string>
     <string name="adaptive_course_marker">ADAPTIVE</string>
 
     <string name="request_error">Something went wrong</string>
@@ -595,7 +563,7 @@
 
     <string name="deadlines_banner_description">Constant learning is a key to success. Create personal schedule, so you\'ll never forget to study.</string>
     <string name="deadlines_banner_action">Create</string>
-    <string name="deadlines_fetching_error">An error was occurred while retrieving the schedule</string>
+    <string name="deadlines_fetching_error">An error occurred while retrieving the schedule</string>
 
 
     <string name="achievements_title">Achievements</string>
@@ -604,9 +572,6 @@
     <string name="achievement_remaining_exp_locked">Not obtained yet</string>
     <string name="achievement_share">I\'ve unlocked achievement «%s» at Stepik.org. Join and beat my record!</string>
     <string name="achievement_notification_message">Congratulations! Obtained a new level of achievement «%s», check your profile.</string>
-
-
-    <string name="downloads_view_cant_remove">Can\'t remove item</string>
 
     <!-- Course -->
     <string name="course_verified">Verified</string>
@@ -646,11 +611,14 @@
     <string name="course_reviews_action_create">Write review</string>
     <string name="course_reviews_action_edit">Edit</string>
     <string name="course_reviews_action_remove">Remove</string>
-    <string name="course_reviews_compose_banner_review_description">To send a review, complete more than 80% steps</string>
+    <string name="course_reviews_compose_banner_review_description">To send a review, complete more than 80% of the steps</string>
     <string name="course_reviews_compose_banner_review_motivation">Share your opinion</string>
 
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
+    <string name="course_content_time_to_complete" translatable="false">&#8776; %s</string>
+    <string name="course_content_time_to_complete_hours_unit">%d h</string>
     <string name="course_content_text_progress" translatable="false">%d/%d</string>
+    <string name="course_content_text_progress_points">%d/%d points</string>
 
     <string name="course_content_timeline_begin_date">Begin date</string>
     <string name="course_content_timeline_end_date">End date</string>
@@ -659,22 +627,27 @@
     <string name="course_content_timeline_deadline">Deadline</string>
 
     <string name="course_content_section_exam_description">This is an exam module, you can only solve it in the web version. Press to open it in the web browser.</string>
+    <string name="course_content_section_requirements">To unlock this module you need to score %s in module %s</string>
 
     <string name="course_control_schedule">Schedule</string>
     <string name="course_control_filter">Filter by</string>
-    <string name="course_control_download_all">Download all</string>
+    <string name="course_control_download_all">Download</string>
+    <string name="course_control_processing">Processing</string>
 
     <string name="course_content_calendar_title" translatable="false">%s – %s</string>
     <string name="course_content_calendar_sync_success">Dates successfully exported to calendar</string>
     <string name="course_content_calendar_no_calendars_error">Calendars not found</string>
     <string name="course_content_calendar_permission_error">Grant permission to use calendar manually in settings</string>
 
+    <string name="course_content_remove_item_title">Delete item?</string>
+    <string name="course_content_remove_item_description">This item will be deleted from your device</string>
+
     <string name="course_restore_purchase">Restore purchase</string>
     <string name="course_payments_purchase_in_app">Buy for %s</string>
     <string name="course_payments_purchase_in_web">Buy in web version</string>
 
-    <string name="course_purchase_server_error">An error was occurred during processing your purchase, try to restore purchase and contact support if an error persists</string>
-    <string name="course_purchase_billing_error">An error was occurred during processing your purchase</string>
+    <string name="course_purchase_server_error">An error occurred while processing your purchase, try to restore purchase and contact support if the error persists</string>
+    <string name="course_purchase_billing_error">An error occurred while processing your purchase</string>
     <string name="course_purchase_billing_cancelled">Purchase was cancelled</string>
     <string name="course_purchase_billing_not_available">In-app purchases are not supported on this device</string>
     <string name="course_purchase_billing_no_purchases_to_restore">You don\'t have purchases of this course that can be restored</string>
@@ -684,16 +657,15 @@
 
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
+    <string name="video_player_control_notification_channel_description">Control panel of video player</string>
     <string name="video_player_in_background_popup">You can play video in background</string>
+    <string name="video_player_autoplay_cancel">Stay on this step</string>
 
 
     <string name="retention_notification_day1_title">Don\'t slow down</string>
-    <string name="retention_notification_day1_message">You\'ve done a great job learning yesterday, come back today and become smarter! 🚀</string>
+    <string name="retention_notification_day1_message">You\'ve done a great job learning so far. Come back and get even smarter! 🚀</string>
     <string name="retention_notification_day3_title">Time to study ‍🎓</string>
     <string name="retention_notification_day3_message">You haven\'t been here for a while. Come back and continue study! 💡</string>
-
-
-    <string name="step_comment_tooltip">Open discussions for better understanding or asking a question</string>
 
     <!-- Profile edit -->
     <string name="profile_edit_menu_item">Edit profile</string>
@@ -726,7 +698,8 @@
     <string name="lesson_title">Lesson</string>
     <string name="lesson_menu_info">Info</string>
 
-    <string name="lesson_info_points">%s for step</string>
+    <string name="lesson_info_points_with_score">You got %s out of %s for step</string>
+    <string name="lesson_info_points">You will get %s for step</string>
     <string name="lesson_info_time_to_complete">&#8776;%s for lesson</string>
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
@@ -736,6 +709,13 @@
     <string name="step_navigation_prev">Previous lesson</string>
     <string name="step_discussion_show">Show discussions (%d)</string>
     <string name="step_discussion_write_first">Leave a comment</string>
+
+    <string name="step_solutions_show">Show solutions (%d)</string>
+    <string name="step_solutions_empty">No solutions</string>
+
+    <string name="step_action_edit_content">Edit content</string>
+    <string name="step_action_edit_hint">Step text</string>
+    <string name="step_action_edit_description">You can only edit the step\'s text, and only using raw HTML. To access full step editor please use web version of Stepik.</string>
 
     <string name="step_content_video_no_video">Video has not been uploaded or processed yet</string>
 
@@ -751,15 +731,84 @@
     <string name="step_quiz_feedback_wrong_not_last_try">Wrong. Let\'s try again.</string>
     <string name="step_quiz_feedback_wrong_last_try">Incorrect</string>
 
-    <string name="step_quiz_feedback_validation_fill_blanks">All blanks should be filled</string>
-
     <string name="step_quiz_number_description">Enter a number</string>
     <string name="step_quiz_math_description">Enter a math formula</string>
     <string name="step_quiz_string_description">Write an answer in form of a text (string)</string>
     <string name="step_quiz_free_answer_description">Write an essay</string>
+    <string name="step_quiz_sorting_description">Sort a given list</string>
+    <string name="step_quiz_matching_description">Match two lists</string>
+    <string name="step_quiz_choice_description_single">Choose one option</string>
+    <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
+    <string name="step_quiz_sql_description">Enter an SQL query</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
+    <string name="step_quiz_text_invalid_number_reply">The answer must be a number</string>
+    <string name="step_quiz_choice_empty_reply">Choose an option</string>
+
+    <string name="step_quiz_code_details">Details</string>
+    <string name="step_quiz_code_detail_sample_title">Sample data %d:</string>
+
+    <string name="step_quiz_code_detail_limit_title_time">Time limit:</string>
+    <string name="step_quiz_code_detail_limit_title_memory">Memory limit:</string>
+    <string name="step_quiz_code_detail_limit_value_memory">%d MB</string>
+
+    <string name="step_quiz_code_lang_chooser">Choose language</string>
+    <string name="step_quiz_code_empty_lang">Choose programming language before submission</string>
+
+    <string name="step_quiz_not_ready">Sorry, the quiz is not ready yet</string>
+
+    <string name="step_quiz_unsupported_action">Open the web version to solve</string>
+    <string name="step_quiz_unsupported_solution_action">Open solution in the web version</string>
+    <string name="step_quiz_unsupported_message">Current quiz type is not supported in mobile app yet</string>
+
+    <string name="step_quiz_code_full_screen_instruction_tab">Instruction</string>
+    <string name="step_quiz_code_full_screen_code_tab">Code</string>
+
+    <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
+
+    <!-- Comment -->
+    <string name="comment_compose_title">Comment</string>
+    <string name="comment_compose_hint">Add your comment</string>
+    <string name="comment_action_create">Write comment</string>
+    <string name="comment_action_edit">Edit</string>
+    <string name="comment_action_remove">Remove</string>
+    <string name="comment_action_remove_description">Remove this comment?</string>
+
+    <string name="comment_solution_pattern">Solution %d</string>
+
+    <string name="comment_disabled">Comments disabled</string>
+
+    <string name="comments_title">Comments</string>
+    <string name="solutions_title">Solutions</string>
+    <string name="comments_load_more_replies">Show %s</string>
+
+    <string name="comment_tag_pinned">Pinned</string>
+    <string name="comment_tag_course_team">Course Team</string>
+    <string name="comment_tag_staff">Stepik Team</string>
+
+    <string name="relative_date_pattern">%s ago</string>
+    <string name="relative_date_now">now</string>
+
+    <string name="copied_to_clipboard_toast">Copied to clipboard</string>
+
+    <!-- Main screen -->
+    <string name="main_tab_home">Home</string>
+    <string name="main_tab_catalog">Catalog</string>
+    <string name="main_tab_profile">Profile</string>
+    <string name="main_tab_notifications">Notifications</string>
+
+    <!-- Settings -->
+    <string name="setting_section_learning">Learning</string>
+
+    <string name="setting_autoplay">Auto-transition to next step on video end</string>
+    <string name="setting_autoplay_short">Auto-transition to next step</string>
+
+    <string name="setting_font_size">Font size in steps</string>
+    <string name="setting_font_size_dialog_title">Choose font size</string>
+
+    <!-- Downloads -->
+    <string name="downloads_title">Downloaded courses</string>
 </resources>

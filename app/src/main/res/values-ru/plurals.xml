@@ -6,6 +6,12 @@
         <item quantity="many">Серия из %d ответов</item>
         <item quantity="other">Серия из %d ответов</item>
     </plurals>
+    <plurals name="min">
+        <item quantity="one">%d мин</item>
+        <item quantity="few">%d мин</item>
+        <item quantity="many">%d мин</item>
+        <item quantity="other">%d мин</item>
+    </plurals>
     <plurals name="minutes">
         <item quantity="one">%d минута</item>
         <item quantity="few">%d минуты</item>
@@ -24,6 +30,26 @@
         <item quantity="many">%d дней</item>
         <item quantity="other">%d дней</item>
     </plurals>
+    <plurals name="week">
+        <item quantity="one">%d неделя</item>
+        <item quantity="few">%d недели</item>
+        <item quantity="many">%d неделей</item>
+        <item quantity="other">%d неделей</item>
+    </plurals>
+    <plurals name="month">
+        <item quantity="one">%d месяц</item>
+        <item quantity="few">%d месяца</item>
+        <item quantity="many">%d месяцев</item>
+        <item quantity="other">%d месяцев</item>
+    </plurals>
+    <plurals name="year">
+        <item quantity="one">%d год</item>
+        <item quantity="few">%d года</item>
+        <item quantity="many">%d лет</item>
+        <item quantity="other">%d лет</item>
+    </plurals>
+
+
     <plurals name="task">
         <item quantity="one">%d задание</item>
         <item quantity="few">%d задания</item>
@@ -59,5 +85,11 @@
         <item quantity="few">%d попытки</item>
         <item quantity="many">%d попыток</item>
         <item quantity="other">%d попыток</item>
+    </plurals>
+    <plurals name="replies">
+        <item quantity="one">%d ответ</item>
+        <item quantity="few">%d ответа</item>
+        <item quantity="many">%d ответов</item>
+        <item quantity="other">%d ответов</item>
     </plurals>
 </resources>

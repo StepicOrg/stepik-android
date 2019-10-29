@@ -124,20 +124,13 @@ public interface Analytic {
         String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
         String PULL_TO_REFRESH_COURSE = "Pull from top to refreshWhenOnConnectionProblem course";
-        String COURSE_USER_TRY_FAIL = "course: user open failed for him course";
-        String JOIN_COURSE_NULL = "course is null when join, detail";
         String CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
         String AUTH_FROM_DIALOG_FOR_UNAUTHORIZED_USER = "Auth: yes from auth dialog";
         String TRANSFER_DATA_YES = "storage: transfer data";
         String CLICK_CANCEL_SECTION = "click cancel section";
         String CLICK_CANCEL_LESSON = "click cancel unit";
-        String REFRESH_UNITS = "refresh_units";
-        String REFRESH_SECTIONS = "refresh_sections";
         String SUCCESS_LOGIN = "success login";
-        String SHOW_DETAILED_INFO_CLICK = "Show detailed info click from context menu of course";
-        String LONG_TAP_COURSE = "Long tap on course";
         String CLICK_REGISTER_BUTTON = "click_register_register_screen";
-        String SHARE_COURSE = "share_course_detail";
         String CLICK_FIND_COURSE_EMPTY_SCREEN = "click_find_courses_empty_screen";
         String CLICK_NEXT_LESSON_IN_STEPS = "click_next_lesson_in_steps";
         String CLICK_PREVIOUS_LESSON_IN_STEPS = "click_previous_lesson_in_steps";
@@ -238,6 +231,8 @@ public interface Analytic {
         String NOW_PLAYING_WAS_NULL = "video_player_now_playing_null";
 
         String VIDEO_FILE_RESTORED = "video_file_restored";
+
+        String VIDEO_AUTOPLAY_CHANGED = "video_autoplay_changed";
     }
 
     interface AppIndexing {
@@ -329,6 +324,8 @@ public interface Analytic {
         String REMINDER_SWIPE_TO_CANCEL = "remind_swipe_to_cancel";
         String STREAK_SWIPE_TO_CANCEL = "streak_swipe_to_cancel";
         String NIGHT_WITHOUT_SOUND_AND_VIBRATE = "notification_night_without_sound_and_vibrate";
+
+        String NOTIFICATION_SCREEN_OPENED = "notification_screen_opened";
     }
 
     interface Feedback {
@@ -357,6 +354,8 @@ public interface Analytic {
         String SHOW_KEEP_ON_SCREEN = "steps_show_keep_on_screen";
         String SHOW_KEEP_OFF_SCREEN = "steps_show_keep_off_screen";
         String STEP_OPENED = "step_opened";
+        String STEP_EDIT_OPENED = "step_edit_opened";
+        String STEP_EDIT_COMPLETED = "step_edit_completed";
 
         //(message = "remove it, when click_send_submission will collect enough data")
         @Deprecated
@@ -405,6 +404,11 @@ public interface Analytic {
         String CLICK_STREAK_VALUE = "profile_click_streak";
         String CLICK_FULL_NAME = "profile_click_full_name";
         String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
+        String PROFILE_SCREEN_OPENED = "profile_screen_opened";
+
+        interface Params {
+            String STATE = "state";
+        }
     }
 
     interface Streak {
@@ -520,10 +524,40 @@ public interface Analytic {
         String RECEIVE_BAD_DOWNLOAD_STATUS = "downloader_v2_bad_download_status";
         String FILE_NOT_FOND = "downloader_v2_file_not_fond";
 
+        String MOVE_DOWNLOADED_FILE_ERROR = "downloader_v2_move_downloaded_file";
+
+        String SYSTEM_DOWNLOAD_ERROR = "downloader_v2_system_download_error";
+
+        String ADD_TASK_ERROR = "downloader_v2_add_task_error";
+        String REMOVE_TASK_ERROR = "downloader_v2_remove_task_error";
+
+        String FILE_TRANSFER_ERROR = "downloader_v2_file_transfer_error";
+
         interface Params {
             String DOWNLOAD_STATUS = "status";
         }
 
+    }
+
+    interface FontSize {
+        String FONT_SIZE_SELECTED = "font_size_selected";
+
+        interface Params {
+            String SIZE = "size";
+        }
+    }
+
+    interface Home {
+        String HOME_SCREEN_OPENED = "home_screen_opened";
+    }
+
+    interface Catalog {
+        String CATALOG_SCREEN_OPENED = "catalog_screen_opened";
+    }
+
+    interface Traces {
+        String COURSE_CONTENT_LOADING = "course_content_loading";
+        String MY_COURSES_LOADING = "my_courses_loading";
     }
 
     void reportEvent(String eventName, Bundle bundle);

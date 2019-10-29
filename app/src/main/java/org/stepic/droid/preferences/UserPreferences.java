@@ -1,6 +1,7 @@
 package org.stepic.droid.preferences;
 
 import org.jetbrains.annotations.Nullable;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.notifications.model.NotificationType;
@@ -8,6 +9,7 @@ import org.stepic.droid.persistence.model.StorageLocation;
 import org.stepik.android.model.user.EmailAddress;
 import org.stepik.android.model.user.Profile;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -155,20 +157,22 @@ public class UserPreferences {
         }
     }
 
+    public boolean isAutoplayEnabled() {
+        return sharedPreferenceHelper.isAutoplayEnabled();
+    }
+
+    public void setAutoplayEnabled(boolean isEnabled) {
+        sharedPreferenceHelper.setAutoplayEnabled(isEnabled);
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Video.AUTOPLAY, Collections.singletonMap(AmplitudeAnalytic.Video.Params.IS_ENABLED, isEnabled));
+        analytic.reportEventWithName(Analytic.Video.VIDEO_AUTOPLAY_CHANGED, String.valueOf(isEnabled));
+    }
+
     public boolean isNotificationEnabled(NotificationType type) {
         return !sharedPreferenceHelper.isNotificationDisabled(type);
     }
 
     public void setNotificationEnabled(NotificationType type, boolean isEnabled) {
         sharedPreferenceHelper.setNotificationDisabled(type, !isEnabled);
-    }
-
-    public boolean isRotateVideo() {
-        return sharedPreferenceHelper.needRotate();
-    }
-
-    public void setRotateVideo(boolean rotateVideo) {
-        sharedPreferenceHelper.setRotateAlways(rotateVideo);
     }
 
     public void setStorageLocation(StorageLocation storageLocation) {

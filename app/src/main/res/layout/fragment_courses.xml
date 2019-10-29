@@ -27,15 +27,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <org.stepic.droid.ui.util.ContextMenuRecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/list_of_courses"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:divider="@color/transparent"
                 android:overScrollMode="never"
-                android:paddingLeft="@dimen/course_list_side_padding"
-                android:paddingRight="@dimen/course_list_side_right_padding"
+                android:padding="@dimen/course_list_padding"
                 android:scrollbarStyle="outsideOverlay"
                 android:scrollbars="vertical"
                 android:splitMotionEvents="false"/>

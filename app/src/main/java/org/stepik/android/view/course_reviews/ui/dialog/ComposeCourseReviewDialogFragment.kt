@@ -2,29 +2,27 @@ package org.stepik.android.view.course_reviews.ui.dialog
 
 import android.app.Activity
 import android.app.Dialog
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.DialogFragment
-import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.dialog_compose_course_review.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.util.hideKeyboard
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.argument
-import org.stepic.droid.util.setTextColor
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewPresenter
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewView
+import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewView {
@@ -107,6 +105,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
             }
         }
     }
+
     override fun onStart() {
         super.onStart()
         dialog
@@ -170,12 +169,6 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     }
 
     override fun showNetworkError() {
-        val view = view
-            ?: return
-
-        Snackbar
-            .make(view, R.string.connectionProblems, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
-            .show()
+        view?.snackbar(messageRes = R.string.connectionProblems)
     }
 }

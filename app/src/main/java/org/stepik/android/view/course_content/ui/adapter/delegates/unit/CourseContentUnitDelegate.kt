@@ -1,21 +1,21 @@
 package org.stepik.android.view.course_content.ui.adapter.delegates.unit
 
 import android.graphics.BitmapFactory
-import android.support.annotation.DrawableRes
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
-import android.support.v4.util.LongSparseArray
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.collection.LongSparseArray
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.ui.custom.adapter_delegates.AdapterDelegate
-import org.stepic.droid.ui.custom.adapter_delegates.DelegateViewHolder
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.changeVisibility
-import org.stepic.droid.util.safeDiv
 import org.stepik.android.view.course_content.model.CourseContentItem
+import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
+import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import kotlin.math.abs
 
 class CourseContentUnitDelegate(
     private val unitClickListener: CourseContentUnitClickListener,
@@ -38,6 +38,8 @@ class CourseContentUnitDelegate(
         private val unitViewCountIcon = root.unitViewCountIcon
         private val unitRating = root.unitRating
         private val unitRatingIcon = root.unitRatingIcon
+
+        private val unitTimeToComplete = root.unitTimeToComplete
 
         private val unitDownloadStatus = root.unitDownloadStatus
 
@@ -65,7 +67,7 @@ class CourseContentUnitDelegate(
                     is DownloadProgress.Status.InProgress ->
                         unitClickListener.onItemCancelClicked(item)
 
-                    DownloadProgress.Status.Cached ->
+                    is DownloadProgress.Status.Cached ->
                         unitClickListener.onItemRemoveClicked(item)
                 }
             }
@@ -75,16 +77,38 @@ class CourseContentUnitDelegate(
             with(data as CourseContentItem.UnitItem) {
                 unitTitle.text = context.resources.getString(R.string.course_content_unit_title,
                         section.position, unit.position, lesson.title)
+                if (progress != null && progress.cost > 0) {
+                    val score = progress
+                        .score
+                        ?.toFloatOrNull()
+                        ?.toLong()
+                        ?: 0L
 
-                if (progress != null) {
-                    unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress,
-                        progress.nStepsPassed, progress.nSteps)
+                    unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
+                        score, progress.cost)
 
-                    unitProgress.progress = progress.nStepsPassed.toFloat() safeDiv progress.nSteps
+                    unitProgress.progress = score / progress.cost.toFloat()
                     unitTextProgress.visibility = View.VISIBLE
                 } else {
                     unitProgress.progress = 0f
                     unitTextProgress.visibility = View.GONE
+                }
+
+                val timeToComplete = lesson.timeToComplete.takeIf { it > 60 } ?: lesson.steps.size * 60L
+
+                if (timeToComplete > 0) {
+                    unitTimeToComplete.visibility = View.VISIBLE
+
+                    val timeToCompleteString = if (timeToComplete in 0 until 3600) {
+                        val timeValue = timeToComplete / 60
+                        context.resources.getQuantityString(R.plurals.min, timeValue.toInt(), timeValue)
+                    } else {
+                        context.resources.getString(R.string.course_content_time_to_complete_hours_unit, timeToComplete / 3600)
+                    }
+
+                    unitTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, timeToCompleteString)
+                } else {
+                    unitTimeToComplete.visibility = View.GONE
                 }
 
                 unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
@@ -107,9 +131,9 @@ class CourseContentUnitDelegate(
                     }
 
                 unitRatingIcon.setImageResource(unitRatingDrawableRes)
-                unitRating.text = Math.abs(lesson.voteDelta).toString()
+                unitRating.text = abs(lesson.voteDelta).toString()
 
-                unitDownloadStatus.changeVisibility(isEnabled)
+                unitDownloadStatus.isVisible = isEnabled
                 itemView.isEnabled = isEnabled
 
                 val alpha = if (isEnabled) 1f else 0.4f
@@ -118,6 +142,7 @@ class CourseContentUnitDelegate(
                 unitRating.alpha = alpha
                 unitViewCount.alpha = alpha
                 unitViewCountIcon.alpha = alpha
+                unitTimeToComplete.alpha = alpha
             }
         }
     }

@@ -1,8 +1,9 @@
 package org.stepic.droid.social;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.graphics.drawable.VectorDrawableCompat;
+
+import androidx.annotation.DrawableRes;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;

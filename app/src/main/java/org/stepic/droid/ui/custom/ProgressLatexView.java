@@ -1,12 +1,17 @@
 package org.stepic.droid.ui.custom;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -55,6 +60,24 @@ public class ProgressLatexView extends FrameLayout {
                 progressBar.setVisibility(INVISIBLE); // warning: use INVISIBLE instead of GONE for right LaTeX rendering
                 optionText.setVisibility(VISIBLE);
             }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                openExternalUrl(view, Uri.parse(url));
+                return true;
+            }
+
+            @Override
+            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                openExternalUrl(view, request.getUrl());
+                return true;
+            }
+
+            private void openExternalUrl(WebView view, Uri uri) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                view.getContext().startActivity(intent);
+            }
         };
         optionText.getWebView().setWebViewClient(client);
     }
@@ -72,6 +95,10 @@ public class ProgressLatexView extends FrameLayout {
             beforeText = text;
             optionText.setText(text);
         }
+    }
+
+    public void setTextSize(float textSize) {
+        optionText.setTextSize(textSize);
     }
 
     private boolean beforeIsEqual(String newText) {

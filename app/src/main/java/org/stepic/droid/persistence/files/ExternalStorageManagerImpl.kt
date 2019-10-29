@@ -2,7 +2,7 @@ package org.stepic.droid.persistence.files
 
 import android.content.Context
 import android.os.Environment
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.PersistentItem

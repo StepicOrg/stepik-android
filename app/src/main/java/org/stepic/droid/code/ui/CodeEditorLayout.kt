@@ -1,10 +1,9 @@
 package org.stepic.droid.code.ui
 
 import android.content.Context
-import android.graphics.Typeface
-import android.support.v4.widget.NestedScrollView
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.core.widget.NestedScrollView
 import org.stepic.droid.R
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
@@ -15,7 +14,7 @@ class CodeEditorLayout
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : NestedScrollView(context, attrs, defStyleAttr) {
-    private val codeEditor: CodeEditor
+    val codeEditor: CodeEditor
 
     var theme: CodeTheme
         get() = codeEditor.theme
@@ -45,7 +44,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     init {
         LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
-        codeEditor.typeface = Typeface.MONOSPACE
         theme = Presets.themes[0]
     }
 
@@ -63,8 +61,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         text?.let { codeEditor.setText(it) }
     }
 
-    fun insertText(text: String, offset: Int) =
-            codeEditor.insertText(text, offset)
+    fun insertText(text: String, offset: Int) {
+        codeEditor.insertText(text, offset)
+    }
 
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)

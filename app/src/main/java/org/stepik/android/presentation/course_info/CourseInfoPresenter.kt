@@ -4,7 +4,6 @@ import android.os.Bundle
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.analytic.experiments.VideoSplitTest
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_info.interactor.CourseInfoInteractor
@@ -16,8 +15,6 @@ class CourseInfoPresenter
 @Inject
 constructor(
     private val courseInfoInteractor: CourseInfoInteractor,
-
-    private val videoSplitTest: VideoSplitTest,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -50,13 +47,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext  = {
-                    state = if (videoSplitTest.currentGroup.isVideoEnabled) {
-                        CourseInfoView.State.CourseInfoLoaded(it)
-                    } else {
-                        CourseInfoView.State.CourseInfoLoaded(it.copy(videoMediaData = null))
-                    }
-                }
+                onNext  = { state = CourseInfoView.State.CourseInfoLoaded(it) }
             )
     }
 

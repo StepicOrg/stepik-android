@@ -9,7 +9,7 @@
     android:id="@+id/loginRootView"
     tools:context=".ui.activities.LaunchActivity">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -95,7 +95,7 @@
 
             <TextView
                 android:id="@+id/signInText"
-                fontPath="fonts/Roboto-Light.ttf"
+                app:fontFamily="@font/roboto_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20sp"
@@ -125,7 +125,7 @@
 
                 <include layout="@layout/edit_text_separator" />
 
-                <android.support.design.widget.TextInputLayout
+                <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:passwordToggleDrawable="@drawable/password_toggle"
@@ -139,7 +139,7 @@
                         android:imeOptions="flagNoFullscreen|actionSend"
                         android:inputType="textPassword"
                         android:maxLength="@integer/max_length_of_password"/>
-                </android.support.design.widget.TextInputLayout>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
@@ -155,7 +155,7 @@
                 android:gravity="center"
                 android:visibility="gone"
                 tools:ignore="MissingPrefix"
-                fontPath="fonts/Roboto-Light.ttf"
+                app:fontFamily="@font/roboto_light"
                 tools:text="Whoops! The email address and/or password you specified are not correct." />
 
             <Button
@@ -181,6 +181,6 @@
 
         </LinearLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

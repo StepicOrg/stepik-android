@@ -28,4 +28,10 @@
         <item>Отлично!</item>
         <item>Всё получилось!</item>
     </string-array>
+
+    <string-array name="step_content_font_size">
+        <item>Маленький</item>
+        <item>Средний</item>
+        <item>Большой</item>
+    </string-array>
 </resources>

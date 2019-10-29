@@ -1,7 +1,7 @@
 package org.stepic.droid.ui.dialogs
 
-import android.support.v4.app.DialogFragment
-import java.util.*
+import androidx.fragment.app.DialogFragment
+import java.util.HashMap
 
 abstract class VideoQualityDialogBase : DialogFragment() {
     protected val qualityToPositionMap: MutableMap<String, Int> = HashMap()
@@ -17,14 +17,14 @@ abstract class VideoQualityDialogBase : DialogFragment() {
     abstract fun injectDependencies()
 
     private fun initMaps() {
-        qualityToPositionMap.put("270", 0)
-        qualityToPositionMap.put("360", 1)
-        qualityToPositionMap.put("720", 2)
-        qualityToPositionMap.put("1080", 3)
+        qualityToPositionMap["270"] = 0
+        qualityToPositionMap["360"] = 1
+        qualityToPositionMap["720"] = 2
+        qualityToPositionMap["1080"] = 3
 
-        positionToQualityMap.put(0, "270")
-        positionToQualityMap.put(1, "360")
-        positionToQualityMap.put(2, "720")
-        positionToQualityMap.put(3, "1080")
+        positionToQualityMap[0] = "270"
+        positionToQualityMap[1] = "360"
+        positionToQualityMap[2] = "720"
+        positionToQualityMap[3] = "1080"
     }
 }

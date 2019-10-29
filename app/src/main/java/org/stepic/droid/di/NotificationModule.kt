@@ -4,7 +4,13 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoSet
 import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate
-import org.stepik.android.view.notification.*
+import org.stepik.android.view.notification.FcmNotificationHandler
+import org.stepik.android.view.notification.FcmNotificationHandlerImpl
+import org.stepik.android.view.notification.NotificationDelegate
+import org.stepik.android.view.notification.NotificationPublisher
+import org.stepik.android.view.notification.NotificationPublisherImpl
+import org.stepik.android.view.notification.StepikNotificationManager
+import org.stepik.android.view.notification.StepikNotificationManagerImpl
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.notification.helpers.NotificationHelperImpl
 import org.stepik.android.view.personal_deadlines.notification.DeadlinesNotificationDelegate

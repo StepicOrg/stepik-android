@@ -16,12 +16,12 @@ import javax.inject.Inject
 class StepikLogoutManager
 @Inject
 constructor(
-        private val threadPoolExecutor: ThreadPoolExecutor,
-        private val mainHandler: MainHandler,
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val databaseFacade: DatabaseFacade,
-        private val notificationsBadgesLogoutPoster: NotificationsBadgesLogoutPoster,
-        private val removalDownloadsInteractor: RemovalDownloadsInteractor
+    private val threadPoolExecutor: ThreadPoolExecutor,
+    private val mainHandler: MainHandler,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val databaseFacade: DatabaseFacade,
+    private val notificationsBadgesLogoutPoster: NotificationsBadgesLogoutPoster,
+    private val removalDownloadsInteractor: RemovalDownloadsInteractor
 ) {
 
     fun logout(afterClearData: () -> Unit) {

@@ -3,16 +3,18 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.model.CoursesCarouselInfo;
-import org.stepic.droid.ui.fragments.CommentsFragment;
+import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
@@ -21,6 +23,7 @@ import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.Unit;
+import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
@@ -51,18 +54,15 @@ public interface ScreenManager {
 
     void showPdfInBrowserByGoogleDocs(Activity activity, String fullPath);
 
-    void openComments(Activity context, String discussionProxyId, long stepId);
-
-    void openComments(Activity context, String discussionProxyId, long stepId, boolean needOpenForm);
-
-    void openNewCommentForm(CommentsFragment commentsFragment, Long target, @Nullable Long parent);
-
+    void openComments(Activity context, @NonNull DiscussionThread discussionThread, @NonNull Step step, @Nullable Long discussionId, boolean needOpenForm);
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section);
 
-    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, boolean backAnimation, @NotNull Section section);
+    void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section, boolean backAnimation, boolean isAutoplayEnabled);
 
     void openStepInWeb(Context context, Step step);
+
+    void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId);
 
     void openRemindPassword(AppCompatActivity context);
 
@@ -80,7 +80,7 @@ public interface ScreenManager {
 
     Intent getCatalogIntent(Context context);
 
-    void showVideo(Activity sourceActivity, @NotNull VideoPlayerMediaData videoPlayerMediaData);
+    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled);
 
     void showSettings(Activity sourceActivity);
 
@@ -93,6 +93,8 @@ public interface ScreenManager {
     void addCertificateToLinkedIn(CertificateViewItem certificateViewItem);
 
     void showCertificates(Context context);
+
+    void showCertificates(Context context, long userId);
 
     void openSyllabusInWeb(Context context, long courseId);
 
@@ -125,6 +127,7 @@ public interface ScreenManager {
     void continueAdaptiveCourse(Activity activity, Course course);
 
     void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep);
+    void continueCourse(Activity activity, @NotNull LastStep lastStep);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
 

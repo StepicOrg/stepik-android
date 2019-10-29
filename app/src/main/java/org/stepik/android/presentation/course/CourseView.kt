@@ -23,7 +23,7 @@ interface CourseView : BillingView {
     fun showEnrollmentError(errorType: EnrollmentError)
     fun showContinueLearningError()
 
-    fun continueCourse(courseId: Long, lastStep: LastStep)
+    fun continueCourse(lastStep: LastStep)
     fun continueAdaptiveCourse(course: Course)
 
     fun shareCourse(course: Course)

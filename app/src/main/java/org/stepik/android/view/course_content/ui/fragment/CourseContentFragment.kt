@@ -2,23 +2,23 @@ package org.stepik.android.view.course_content.ui.fragment
 
 import android.Manifest
 import android.app.Activity
-import android.arch.lifecycle.ViewModelProvider
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.support.annotation.StringRes
-import android.support.design.widget.Snackbar
-import android.support.v4.app.ActivityCompat
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables.zip
 import io.reactivex.rxkotlin.plusAssign
@@ -35,13 +35,10 @@ import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.VideoQualityDetailedDialog
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.util.requestMultiplePermissions
-import org.stepic.droid.util.checkSelfPermissions
-import org.stepic.droid.util.argument
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.setTextColor
-import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
-import org.stepik.android.view.course_content.model.CourseContentItem
+import org.stepic.droid.util.checkSelfPermissions
+import org.stepic.droid.util.requestMultiplePermissions
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.domain.personal_deadlines.model.Deadline
@@ -55,16 +52,29 @@ import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.view.course_calendar.ui.ChooseCalendarDialog
 import org.stepik.android.view.course_calendar.ui.ExplainCalendarPermissionDialog
+import org.stepik.android.view.course_content.model.CourseContentItem
+import org.stepik.android.view.course_content.ui.adapter.CourseContentAdapter
 import org.stepik.android.view.course_content.ui.adapter.delegates.control_bar.CourseContentControlBarClickListener
+import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentSectionClickListenerImpl
 import org.stepik.android.view.course_content.ui.fragment.listener.CourseContentUnitClickListenerImpl
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
+import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.setTextColor
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
 
-class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerScrollStateListener, ExplainCalendarPermissionDialog.Callback {
+class CourseContentFragment :
+    Fragment(),
+    CourseContentView,
+    FragmentViewPagerScrollStateListener,
+    ExplainCalendarPermissionDialog.Callback,
+    RemoveCachedContentDialog.Callback {
+
     companion object {
         fun newInstance(courseId: Long): Fragment  =
             CourseContentFragment().apply {
@@ -128,8 +138,10 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         with(courseContentRecycler) {
             contentAdapter =
                 CourseContentAdapter(
-                    sectionClickListener    = CourseContentSectionClickListenerImpl(context, courseContentPresenter, screenManager, analytic),
-                    unitClickListener       = CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager, analytic),
+                    sectionClickListener =
+                        CourseContentSectionClickListenerImpl(context, courseContentPresenter, screenManager, childFragmentManager, analytic),
+                    unitClickListener =
+                        CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager, childFragmentManager, analytic),
                     controlBarClickListener = object : CourseContentControlBarClickListener {
                         override fun onCreateScheduleClicked() {
                             showPersonalDeadlinesLearningRateDialog()
@@ -155,6 +167,16 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                                     AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE
                                 )
                             )
+                        }
+
+                        override fun onRemoveAllClicked(course: Course) {
+                            val fragmentManager = childFragmentManager
+                                .takeIf { it.findFragmentByTag(RemoveCachedContentDialog.TAG) == null }
+                                ?: return
+
+                            RemoveCachedContentDialog
+                                .newInstance(course = course)
+                                .show(fragmentManager, RemoveCachedContentDialog.TAG)
                         }
                     }
                 )
@@ -231,30 +253,29 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
         contentAdapter.updateUnitDownloadProgress(downloadProgress)
     }
 
-    override fun showChangeDownloadNetworkType() {
-        val view = view
-            ?: return
+    override fun updateCourseDownloadProgress(downloadProgress: DownloadProgress) {
+        contentAdapter.updateCourseDownloadProgress(downloadProgress)
+    }
 
-        Snackbar
-            .make(view, R.string.allow_mobile_snack, Snackbar.LENGTH_LONG)
-            .setAction(R.string.settings_title) {
+    override fun showChangeDownloadNetworkType() {
+        view?.snackbar(messageRes = R.string.allow_mobile_snack, length = Snackbar.LENGTH_LONG) {
+            setAction(R.string.settings_title) {
                 analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS)
                 screenManager.showSettings(activity)
             }
-            .setActionTextColor(ContextCompat.getColor(view.context, R.color.snack_action_color))
-            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
-            .show()
+            setActionTextColor(ContextCompat.getColor(view.context, R.color.snack_action_color))
+            setTextColor(ContextCompat.getColor(view.context, R.color.white))
+        }
     }
 
     override fun showVideoQualityDialog(course: Course?, section: Section?, unit: Unit?) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(VideoQualityDetailedDialog.TAG) == null }
             ?: return
 
         val dialog = VideoQualityDetailedDialog.newInstance(course, section, unit)
         dialog.setTargetFragment(this, VideoQualityDetailedDialog.VIDEO_QUALITY_REQUEST_CODE)
-        dialog.show(supportFragmentManager, VideoQualityDetailedDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, VideoQualityDetailedDialog.TAG)
     }
 
     /**
@@ -273,29 +294,22 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             .subscribe {
                 val anchorView = courseContentRecycler.findViewById<View>(R.id.course_control_schedule)
                 val deadlinesDescription = getString(R.string.deadlines_banner_description)
-                PopupHelper.showPopupAnchoredToView(requireContext(), anchorView, deadlinesDescription, cancelableOnTouchOutside = true)
+                PopupHelper.showPopupAnchoredToView(requireContext(), anchorView, deadlinesDescription, cancelableOnTouchOutside = true, withArrow = true)
             }
     }
 
     override fun showPersonalDeadlinesError() {
-        val view = view
-            ?: return
-
-        Snackbar
-            .make(view, R.string.deadlines_fetching_error, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
-            .show()
+        view?.snackbar(messageRes = R.string.deadlines_fetching_error)
     }
 
     private fun showPersonalDeadlinesLearningRateDialog() {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(LearningRateDialog.TAG) == null }
             ?: return
 
         val dialog = LearningRateDialog.newInstance()
         dialog.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE)
-        dialog.show(supportFragmentManager, LearningRateDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, LearningRateDialog.TAG)
 
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.SCHEDULE_PRESSED)
     }
@@ -303,7 +317,6 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     private fun showPersonalDeadlinesEditDialog(record: StorageRecord<DeadlinesWrapper>) {
         val supportFragmentManager = activity
             ?.supportFragmentManager
-            ?.takeIf { it.findFragmentByTag(EditDeadlinesDialog.TAG) == null }
             ?: return
 
         val sections = contentAdapter
@@ -315,18 +328,17 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
 
         val dialog = EditDeadlinesDialog.newInstance(sections, record)
         dialog.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE)
-        dialog.show(supportFragmentManager, EditDeadlinesDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, EditDeadlinesDialog.TAG)
     }
 
     override fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>) {
         val supportFragmentManager = activity
-                ?.supportFragmentManager
-                ?.takeIf { it.findFragmentByTag(ChooseCalendarDialog.TAG) == null }
-                ?: return
+            ?.supportFragmentManager
+            ?: return
 
         val dialog = ChooseCalendarDialog.newInstance(calendarItems)
         dialog.setTargetFragment(this, ChooseCalendarDialog.CHOOSE_CALENDAR_REQUEST_CODE)
-        dialog.show(supportFragmentManager, ChooseCalendarDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, ChooseCalendarDialog.TAG)
     }
 
     /**
@@ -336,12 +348,11 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     private fun showExplainPermissionsDialog() {
         val supportFragmentManager = activity
                 ?.supportFragmentManager
-                ?.takeIf { it.findFragmentByTag(ExplainCalendarPermissionDialog.TAG) == null }
                 ?: return
 
         val dialog = ExplainCalendarPermissionDialog.newInstance()
         dialog.setTargetFragment(this@CourseContentFragment, 0)
-        dialog.show(supportFragmentManager, ExplainCalendarPermissionDialog.TAG)
+        dialog.showIfNotExists(supportFragmentManager, ExplainCalendarPermissionDialog.TAG)
     }
 
     private fun syncCalendarDates() {
@@ -360,22 +371,13 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
     }
 
     override fun showCalendarSyncSuccess() {
-        val view = view
-            ?: return
-
-        Snackbar
-            .make(view, R.string.course_content_calendar_sync_success, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
-            .show()
+        view?.snackbar(messageRes = R.string.course_content_calendar_sync_success)
     }
 
-    override fun showCalendarError(errorType: CalendarError) {
-        val view = view
-            ?: return
-
+    override fun showCalendarError(error: CalendarError) {
         @StringRes
         val errorMessage =
-            when (errorType) {
+            when (error) {
                 CalendarError.GENERIC_ERROR ->
                     R.string.request_error
 
@@ -386,10 +388,7 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
                     R.string.course_content_calendar_permission_error
             }
 
-        Snackbar
-            .make(view, errorMessage, Snackbar.LENGTH_SHORT)
-            .setTextColor(ContextCompat.getColor(view.context, R.color.white))
-            .show()
+        view?.snackbar(messageRes = errorMessage)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -454,6 +453,39 @@ class CourseContentFragment : Fragment(), CourseContentView, FragmentViewPagerSc
             else ->
                 super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    /**
+     * RemoveCachedContentDialog.Callback
+     */
+    override fun onRemoveCourseDownloadConfirmed(course: Course) {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.DELETED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE
+            )
+        )
+        courseContentPresenter.removeCourseDownloadTask(course)
+    }
+
+    override fun onRemoveSectionDownloadConfirmed(section: Section) {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.DELETED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.SECTION
+            )
+        )
+        courseContentPresenter.removeSectionDownloadTask(section)
+    }
+
+    override fun onRemoveUnitDownloadConfirmed(unit: Unit) {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.DELETED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON
+            )
+        )
+        courseContentPresenter.removeUnitDownloadTask(unit)
     }
 
     override fun onDestroyView() {

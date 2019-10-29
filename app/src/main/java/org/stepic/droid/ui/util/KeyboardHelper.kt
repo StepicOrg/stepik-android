@@ -2,7 +2,6 @@ package org.stepic.droid.ui.util
 
 import android.content.Context
 import android.graphics.Rect
-import android.os.Build
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewTreeObserver
@@ -57,10 +56,6 @@ fun stopListenKeyboardChanges(
         rootView: View,
         onGlobalLayoutListener: ViewTreeObserver.OnGlobalLayoutListener?) {
     onGlobalLayoutListener?.let {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            rootView.viewTreeObserver.removeOnGlobalLayoutListener(it)
-        } else {
-            rootView.viewTreeObserver.removeGlobalOnLayoutListener(it)
-        }
+        rootView.viewTreeObserver.removeOnGlobalLayoutListener(it)
     }
 }

@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:textSize="12sp"
-            fontPath="fonts/Roboto-Light.ttf"
+            app:fontFamily="@font/roboto_light"
             android:textColor="@color/stepic_weak_text"
             tools:text="23.11.2015 14:33"
             tools:ignore="MissingPrefix" />
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/guideline_standard_padding"
                 android:layout_marginLeft="@dimen/guideline_standard_padding"
-                fontPath="fonts/Roboto-Light.ttf"
+                app:fontFamily="@font/roboto_light"
                 android:clickable="false"
                 android:focusable="false"
                 tools:text="В курсе Археология фольклора: мифологические мотивы на карте мира менее чем через 36 часов наступит совсем крайний срок сдачи заданий по модулю Ныряльщик и антропогонические мифы"

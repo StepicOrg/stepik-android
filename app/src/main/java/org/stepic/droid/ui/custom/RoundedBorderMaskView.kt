@@ -1,7 +1,12 @@
 package org.stepic.droid.ui.custom
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffXfermode
+import android.graphics.RectF
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import org.stepic.droid.R

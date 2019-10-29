@@ -1,12 +1,13 @@
 package org.stepic.droid.code.highlight.prettify;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import org.stepic.droid.code.highlight.prettify.parser.Job;
 import org.stepic.droid.code.highlight.prettify.parser.Prettify;
 import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult;
 import org.stepic.droid.code.highlight.syntaxhighlight.Parser;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The prettify parser for syntax highlight.

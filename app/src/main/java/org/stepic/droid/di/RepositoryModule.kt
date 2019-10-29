@@ -7,7 +7,9 @@ import org.stepic.droid.storage.repositories.course.CourseRepositoryImpl
 import org.stepic.droid.storage.repositories.lesson.LessonRepositoryImpl
 import org.stepic.droid.storage.repositories.section.SectionRepositoryImpl
 import org.stepic.droid.storage.repositories.unit.UnitRepositoryImpl
-import org.stepik.android.model.*
+import org.stepik.android.model.Course
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 
 @Module

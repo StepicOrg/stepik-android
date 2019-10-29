@@ -2,8 +2,9 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
-import android.support.v7.app.AlertDialog
+import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class ChooseStorageDialog: DialogFragment() {
     companion object {
         fun newInstance() =
-                ChooseStorageDialog()
+            ChooseStorageDialog()
     }
 
     @Inject
@@ -43,16 +44,18 @@ class ChooseStorageDialog: DialogFragment() {
         val youWantMoveDataDialog = WantMoveDataDialog.newInstance()
         youWantMoveDataDialog.setTargetFragment(targetFragment, WantMoveDataDialog.REQUEST_CODE)
 
+        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, headers)
+
         return AlertDialog.Builder(requireContext())
                 .setTitle(R.string.choose_storage_title)
-                .setNegativeButton(R.string.cancel) { _, _ -> analytic.reportEvent(Analytic.Interaction.CANCEL_CHOOSE_STORE_CLICK) }
-                .setSingleChoiceItems(headers, indexChosen) { _, which ->
+                .setSingleChoiceItems(adapter, indexChosen) { _, which ->
                     if (which != indexChosen && !youWantMoveDataDialog.isAdded) {
                         youWantMoveDataDialog.targetLocation = storageOptions[which]
-                        youWantMoveDataDialog.show(fragmentManager, null)
+                        youWantMoveDataDialog.show(requireFragmentManager(), null)
                     }
                     dismiss()
                 }
+                .setNegativeButton(R.string.cancel) { _, _ -> analytic.reportEvent(Analytic.Interaction.CANCEL_CHOOSE_STORE_CLICK) }
                 .create()
     }
 }

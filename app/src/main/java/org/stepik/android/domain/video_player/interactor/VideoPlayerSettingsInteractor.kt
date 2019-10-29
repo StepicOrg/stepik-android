@@ -30,16 +30,9 @@ constructor(
                 videoUrl = videoUrl,
                 videoPlaybackRate = playbackRate,
                 videoTimestamp = timestamp,
-                mediaData = videoPlayerMediaData
+                mediaData = videoPlayerMediaData,
+                videoQuality = getQualityVideoForPlaying()
             )
-        }
-
-    fun isRotateVideo(): Single<Boolean> =
-        Single.fromCallable(userPreferences::isRotateVideo)
-
-    fun setRotateVideo(isRotateVideo: Boolean): Completable =
-        Completable.fromAction {
-            userPreferences.isRotateVideo = isRotateVideo
         }
 
     private fun getVideoUrl(videoUrls: List<VideoUrl>): Single<String> =
@@ -77,4 +70,14 @@ constructor(
 
             isFirstTime
         }
+
+    fun isAutoplayEnabled(): Boolean =
+        userPreferences.isAutoplayEnabled
+
+    fun setAutoplayEnabled(isEnabled: Boolean) {
+        userPreferences.isAutoplayEnabled = isEnabled
+    }
+
+    private fun getQualityVideoForPlaying(): String =
+        userPreferences.qualityVideoForPlaying
 }
