@@ -95,6 +95,27 @@
         android:layout_marginLeft="@dimen/comment_item_margin"
         android:layout_marginRight="@dimen/comment_item_margin" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/commentSolution"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_comment_item_solution"
+
+        app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
+        app:layout_constraintTop_toBottomOf="@id/commentText"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:padding="8dp"
+        android:drawablePadding="8dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_marginLeft="@dimen/comment_item_margin"
+        android:layout_marginRight="@dimen/comment_item_margin"
+
+        tools:drawableStart="@drawable/ic_step_quiz_wrong_wide"
+
+        tools:text="Решение 31293193128392" />
+
     <include
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -103,7 +124,7 @@
         app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/commentText"
+        app:layout_constraintTop_toBottomOf="@id/commentSolution"
 
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"

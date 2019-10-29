@@ -12,6 +12,7 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.interactor.StepInteractor
 import org.stepik.android.domain.step.interactor.StepNavigationInteractor
 import org.stepik.android.domain.step.model.StepNavigationDirection
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -60,7 +61,20 @@ constructor(
     fun onLessonData(stepWrapper: StepPersistentWrapper, lessonData: LessonData) {
         if (state != StepView.State.Idle) return
 
-        state = StepView.State.Loaded(stepWrapper, lessonData)
+        val discussionThreads =
+            stepWrapper.step.discussionProxy
+                ?.let {
+                    listOf(DiscussionThread(
+                        stepWrapper.step.discussionThreads?.firstOrNull() ?: "",
+                        DiscussionThread.THREAD_DEFAULT,
+                        discussionsCount = stepWrapper.step.discussionsCount,
+                        discussionProxy = it
+                    ))
+                }
+                ?: emptyList()
+        state = StepView.State.Loaded(stepWrapper, lessonData, discussionThreads)
+
+        fetchDiscussionThreads(stepWrapper)
         fetchNavigation(stepWrapper, lessonData)
         subscribeForStepUpdates(stepWrapper.step.id)
     }
@@ -80,6 +94,7 @@ constructor(
                     val oldState = this.state
                     if (oldState is StepView.State.Loaded) {
                         this.state = oldState.copy(stepWrapper)
+                        fetchDiscussionThreads(stepWrapper)
                     }
                 },
                 onError = { subscribeForStepUpdates(stepId, shouldSkipFirstValue = true) }
@@ -116,6 +131,25 @@ constructor(
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onSuccess = { view?.showLesson(stepNavigationDirection, lessonData = it, isAutoplayEnabled = isAutoplayEnabled) },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    /**
+     * Discussions
+     */
+    private fun fetchDiscussionThreads(stepWrapper: StepPersistentWrapper) {
+        compositeDisposable += stepInteractor
+            .getDiscussionThreads(stepWrapper.step)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { discussionThreads ->
+                    val oldState = (state as? StepView.State.Loaded)
+                        ?: return@subscribeBy
+
+                    state = oldState.copy(discussionThreads = discussionThreads)
+                },
                 onError = emptyOnErrorStub
             )
     }

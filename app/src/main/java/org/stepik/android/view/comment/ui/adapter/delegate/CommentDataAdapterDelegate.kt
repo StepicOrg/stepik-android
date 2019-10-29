@@ -7,6 +7,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
@@ -17,6 +18,7 @@ import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.model.Submission
 import org.stepik.android.model.UserRole
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -50,6 +52,8 @@ class CommentDataAdapterDelegate(
         private val commentLike = root.commentLike
         private val commentDislike = root.commentDislike
 
+        private val commentSolution = root.commentSolution
+
         private val commentUserIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
             val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(this, coursePlaceholderBitmap)
@@ -74,6 +78,7 @@ class CommentDataAdapterDelegate(
             commentLike.setOnClickListener(this)
             commentDislike.setOnClickListener(this)
             commentMenu.setOnClickListener(this)
+            commentSolution.setOnClickListener(this)
 
             commentUserIcon.setOnClickListener(this)
             commentUserIcon.setOnClickListener(this)
@@ -150,6 +155,29 @@ class CommentDataAdapterDelegate(
                             0.5f
                     }
             }
+
+            // solution
+            if (data.solution != null) {
+                commentSolution.text = context.getString(R.string.comment_solution_pattern, data.solution.submission.id)
+
+                @DrawableRes
+                val compoundDrawableRes =
+                    when (data.solution.submission.status) {
+                        Submission.Status.CORRECT ->
+                            R.drawable.ic_step_quiz_correct
+
+                        Submission.Status.WRONG ->
+                            R.drawable.ic_step_quiz_wrong_wide
+
+                        else ->
+                            -1
+                    }
+                commentSolution.setCompoundDrawables(start = compoundDrawableRes)
+
+                commentSolution.isVisible = true
+            } else {
+                commentSolution.isVisible = false
+            }
         }
 
         private fun showItemMenu(view: View) {
@@ -171,7 +199,7 @@ class CommentDataAdapterDelegate(
 
             popupMenu
                 .menu
-                .findItem(R.id.comment_item_remove)
+                .findItem(R.id.comment_item_edit)
                 ?.let { menuItem ->
                     menuItem.isVisible = commentDataItem.comment.actions?.edit == true
                 }
@@ -211,6 +239,9 @@ class CommentDataAdapterDelegate(
                 R.id.commentUserIcon,
                 R.id.commentUserName ->
                     actionListener.onProfileClicked(data)
+
+                R.id.commentSolution ->
+                    data.solution?.let { actionListener.onSolutionClicked(data.id, it) }
             }
         }
     }
@@ -220,6 +251,7 @@ class CommentDataAdapterDelegate(
 
         fun onReplyClicked(parentCommentId: Long)
         fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value)
+        fun onSolutionClicked(discussionId: Long, solution: CommentItem.Data.Solution)
 
         fun onEditCommentClicked(commentDataItem: CommentItem.Data)
         fun onRemoveCommentClicked(commentDataItem: CommentItem.Data)

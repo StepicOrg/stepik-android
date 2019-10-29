@@ -585,7 +585,6 @@
     <string name="course_reviews_compose_banner_review_description">Чтобы оставить отзыв, пройдите больше 80% материалов</string>
     <string name="course_reviews_compose_banner_review_motivation">Поделитесь своим мнением</string>
 
-    <string name="course_content_time_to_complete_minutes_unit">%d мин</string>
     <string name="course_content_time_to_complete_hours_unit">%d ч</string>
     <string name="course_content_text_progress_points">%d/%d баллов</string>
 
@@ -601,7 +600,6 @@
     <string name="course_control_schedule">Расписание</string>
     <string name="course_control_filter">Фильтр</string>
     <string name="course_control_download_all">Скачать</string>
-    <string name="course_control_downloaded_for_offline">Загружено (%s)</string>
     <string name="course_control_processing">Обработка</string>
 
     <string name="course_content_calendar_sync_success">Даты успешно экспортированы в календарь</string>
@@ -678,6 +676,13 @@
     <string name="step_discussion_show">Открыть комментарии (%d)</string>
     <string name="step_discussion_write_first">Написать первый комментарий</string>
 
+    <string name="step_solutions_show">Форум решений (%d)</string>
+    <string name="step_solutions_empty">Решений пока нет</string>
+
+    <string name="step_action_edit_content">Изменить текст шага</string>
+    <string name="step_action_edit_hint">Текст шага</string>
+    <string name="step_action_edit_description">Вы можете редактировать только текст шага и только в виде HTML кода. Для доступа к полноценному редактору шагов, пожалуйста, воспользуйтесь веб версией Stepik.</string>
+
     <string name="step_content_video_no_video">Видео не было добавлено или еще не обработано</string>
 
     <string name="step_quiz_action_button_submit">Отправить</string>
@@ -719,7 +724,8 @@
     <string name="step_quiz_not_ready">Извините, эта задача еще не готова</string>
 
     <string name="step_quiz_unsupported_action">Пройти задание в web-версии</string>
-    <string name="step_quiz_unsupported_message">Данный тип шага пока не поддерживается в приложении</string>
+    <string name="step_quiz_unsupported_solution_action">Открыть решение в web-версии</string>
+    <string name="step_quiz_unsupported_message">Данный тип заданий пока не поддерживается в приложении</string>
 
     <string name="step_quiz_code_full_screen_instruction_tab">Условия</string>
     <string name="step_quiz_code_full_screen_code_tab">Код</string>
@@ -737,9 +743,12 @@
     <string name="comment_action_remove">Удалить</string>
     <string name="comment_action_remove_description">Удалить этот комментарий</string>
 
+    <string name="comment_solution_pattern">Решение %d</string>
+
     <string name="comment_disabled">Комментарии отключены</string>
 
     <string name="comments_title">Комментарии</string>
+    <string name="solutions_title">Решения</string>
     <string name="comments_load_more_replies">Показать %s</string>
 
     <string name="comment_tag_pinned">Закреплен</string>

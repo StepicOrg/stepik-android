@@ -11,7 +11,6 @@ import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_text.view.*
 import org.stepic.droid.R
-import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
@@ -23,7 +22,7 @@ import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 
 class TextStepQuizFormDelegate(
     containerView: View,
-    private val stepWrapper: StepPersistentWrapper
+    private val stepBlockName: String?
 ) : StepQuizFormDelegate {
     companion object {
         private const val MINUS = "-\\\u002D\u00AD\u2012\u2013\u2014\u2015\u02D7"
@@ -41,7 +40,7 @@ class TextStepQuizFormDelegate(
 
     init {
         val (inputType, @StringRes descriptionTextRes) =
-            when (val blockName = stepWrapper.step.block?.name) {
+            when (val blockName = stepBlockName) {
                 AppConstants.TYPE_STRING ->
                     InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE to R.string.step_quiz_string_description
 
@@ -65,7 +64,7 @@ class TextStepQuizFormDelegate(
     override fun createReply(): ReplyResult =
         quizTextField.text.toString().let { value ->
             if (value.isNotEmpty()) {
-                when (stepWrapper.step.block?.name) {
+                when (stepBlockName) {
                     AppConstants.TYPE_NUMBER ->
                         if (value.matches(NUMBER_VALIDATION_REGEX.toRegex())) {
                             ReplyResult.Success(Reply(number = value))
@@ -92,7 +91,7 @@ class TextStepQuizFormDelegate(
 
         quizTextField.isEnabled = StepQuizFormResolver.isQuizEnabled(state)
         quizTextField.text =
-            when (stepWrapper.step.block?.name) {
+            when (stepBlockName) {
                 AppConstants.TYPE_NUMBER ->
                     reply?.number
 

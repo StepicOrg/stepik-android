@@ -18,12 +18,15 @@ import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse;
 import org.stepik.android.remote.course_reviews.model.CourseReviewRequest;
 import org.stepik.android.remote.course_reviews.model.CourseReviewsResponse;
 import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
+import org.stepik.android.remote.discussion_thread.model.DiscussionThreadResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
+import org.stepik.android.remote.step_source.model.StepSourceRequest;
+import org.stepik.android.remote.step_source.model.StepSourceResponse;
 import org.stepik.android.remote.submission.model.SubmissionRequest;
 import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
@@ -210,6 +213,9 @@ public interface StepicRestLoggedService {
     @GET("api/discussion-proxies")
     Single<DiscussionProxyResponse> getDiscussionProxies(@Query("ids[]") String[] ids);
 
+    @GET("api/discussion-threads")
+    Single<DiscussionThreadResponse> getDiscussionThreads(@Query("ids[]") String[] ids);
+
     @GET("api/comments")
     Single<CommentResponse> getComments(@Query("ids[]") long[] ids);
 
@@ -322,5 +328,19 @@ public interface StepicRestLoggedService {
     @DELETE("api/course-reviews/{courseReviewId}")
     Completable removeCourseReview(
             @Path("courseReviewId") final long courseReviewId
+    );
+
+    /*
+     * Step sources
+     */
+    @GET("api/step-sources")
+    Single<StepSourceResponse> getStepSources(
+            @Query("ids[]") long[] ids
+    );
+
+    @PUT("api/step-sources/{stepId}")
+    Single<StepSourceResponse> saveStepSource(
+            @Path("stepId") final long stepId,
+            @Body StepSourceRequest request
     );
 }

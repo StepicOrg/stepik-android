@@ -70,8 +70,8 @@ class CardPresenter(
         view?.let {
             if (submission == null || submission?.status == Submission.Status.LOCAL) {
                 submission = Submission(
-                        reply = it.getQuizViewDelegate().createReply(),
-                        status = Submission.Status.LOCAL) // cache current choices state
+                    _reply = it.getQuizViewDelegate().createReply(),
+                    status = Submission.Status.LOCAL) // cache current choices state
             }
             super.detachView(it)
         }
@@ -111,7 +111,7 @@ class CardPresenter(
             error = null
 
             val submission = Submission(
-                    reply = view?.getQuizViewDelegate()?.createReply(),
+                    _reply = view?.getQuizViewDelegate()?.createReply(),
                     attempt = card.attempt?.id ?: 0)
             disposable = api.createNewSubmissionReactive(submission)
                     .ignoreElement()

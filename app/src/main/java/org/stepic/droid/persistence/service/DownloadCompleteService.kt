@@ -4,10 +4,13 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.system.ErrnoException
+import android.system.OsConstants
 import androidx.core.app.JobIntentService
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.di.FSLock
+import org.stepic.droid.persistence.downloads.DownloadErrorPoster
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.StorageLocation
@@ -28,7 +31,7 @@ class DownloadCompleteService: JobIntentService() {
 
         fun enqueueWork(context: Context, downloadId: Long) {
             enqueueWork(context, DownloadCompleteService::class.java, JOB_ID,
-                    Intent().putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, downloadId))
+                Intent().putExtra(DownloadManager.EXTRA_DOWNLOAD_ID, downloadId))
         }
     }
 
@@ -43,6 +46,9 @@ class DownloadCompleteService: JobIntentService() {
 
     @Inject
     lateinit var persistentItemObserver: PersistentItemObserver
+
+    @Inject
+    lateinit var downloadErrorPoster: DownloadErrorPoster
 
     @Inject
     lateinit var analytic: Analytic
@@ -65,8 +71,8 @@ class DownloadCompleteService: JobIntentService() {
 
         val download = systemDownloadsDao.get(downloadId).blockingGet().firstOrNull()
         val persistentItem = persistentItemDao.get(mapOf(
-                DBStructurePersistentItem.Columns.DOWNLOAD_ID to downloadId.toString(),
-                DBStructurePersistentItem.Columns.STATUS      to PersistentItem.Status.IN_PROGRESS.name // move file only one time
+            DBStructurePersistentItem.Columns.DOWNLOAD_ID to downloadId.toString(),
+            DBStructurePersistentItem.Columns.STATUS      to PersistentItem.Status.IN_PROGRESS.name // move file only one time
         )) ?: return
 
         when {
@@ -97,10 +103,10 @@ class DownloadCompleteService: JobIntentService() {
             val targetFile = File(targetDir.path, targetFileName)
 
             val newPersistentItem = persistentItem.copy(
-                    localFileName = targetFileName,
-                    localFileDir = targetDir.path.canonicalPath,
-                    isInAppInternalDir = targetDir.type == StorageLocation.Type.APP_INTERNAL,
-                    status = PersistentItem.Status.FILE_TRANSFER
+                localFileName = targetFileName,
+                localFileDir = targetDir.path.canonicalPath,
+                isInAppInternalDir = targetDir.type == StorageLocation.Type.APP_INTERNAL,
+                status = PersistentItem.Status.FILE_TRANSFER
             )
 
             persistentItemObserver.update(newPersistentItem)
@@ -117,14 +123,20 @@ class DownloadCompleteService: JobIntentService() {
             }
 
             persistentItemObserver.update(newPersistentItem.copy(
-                    status = PersistentItem.Status.COMPLETED
+                status = PersistentItem.Status.COMPLETED
             ))
 
             downloadManager.remove(downloadRecord.id)
         } catch (e: Exception) {
             persistentItemObserver.update(persistentItem.copy(
-                    status = PersistentItem.Status.TRANSFER_ERROR
+                status = PersistentItem.Status.TRANSFER_ERROR
             ))
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP &&
+                e is IOException &&
+                (e.cause as? ErrnoException)?.errno == OsConstants.ENOSPC
+            ) {
+                downloadErrorPoster.onError(downloadRecord.copy(reason = DownloadManager.ERROR_INSUFFICIENT_SPACE))
+            }
             analytic.reportError(Analytic.DownloaderV2.MOVE_DOWNLOADED_FILE_ERROR, e)
         }
     }

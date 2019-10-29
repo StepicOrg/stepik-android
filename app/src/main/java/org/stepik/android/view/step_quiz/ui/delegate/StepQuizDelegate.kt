@@ -68,7 +68,7 @@ class StepQuizDelegate(
     fun setState(state: StepQuizView.State.AttemptLoaded) {
         currentState = state
 
-        stepQuizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(step, state))
+        stepQuizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(step.block?.name, state))
         stepQuizFormDelegate.setState(state)
 
         stepQuizActionButton.isEnabled = StepQuizFormResolver.isQuizActionEnabled(state)
