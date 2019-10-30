@@ -306,7 +306,7 @@ class CommentsActivity :
         analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
 
         ComposeCommentDialogFragment
-            .newInstance(target = stepId, parent = parent, comment = comment)
+            .newInstance(discussionThread = discussionThread, target = stepId, parent = parent, comment = comment)
             .showIfNotExists(supportFragmentManager, ComposeCommentDialogFragment.TAG)
     }
 

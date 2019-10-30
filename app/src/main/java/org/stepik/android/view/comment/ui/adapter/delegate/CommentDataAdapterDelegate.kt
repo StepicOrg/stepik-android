@@ -199,7 +199,7 @@ class CommentDataAdapterDelegate(
 
             popupMenu
                 .menu
-                .findItem(R.id.comment_item_remove)
+                .findItem(R.id.comment_item_edit)
                 ?.let { menuItem ->
                     menuItem.isVisible = commentDataItem.comment.actions?.edit == true
                 }

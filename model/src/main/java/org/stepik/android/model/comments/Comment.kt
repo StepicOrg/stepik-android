@@ -65,7 +65,10 @@ data class Comment(
     val abuseCount: Int? = null,
 
     @SerializedName("vote")
-    val vote: String? = null
+    val vote: String? = null,
+
+    @SerializedName("thread")
+    val thread: String? = null
 ) : Parcelable {
     override fun describeContents(): Int = 0
 
