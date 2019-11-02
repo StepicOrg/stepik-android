@@ -212,6 +212,13 @@ dependencies {
     androidTestImplementation libraries.espressoCore
     androidTestImplementation libraries.espressoContrib
     androidTestImplementation libraries.espressoIntents
+
+    debugImplementation libraries.soloader
+    debugImplementation libraries.flipperCore
+    debugImplementation libraries.flipperLeakcanary
+    debugImplementation libraries.flipperNetwork
+
+    releaseImplementation libraries.flipperNoop
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -98,7 +98,10 @@ ext.versions = [
         espresso             : '3.1.0',
         testCore             : '1.1.1',
 
-        ktlint               : '0.34.2'
+        ktlint               : '0.34.2',
+        
+        flipper              : '0.27.0',
+        soloader             : '0.8.0'
 ]
 
 ext.gradlePlugins = [
@@ -211,5 +214,11 @@ ext.libraries = [
         espressoContrib      : "androidx.test.espresso:espresso-contrib:$versions.espresso",
         espressoIntents      : "androidx.test.espresso:espresso-intents:$versions.espresso",
 
-        ktlint               : "com.pinterest:ktlint:$versions.ktlint"
+        ktlint               : "com.pinterest:ktlint:$versions.ktlint",
+
+        flipperCore          : "com.facebook.flipper:flipper:$versions.flipper",
+        flipperLeakcanary    : "com.facebook.flipper:flipper-leakcanary-plugin:$versions.flipper",
+        flipperNetwork       : "com.facebook.flipper:flipper-network-plugin:$versions.flipper",
+        flipperNoop          : "com.facebook.flipper:flipper-noop:$versions.flipper",
+        soloader             : "com.facebook.soloader:soloader:$versions.soloader"
 ]
