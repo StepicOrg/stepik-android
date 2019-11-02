@@ -5,7 +5,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 import io.reactivex.internal.disposables.DisposableHelper
-import timber.log.Timber
 
 class ObservableReduceMap<T : Any, R : Any>(
     private val source: ObservableSource<T>,
@@ -31,8 +30,6 @@ class ObservableReduceMap<T : Any, R : Any>(
         }
 
         override fun onNext(t: T) {
-            Timber.d(Thread.currentThread().name + " $t")
-
             val newValue = transform(value, t)
             downstream.onNext(newValue)
             value = newValue
