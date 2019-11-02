@@ -115,7 +115,7 @@ constructor(
                             .filterIsInstance<CourseContentItem.SectionItem>()
                         val unitItems = courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
 
-                        courseContentItemMapper.replaceUnitPlaceholders(newItems, unitItems)
+                        courseContentItemMapper.replaceUnits(newItems, unitItems, progresses)
                     }
             }
             .map { course to it }
