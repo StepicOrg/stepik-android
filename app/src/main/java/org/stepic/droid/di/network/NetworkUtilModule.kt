@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
 import org.stepic.droid.di.AppSingleton
-import org.stepic.droid.util.StethoHelper
+import org.stepic.droid.util.DebugToolsHelper
 
 @Module
 abstract class NetworkUtilModule {
@@ -14,8 +14,8 @@ abstract class NetworkUtilModule {
         @AppSingleton
         @Provides
         @JvmStatic
-        @StethoInterceptor
-        fun provideStethoInterceptor(): Interceptor =
-                StethoHelper.getInterceptor()
+        @DebugInterceptors
+        fun provideStethoInterceptor(): List<Interceptor> =
+            DebugToolsHelper.getDebugInterceptors()
     }
 }
