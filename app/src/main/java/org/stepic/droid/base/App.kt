@@ -22,7 +22,7 @@ import org.stepic.droid.di.DaggerAppCoreComponent
 import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.util.NotificationChannelInitializer
-import org.stepic.droid.util.StethoHelper
+import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
 import ru.nobird.android.view.base.ui.extension.isMainProcess
 import timber.log.Timber
@@ -85,7 +85,7 @@ class App : MultiDexApplication() {
     private fun init() {
         application = this
 
-        StethoHelper.initStetho(this)
+        DebugToolsHelper.initDebugTools(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())

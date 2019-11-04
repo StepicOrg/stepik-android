@@ -5,11 +5,11 @@ import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
 import okhttp3.Interceptor
 
-object StethoHelper {
-    fun initStetho(app: Application) {
-        Stetho.initializeWithDefaults(app)
+object DebugToolsHelper {
+    fun initDebugTools(app: Application) {
+        // no op
     }
 
-    fun getInterceptor(): Interceptor =
-            StethoInterceptor()
+    fun getDebugInterceptors(): List<Interceptor> =
+        emptyList()
 }

@@ -146,3 +146,6 @@
 -keepclassmembers,allowobfuscation class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
+
+-keep class com.facebook.jni.** { *; }
+-keep class com.facebook.flipper.** { *; }

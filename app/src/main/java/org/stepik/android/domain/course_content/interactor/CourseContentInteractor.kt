@@ -3,13 +3,16 @@ package org.stepik.android.domain.course_content.interactor
 import com.google.firebase.perf.FirebasePerformance
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles.zip
+import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.toObservable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.util.concat
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.plus
-import org.stepic.droid.util.reduce
+import org.stepic.droid.util.reduceMap
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -76,37 +79,48 @@ constructor(
 
     private fun loadUnits(course: Course, items: List<CourseContentItem>): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable
-            .just(courseContentItemMapper.getUnitPlaceholdersIds(items))
+            .fromCallable { courseContentItemMapper.getUnitPlaceholdersIds(items) }
             .flatMap { unitIds ->
-                val sources = unitIds
-                    .asIterable()
+                val subject = PublishSubject.create<Array<String>>()
+
+                val unitsSource = unitIds
                     .chunked(UNITS_CHUNK_SIZE)
-                    .map { getUnits(it.toLongArray()) }
+                    .toObservable()
+                    .concatMapSingle { ids ->
+                        getUnits(ids.toLongArray())
+                            .flatMap { units ->
+                                lessonRepository
+                                    .getLessons(*units.mapToLongArray(Unit::lesson), primarySourceType = DataSourceType.REMOTE)
+                                    .map { units to it }
+                                    .doOnSuccess { subject.onNext(units.getProgresses()) }
+                            }
+                    }
 
-                reduce(sources, items) { newItems, units ->
-                    val sectionItems = newItems
-                        .filterIsInstance<CourseContentItem.SectionItem>()
+                val progressesSource =
+                    Observable.concat(
+                        Observable.just(emptyList()),
+                        subject
+                            .observeOn(Schedulers.io())
+                            .flatMapSingle { progressIds ->
+                                progressRepository.getProgresses(*progressIds)
+                            }
+                    )
 
-                    populateUnits(sectionItems, units)
-                        .map { unitItems ->
-                            courseContentItemMapper.replaceUnitPlaceholders(newItems, unitItems)
-                        }
-                }
+                Observables
+                    .combineLatest(progressesSource, unitsSource) { progresses, (units, lessons) ->
+                        Triple(units, lessons, progresses)
+                    }
+                    .reduceMap(items) { newItems, (units, lessons, progresses) ->
+                        val sectionItems = newItems
+                            .filterIsInstance<CourseContentItem.SectionItem>()
+                        val unitItems = courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
+
+                        courseContentItemMapper.replaceUnits(newItems, unitItems, progresses)
+                    }
             }
             .map { course to it }
 
     private fun getUnits(unitIds: LongArray): Single<List<Unit>> =
         unitRepository
             .getUnits(*unitIds, primarySourceType = DataSourceType.REMOTE)
-
-    private fun populateUnits(sectionItems: List<CourseContentItem.SectionItem>, units: List<Unit>): Single<List<CourseContentItem.UnitItem>> =
-        zip(
-            progressRepository
-                .getProgresses(*units.getProgresses()),
-            lessonRepository
-                .getLessons(*units.mapToLongArray(Unit::lesson), primarySourceType = DataSourceType.REMOTE)
-        )
-            .map { (progresses, lessons) ->
-                courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
-            }
 }
