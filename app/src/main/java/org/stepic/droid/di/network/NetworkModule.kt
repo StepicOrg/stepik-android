@@ -11,7 +11,7 @@ import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.features.achievements.repository.AchievementsRepositoryImpl
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepositoryImpl
-import org.stepic.droid.util.StethoHelper
+import org.stepic.droid.util.DebugToolsHelper
 
 @Module(includes = [AuthModule::class, ServicesModule::class])
 abstract class NetworkModule {
@@ -30,7 +30,7 @@ abstract class NetworkModule {
         @AppSingleton
         @JvmStatic
         @IntoSet
-        fun provideStethoInterceptor(): Interceptor =
-            StethoHelper.getInterceptor()
+        fun provideStethoInterceptor(): List<Interceptor> =
+            DebugToolsHelper.getDebugInterceptors()
     }
 }
