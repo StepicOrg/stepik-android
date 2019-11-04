@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
-public interface StepicEmptyAuthService {
+public interface EmptyAuthService {
 
     @GET("/")
     Call<Void> getStepicForFun(@Header("Accept-Language") String lang);

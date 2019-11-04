@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
+import android.webkit.CookieManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
@@ -238,6 +239,11 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideContentResolver(context: Context): ContentResolver =
             context.contentResolver
+
+        @JvmStatic
+        @Provides
+        @AppSingleton
+        internal fun provideCookieManager(): CookieManager = CookieManager.getInstance()
     }
 
 }

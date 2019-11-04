@@ -3,14 +3,11 @@ package org.stepic.droid.web;
 import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.social.ISocialType;
-import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.Reply;
 import org.stepik.android.model.Submission;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
@@ -45,14 +42,6 @@ public interface Api {
     enum TokenType {
         social, loginPassword
     }
-
-    Call<AuthenticationStepikResponse> authWithNativeCode(String code, SocialManager.SocialType type, @Nullable String email);
-
-    Call<AuthenticationStepikResponse> authWithLoginPassword(String login, String password);
-
-    Call<AuthenticationStepikResponse> authWithCode(String code);
-
-    Call<RegistrationResponse> signUp(String firstName, String secondName, String email, String password);
 
     Single<UserCoursesResponse> getUserCourses(int page);
 
@@ -109,31 +98,19 @@ public interface Api {
 
     Single<CourseResponse> getCoursesReactive(@NotNull long[] ids);
 
-    Call<AttemptResponse> createNewAttempt(long stepId);
-
     Single<AttemptResponse> createNewAttemptReactive(long stepId);
-
-    Call<SubmissionResponse> createNewSubmission(Reply reply, long attemptId);
 
     Single<SubmissionResponse> createNewSubmissionReactive(Submission submission);
 
-    Call<AttemptResponse> getExistingAttempts(long stepId);
-
     Single<AttemptResponse> getExistingAttemptsReactive(long stepId);
 
-    Call<SubmissionResponse> getSubmissions(long attemptId);
-
     Single<SubmissionResponse> getSubmissionsReactive(long attemptId);
-
-    Call<SubmissionResponse> getSubmissionForStep(long stepId);
 
     Single<SubmissionResponse> getSubmissionForStepReactive(long stepId);
 
     Call<Void> remindPassword(String email);
 
     Call<EmailAddressResponse> getEmailAddresses(long[] ids);
-
-    Call<DeviceResponse> getDevices();
 
     Call<DeviceResponse> getDevicesByRegistrationId(String token);
 
@@ -146,8 +123,6 @@ public interface Api {
     Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);
 
     Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead);
-
-    Call<Void> removeDevice(long deviceId);
 
     Single<CertificateResponse> getCertificates(long userId, int page);
 
@@ -172,7 +147,6 @@ public interface Api {
     Single<TagResponse> getFeaturedTags();
 
     Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag);
-
 
     Single<RecommendationsResponse> getNextRecommendations(long courseId, int count);
 

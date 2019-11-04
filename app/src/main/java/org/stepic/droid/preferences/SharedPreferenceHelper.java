@@ -19,7 +19,7 @@ import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.web.AuthenticationStepikResponse;
+import org.stepic.droid.web.OAuthResponse;
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
 import org.stepik.android.domain.step_content_text.model.FontSize;
 import org.stepik.android.model.user.EmailAddress;
@@ -101,7 +101,7 @@ public class SharedPreferenceHelper {
     private final static String LAST_SESSION_TIMESTAMP = "last_session_timestamp";
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
 
-    private AuthenticationStepikResponse cachedAuthStepikResponse = null;
+    private OAuthResponse cachedAuthStepikResponse = null;
 
 
     private final Context context;
@@ -712,7 +712,7 @@ public class SharedPreferenceHelper {
         }
     }
 
-    public void storeAuthInfo(AuthenticationStepikResponse response) {
+    public void storeAuthInfo(OAuthResponse response) {
         Gson gson = new Gson();
         String json = gson.toJson(response);
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
@@ -750,7 +750,7 @@ public class SharedPreferenceHelper {
     }
 
     @Nullable
-    public AuthenticationStepikResponse getAuthResponseFromStore() {
+    public OAuthResponse getAuthResponseFromStore() {
         if (cachedAuthStepikResponse != null) {
             return cachedAuthStepikResponse;
         }
@@ -761,7 +761,7 @@ public class SharedPreferenceHelper {
         }
 
         Gson gson = new GsonBuilder().create();
-        cachedAuthStepikResponse = gson.fromJson(json, AuthenticationStepikResponse.class);
+        cachedAuthStepikResponse = gson.fromJson(json, OAuthResponse.class);
         return cachedAuthStepikResponse;
     }
 

@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.gms.auth.api.credentials.Credential
 import kotlinx.android.synthetic.main.activity_login.*
+import okhttp3.ResponseBody
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
@@ -244,5 +245,9 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
     override fun onPause() {
         loginPresenter.detachView(this)
         super.onPause()
+    }
+
+    override fun onRegistrationFailed(responseBody: ResponseBody?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
