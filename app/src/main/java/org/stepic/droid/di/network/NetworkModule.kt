@@ -25,11 +25,11 @@ abstract class NetworkModule {
 
     @Module
     companion object {
-
         @Provides
         @AppSingleton
         @JvmStatic
         @IntoSet
+        @DebugInterceptors
         fun provideStethoInterceptor(): List<Interceptor> =
             DebugToolsHelper.getDebugInterceptors()
     }
