@@ -9,6 +9,7 @@ import org.stepic.droid.jsonHelpers.deserializers.ReplyDeserializer
 import org.stepic.droid.jsonHelpers.serializers.ReplySerializer
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.operations.DatabaseOperations
+import org.stepic.droid.util.getDate
 import org.stepic.droid.util.getInt
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
@@ -48,7 +49,7 @@ constructor(
             status = Submission.Status.values()[cursor.getInt(DbStructureSubmission.Columns.STATUS)],
             score = cursor.getString(DbStructureSubmission.Columns.SCORE),
             hint = cursor.getString(DbStructureSubmission.Columns.HINT),
-            time = cursor.getString(DbStructureSubmission.Columns.TIME),
+            time = cursor.getDate(DbStructureSubmission.Columns.TIME),
             _reply = cursor.getString(DbStructureSubmission.Columns.REPLY)?.toObject(gson),
             attempt = cursor.getLong(DbStructureSubmission.Columns.ATTEMPT_ID),
             session = cursor.getString(DbStructureSubmission.Columns.SESSION),
@@ -62,7 +63,7 @@ constructor(
             put(DbStructureSubmission.Columns.STATUS, persistentObject.status?.ordinal)
             put(DbStructureSubmission.Columns.SCORE, persistentObject.score)
             put(DbStructureSubmission.Columns.HINT, persistentObject.hint)
-            put(DbStructureSubmission.Columns.TIME, persistentObject.time)
+            put(DbStructureSubmission.Columns.TIME, persistentObject.time?.time)
             put(DbStructureSubmission.Columns.REPLY, persistentObject.reply?.let(gson::toJson))
             put(DbStructureSubmission.Columns.ATTEMPT_ID, persistentObject.attempt)
             put(DbStructureSubmission.Columns.SESSION, persistentObject.session)

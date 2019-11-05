@@ -4,6 +4,9 @@ import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.feedback.Feedback
+import org.stepik.android.model.util.readDate
+import org.stepik.android.model.util.writeDate
+import java.util.Date
 
 data class Submission(
     @SerializedName("id")
@@ -15,7 +18,7 @@ data class Submission(
     @SerializedName("hint")
     val hint: String? = null,
     @SerializedName("time")
-    val time: String? = null,
+    val time: Date? = null,
     @Transient
     val _reply: Reply? = null,
     @SerializedName("attempt")
@@ -52,7 +55,7 @@ data class Submission(
         parcel.writeInt(status?.ordinal ?: -1)
         parcel.writeString(score)
         parcel.writeString(hint)
-        parcel.writeString(time)
+        parcel.writeDate(time)
         parcel.writeParcelable(reply, flags)
         parcel.writeLong(attempt)
         parcel.writeString(session)
@@ -69,7 +72,7 @@ data class Submission(
                 Status.values().getOrNull(parcel.readInt()),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readString(),
+                parcel.readDate(),
 
                 parcel.readParcelable(Reply::class.java.classLoader),
                 parcel.readLong(),

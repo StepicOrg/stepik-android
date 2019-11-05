@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DividerItemDecoration
 import org.stepik.android.presentation.submission.SubmissionsPresenter
 import org.stepik.android.presentation.submission.SubmissionsView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,11 +21,13 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
+import org.stepik.android.model.user.User
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -43,6 +47,9 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     private var step: Step by argument()
 
@@ -64,6 +71,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
 
         injectComponent()
 
@@ -90,7 +98,17 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         viewStateDelegate.addState<SubmissionsView.State.ContentEmpty>(report_empty)
 
         submissionItemAdapter = DefaultDelegateAdapter()
-        submissionItemAdapter += SubmissionDataAdapterDelegate()
+        submissionItemAdapter += SubmissionDataAdapterDelegate(
+            actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
+                override fun onSubmissionClicked(data: SubmissionItem.Data) {
+
+                }
+
+                override fun onUserClicked(user: User) {
+                    screenManager.openProfile(activity, user.id)
+                }
+            }
+        )
         submissionItemAdapter += SubmissionPlaceholderAdapterDelegate()
 
         with(recycler) {
@@ -102,6 +120,10 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
                     submissionsPresenter.fetchNextPage(step.id)
                 }
             }
+
+            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+                ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
+            })
         }
 
         swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, forceUpdate = true) }
@@ -120,10 +142,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         dialog
             ?.window
             ?.let { window ->
-                window.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
+                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
             }
 
