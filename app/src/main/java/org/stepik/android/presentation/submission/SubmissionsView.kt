@@ -8,6 +8,7 @@ interface SubmissionsView {
         object Idle : State()
         object Loading : State()
         object NetworkError : State()
+        object ContentEmpty : State()
 
         class Content(val items: PagedList<SubmissionItem.Data>) : State()
         class ContentLoading(val items: PagedList<SubmissionItem.Data>) : State()

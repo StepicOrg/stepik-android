@@ -46,7 +46,15 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { state = SubmissionsView.State.Content(it) },
+                onSuccess = {
+                    state =
+                        if (it.isEmpty()) {
+                            SubmissionsView.State.ContentEmpty
+                        } else {
+                            SubmissionsView.State.Content(it)
+                        }
+
+                },
                 onError = {
                     if (oldState is SubmissionsView.State.Content) {
                         state = oldState

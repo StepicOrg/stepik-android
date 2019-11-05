@@ -14,9 +14,13 @@ import org.stepik.android.presentation.submission.SubmissionsView
 import androidx.recyclerview.widget.LinearLayoutManager
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import kotlinx.android.synthetic.main.dialog_submissions.*
+import kotlinx.android.synthetic.main.empty_default.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
@@ -42,6 +46,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     private lateinit var viewStateDelegate: ViewStateDelegate<SubmissionsView.State>
 
+    private val placeholders = List(10) { SubmissionItem.Placeholder }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setCanceledOnTouchOutside(false)
@@ -58,24 +64,36 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         submissionsPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(SubmissionsPresenter::class.java)
+        submissionsPresenter.fetchSubmissions(stepId)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.dialog_submissions, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<SubmissionsView.State.Idle>()
+        viewStateDelegate.addState<SubmissionsView.State.Loading>(swipeRefresh)
+        viewStateDelegate.addState<SubmissionsView.State.NetworkError>(error)
+        viewStateDelegate.addState<SubmissionsView.State.Content>(swipeRefresh)
+        viewStateDelegate.addState<SubmissionsView.State.ContentLoading>(swipeRefresh)
+        viewStateDelegate.addState<SubmissionsView.State.ContentEmpty>(report_empty)
 
         submissionItemAdapter = DefaultDelegateAdapter()
 
         with(recycler) {
             adapter = submissionItemAdapter
             layoutManager = LinearLayoutManager(context)
+
+            setOnPaginationListener { paginationDirection ->
+                if (paginationDirection == PaginationDirection.DOWN) {
+                    submissionsPresenter.fetchNextPage(stepId)
+                }
+            }
         }
+
+        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(stepId, forceUpdate = true) }
+        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(stepId, forceUpdate = true) }
     }
 
     private fun injectComponent() {
@@ -106,15 +124,22 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     }
 
     override fun setState(state: SubmissionsView.State) {
+        swipeRefresh.isRefreshing = false
+
         viewStateDelegate.switchState(state)
+        submissionItemAdapter.items =
+            when (state) {
+                is SubmissionsView.State.Loading ->
+                    placeholders
 
-        when (state) {
-            is SubmissionsView.State.Content ->
-                submissionItemAdapter.items = state.items
+                is SubmissionsView.State.Content ->
+                    state.items
 
-            is SubmissionsView.State.ContentLoading ->
-                submissionItemAdapter.items = state.items + SubmissionItem.Placeholder
-        }
+                is SubmissionsView.State.ContentLoading ->
+                    state.items + SubmissionItem.Placeholder
+
+                else -> emptyList()
+            }
     }
 
     override fun showNetworkError() {

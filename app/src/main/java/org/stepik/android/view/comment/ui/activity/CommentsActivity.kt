@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.empty_comments.*
@@ -23,8 +22,8 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.Step
 import org.stepik.android.model.comments.Comment
@@ -162,26 +161,7 @@ class CommentsActivity :
                     )
             ))
 
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
-                        ?: return
-
-                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-                    if (dy > 0) {
-                        val visibleItemCount = layoutManager.childCount
-                        val totalItemCount = layoutManager.itemCount
-
-                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                            post { commentsPresenter.onLoadMore(PaginationDirection.DOWN) }
-                        }
-                    } else {
-                        if (pastVisibleItems == 0) {
-                            post { commentsPresenter.onLoadMore(PaginationDirection.UP) }
-                        }
-                    }
-                }
-            })
+            setOnPaginationListener(commentsPresenter::onLoadMore)
 
             (itemAnimator as? SimpleItemAnimator)
                 ?.supportsChangeAnimations = false
