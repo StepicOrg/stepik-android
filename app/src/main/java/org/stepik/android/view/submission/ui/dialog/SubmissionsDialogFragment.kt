@@ -22,23 +22,24 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
+import org.stepik.android.model.Step
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     companion object {
-        fun newInstance(stepId: Long): DialogFragment =
+        fun newInstance(step: Step): DialogFragment =
             SubmissionsDialogFragment()
                 .apply {
-                    this.stepId = stepId
+                    this.step = step
                 }
     }
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private var stepId: Long by argument()
+    private var step: Step by argument()
 
     private lateinit var submissionsPresenter: SubmissionsPresenter
 
