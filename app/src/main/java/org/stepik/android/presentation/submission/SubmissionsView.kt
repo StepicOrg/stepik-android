@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.submission
 
-import org.stepik.android.presentation.submission.model.SubmissionItem
+import org.stepik.android.domain.submission.model.SubmissionItem
 
 interface SubmissionsView {
     sealed class State {

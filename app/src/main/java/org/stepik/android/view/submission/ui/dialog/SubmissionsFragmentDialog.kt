@@ -16,7 +16,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import kotlinx.android.synthetic.main.dialog_submissions.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepik.android.presentation.submission.model.SubmissionItem
+import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 

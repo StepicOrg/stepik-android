@@ -24,4 +24,8 @@ constructor(
     override fun getAttemptsForStep(stepId: Long): Single<List<Attempt>> =
         api.getExistingAttemptsReactive(stepId)
             .map(attemptMapper)
+
+    override fun getAttempts(vararg attemptIds: Long): Single<List<Attempt>> =
+        api.getExistingAttemptsReactive(attemptIds)
+            .map(attemptMapper)
 }
