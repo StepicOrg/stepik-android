@@ -16,18 +16,25 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import kotlinx.android.synthetic.main.dialog_submissions.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class SubmissionsFragmentDialog : DialogFragment(), SubmissionsView {
+class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     companion object {
-        fun newInstance(): DialogFragment =
-            SubmissionsFragmentDialog()
+        fun newInstance(stepId: Long): DialogFragment =
+            SubmissionsDialogFragment()
+                .apply {
+                    this.stepId = stepId
+                }
     }
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private var stepId: Long by argument()
 
     private lateinit var submissionsPresenter: SubmissionsPresenter
 
@@ -99,12 +106,18 @@ class SubmissionsFragmentDialog : DialogFragment(), SubmissionsView {
     }
 
     override fun setState(state: SubmissionsView.State) {
-        when (state) {
+        viewStateDelegate.switchState(state)
 
+        when (state) {
+            is SubmissionsView.State.Content ->
+                submissionItemAdapter.items = state.items
+
+            is SubmissionsView.State.ContentLoading ->
+                submissionItemAdapter.items = state.items + SubmissionItem.Placeholder
         }
     }
 
     override fun showNetworkError() {
-
+        view?.snackbar(messageRes = R.string.connectionProblems)
     }
 }

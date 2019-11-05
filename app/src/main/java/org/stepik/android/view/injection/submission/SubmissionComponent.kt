@@ -2,7 +2,7 @@ package org.stepik.android.view.injection.submission
 
 import dagger.Subcomponent
 import org.stepik.android.view.injection.attempt.AttemptDataModule
-import org.stepik.android.view.submission.ui.dialog.SubmissionsFragmentDialog
+import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 
 @Subcomponent(modules = [
     SubmissionModule::class,
@@ -15,5 +15,5 @@ interface SubmissionComponent {
         fun build(): SubmissionComponent
     }
 
-    fun inject(submissionsFragmentDialog: SubmissionsFragmentDialog)
+    fun inject(submissionsFragmentDialog: SubmissionsDialogFragment)
 }
