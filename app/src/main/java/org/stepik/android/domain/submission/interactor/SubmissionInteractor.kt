@@ -1,11 +1,10 @@
 package org.stepik.android.domain.submission.interactor
 
 import io.reactivex.Single
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapNotNullPaged
-import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mapToLongArray
-import org.stepic.droid.util.mutate
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Submission
@@ -17,11 +16,12 @@ class SubmissionInteractor
 @Inject
 constructor(
     private val submissionRepository: SubmissionRepository,
-    private val attemptRepository: AttemptRepository
+    private val attemptRepository: AttemptRepository,
+    private val userPreferences: UserPreferences
 ) {
-    fun getSubmissionItems(stepId: Long, page: Int = 1): Single<PagedList<SubmissionItem>> =
+    fun getSubmissionItems(stepId: Long, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
         submissionRepository
-            .getSubmissionsForStep(stepId, page = page)
+            .getSubmissionsForStep(stepId, userPreferences.userId, page)
             .flatMap { submissions ->
                 val attemptIds = submissions.mapToLongArray(Submission::attempt)
                 attemptRepository
@@ -31,13 +31,13 @@ constructor(
                     }
             }
 
-    private fun mapToSubmissionItems(submissions: PagedList<Submission>, attempts: List<Attempt>): PagedList<SubmissionItem> =
+    private fun mapToSubmissionItems(submissions: PagedList<Submission>, attempts: List<Attempt>): PagedList<SubmissionItem.Data> =
         submissions
             .mapNotNullPaged { submission ->
                 val attempt = attempts
                     .find { it.id == submission.attempt }
                     ?: return@mapNotNullPaged null
 
-                SubmissionItem(submission, attempt)
+                SubmissionItem.Data(submission, attempt)
             }
 }
