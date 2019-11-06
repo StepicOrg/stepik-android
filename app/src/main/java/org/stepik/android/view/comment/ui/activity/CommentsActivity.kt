@@ -300,7 +300,7 @@ class CommentsActivity :
 
     private fun showSolutionDialog(discussionId: Long, solution: CommentItem.Data.Solution) {
         SolutionCommentDialogFragment
-            .newInstance(intent.getParcelableExtra(EXTRA_STEP), discussionThread, discussionId, solution.attempt, solution.submission)
+            .newInstance(intent.getParcelableExtra(EXTRA_STEP), solution.attempt, solution.submission, discussionThread, discussionId)
             .showIfNotExists(supportFragmentManager, SolutionCommentDialogFragment.TAG)
     }
 

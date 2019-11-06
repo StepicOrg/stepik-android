@@ -27,11 +27,14 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
+import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
@@ -101,7 +104,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         submissionItemAdapter += SubmissionDataAdapterDelegate(
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
-
+                    showSolution(data)
                 }
 
                 override fun onUserClicked(user: User) {
@@ -176,5 +179,11 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     override fun showNetworkError() {
         view?.snackbar(messageRes = R.string.connectionProblems)
+    }
+
+    private fun showSolution(submissionItem: SubmissionItem.Data) {
+        SolutionCommentDialogFragment
+            .newInstance(step, submissionItem.attempt, submissionItem.submission)
+            .showIfNotExists(fragmentManager ?: return, SolutionCommentDialogFragment.TAG)
     }
 }
