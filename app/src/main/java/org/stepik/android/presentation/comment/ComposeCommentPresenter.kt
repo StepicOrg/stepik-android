@@ -10,6 +10,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.submission.interactor.LastSubmissionInteractor
+import org.stepik.android.model.Submission
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
@@ -47,6 +48,7 @@ constructor(
         if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS &&
             parent == null
         ) {
+            state = ComposeCommentView.State.Loading
             compositeDisposable += lastSubmissionInteractor
                 .getLastSubmission(target)
                 .observeOn(mainScheduler)
@@ -57,6 +59,12 @@ constructor(
                 )
         } else {
             state = ComposeCommentView.State.Create(submission = null)
+        }
+    }
+
+    fun onSubmissionSelected(submission: Submission) {
+        if (state is ComposeCommentView.State.Create) {
+            state = ComposeCommentView.State.Create(submission)
         }
     }
 

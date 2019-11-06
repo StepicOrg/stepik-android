@@ -27,11 +27,14 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.model.user.User
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapters.selection.SelectionHelper
+import ru.nobird.android.ui.adapters.selection.SingleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -40,10 +43,12 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     companion object {
         const val TAG = "SubmissionsDialogFragment"
 
-        fun newInstance(step: Step): DialogFragment =
+        fun newInstance(step: Step, isSelectionEnabled: Boolean = false, selectedSubmissionId: Long = -1): DialogFragment =
             SubmissionsDialogFragment()
                 .apply {
                     this.step = step
+                    this.isSelectionEnabled = isSelectionEnabled
+                    this.selectedSubmissionId = selectedSubmissionId
                 }
     }
 
@@ -54,6 +59,10 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     internal lateinit var screenManager: ScreenManager
 
     private var step: Step by argument()
+    private var isSelectionEnabled: Boolean by argument()
+    private var selectedSubmissionId: Long by argument()
+
+    private var selectionHelper: SelectionHelper? = null
 
     private lateinit var submissionsPresenter: SubmissionsPresenter
 
@@ -100,7 +109,15 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         viewStateDelegate.addState<SubmissionsView.State.ContentEmpty>(report_empty)
 
         submissionItemAdapter = DefaultDelegateAdapter()
+        selectionHelper =
+            if (isSelectionEnabled) {
+                SingleChoiceSelectionHelper(submissionItemAdapter)
+            } else {
+                null
+            }
+
         submissionItemAdapter += SubmissionDataAdapterDelegate(
+            selectionHelper = selectionHelper,
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
                     showSolution(data)
@@ -184,5 +201,9 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         SolutionCommentDialogFragment
             .newInstance(step, submissionItem.attempt, submissionItem.submission)
             .showIfNotExists(fragmentManager ?: return, SolutionCommentDialogFragment.TAG)
+    }
+
+    interface Callback {
+        fun onSubmissionSelected(submission: Submission)
     }
 }

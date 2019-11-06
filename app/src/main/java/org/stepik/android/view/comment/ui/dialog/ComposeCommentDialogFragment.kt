@@ -22,6 +22,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
@@ -39,7 +40,8 @@ import kotlin.error
 class ComposeCommentDialogFragment :
     DialogFragment(),
     ComposeCommentView,
-    DiscardTextDialogFragment.Callback {
+    DiscardTextDialogFragment.Callback,
+    SubmissionsDialogFragment.Callback {
 
     companion object {
         const val TAG = "ComposeCommentDialogFragment"
@@ -184,7 +186,7 @@ class ComposeCommentDialogFragment :
 
     private fun showSubmissions() {
         SubmissionsDialogFragment
-            .newInstance(step)
+            .newInstance(step, isSelectionEnabled = true, selectedSubmissionId = -1)
             .showIfNotExists(childFragmentManager, SubmissionsDialogFragment.TAG)
     }
 
@@ -254,6 +256,10 @@ class ComposeCommentDialogFragment :
 
     override fun onDiscardConfirmed() {
         super.dismiss()
+    }
+
+    override fun onSubmissionSelected(submission: Submission) {
+        composeCommentPresenter.onSubmissionSelected(submission)
     }
 
     interface Callback {

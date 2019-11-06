@@ -14,8 +14,10 @@ import org.stepik.android.view.base.ui.mapper.DateMapper
 import org.stepik.android.view.submission.ui.delegate.setSubmission
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import ru.nobird.android.ui.adapters.selection.SelectionHelper
 
 class SubmissionDataAdapterDelegate(
+    private val selectionHelper: SelectionHelper?,
     private val actionListener: ActionListener
 ) : AdapterDelegate<SubmissionItem, DelegateViewHolder<SubmissionItem>>() {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SubmissionItem> =
