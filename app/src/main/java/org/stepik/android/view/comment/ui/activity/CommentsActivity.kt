@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -117,7 +116,7 @@ class CommentsActivity :
         commentsAdapter += CommentDataAdapterDelegate(
             actionListener = object : CommentDataAdapterDelegate.ActionListener {
                 override fun onReplyClicked(parentCommentId: Long) {
-                    showCommentComposeDialog(step.id, parent = parentCommentId)
+                    showCommentComposeDialog(step, parent = parentCommentId)
                 }
 
                 override fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
@@ -125,7 +124,7 @@ class CommentsActivity :
                 }
 
                 override fun onEditCommentClicked(commentDataItem: CommentItem.Data) {
-                    showCommentComposeDialog(step.id, commentDataItem.comment.parent, commentDataItem.comment)
+                    showCommentComposeDialog(step, commentDataItem.comment.parent, commentDataItem.comment)
                 }
 
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
@@ -184,8 +183,7 @@ class CommentsActivity :
             emptyComments.placeholderMessage.setText(R.string.step_solutions_empty)
         }
 
-        composeCommentButton.isVisible = discussionThread.thread == DiscussionThread.THREAD_DEFAULT
-        composeCommentButton.setOnClickListener { showCommentComposeDialog(step.id) }
+        composeCommentButton.setOnClickListener { showCommentComposeDialog(step) }
         commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
 
@@ -201,7 +199,7 @@ class CommentsActivity :
             .takeIf { it != -1L }
 
         if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
-            showCommentComposeDialog(step.id)
+            showCommentComposeDialog(step)
             intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
         }
 
@@ -282,11 +280,11 @@ class CommentsActivity :
         invalidateOptionsMenu()
     }
 
-    private fun showCommentComposeDialog(stepId: Long, parent: Long? = null, comment: Comment? = null) {
+    private fun showCommentComposeDialog(step: Step, parent: Long? = null, comment: Comment? = null) {
         analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
 
         ComposeCommentDialogFragment
-            .newInstance(discussionThread = discussionThread, target = stepId, parent = parent, comment = comment)
+            .newInstance(discussionThread, step, parent, comment)
             .showIfNotExists(supportFragmentManager, ComposeCommentDialogFragment.TAG)
     }
 

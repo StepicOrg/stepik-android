@@ -21,14 +21,18 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.comment.model.CommentsData
+import org.stepik.android.model.Step
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
 import org.stepik.android.presentation.video_player.VideoPlayerView
+import org.stepik.android.view.submission.ui.delegate.setSubmission
+import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 import kotlin.error
 
@@ -45,11 +49,11 @@ class ComposeCommentDialogFragment :
 
         /**
          * [discussionThread] - current discussion thread
-         * [target] - comment target, e.g. step id
+         * [step] - comment target, e.g. step id
          * [parent] - parent comment id
          * [comment] - comment if comment should be edited
          */
-        fun newInstance(discussionThread: DiscussionThread, target: Long, parent: Long?, comment: Comment?): DialogFragment =
+        fun newInstance(discussionThread: DiscussionThread, step: Step, parent: Long?, comment: Comment?): DialogFragment =
             ComposeCommentDialogFragment().apply {
                 this.arguments = Bundle(4)
                     .also {
@@ -57,7 +61,7 @@ class ComposeCommentDialogFragment :
                         it.putParcelable(ARG_COMMENT, comment)
                     }
                 this.discussionThread = discussionThread
-                this.target = target
+                this.step = step
             }
     }
 
@@ -67,7 +71,7 @@ class ComposeCommentDialogFragment :
     private lateinit var composeCommentPresenter: ComposeCommentPresenter
 
     private var discussionThread: DiscussionThread by argument()
-    private var target: Long by argument()
+    private var step: Step by argument()
     private val parent: Long? by lazy { arguments?.getLong(ARG_PARENT, -1)?.takeIf { it != -1L } }
     private val comment: Comment? by lazy { arguments?.getParcelable<Comment>(ARG_COMMENT) }
 
@@ -115,9 +119,11 @@ class ComposeCommentDialogFragment :
         viewStateDelegate.addState<ComposeCommentView.State.Idle>(commentContent)
         viewStateDelegate.addState<ComposeCommentView.State.Loading>(commentContent)
         viewStateDelegate.addState<ComposeCommentView.State.NetworkError>(error)
+        viewStateDelegate.addState<ComposeCommentView.State.Create>(commentContent, commentSolution)
         viewStateDelegate.addState<ComposeCommentView.State.Complete>(commentContent)
 
-        centeredToolbarTitle.setText(R.string.comment_compose_title)
+        centeredToolbarTitle.setText(
+            if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) R.string.solutions_compose_title else R.string.comment_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.comment_compose_menu)
@@ -142,6 +148,16 @@ class ComposeCommentDialogFragment :
                 invalidateMenuState()
             }
         })
+
+        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+
+        commentSolution.setOnClickListener { showSubmissions() }
+
+        setDataToPresenter()
+    }
+
+    private fun setDataToPresenter(forceUpdate: Boolean = false) {
+        composeCommentPresenter.onData(discussionThread, step.id, parent, forceUpdate)
     }
 
     private fun invalidateMenuState() {
@@ -166,6 +182,12 @@ class ComposeCommentDialogFragment :
         super.onStop()
     }
 
+    private fun showSubmissions() {
+        SubmissionsDialogFragment
+            .newInstance(step)
+            .showIfNotExists(childFragmentManager, SubmissionsDialogFragment.TAG)
+    }
+
     private fun submit() {
         commentEditText.hideKeyboard()
         val oldComment = comment
@@ -174,7 +196,7 @@ class ComposeCommentDialogFragment :
 
         if (oldComment == null) {
             val comment = Comment(
-                target = target,
+                target = step.id,
                 parent = parent,
                 text = text,
                 thread = discussionThread.thread
@@ -187,16 +209,19 @@ class ComposeCommentDialogFragment :
     }
 
     override fun setState(state: ComposeCommentView.State) {
-        when (state) {
-            ComposeCommentView.State.Idle ->
-                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+        if (state is ComposeCommentView.State.Loading) {
+            ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
 
-            ComposeCommentView.State.Loading ->
-                ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+        when (state) {
+            is ComposeCommentView.State.Create -> {
+                commentSolution.setSubmission(state.submission)
+                commentSolution.isEnabled = comment == null
+            }
 
             is ComposeCommentView.State.Complete -> {
-                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
-
                 (activity as? Callback
                     ?: parentFragment as? Callback
                     ?: targetFragment as? Callback)

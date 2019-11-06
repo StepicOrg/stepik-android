@@ -771,6 +771,7 @@
 
     <!-- Comment -->
     <string name="comment_compose_title">Comment</string>
+    <string name="solutions_compose_title">Solution</string>
     <string name="comment_compose_hint">Add your comment</string>
     <string name="comment_action_create">Write comment</string>
     <string name="comment_action_edit">Edit</string>

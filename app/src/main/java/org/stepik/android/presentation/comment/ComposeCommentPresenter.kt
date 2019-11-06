@@ -11,6 +11,7 @@ import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.submission.interactor.LastSubmissionInteractor
 import org.stepik.android.model.comments.Comment
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -37,16 +38,44 @@ constructor(
         view.setState(state)
     }
 
+    fun onData(discussionThread: DiscussionThread, target: Long, parent: Long?, forceUpdate: Boolean = false) {
+        if (state != ComposeCommentView.State.Idle &&
+            !(state == ComposeCommentView.State.NetworkError && forceUpdate)) {
+            return
+        }
+
+        if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS &&
+            parent == null
+        ) {
+            compositeDisposable += lastSubmissionInteractor
+                .getLastSubmission(target)
+                .observeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribeBy(
+                    onSuccess = { state = ComposeCommentView.State.Create(it) },
+                    onError = { state = ComposeCommentView.State.NetworkError }
+                )
+        } else {
+            state = ComposeCommentView.State.Create(submission = null)
+        }
+    }
+
     fun createComment(comment: Comment) {
+        val oldState = (state as? ComposeCommentView.State.Create)
+            ?: return
+
         replaceComment(
             composeCommentInteractor
-                .createComment(comment)
+                .createComment(comment.copy(submission = oldState.submission?.id))
                 .doOnSuccess { analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY) },
             isCommentCreated = true
         )
     }
 
     fun updateComment(comment: Comment) {
+        val oldState = (state as? ComposeCommentView.State.Create)
+            ?: return
+
         replaceComment(composeCommentInteractor.saveComment(comment), isCommentCreated = false)
     }
 

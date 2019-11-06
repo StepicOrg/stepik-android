@@ -738,6 +738,7 @@
     <!-- Comment -->
     <string name="comment_compose_hint">Оставьте комментарий</string>
     <string name="comment_compose_title">Комментарий</string>
+    <string name="solutions_compose_title">Решение</string>
     <string name="comment_action_create">Написать комментарий</string>
     <string name="comment_action_edit">Изменить</string>
     <string name="comment_action_remove">Удалить</string>
