@@ -53,7 +53,6 @@ constructor(
                         } else {
                             SubmissionsView.State.Content(it)
                         }
-
                 },
                 onError = {
                     if (oldState is SubmissionsView.State.Content) {

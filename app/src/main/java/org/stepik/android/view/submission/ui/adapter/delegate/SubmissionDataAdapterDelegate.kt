@@ -84,7 +84,6 @@ class SubmissionDataAdapterDelegate(
                     actionListener.onSubmissionClicked(dataItem)
             }
         }
-
     }
 
     interface ActionListener {
