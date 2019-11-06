@@ -3,7 +3,7 @@ ext.versions = [
         name                 : '1.100',
 
         minSdk               : 16,
-        targetSdk            : 26,
+        targetSdk            : 28,
         compileSdk           : 28,
         buildTools           : '28.0.3',
 
@@ -47,7 +47,7 @@ ext.versions = [
         glideAnnotations     : '4.9.0',
 
         amplitude            : '2.23.2',
-        appMetrica           : '2.78',
+        appMetrica           : '3.8.0',
         branch               : '2.+',
         installreferrer      : '1.0',
 
