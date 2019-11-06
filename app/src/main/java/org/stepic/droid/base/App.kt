@@ -11,6 +11,7 @@ import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import com.vk.sdk.VKSdk
 import com.yandex.metrica.YandexMetrica
+import com.yandex.metrica.YandexMetricaConfig
 import io.branch.referral.Branch
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.analytic.experiments.SplitTestsHolder
@@ -120,7 +121,7 @@ class App : MultiDexApplication() {
         componentManager = ComponentManagerImpl(component)
 
         // init AppMetrica SDK
-        YandexMetrica.activate(applicationContext, "fd479031-bdf4-419e-8d8f-6895aab23502")
+        YandexMetrica.activate(applicationContext, YandexMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build())
         YandexMetrica.enableActivityAutoTracking(this)
 
         Branch.getAutoInstance(this)
