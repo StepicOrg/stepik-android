@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.dialog_compose_comment.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -24,9 +25,12 @@ import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
+import org.stepik.android.presentation.video_player.VideoPlayerView
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
+import kotlin.error
 
 class ComposeCommentDialogFragment :
     DialogFragment(),
@@ -70,6 +74,8 @@ class ComposeCommentDialogFragment :
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
+    private lateinit var viewStateDelegate: ViewStateDelegate<ComposeCommentView.State>
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = object : Dialog(requireContext(), theme) {
             override fun onBackPressed() {
@@ -105,6 +111,12 @@ class ComposeCommentDialogFragment :
         inflater.inflate(R.layout.dialog_compose_comment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<ComposeCommentView.State.Idle>(commentContent)
+        viewStateDelegate.addState<ComposeCommentView.State.Loading>(commentContent)
+        viewStateDelegate.addState<ComposeCommentView.State.NetworkError>(error)
+        viewStateDelegate.addState<ComposeCommentView.State.Complete>(commentContent)
+
         centeredToolbarTitle.setText(R.string.comment_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)

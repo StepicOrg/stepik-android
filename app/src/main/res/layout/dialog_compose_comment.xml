@@ -1,21 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/commentEditText"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:inputType="textMultiLine"
-        android:imeOptions="flagNoFullscreen"
-        android:background="@android:color/transparent"
-        android:hint="@string/comment_compose_hint"
-        android:padding="16dp"
-        android:gravity="top|start"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:id="@+id/commentContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/commentSolution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_comment_item_solution"
+
+                app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
+                app:layout_constraintTop_toBottomOf="@id/commentText"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                android:padding="12dp"
+                android:drawablePadding="8dp"
+
+                tools:drawableStart="@drawable/ic_step_quiz_wrong_wide"
+                tools:drawableEnd="@drawable/ic_arrow_forward"
+
+                tools:text="Решение 31293193128392" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/commentEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="textMultiLine"
+                android:imeOptions="flagNoFullscreen"
+                android:background="@android:color/transparent"
+                android:hint="@string/comment_compose_hint"
+                android:padding="16dp"
+                android:gravity="top|start" />
+        </LinearLayout>
+
+        <include
+            layout="@layout/error_no_connection_with_button" />
+
+    </FrameLayout>
 
     <include
         android:id="@+id/appBarLayout"

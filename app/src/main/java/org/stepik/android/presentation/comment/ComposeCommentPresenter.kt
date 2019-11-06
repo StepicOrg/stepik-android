@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.CommentsData
+import org.stepik.android.domain.submission.interactor.LastSubmissionInteractor
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
@@ -18,6 +19,7 @@ class ComposeCommentPresenter
 constructor(
     private val analytic: Analytic,
     private val composeCommentInteractor: ComposeCommentInteractor,
+    private val lastSubmissionInteractor: LastSubmissionInteractor,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,

@@ -6,6 +6,7 @@ interface ComposeCommentView {
     sealed class State {
         object Idle : State()
         object Loading : State()
+        object NetworkError : State()
         class Complete(val commentsData: CommentsData, val isCommentCreated: Boolean) : State()
     }
 
