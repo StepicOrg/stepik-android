@@ -11,7 +11,6 @@ import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.features.stories.storage.dao.ViewedStoryTemplatesDaoImpl
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter
 import org.stepic.droid.model.BlockPersistentWrapper
-import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.ViewedNotification
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
@@ -23,7 +22,6 @@ import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.AdaptiveExpDaoImpl
 import org.stepic.droid.storage.dao.AssignmentDaoImpl
 import org.stepic.droid.storage.dao.BlockDaoImpl
-import org.stepic.droid.storage.dao.CalendarSectionDaoImpl
 import org.stepic.droid.storage.dao.CourseDaoImpl
 import org.stepic.droid.storage.dao.CourseListDao
 import org.stepic.droid.storage.dao.CourseListDaoImpl
@@ -46,8 +44,8 @@ import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
-import org.stepik.android.cache.comment_banner.dao.CommentBannerDao
-import org.stepik.android.cache.comment_banner.dao.CommentBannerDaoImpl
+import org.stepik.android.cache.download.dao.DownloadedCoursesDao
+import org.stepik.android.cache.download.dao.DownloadedCoursesDaoImpl
 import org.stepik.android.cache.discussion_thread.dao.DiscussionThreadDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
@@ -111,10 +109,6 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun provideViewAssignment(viewAssignmentDao: ViewAssignmentDaoImpl): IDao<ViewAssignment>
-
-    @StorageSingleton
-    @Binds
-    internal abstract fun provideCalendarSection(calendarSectionDao: CalendarSectionDaoImpl): IDao<CalendarSection>
 
     @StorageSingleton
     @Binds
@@ -202,10 +196,6 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun provideCommentsBannerDao(commentsBannerDaoImpl: CommentBannerDaoImpl): CommentBannerDao
-
-    @StorageSingleton
-    @Binds
     internal abstract fun bindCourseReviewSummaryDao(courseReviewSummaryDaoImpl: CourseReviewSummaryDaoImpl): IDao<CourseReviewSummary>
 
     @StorageSingleton
@@ -219,6 +209,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindDiscussionThreadDao(discussionThreadDaoImpl: DiscussionThreadDaoImpl): IDao<DiscussionThread>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindDownloadeCoursesDao(downloadedCoursesDaoImpl: DownloadedCoursesDaoImpl): DownloadedCoursesDao
 
     @Module
     companion object {

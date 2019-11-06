@@ -29,7 +29,7 @@ import org.stepic.droid.configuration.RemoteConfig;
 import org.stepic.droid.core.ScreenManager;
 import org.stepic.droid.core.StepikLogoutManager;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.di.network.StethoInterceptor;
+import org.stepic.droid.di.network.DebugInterceptors;
 import org.stepic.droid.jsonHelpers.adapters.CodeOptionsAdapterFactory;
 import org.stepic.droid.jsonHelpers.adapters.UTCDateAdapter;
 import org.stepic.droid.jsonHelpers.deserializers.DatasetDeserializer;
@@ -122,7 +122,7 @@ import timber.log.Timber;
 @AppSingleton
 public class ApiImpl implements Api {
     private final int TIMEOUT_IN_SECONDS = 60;
-    private final Interceptor stethoInterceptor;
+    private final List<Interceptor> debugInterceptors;
     private static final String USER_AGENT_NAME = "User-Agent";
 
     private final Context context;
@@ -150,7 +150,7 @@ public class ApiImpl implements Api {
             ScreenManager screenManager,
             UserAgentProvider userAgentProvider,
             FirebaseRemoteConfig firebaseRemoteConfig,
-            @StethoInterceptor Interceptor stethoInterceptor
+            @DebugInterceptors List<Interceptor> debugInterceptors
     ) {
         this.context = context;
         this.sharedPreference = sharedPreference;
@@ -159,7 +159,7 @@ public class ApiImpl implements Api {
         this.stepikLogoutManager = stepikLogoutManager;
         this.screenManager = screenManager;
         this.userAgentProvider = userAgentProvider;
-        this.stethoInterceptor = stethoInterceptor;
+        this.debugInterceptors = debugInterceptors;
 
         makeOauthServiceWithNewAuthHeader(this.sharedPreference.isLastTokenSocial() ? TokenType.social : TokenType.loginPassword);
 
@@ -332,7 +332,9 @@ public class ApiImpl implements Api {
             }
         };
         okHttpBuilder.addNetworkInterceptor(interceptor);
-        okHttpBuilder.addNetworkInterceptor(this.stethoInterceptor);
+        for (Interceptor debugInterceptor : debugInterceptors) {
+            okHttpBuilder.addNetworkInterceptor(debugInterceptor);
+        }
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         OkHttpClient okHttpClient = okHttpBuilder.build();
         return new Retrofit.Builder()
@@ -357,7 +359,9 @@ public class ApiImpl implements Api {
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         okHttpBuilder.addNetworkInterceptor(interceptor);
-        okHttpBuilder.addNetworkInterceptor(this.stethoInterceptor);
+        for (Interceptor debugInterceptor : debugInterceptors) {
+            okHttpBuilder.addNetworkInterceptor(debugInterceptor);
+        }
         okHttpBuilder.protocols(Collections.singletonList(Protocol.HTTP_1_1));
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
@@ -439,7 +443,9 @@ public class ApiImpl implements Api {
         };
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
         okHttpBuilder.addNetworkInterceptor(interceptor);
-        okHttpBuilder.addNetworkInterceptor(this.stethoInterceptor);
+        for (Interceptor debugInterceptor : debugInterceptors) {
+            okHttpBuilder.addNetworkInterceptor(debugInterceptor);
+        }
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
@@ -723,7 +729,9 @@ public class ApiImpl implements Api {
         };
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
         okHttpBuilder.addNetworkInterceptor(interceptor);
-        okHttpBuilder.addNetworkInterceptor(this.stethoInterceptor);
+        for (Interceptor debugInterceptor : debugInterceptors) {
+            okHttpBuilder.addNetworkInterceptor(debugInterceptor);
+        }
         setTimeout(okHttpBuilder, TIMEOUT_IN_SECONDS);
         Retrofit notLogged = new Retrofit.Builder()
                 .baseUrl(config.getBaseUrl())
