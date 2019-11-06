@@ -811,4 +811,7 @@
 
     <!-- Downloads -->
     <string name="downloads_title">Downloaded courses</string>
+
+    <!-- Submissions -->
+    <string name="submissions_title">Submissions</string>
 </resources>

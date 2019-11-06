@@ -83,6 +83,7 @@ import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
 import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
+import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
@@ -183,6 +184,8 @@ interface AppCoreComponent {
     fun downloadComponentBuilder(): DownloadComponent.Builder
 
     fun fontSizeComponentBuilder(): FontSizeComponent.Builder
+
+    fun submissionComponentBuilder(): SubmissionComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

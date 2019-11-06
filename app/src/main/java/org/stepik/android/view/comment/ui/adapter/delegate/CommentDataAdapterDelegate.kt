@@ -81,7 +81,7 @@ class CommentDataAdapterDelegate(
             commentSolution.setOnClickListener(this)
 
             commentUserIcon.setOnClickListener(this)
-            commentUserIcon.setOnClickListener(this)
+            commentUserName.setOnClickListener(this)
 
             commentLike.setCompoundDrawables(start = R.drawable.ic_comment_like)
             commentDislike.setCompoundDrawables(start = R.drawable.ic_comment_dislike)
