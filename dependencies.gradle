@@ -1,9 +1,9 @@
 ext.versions = [
-        code                 : 2048,
-        name                 : '1.100',
+        code                 : 2049,
+        name                 : '1.100.1',
 
         minSdk               : 16,
-        targetSdk            : 26,
+        targetSdk            : 28,
         compileSdk           : 28,
         buildTools           : '28.0.3',
 
@@ -47,11 +47,11 @@ ext.versions = [
         glideAnnotations     : '4.9.0',
 
         amplitude            : '2.23.2',
-        appMetrica           : '2.78',
+        appMetrica           : '3.8.0',
         branch               : '2.+',
         installreferrer      : '1.0',
 
-        lottie               : '2.3.1',
+        lottie               : '2.7.0',
 
         googleauth           : '16.0.1',
         firebaseAppindexing  : '17.1.0',
