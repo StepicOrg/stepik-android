@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <include layout="@layout/view_centered_appbar"/>
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/view_centered_toolbar"/>
+
+        <org.stepic.droid.ui.custom.AutoCompleteSearchView
+            android:id="@+id/searchViewToolbar"
+            android:visibility="gone"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
+            app:defaultQueryHint="find_courses_hint"
+            app:queryHint="@string/find_courses_hint"
+            android:background="@drawable/bg_catalog_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/toolbarShadow"
+            android:visibility="gone"
+            layout="@layout/drop_shadow_view" />
+
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <org.stepic.droid.ui.custom.TouchDispatchableFrameLayout
         android:id="@+id/root_fragment_view"

@@ -176,7 +176,9 @@ class CatalogFragment : FragmentBase(),
 
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
-        toolbarShadow.isVisible = true
+        if (android.os.Build.VERSION.SDK_INT < 21) {
+            toolbarShadow.isVisible = true
+        }
         searchView.isVisible = true
         searchView.onActionViewExpanded()
         searchView.clearFocus()
