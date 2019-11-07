@@ -8,9 +8,46 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
-        layout="@layout/view_centered_appbar"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include
+            android:visibility="visible"
+            layout="@layout/view_centered_toolbar"/>
+
+        <FrameLayout
+            android:id="@+id/catalogNewSearchBar"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+            <EditText
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:paddingLeft="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingRight="16dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/bg_catalog_search_bar"
+                android:drawablePadding="8dp"
+                android:drawableLeft="@drawable/ic_action_search"
+                android:drawableStart="@drawable/ic_action_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <include layout="@layout/drop_shadow_view" />
+
+        </FrameLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
 
     <FrameLayout
         android:id="@+id/catalogContainer"
