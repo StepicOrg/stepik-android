@@ -39,26 +39,29 @@ constructor(
         view.setState(state)
     }
 
-    fun onData(discussionThread: DiscussionThread, target: Long, parent: Long?, forceUpdate: Boolean = false) {
+    fun onData(discussionThread: DiscussionThread, target: Long, parent: Long?, submission: Submission?, forceUpdate: Boolean = false) {
         if (state != ComposeCommentView.State.Idle &&
             !(state == ComposeCommentView.State.NetworkError && forceUpdate)) {
             return
         }
 
         if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS &&
-            parent == null
+            parent == null &&
+            submission == null
         ) {
             state = ComposeCommentView.State.Loading
+
             compositeDisposable += lastSubmissionInteractor
                 .getLastSubmission(target)
                 .observeOn(mainScheduler)
                 .subscribeOn(backgroundScheduler)
                 .subscribeBy(
                     onSuccess = { state = ComposeCommentView.State.Create(it) },
+                    onComplete = { state = ComposeCommentView.State.NetworkError },
                     onError = { state = ComposeCommentView.State.NetworkError }
                 )
         } else {
-            state = ComposeCommentView.State.Create(submission = null)
+            state = ComposeCommentView.State.Create(submission)
         }
     }
 

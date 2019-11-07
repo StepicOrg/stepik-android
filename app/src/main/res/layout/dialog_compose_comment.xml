@@ -19,20 +19,30 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/commentSolution"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_comment_item_solution"
+                android:layout_height="48dp"
+                android:background="?selectableItemBackground"
 
                 app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
                 app:layout_constraintTop_toBottomOf="@id/commentText"
                 app:layout_constraintEnd_toEndOf="parent"
 
-                android:padding="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
                 android:drawablePadding="8dp"
+                android:gravity="center_vertical"
 
                 tools:drawableStart="@drawable/ic_step_quiz_wrong_wide"
-                tools:drawableEnd="@drawable/ic_arrow_forward"
+                tools:drawableEnd="@drawable/ic_nav_arrow_right"
 
                 tools:text="Решение 31293193128392" />
+
+            <View
+                android:id="@+id/commentSolutionSeparator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/grey04" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/commentEditText"
@@ -47,7 +57,8 @@
         </LinearLayout>
 
         <include
-            layout="@layout/error_no_connection_with_button" />
+            layout="@layout/error_no_connection_with_button"
+            tools:visibility="gone" />
 
     </FrameLayout>
 

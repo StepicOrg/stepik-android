@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -27,7 +28,6 @@ import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
-import org.stepik.android.presentation.video_player.VideoPlayerView
 import org.stepik.android.view.submission.ui.delegate.setSubmission
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -35,7 +35,6 @@ import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
-import kotlin.error
 
 class ComposeCommentDialogFragment :
     DialogFragment(),
@@ -48,6 +47,7 @@ class ComposeCommentDialogFragment :
 
         private const val ARG_COMMENT = "comment"
         private const val ARG_PARENT = "parent"
+        private const val ARG_SUBMISSION = "submission"
 
         /**
          * [discussionThread] - current discussion thread
@@ -55,12 +55,13 @@ class ComposeCommentDialogFragment :
          * [parent] - parent comment id
          * [comment] - comment if comment should be edited
          */
-        fun newInstance(discussionThread: DiscussionThread, step: Step, parent: Long?, comment: Comment?): DialogFragment =
+        fun newInstance(discussionThread: DiscussionThread, step: Step, parent: Long?, comment: Comment?, submission: Submission?): DialogFragment =
             ComposeCommentDialogFragment().apply {
                 this.arguments = Bundle(4)
                     .also {
                         it.putLong(ARG_PARENT, parent ?: -1)
                         it.putParcelable(ARG_COMMENT, comment)
+                        it.putParcelable(ARG_SUBMISSION, submission)
                     }
                 this.discussionThread = discussionThread
                 this.step = step
@@ -76,6 +77,7 @@ class ComposeCommentDialogFragment :
     private var step: Step by argument()
     private val parent: Long? by lazy { arguments?.getLong(ARG_PARENT, -1)?.takeIf { it != -1L } }
     private val comment: Comment? by lazy { arguments?.getParcelable<Comment>(ARG_COMMENT) }
+    private val submission: Submission? by lazy { arguments?.getParcelable<Submission>(ARG_SUBMISSION) }
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -159,7 +161,7 @@ class ComposeCommentDialogFragment :
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
-        composeCommentPresenter.onData(discussionThread, step.id, parent, forceUpdate)
+        composeCommentPresenter.onData(discussionThread, step.id, parent, submission, forceUpdate)
     }
 
     private fun invalidateMenuState() {
@@ -219,8 +221,9 @@ class ComposeCommentDialogFragment :
 
         when (state) {
             is ComposeCommentView.State.Create -> {
-                commentSolution.setSubmission(state.submission)
                 commentSolution.isEnabled = comment == null
+                commentSolution.setSubmission(state.submission, showArrow = commentSolution.isEnabled)
+                commentSolutionSeparator.isVisible = state.submission != null
             }
 
             is ComposeCommentView.State.Complete -> {
@@ -243,7 +246,7 @@ class ComposeCommentDialogFragment :
     }
 
     private fun onClose() {
-        if (commentEditText.text.isNullOrEmpty()) {
+        if (commentEditText.text.isNullOrEmpty() || commentEditText.text.toString() == comment?.text) {
             super.dismiss()
         } else {
             if (childFragmentManager.findFragmentByTag(DiscardTextDialogFragment.TAG) == null) {

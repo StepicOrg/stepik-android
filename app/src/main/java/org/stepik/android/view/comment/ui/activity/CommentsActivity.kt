@@ -25,6 +25,7 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.comments.Vote
@@ -124,7 +125,7 @@ class CommentsActivity :
                 }
 
                 override fun onEditCommentClicked(commentDataItem: CommentItem.Data) {
-                    showCommentComposeDialog(step, commentDataItem.comment.parent, commentDataItem.comment)
+                    showCommentComposeDialog(step, commentDataItem.comment.parent, commentDataItem.comment, commentDataItem.solution?.submission)
                 }
 
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
@@ -280,11 +281,11 @@ class CommentsActivity :
         invalidateOptionsMenu()
     }
 
-    private fun showCommentComposeDialog(step: Step, parent: Long? = null, comment: Comment? = null) {
+    private fun showCommentComposeDialog(step: Step, parent: Long? = null, comment: Comment? = null, submission: Submission? = null) {
         analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
 
         ComposeCommentDialogFragment
-            .newInstance(discussionThread, step, parent, comment)
+            .newInstance(discussionThread, step, parent, comment, submission)
             .showIfNotExists(supportFragmentManager, ComposeCommentDialogFragment.TAG)
     }
 

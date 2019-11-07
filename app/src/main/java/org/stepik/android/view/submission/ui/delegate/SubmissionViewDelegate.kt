@@ -7,7 +7,7 @@ import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.model.Submission
 
-fun TextView.setSubmission(submission: Submission?) {
+fun TextView.setSubmission(submission: Submission?, showArrow: Boolean = false) {
     if (submission != null) {
         text = context.getString(R.string.comment_solution_pattern, submission.id)
 
@@ -23,7 +23,7 @@ fun TextView.setSubmission(submission: Submission?) {
                 else ->
                     -1
             }
-        setCompoundDrawables(start = compoundDrawableRes)
+        setCompoundDrawables(start = compoundDrawableRes, end = if (showArrow) R.drawable.ic_nav_arrow_right else -1)
         isVisible = true
     } else {
         isVisible = false
