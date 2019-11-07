@@ -8,8 +8,10 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_catalog.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -94,6 +96,7 @@ class CatalogFragment : FragmentBase(),
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
+        setupSearchBar() // TODO Inject Split Test
 
         tagsPresenter.attachView(this)
         filtersClient.subscribe(this)
@@ -102,6 +105,7 @@ class CatalogFragment : FragmentBase(),
         storiesPresenter.attachView(this)
         filtersPresenter.onNeedFilters()
         tagsPresenter.onNeedShowTags()
+
     }
 
     override fun onDestroyView() {
@@ -161,7 +165,17 @@ class CatalogFragment : FragmentBase(),
             analytic.reportEvent(Analytic.Search.SEARCH_OPENED)
             false
         }
+        setupSearchView(searchView)
+    }
 
+    private fun setupSearchBar() {
+        centeredToolbar.isVisible = false
+        searchView.onActionViewExpanded()
+        searchView.clearFocus()
+        setupSearchView(searchView)
+    }
+
+    private fun setupSearchView(searchView: AutoCompleteSearchView?) {
         searchView?.let {
             it.initSuggestions(catalogContainer)
             it.setCloseIconDrawableRes(getCloseIconDrawableRes())
