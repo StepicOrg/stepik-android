@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.CatalogSearchSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
@@ -65,6 +66,9 @@ class CatalogFragment : FragmentBase(),
     @Inject
     lateinit var storiesPresenter: StoriesPresenter
 
+    @Inject
+    lateinit var catalogSearchSplitTest: CatalogSearchSplitTest
+
     private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
 
     private var searchMenuItem: MenuItem? = null
@@ -96,7 +100,9 @@ class CatalogFragment : FragmentBase(),
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
-        setupSearchBar() // TODO Inject Split Test
+        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+            setupSearchBar()
+        }
 
         tagsPresenter.attachView(this)
         filtersClient.subscribe(this)
@@ -170,6 +176,8 @@ class CatalogFragment : FragmentBase(),
 
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
+        toolbarShadow.isVisible = true
+        searchView.isVisible = true
         searchView.onActionViewExpanded()
         searchView.clearFocus()
         setupSearchView(searchView)
@@ -189,7 +197,13 @@ class CatalogFragment : FragmentBase(),
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     it.onSubmitted(query)
-                    searchMenuItem?.collapseActionView()
+                    if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+                        searchView.onActionViewCollapsed()
+                        searchView.onActionViewExpanded()
+                        searchView.clearFocus()
+                    } else {
+                        searchMenuItem?.collapseActionView()
+                    }
                     return false
                 }
 
@@ -203,7 +217,6 @@ class CatalogFragment : FragmentBase(),
 
     override fun onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu()
-
         (searchMenuItem?.actionView as? SearchView)?.setOnQueryTextListener(null)
         searchMenuItem = null
     }
