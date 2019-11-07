@@ -33,8 +33,6 @@ import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.ui.adapters.selection.SelectionHelper
-import ru.nobird.android.ui.adapters.selection.SingleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -43,12 +41,11 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     companion object {
         const val TAG = "SubmissionsDialogFragment"
 
-        fun newInstance(step: Step, isSelectionEnabled: Boolean = false, selectedSubmissionId: Long = -1): DialogFragment =
+        fun newInstance(step: Step, isSelectionEnabled: Boolean = false): DialogFragment =
             SubmissionsDialogFragment()
                 .apply {
                     this.step = step
                     this.isSelectionEnabled = isSelectionEnabled
-                    this.selectedSubmissionId = selectedSubmissionId
                 }
     }
 
@@ -60,9 +57,6 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     private var step: Step by argument()
     private var isSelectionEnabled: Boolean by argument()
-    private var selectedSubmissionId: Long by argument()
-
-    private var selectionHelper: SelectionHelper? = null
 
     private lateinit var submissionsPresenter: SubmissionsPresenter
 
@@ -96,7 +90,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         inflater.inflate(R.layout.dialog_submissions, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbarTitle.setText(R.string.submissions_title)
+        centeredToolbarTitle.setText(if (isSelectionEnabled) R.string.submissions_select_title else R.string.submissions_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
 
@@ -109,15 +103,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         viewStateDelegate.addState<SubmissionsView.State.ContentEmpty>(report_empty)
 
         submissionItemAdapter = DefaultDelegateAdapter()
-        selectionHelper =
-            if (isSelectionEnabled) {
-                SingleChoiceSelectionHelper(submissionItemAdapter)
-            } else {
-                null
-            }
-
         submissionItemAdapter += SubmissionDataAdapterDelegate(
-            selectionHelper = selectionHelper,
+            isItemClickEnabled = isSelectionEnabled,
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
                     showSolution(data)
@@ -125,6 +112,14 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
                 override fun onUserClicked(user: User) {
                     screenManager.openProfile(activity, user.id)
+                }
+
+                override fun onItemClicked(data: SubmissionItem.Data) {
+                    (activity as? Callback
+                        ?: parentFragment as? Callback
+                        ?: targetFragment as? Callback)
+                        ?.onSubmissionSelected(data.submission)
+                    dismiss()
                 }
             }
         )

@@ -188,7 +188,7 @@ class ComposeCommentDialogFragment :
 
     private fun showSubmissions() {
         SubmissionsDialogFragment
-            .newInstance(step, isSelectionEnabled = true, selectedSubmissionId = -1)
+            .newInstance(step, isSelectionEnabled = true)
             .showIfNotExists(childFragmentManager, SubmissionsDialogFragment.TAG)
     }
 

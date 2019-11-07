@@ -781,4 +781,5 @@
 
     <!-- Submissions -->
     <string name="submissions_title">Решения</string>
+    <string name="submissions_select_title">Выберите решение</string>
 </resources>

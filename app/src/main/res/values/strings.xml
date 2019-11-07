@@ -815,4 +815,5 @@
 
     <!-- Submissions -->
     <string name="submissions_title">Submissions</string>
+    <string name="submissions_select_title">Choose submission</string>
 </resources>

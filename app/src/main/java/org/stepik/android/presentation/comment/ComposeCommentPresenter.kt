@@ -76,6 +76,7 @@ constructor(
             ?: return
 
         replaceComment(
+            oldState,
             composeCommentInteractor
                 .createComment(comment.copy(submission = oldState.submission?.id))
                 .doOnSuccess { analytic.reportEvent(Analytic.Comments.COMMENTS_SENT_SUCCESSFULLY) },
@@ -87,10 +88,10 @@ constructor(
         val oldState = (state as? ComposeCommentView.State.Create)
             ?: return
 
-        replaceComment(composeCommentInteractor.saveComment(comment), isCommentCreated = false)
+        replaceComment(oldState, composeCommentInteractor.saveComment(comment), isCommentCreated = false)
     }
 
-    private fun replaceComment(commentSource: Single<CommentsData>, isCommentCreated: Boolean) {
+    private fun replaceComment(oldState: ComposeCommentView.State.Create, commentSource: Single<CommentsData>, isCommentCreated: Boolean) {
         state = ComposeCommentView.State.Loading
         compositeDisposable += commentSource
             .doOnSubscribe { analytic.reportEvent(Analytic.Comments.CLICK_SEND_COMMENTS) }
@@ -98,7 +99,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = { state = ComposeCommentView.State.Complete(it, isCommentCreated) },
-                onError = { state = ComposeCommentView.State.Idle; view?.showNetworkError() }
+                onError = { state = oldState; view?.showNetworkError() }
             )
     }
 }
