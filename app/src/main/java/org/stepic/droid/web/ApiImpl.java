@@ -276,13 +276,23 @@ public class ApiImpl implements Api {
     }
 
     @Override
+    public Single<AttemptResponse> getExistingAttemptsReactive(long[] attemptIds) {
+        return loggedService.getExistingAttemptsReactive(attemptIds);
+    }
+
+    @Override
     public Single<SubmissionResponse> getSubmissionsReactive(long attemptId) {
         return loggedService.getExistingSubmissionsReactive(attemptId, "desc");
     }
 
     @Override
-    public Single<SubmissionResponse> getSubmissionForStepReactive(long stepId) {
-        return loggedService.getExistingSubmissionsForStepReactive(stepId);
+    public Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, int page) {
+        return loggedService.getExistingSubmissionsForStepReactive(stepId, page);
+    }
+
+    @Override
+    public Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, long userId, int page) {
+        return loggedService.getExistingSubmissionsForStepReactive(stepId, userId, page);
     }
 
     @Override

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
+
+    <org.stepic.droid.ui.custom.RoundedBorderMaskView
+        android:id="@+id/submissionUserIconMask"
+        android:layout_width="@dimen/comment_user_image_size"
+        android:layout_height="@dimen/comment_user_image_size"
+        android:layout_margin="@dimen/comment_item_margin"
+        app:borderRadius="@dimen/course_image_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/submissionUserIcon"
+            android:layout_width="@dimen/comment_user_image_size"
+            android:layout_height="@dimen/comment_user_image_size"
+            android:contentDescription="@null" />
+    </org.stepic.droid.ui.custom.RoundedBorderMaskView>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/submissionUserName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:textSize="16sp"
+        android:textColor="@color/new_accent_color"
+
+        app:fontFamily="@font/roboto_bold"
+
+        app:layout_constraintStart_toEndOf="@id/submissionUserIconMask"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/submissionSelect"
+
+        android:layout_marginLeft="@dimen/comment_item_margin"
+        android:layout_marginStart="@dimen/comment_item_margin"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="@dimen/comment_item_margin"
+
+        android:lines="1"
+        android:ellipsize="end"
+
+        tools:text="Konstatin Konstatinopolis Konstatinopolis Konstatinopolis" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/submissionSolution"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_comment_item_solution"
+
+        app:layout_constraintStart_toEndOf="@id/submissionUserIconMask"
+        app:layout_constraintTop_toBottomOf="@id/submissionUserName"
+        app:layout_constraintEnd_toStartOf="@id/submissionSelect"
+
+        android:padding="8dp"
+        android:drawablePadding="8dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_marginLeft="@dimen/comment_item_margin"
+        android:layout_marginStart="@dimen/comment_item_margin"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+
+        tools:drawableStart="@drawable/ic_step_quiz_wrong_wide"
+
+        tools:text="Решение 31293193128392" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/submissionTime"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/comment_item_action_size"
+
+        app:layout_constraintStart_toEndOf="@id/submissionUserIconMask"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/submissionSelect"
+        app:layout_constraintTop_toBottomOf="@id/submissionSolution"
+
+        android:alpha="0.7"
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+        android:gravity="start|center_vertical"
+
+        android:layout_marginLeft="@dimen/comment_item_margin"
+        android:layout_marginStart="@dimen/comment_item_margin"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
+
+        tools:text="Полгода назад" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/submissionSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_nav_arrow_right"
+
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

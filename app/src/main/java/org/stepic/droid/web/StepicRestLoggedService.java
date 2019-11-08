@@ -157,6 +157,9 @@ public interface StepicRestLoggedService {
     @GET("api/attempts")
     Single<AttemptResponse> getExistingAttemptsReactive(@Query("step") long stepId, @Query("user") long userId);
 
+    @GET("api/attempts")
+    Single<AttemptResponse> getExistingAttemptsReactive(@Query("ids[]") long[] ids);
+
     @GET("api/submissions")
     Single<SubmissionResponse> getExistingSubmissionsReactive(
             @Query("attempt") final long attemptId,
@@ -212,7 +215,10 @@ public interface StepicRestLoggedService {
     Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
 
     @GET("api/submissions?order=desc")
-    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId);
+    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId, @Query("page") int page);
+
+    @GET("api/submissions?order=desc")
+    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId, @Query("user") long user, @Query("page") int page);
 
     @GET("api/notifications")
     Call<NotificationResponse> getNotifications(@Query("page") int page, @Nullable @Query("type") String type);

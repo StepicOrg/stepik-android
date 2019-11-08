@@ -104,9 +104,13 @@ public interface Api {
 
     Single<AttemptResponse> getExistingAttemptsReactive(long stepId);
 
+    Single<AttemptResponse> getExistingAttemptsReactive(long[] attemptIds);
+
     Single<SubmissionResponse> getSubmissionsReactive(long attemptId);
 
-    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId);
+    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, int page);
+
+    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, long userId, int page);
 
     Call<Void> remindPassword(String email);
 
