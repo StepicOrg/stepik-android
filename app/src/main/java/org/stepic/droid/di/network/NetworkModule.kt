@@ -9,12 +9,13 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
-import org.stepic.droid.di.auth.AuthModule
+import org.stepik.android.view.injection.auth.AuthModule
 import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.features.achievements.repository.AchievementsRepositoryImpl
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepositoryImpl
 import org.stepic.droid.util.DebugToolsHelper
+import org.stepic.droid.web.NetworkFactory
 import org.stepik.android.view.injection.base.Authorized
 import retrofit2.Converter
 import retrofit2.Retrofit

@@ -1,4 +1,4 @@
-package org.stepic.droid.di.network
+package org.stepic.droid.web
 
 import okhttp3.OkHttpClient
 import retrofit2.Converter
@@ -20,7 +20,8 @@ object NetworkFactory {
 
     @JvmStatic
     inline fun <reified T> createService(host: String, okHttpClient: OkHttpClient, converterFactory: Converter.Factory): T {
-        val retrofit = createRetrofit(host, okHttpClient, converterFactory)
+        val retrofit =
+            createRetrofit(host, okHttpClient, converterFactory)
         return retrofit.create(T::class.java)
     }
 }

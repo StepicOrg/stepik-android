@@ -16,14 +16,13 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.util.CookieHelper;
-import org.stepic.droid.di.network.NetworkFactory;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.util.CompatibilityExtensionsKt;
+import org.stepic.droid.base.CookieHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.NetworkExtensionsKt;
 import org.stepic.droid.web.model.adaptive.RatingRequest;
@@ -40,6 +39,9 @@ import org.stepik.android.model.user.Profile;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.auth.model.OAuthResponse;
+import org.stepik.android.remote.auth.model.StepikProfileResponse;
+import org.stepik.android.remote.auth.service.EmptyAuthService;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
@@ -126,7 +128,7 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<StepicProfileResponse> getUserProfile() {
+    public Call<StepikProfileResponse> getUserProfile() {
         return loggedService.getUserProfile();
     }
 

@@ -6,6 +6,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
+import org.stepic.droid.web.NetworkFactory
 import org.stepic.droid.web.RatingService
 import org.stepic.droid.web.StepicRestLoggedService
 import org.stepic.droid.web.achievements.AchievementsService

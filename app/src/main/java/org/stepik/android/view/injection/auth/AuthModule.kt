@@ -1,4 +1,4 @@
-package org.stepic.droid.di.auth
+package org.stepik.android.view.injection.auth
 
 import dagger.Binds
 import dagger.Module
@@ -8,24 +8,26 @@ import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
+import org.stepic.droid.base.CookieHelper
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.network.AuthLock
 import org.stepic.droid.di.network.AuthService
 import org.stepic.droid.di.network.CookieAuthService
-import org.stepic.droid.di.network.NetworkFactory
 import org.stepic.droid.di.network.SocialAuthService
-import org.stepic.droid.features.auth.repository.AuthRepository
-import org.stepic.droid.features.auth.repository.AuthRepositoryImpl
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.CookieHelper
 import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.util.setTimeoutsInSeconds
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.AuthInterceptor
-import org.stepic.droid.web.EmptyAuthService
-import org.stepic.droid.web.OAuthService
+import org.stepic.droid.web.NetworkFactory
 import org.stepic.droid.web.UserAgentProvider
+import org.stepik.android.data.auth.repository.AuthRepositoryImpl
+import org.stepik.android.data.auth.source.AuthRemoteDataSource
+import org.stepik.android.domain.auth.repository.AuthRepository
+import org.stepik.android.remote.auth.AuthRemoteDataSourceImpl
+import org.stepik.android.remote.auth.interceptor.AuthInterceptor
+import org.stepik.android.remote.auth.service.EmptyAuthService
+import org.stepik.android.remote.auth.service.OAuthService
 import retrofit2.Converter
 import java.util.concurrent.locks.ReentrantLock
 
@@ -40,6 +42,9 @@ abstract class AuthModule {
     @AppSingleton
     abstract fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
 
+    @Binds
+    internal abstract fun bindAuthRemoteDataSource(authRemoteDataSourceImpl: AuthRemoteDataSourceImpl): AuthRemoteDataSource
+
     @Module
     companion object {
 
@@ -47,7 +52,8 @@ abstract class AuthModule {
         @AppSingleton
         @JvmStatic
         @AuthLock
-        internal fun provideAuthLock(): ReentrantLock = ReentrantLock()
+        internal fun provideAuthLock(): ReentrantLock =
+            ReentrantLock()
 
         @Provides
         @AppSingleton
@@ -55,11 +61,7 @@ abstract class AuthModule {
         internal fun provideEmptyAuthService(config: Config, converterFactory: Converter.Factory): EmptyAuthService {
             val okHttpBuilder = OkHttpClient.Builder()
             okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
-            val retrofit = NetworkFactory.createRetrofit(
-                config.baseUrl,
-                okHttpBuilder.build(),
-                converterFactory
-            )
+            val retrofit = NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
             return retrofit.create(EmptyAuthService::class.java)
         }
 
@@ -73,11 +75,7 @@ abstract class AuthModule {
             converterFactory: Converter.Factory
         ): OAuthService =
             createAuthService(
-                Credentials.basic(
-                    config.getOAuthClientId(Api.TokenType.social), config.getOAuthClientSecret(
-                        Api.TokenType.social
-                    )
-                ),
+                Credentials.basic(config.getOAuthClientId(Api.TokenType.social), config.getOAuthClientSecret(Api.TokenType.social)),
                 userAgentProvider.provideUserAgent(),
                 config.baseUrl,
                 converterFactory
@@ -127,7 +125,6 @@ abstract class AuthModule {
             val retrofit = NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
             return retrofit.create(OAuthService::class.java)
         }
-
 
         private fun createAuthService(credentials: String, userAgent: String, host: String, converterFactory: Converter.Factory): OAuthService {
             val okHttpBuilder = OkHttpClient.Builder()

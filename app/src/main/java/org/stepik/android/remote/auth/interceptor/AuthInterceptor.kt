@@ -1,4 +1,4 @@
-package org.stepic.droid.web
+package org.stepik.android.remote.auth.interceptor
 
 import android.content.Context
 import com.facebook.login.LoginManager
@@ -15,6 +15,10 @@ import org.stepic.droid.di.network.SocialAuthService
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.addUserAgent
+import org.stepic.droid.web.UserAgentProvider
+import org.stepik.android.remote.auth.model.OAuthResponse
+import org.stepik.android.remote.auth.service.OAuthService
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
@@ -44,7 +48,7 @@ constructor(
         const val USER_AGENT_NAME = "User-Agent"
     }
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = addUserAgentTo(chain)
+        val request = chain.addUserAgent(userAgentProvider.provideUserAgent())
         var response = addAuthHeaderAndProceed(chain, request)
         if (response.code() == 400) {
             // authPreferences.resetAuthResponseDeadline() - technically this is = val expiresMillis = (response.expiresIn - 50) * 1000
@@ -94,14 +98,6 @@ constructor(
         return chain.proceed(request)
     }
 
-    private fun addUserAgentTo(chain: Interceptor.Chain): Request {
-        return chain
-            .request()
-            .newBuilder()
-            .header(USER_AGENT_NAME, userAgentProvider.provideUserAgent())
-            .build()
-    }
-
     private fun isUpdateNeeded(): Boolean {
         val response = sharedPreference.authResponseFromStore
         if (response == null) {
@@ -115,7 +111,7 @@ constructor(
         val nowTemp = DateTimeHelper.nowUtc()
         val delta = nowTemp - timestampStored
         val expiresMillis = (response.expiresIn - 50) * 1000
-        return delta > expiresMillis //token expired --> need update
+        return delta > expiresMillis // token expired --> need update
     }
     private fun authWithRefreshToken(refreshToken: String): Call<OAuthResponse> =
         (if (sharedPreference.isLastTokenSocial) socialAuthService else authService)

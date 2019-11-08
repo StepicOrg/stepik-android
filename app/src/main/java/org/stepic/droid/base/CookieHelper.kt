@@ -1,4 +1,4 @@
-package org.stepic.droid.util
+package org.stepic.droid.base
 
 import android.os.Build
 import android.os.Looper
@@ -8,7 +8,8 @@ import io.reactivex.Scheduler
 import okhttp3.Request
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepic.droid.web.EmptyAuthService
+import org.stepic.droid.util.AppConstants
+import org.stepik.android.remote.auth.service.EmptyAuthService
 import java.net.HttpCookie
 import java.net.URI
 import java.net.URISyntaxException

@@ -7,6 +7,7 @@ import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.comment.model.CommentRequest;
 import org.stepik.android.remote.comment.model.CommentResponse;
@@ -73,7 +74,7 @@ public interface StepicRestLoggedService {
     Single<UserResponse> getUsersRx(@Query("ids[]") long[] userIds);
 
     @GET("api/stepics/1")
-    Call<StepicProfileResponse> getUserProfile();
+    Call<StepikProfileResponse> getUserProfile();
 
     @GET("api/user-courses")
     Single<UserCoursesResponse> getUserCourses(@Query("page") int page);

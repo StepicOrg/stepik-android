@@ -14,6 +14,7 @@ import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
@@ -47,7 +48,7 @@ public interface Api {
 
     Single<CourseResponse> getPopularCourses(int page);
 
-    Call<StepicProfileResponse> getUserProfile();
+    Call<StepikProfileResponse> getUserProfile();
 
     Call<UserResponse> getUsers(long[] userIds);
 

@@ -19,7 +19,7 @@ import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.web.OAuthResponse;
+import org.stepik.android.remote.auth.model.OAuthResponse;
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
 import org.stepik.android.domain.step_content_text.model.FontSize;
 import org.stepik.android.model.user.EmailAddress;
