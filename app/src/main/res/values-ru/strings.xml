@@ -64,7 +64,7 @@
     <string name="gb">ГБ</string>
     <string name="clear_videos">Вы уверены, что хотите удалить все закешированные видео?</string>
     <string name="empty_downloading">Нет загруженных видео</string>
-    <string name="find_courses_hint">Поиск курсов</string>
+    <string name="find_courses_hint">Искать курс</string>
     <string name="search_title">Поиск</string>
     <string name="empty_search">Курсы не найдены</string>
     <string name="submit">Отправить</string>

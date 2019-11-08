@@ -113,6 +113,7 @@ class CourseSearchFragment: CourseListFragmentBase() {
         }
         searchViewToolbar.isVisible = true
         setupSearchView(searchViewToolbar)
+        searchViewToolbar.setIconifiedByDefault(false)
     }
 
     private fun setupSearchView(searchView: AutoCompleteSearchView, searchMenuItem: MenuItem? = null) {

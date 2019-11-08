@@ -182,6 +182,7 @@ class CatalogFragment : FragmentBase(),
         searchView.isVisible = true
         searchView.onActionViewExpanded()
         searchView.clearFocus()
+        searchView.setIconifiedByDefault(false)
         setupSearchView(searchView)
     }
 
