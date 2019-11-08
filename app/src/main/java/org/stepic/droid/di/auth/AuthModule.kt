@@ -18,6 +18,7 @@ import org.stepic.droid.di.network.SocialAuthService
 import org.stepic.droid.features.auth.repository.AuthRepository
 import org.stepic.droid.features.auth.repository.AuthRepositoryImpl
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.CookieHelper
 import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.util.setTimeoutsInSeconds
 import org.stepic.droid.web.Api

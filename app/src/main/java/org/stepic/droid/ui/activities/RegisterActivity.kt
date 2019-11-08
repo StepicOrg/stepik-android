@@ -194,33 +194,6 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         if (isOk) {
             onLoadingWhileLogin()
             loginPresenter.signUp(firstName, lastName, email, password)
-//            api.signUp(firstName, lastName, email, password).enqueue(object : Callback<RegistrationResponse> {
-//                override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
-//                    if (response.isSuccessful) {
-//                        analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP)
-//
-//                        loginPresenter.login(email, password, isAfterRegistration = true)
-//                    } else {
-//                        ProgressHelper.dismiss(progressBar)
-//                        response.errorBody()
-//                        val errorConverter = retrofit.responseBodyConverter<RegistrationResponse>(RegistrationResponse::class.java, arrayOfNulls<Annotation>(0))
-//                        var error: RegistrationResponse? = null
-//                        try {
-//                            error = errorConverter.convert(response.errorBody()!!)
-//                        } catch (e: Exception) {
-//                            analytic.reportError(Analytic.Error.REGISTRATION_IMPORTANT_ERROR, e) //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
-//                        }
-//
-//                        handleErrorRegistrationResponse(error)
-//                    }
-//
-//                }
-//
-//                override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
-//                    ProgressHelper.dismiss(progressBar)
-//                    Toast.makeText(this@RegisterActivity, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
-//                }
-//            })
         }
     }
 

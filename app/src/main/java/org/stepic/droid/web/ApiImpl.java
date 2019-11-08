@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.di.auth.CookieHelper;
+import org.stepic.droid.util.CookieHelper;
 import org.stepic.droid.di.network.NetworkHelper;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.StepikFilter;
