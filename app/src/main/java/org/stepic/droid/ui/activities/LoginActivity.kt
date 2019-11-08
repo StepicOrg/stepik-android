@@ -248,6 +248,6 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
     }
 
     override fun onRegistrationFailed(responseBody: ResponseBody?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        // no op
     }
 }
