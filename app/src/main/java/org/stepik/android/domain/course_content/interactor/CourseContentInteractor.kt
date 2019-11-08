@@ -12,7 +12,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.util.concat
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.plus
-import org.stepic.droid.util.reduceMap
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -110,7 +109,7 @@ constructor(
                     .combineLatest(progressesSource, unitsSource) { progresses, (units, lessons) ->
                         Triple(units, lessons, progresses)
                     }
-                    .reduceMap(items) { newItems, (units, lessons, progresses) ->
+                    .scan(items) { newItems, (units, lessons, progresses) ->
                         val sectionItems = newItems
                             .filterIsInstance<CourseContentItem.SectionItem>()
                         val unitItems = courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
