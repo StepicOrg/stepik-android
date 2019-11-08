@@ -16,11 +16,12 @@ import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepositoryImpl
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.view.injection.base.Authorized
+import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.util.concurrent.TimeUnit
 
-@Module(includes = [AuthModule::class, ServicesModule::class])
+@Module(includes = [AuthModule::class, ServicesModule::class, SerializationModule::class])
 abstract class NetworkModule {
 
     @Binds
@@ -32,6 +33,8 @@ abstract class NetworkModule {
 
     @Module
     companion object {
+        const val TIMEOUT_IN_SECONDS = 60L
+
         @Provides
         @AppSingleton
         @JvmStatic
@@ -49,20 +52,25 @@ abstract class NetworkModule {
         @Provides
         @JvmStatic
         @AppSingleton
-        @Authorized
-        internal fun provideRetrofit(interceptors: Set<@JvmSuppressWildcards Interceptor>, config: Config): Retrofit {
+        internal fun provideOkHttpClient(interceptors: Set<@JvmSuppressWildcards Interceptor>): OkHttpClient {
             val okHttpBuilder = OkHttpClient.Builder()
-                .connectTimeout(NetworkHelper.TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(NetworkHelper.TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .connectTimeout(NetworkFactory.TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(NetworkFactory.TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
             interceptors.forEach { okHttpBuilder.addNetworkInterceptor(it) }
 
-            return Retrofit.Builder()
-                .baseUrl(config.baseUrl)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(NetworkHelper.createGsonConverterFactory())
-                .client(okHttpBuilder.build())
-                .build()
+            return okHttpBuilder.build()
         }
 
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @Authorized
+        internal fun provideRetrofit(config: Config, okHttpClient: OkHttpClient, converterFactory: Converter.Factory): Retrofit =
+            Retrofit.Builder()
+                .baseUrl(config.baseUrl)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(converterFactory)
+                .client(okHttpClient)
+                .build()
     }
 }

@@ -8,7 +8,6 @@ import org.stepic.droid.di.network.AuthLock
 import org.stepic.droid.di.network.AuthService
 import org.stepic.droid.di.network.CookieAuthService
 import org.stepic.droid.di.network.SocialAuthService
-import org.stepic.droid.features.auth.repository.AuthRepository
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.web.Api
@@ -56,13 +55,14 @@ constructor(
             codeType = "access_token"
         }
 
-        return socialAuthService.getTokenByNativeCode(
-            type.identifier,
-            code,
-            config.getGrantType(Api.TokenType.social),
-            config.redirectUri,
-            codeType,
-            email
+        return socialAuthService
+            .getTokenByNativeCode(
+                type.identifier,
+                code,
+                config.getGrantType(Api.TokenType.social),
+                config.redirectUri,
+                codeType,
+                email
             )
             .doOnSuccess { saveResponse(it, isSocial = true) }
     }

@@ -13,7 +13,7 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.network.AuthLock
 import org.stepic.droid.di.network.AuthService
 import org.stepic.droid.di.network.CookieAuthService
-import org.stepic.droid.di.network.NetworkHelper
+import org.stepic.droid.di.network.NetworkFactory
 import org.stepic.droid.di.network.SocialAuthService
 import org.stepic.droid.features.auth.repository.AuthRepository
 import org.stepic.droid.features.auth.repository.AuthRepositoryImpl
@@ -26,6 +26,7 @@ import org.stepic.droid.web.AuthInterceptor
 import org.stepic.droid.web.EmptyAuthService
 import org.stepic.droid.web.OAuthService
 import org.stepic.droid.web.UserAgentProvider
+import retrofit2.Converter
 import java.util.concurrent.locks.ReentrantLock
 
 @Module
@@ -51,12 +52,13 @@ abstract class AuthModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideEmptyAuthService(config: Config): EmptyAuthService {
+        internal fun provideEmptyAuthService(config: Config, converterFactory: Converter.Factory): EmptyAuthService {
             val okHttpBuilder = OkHttpClient.Builder()
-            okHttpBuilder.setTimeoutsInSeconds(NetworkHelper.TIMEOUT_IN_SECONDS)
-            val retrofit = NetworkHelper.createRetrofit(
+            okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
+            val retrofit = NetworkFactory.createRetrofit(
+                config.baseUrl,
                 okHttpBuilder.build(),
-                config.baseUrl
+                converterFactory
             )
             return retrofit.create(EmptyAuthService::class.java)
         }
@@ -66,8 +68,9 @@ abstract class AuthModule {
         @JvmStatic
         @SocialAuthService
         internal fun provideSocialAuthService(
+            config: Config,
             userAgentProvider: UserAgentProvider,
-            config: Config
+            converterFactory: Converter.Factory
         ): OAuthService =
             createAuthService(
                 Credentials.basic(
@@ -76,7 +79,8 @@ abstract class AuthModule {
                     )
                 ),
                 userAgentProvider.provideUserAgent(),
-                config.baseUrl
+                config.baseUrl,
+                converterFactory
             )
 
         @Provides
@@ -84,18 +88,18 @@ abstract class AuthModule {
         @JvmStatic
         @AuthService
         internal fun provideAuthService(
+            config: Config,
             userAgentProvider: UserAgentProvider,
-            config: Config
+            converterFactory: Converter.Factory
         ): OAuthService =
             createAuthService(
                 Credentials.basic(
                     config.getOAuthClientId(Api.TokenType.loginPassword),
-                    config.getOAuthClientSecret(
-                        Api.TokenType.loginPassword
-                    )
+                    config.getOAuthClientSecret(Api.TokenType.loginPassword)
                 ),
                 userAgentProvider.provideUserAgent(),
-                config.baseUrl
+                config.baseUrl,
+                converterFactory
             )
 
         @Provides
@@ -103,9 +107,10 @@ abstract class AuthModule {
         @JvmStatic
         @CookieAuthService
         internal fun provideCookieAuthService(
+            config: Config,
             userAgentProvider: UserAgentProvider,
             cookieHelper: CookieHelper,
-            config: Config
+            converterFactory: Converter.Factory
         ): OAuthService {
             val okHttpBuilder = OkHttpClient.Builder()
             okHttpBuilder.addNetworkInterceptor { chain ->
@@ -117,29 +122,23 @@ abstract class AuthModule {
                     )
                 )
             }
-            okHttpBuilder.setTimeoutsInSeconds(NetworkHelper.TIMEOUT_IN_SECONDS)
+            okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
 
-            val retrofit = NetworkHelper.createRetrofit(
-                okHttpBuilder.build(),
-                config.baseUrl
-            )
+            val retrofit = NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
             return retrofit.create(OAuthService::class.java)
         }
 
 
-        private fun createAuthService(credentials: String, userAgent: String, host: String): OAuthService {
+        private fun createAuthService(credentials: String, userAgent: String, host: String, converterFactory: Converter.Factory): OAuthService {
             val okHttpBuilder = OkHttpClient.Builder()
 
             okHttpBuilder.addInterceptor { chain ->
                 chain.proceed(chain.addUserAgent(userAgent).newBuilder().header(AppConstants.authorizationHeaderName, credentials).build())
             }
             okHttpBuilder.protocols(listOf(Protocol.HTTP_1_1))
-            okHttpBuilder.setTimeoutsInSeconds(NetworkHelper.TIMEOUT_IN_SECONDS)
+            okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
 
-            val retrofit = NetworkHelper.createRetrofit(
-                okHttpBuilder.build(),
-                host
-            )
+            val retrofit = NetworkFactory.createRetrofit(host, okHttpBuilder.build(), converterFactory)
             return retrofit.create(OAuthService::class.java)
         }
     }

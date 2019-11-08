@@ -3,9 +3,6 @@ package org.stepik.android.view.injection.profile
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import okhttp3.Interceptor
-import org.stepic.droid.configuration.Config
-import org.stepic.droid.di.network.NetworkHelper
 import org.stepik.android.cache.profile.ProfileCacheDataSourceImpl
 import org.stepik.android.data.profile.repository.ProfileRepositoryImpl
 import org.stepik.android.data.profile.source.ProfileCacheDataSource
@@ -13,6 +10,8 @@ import org.stepik.android.data.profile.source.ProfileRemoteDataSource
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.remote.profile.ProfileRemoteDataSourceImpl
 import org.stepik.android.remote.profile.service.ProfileService
+import org.stepik.android.view.injection.base.Authorized
+import retrofit2.Retrofit
 
 @Module
 abstract class ProfileDataModule {
@@ -35,7 +34,7 @@ abstract class ProfileDataModule {
     companion object {
         @Provides
         @JvmStatic
-        internal fun provideProfileService(interceptors: Set<@JvmSuppressWildcards Interceptor>, config: Config): ProfileService =
-            NetworkHelper.createService(interceptors, config.baseUrl)
+        internal fun provideProfileService(@Authorized retrofit: Retrofit): ProfileService =
+            retrofit.create(ProfileService::class.java)
     }
 }

@@ -17,7 +17,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.util.CookieHelper;
-import org.stepic.droid.di.network.NetworkHelper;
+import org.stepic.droid.di.network.NetworkFactory;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.notifications.model.Notification;
@@ -75,6 +75,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Call;
+import retrofit2.Converter;
 import retrofit2.Retrofit;
 
 @AppSingleton
@@ -91,6 +92,7 @@ public class ApiImpl implements Api {
     private final RatingService ratingService;
 
     private final CookieHelper cookieHelper;
+    private final Converter.Factory converterFactory;
 
     @Inject
     public ApiImpl(
@@ -100,7 +102,8 @@ public class ApiImpl implements Api {
             UserAgentProvider userAgentProvider,
             CookieHelper cookieHelper,
             StepicRestLoggedService stepicRestLoggedService,
-            RatingService ratingService
+            RatingService ratingService,
+            Converter.Factory converterFactory
     ) {
         this.context = context;
         this.sharedPreference = sharedPreference;
@@ -110,6 +113,7 @@ public class ApiImpl implements Api {
         this.cookieHelper = cookieHelper;
         this.loggedService = stepicRestLoggedService;
         this.ratingService = ratingService;
+        this.converterFactory = converterFactory;
     }
     public Single<UserCoursesResponse> getUserCourses(int page) {
         return loggedService.getUserCourses(page);
@@ -340,7 +344,7 @@ public class ApiImpl implements Api {
         OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
         okHttpBuilder.addNetworkInterceptor(interceptor);
         NetworkExtensionsKt.setTimeoutsInSeconds(okHttpBuilder, TIMEOUT_IN_SECONDS);
-        Retrofit notLogged = NetworkHelper.createRetrofit(okHttpBuilder.build(), config.getBaseUrl());
+        Retrofit notLogged = NetworkFactory.createRetrofit(config.getBaseUrl(), okHttpBuilder.build(), converterFactory);
         EmptyAuthService tempService = notLogged.create(EmptyAuthService.class);
         return tempService.remindPassword(encodedEmail);
     }
