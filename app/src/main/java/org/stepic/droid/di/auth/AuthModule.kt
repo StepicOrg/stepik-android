@@ -8,7 +8,6 @@ import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
-import okhttp3.Request
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.network.AuthLock
@@ -19,6 +18,7 @@ import org.stepic.droid.di.network.SocialAuthService
 import org.stepic.droid.features.auth.repository.AuthRepository
 import org.stepic.droid.features.auth.repository.AuthRepositoryImpl
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.util.setTimeoutsInSeconds
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.AuthInterceptor
@@ -40,8 +40,6 @@ abstract class AuthModule {
 
     @Module
     companion object {
-
-        const val USER_AGENT_NAME = "User-Agent"
 
         @Provides
         @AppSingleton
@@ -112,12 +110,11 @@ abstract class AuthModule {
             okHttpBuilder.addNetworkInterceptor { chain ->
                 cookieHelper.removeCookiesCompat()
                 cookieHelper.updateCookieForBaseUrl()
-                chain.proceed(cookieHelper.addCsrfTokenToRequest(
-                    addUserAgentTo(
-                        userAgentProvider.provideUserAgent(),
-                        chain
+                chain.proceed(
+                    cookieHelper.addCsrfTokenToRequest(
+                        chain.addUserAgent(userAgentProvider.provideUserAgent())
                     )
-                ))
+                )
             }
             okHttpBuilder.setTimeoutsInSeconds(NetworkHelper.TIMEOUT_IN_SECONDS)
 
@@ -133,11 +130,7 @@ abstract class AuthModule {
             val okHttpBuilder = OkHttpClient.Builder()
 
             okHttpBuilder.addInterceptor { chain ->
-                chain.proceed(
-                    addUserAgentTo(
-                        userAgent,
-                        chain
-                    ).newBuilder().header(AppConstants.authorizationHeaderName, credentials).build())
+                chain.proceed(chain.addUserAgent(userAgent).newBuilder().header(AppConstants.authorizationHeaderName, credentials).build())
             }
             okHttpBuilder.protocols(listOf(Protocol.HTTP_1_1))
             okHttpBuilder.setTimeoutsInSeconds(NetworkHelper.TIMEOUT_IN_SECONDS)
@@ -147,14 +140,6 @@ abstract class AuthModule {
                 host
             )
             return retrofit.create(OAuthService::class.java)
-        }
-
-        private fun addUserAgentTo(userAgent: String, chain: Interceptor.Chain): Request {
-            return chain
-                .request()
-                .newBuilder()
-                .header(USER_AGENT_NAME, userAgent)
-                .build()
         }
     }
 }

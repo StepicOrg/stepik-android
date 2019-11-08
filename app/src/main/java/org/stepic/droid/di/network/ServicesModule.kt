@@ -4,13 +4,14 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
-import org.stepic.droid.configuration.Config
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.web.RatingService
 import org.stepic.droid.web.StepicRestLoggedService
 import org.stepic.droid.web.achievements.AchievementsService
 import org.stepic.droid.web.storage.RemoteStorageService
+import org.stepik.android.view.injection.base.Authorized
+import retrofit2.Retrofit
 
 @Module
 abstract class ServicesModule {
@@ -19,25 +20,25 @@ abstract class ServicesModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideAchievementService(interceptors: Set<@JvmSuppressWildcards Interceptor>, config: Config): AchievementsService =
-            NetworkHelper.createService(interceptors, config.baseUrl)
+        internal fun provideAchievementService(@Authorized retrofit: Retrofit): AchievementsService =
+            retrofit.create(AchievementsService::class.java)
 
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideRemoteStorageService(interceptors: Set<@JvmSuppressWildcards Interceptor>, config: Config): RemoteStorageService =
-            NetworkHelper.createService(interceptors, config.baseUrl)
+        internal fun provideRemoteStorageService(@Authorized retrofit: Retrofit): RemoteStorageService =
+            retrofit.create(RemoteStorageService::class.java)
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        internal fun provideStepikService(@Authorized retrofit: Retrofit): StepicRestLoggedService =
+            retrofit.create(StepicRestLoggedService::class.java)
 
         @Provides
         @AppSingleton
         @JvmStatic
         internal fun provideRatingService(interceptors: Set<@JvmSuppressWildcards Interceptor>, firebaseRemoteConfig: FirebaseRemoteConfig): RatingService =
             NetworkHelper.createService(interceptors, firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL))
-
-        @Provides
-        @AppSingleton
-        @JvmStatic
-        internal fun provideStepikService(interceptors: Set<@JvmSuppressWildcards Interceptor>, config: Config): StepicRestLoggedService =
-            NetworkHelper.createService(interceptors, config.baseUrl)
     }
 }
