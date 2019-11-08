@@ -44,8 +44,8 @@ import javax.inject.Inject
 class SolutionCommentDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "SolutionCommentDialogFragment"
-        const val DISCUSSION_ID_EMPTY = -1L
 
+        private const val DISCUSSION_ID_EMPTY = -1L
         private const val ARG_DISCUSSION_THREAD = "discussion_thread"
 
         fun newInstance(step: Step, attempt: Attempt, submission: Submission, discussionThread: DiscussionThread? = null, discussionId: Long = DISCUSSION_ID_EMPTY): DialogFragment =

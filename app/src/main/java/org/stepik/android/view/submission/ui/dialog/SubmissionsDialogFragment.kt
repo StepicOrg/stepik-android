@@ -27,6 +27,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.model.user.User
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
@@ -40,10 +41,11 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     companion object {
         const val TAG = "SubmissionsDialogFragment"
 
-        fun newInstance(step: Step): DialogFragment =
+        fun newInstance(step: Step, isSelectionEnabled: Boolean = false): DialogFragment =
             SubmissionsDialogFragment()
                 .apply {
                     this.step = step
+                    this.isSelectionEnabled = isSelectionEnabled
                 }
     }
 
@@ -54,6 +56,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     internal lateinit var screenManager: ScreenManager
 
     private var step: Step by argument()
+    private var isSelectionEnabled: Boolean by argument()
 
     private lateinit var submissionsPresenter: SubmissionsPresenter
 
@@ -87,7 +90,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         inflater.inflate(R.layout.dialog_submissions, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbarTitle.setText(R.string.submissions_title)
+        centeredToolbarTitle.setText(if (isSelectionEnabled) R.string.submissions_select_title else R.string.submissions_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
 
@@ -101,6 +104,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
         submissionItemAdapter = DefaultDelegateAdapter()
         submissionItemAdapter += SubmissionDataAdapterDelegate(
+            isItemClickEnabled = isSelectionEnabled,
             actionListener = object : SubmissionDataAdapterDelegate.ActionListener {
                 override fun onSubmissionClicked(data: SubmissionItem.Data) {
                     showSolution(data)
@@ -108,6 +112,14 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
                 override fun onUserClicked(user: User) {
                     screenManager.openProfile(activity, user.id)
+                }
+
+                override fun onItemClicked(data: SubmissionItem.Data) {
+                    (activity as? Callback
+                        ?: parentFragment as? Callback
+                        ?: targetFragment as? Callback)
+                        ?.onSubmissionSelected(data.submission)
+                    dismiss()
                 }
             }
         )
@@ -184,5 +196,9 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         SolutionCommentDialogFragment
             .newInstance(step, submissionItem.attempt, submissionItem.submission)
             .showIfNotExists(fragmentManager ?: return, SolutionCommentDialogFragment.TAG)
+    }
+
+    interface Callback {
+        fun onSubmissionSelected(submission: Submission)
     }
 }
