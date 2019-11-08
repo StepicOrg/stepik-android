@@ -777,4 +777,7 @@
 
     <!-- Downloads -->
     <string name="downloads_title">Загруженные курсы</string>
+
+    <!-- Submissions -->
+    <string name="submissions_title">Решения</string>
 </resources>
