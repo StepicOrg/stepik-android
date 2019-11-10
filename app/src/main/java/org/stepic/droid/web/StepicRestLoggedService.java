@@ -16,7 +16,6 @@ import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
 import org.stepik.android.remote.discussion_thread.model.DiscussionThreadResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
-import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
@@ -187,9 +186,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/user-activities/{userId}")
     Single<UserActivityResponse> getUserActivitiesReactive(@Path("userId") long userId);
-
-    @GET("api/last-steps/{lastStepId}")
-    Single<LastStepResponse> getLastStepResponse(@Path("lastStepId") String lastStepId);
 
     @GET("api/course-lists?platform=mobile")
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);

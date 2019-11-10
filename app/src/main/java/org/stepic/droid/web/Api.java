@@ -18,7 +18,6 @@ import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
-import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
@@ -114,8 +113,6 @@ public interface Api {
     Call<UserActivityResponse> getUserActivities(long userId);
 
     Single<UserActivityResponse> getUserActivitiesReactive(long userId);
-
-    Single<LastStepResponse> getLastStepResponse(@NotNull String lastStepId);
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 

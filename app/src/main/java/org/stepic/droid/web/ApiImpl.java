@@ -367,11 +367,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<LastStepResponse> getLastStepResponse(@NonNull String lastStepId) {
-        return loggedService.getLastStepResponse(lastStepId);
-    }
-
-    @Override
     public Single<CourseCollectionsResponse> getCourseCollections(String language) {
         return loggedService.getCourseLists(language);
     }
