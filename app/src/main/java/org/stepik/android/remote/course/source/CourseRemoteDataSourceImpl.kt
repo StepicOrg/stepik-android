@@ -30,6 +30,9 @@ constructor(
         return courseService.getCourses(page, ids)
     }
 
+    override fun getCourses(vararg courseIds: Long): Call<CourseResponse> =
+        courseService.getCourses(courseIds)
+
     override fun getCoursesReactive(page: Int, vararg courseIds: Long): Single<CourseResponse> {
         val ids = if (courseIds.isEmpty()) {
             longArrayOf(0)

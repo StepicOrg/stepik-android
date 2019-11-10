@@ -32,7 +32,6 @@ import org.stepik.android.remote.auth.model.OAuthResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.auth.service.EmptyAuthService;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
-import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
@@ -205,12 +204,6 @@ public class ApiImpl implements Api {
     @Override
     public Call<EmailAddressResponse> getEmailAddresses(@NotNull long[] ids) {
         return loggedService.getEmailAddresses(ids);
-    }
-
-    @Override
-    public Call<CourseResponse> getCourse(long id) {
-        long[] ids = new long[]{id};
-        return loggedService.getCourses(ids);
     }
 
     @Override

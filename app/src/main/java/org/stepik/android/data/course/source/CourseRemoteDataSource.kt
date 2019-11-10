@@ -8,6 +8,8 @@ import retrofit2.Call
 
 interface CourseRemoteDataSource {
     fun getCourses(page: Int, vararg courseIds: Long): Call<CourseResponse>
+    fun getCourses(vararg courseIds: Long): Call<CourseResponse>
+
     fun getCoursesReactive(page: Int, vararg courseIds: Long): Single<CourseResponse>
     fun getCoursesReactive(vararg courseIds: Long): Single<List<Course>>
 

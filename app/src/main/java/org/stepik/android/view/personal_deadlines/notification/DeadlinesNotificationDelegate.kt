@@ -14,6 +14,7 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.Api
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
+import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
 import org.stepik.android.data.section.source.SectionRemoteDataSource
 import org.stepik.android.model.Course
@@ -30,6 +31,7 @@ constructor(
     private val context: Context,
     private val deadlinesCacheDataSource: DeadlinesCacheDataSource,
     private val sectionsRemoteDataSource: SectionRemoteDataSource,
+    private val courseRemoteDataSource: CourseRemoteDataSource,
     private val api: Api,
     private val databaseFacade: DatabaseFacade,
     private val notificationHelper: NotificationHelper,
@@ -124,7 +126,7 @@ constructor(
         if (courseId == null) return null
         var course: Course? = databaseFacade.getCourseById(courseId)
         if (course == null) {
-            course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
+            course = courseRemoteDataSource.getCourses(courseId).execute()?.body()?.courses?.firstOrNull()
         }
         return course
     }

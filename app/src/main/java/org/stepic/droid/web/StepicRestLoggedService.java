@@ -4,9 +4,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
-import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
-import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
@@ -49,9 +47,6 @@ public interface StepicRestLoggedService {
             @Query("lesson") final long lessonId
     );
 
-    @GET("api/progresses")
-    Single<ProgressResponse> getProgressesReactive(@Query("ids[]") String[] progresses);
-
     @GET("api/assignments")
     Single<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
 
@@ -72,9 +67,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/email-addresses")
     Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
-
-    @GET("api/courses")
-    Call<CourseResponse> getCourses(@Query("ids[]") long[] courseIds);
 
     @PUT("api/notifications/{id}")
     Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);

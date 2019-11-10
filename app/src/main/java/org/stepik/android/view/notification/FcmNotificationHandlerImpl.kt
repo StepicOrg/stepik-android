@@ -23,7 +23,7 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.resolvers.text.TextResolver
-import org.stepic.droid.web.Api
+import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.ui.activity.CourseActivity
@@ -43,7 +43,7 @@ constructor(
     private val textResolver: TextResolver,
     private val notificationHelper: NotificationHelper,
     private val databaseFacade: DatabaseFacade,
-    private val api: Api,
+    private val courseRemoteDataSource: CourseRemoteDataSource,
     private val notificationTimeChecker: NotificationTimeChecker,
     private val stepikNotificationManager: StepikNotificationManager
 ) : FcmNotificationHandler {
@@ -423,7 +423,7 @@ constructor(
         if (courseId == null) return null
         var course: Course? = databaseFacade.getCourseById(courseId)
         if (course == null) {
-            course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
+            course = courseRemoteDataSource.getCourses(courseId).execute()?.body()?.courses?.firstOrNull()
         }
         return course
     }

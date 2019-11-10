@@ -8,11 +8,17 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface CourseService {
-    fun getCourses(page: Int, ids: LongArray): Call<CourseResponse>
+    @GET("api/courses")
+    fun getCourses(@Query("page") page: Int, @Query("ids[]") ids: LongArray): Call<CourseResponse>
 
-    fun getCoursesReactive(page: Int, ids: LongArray): Single<CourseResponse>
+    @GET("api/courses")
+    fun getCourses(@Query("ids[]") courseIds: LongArray): Call<CourseResponse>
 
-    fun getCoursesReactive(ids: LongArray): Single<CourseResponse>
+    @GET("api/courses")
+    fun getCoursesReactive(@Query("page") page: Int, @Query("ids[]") ids: LongArray): Single<CourseResponse>
+
+    @GET("api/courses")
+    fun getCoursesReactive(@Query("ids[]") ids: LongArray): Single<CourseResponse>
 
     @GET("api/user-courses")
     fun getUserCourses(@Query("page") page: Int): Single<UserCoursesResponse>
