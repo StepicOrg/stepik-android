@@ -14,6 +14,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.base.CookieHelper;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.NotificationCategory;
@@ -22,7 +23,6 @@ import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.util.CompatibilityExtensionsKt;
-import org.stepic.droid.base.CookieHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.NetworkExtensionsKt;
 import org.stepic.droid.web.model.adaptive.RatingRequest;
@@ -31,7 +31,6 @@ import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.Submission;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
@@ -52,8 +51,6 @@ import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
-import org.stepik.android.remote.submission.model.SubmissionRequest;
-import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
@@ -163,11 +160,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<UnitResponse> getUnitsRx(long[] units) {
-        return loggedService.getUnitsRx(units);
-    }
-
-    @Override
     public Single<UnitResponse> getUnits(long courseId, long lessonId) {
         return loggedService.getUnits(courseId, lessonId);
     }
@@ -272,11 +264,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<SubmissionResponse> createNewSubmissionReactive(Submission submission) {
-        return loggedService.createNewSubmissionReactive(new SubmissionRequest(submission));
-    }
-
-    @Override
     public Single<AttemptResponse> getExistingAttemptsReactive(long stepId) {
         return loggedService.getExistingAttemptsReactive(stepId, getCurrentUserId());
     }
@@ -284,21 +271,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<AttemptResponse> getExistingAttemptsReactive(long[] attemptIds) {
         return loggedService.getExistingAttemptsReactive(attemptIds);
-    }
-
-    @Override
-    public Single<SubmissionResponse> getSubmissionsReactive(long attemptId) {
-        return loggedService.getExistingSubmissionsReactive(attemptId, "desc");
-    }
-
-    @Override
-    public Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, int page) {
-        return loggedService.getExistingSubmissionsForStepReactive(stepId, page);
-    }
-
-    @Override
-    public Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, long userId, int page) {
-        return loggedService.getExistingSubmissionsForStepReactive(stepId, userId, page);
     }
 
     @Override
@@ -398,11 +370,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<CertificateResponse> getCertificates(long userId, int page) {
         return loggedService.getCertificates(userId, page);
-    }
-
-    @Override
-    public Single<UnitResponse> getUnitsByLessonId(long lessonId) {
-        return loggedService.getUnitsByLessonId(lessonId);
     }
 
     @Override

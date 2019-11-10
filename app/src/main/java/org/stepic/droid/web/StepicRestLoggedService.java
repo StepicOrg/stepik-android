@@ -28,8 +28,6 @@ import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.step_source.model.StepSourceRequest;
 import org.stepik.android.remote.step_source.model.StepSourceResponse;
-import org.stepik.android.remote.submission.model.SubmissionRequest;
-import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
@@ -85,11 +83,6 @@ public interface StepicRestLoggedService {
     @GET("api/units")
     Call<UnitResponse> getUnits(
             @Query("ids[]") List<Long> units
-    );
-
-    @GET("api/units")
-    Single<UnitResponse> getUnitsRx(
-            @Query("ids[]") long[] units
     );
 
     @GET("api/units")
@@ -150,22 +143,11 @@ public interface StepicRestLoggedService {
     @POST("api/attempts")
     Single<AttemptResponse> createNewAttemptReactive(@Body AttemptRequest attemptRequest);
 
-    @POST("api/submissions")
-    Single<SubmissionResponse> createNewSubmissionReactive(
-            @Body SubmissionRequest submissionRequest
-    );
-
     @GET("api/attempts")
     Single<AttemptResponse> getExistingAttemptsReactive(@Query("step") long stepId, @Query("user") long userId);
 
     @GET("api/attempts")
     Single<AttemptResponse> getExistingAttemptsReactive(@Query("ids[]") long[] ids);
-
-    @GET("api/submissions")
-    Single<SubmissionResponse> getExistingSubmissionsReactive(
-            @Query("attempt") final long attemptId,
-            @Query("order") final String order
-    );
 
     @GET("api/email-addresses")
     Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
@@ -211,15 +193,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/certificates")
     Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);
-
-    @GET("api/units")
-    Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
-
-    @GET("api/submissions?order=desc")
-    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId, @Query("page") int page);
-
-    @GET("api/submissions?order=desc")
-    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId, @Query("user") long user, @Query("page") int page);
 
     @GET("api/notifications")
     Call<NotificationResponse> getNotifications(@Query("page") int page, @Nullable @Query("type") String type);

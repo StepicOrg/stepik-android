@@ -8,7 +8,6 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
-import org.stepik.android.model.Submission;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
@@ -25,7 +24,6 @@ import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
-import org.stepik.android.remote.submission.model.SubmissionResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
@@ -67,8 +65,6 @@ public interface Api {
      */
     Call<UnitResponse> getUnits(List<Long> units);
 
-    Single<UnitResponse> getUnitsRx(long[] units);
-
     Single<UnitResponse> getUnits(long courseId, long lessonId);
 
     Call<LessonResponse> getLessons(long[] lessons);
@@ -101,17 +97,9 @@ public interface Api {
 
     Single<AttemptResponse> createNewAttemptReactive(long stepId);
 
-    Single<SubmissionResponse> createNewSubmissionReactive(Submission submission);
-
     Single<AttemptResponse> getExistingAttemptsReactive(long stepId);
 
     Single<AttemptResponse> getExistingAttemptsReactive(long[] attemptIds);
-
-    Single<SubmissionResponse> getSubmissionsReactive(long attemptId);
-
-    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, int page);
-
-    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, long userId, int page);
 
     Call<Void> remindPassword(String email);
 
@@ -130,8 +118,6 @@ public interface Api {
     Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead);
 
     Single<CertificateResponse> getCertificates(long userId, int page);
-
-    Single<UnitResponse> getUnitsByLessonId(long lessonId);
 
     Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);
 

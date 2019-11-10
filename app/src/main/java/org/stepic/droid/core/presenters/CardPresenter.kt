@@ -13,10 +13,9 @@ import org.stepic.droid.core.presenters.contracts.CardView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.getStepType
-import org.stepic.droid.web.Api
+import org.stepik.android.data.submission.source.SubmissionRemoteDataSource
 import org.stepik.android.model.Submission
 import org.stepik.android.model.adaptive.Reaction
-import org.stepik.android.remote.submission.model.SubmissionResponse
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -27,7 +26,7 @@ class CardPresenter(
         private val answerListener: AnswerListener?
 ) : PresenterBase<CardView>() {
     @Inject
-    lateinit var api: Api
+    lateinit var submissionRemoteDataSource: SubmissionRemoteDataSource
 
     @Inject
     @field:MainScheduler
@@ -113,9 +112,9 @@ class CardPresenter(
             val submission = Submission(
                     _reply = view?.getQuizViewDelegate()?.createReply(),
                     attempt = card.attempt?.id ?: 0)
-            disposable = api.createNewSubmissionReactive(submission)
+            disposable = submissionRemoteDataSource.createSubmission(submission)
                     .ignoreElement()
-                    .andThen(api.getSubmissionsReactive(submission.attempt))
+                    .andThen(submissionRemoteDataSource.getSubmissionsForAttempt(submission.attempt))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribe(this::onSubmissionLoaded, this::onError)
@@ -131,11 +130,11 @@ class CardPresenter(
         submission = null
     }
 
-    private fun onSubmissionLoaded(submissionResponse: SubmissionResponse) {
-        submission = submissionResponse.submissions.firstOrNull()
+    private fun onSubmissionLoaded(submissions: List<Submission>) {
+        submission = submissions.firstOrNull()
         submission?.let {
             if (it.status == Submission.Status.EVALUATION) {
-                disposable =  api.getSubmissionsReactive(it.attempt)
+                disposable =  submissionRemoteDataSource.getSubmissionsForAttempt(it.attempt)
                         .delay(1, TimeUnit.SECONDS)
                         .subscribeOn(backgroundScheduler)
                         .observeOn(mainScheduler)
