@@ -44,7 +44,6 @@ import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
-import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
@@ -147,22 +146,6 @@ public class ApiImpl implements Api {
     public Single<UnitResponse> getUnits(long courseId, long lessonId) {
         return loggedService.getUnits(courseId, lessonId);
     }
-
-    @Override
-    public Call<LessonResponse> getLessons(long[] lessons) {
-        return loggedService.getLessons(lessons);
-    }
-
-    @Override
-    public Single<LessonResponse> getLessonsRx(long[] lessons) {
-        return loggedService.getLessonsRx(lessons);
-    }
-
-    @Override
-    public Single<LessonResponse> getLessons(long lessonId) {
-        return getLessonsRx(new long[]{lessonId});
-    }
-
     @Override
     public Single<StepResponse> getSteps(long[] steps) {
         return loggedService.getSteps(steps);

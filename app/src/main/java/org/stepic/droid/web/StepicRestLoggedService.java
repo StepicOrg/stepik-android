@@ -17,7 +17,6 @@ import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
 import org.stepik.android.remote.discussion_thread.model.DiscussionThreadResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
-import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
@@ -75,12 +74,6 @@ public interface StepicRestLoggedService {
             @Query("course") final long courseId,
             @Query("lesson") final long lessonId
     );
-
-    @GET("api/lessons")
-    Call<LessonResponse> getLessons(@Query("ids[]") long[] lessons);
-
-    @GET("api/lessons")
-    Single<LessonResponse> getLessonsRx(@Query("ids[]") long[] lessons);
 
     @GET("api/steps")
     Single<StepResponse> getSteps(
