@@ -15,6 +15,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.Api
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
+import org.stepik.android.data.section.source.SectionRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.view.course.ui.activity.CourseActivity
@@ -28,6 +29,7 @@ class DeadlinesNotificationDelegate
 constructor(
     private val context: Context,
     private val deadlinesCacheDataSource: DeadlinesCacheDataSource,
+    private val sectionsRemoteDataSource: SectionRemoteDataSource,
     private val api: Api,
     private val databaseFacade: DatabaseFacade,
     private val notificationHelper: NotificationHelper,
@@ -130,7 +132,7 @@ constructor(
     private fun getSection(sectionId: Long): Section? {
         var section: Section? = databaseFacade.getSectionById(sectionId)
         if (section == null) {
-            section = api.getSections(longArrayOf(sectionId)).execute()?.body()?.sections?.firstOrNull()
+            section = sectionsRemoteDataSource.getSections(sectionId).execute()?.body()?.sections?.firstOrNull()
         }
         return section
     }

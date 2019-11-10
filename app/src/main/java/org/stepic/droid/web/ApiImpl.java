@@ -49,7 +49,6 @@ import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
-import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
@@ -142,16 +141,6 @@ public class ApiImpl implements Api {
     @Override
     public Completable joinCourse(EnrollmentRequest enrollmentRequest) {
         return loggedService.joinCourse(enrollmentRequest);
-    }
-
-    @Override
-    public Call<SectionResponse> getSections(long[] sectionsIds) {
-        return loggedService.getSections(sectionsIds);
-    }
-
-    @Override
-    public Single<SectionResponse> getSectionsRx(long[] sectionsIds) {
-        return loggedService.getSectionsRx(sectionsIds);
     }
 
     @Override

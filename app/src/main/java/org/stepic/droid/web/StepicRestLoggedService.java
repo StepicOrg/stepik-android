@@ -24,7 +24,6 @@ import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
-import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.step_source.model.StepSourceRequest;
 import org.stepik.android.remote.step_source.model.StepSourceResponse;
@@ -53,12 +52,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface StepicRestLoggedService {
-    @GET("api/sections")
-    Call<SectionResponse> getSections(@Query("ids[]") long[] sectionIds);
-
-    @GET("api/sections")
-    Single<SectionResponse> getSectionsRx(@Query("ids[]") long[] sectionIds);
-
     @POST("api/enrollments")
     Completable joinCourse(@Body EnrollmentRequest enrollmentCourse);
 

@@ -22,7 +22,6 @@ import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.lesson.model.LessonResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
-import org.stepik.android.remote.section.model.SectionResponse;
 import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
@@ -55,10 +54,6 @@ public interface Api {
     Completable joinCourse(EnrollmentRequest enrollmentRequest);
 
     Completable dropCourse(long courseId);
-
-    Call<SectionResponse> getSections(long[] sectionsIds);
-
-    Single<SectionResponse> getSectionsRx(long[] sectionsIds);
 
     /**
      * Max number of  units defined in AppConstants

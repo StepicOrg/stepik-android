@@ -4,10 +4,14 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.model.Section
+import org.stepik.android.remote.section.model.SectionResponse
+import retrofit2.Call
 
 interface SectionRemoteDataSource {
-    fun getSection(sectionId: Long): Maybe<Section> =
-        getSections(sectionId).maybeFirst()
+    fun getSectionRx(sectionId: Long): Maybe<Section> =
+        getSectionsRx(sectionId).maybeFirst()
 
-    fun getSections(vararg sectionIds: Long): Single<List<Section>>
+    fun getSectionsRx(vararg sectionIds: Long): Single<List<Section>>
+
+    fun getSections(vararg sectionIds: Long): Call<SectionResponse>
 }

@@ -2,22 +2,22 @@ package org.stepic.droid.storage.repositories.section
 
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.web.Api
+import org.stepik.android.data.section.source.SectionRemoteDataSource
 import org.stepik.android.model.Section
 import javax.inject.Inject
 
 class SectionRepositoryImpl
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
-        private val api: Api)
-    : Repository<Section> {
+        private val sectionRemoteDataSource: SectionRemoteDataSource
+) : Repository<Section> {
 
     override fun getObjects(keys: LongArray): Iterable<Section> {
         var sections = databaseFacade.getSectionsByIds(keys)
         if (sections.size != keys.size) {
             sections =
                     try {
-                        api.getSections(keys).execute()?.body()?.sections?.also {
+                        sectionRemoteDataSource.getSections(*keys).execute()?.body()?.sections?.also {
                             it.forEach(databaseFacade::addSection)
                         } ?: emptyList()
                     } catch (exception: Exception) {
@@ -34,7 +34,7 @@ class SectionRepositoryImpl
         if (section == null) {
             section =
                     try {
-                        api.getSections(longArrayOf(key)).execute()
+                        sectionRemoteDataSource.getSections(key).execute()
                                 ?.body()
                                 ?.sections
                                 ?.firstOrNull()
