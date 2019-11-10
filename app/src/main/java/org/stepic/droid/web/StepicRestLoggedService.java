@@ -68,9 +68,6 @@ public interface StepicRestLoggedService {
     );
 
     @GET("api/progresses")
-    Call<ProgressResponse> getProgresses(@Query("ids[]") String[] progresses);
-
-    @GET("api/progresses")
     Single<ProgressResponse> getProgressesReactive(@Query("ids[]") String[] progresses);
 
     @GET("api/assignments")

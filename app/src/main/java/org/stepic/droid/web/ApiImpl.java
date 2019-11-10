@@ -36,7 +36,6 @@ import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
-import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
@@ -142,16 +141,6 @@ public class ApiImpl implements Api {
     public Completable dropCourse(long courseId) {
         if (!config.isUserCanDropCourse()) return null;
         return loggedService.dropCourse(courseId);
-    }
-
-    @Override
-    public Call<ProgressResponse> getProgresses(String[] progresses) {
-        return loggedService.getProgresses(progresses);
-    }
-
-    @Override
-    public Single<ProgressResponse> getProgressesReactive(String[] progresses) {
-        return loggedService.getProgressesReactive(progresses);
     }
 
     @Override

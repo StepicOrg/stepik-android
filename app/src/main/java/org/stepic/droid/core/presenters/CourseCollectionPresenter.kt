@@ -12,12 +12,12 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.web.Api
+import org.stepik.android.data.progress.source.ProgressRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
 import org.stepik.android.remote.course.model.CourseResponse
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
-import org.stepik.android.remote.progress.model.ProgressResponse
 import javax.inject.Inject
 
 @CourseListScope
@@ -28,7 +28,8 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    private val api: Api
+    private val api: Api,
+    private val progressRemoteDataSource: ProgressRemoteDataSource
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -72,8 +73,8 @@ constructor(
             .subscribeOn(backgroundScheduler)
 
     private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> =
-        api.getProgressesReactive(progressIds)
-            .map(ProgressResponse::progresses)
+        progressRemoteDataSource.getProgresses(*progressIds)
+            .map { it }
             .map { it.associateBy(Progress::id) }
             .subscribeOn(backgroundScheduler)
 

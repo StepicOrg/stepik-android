@@ -15,7 +15,6 @@ import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
-import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
@@ -53,10 +52,6 @@ public interface Api {
     Call<UnitResponse> getUnits(List<Long> units);
 
     Single<UnitResponse> getUnits(long courseId, long lessonId);
-
-    Call<ProgressResponse> getProgresses(String[] progresses);
-
-    Single<ProgressResponse> getProgressesReactive(String[] progresses);
 
     Single<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
