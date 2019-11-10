@@ -7,8 +7,6 @@ import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
-import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
-import org.stepik.android.remote.discussion_thread.model.DiscussionThreadResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
@@ -108,12 +106,6 @@ public interface StepicRestLoggedService {
 
     @PUT("api/notifications/{id}")
     Completable putNotificationReactive(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
-
-    @GET("api/discussion-proxies")
-    Single<DiscussionProxyResponse> getDiscussionProxies(@Query("ids[]") String[] ids);
-
-    @GET("api/discussion-threads")
-    Single<DiscussionThreadResponse> getDiscussionThreads(@Query("ids[]") String[] ids);
 
     @PUT("api/votes/{id}")
     Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
