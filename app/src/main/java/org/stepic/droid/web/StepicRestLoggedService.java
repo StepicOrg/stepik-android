@@ -188,14 +188,5 @@ public interface StepicRestLoggedService {
     @GET("api/search-results?is_popular=true&is_public=true&type=course")
     Single<SearchResultResponse> getSearchResultsOfTag(@Query("page") int page, @Query("tag") int id, @Query("language") String lang);
 
-    @GET("api/recommendations")
-    Single<RecommendationsResponse> getNextRecommendations(
-            @Query("course") final long courseId,
-            @Query("count") final int count
-    );
 
-    @POST("api/recommendation-reactions")
-    Completable createRecommendationReaction(
-            @Body final RecommendationReactionsRequest reactionsRequest
-    );
 }

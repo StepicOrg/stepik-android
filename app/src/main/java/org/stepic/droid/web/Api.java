@@ -6,10 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
-import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
-import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
@@ -109,10 +107,6 @@ public interface Api {
     Single<TagResponse> getFeaturedTags();
 
     Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag);
-
-    Single<RecommendationsResponse> getNextRecommendations(long courseId, int count);
-
-    Completable createReaction(RecommendationReaction reaction);
 
     Single<List<RatingItem>> getRating(long courseId, int count, int days);
 

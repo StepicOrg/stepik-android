@@ -25,11 +25,8 @@ import org.stepic.droid.util.NetworkExtensionsKt;
 import org.stepic.droid.web.model.adaptive.RatingRequest;
 import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
-import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
-import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
-import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.OAuthResponse;
@@ -350,16 +347,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<TagResponse> getFeaturedTags() {
         return loggedService.getFeaturedTags();
-    }
-
-    @Override
-    public Single<RecommendationsResponse> getNextRecommendations(long courseId, int count) {
-        return loggedService.getNextRecommendations(courseId, count);
-    }
-
-    @Override
-    public Completable createReaction(RecommendationReaction reaction) {
-        return loggedService.createRecommendationReaction(new RecommendationReactionsRequest(reaction));
     }
 
     @Override

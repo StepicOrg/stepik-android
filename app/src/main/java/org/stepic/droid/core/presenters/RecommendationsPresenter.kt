@@ -29,6 +29,7 @@ import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse
+import org.stepik.android.data.recommendation.source.RecommendationRemoteDataSource
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.adaptive.Reaction
 import org.stepik.android.model.adaptive.RecommendationReaction
@@ -42,6 +43,7 @@ class RecommendationsPresenter
 constructor(
     @CourseId
     private val courseId: Long,
+    private val recommendationRemoteDataSource: RecommendationRemoteDataSource,
     private val api: Api,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -214,10 +216,10 @@ constructor(
     }
 
     private fun createReactionObservable(lesson: Long, reaction: Reaction, cacheSize: Int): Observable<RecommendationsResponse> {
-        val responseObservable = api.getNextRecommendations(courseId, CARDS_IN_CACHE).toObservable()
+        val responseObservable = recommendationRemoteDataSource.getNextRecommendations(courseId, CARDS_IN_CACHE).toObservable()
 
         if (lesson != 0L) {
-            val reactionCompletable = api
+            val reactionCompletable = recommendationRemoteDataSource
                     .createReaction(RecommendationReaction(lesson, reaction, sharedPreferenceHelper.profile?.id ?: 0))
             return if (cacheSize <= MIN_CARDS_IN_CACHE) {
                 reactionCompletable.andThen(responseObservable)
