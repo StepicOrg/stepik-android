@@ -11,6 +11,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.web.Api
 import org.stepik.android.data.lesson.source.LessonRemoteDataSource
+import org.stepik.android.data.step.source.StepRemoteDataSource
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Step
 import org.stepik.android.model.attempts.Attempt
@@ -26,6 +27,8 @@ class Card(
 ) : Single<Card>() {
     @Inject
     lateinit var lessonRemoteDataSource: LessonRemoteDataSource
+    @Inject
+    lateinit var stepRemoteDataSource: StepRemoteDataSource
     @Inject
     lateinit var api: Api
 
@@ -60,7 +63,7 @@ class Card(
         error = null
 
         if (stepSubscription == null || stepSubscription?.isDisposed == true && step == null) {
-            stepSubscription = api.getStepsByLessonId(lessonId)
+            stepSubscription = stepRemoteDataSource.getStepByLessonId(lessonId)// api.getStepsByLessonId(lessonId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribe({ setStep(it.steps.firstOrNull()) }, { onError(it) })

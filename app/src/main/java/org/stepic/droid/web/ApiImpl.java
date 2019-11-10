@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -43,9 +42,7 @@ import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
-import org.stepik.android.remote.last_step.model.LastStepResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
-import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
@@ -145,15 +142,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<UnitResponse> getUnits(long courseId, long lessonId) {
         return loggedService.getUnits(courseId, lessonId);
-    }
-    @Override
-    public Single<StepResponse> getSteps(long[] steps) {
-        return loggedService.getSteps(steps);
-    }
-
-    @Override
-    public Single<StepResponse> getStepsByLessonId(long lessonId) {
-        return loggedService.getStepsByLessonId(lessonId);
     }
 
     @Override
