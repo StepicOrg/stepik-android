@@ -69,6 +69,7 @@ import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
+import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
@@ -125,7 +126,8 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
         CourseRoutingModule::class, // todo unite it in RoutingModule::class
         NotificationModule::class,
 
-        StoryDataModule::class
+        StoryDataModule::class,
+        DeviceDataModule::class
     ]
 )
 interface AppCoreComponent {

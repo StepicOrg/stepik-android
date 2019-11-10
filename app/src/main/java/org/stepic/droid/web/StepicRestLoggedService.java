@@ -103,15 +103,6 @@ public interface StepicRestLoggedService {
     @GET("api/email-addresses")
     Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
 
-    @GET("api/devices")
-    Call<DeviceResponse> getDeviceByRegistrationId(@Query("registration_id") String token);
-
-    @POST("api/devices")
-    Call<DeviceResponse> registerDevice(@Body DeviceRequest deviceRequest);
-
-    @PUT("api/devices/{id}")
-    Call<DeviceResponse> renewDeviceRegistration(@Path("id") long deviceId, @Body DeviceRequest deviceRequest);
-
     @GET("api/courses")
     Call<CourseResponse> getCourses(@Query("ids[]") long[] courseIds);
 

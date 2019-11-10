@@ -76,12 +76,6 @@ public interface Api {
 
     Call<EmailAddressResponse> getEmailAddresses(long[] ids);
 
-    Call<DeviceResponse> getDevicesByRegistrationId(String token);
-
-    Call<DeviceResponse> renewDeviceRegistration(long deviceId, String token);
-
-    Call<DeviceResponse> registerDevice(String token);
-
     Call<CourseResponse> getCourse(long id);
 
     Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);

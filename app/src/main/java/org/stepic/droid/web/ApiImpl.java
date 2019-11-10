@@ -20,7 +20,6 @@ import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.ISocialType;
-import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.NetworkExtensionsKt;
 import org.stepic.droid.web.model.adaptive.RatingRequest;
 import org.stepic.droid.web.model.adaptive.RatingResponse;
@@ -261,25 +260,6 @@ public class ApiImpl implements Api {
     @Override
     public Call<EmailAddressResponse> getEmailAddresses(@NotNull long[] ids) {
         return loggedService.getEmailAddresses(ids);
-    }
-
-    @Override
-    public Call<DeviceResponse> getDevicesByRegistrationId(String token) {
-        return loggedService.getDeviceByRegistrationId(token);
-    }
-
-    @Override
-    public Call<DeviceResponse> renewDeviceRegistration(long deviceId, String token) {
-        String description = DeviceInfoUtil.getShortInfo(context);
-        DeviceRequest deviceRequest = new DeviceRequest(deviceId, token, description);
-        return loggedService.renewDeviceRegistration(deviceId, deviceRequest);
-    }
-
-    @Override
-    public Call<DeviceResponse> registerDevice(String token) {
-        String description = DeviceInfoUtil.getShortInfo(context);
-        DeviceRequest deviceRequest = new DeviceRequest(token, description);
-        return loggedService.registerDevice(deviceRequest);
     }
 
     @Override
