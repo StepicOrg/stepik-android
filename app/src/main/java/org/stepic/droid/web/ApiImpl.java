@@ -32,8 +32,6 @@ import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
-import org.stepik.android.remote.attempt.model.AttemptRequest;
-import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.auth.model.OAuthResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.auth.service.EmptyAuthService;
@@ -211,21 +209,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<CourseResponse> getCoursesReactive(@NotNull long[] ids) {
         return loggedService.getCoursesReactive(ids);
-    }
-
-    @Override
-    public Single<AttemptResponse> createNewAttemptReactive(long stepId) {
-        return loggedService.createNewAttemptReactive(new AttemptRequest(stepId));
-    }
-
-    @Override
-    public Single<AttemptResponse> getExistingAttemptsReactive(long stepId) {
-        return loggedService.getExistingAttemptsReactive(stepId, getCurrentUserId());
-    }
-
-    @Override
-    public Single<AttemptResponse> getExistingAttemptsReactive(long[] attemptIds) {
-        return loggedService.getExistingAttemptsReactive(attemptIds);
     }
 
     @Override

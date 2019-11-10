@@ -11,7 +11,6 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
-import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
@@ -74,12 +73,6 @@ public interface Api {
     Single<CourseResponse> getCoursesReactive(int page, @NotNull long[] ids);
 
     Single<CourseResponse> getCoursesReactive(@NotNull long[] ids);
-
-    Single<AttemptResponse> createNewAttemptReactive(long stepId);
-
-    Single<AttemptResponse> getExistingAttemptsReactive(long stepId);
-
-    Single<AttemptResponse> getExistingAttemptsReactive(long[] attemptIds);
 
     Call<Void> remindPassword(String email);
 

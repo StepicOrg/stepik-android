@@ -2,30 +2,39 @@ package org.stepik.android.remote.attempt
 
 import io.reactivex.Single
 import io.reactivex.functions.Function
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.first
-import org.stepic.droid.web.Api
 import org.stepik.android.data.attempt.source.AttemptRemoteDataSource
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.remote.attempt.model.AttemptRequest
 import org.stepik.android.remote.attempt.model.AttemptResponse
+import org.stepik.android.remote.attempt.service.AttemptService
 import javax.inject.Inject
 
 class AttemptRemoteDataSourceImpl
 @Inject
 constructor(
-    private val api: Api
+    private val attemptService: AttemptService,
+    private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : AttemptRemoteDataSource {
     private val attemptMapper = Function(AttemptResponse::attempts)
 
     override fun createAttemptForStep(stepId: Long): Single<Attempt> =
-        api.createNewAttemptReactive(stepId)
+        attemptService.createNewAttemptReactive(AttemptRequest(stepId))
             .map(attemptMapper)
             .first()
 
     override fun getAttemptsForStep(stepId: Long): Single<List<Attempt>> =
-        api.getExistingAttemptsReactive(stepId)
+        attemptService.getExistingAttemptsReactive(stepId, sharedPreferenceHelper.profile?.id ?: 0)
             .map(attemptMapper)
 
     override fun getAttempts(vararg attemptIds: Long): Single<List<Attempt>> =
-        api.getExistingAttemptsReactive(attemptIds)
+        attemptService.getExistingAttemptsReactive(attemptIds)
             .map(attemptMapper)
+
+    override fun createAttemptForStepAdaptive(stepId: Long): Single<AttemptResponse> =
+        attemptService.createNewAttemptReactive(AttemptRequest(stepId))
+
+    override fun getAttemptsForStepAdaptive(stepId: Long): Single<AttemptResponse> =
+        attemptService.getExistingAttemptsReactive(stepId, sharedPreferenceHelper.profile?.id ?: 0)
 }

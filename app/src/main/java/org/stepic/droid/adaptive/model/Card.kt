@@ -10,6 +10,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.web.Api
+import org.stepik.android.data.attempt.source.AttemptRemoteDataSource
 import org.stepik.android.data.lesson.source.LessonRemoteDataSource
 import org.stepik.android.data.step.source.StepRemoteDataSource
 import org.stepik.android.model.Lesson
@@ -29,6 +30,8 @@ class Card(
     lateinit var lessonRemoteDataSource: LessonRemoteDataSource
     @Inject
     lateinit var stepRemoteDataSource: StepRemoteDataSource
+    @Inject
+    lateinit var attemptRemoteDataSource: AttemptRemoteDataSource
     @Inject
     lateinit var api: Api
 
@@ -79,12 +82,18 @@ class Card(
         }
     }
 
+//    TODO Why return type is Any ?
+//    Observable.concat(
+//    attemptRemoteDataSource.getAttemptsForStep(newStep.id).toObservable(),
+//    attemptRemoteDataSource.createAttemptForStep(newStep.id).toObservable()
+//    )
+
     private fun setStep(newStep: Step?) = newStep?.let {
         this.step = newStep
         if (attemptDisposable == null || attemptDisposable?.isDisposed == true && attempt == null) {
             attemptDisposable = Observable.concat(
-                    api.getExistingAttemptsReactive(newStep.id).toObservable(),
-                    api.createNewAttemptReactive(newStep.id).toObservable()
+                    attemptRemoteDataSource.getAttemptsForStepAdaptive(newStep.id).toObservable(),
+                    attemptRemoteDataSource.createAttemptForStepAdaptive(newStep.id).toObservable()
             )
                     .filter { it.attempts.isNotEmpty() }
                     .take(1)

@@ -4,8 +4,6 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
-import org.stepik.android.remote.attempt.model.AttemptRequest;
-import org.stepik.android.remote.attempt.model.AttemptResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.comment.model.CommentRequest;
@@ -116,15 +114,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/courses")
     Single<CourseResponse> getCoursesReactive(@Query("ids[]") long[] courseIds);
-
-    @POST("api/attempts")
-    Single<AttemptResponse> createNewAttemptReactive(@Body AttemptRequest attemptRequest);
-
-    @GET("api/attempts")
-    Single<AttemptResponse> getExistingAttemptsReactive(@Query("step") long stepId, @Query("user") long userId);
-
-    @GET("api/attempts")
-    Single<AttemptResponse> getExistingAttemptsReactive(@Query("ids[]") long[] ids);
 
     @GET("api/email-addresses")
     Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
