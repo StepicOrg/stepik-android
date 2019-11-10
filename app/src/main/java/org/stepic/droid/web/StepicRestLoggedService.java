@@ -1,13 +1,9 @@
 package org.stepic.droid.web;
 
 import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
-import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
-import org.stepik.android.remote.comment.model.CommentRequest;
-import org.stepik.android.remote.comment.model.CommentResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
 import org.stepik.android.remote.course.model.EnrollmentRequest;
@@ -15,7 +11,6 @@ import org.stepik.android.remote.discussion_proxy.model.DiscussionProxyResponse;
 import org.stepik.android.remote.discussion_thread.model.DiscussionThreadResponse;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
-import org.stepik.android.remote.step.model.StepResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.user_activity.model.UserActivityResponse;
@@ -70,16 +65,6 @@ public interface StepicRestLoggedService {
     Single<UnitResponse> getUnits(
             @Query("course") final long courseId,
             @Query("lesson") final long lessonId
-    );
-
-    @GET("api/steps")
-    Single<StepResponse> getSteps(
-            @Query("ids[]") long[] steps
-    );
-
-    @GET("api/steps")
-    Single<StepResponse> getStepsByLessonId(
-            @Query("lesson") long lessonId
     );
 
     @GET("api/progresses")
@@ -141,18 +126,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/discussion-threads")
     Single<DiscussionThreadResponse> getDiscussionThreads(@Query("ids[]") String[] ids);
-
-    @GET("api/comments")
-    Single<CommentResponse> getComments(@Query("ids[]") long[] ids);
-
-    @POST("api/comments")
-    Single<CommentResponse> createComment(@Body CommentRequest request);
-
-    @PUT("api/comments/{commentId}")
-    Single<CommentResponse> saveComment(@Path("commentId") long commentId, @Body CommentRequest request);
-
-    @DELETE("api/comments/{commentId}")
-    Completable removeComment(@Path("commentId") long commentId);
 
     @PUT("api/votes/{id}")
     Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
