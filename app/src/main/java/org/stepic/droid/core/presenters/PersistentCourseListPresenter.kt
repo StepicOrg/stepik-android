@@ -17,7 +17,7 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.RWLocks
-import org.stepic.droid.web.Api
+import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
@@ -39,7 +39,7 @@ constructor(
     private val databaseFacade: DatabaseFacade,
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
-    private val api: Api,
+    private val courseRemoteDataSource: CourseRemoteDataSource,
 
     private val progressRepository: ProgressRepository,
     private val filterApplicator: FilterApplicator,
@@ -117,20 +117,20 @@ constructor(
         while (hasNextPage.get()) {
             val coursesFromInternet: List<Course>? = try {
                 if (courseType == CourseListType.FEATURED) {
-                    val response = api.getPopularCourses(currentPage.get()).blockingGet()
+                    val response = courseRemoteDataSource.getPopularCourses(currentPage.get()).blockingGet()
                     handleMeta(response.meta)
                     response.courses
                 } else {
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
                         val page = currentPage.get()
-                        val coursesOrder = api.getUserCourses(page)
+                        val coursesOrder = courseRemoteDataSource.getUserCourses(page)
                                 .blockingGet()
                                 .apply { handleMeta(meta) }
                                 .userCourse
                                 .map(UserCourse::course)
 
-                        val coursesResponse = api.getCoursesReactive(1, coursesOrder.toLongArray())
+                        val coursesResponse = courseRemoteDataSource.getCoursesReactive(1, *coursesOrder.toLongArray())
                                 .blockingGet()
                         val courses = coursesResponse
                                 .courses

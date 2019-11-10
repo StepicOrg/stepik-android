@@ -13,6 +13,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
+import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.model.Meta
 import org.stepik.android.model.Tag
@@ -25,6 +26,7 @@ class TagListPresenter
 @Inject
 constructor(
     private val tag: Tag,
+    private val courseRemoteDataSource: CourseRemoteDataSource,
     private val api: Api,
     private val searchResolver: SearchResolver,
     @MainScheduler
@@ -92,10 +94,10 @@ constructor(
     private fun zipIdsAndCourses(it: LongArray): Observable<Pair<LongArray, List<Course>>>? {
         return Observable.zip(
                 Observable.just(it),
-                api
-                        .getCoursesReactive(FIRST_PAGE, it)
-                        .toObservable()
-                        .map { it.courses },
+                courseRemoteDataSource
+                    .getCoursesReactive(FIRST_PAGE, *it)
+                    .toObservable()
+                    .map { it.courses },
                 BiFunction<LongArray, List<Course>, Pair<LongArray, List<Course>>> { courseIds, courses ->
                     courseIds to courses
                 }

@@ -12,8 +12,6 @@ import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
-import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
-import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
@@ -31,19 +29,11 @@ public interface Api {
         social, loginPassword
     }
 
-    Single<UserCoursesResponse> getUserCourses(int page);
-
-    Single<CourseResponse> getPopularCourses(int page);
-
     Call<StepikProfileResponse> getUserProfile();
 
     Call<UserResponse> getUsers(long[] userIds);
 
     Single<UserResponse> getUsersRx(long[] userIds);
-
-    Completable joinCourse(EnrollmentRequest enrollmentRequest);
-
-    Completable dropCourse(long courseId);
 
     /**
      * Max number of  units defined in AppConstants
@@ -59,12 +49,6 @@ public interface Api {
     Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
 
     Single<QueriesResponse> getSearchQueries(String query);
-
-    Call<CourseResponse> getCourses(int page, long[] ids);
-
-    Single<CourseResponse> getCoursesReactive(int page, @NotNull long[] ids);
-
-    Single<CourseResponse> getCoursesReactive(@NotNull long[] ids);
 
     Call<Void> remindPassword(String email);
 
@@ -85,8 +69,6 @@ public interface Api {
     Single<NotificationStatusesResponse> getNotificationStatuses();
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
-
-    Single<CourseReviewSummaryResponse> getCourseReviewSummaries(long[] reviewSummaryIds);
 
     Single<TagResponse> getFeaturedTags();
 

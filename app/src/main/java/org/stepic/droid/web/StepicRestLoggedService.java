@@ -5,8 +5,6 @@ import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
-import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
-import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
@@ -21,7 +19,6 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -32,12 +29,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface StepicRestLoggedService {
-    @POST("api/enrollments")
-    Completable joinCourse(@Body EnrollmentRequest enrollmentCourse);
-
-    @DELETE("api/enrollments/{id}")
-    Completable dropCourse(@Path("id") long courseId);
-
     @GET("api/users")
     Call<UserResponse> getUsers(@Query("ids[]") long[] userIds);
 
@@ -46,12 +37,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/stepics/1")
     Call<StepikProfileResponse> getUserProfile();
-
-    @GET("api/user-courses")
-    Single<UserCoursesResponse> getUserCourses(@Query("page") int page);
-
-    @GET("api/courses?exclude_ended=true&is_public=true&order=-activity")
-    Single<CourseResponse> getPopularCourses(@Query("page") int page, @Query("language") String language);
 
     @GET("api/units")
     Call<UnitResponse> getUnits(
@@ -85,15 +70,6 @@ public interface StepicRestLoggedService {
     @GET("api/queries")
     Single<QueriesResponse> getSearchQueries(@Query("query") String query);
 
-    @GET("api/courses")
-    Call<CourseResponse> getCourses(@Query("page") int page, @Query("ids[]") long[] courseIds);
-
-    @GET("api/courses")
-    Single<CourseResponse> getCoursesReactive(@Query("page") int page, @Query("ids[]") long[] courseIds);
-
-    @GET("api/courses")
-    Single<CourseResponse> getCoursesReactive(@Query("ids[]") long[] courseIds);
-
     @GET("api/email-addresses")
     Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
 
@@ -122,13 +98,8 @@ public interface StepicRestLoggedService {
     @GET("api/notification-statuses")
     Single<NotificationStatusesResponse> getNotificationStatuses();
 
-
-
     @GET("api/course-lists?platform=mobile")
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
-
-    @GET("api/course-review-summaries")
-    Single<CourseReviewSummaryResponse> getCourseReviews(@Query("ids[]") long[] reviewSummaryIds);
 
     @GET("api/tags?is_featured=true")
     Single<TagResponse> getFeaturedTags();

@@ -8,6 +8,7 @@ import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.web.Api
+import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.model.Course
 import java.util.ArrayList
 import java.util.concurrent.ThreadPoolExecutor
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @CourseListScope
 class SearchCoursesPresenter
 @Inject constructor(
+    private val courseRemoteDataSource: CourseRemoteDataSource,
     private val api: Api,
     private val threadPoolExecutor: ThreadPoolExecutor,
     private val mainHandler: MainHandler,
@@ -67,7 +69,7 @@ class SearchCoursesPresenter
                             view?.showEmptyCourses()
                         }
                     } else {
-                        val courses = api.getCourses(1, courseIdsForSearch).execute().body()?.courses //FIXME: WARNING, here may pagination not working for query with ids[]
+                        val courses = courseRemoteDataSource.getCourses(1, *courseIdsForSearch).execute().body()?.courses //FIXME: WARNING, here may pagination not working for query with ids[]
                         if (courses == null || courses.isEmpty()) {
                             mainHandler.post { view?.showEmptyCourses() }
                         } else {

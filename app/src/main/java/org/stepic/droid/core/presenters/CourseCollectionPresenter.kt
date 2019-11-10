@@ -11,13 +11,13 @@ import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.CourseUtil
-import org.stepic.droid.web.Api
+import org.stepik.android.data.course.source.CourseRemoteDataSource
+import org.stepik.android.data.course.source.CourseReviewSummaryRemoteDataSource
 import org.stepik.android.data.progress.source.ProgressRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
 import org.stepik.android.remote.course.model.CourseResponse
-import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
 import javax.inject.Inject
 
 @CourseListScope
@@ -28,7 +28,8 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    private val api: Api,
+    private val courseReviewsSummaryRemoteDataSource: CourseReviewSummaryRemoteDataSource,
+    private val courseRemoteDataSource: CourseRemoteDataSource,
     private val progressRemoteDataSource: ProgressRemoteDataSource
 ) : PresenterBase<CoursesView>() {
 
@@ -41,7 +42,7 @@ constructor(
 
     fun onShowCollections(courseIds: LongArray) {
         view?.showLoading()
-        compositeDisposable += api.getCoursesReactive(DEFAULT_PAGE, courseIds)
+        compositeDisposable += courseRemoteDataSource.getCoursesReactive(DEFAULT_PAGE, *courseIds)
             .map(CourseResponse::courses)
             .flatMap {
                 val progressIds = it.map(Course::progress).toTypedArray()
@@ -68,8 +69,8 @@ constructor(
     }
 
     private fun getReviewsSingle(reviewIds: LongArray): Single<List<CourseReviewSummary>> =
-        api.getCourseReviewSummaries(reviewIds)
-            .map(CourseReviewSummaryResponse::courseReviewSummaries)
+        courseReviewsSummaryRemoteDataSource.getCourseReviewSummaries(*reviewIds)
+            .map { it }
             .subscribeOn(backgroundScheduler)
 
     private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> =

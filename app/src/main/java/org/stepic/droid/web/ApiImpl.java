@@ -33,8 +33,6 @@ import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.auth.service.EmptyAuthService;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.course.model.CourseResponse;
-import org.stepik.android.remote.course.model.CourseReviewSummaryResponse;
-import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
@@ -96,15 +94,6 @@ public class ApiImpl implements Api {
         this.ratingService = ratingService;
         this.converterFactory = converterFactory;
     }
-    public Single<UserCoursesResponse> getUserCourses(int page) {
-        return loggedService.getUserCourses(page);
-    }
-
-    public Single<CourseResponse> getPopularCourses(int page) {
-        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
-        String lang = enumSet.iterator().next().getLanguage();
-        return loggedService.getPopularCourses(page, lang);
-    }
 
     @Override
     public Call<StepikProfileResponse> getUserProfile() {
@@ -122,11 +111,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Completable joinCourse(EnrollmentRequest enrollmentRequest) {
-        return loggedService.joinCourse(enrollmentRequest);
-    }
-
-    @Override
     public Call<UnitResponse> getUnits(List<Long> units) {
         return loggedService.getUnits(units);
     }
@@ -134,12 +118,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<UnitResponse> getUnits(long courseId, long lessonId) {
         return loggedService.getUnits(courseId, lessonId);
-    }
-
-    @Override
-    public Completable dropCourse(long courseId) {
-        if (!config.isUserCanDropCourse()) return null;
-        return loggedService.dropCourse(courseId);
     }
 
     @Override
@@ -172,27 +150,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<QueriesResponse> getSearchQueries(String query) {
         return loggedService.getSearchQueries(query);
-    }
-
-    @Override
-    public Call<CourseResponse> getCourses(int page, @Nullable long[] ids) {
-        if (ids == null || ids.length == 0) {
-            ids = new long[]{0};
-        }
-        return loggedService.getCourses(page, ids);
-    }
-
-    @Override
-    public Single<CourseResponse> getCoursesReactive(int page, @NotNull long[] ids) {
-        if (ids.length == 0) {
-            ids = new long[]{0};
-        }
-        return loggedService.getCoursesReactive(page, ids);
-    }
-
-    @Override
-    public Single<CourseResponse> getCoursesReactive(@NotNull long[] ids) {
-        return loggedService.getCoursesReactive(ids);
     }
 
     @Override
@@ -295,11 +252,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<CourseCollectionsResponse> getCourseCollections(String language) {
         return loggedService.getCourseLists(language);
-    }
-
-    @Override
-    public Single<CourseReviewSummaryResponse> getCourseReviewSummaries(long[] courseIds) {
-        return loggedService.getCourseReviews(courseIds);
     }
 
     @Override

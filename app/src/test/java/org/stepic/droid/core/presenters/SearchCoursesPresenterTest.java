@@ -8,6 +8,7 @@ import org.mockito.MockitoAnnotations;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
+import org.stepik.android.data.course.source.CourseRemoteDataSource;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.SearchResult;
 import org.stepic.droid.storage.operations.DatabaseFacade;
@@ -41,6 +42,9 @@ public class SearchCoursesPresenterTest {
     private SearchCoursesPresenter searchCoursesPresenter;
 
     @Mock
+    CourseRemoteDataSource courseRemoteDataSource;
+
+    @Mock
     Api api;
 
     @Mock
@@ -70,7 +74,7 @@ public class SearchCoursesPresenterTest {
 
         searchResolver = spy(new SearchResolverImpl());
 
-        searchCoursesPresenter = new SearchCoursesPresenter(api, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic);
+        searchCoursesPresenter = new SearchCoursesPresenter(courseRemoteDataSource, api, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic);
     }
 
     @Test
@@ -101,14 +105,14 @@ public class SearchCoursesPresenterTest {
         Course expectedCourse = FakeCourseGenerator.INSTANCE.generate(expectedCourseId);
         expectedCourses.add(expectedCourse);
         when(coursesStepicResponse.getCourses()).thenReturn(expectedCourses);
-        ResponseGeneratorKt.useMockInsteadCall(when(api.getCourses(1, courseIds)), coursesStepicResponse);
+        ResponseGeneratorKt.useMockInsteadCall(when(courseRemoteDataSource.getCourses(1, courseIds)), coursesStepicResponse);
 
         //call method of tested object
         searchCoursesPresenter.downloadData(searchQuery);
 
         //verify calling of dependencies
         verify(api).getSearchResultsCourses(1, searchQuery);
-        verify(api).getCourses(1, courseIds);
+        verify(courseRemoteDataSource).getCourses(1, courseIds);
 
         verify(threadPoolExecutor).execute(any(Runnable.class));
         verify(searchResolver).getCourseIdsFromSearchResults(any(List.class));

@@ -20,7 +20,7 @@ constructor(
 ) : CourseRepository {
 
     override fun getCourse(courseId: Long, canUseCache: Boolean): Maybe<Course> {
-        val remoteSource = courseRemoteDataSource.getCourses(courseId).maybeFirst()
+        val remoteSource = courseRemoteDataSource.getCoursesReactive(courseId).maybeFirst()
             .doCompletableOnSuccess(courseCacheDataSource::saveCourse)
 
         val cacheSource = courseCacheDataSource.getCourses(courseId).maybeFirst()
@@ -34,7 +34,7 @@ constructor(
 
     override fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType): Single<List<Course>> {
         val remoteSource = courseRemoteDataSource
-            .getCourses(*courseIds)
+            .getCoursesReactive(*courseIds)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
 
         val cacheSource = courseCacheDataSource
@@ -48,7 +48,7 @@ constructor(
                 cacheSource.flatMap { cachedCourses ->
                     val ids = (courseIds.toList() - cachedCourses.map(Course::id)).toLongArray()
                     courseRemoteDataSource
-                        .getCourses(*ids)
+                        .getCoursesReactive(*ids)
                         .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
                         .map { remoteCourses -> cachedCourses + remoteCourses }
                 }
