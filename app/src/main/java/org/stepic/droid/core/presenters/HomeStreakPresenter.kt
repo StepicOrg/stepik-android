@@ -11,28 +11,28 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.RxOptional
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.unwrapOptional
-import org.stepic.droid.web.Api
+import org.stepik.android.data.user_activity.source.UserActivityRemoteDataSource
 import javax.inject.Inject
 
 @HomeScope
 class HomeStreakPresenter
 @Inject
 constructor(
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler,
-        private val api: Api,
-        private val sharedPreferences: SharedPreferenceHelper
-        ): PresenterBase<HomeStreakView>() {
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler,
+    private val userActivityRemoteDataSource: UserActivityRemoteDataSource,
+    private val sharedPreferences: SharedPreferenceHelper
+): PresenterBase<HomeStreakView>() {
     private val compositeDisposable = CompositeDisposable()
 
     fun onNeedShowStreak() {
         compositeDisposable.add(Observable
                 .fromCallable { RxOptional(sharedPreferences.profile?.id) }
                 .unwrapOptional()
-                .flatMap { api.getUserActivitiesReactive(it).toObservable() }
-                .map { RxOptional(it.userActivities.firstOrNull()?.pins) }
+                .flatMap { userActivityRemoteDataSource.getUserActivitiesRx(it).toObservable() }
+                .map { RxOptional(it.firstOrNull()?.pins) }
                 .map { optional ->
                     optional.map { StepikUtil.getCurrentStreak(it) }
                 }

@@ -38,7 +38,6 @@ import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
-import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -291,16 +290,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<NotificationStatusesResponse> getNotificationStatuses() {
         return loggedService.getNotificationStatuses();
-    }
-
-    @Override
-    public Call<UserActivityResponse> getUserActivities(long userId) {
-        return loggedService.getUserActivities(userId);
-    }
-
-    @Override
-    public Single<UserActivityResponse> getUserActivitiesReactive(long userId) {
-        return loggedService.getUserActivitiesReactive(userId);
     }
 
     @Override

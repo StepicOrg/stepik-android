@@ -11,7 +11,6 @@ import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.progress.model.ProgressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
-import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 import org.stepik.android.remote.vote.model.VoteRequest;
 import org.stepik.android.remote.vote.model.VoteResponse;
@@ -123,11 +122,7 @@ public interface StepicRestLoggedService {
     @GET("api/notification-statuses")
     Single<NotificationStatusesResponse> getNotificationStatuses();
 
-    @GET("api/user-activities/{userId}")
-    Call<UserActivityResponse> getUserActivities(@Path("userId") long userId);
 
-    @GET("api/user-activities/{userId}")
-    Single<UserActivityResponse> getUserActivitiesReactive(@Path("userId") long userId);
 
     @GET("api/course-lists?platform=mobile")
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);

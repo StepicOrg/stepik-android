@@ -86,6 +86,7 @@ import org.stepik.android.view.injection.step_content_video.VideoStepContentComp
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.story.StoryDataModule
 import org.stepik.android.view.injection.submission.SubmissionComponent
+import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
@@ -127,7 +128,8 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
         NotificationModule::class,
 
         StoryDataModule::class,
-        DeviceDataModule::class
+        DeviceDataModule::class,
+        UserActivityDataModule::class
     ]
 )
 interface AppCoreComponent {

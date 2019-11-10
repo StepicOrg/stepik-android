@@ -17,7 +17,6 @@ import org.stepik.android.remote.course.model.EnrollmentRequest;
 import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
-import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 
 import java.util.List;
 
@@ -84,10 +83,6 @@ public interface Api {
     Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory);
 
     Single<NotificationStatusesResponse> getNotificationStatuses();
-
-    Call<UserActivityResponse> getUserActivities(long userId);
-
-    Single<UserActivityResponse> getUserActivitiesReactive(long userId);
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 

@@ -14,7 +14,7 @@ import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.web.Api
+import org.stepik.android.data.user_activity.source.UserActivityRemoteDataSource
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
@@ -26,7 +26,7 @@ class StreakNotificationDelegate
 constructor(
     private val context: Context,
     private val analytic: Analytic,
-    private val api: Api,
+    private val userActivityRemoteDataSource: UserActivityRemoteDataSource,
     private val screenManager: ScreenManager,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val notificationHelper: NotificationHelper,
@@ -42,7 +42,7 @@ constructor(
             val numberOfStreakNotifications = sharedPreferenceHelper.numberOfStreakNotifications
             if (numberOfStreakNotifications < AppConstants.MAX_NUMBER_OF_NOTIFICATION_STREAK) {
                 try {
-                    val pins: ArrayList<Long> = api.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth"))
+                    val pins: ArrayList<Long> = userActivityRemoteDataSource.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth"))
                             .execute()
                             ?.body()
                             ?.userActivities
