@@ -7,7 +7,6 @@ import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
-import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
@@ -30,7 +29,6 @@ import org.stepik.android.remote.user_activity.model.UserActivityResponse;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import retrofit2.Call;
 
@@ -143,6 +141,4 @@ public interface Api {
     Completable putRating(long courseId, long exp);
 
     Single<RatingRestoreResponse> restoreRating(long courseId);
-
-    Observable<StoryTemplatesResponse> getStoryTemplates(int page);
 }

@@ -2,7 +2,6 @@ package org.stepic.droid.web;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -22,7 +21,6 @@ import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.ISocialType;
-import org.stepic.droid.util.CompatibilityExtensionsKt;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.NetworkExtensionsKt;
 import org.stepic.droid.web.model.adaptive.RatingRequest;
@@ -30,7 +28,6 @@ import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest;
 import org.stepic.droid.web.model.adaptive.RecommendationsResponse;
-import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.adaptive.RecommendationReaction;
@@ -59,12 +56,10 @@ import java.net.HttpCookie;
 import java.net.URLEncoder;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.functions.Function;
 import okhttp3.HttpUrl;
@@ -436,13 +431,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<RatingRestoreResponse> restoreRating(long courseId) {
         return ratingService.restoreRating(courseId, getAccessToken());
-    }
-
-
-    @Override
-    public Observable<StoryTemplatesResponse> getStoryTemplates(int page) {
-        final Locale locale = CompatibilityExtensionsKt.getDefaultLocale(Resources.getSystem().getConfiguration());
-        return loggedService.getStoryTemplate(page, true, locale.getLanguage());
     }
 
     @Override

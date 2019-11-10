@@ -6,8 +6,8 @@ import io.reactivex.Single
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.storage.dao.IDao
-import org.stepic.droid.web.Api
 import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse
+import org.stepik.android.data.stories.source.StoryTemplatesRemoteDataSource
 import org.stepik.android.model.StoryTemplate
 import javax.inject.Inject
 
@@ -15,8 +15,8 @@ import javax.inject.Inject
 class StoryTemplatesRepositoryImpl
 @Inject
 constructor(
-        private val api: Api,
-        private val viewedStoryTemplateDao: IDao<ViewedStoryTemplate>
+    private val storyTemplatesRemoteRemoteDataSource: StoryTemplatesRemoteDataSource,
+    private val viewedStoryTemplateDao: IDao<ViewedStoryTemplate>
 ) : StoryTemplatesRepository {
     companion object {
         const val STORY_TEMPLATES_VERSION = 1
@@ -34,7 +34,7 @@ constructor(
             }
 
     private fun getStoryTemplatesByPage(page: Int): Observable<StoryTemplatesResponse> =
-        api.getStoryTemplates(page)
+        storyTemplatesRemoteRemoteDataSource.getStoryTemplates(page)
             .concatMap {
                 val templatesObservable = Observable.just(it)
                 if (it.meta.hasNext) {
