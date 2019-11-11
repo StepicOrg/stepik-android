@@ -4,7 +4,6 @@ import android.webkit.CookieManager
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.multibindings.IntoSet
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.stepic.droid.configuration.Config
@@ -14,7 +13,6 @@ import org.stepic.droid.features.achievements.repository.AchievementsRepositoryI
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepositoryImpl
 import org.stepic.droid.util.DebugToolsHelper
-import org.stepic.droid.web.NetworkFactory
 import org.stepik.android.view.injection.auth.AuthModule
 import org.stepik.android.view.injection.base.Authorized
 import org.stepik.android.view.injection.qualifiers.DebugInterceptors
@@ -42,9 +40,8 @@ abstract class NetworkModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        @IntoSet
         @DebugInterceptors
-        fun provideStethoInterceptor(): List<Interceptor> =
+        fun provideDebugInterceptors(): List<Interceptor> =
             DebugToolsHelper.getDebugInterceptors()
 
         @Provides
@@ -56,10 +53,10 @@ abstract class NetworkModule {
         @Provides
         @JvmStatic
         @AppSingleton
-        internal fun provideOkHttpClient(interceptors: Set<@JvmSuppressWildcards Interceptor>): OkHttpClient {
+        internal fun provideOkHttpClient(@DebugInterceptors interceptors: List<@JvmSuppressWildcards Interceptor>): OkHttpClient {
             val okHttpBuilder = OkHttpClient.Builder()
-                .connectTimeout(NetworkFactory.TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(NetworkFactory.TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
             interceptors.forEach { okHttpBuilder.addNetworkInterceptor(it) }
 
             return okHttpBuilder.build()
