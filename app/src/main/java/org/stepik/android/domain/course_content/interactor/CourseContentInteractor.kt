@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.toObservable
+import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -41,10 +42,10 @@ constructor(
 
     fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> =
         courseObservableSource
+            .zipWith(Observable.range(0, Int.MAX_VALUE))
             .skip(if (shouldSkipStoredValue) 1 else 0)
-            .switchMap { course ->
-                // todo: determine should we update from cache or not
-                val shouldUseCache = !shouldSkipStoredValue
+            .switchMap { (course, count) ->
+                val shouldUseCache = count == 0
                 val contentObservable =
                     if (shouldUseCache) {
                         val cacheSource = getContent(course, emptyList(), DataSourceType.CACHE)
