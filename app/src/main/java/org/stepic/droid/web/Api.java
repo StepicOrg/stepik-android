@@ -11,7 +11,6 @@ import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
-import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 
@@ -50,8 +49,6 @@ public interface Api {
     Single<QueriesResponse> getSearchQueries(String query);
 
     Call<Void> remindPassword(String email);
-
-    Call<EmailAddressResponse> getEmailAddresses(long[] ids);
 
     Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);
 

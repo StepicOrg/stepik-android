@@ -4,7 +4,6 @@ import org.jetbrains.annotations.Nullable;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
-import org.stepik.android.remote.email_address.model.EmailAddressResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
@@ -64,9 +63,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/queries")
     Single<QueriesResponse> getSearchQueries(@Query("query") String query);
-
-    @GET("api/email-addresses")
-    Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
 
     @PUT("api/notifications/{id}")
     Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);

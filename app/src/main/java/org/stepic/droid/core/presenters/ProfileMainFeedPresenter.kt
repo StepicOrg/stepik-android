@@ -7,6 +7,7 @@ import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.di.mainscreen.MainScreenScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.web.Api
+import org.stepik.android.data.email_address.source.EmailAddressRemoteDataSource
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -18,6 +19,7 @@ class ProfileMainFeedPresenter
         private val sharedPreferenceHelper: SharedPreferenceHelper,
         private val mainHandler: MainHandler,
         private val api: Api,
+        private val emailAddressRemoteDataSource: EmailAddressRemoteDataSource,
         private val threadPoolExecutor: ThreadPoolExecutor,
         analytic: Analytic,
         private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
@@ -61,7 +63,7 @@ class ProfileMainFeedPresenter
                     val emailIds = tempProfile.emailAddresses
                     if (emailIds?.isNotEmpty() == true) {
                         try {
-                            api.getEmailAddresses(emailIds).execute().body()?.emailAddresses?.let {
+                            emailAddressRemoteDataSource.getEmailAddressesResponse(*emailIds).blockingGet().emailAddresses.let {
                                 if (it.isNotEmpty()) {
                                     sharedPreferenceHelper.storeEmailAddresses(it)
                                 }
