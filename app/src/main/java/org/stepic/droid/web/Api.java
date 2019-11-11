@@ -7,7 +7,6 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
-import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
@@ -37,8 +36,6 @@ public interface Api {
     Call<UnitResponse> getUnits(List<Long> units);
 
     Single<UnitResponse> getUnits(long courseId, long lessonId);
-
-    Single<AssignmentResponse> getAssignments(long[] assignmentsIds);
 
     void loginWithSocial(FragmentActivity activity, ISocialType type);
 

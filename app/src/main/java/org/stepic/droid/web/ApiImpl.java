@@ -26,7 +26,6 @@ import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.user.Profile;
-import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.OAuthResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.auth.service.EmptyAuthService;
@@ -114,11 +113,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<UnitResponse> getUnits(long courseId, long lessonId) {
         return loggedService.getUnits(courseId, lessonId);
-    }
-
-    @Override
-    public Single<AssignmentResponse> getAssignments(long[] assignmentsIds) {
-        return loggedService.getAssignments(assignmentsIds);
     }
 
     @Override

@@ -1,22 +1,17 @@
 package org.stepic.droid.web;
 
-import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
-import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
 import org.stepik.android.remote.vote.model.VoteRequest;
 import org.stepik.android.remote.vote.model.VoteResponse;
 
 import java.util.List;
 
-import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -42,14 +37,6 @@ public interface StepicRestLoggedService {
             @Query("lesson") final long lessonId
     );
 
-    @GET("api/assignments")
-    Single<AssignmentResponse> getAssignments(@Query("ids[]") long[] assignmentsIds);
-
-
-    @Headers("Content-Type:application/json")
-    @POST("api/views")
-    Completable postViewedReactive(@Body ViewAssignmentRequest stepAssignment);
-
     @GET("api/search-results?is_popular=true&is_public=true&type=course")
     Call<SearchResultResponse> getSearchResults(
             @Query("page") int page,
@@ -62,8 +49,6 @@ public interface StepicRestLoggedService {
 
     @PUT("api/votes/{id}")
     Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
-
-
 
     @GET("api/course-lists?platform=mobile")
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
