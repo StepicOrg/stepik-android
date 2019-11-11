@@ -17,7 +17,6 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.model.StepikFilter;
-import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.util.NetworkExtensionsKt;
@@ -201,39 +200,8 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Call<Void> setReadStatusForNotification(long notificationId, boolean isRead) {
-        Notification notification = new Notification();
-        notification.setUnread(!isRead);
-        return loggedService.putNotification(notificationId, new NotificationRequest(notification));
-    }
-
-    @Override
-    public Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead) {
-        Notification notification = new Notification();
-        notification.setUnread(!isRead);
-        return loggedService.putNotificationReactive(notificationId, new NotificationRequest(notification));
-    }
-
-    @Override
     public Single<CertificateResponse> getCertificates(long userId, int page) {
         return loggedService.getCertificates(userId, page);
-    }
-
-    @Override
-    public Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page) {
-        String categoryType = getNotificationCategoryString(notificationCategory);
-        return loggedService.getNotifications(page, categoryType);
-    }
-
-    @Override
-    public Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory) {
-        String categoryType = getNotificationCategoryString(notificationCategory);
-        return loggedService.markAsRead(categoryType);
-    }
-
-    @Override
-    public Single<NotificationStatusesResponse> getNotificationStatuses() {
-        return loggedService.getNotificationStatuses();
     }
 
     @Override

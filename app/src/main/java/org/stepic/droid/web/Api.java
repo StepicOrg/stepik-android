@@ -3,7 +3,6 @@ package org.stepic.droid.web;
 import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
-import org.stepic.droid.model.NotificationCategory;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepik.android.model.Tag;
@@ -50,17 +49,7 @@ public interface Api {
 
     Call<Void> remindPassword(String email);
 
-    Call<Void> setReadStatusForNotification(long notificationId, boolean isRead);
-
-    Completable setReadStatusForNotificationReactive(long notificationId, boolean isRead);
-
     Single<CertificateResponse> getCertificates(long userId, int page);
-
-    Call<NotificationResponse> getNotifications(NotificationCategory notificationCategory, int page);
-
-    Call<Void> markAsReadAllType(@NotNull NotificationCategory notificationCategory);
-
-    Single<NotificationStatusesResponse> getNotificationStatuses();
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);
 

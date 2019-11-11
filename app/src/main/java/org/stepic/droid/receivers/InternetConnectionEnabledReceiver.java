@@ -12,18 +12,21 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.internetstate.contract.InternetEnabledPoster;
+import org.stepic.droid.di.qualifiers.BackgroundScheduler;
+import org.stepic.droid.di.qualifiers.MainScheduler;
 import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.web.Api;
+import org.stepik.android.data.notification.source.NotificationRemoteDataSource;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.inject.Inject;
 
+import io.reactivex.Scheduler;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 
@@ -32,6 +35,17 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
     @Inject
     Api api;
+
+    @Inject
+    NotificationRemoteDataSource notificationRemoteDataSource;
+
+    @Inject
+    @MainScheduler
+    Scheduler mainScheduler;
+
+    @Inject
+    @BackgroundScheduler
+    Scheduler backgroundScheduler;
 
     @Inject
     DatabaseFacade databaseFacade;
@@ -87,14 +101,10 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         List<ViewedNotification> viewedNotifications = databaseFacade.getViewedNotificationsQueue();
         for (ViewedNotification viewedNotification : viewedNotifications) {
             try {
-                retrofit2.Response<Void> response
-                        = api.setReadStatusForNotification(viewedNotification.getNotificationId(), true).execute();
-
-                if (response.isSuccessful()) {
-                    databaseFacade.removeViewedNotification(viewedNotification);
-                }
-            } catch (IOException e) {
-                //no internet, just ignore and send next time
+                notificationRemoteDataSource.putNotifications(new long[]{viewedNotification.getNotificationId()}, true).blockingAwait();
+                databaseFacade.removeViewedNotification(viewedNotification);
+            } catch (Exception e) {
+                // no internet, just ignore and send next time
             }
         }
     }

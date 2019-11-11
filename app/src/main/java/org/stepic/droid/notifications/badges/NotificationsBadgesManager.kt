@@ -13,21 +13,21 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.mapNotNull
-import org.stepic.droid.web.Api
+import org.stepik.android.data.notification.source.NotificationRemoteDataSource
 import javax.inject.Inject
 
 @AppSingleton
 class NotificationsBadgesManager
 @Inject
 constructor(
-        private val api: Api,
-        private val context: Context,
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val firebaseRemoteConfig: FirebaseRemoteConfig,
-        private val listenerContainer: ListenerContainer<NotificationsBadgesListener>,
-        @BackgroundScheduler
+    private val context: Context,
+    private val notificationRemoteDataSrouce: NotificationRemoteDataSource,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val firebaseRemoteConfig: FirebaseRemoteConfig,
+    private val listenerContainer: ListenerContainer<NotificationsBadgesListener>,
+    @BackgroundScheduler
         private val scheduler: Scheduler,
-        @MainScheduler
+    @MainScheduler
         private val mainScheduler: Scheduler
 ) {
     fun fetchAndThenSyncCounter() {
@@ -41,7 +41,7 @@ constructor(
     }
 
     fun syncCounter() {
-        api.notificationStatuses
+        notificationRemoteDataSrouce.getNotificationStatuses()
                 .mapNotNull {
                     it.notificationStatuses?.firstOrNull()?.total
                 }

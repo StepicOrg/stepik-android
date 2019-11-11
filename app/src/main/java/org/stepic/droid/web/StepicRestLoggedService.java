@@ -1,6 +1,5 @@
 package org.stepic.droid.web;
 
-import org.jetbrains.annotations.Nullable;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
@@ -16,8 +15,6 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
@@ -64,27 +61,11 @@ public interface StepicRestLoggedService {
     @GET("api/queries")
     Single<QueriesResponse> getSearchQueries(@Query("query") String query);
 
-    @PUT("api/notifications/{id}")
-    Call<Void> putNotification(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
-
-    @PUT("api/notifications/{id}")
-    Completable putNotificationReactive(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
-
     @PUT("api/votes/{id}")
     Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 
     @GET("api/certificates")
     Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);
-
-    @GET("api/notifications")
-    Call<NotificationResponse> getNotifications(@Query("page") int page, @Nullable @Query("type") String type);
-
-    @FormUrlEncoded
-    @POST("api/notifications/mark-as-read")
-    Call<Void> markAsRead(@Nullable @Field(value = "type", encoded = true) String notificationType);
-
-    @GET("api/notification-statuses")
-    Single<NotificationStatusesResponse> getNotificationStatuses();
 
     @GET("api/course-lists?platform=mobile")
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
