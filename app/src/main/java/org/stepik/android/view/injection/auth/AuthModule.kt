@@ -8,14 +8,10 @@ import okhttp3.Credentials
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
-import org.stepik.android.remote.base.CookieHelper
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
-import org.stepik.android.view.injection.qualifiers.AuthLock
-import org.stepik.android.view.injection.qualifiers.AuthService
-import org.stepik.android.view.injection.qualifiers.CookieAuthService
-import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.DebugToolsHelper
 import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.util.setTimeoutsInSeconds
 import org.stepic.droid.web.Api
@@ -28,6 +24,11 @@ import org.stepik.android.remote.auth.AuthRemoteDataSourceImpl
 import org.stepik.android.remote.auth.interceptor.AuthInterceptor
 import org.stepik.android.remote.auth.service.EmptyAuthService
 import org.stepik.android.remote.auth.service.OAuthService
+import org.stepik.android.remote.base.CookieHelper
+import org.stepik.android.view.injection.qualifiers.AuthLock
+import org.stepik.android.view.injection.qualifiers.AuthService
+import org.stepik.android.view.injection.qualifiers.CookieAuthService
+import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import retrofit2.Converter
 import java.util.concurrent.locks.ReentrantLock
 
@@ -47,6 +48,11 @@ abstract class AuthModule {
 
     @Module
     companion object {
+        private val debugInterceptors = DebugToolsHelper.getDebugInterceptors()
+
+        private fun addDebugInterceptors(okHttpBuilder: OkHttpClient.Builder) {
+            debugInterceptors.forEach { okHttpBuilder.addNetworkInterceptor(it) }
+        }
 
         @Provides
         @AppSingleton
@@ -61,6 +67,7 @@ abstract class AuthModule {
         internal fun provideEmptyAuthService(config: Config, converterFactory: Converter.Factory): EmptyAuthService {
             val okHttpBuilder = OkHttpClient.Builder()
             okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
+            addDebugInterceptors(okHttpBuilder)
             val retrofit = NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
             return retrofit.create(EmptyAuthService::class.java)
         }
@@ -121,6 +128,7 @@ abstract class AuthModule {
                 )
             }
             okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
+            addDebugInterceptors(okHttpBuilder)
 
             val retrofit = NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
             return retrofit.create(OAuthService::class.java)
@@ -134,6 +142,7 @@ abstract class AuthModule {
             }
             okHttpBuilder.protocols(listOf(Protocol.HTTP_1_1))
             okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
+            addDebugInterceptors(okHttpBuilder)
 
             val retrofit = NetworkFactory.createRetrofit(host, okHttpBuilder.build(), converterFactory)
             return retrofit.create(OAuthService::class.java)

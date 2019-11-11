@@ -92,7 +92,7 @@ constructor(
         val setCookieHeaders = response.headers().values(AppConstants.setCookieHeaderName)
         for (value in setCookieHeaders) {
             if (value != null) {
-                cookieManager.setCookie(config.baseUrl, value) //set-cookie is not empty
+                cookieManager.setCookie(config.baseUrl, value) // set-cookie is not empty
             }
         }
     }

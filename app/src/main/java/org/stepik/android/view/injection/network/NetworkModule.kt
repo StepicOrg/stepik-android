@@ -53,11 +53,15 @@ abstract class NetworkModule {
         @Provides
         @JvmStatic
         @AppSingleton
-        internal fun provideOkHttpClient(@DebugInterceptors interceptors: List<@JvmSuppressWildcards Interceptor>): OkHttpClient {
+        internal fun provideOkHttpClient(
+            @DebugInterceptors debugInterceptors: List<@JvmSuppressWildcards Interceptor>,
+            interceptors: Set<@JvmSuppressWildcards Interceptor>
+        ): OkHttpClient {
             val okHttpBuilder = OkHttpClient.Builder()
                 .connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
                 .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
             interceptors.forEach { okHttpBuilder.addNetworkInterceptor(it) }
+            debugInterceptors.forEach { okHttpBuilder.addNetworkInterceptor(it) }
 
             return okHttpBuilder.build()
         }
