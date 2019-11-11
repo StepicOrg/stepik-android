@@ -2,7 +2,6 @@ package org.stepic.droid.web;
 
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.auth.model.StepikProfileResponse;
-import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
 import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.view_assignment.model.ViewAssignmentRequest;
@@ -64,8 +63,7 @@ public interface StepicRestLoggedService {
     @PUT("api/votes/{id}")
     Single<VoteResponse> saveVote(@Path("id") String voteId, @Body VoteRequest voteRequest);
 
-    @GET("api/certificates")
-    Single<CertificateResponse> getCertificates(@Query("user") long userId, @Query("page") int page);
+
 
     @GET("api/course-lists?platform=mobile")
     Single<CourseCollectionsResponse> getCourseLists(@Query("language") String language);
