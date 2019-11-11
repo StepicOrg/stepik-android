@@ -25,8 +25,8 @@ import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.not
 import org.stepic.droid.util.substringOrNull
-import org.stepic.droid.web.Api
 import org.stepik.android.data.notification.source.NotificationRemoteDataSource
+import org.stepik.android.data.user.source.UserRemoteDataSource
 import org.stepik.android.view.notification.FcmNotificationHandler
 import timber.log.Timber
 import java.util.ArrayList
@@ -43,8 +43,8 @@ class NotificationListPresenter
 @Inject constructor(
     private val threadPoolExecutor: ThreadPoolExecutor,
     private val mainHandler: MainHandler,
-    private val api: Api,
     private val notificationRemoteDataSource: NotificationRemoteDataSource,
+    private val userRemoteDataSource: UserRemoteDataSource,
 
     @MainScheduler
     private val mainScheduler: Scheduler,
@@ -153,7 +153,7 @@ class NotificationListPresenter
         }
 
         if (userIds.isNotEmpty()) {
-            api.getUsers(userIds.toLongArray()).execute().body()?.users?.forEach {
+            userRemoteDataSource.getUsers(*userIds.toLongArray()).blockingGet().forEach {
                 val avatar = it.avatar
                 userIdToNotificationsIndexes[it.id]?.forEach { notificationIndex ->
                     notifications[notificationIndex].userAvatarUrl = avatar

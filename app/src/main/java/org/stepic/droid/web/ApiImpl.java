@@ -27,10 +27,8 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.remote.auth.model.OAuthResponse;
-import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.auth.service.EmptyAuthService;
 import org.stepik.android.remote.unit.model.UnitResponse;
-import org.stepik.android.remote.user.model.UserResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -88,21 +86,6 @@ public class ApiImpl implements Api {
         this.loggedService = stepicRestLoggedService;
         this.ratingService = ratingService;
         this.converterFactory = converterFactory;
-    }
-
-    @Override
-    public Call<StepikProfileResponse> getUserProfile() {
-        return loggedService.getUserProfile();
-    }
-
-    @Override
-    public Call<UserResponse> getUsers(long[] userIds) {
-        return loggedService.getUsers(userIds);
-    }
-
-    @Override
-    public Single<UserResponse> getUsersRx(long[] userIds) {
-        return loggedService.getUsersRx(userIds);
     }
 
     @Override

@@ -13,8 +13,9 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.web.Api
+import org.stepik.android.data.user.source.UserRemoteDataSource
 import org.stepik.android.data.user_activity.source.UserActivityRemoteDataSource
+import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -26,7 +27,8 @@ constructor(
     analytic: Analytic,
     private val mainHandler: MainHandler,
     private val userActivityRemoteDataSource: UserActivityRemoteDataSource,
-    private val api: Api,
+    private val userRemoteDataSource: UserRemoteDataSource,
+    private val userProfileRemoteDataSource: UserProfileRemoteDataSource,
     private val sharedPreferences: SharedPreferenceHelper,
 
     private val profileObservable: Observable<Profile>,
@@ -88,7 +90,7 @@ constructor(
                 showLocalProfile(profile)
             } else if (profileId == 0L && (profile != null && profile.isGuest || profile == null)) {
                 try {
-                    val realProfile = api.userProfile.execute().body()?.getProfile() ?: throw IllegalStateException("profile can't be null on API here")
+                    val realProfile = userProfileRemoteDataSource.getUserProfile().blockingGet()?.getProfile() ?: throw IllegalStateException("profile can't be null on API here")
                     sharedPreferences.storeProfile(realProfile)
                     showLocalProfile(realProfile)
                 } catch (noInternetOrPermission: Exception) {
@@ -117,7 +119,7 @@ constructor(
         //3) user hide profile == Anonymous. We do not need handle this situation
 
         val user = try {
-            api.getUsers(longArrayOf(userId)).execute().body()?.users?.firstOrNull()
+            userRemoteDataSource.getUsers(userId).blockingGet().firstOrNull()
         } catch (exception: Exception) {
             null
         }

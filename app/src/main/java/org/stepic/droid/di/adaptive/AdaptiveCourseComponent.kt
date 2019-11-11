@@ -12,6 +12,7 @@ import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.recommendation.RecommendationModule
 import org.stepik.android.view.injection.submission.SubmissionDataModule
+import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentDataModule
 
 @AdaptiveCourseScope
@@ -21,7 +22,8 @@ import org.stepik.android.view.injection.view_assignment.ViewAssignmentDataModul
     ViewAssignmentDataModule::class,
     SubmissionDataModule::class,
     AttemptDataModule::class,
-    RecommendationModule::class
+    RecommendationModule::class,
+    UserDataModule::class
 ])
 interface AdaptiveCourseComponent {
     @Subcomponent.Builder

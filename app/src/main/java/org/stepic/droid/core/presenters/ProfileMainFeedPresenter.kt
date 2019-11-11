@@ -6,8 +6,8 @@ import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.di.mainscreen.MainScreenScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.Api
 import org.stepik.android.data.email_address.source.EmailAddressRemoteDataSource
+import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -16,13 +16,13 @@ import javax.inject.Inject
 @MainScreenScope
 class ProfileMainFeedPresenter
 @Inject constructor(
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val mainHandler: MainHandler,
-        private val api: Api,
-        private val emailAddressRemoteDataSource: EmailAddressRemoteDataSource,
-        private val threadPoolExecutor: ThreadPoolExecutor,
-        analytic: Analytic,
-        private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val mainHandler: MainHandler,
+    private val emailAddressRemoteDataSource: EmailAddressRemoteDataSource,
+    private val userProfileRemoteDataSource: UserProfileRemoteDataSource,
+    private val threadPoolExecutor: ThreadPoolExecutor,
+    analytic: Analytic,
+    private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
 
     private val isProfileFetching = AtomicBoolean(false)
     private var profile: Profile? = null
@@ -59,7 +59,7 @@ class ProfileMainFeedPresenter
 
                 //after that try to update profile, because user can change avatar or something at web.
                 try {
-                    val tempProfile = api.userProfile.execute().body()?.getProfile() ?: throw IllegalStateException("profile can't be null")
+                    val tempProfile = userProfileRemoteDataSource.getUserProfile().blockingGet()?.getProfile() ?: throw IllegalStateException("profile can't be null")
                     val emailIds = tempProfile.emailAddresses
                     if (emailIds?.isNotEmpty() == true) {
                         try {

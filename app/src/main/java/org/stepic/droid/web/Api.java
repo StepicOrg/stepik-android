@@ -7,9 +7,7 @@ import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
 import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
-import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
-import org.stepik.android.remote.user.model.UserResponse;
 
 import java.util.List;
 
@@ -23,12 +21,6 @@ public interface Api {
     enum TokenType {
         social, loginPassword
     }
-
-    Call<StepikProfileResponse> getUserProfile();
-
-    Call<UserResponse> getUsers(long[] userIds);
-
-    Single<UserResponse> getUsersRx(long[] userIds);
 
     /**
      * Max number of  units defined in AppConstants

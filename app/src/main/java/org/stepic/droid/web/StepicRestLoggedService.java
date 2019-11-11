@@ -1,8 +1,6 @@
 package org.stepic.droid.web;
 
-import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.unit.model.UnitResponse;
-import org.stepik.android.remote.user.model.UserResponse;
 import org.stepik.android.remote.vote.model.VoteRequest;
 import org.stepik.android.remote.vote.model.VoteResponse;
 
@@ -17,14 +15,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface StepicRestLoggedService {
-    @GET("api/users")
-    Call<UserResponse> getUsers(@Query("ids[]") long[] userIds);
-
-    @GET("api/users")
-    Single<UserResponse> getUsersRx(@Query("ids[]") long[] userIds);
-
-    @GET("api/stepics/1")
-    Call<StepikProfileResponse> getUserProfile();
 
     @GET("api/units")
     Call<UnitResponse> getUnits(
