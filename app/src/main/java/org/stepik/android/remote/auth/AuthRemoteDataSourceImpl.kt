@@ -37,35 +37,33 @@ constructor(
 
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : AuthRemoteDataSource {
+    companion object {
+        private const val ACCESS_TOKEN = "access_token"
+    }
 
-    private fun saveResponse(response: OAuthResponse, isSocial: Boolean) =
+    private fun saveResponse(response: OAuthResponse, isSocial: Boolean) {
         authLock.withLock {
             sharedPreferenceHelper.storeAuthInfo(response)
             sharedPreferenceHelper.storeLastTokenType(isSocial)
         }
+    }
 
     override fun authWithLoginPassword(login: String, password: String): Single<OAuthResponse> =
         authService
             .authWithLoginPassword(config.getGrantType(Api.TokenType.loginPassword), URLEncoder.encode(login), URLEncoder.encode(password))
             .doOnSuccess { saveResponse(it, isSocial = false) }
 
-    override fun authWithNativeCode(code: String, type: SocialManager.SocialType, email: String?): Single<OAuthResponse> {
-        var codeType: String? = null
-        if (type.needUseAccessTokenInsteadOfCode()) {
-            codeType = "access_token"
-        }
-
-        return socialAuthService
+    override fun authWithNativeCode(code: String, type: SocialManager.SocialType, email: String?): Single<OAuthResponse> =
+        socialAuthService
             .getTokenByNativeCode(
                 type.identifier,
                 code,
                 config.getGrantType(Api.TokenType.social),
                 config.redirectUri,
-                codeType,
+                if (type.needUseAccessTokenInsteadOfCode()) ACCESS_TOKEN else null,
                 email
             )
             .doOnSuccess { saveResponse(it, isSocial = true) }
-    }
 
     override fun authWithCode(code: String): Single<OAuthResponse> =
         socialAuthService

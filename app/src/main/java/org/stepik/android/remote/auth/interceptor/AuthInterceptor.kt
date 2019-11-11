@@ -45,9 +45,6 @@ constructor(
     @AuthService
     private val authService: OAuthService
 ) : Interceptor {
-    companion object {
-        const val USER_AGENT_NAME = "User-Agent"
-    }
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.addUserAgent(userAgentProvider.provideUserAgent())
         var response = addAuthHeaderAndProceed(chain, request)
@@ -58,7 +55,7 @@ constructor(
         return response
     }
 
-    private fun addAuthHeaderAndProceed(chain: Interceptor.Chain, req: Request): okhttp3.Response {
+    private fun addAuthHeaderAndProceed(chain: Interceptor.Chain, req: Request): Response {
         var request = req
         authLock.withLock {
             var response = sharedPreference.authResponseFromStore
@@ -110,6 +107,7 @@ constructor(
         val expiresMillis = (response.expiresIn - 50) * 1000
         return delta > expiresMillis // token expired --> need update
     }
+
     private fun authWithRefreshToken(refreshToken: String): Call<OAuthResponse> =
         (if (sharedPreference.isLastTokenSocial) socialAuthService else authService)
             .updateToken(config.refreshGrantType, refreshToken)

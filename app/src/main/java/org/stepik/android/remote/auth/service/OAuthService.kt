@@ -42,8 +42,7 @@ interface OAuthService {
         @Field("grant_type") grantType: String,
         @Field("redirect_uri") redirectUri: String,
         @Field("code_type") accessToken: String?,
-        @Field("email")
-        email: String?
+        @Field("email") email: String?
     ): Single<OAuthResponse>
 
     @POST("/api/users")
