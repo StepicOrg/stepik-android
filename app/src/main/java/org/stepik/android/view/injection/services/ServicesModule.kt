@@ -1,4 +1,4 @@
-package org.stepic.droid.di.network
+package org.stepik.android.view.injection.services
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import dagger.Module
@@ -15,6 +15,7 @@ import org.stepik.android.view.injection.base.Authorized
 import retrofit2.Converter
 import retrofit2.Retrofit
 
+// TODO This will be decomposed into separate feature packages in the next API refactor pull request
 @Module
 abstract class ServicesModule {
     @Module

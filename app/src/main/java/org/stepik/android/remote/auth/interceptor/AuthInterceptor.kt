@@ -9,9 +9,6 @@ import okhttp3.Response
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.StepikLogoutManager
-import org.stepic.droid.di.network.AuthLock
-import org.stepic.droid.di.network.AuthService
-import org.stepic.droid.di.network.SocialAuthService
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -19,11 +16,15 @@ import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.web.UserAgentProvider
 import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.service.OAuthService
+import org.stepik.android.view.injection.qualifiers.AuthLock
+import org.stepik.android.view.injection.qualifiers.AuthService
+import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
+import kotlin.concurrent.withLock
 
 class AuthInterceptor
 @Inject
@@ -59,8 +60,7 @@ constructor(
 
     private fun addAuthHeaderAndProceed(chain: Interceptor.Chain, req: Request): okhttp3.Response {
         var request = req
-        try {
-            authLock.lock()
+        authLock.withLock {
             var response = sharedPreference.authResponseFromStore
 
             if (response != null) {
@@ -91,10 +91,7 @@ constructor(
                     .addHeader(AppConstants.authorizationHeaderName, response.tokenType + " " + response.accessToken)
                     .build()
             }
-        } finally {
-            authLock.unlock()
         }
-
         return chain.proceed(request)
     }
 

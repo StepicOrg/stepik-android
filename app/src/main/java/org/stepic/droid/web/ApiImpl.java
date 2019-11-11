@@ -22,7 +22,7 @@ import org.stepic.droid.notifications.model.Notification;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.util.CompatibilityExtensionsKt;
-import org.stepic.droid.base.CookieHelper;
+import org.stepik.android.remote.base.CookieHelper;
 import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.NetworkExtensionsKt;
 import org.stepic.droid.web.model.adaptive.RatingRequest;

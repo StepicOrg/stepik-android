@@ -1,4 +1,4 @@
-package org.stepic.droid.base
+package org.stepik.android.remote.base
 
 import android.os.Build
 import android.os.Looper
@@ -58,7 +58,9 @@ constructor(
             request
         } else {
             val csrftoken =
-                getCsrfTokenFromCookies(cookies)
+                getCsrfTokenFromCookies(
+                    cookies
+                )
             request.newBuilder()
                 .addHeader(AppConstants.refererHeaderName, config.baseUrl)
                 .addHeader(AppConstants.csrfTokenHeaderName, csrftoken)

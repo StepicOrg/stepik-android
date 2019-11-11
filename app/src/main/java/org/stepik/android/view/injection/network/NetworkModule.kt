@@ -1,4 +1,4 @@
-package org.stepic.droid.di.network
+package org.stepik.android.view.injection.network
 
 import android.webkit.CookieManager
 import dagger.Binds
@@ -9,14 +9,17 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
-import org.stepik.android.view.injection.auth.AuthModule
 import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.features.achievements.repository.AchievementsRepositoryImpl
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepositoryImpl
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepic.droid.web.NetworkFactory
+import org.stepik.android.view.injection.auth.AuthModule
 import org.stepik.android.view.injection.base.Authorized
+import org.stepik.android.view.injection.qualifiers.DebugInterceptors
+import org.stepik.android.view.injection.serialization.SerializationModule
+import org.stepik.android.view.injection.services.ServicesModule
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

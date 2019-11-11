@@ -1,4 +1,4 @@
-package org.stepic.droid.di.network
+package org.stepik.android.view.injection.serialization
 
 import com.google.gson.GsonBuilder
 import dagger.Module

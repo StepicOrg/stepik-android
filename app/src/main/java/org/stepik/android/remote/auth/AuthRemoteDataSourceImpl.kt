@@ -3,10 +3,10 @@ package org.stepik.android.remote.auth
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.di.network.AuthLock
-import org.stepic.droid.di.network.AuthService
-import org.stepic.droid.di.network.CookieAuthService
-import org.stepic.droid.di.network.SocialAuthService
+import org.stepik.android.view.injection.qualifiers.AuthLock
+import org.stepik.android.view.injection.qualifiers.AuthService
+import org.stepik.android.view.injection.qualifiers.CookieAuthService
+import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.web.Api

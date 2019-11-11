@@ -11,13 +11,11 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.di.login.LoginScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.ISocialType
@@ -26,11 +24,11 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toObject
 import org.stepic.droid.web.Api
-import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepic.droid.web.SocialAuthError
+import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.model.user.RegistrationCredentials
+import org.stepik.android.remote.auth.model.OAuthResponse
 import retrofit2.HttpException
-import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 @LoginScope
@@ -39,8 +37,6 @@ class LoginPresenter
     private val api: Api,
     private val analytic: Analytic,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val threadPoolExecutor: ThreadPoolExecutor,
-    private val mainHandler: MainHandler,
     private val authRepository: AuthRepository,
 
     @MainScheduler

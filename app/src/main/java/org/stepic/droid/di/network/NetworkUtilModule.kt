@@ -5,6 +5,7 @@ import dagger.Provides
 import okhttp3.Interceptor
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.DebugToolsHelper
+import org.stepik.android.view.injection.qualifiers.DebugInterceptors
 
 @Module
 abstract class NetworkUtilModule {
