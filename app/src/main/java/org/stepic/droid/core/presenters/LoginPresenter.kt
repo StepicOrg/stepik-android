@@ -154,42 +154,45 @@ class LoginPresenter
 
     @WorkerThread
     private fun resolveAmplitudeAuthAnalytic(authInfo: AuthInfo) {
-        compositeDisposable += Completable.fromRunnable {
-            with(authInfo) {
-                when(type) {
-                    Type.LOGIN_PASSWORD -> {
-                        val event = if(isAfterRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
-                        analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
-                    }
-                    Type.SOCIAL -> {
-                        if (authInfo.socialType == null) return@fromRunnable
+        compositeDisposable += Completable
+            .fromRunnable {
+                with(authInfo) {
+                    when(type) {
+                        Type.LOGIN_PASSWORD -> {
+                            val event = if(isAfterRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
+                            analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
+                        }
+                        Type.SOCIAL -> {
+                            if (socialType == null) return@fromRunnable
 
-                        val event: String = try {
-                            val request = api.userProfile.execute().body()
+                            val event: String = try {
+                                val request = api.userProfile.execute().body()
 
-                            val user = request?.getUser()
-                            val profile = request?.getProfile()
+                                val user = request?.getUser()
+                                val profile = request?.getProfile()
 
-                            if (profile != null) {
-                                sharedPreferenceHelper.storeProfile(profile)
+                                if (profile != null) {
+                                    sharedPreferenceHelper.storeProfile(profile)
+                                }
+
+                                user?.joinDate?.let {
+                                    if (DateTimeHelper.nowUtc() - it.time < MINUTES_TO_CONSIDER_REGISTRATION * AppConstants.MILLIS_IN_1MINUTE) {
+                                        AmplitudeAnalytic.Auth.REGISTERED
+                                    } else {
+                                        AmplitudeAnalytic.Auth.LOGGED_ID
+                                    }
+                                } ?: AmplitudeAnalytic.Auth.LOGGED_ID
+                            } catch (_: Exception) {
+                                AmplitudeAnalytic.Auth.LOGGED_ID
                             }
 
-                            user?.joinDate?.let {
-                                if (DateTimeHelper.nowUtc() - it.time < MINUTES_TO_CONSIDER_REGISTRATION * AppConstants.MILLIS_IN_1MINUTE) {
-                                    AmplitudeAnalytic.Auth.REGISTERED
-                                } else {
-                                    AmplitudeAnalytic.Auth.LOGGED_ID
-                                }
-                            } ?: AmplitudeAnalytic.Auth.LOGGED_ID
-                        } catch (_: Exception) {
-                            AmplitudeAnalytic.Auth.LOGGED_ID
+                            analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to socialType.identifier))
                         }
-
-                        analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to authInfo.socialType?.identifier))
                     }
                 }
             }
-        }.subscribeOn(backgroundScheduler).subscribe()
+            .subscribeOn(backgroundScheduler)
+            .subscribe()
     }
 
     override fun detachView(view: LoginView) {
