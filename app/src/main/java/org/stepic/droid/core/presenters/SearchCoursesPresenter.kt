@@ -7,8 +7,8 @@ import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepic.droid.web.Api
 import org.stepik.android.data.course.source.CourseRemoteDataSource
+import org.stepik.android.data.search.source.SearchRemoteDataSource
 import org.stepik.android.model.Course
 import java.util.ArrayList
 import java.util.concurrent.ThreadPoolExecutor
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class SearchCoursesPresenter
 @Inject constructor(
     private val courseRemoteDataSource: CourseRemoteDataSource,
-    private val api: Api,
+    private val searchRemoteDataSource: SearchRemoteDataSource,
     private val threadPoolExecutor: ThreadPoolExecutor,
     private val mainHandler: MainHandler,
     private val searchResolver: SearchResolver,
@@ -53,12 +53,8 @@ class SearchCoursesPresenter
                     if (searchQuery != null) {
                         databaseFacade.addSearchQuery(SearchQuery(searchQuery))
                     }
-                    val response = api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
-                    if (!response.isSuccessful) {
-                        analytic.reportEvent(Analytic.Error.SEARCH_COURSE_UNSUCCESSFUL, "${response.code()}  ${response.errorBody()?.string()}")
-                    }
 
-                    val searchResultResponseBody = response.body()!!
+                    val searchResultResponseBody = searchRemoteDataSource.getSearchResultsCourses(currentPage.get(), searchQuery).blockingGet()
                     val searchResultList = searchResultResponseBody.searchResultList
                     val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultList)
                     hasNextPage.set(searchResultResponseBody.meta.hasNext)

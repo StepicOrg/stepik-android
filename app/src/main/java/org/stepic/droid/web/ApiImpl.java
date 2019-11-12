@@ -3,11 +3,8 @@ package org.stepic.droid.web;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 
 import androidx.fragment.app.FragmentActivity;
-
-import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -105,24 +102,6 @@ public class ApiImpl implements Api {
         Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
         activity.startActivity(intent);
-    }
-
-    @Override
-    public Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery) {
-        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
-        String lang = enumSet.iterator().next().getLanguage();
-        String encodedQuery = URLEncoder.encode(rawQuery);
-
-        Bundle bundle = new Bundle();
-        bundle.putString(FirebaseAnalytics.Param.SEARCH_TERM, rawQuery);
-        analytic.reportEvent(FirebaseAnalytics.Event.SEARCH, bundle);
-
-        return loggedService.getSearchResults(page, encodedQuery, lang);
-    }
-
-    @Override
-    public Single<QueriesResponse> getSearchQueries(String query) {
-        return loggedService.getSearchQueries(query);
     }
 
     @Override

@@ -8,9 +8,6 @@ import org.mockito.MockitoAnnotations;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
-import org.stepik.android.data.course.source.CourseRemoteDataSource;
-import org.stepik.android.model.Course;
-import org.stepik.android.model.SearchResult;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.ResponseGeneratorKt;
@@ -19,10 +16,13 @@ import org.stepic.droid.testUtils.generators.FakeMetaGenerator;
 import org.stepic.droid.testUtils.generators.FakeSearchResultGenerator;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.SearchResolverImpl;
-import org.stepic.droid.web.Api;
-import org.stepik.android.remote.course.model.CourseResponse;
 import org.stepic.droid.web.SearchResultResponse;
+import org.stepik.android.data.course.source.CourseRemoteDataSource;
+import org.stepik.android.data.search.source.SearchRemoteDataSource;
+import org.stepik.android.model.Course;
 import org.stepik.android.model.Meta;
+import org.stepik.android.model.SearchResult;
+import org.stepik.android.remote.course.model.CourseResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class SearchCoursesPresenterTest {
     CourseRemoteDataSource courseRemoteDataSource;
 
     @Mock
-    Api api;
+    SearchRemoteDataSource searchRemoteDataSource;
 
     @Mock
     ThreadPoolExecutor threadPoolExecutor;
@@ -74,7 +74,7 @@ public class SearchCoursesPresenterTest {
 
         searchResolver = spy(new SearchResolverImpl());
 
-        searchCoursesPresenter = new SearchCoursesPresenter(courseRemoteDataSource, api, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic);
+        searchCoursesPresenter = new SearchCoursesPresenter(courseRemoteDataSource, searchRemoteDataSource, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic);
     }
 
     @Test
@@ -93,7 +93,7 @@ public class SearchCoursesPresenterTest {
         searchResults.add(expectedSingleSearchResult);
         when(responseMock.getSearchResultList()).thenReturn(searchResults);
         when(responseMock.getMeta()).thenReturn(onePageMeta);
-        ResponseGeneratorKt.useMockInsteadCall(when(api.getSearchResultsCourses(1, searchQuery)), responseMock);
+        // ResponseGeneratorKt.useMockInsteadCall(when(searchRemoteDataSource.getSearchResultsCourses(1, searchQuery).blockingGet()), responseMock);
 
 
         //mock calling api for getting course
@@ -111,7 +111,7 @@ public class SearchCoursesPresenterTest {
         searchCoursesPresenter.downloadData(searchQuery);
 
         //verify calling of dependencies
-        verify(api).getSearchResultsCourses(1, searchQuery);
+        verify(searchRemoteDataSource).getSearchResultsCourses(1, searchQuery);
         verify(courseRemoteDataSource).getCourses(1, courseIds);
 
         verify(threadPoolExecutor).execute(any(Runnable.class));

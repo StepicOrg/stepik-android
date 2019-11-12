@@ -31,10 +31,6 @@ public interface Api {
 
     void loginWithSocial(FragmentActivity activity, ISocialType type);
 
-    Call<SearchResultResponse> getSearchResultsCourses(int page, String rawQuery);
-
-    Single<QueriesResponse> getSearchQueries(String query);
-
     Call<Void> remindPassword(String email);
 
     Single<CourseCollectionsResponse> getCourseCollections(String language);

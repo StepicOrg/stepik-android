@@ -81,6 +81,7 @@ import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDat
 import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
+import org.stepik.android.view.injection.search.SearchDataModule
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
@@ -133,7 +134,8 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
         DeviceDataModule::class,
         UserActivityDataModule::class,
         NotificationDataModule::class,
-        EmailAddressDataModule::class
+        EmailAddressDataModule::class,
+        SearchDataModule::class
     ]
 )
 interface AppCoreComponent {

@@ -11,14 +11,14 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.web.Api
+import org.stepik.android.data.search.source.SearchRemoteDataSource
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 class SearchSuggestionsPresenter
 @Inject constructor(
-        private val api: Api,
+        private val searchRemoteDataSource: SearchRemoteDataSource,
         private val databaseFacade: DatabaseFacade,
         private val analytic: Analytic,
         @BackgroundScheduler
@@ -51,7 +51,7 @@ class SearchSuggestionsPresenter
                 .subscribe { searchView.setSuggestions(it, SearchQuerySource.DB) })
 
         compositeDisposable.add(queryPublisher
-                .flatMap { query -> api.getSearchQueries(query).toObservable().onErrorResumeNext(Observable.empty()) }
+                .flatMap { query -> searchRemoteDataSource.getSearchQueries(query).toObservable().onErrorResumeNext(Observable.empty()) }
                 .observeOn(mainScheduler)
                 .subscribe { searchView.setSuggestions(it.queries, SearchQuerySource.API) })
     }
