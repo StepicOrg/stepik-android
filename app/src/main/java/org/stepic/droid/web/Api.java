@@ -121,13 +121,13 @@ public interface Api {
 
     Single<AttemptResponse> getExistingAttemptsReactive(long stepId);
 
-    Call<SubmissionResponse> getSubmissions(long attemptId);
+    Single<AttemptResponse> getExistingAttemptsReactive(long[] attemptIds);
 
     Single<SubmissionResponse> getSubmissionsReactive(long attemptId);
 
-    Call<SubmissionResponse> getSubmissionForStep(long stepId);
+    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, int page);
 
-    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId);
+    Single<SubmissionResponse> getSubmissionForStepReactive(long stepId, long userId, int page);
 
     Call<Void> remindPassword(String email);
 

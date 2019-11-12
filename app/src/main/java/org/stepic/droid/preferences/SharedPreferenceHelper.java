@@ -577,8 +577,15 @@ public class SharedPreferenceHelper {
         }
     }
 
+    @NotNull
     public DiscussionOrder getDiscussionOrder() {
-        DiscussionOrder order = DiscussionOrder.valueOf(getString(PreferenceType.LOGIN, DISCUSSION_ORDER));
+        final String discussionOrderName = getString(PreferenceType.LOGIN, DISCUSSION_ORDER);
+        final DiscussionOrder order;
+        if (discussionOrderName == null) {
+            order = DiscussionOrder.LAST_DISCUSSION;
+        } else {
+            order = DiscussionOrder.valueOf(discussionOrderName);
+        }
         analytic.reportEvent(Analytic.Comments.ORDER_TREND, order.toString());
         return order;
     }
@@ -853,6 +860,7 @@ public class SharedPreferenceHelper {
                 .getLong(key, -1);
     }
 
+    @Nullable
     private String getString(PreferenceType preferenceType, String key) {
         return context.getSharedPreferences(preferenceType.getStoreName(), Context.MODE_PRIVATE)
                 .getString(key, null);

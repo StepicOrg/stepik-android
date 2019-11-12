@@ -1,11 +1,14 @@
 package org.stepik.android.presentation.comment
 
 import io.reactivex.Scheduler
+import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.interactor.CommentInteractor
 import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
@@ -58,18 +61,24 @@ constructor(
             return
         }
 
-        val discussionOrder = (state as? CommentsView.State.DiscussionLoaded)
+        val discussionOrderSource = (state as? CommentsView.State.DiscussionLoaded)
             ?.discussionOrder
-            ?: DiscussionOrder.LAST_DISCUSSION
+            ?.let { Single.just(it) }
+            ?: discussionProxyInteractor.getDiscussionOrder()
 
         compositeDisposable.clear()
         state = CommentsView.State.Loading
-        compositeDisposable += discussionProxyInteractor
-            .getDiscussionProxy(discussionProxyId)
+        compositeDisposable += Singles
+            .zip(
+                discussionProxyInteractor.getDiscussionProxy(discussionProxyId),
+                discussionOrderSource
+            )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { fetchComments(it, discussionOrder, discussionId) },
+                onSuccess = { (discussionProxy, discussionOrder) ->
+                    fetchComments(discussionProxy, discussionOrder, discussionId)
+                },
                 onError = { state = CommentsView.State.NetworkError }
             )
     }
@@ -114,6 +123,11 @@ constructor(
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
 
+        compositeDisposable += discussionProxyInteractor
+            .saveDiscussionOrder(discussionOrder)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(onError = emptyOnErrorStub)
         fetchComments(oldState.discussionProxy, discussionOrder, oldState.discussionId, keepCachedComments = true)
     }
 

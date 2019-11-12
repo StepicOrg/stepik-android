@@ -7,7 +7,6 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
@@ -18,12 +17,12 @@ import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
-import org.stepik.android.model.Submission
 import org.stepik.android.model.UserRole
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
 import org.stepik.android.view.base.ui.mapper.DateMapper
 import org.stepik.android.view.comment.model.CommentTag
+import org.stepik.android.view.submission.ui.delegate.setSubmission
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -81,7 +80,7 @@ class CommentDataAdapterDelegate(
             commentSolution.setOnClickListener(this)
 
             commentUserIcon.setOnClickListener(this)
-            commentUserIcon.setOnClickListener(this)
+            commentUserName.setOnClickListener(this)
 
             commentLike.setCompoundDrawables(start = R.drawable.ic_comment_like)
             commentDislike.setCompoundDrawables(start = R.drawable.ic_comment_dislike)
@@ -157,27 +156,7 @@ class CommentDataAdapterDelegate(
             }
 
             // solution
-            if (data.solution != null) {
-                commentSolution.text = context.getString(R.string.comment_solution_pattern, data.solution.submission.id)
-
-                @DrawableRes
-                val compoundDrawableRes =
-                    when (data.solution.submission.status) {
-                        Submission.Status.CORRECT ->
-                            R.drawable.ic_step_quiz_correct
-
-                        Submission.Status.WRONG ->
-                            R.drawable.ic_step_quiz_wrong_wide
-
-                        else ->
-                            -1
-                    }
-                commentSolution.setCompoundDrawables(start = compoundDrawableRes)
-
-                commentSolution.isVisible = true
-            } else {
-                commentSolution.isVisible = false
-            }
+            commentSolution.setSubmission(data.solution?.submission)
         }
 
         private fun showItemMenu(view: View) {

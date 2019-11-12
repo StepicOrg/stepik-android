@@ -14,6 +14,8 @@ fun <E> List<E>.concatWithPagedList(pagedList: PagedList<E>): PagedList<E> =
 inline fun <T, R> PagedList<T>.mapPaged(transform: (T) -> R): PagedList<R> =
     PagedList(map(transform), page = page, hasNext = hasNext, hasPrev = hasPrev)
 
+inline fun <T, R : Any> PagedList<T>.mapNotNullPaged(transform: (T) -> R?): PagedList<R> =
+    PagedList(mapNotNull(transform), page = page, hasNext = hasNext, hasPrev = hasPrev)
 /**
  * Concatenate two paged lists
  */

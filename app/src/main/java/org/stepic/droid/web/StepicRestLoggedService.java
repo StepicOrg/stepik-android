@@ -75,9 +75,6 @@ public interface StepicRestLoggedService {
     @GET("api/stepics/1")
     Call<StepicProfileResponse> getUserProfile();
 
-    @GET("api/courses?enrolled=true")
-    Single<CourseResponse> getEnrolledCourses(@Query("page") int page);
-
     @GET("api/user-courses")
     Single<UserCoursesResponse> getUserCourses(@Query("page") int page);
 
@@ -171,11 +168,8 @@ public interface StepicRestLoggedService {
     @GET("api/attempts")
     Single<AttemptResponse> getExistingAttemptsReactive(@Query("step") long stepId, @Query("user") long userId);
 
-    @GET("api/submissions")
-    Call<SubmissionResponse> getExistingSubmissions(
-            @Query("attempt") long attemptId,
-            @Query("order") String order
-    );
+    @GET("api/attempts")
+    Single<AttemptResponse> getExistingAttemptsReactive(@Query("ids[]") long[] ids);
 
     @GET("api/submissions")
     Single<SubmissionResponse> getExistingSubmissionsReactive(
@@ -238,10 +232,10 @@ public interface StepicRestLoggedService {
     Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
 
     @GET("api/submissions?order=desc")
-    Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);
+    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId, @Query("page") int page);
 
     @GET("api/submissions?order=desc")
-    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId);
+    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId, @Query("user") long user, @Query("page") int page);
 
     @GET("api/notifications")
     Call<NotificationResponse> getNotifications(@Query("page") int page, @Nullable @Query("type") String type);
