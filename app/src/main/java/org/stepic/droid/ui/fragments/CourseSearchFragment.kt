@@ -5,6 +5,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -17,9 +19,10 @@ import org.stepic.droid.core.presenters.SearchCoursesPresenter
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
+import timber.log.Timber
 import javax.inject.Inject
 
-class CourseSearchFragment: CourseListFragmentBase() {
+class CourseSearchFragment: CourseListFragmentBase(), AutoCompleteSearchView.FocusCallback {
     companion object {
         private const val QUERY_KEY = "query_key"
 
@@ -40,6 +43,8 @@ class CourseSearchFragment: CourseListFragmentBase() {
 
     @Inject
     lateinit var catalogSearchSplitTest: CatalogSearchSplitTest
+
+    lateinit var searchIcon: ImageView
 
     override fun injectComponent() {
         App
@@ -65,8 +70,10 @@ class CourseSearchFragment: CourseListFragmentBase() {
         emptySearch.isFocusable = false
         searchCoursesPresenter.attachView(this)
         searchCoursesPresenter.restoreState()
+        searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         swipeRefreshLayout.post { searchCoursesPresenter.downloadData(searchQuery) }
-        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+        if (true) {
+//        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
             setupCatalogABSearchBar()
         }
     }
@@ -114,6 +121,26 @@ class CourseSearchFragment: CourseListFragmentBase() {
         searchViewToolbar.isVisible = true
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setIconifiedByDefault(false)
+        searchViewToolbar.setFocusCallback(this)
+        backIcon.setOnClickListener {
+            searchViewToolbar.onActionViewCollapsed()
+            searchViewToolbar.onActionViewExpanded()
+            searchViewToolbar.clearFocus()
+        }
+    }
+
+    override fun onFocusChanged(hasFocus: Boolean) {
+        Timber.d("Focus: $hasFocus")
+        backIcon.isVisible = hasFocus
+        if (hasFocus) {
+            searchIcon.setImageResource(0)
+            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
+            searchViewToolbar.setBackgroundResource(R.color.white)
+        } else {
+            searchIcon.setImageResource(R.drawable.ic_action_search)
+            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(4, 4, 4, 4)
+            searchViewToolbar.setBackgroundResource(R.drawable.bg_catalog_search_bar)
+        }
     }
 
     private fun setupSearchView(searchView: AutoCompleteSearchView, searchMenuItem: MenuItem? = null) {

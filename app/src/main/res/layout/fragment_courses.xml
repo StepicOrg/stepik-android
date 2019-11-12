@@ -8,35 +8,55 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?attr/actionBarSize">
 
         <include layout="@layout/view_centered_toolbar"/>
 
-        <org.stepic.droid.ui.custom.AutoCompleteSearchView
-            android:id="@+id/searchViewToolbar"
-            android:visibility="gone"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginRight="4dp"
-            android:layout_marginEnd="4dp"
-            android:paddingLeft="-8dp"
-            android:paddingStart="-8dp"
-            android:paddingRight="-8dp"
-            android:paddingEnd="-8dp"
-            app:searchIcon="@drawable/ic_action_search"
-            app:defaultQueryHint="find_courses_hint"
-            app:queryHint="@string/find_courses_hint"
-            android:background="@drawable/bg_catalog_search_bar"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@color/white"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" >
+
+            <ImageView
+                android:id="@+id/backIcon"
+                android:src="?attr/homeAsUpIndicator"
+                android:visibility="gone"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <org.stepic.droid.ui.custom.AutoCompleteSearchView
+                android:id="@+id/searchViewToolbar"
+                android:focusable="false"
+                android:visibility="gone"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:paddingLeft="-4dp"
+                android:paddingStart="-4dp"
+                android:paddingRight="-4dp"
+                android:paddingEnd="-4dp"
+                app:closeIcon="@drawable/ic_close_dark"
+                app:searchIcon="@drawable/ic_action_search"
+                app:defaultQueryHint="find_courses_hint"
+                app:queryHint="@string/find_courses_hint"
+                android:background="@drawable/bg_catalog_search_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
         <include
             android:id="@+id/toolbarShadow"
             android:visibility="gone"
             layout="@layout/drop_shadow_view" />
-
 
     </com.google.android.material.appbar.AppBarLayout>
 

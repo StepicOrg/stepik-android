@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,7 +44,7 @@ import java.util.EnumSet
 import javax.inject.Inject
 
 class CatalogFragment : FragmentBase(),
-        CatalogView, FiltersView, FiltersListener, TagsView, StoriesView {
+        CatalogView, FiltersView, FiltersListener, TagsView, StoriesView, AutoCompleteSearchView.FocusCallback {
 
     companion object {
         fun newInstance(): FragmentBase = CatalogFragment()
@@ -68,6 +69,8 @@ class CatalogFragment : FragmentBase(),
 
     @Inject
     lateinit var catalogSearchSplitTest: CatalogSearchSplitTest
+
+    lateinit var searchIcon: ImageView
 
     private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
 
@@ -100,7 +103,9 @@ class CatalogFragment : FragmentBase(),
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
-        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+        searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
+        if(true) {
+//        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
             setupSearchBar()
         }
 
@@ -184,6 +189,25 @@ class CatalogFragment : FragmentBase(),
         searchView.clearFocus()
         searchView.setIconifiedByDefault(false)
         setupSearchView(searchView)
+        searchView.setFocusCallback(this)
+        backIcon.setOnClickListener {
+            searchView.onActionViewCollapsed()
+            searchView.onActionViewExpanded()
+            searchView.clearFocus()
+        }
+    }
+
+    override fun onFocusChanged(hasFocus: Boolean) {
+        backIcon.isVisible = hasFocus
+        if (hasFocus) {
+            searchIcon.setImageResource(0)
+            (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
+            searchView.setBackgroundResource(R.color.white)
+        } else {
+            searchIcon.setImageResource(R.drawable.ic_action_search)
+            (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(4, 4, 4, 4)
+            searchView.setBackgroundResource(R.drawable.bg_catalog_search_bar)
+        }
     }
 
     private fun setupSearchView(searchView: AutoCompleteSearchView?) {
@@ -200,7 +224,8 @@ class CatalogFragment : FragmentBase(),
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     it.onSubmitted(query)
-                    if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+                    if (true) {
+//                    if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
                         searchView.onActionViewCollapsed()
                         searchView.onActionViewExpanded()
                         searchView.clearFocus()
@@ -217,6 +242,8 @@ class CatalogFragment : FragmentBase(),
             })
         }
     }
+
+
 
     override fun onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu()
