@@ -205,7 +205,8 @@ class CatalogFragment : FragmentBase(),
             searchView.setBackgroundResource(R.color.white)
         } else {
             searchIcon.setImageResource(R.drawable.ic_action_search)
-            (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(4, 4, 4, 4)
+            val margin = resources.getDimension(R.dimen.search_bar_margin).toInt()
+            (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
             searchView.setBackgroundResource(R.drawable.bg_catalog_search_bar)
         }
     }

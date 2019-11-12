@@ -19,7 +19,6 @@ import org.stepic.droid.core.presenters.SearchCoursesPresenter
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseSearchFragment: CourseListFragmentBase(), AutoCompleteSearchView.FocusCallback {
@@ -130,7 +129,6 @@ class CourseSearchFragment: CourseListFragmentBase(), AutoCompleteSearchView.Foc
     }
 
     override fun onFocusChanged(hasFocus: Boolean) {
-        Timber.d("Focus: $hasFocus")
         backIcon.isVisible = hasFocus
         if (hasFocus) {
             searchIcon.setImageResource(0)
@@ -138,7 +136,8 @@ class CourseSearchFragment: CourseListFragmentBase(), AutoCompleteSearchView.Foc
             searchViewToolbar.setBackgroundResource(R.color.white)
         } else {
             searchIcon.setImageResource(R.drawable.ic_action_search)
-            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(4, 4, 4, 4)
+            val margin = resources.getDimension(R.dimen.search_bar_margin).toInt()
+            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
             searchViewToolbar.setBackgroundResource(R.drawable.bg_catalog_search_bar)
         }
     }
