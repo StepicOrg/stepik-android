@@ -104,8 +104,7 @@ class CatalogFragment : FragmentBase(),
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
         searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
-        if(true) {
-//        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
             setupSearchBar()
         }
 
@@ -225,8 +224,7 @@ class CatalogFragment : FragmentBase(),
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     it.onSubmitted(query)
-                    if (true) {
-//                    if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+                    if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
                         searchView.onActionViewCollapsed()
                         searchView.onActionViewExpanded()
                         searchView.clearFocus()

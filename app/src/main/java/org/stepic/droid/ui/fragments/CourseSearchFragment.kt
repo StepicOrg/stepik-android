@@ -71,8 +71,7 @@ class CourseSearchFragment: CourseListFragmentBase(), AutoCompleteSearchView.Foc
         searchCoursesPresenter.restoreState()
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         swipeRefreshLayout.post { searchCoursesPresenter.downloadData(searchQuery) }
-        if (true) {
-//        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
             setupCatalogABSearchBar()
         }
     }
