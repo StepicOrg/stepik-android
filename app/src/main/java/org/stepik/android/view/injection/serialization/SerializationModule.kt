@@ -1,5 +1,6 @@
 package org.stepik.android.view.injection.serialization
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -24,17 +25,21 @@ abstract class SerializationModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideGsonConverterFactory(): Converter.Factory =
-            GsonConverterFactory.create(
-                GsonBuilder()
-                    .enableComplexMapKeySerialization()
-                    .registerTypeAdapterFactory(CodeOptionsAdapterFactory())
-                    .registerTypeAdapter(DatasetWrapper::class.java, DatasetDeserializer())
-                    .registerTypeAdapter(ReplyWrapper::class.java, ReplyDeserializer())
-                    .registerTypeAdapter(ReplyWrapper::class.java, ReplySerializer())
-                    .registerTypeAdapter(Date::class.java, UTCDateAdapter())
-                    .registerTypeAdapter(Feedback::class.java, FeedbackDeserializer())
-                    .create()
-            )
+        internal fun provideGsonConverterFactory(gsonInstance: Gson): Converter.Factory =
+            GsonConverterFactory.create(gsonInstance)
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        internal fun provideGsonInstance(): Gson =
+            GsonBuilder()
+                .enableComplexMapKeySerialization()
+                .registerTypeAdapterFactory(CodeOptionsAdapterFactory())
+                .registerTypeAdapter(DatasetWrapper::class.java, DatasetDeserializer())
+                .registerTypeAdapter(ReplyWrapper::class.java, ReplyDeserializer())
+                .registerTypeAdapter(ReplyWrapper::class.java, ReplySerializer())
+                .registerTypeAdapter(Date::class.java, UTCDateAdapter())
+                .registerTypeAdapter(Feedback::class.java, FeedbackDeserializer())
+                .create()
     }
 }
