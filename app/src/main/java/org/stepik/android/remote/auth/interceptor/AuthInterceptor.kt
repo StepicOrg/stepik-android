@@ -13,7 +13,6 @@ import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.RWLocks
 import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.web.FailRefreshException
 import org.stepic.droid.web.UserAgentProvider
@@ -21,16 +20,21 @@ import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.service.EmptyAuthService
 import org.stepik.android.remote.auth.service.OAuthService
 import org.stepik.android.remote.base.CookieHelper
+import org.stepik.android.view.injection.qualifiers.AuthLock
 import org.stepik.android.view.injection.qualifiers.AuthService
 import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
+import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
 
 class AuthInterceptor
 @Inject
 constructor(
+    @AuthLock
+    private val authLock: ReentrantReadWriteLock,
+
     private val sharedPreference: SharedPreferenceHelper,
     private val stepikLogoutManager: StepikLogoutManager,
     private val screenManager: ScreenManager,
@@ -50,7 +54,7 @@ constructor(
     override fun intercept(chain: Interceptor.Chain): Response {
         var request = chain.addUserAgent(userAgentProvider.provideUserAgent())
         try {
-            RWLocks.AuthLock.readLock().lock()
+            authLock.readLock().lock()
             var response = sharedPreference.authResponseFromStore
             val urlForCookies = request.url().toString()
 
@@ -88,8 +92,8 @@ constructor(
                 }
             } else if (isUpdateNeeded(response)) {
                 try {
-                    RWLocks.AuthLock.readLock().unlock()
-                    RWLocks.AuthLock.writeLock().lock()
+                    authLock.readLock().unlock()
+                    authLock.writeLock().lock()
                     Timber.d("writer 1")
                     response = sharedPreference.authResponseFromStore
                     if (isUpdateNeeded(response)) {
@@ -131,9 +135,9 @@ constructor(
                         sharedPreference.storeAuthInfo(response)
                     }
                 } finally {
-                    RWLocks.AuthLock.readLock().lock()
+                    authLock.readLock().lock()
                     Timber.d("writer 2")
-                    RWLocks.AuthLock.writeLock().unlock()
+                    authLock.writeLock().unlock()
                 }
             }
             if (response != null) {
@@ -151,7 +155,7 @@ constructor(
             }
             return originalResponse
         } finally {
-            RWLocks.AuthLock.readLock().unlock()
+            authLock.readLock().unlock()
         }
     }
 

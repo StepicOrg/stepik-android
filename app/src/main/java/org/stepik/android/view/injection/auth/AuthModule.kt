@@ -25,10 +25,12 @@ import org.stepik.android.remote.auth.interceptor.AuthInterceptor
 import org.stepik.android.remote.auth.service.EmptyAuthService
 import org.stepik.android.remote.auth.service.OAuthService
 import org.stepik.android.remote.base.CookieHelper
+import org.stepik.android.view.injection.qualifiers.AuthLock
 import org.stepik.android.view.injection.qualifiers.AuthService
 import org.stepik.android.view.injection.qualifiers.CookieAuthService
 import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import retrofit2.Converter
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 @Module
 abstract class AuthModule {
@@ -51,6 +53,13 @@ abstract class AuthModule {
         private fun addDebugInterceptors(okHttpBuilder: OkHttpClient.Builder) {
             debugInterceptors.forEach { okHttpBuilder.addNetworkInterceptor(it) }
         }
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        @AuthLock
+        internal fun provideAuthLock(): ReentrantReadWriteLock =
+            ReentrantReadWriteLock()
 
         @Provides
         @AppSingleton

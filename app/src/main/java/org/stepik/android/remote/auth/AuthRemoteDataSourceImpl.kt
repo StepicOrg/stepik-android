@@ -5,23 +5,27 @@ import io.reactivex.Single
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
-import org.stepic.droid.util.RWLocks
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.UserRegistrationRequest
 import org.stepik.android.data.auth.source.AuthRemoteDataSource
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.service.OAuthService
+import org.stepik.android.view.injection.qualifiers.AuthLock
 import org.stepik.android.view.injection.qualifiers.AuthService
 import org.stepik.android.view.injection.qualifiers.CookieAuthService
 import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import java.net.URLEncoder
+import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
 import kotlin.concurrent.write
 
 class AuthRemoteDataSourceImpl
 @Inject
 constructor(
+    @AuthLock
+    private val authLock: ReentrantReadWriteLock,
+
     @AuthService
     private val authService: OAuthService,
     @SocialAuthService
@@ -38,7 +42,7 @@ constructor(
     }
 
     private fun saveResponse(response: OAuthResponse, isSocial: Boolean) {
-        RWLocks.AuthLock.write {
+        authLock.write {
             sharedPreferenceHelper.storeAuthInfo(response)
             sharedPreferenceHelper.storeLastTokenType(isSocial)
         }
