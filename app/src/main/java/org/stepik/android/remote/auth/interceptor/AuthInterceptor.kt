@@ -21,21 +21,16 @@ import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.service.EmptyAuthService
 import org.stepik.android.remote.auth.service.OAuthService
 import org.stepik.android.remote.base.CookieHelper
-import org.stepik.android.view.injection.qualifiers.AuthLock
 import org.stepik.android.view.injection.qualifiers.AuthService
 import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import retrofit2.Call
 import timber.log.Timber
 import java.io.IOException
-import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
 
 class AuthInterceptor
 @Inject
 constructor(
-    @AuthLock
-    private val authLock: ReentrantLock,
-
     private val sharedPreference: SharedPreferenceHelper,
     private val stepikLogoutManager: StepikLogoutManager,
     private val screenManager: ScreenManager,
@@ -113,7 +108,7 @@ constructor(
                             val message: String = response?.toString() ?: "response was null"
                             var extendedMessage = ""
                             if (oAuthResponse.isSuccessful) {
-                                extendedMessage = "was success " + oAuthResponse.code()
+                                extendedMessage = "was success ${oAuthResponse.code()}"
                             } else {
                                 try {
                                     extendedMessage = "failed ${oAuthResponse.code()} ${oAuthResponse.errorBody()?.string()}"
