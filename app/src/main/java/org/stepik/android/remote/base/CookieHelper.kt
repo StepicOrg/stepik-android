@@ -25,18 +25,17 @@ constructor(
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler
 ) {
-    companion object {
-        private fun tryGetCsrfFromOnePair(keyValueCookie: String): String? =
-            HttpCookie.parse(keyValueCookie).find { it.name == AppConstants.csrfTokenCookieName }?.value
 
-        private fun getCsrfTokenFromCookies(cookies: String): String {
-            cookies.split(";").forEach {
-                val csrf =
-                    tryGetCsrfFromOnePair(it)
-                if (csrf != null) return csrf
-            }
-            return ""
+    private fun tryGetCsrfFromOnePair(keyValueCookie: String): String? =
+        HttpCookie.parse(keyValueCookie).find { it.name == AppConstants.csrfTokenCookieName }?.value
+
+    fun getCsrfTokenFromCookies(cookies: String): String {
+        cookies.split(";").forEach {
+            val csrf =
+                tryGetCsrfFromOnePair(it)
+            if (csrf != null) return csrf
         }
+        return ""
     }
 
     fun removeCookiesCompat() {

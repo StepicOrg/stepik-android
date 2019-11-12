@@ -162,7 +162,7 @@ class LoginPresenter
                         analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
                     }
                     Type.SOCIAL -> {
-                        if (authInfo.socialType == null) Completable.complete()
+                        if (authInfo.socialType == null) return@fromRunnable
 
                         val event: String = try {
                             val request = api.userProfile.execute().body()
