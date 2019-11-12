@@ -11,4 +11,10 @@ interface UnitService {
 
     @GET("api/units")
     fun getUnitsByLessonId(@Query("lesson") lessonId: Long): Single<UnitResponse>
+
+    @GET("api/units")
+    fun getUnits(
+        @Query("course") courseId: Long,
+        @Query("lesson") lessonId: Long
+    ): Single<UnitResponse>
 }

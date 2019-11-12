@@ -1,4 +1,4 @@
-package org.stepic.droid.web.achievements.model
+package org.stepik.android.remote.achievement.model
 
 import org.stepic.droid.web.MetaResponseBase
 import org.stepik.android.model.Meta

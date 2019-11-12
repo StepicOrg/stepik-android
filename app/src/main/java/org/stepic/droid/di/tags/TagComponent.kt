@@ -4,9 +4,10 @@ import dagger.BindsInstance
 import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.TagFragment
 import org.stepik.android.model.Tag
+import org.stepik.android.view.injection.tags.TagsDataModule
 
 @TagScope
-@Subcomponent()
+@Subcomponent(modules = [TagsDataModule::class])
 interface TagComponent {
 
     @Subcomponent.Builder

@@ -18,7 +18,7 @@ constructor(
 ) : UnitRepository {
     override fun getUnits(vararg unitIds: Long, primarySourceType: DataSourceType): Single<List<Unit>> {
         val remoteSource = unitRemoteDataSource
-            .getUnits(*unitIds)
+            .getUnitsByCourseAndLessonId(*unitIds)
             .doCompletableOnSuccess(unitCacheDataSource::saveUnits)
 
         val cacheSource = unitCacheDataSource
@@ -32,7 +32,7 @@ constructor(
                 cacheSource.flatMap { cachedUnits ->
                     val ids = (unitIds.toList() - cachedUnits.map(Unit::id)).toLongArray()
                     unitRemoteDataSource
-                        .getUnits(*ids)
+                        .getUnitsByCourseAndLessonId(*ids)
                         .doCompletableOnSuccess(unitCacheDataSource::saveUnits)
                         .map { remoteUnits -> cachedUnits + remoteUnits }
                 }

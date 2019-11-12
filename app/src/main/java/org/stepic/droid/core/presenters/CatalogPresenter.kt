@@ -10,7 +10,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.mappers.Mapper
 import org.stepic.droid.model.CoursesCarouselInfo
 import org.stepic.droid.model.StepikFilter
-import org.stepic.droid.web.Api
+import org.stepik.android.data.course_list.source.CourseListRemoteDataSource
 import org.stepik.android.model.CourseCollection
 import java.util.EnumSet
 import javax.inject.Inject
@@ -19,7 +19,7 @@ import javax.inject.Inject
 class CatalogPresenter
 @Inject
 constructor(
-    private val api: Api,
+    private val courseListRemoteDataSource: CourseListRemoteDataSource,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -34,7 +34,7 @@ constructor(
 
         val lang = filters.first().language
         disposableContainer +=
-            api.getCourseCollections(lang)
+            courseListRemoteDataSource.getCourseCollections(lang)
                 .map {
                     it.courseCollections.sortedBy {
                         it.position

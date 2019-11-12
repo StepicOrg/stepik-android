@@ -7,7 +7,7 @@ import org.stepic.droid.core.presenters.contracts.TagsView
 import org.stepic.droid.di.catalog.CatalogScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.web.Api
+import org.stepik.android.data.tags.source.TagsRemoteDataSource
 import javax.inject.Inject
 
 @CatalogScope
@@ -18,7 +18,7 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    private val api: Api
+    private val tagsRemoteDataSource: TagsRemoteDataSource
 ) : PresenterBase<TagsView>() {
 
     private var disposable: Disposable? = null
@@ -27,8 +27,8 @@ constructor(
     fun onNeedShowTags() {
         disposable?.dispose()
 
-        disposable = api
-            .featuredTags
+        disposable = tagsRemoteDataSource
+            .getFeaturedTags()
             .map {
                 it.tags
             }

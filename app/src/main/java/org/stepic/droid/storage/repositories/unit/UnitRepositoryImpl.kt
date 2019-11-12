@@ -2,15 +2,15 @@ package org.stepic.droid.storage.repositories.unit
 
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.storage.repositories.Repository
-import org.stepic.droid.web.Api
+import org.stepik.android.data.unit.source.UnitRemoteDataSource
 import org.stepik.android.model.Unit
 import javax.inject.Inject
 
 class UnitRepositoryImpl
 @Inject constructor(
         private val databaseFacade: DatabaseFacade,
-        private val api: Api)
-    : Repository<Unit> {
+        private val unitRemoteDataSource: UnitRemoteDataSource
+) : Repository<Unit> {
 
     override fun getObjects(keys: LongArray): Iterable<Unit> {
         val keyList = keys.toList()
@@ -18,7 +18,7 @@ class UnitRepositoryImpl
         if (units.size != keys.size) {
             units =
                     try {
-                        api.getUnits(keyList).execute()?.body()?.units?.also {
+                        unitRemoteDataSource.getUnitsByCourseAndLessonId(*keys).blockingGet()?.also {
                             it.forEach(databaseFacade::addUnit)
                         } ?: emptyList()
                     } catch (exception: Exception) {
@@ -34,9 +34,7 @@ class UnitRepositoryImpl
         if (unit == null) {
             unit =
                     try {
-                        api.getUnits(listOf(key)).execute()
-                                ?.body()
-                                ?.units
+                        unitRemoteDataSource.getUnitsByCourseAndLessonId(key).blockingGet()
                                 ?.firstOrNull()
                                 ?.also(databaseFacade::addUnit)
                     } catch (exception: Exception) {

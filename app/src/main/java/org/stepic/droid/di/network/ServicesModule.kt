@@ -8,8 +8,6 @@ import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.web.NetworkFactory
 import org.stepic.droid.web.RatingService
-import org.stepic.droid.web.StepicRestLoggedService
-import org.stepic.droid.web.achievements.AchievementsService
 import org.stepic.droid.web.storage.RemoteStorageService
 import org.stepik.android.view.injection.base.Authorized
 import retrofit2.Converter
@@ -22,20 +20,8 @@ abstract class ServicesModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideAchievementService(@Authorized retrofit: Retrofit): AchievementsService =
-            retrofit.create(AchievementsService::class.java)
-
-        @Provides
-        @AppSingleton
-        @JvmStatic
         internal fun provideRemoteStorageService(@Authorized retrofit: Retrofit): RemoteStorageService =
             retrofit.create(RemoteStorageService::class.java)
-
-        @Provides
-        @AppSingleton
-        @JvmStatic
-        internal fun provideStepikService(@Authorized retrofit: Retrofit): StepicRestLoggedService =
-            retrofit.create(StepicRestLoggedService::class.java)
 
         @Provides
         @AppSingleton

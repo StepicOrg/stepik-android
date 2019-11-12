@@ -6,31 +6,25 @@ import android.net.Uri;
 
 import androidx.fragment.app.FragmentActivity;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.CookieHelper;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.model.NotificationCategory;
-import org.stepic.droid.model.StepikFilter;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.util.NetworkExtensionsKt;
 import org.stepic.droid.web.model.adaptive.RatingRequest;
 import org.stepic.droid.web.model.adaptive.RatingResponse;
 import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
-import org.stepik.android.model.Tag;
 import org.stepik.android.model.adaptive.RatingItem;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.remote.auth.model.OAuthResponse;
 import org.stepik.android.remote.auth.service.EmptyAuthService;
-import org.stepik.android.remote.unit.model.UnitResponse;
 
 import java.io.IOException;
 import java.net.HttpCookie;
 import java.net.URLEncoder;
-import java.util.EnumSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -57,7 +51,6 @@ public class ApiImpl implements Api {
     private final Config config;
     private final Analytic analytic;
     private final UserAgentProvider userAgentProvider;
-    private final StepicRestLoggedService loggedService;
     private final RatingService ratingService;
 
     private final CookieHelper cookieHelper;
@@ -70,7 +63,6 @@ public class ApiImpl implements Api {
             Analytic analytic,
             UserAgentProvider userAgentProvider,
             CookieHelper cookieHelper,
-            StepicRestLoggedService stepicRestLoggedService,
             RatingService ratingService,
             Converter.Factory converterFactory
     ) {
@@ -80,19 +72,8 @@ public class ApiImpl implements Api {
         this.analytic = analytic;
         this.userAgentProvider = userAgentProvider;
         this.cookieHelper = cookieHelper;
-        this.loggedService = stepicRestLoggedService;
         this.ratingService = ratingService;
         this.converterFactory = converterFactory;
-    }
-
-    @Override
-    public Call<UnitResponse> getUnits(List<Long> units) {
-        return loggedService.getUnits(units);
-    }
-
-    @Override
-    public Single<UnitResponse> getUnits(long courseId, long lessonId) {
-        return loggedService.getUnits(courseId, lessonId);
     }
 
     @Override
@@ -155,16 +136,6 @@ public class ApiImpl implements Api {
     }
 
     @Override
-    public Single<CourseCollectionsResponse> getCourseCollections(String language) {
-        return loggedService.getCourseLists(language);
-    }
-
-    @Override
-    public Single<TagResponse> getFeaturedTags() {
-        return loggedService.getFeaturedTags();
-    }
-
-    @Override
     public Single<List<RatingItem>> getRating(long courseId, int count, int days) {
         return ratingService.getRating(courseId, count, days, getCurrentUserId()).map(new Function<RatingResponse, List<RatingItem>>() {
             @Override
@@ -182,25 +153,6 @@ public class ApiImpl implements Api {
     @Override
     public Single<RatingRestoreResponse> restoreRating(long courseId) {
         return ratingService.restoreRating(courseId, getAccessToken());
-    }
-
-    @Override
-    public Single<SearchResultResponse> getSearchResultsOfTag(int page, @NotNull Tag tag) {
-        EnumSet<StepikFilter> enumSet = sharedPreference.getFilterForFeatured();
-        String lang = enumSet.iterator().next().getLanguage();
-        return loggedService.getSearchResultsOfTag(page, tag.getId(), lang);
-    }
-
-
-    @Nullable
-    private String getNotificationCategoryString(NotificationCategory notificationCategory) {
-        String categoryType;
-        if (notificationCategory == NotificationCategory.all) {
-            categoryType = null;
-        } else {
-            categoryType = notificationCategory.name();
-        }
-        return categoryType;
     }
 
     private Request addUserAgentTo(Interceptor.Chain chain) {

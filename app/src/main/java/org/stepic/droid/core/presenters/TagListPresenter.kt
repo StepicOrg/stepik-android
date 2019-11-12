@@ -12,8 +12,8 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
 import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepic.droid.web.Api
 import org.stepik.android.data.course.source.CourseRemoteDataSource
+import org.stepik.android.data.tags.source.TagsRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.model.Meta
 import org.stepik.android.model.Tag
@@ -27,7 +27,7 @@ class TagListPresenter
 constructor(
     private val tag: Tag,
     private val courseRemoteDataSource: CourseRemoteDataSource,
-    private val api: Api,
+    private val tagsRemoteDataSource: TagsRemoteDataSource,
     private val searchResolver: SearchResolver,
     @MainScheduler
     private val mainScheduler: Scheduler,
@@ -51,7 +51,7 @@ constructor(
             }
             .observeOn(backgroundScheduler)
             .flatMap {
-                api.getSearchResultsOfTag(it, tag)
+                tagsRemoteDataSource.getSearchResultsOfTag(it, tag)
                     .toObservable()
             }
             .doOnNext { handleMeta(it.meta) }
