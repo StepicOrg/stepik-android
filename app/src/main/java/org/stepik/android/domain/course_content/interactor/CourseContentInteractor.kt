@@ -5,7 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.toObservable
-import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -23,6 +22,7 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.course_content.mapper.CourseContentItemMapper
 import org.stepik.android.view.course_content.model.CourseContentItem
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 class CourseContentInteractor
@@ -40,12 +40,13 @@ constructor(
         private const val UNITS_CHUNK_SIZE = 10
     }
 
-    fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> =
-        courseObservableSource
-            .zipWith(Observable.range(0, Int.MAX_VALUE))
+    fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> {
+        val count = AtomicInteger(0)
+
+        return courseObservableSource
             .skip(if (shouldSkipStoredValue) 1 else 0)
-            .switchMap { (course, count) ->
-                val shouldUseCache = count == 0
+            .switchMap { course ->
+                val shouldUseCache = !shouldSkipStoredValue && count.getAndIncrement() < 1
                 val contentObservable =
                     if (shouldUseCache) {
                         val cacheSource = getContent(course, emptyList(), DataSourceType.CACHE)
@@ -64,6 +65,7 @@ constructor(
 
                 Observable.concat(getEmptySections(course), contentObservable)
             }
+    }
 
     private fun getEmptySections(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable.just(course to emptyList())
@@ -71,12 +73,13 @@ constructor(
     private fun getContent(course: Course, items: List<CourseContentItem>, dataSourceType: DataSourceType): Observable<Pair<Course, List<CourseContentItem>>> {
         val courseContentLoadingTrace = FirebasePerformance.getInstance().newTrace(Analytic.Traces.COURSE_CONTENT_LOADING)
         courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.COURSE, course.id.toString())
+        courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.SOURCE, dataSourceType.name)
         courseContentLoadingTrace.start()
 
         return getSectionsOfCourse(course, dataSourceType)
             .flatMap { populateSections(course, it, items, dataSourceType) }
-            .flatMapObservable { items ->
-                Observable.just(course to items) + loadUnits(course, items, dataSourceType)
+            .flatMapObservable { populatedItems ->
+                Observable.just(course to populatedItems) + loadUnits(course, populatedItems, dataSourceType)
             }
             .doOnComplete {
                 courseContentLoadingTrace.stop()
