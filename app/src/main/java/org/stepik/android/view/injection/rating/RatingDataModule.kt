@@ -1,30 +1,27 @@
-package org.stepic.droid.di.network
+package org.stepik.android.view.injection.rating
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import org.stepic.droid.configuration.RemoteConfig
-import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.web.NetworkFactory
 import org.stepic.droid.web.RatingService
-import org.stepic.droid.web.storage.RemoteStorageService
-import org.stepik.android.view.injection.base.Authorized
+import org.stepik.android.data.rating.source.RatingRemoteDataSource
+import org.stepik.android.remote.rating.RatingRemoteDataSourceImpl
 import retrofit2.Converter
-import retrofit2.Retrofit
 
 @Module
-abstract class ServicesModule {
+abstract class RatingDataModule {
+    @Binds
+    internal abstract fun bindRatingRemoteDataSource(
+        ratingRemoteDataSourceImpl: RatingRemoteDataSourceImpl
+    ): RatingRemoteDataSource
+
     @Module
     companion object {
         @Provides
-        @AppSingleton
-        @JvmStatic
-        internal fun provideRemoteStorageService(@Authorized retrofit: Retrofit): RemoteStorageService =
-            retrofit.create(RemoteStorageService::class.java)
-
-        @Provides
-        @AppSingleton
         @JvmStatic
         internal fun provideRatingService(firebaseRemoteConfig: FirebaseRemoteConfig, okHttpClient: OkHttpClient, converterFactory: Converter.Factory): RatingService =
             NetworkFactory.createService(firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL), okHttpClient, converterFactory)

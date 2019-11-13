@@ -37,12 +37,10 @@ constructor(
     override fun getNotificationStatuses(): Single<NotificationStatusesResponse> =
         notificationService.getNotificationStatuses()
 
-    private fun getNotificationCategoryString(notificationCategory: NotificationCategory): String? {
-        return if (notificationCategory === NotificationCategory.all) {
+    private fun getNotificationCategoryString(notificationCategory: NotificationCategory): String? =
+        if (notificationCategory === NotificationCategory.all) {
             null
         } else {
             notificationCategory.name
         }
-    }
 }
-

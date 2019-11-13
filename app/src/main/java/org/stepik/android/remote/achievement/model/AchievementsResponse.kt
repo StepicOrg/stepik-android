@@ -5,6 +5,6 @@ import org.stepik.android.model.Meta
 import org.stepik.android.model.achievements.Achievement
 
 class AchievementsResponse(
-        meta: Meta,
-        val achievements: List<Achievement>
-): MetaResponseBase(meta)
+    meta: Meta,
+    val achievements: List<Achievement>
+) : MetaResponseBase(meta)

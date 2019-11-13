@@ -1,4 +1,4 @@
-package org.stepic.droid.web.storage
+package org.stepik.android.remote.remote_storage.service
 
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -16,26 +16,25 @@ interface RemoteStorageService {
 
     @GET("api/storage-records")
     fun getStorageRecords(
-            @Query("page") page: Int,
-            @Query("user") userId: Long,
-            @Query("kind") kind: String? = null,
-            @Query("kind__startswith") startsWith: String? = null
+        @Query("page") page: Int,
+        @Query("user") userId: Long,
+        @Query("kind") kind: String? = null,
+        @Query("kind__startswith") startsWith: String? = null
     ): Single<StorageResponse>
 
     @POST("api/storage-records")
     fun createStorageRecord(
-            @Body body: StorageRequest
+        @Body body: StorageRequest
     ): Single<StorageResponse>
 
     @PUT("api/storage-records/{recordId}")
     fun setStorageRecord(
-            @Path("recordId") recordId: Long,
-            @Body body: StorageRequest
+        @Path("recordId") recordId: Long,
+        @Body body: StorageRequest
     ): Single<StorageResponse>
 
     @DELETE("api/storage-records/{recordId}")
     fun removeStorageRecord(
-            @Path("recordId") recordId: Long
+        @Path("recordId") recordId: Long
     ): Completable
-
 }

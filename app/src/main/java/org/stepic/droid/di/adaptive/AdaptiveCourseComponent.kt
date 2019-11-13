@@ -10,6 +10,7 @@ import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
+import org.stepik.android.view.injection.rating.RatingDataModule
 import org.stepik.android.view.injection.recommendation.RecommendationModule
 import org.stepik.android.view.injection.submission.SubmissionDataModule
 import org.stepik.android.view.injection.user.UserDataModule
@@ -23,7 +24,8 @@ import org.stepik.android.view.injection.view_assignment.ViewAssignmentDataModul
     SubmissionDataModule::class,
     AttemptDataModule::class,
     RecommendationModule::class,
-    UserDataModule::class
+    UserDataModule::class,
+    RatingDataModule::class
 ])
 interface AdaptiveCourseComponent {
     @Subcomponent.Builder

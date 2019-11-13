@@ -21,8 +21,8 @@ public interface RatingService {
     @GET("rating")
     Single<RatingResponse> getRating(
             @Query("course") final long courseId,
-            @Query("count") final long count,
-            @Query("days") final long days,
+            @Query("count") final int count,
+            @Query("days") final int days,
             @Query("user") final long userId
     );
 

@@ -17,7 +17,7 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addDisposable
-import org.stepic.droid.web.Api
+import org.stepik.android.data.rating.source.RatingRemoteDataSource
 import org.stepik.android.data.user.source.UserRemoteDataSource
 import org.stepik.android.model.adaptive.RatingItem
 import retrofit2.HttpException
@@ -26,18 +26,18 @@ import javax.inject.Inject
 class AdaptiveRatingPresenter
 @Inject
 constructor(
-        @CourseId
-        private val courseId: Long,
-        private val api: Api,
-        @BackgroundScheduler
-        private val backgroundScheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler,
-        private val ratingNamesGenerator: RatingNamesGenerator,
-        private val userRemoteDataSource: UserRemoteDataSource,
+    @CourseId
+    private val courseId: Long,
+    private val ratingRemoteDataSource: RatingRemoteDataSource,
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler,
+    private val ratingNamesGenerator: RatingNamesGenerator,
+    private val userRemoteDataSource: UserRemoteDataSource,
 
-        context: Context,
-        sharedPreferenceHelper: SharedPreferenceHelper
+    context: Context,
+    sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<AdaptiveRatingView>() {
     companion object {
         private const val ITEMS_PER_PAGE = 10
@@ -65,7 +65,7 @@ constructor(
         val left = BiFunction<Any, Any, Any> { a, _ -> a}
 
         RATING_PERIODS.forEachIndexed { pos, period ->
-            compositeDisposable addDisposable resolveUsers(api.getRating(courseId, ITEMS_PER_PAGE, period))
+            compositeDisposable addDisposable resolveUsers(ratingRemoteDataSource.getRating(courseId, ITEMS_PER_PAGE, period))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .doOnError(this::onError)

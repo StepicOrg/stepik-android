@@ -1,25 +1,15 @@
 package org.stepic.droid.web;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
 import androidx.fragment.app.FragmentActivity;
 
-import org.jetbrains.annotations.Nullable;
-import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.CookieHelper;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.util.NetworkExtensionsKt;
-import org.stepic.droid.web.model.adaptive.RatingRequest;
-import org.stepic.droid.web.model.adaptive.RatingResponse;
-import org.stepic.droid.web.model.adaptive.RatingRestoreResponse;
-import org.stepik.android.model.adaptive.RatingItem;
-import org.stepik.android.model.user.Profile;
-import org.stepik.android.remote.auth.model.OAuthResponse;
 import org.stepik.android.remote.auth.service.EmptyAuthService;
 
 import java.io.IOException;
@@ -29,9 +19,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import io.reactivex.Completable;
-import io.reactivex.Single;
-import io.reactivex.functions.Function;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -46,33 +33,22 @@ public class ApiImpl implements Api {
     private final long TIMEOUT_IN_SECONDS = 60L;
     private static final String USER_AGENT_NAME = "User-Agent";
 
-    private final Context context;
-    private final SharedPreferenceHelper sharedPreference;
     private final Config config;
-    private final Analytic analytic;
     private final UserAgentProvider userAgentProvider;
-    private final RatingService ratingService;
 
     private final CookieHelper cookieHelper;
     private final Converter.Factory converterFactory;
 
     @Inject
     public ApiImpl(
-            Context context, SharedPreferenceHelper sharedPreference,
             Config config,
-            Analytic analytic,
             UserAgentProvider userAgentProvider,
             CookieHelper cookieHelper,
-            RatingService ratingService,
             Converter.Factory converterFactory
     ) {
-        this.context = context;
-        this.sharedPreference = sharedPreference;
         this.config = config;
-        this.analytic = analytic;
         this.userAgentProvider = userAgentProvider;
         this.cookieHelper = cookieHelper;
-        this.ratingService = ratingService;
         this.converterFactory = converterFactory;
     }
 
@@ -135,52 +111,11 @@ public class ApiImpl implements Api {
         return tempService.remindPassword(encodedEmail);
     }
 
-    @Override
-    public Single<List<RatingItem>> getRating(long courseId, int count, int days) {
-        return ratingService.getRating(courseId, count, days, getCurrentUserId()).map(new Function<RatingResponse, List<RatingItem>>() {
-            @Override
-            public List<RatingItem> apply(RatingResponse ratingResponse) {
-                return ratingResponse.getUsers();
-            }
-        });
-    }
-
-    @Override
-    public Completable putRating(long courseId, long exp) {
-        return ratingService.putRating(new RatingRequest(exp, courseId, getAccessToken()));
-    }
-
-    @Override
-    public Single<RatingRestoreResponse> restoreRating(long courseId) {
-        return ratingService.restoreRating(courseId, getAccessToken());
-    }
-
     private Request addUserAgentTo(Interceptor.Chain chain) {
         return chain
                 .request()
                 .newBuilder()
                 .header(USER_AGENT_NAME, userAgentProvider.provideUserAgent())
                 .build();
-    }
-
-    private long getCurrentUserId() {
-        Profile profile = sharedPreference.getProfile();
-        //noinspection StatementWithEmptyBody
-        if (profile == null) {
-            //practically it is not happens (yandex metrica)
-            return 0;
-        } else {
-            return profile.getId();
-        }
-    }
-
-    @Nullable
-    private String getAccessToken() {
-        final OAuthResponse auth = sharedPreference.getAuthResponseFromStore();
-        if (auth == null) {
-            return null;
-        } else {
-            return auth.getAccessToken();
-        }
     }
 }

@@ -22,13 +22,16 @@ interface NotificationService {
     ): Completable
 
     @GET("api/notifications")
-    fun getNotifications(@Query("page") page: Int,
-                         @Query("type") type: String?
+    fun getNotifications(
+        @Query("page") page: Int,
+        @Query("type") type: String?
     ): Single<NotificationResponse>
 
     @FormUrlEncoded
     @POST("api/notifications/mark-as-read")
-    fun markNotificationAsRead(@Field(value = "type", encoded = true) notificationType: String?): Completable
+    fun markNotificationAsRead(
+        @Field(value = "type", encoded = true) notificationType: String?
+    ): Completable
 
     @GET("api/notification-statuses")
     fun getNotificationStatuses(): Single<NotificationStatusesResponse>

@@ -24,7 +24,7 @@ constructor(
     override fun getCourses(page: Int, vararg courseIds: Long): Call<CourseResponse> {
         val ids = if (courseIds.isEmpty()) {
             longArrayOf(0)
-        } else{
+        } else {
             courseIds
         }
         return courseService.getCourses(page, ids)

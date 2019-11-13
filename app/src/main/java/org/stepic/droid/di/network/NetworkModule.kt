@@ -1,7 +1,6 @@
 package org.stepic.droid.di.network
 
 import android.webkit.CookieManager
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoSet
@@ -9,8 +8,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
-import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
-import org.stepic.droid.features.stories.repository.StoryTemplatesRepositoryImpl
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepic.droid.web.NetworkFactory
 import org.stepik.android.view.injection.achievement.AchievementDataModule
@@ -21,11 +18,8 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.util.concurrent.TimeUnit
 
-@Module(includes = [AuthModule::class, ServicesModule::class, SerializationModule::class, AchievementDataModule::class])
+@Module(includes = [AuthModule::class, SerializationModule::class, AchievementDataModule::class])
 abstract class NetworkModule {
-
-    @Binds
-    abstract fun bindStoryTemplatesRepository(storyTemplatesRepositoryImpl: StoryTemplatesRepositoryImpl): StoryTemplatesRepository
 
     @Module
     companion object {
