@@ -43,6 +43,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
 import org.stepik.android.model.ViewAssignment
+import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import javax.inject.Inject
 
@@ -72,7 +73,8 @@ constructor(
     private val sectionDateEventDao: IDao<SectionDateEvent>,
     private val submissionDao: IDao<Submission>,
     private val certificateDao: IDao<Certificate>,
-    private val discussionThreadDao: IDao<DiscussionThread>
+    private val discussionThreadDao: IDao<DiscussionThread>,
+    private val attemptDao: IDao<Attempt>
 ) {
 
     fun dropDatabase() {
@@ -99,6 +101,7 @@ constructor(
         submissionDao.removeAll()
         certificateDao.removeAll()
         discussionThreadDao.removeAll()
+        attemptDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {
