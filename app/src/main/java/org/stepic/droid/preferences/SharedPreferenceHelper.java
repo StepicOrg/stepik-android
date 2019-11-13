@@ -18,16 +18,17 @@ import org.stepic.droid.persistence.model.StorageLocation;
 import org.stepic.droid.ui.util.TimeIntervalUtil;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
-import org.stepic.droid.util.RWLocks;
-import org.stepic.droid.web.AuthenticationStepikResponse;
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder;
 import org.stepik.android.domain.step_content_text.model.FontSize;
 import org.stepik.android.model.user.EmailAddress;
 import org.stepik.android.model.user.Profile;
+import org.stepik.android.remote.auth.model.OAuthResponse;
+import org.stepik.android.view.injection.qualifiers.AuthLock;
 
 import java.io.File;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.inject.Inject;
 
@@ -101,12 +102,13 @@ public class SharedPreferenceHelper {
     private final static String LAST_SESSION_TIMESTAMP = "last_session_timestamp";
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
 
-    private AuthenticationStepikResponse cachedAuthStepikResponse = null;
+    private OAuthResponse cachedAuthStepikResponse = null;
 
 
     private final Context context;
     private final Analytic analytic;
     private final DefaultFilter defaultFilter;
+    private final ReentrantReadWriteLock authLock;
 
     public enum NotificationDay {
         DAY_ONE(ONE_DAY_NOTIFICATION),
@@ -124,10 +126,11 @@ public class SharedPreferenceHelper {
     }
 
     @Inject
-    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context) {
+    public SharedPreferenceHelper(Analytic analytic, DefaultFilter defaultFilter, Context context, @AuthLock ReentrantReadWriteLock authLock) {
         this.analytic = analytic;
         this.defaultFilter = defaultFilter;
         this.context = context;
+        this.authLock = authLock;
     }
 
     /**
@@ -719,7 +722,7 @@ public class SharedPreferenceHelper {
         }
     }
 
-    public void storeAuthInfo(AuthenticationStepikResponse response) {
+    public void storeAuthInfo(OAuthResponse response) {
         Gson gson = new Gson();
         String json = gson.toJson(response);
         put(PreferenceType.LOGIN, AUTH_RESPONSE_JSON, json);
@@ -740,7 +743,7 @@ public class SharedPreferenceHelper {
     }
 
     public void deleteAuthInfo() {
-        RWLocks.AuthLock.writeLock().lock();
+        authLock.writeLock().lock();
         try {
             Profile profile = getProfile();
             String userId = "anon_prev";
@@ -752,12 +755,12 @@ public class SharedPreferenceHelper {
             clear(PreferenceType.LOGIN);
             clear(PreferenceType.FEATURED_FILTER);
         } finally {
-            RWLocks.AuthLock.writeLock().unlock();
+            authLock.writeLock().unlock();
         }
     }
 
     @Nullable
-    public AuthenticationStepikResponse getAuthResponseFromStore() {
+    public OAuthResponse getAuthResponseFromStore() {
         if (cachedAuthStepikResponse != null) {
             return cachedAuthStepikResponse;
         }
@@ -768,7 +771,7 @@ public class SharedPreferenceHelper {
         }
 
         Gson gson = new GsonBuilder().create();
-        cachedAuthStepikResponse = gson.fromJson(json, AuthenticationStepikResponse.class);
+        cachedAuthStepikResponse = gson.fromJson(json, OAuthResponse.class);
         return cachedAuthStepikResponse;
     }
 
