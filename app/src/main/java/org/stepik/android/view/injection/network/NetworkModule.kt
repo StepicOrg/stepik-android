@@ -1,4 +1,4 @@
-package org.stepic.droid.di.network
+package org.stepik.android.view.injection.network
 
 import android.webkit.CookieManager
 import dagger.Module
@@ -13,6 +13,9 @@ import org.stepic.droid.web.NetworkFactory
 import org.stepik.android.view.injection.achievement.AchievementDataModule
 import org.stepik.android.view.injection.auth.AuthModule
 import org.stepik.android.view.injection.base.Authorized
+import org.stepik.android.view.injection.qualifiers.DebugInterceptors
+import org.stepik.android.view.injection.serialization.SerializationModule
+import org.stepik.android.view.injection.services.ServicesModule
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -28,9 +31,8 @@ abstract class NetworkModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        @IntoSet
         @DebugInterceptors
-        fun provideStethoInterceptor(): List<Interceptor> =
+        fun provideDebugInterceptors(): List<Interceptor> =
             DebugToolsHelper.getDebugInterceptors()
 
         @Provides
@@ -42,11 +44,15 @@ abstract class NetworkModule {
         @Provides
         @JvmStatic
         @AppSingleton
-        internal fun provideOkHttpClient(interceptors: Set<@JvmSuppressWildcards Interceptor>): OkHttpClient {
+        internal fun provideOkHttpClient(
+            @DebugInterceptors debugInterceptors: List<@JvmSuppressWildcards Interceptor>,
+            interceptors: Set<@JvmSuppressWildcards Interceptor>
+        ): OkHttpClient {
             val okHttpBuilder = OkHttpClient.Builder()
-                .connectTimeout(NetworkFactory.TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(NetworkFactory.TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .connectTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT_IN_SECONDS, TimeUnit.SECONDS)
             interceptors.forEach { okHttpBuilder.addNetworkInterceptor(it) }
+            debugInterceptors.forEach { okHttpBuilder.addNetworkInterceptor(it) }
 
             return okHttpBuilder.build()
         }

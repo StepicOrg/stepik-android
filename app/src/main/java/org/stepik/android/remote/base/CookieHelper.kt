@@ -1,4 +1,4 @@
-package org.stepic.droid.base
+package org.stepik.android.remote.base
 
 import android.os.Build
 import android.os.Looper
@@ -25,18 +25,17 @@ constructor(
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler
 ) {
-    companion object {
-        private fun tryGetCsrfFromOnePair(keyValueCookie: String): String? =
-            HttpCookie.parse(keyValueCookie).find { it.name == AppConstants.csrfTokenCookieName }?.value
 
-        private fun getCsrfTokenFromCookies(cookies: String): String {
-            cookies.split(";").forEach {
-                val csrf =
-                    tryGetCsrfFromOnePair(it)
-                if (csrf != null) return csrf
-            }
-            return ""
+    private fun tryGetCsrfFromOnePair(keyValueCookie: String): String? =
+        HttpCookie.parse(keyValueCookie).find { it.name == AppConstants.csrfTokenCookieName }?.value
+
+    fun getCsrfTokenFromCookies(cookies: String): String {
+        cookies.split(";").forEach {
+            val csrf =
+                tryGetCsrfFromOnePair(it)
+            if (csrf != null) return csrf
         }
+        return ""
     }
 
     fun removeCookiesCompat() {
@@ -58,7 +57,9 @@ constructor(
             request
         } else {
             val csrftoken =
-                getCsrfTokenFromCookies(cookies)
+                getCsrfTokenFromCookies(
+                    cookies
+                )
             request.newBuilder()
                 .addHeader(AppConstants.refererHeaderName, config.baseUrl)
                 .addHeader(AppConstants.csrfTokenHeaderName, csrftoken)
@@ -90,9 +91,8 @@ constructor(
         val setCookieHeaders = response.headers().values(AppConstants.setCookieHeaderName)
         for (value in setCookieHeaders) {
             if (value != null) {
-                cookieManager.setCookie(config.baseUrl, value) //set-cookie is not empty
+                cookieManager.setCookie(config.baseUrl, value) // set-cookie is not empty
             }
         }
     }
-
 }
