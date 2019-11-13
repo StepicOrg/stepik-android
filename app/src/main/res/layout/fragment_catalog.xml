@@ -25,6 +25,7 @@
                 android:id="@+id/backIcon"
                 android:src="?attr/homeAsUpIndicator"
                 android:visibility="gone"
+                android:background="?selectableItemBackgroundBorderless"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/back_button_left_margin"
                 android:layout_marginLeft="@dimen/back_button_left_margin"
