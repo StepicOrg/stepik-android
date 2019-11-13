@@ -91,4 +91,5 @@ public class AppConstants {
     public static final String csrfTokenHeaderName = "X-CSRFToken";
 
     public final static String FROM_MAIN_FEED_FLAG = "from_main_feed";
+    public static final String csrfTokenCookieName = "csrftoken";
 }

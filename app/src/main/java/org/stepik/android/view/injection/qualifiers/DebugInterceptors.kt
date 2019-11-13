@@ -1,4 +1,4 @@
-package org.stepic.droid.di.network
+package org.stepik.android.view.injection.qualifiers
 
 import javax.inject.Qualifier
 
