@@ -30,6 +30,7 @@ import org.stepic.droid.persistence.storage.PersistentStateManagerImpl
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDaoImpl
 import org.stepik.android.view.injection.assignment.AssignmentDataModule
+import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.lesson.LessonDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
@@ -46,6 +47,7 @@ import java.util.concurrent.locks.ReentrantLock
     ProgressProvidersModule::class,
 
     AssignmentDataModule::class,
+    AttemptDataModule::class,
     CourseDataModule::class,
     LessonDataModule::class,
     UnitDataModule::class,
