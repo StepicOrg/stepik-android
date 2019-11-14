@@ -78,6 +78,9 @@ class CatalogFragment : FragmentBase(),
 
     private var needShowLangWidget = false
 
+    // This workaround is necessary, because onFocus get activated multiple times
+    private var searchEventLogged: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -104,7 +107,7 @@ class CatalogFragment : FragmentBase(),
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
         searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
-        if (true) {
+        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
             setupSearchBar()
         }
 
@@ -172,7 +175,7 @@ class CatalogFragment : FragmentBase(),
         val searchView = searchMenuItem?.actionView as? AutoCompleteSearchView
 
         searchMenuItem?.setOnMenuItemClickListener {
-            analytic.reportEvent(Analytic.Search.SEARCH_OPENED)
+            logSearchEvent()
             false
         }
         setupSearchView(searchView)
@@ -199,6 +202,10 @@ class CatalogFragment : FragmentBase(),
     override fun onFocusChanged(hasFocus: Boolean) {
         backIcon.isVisible = hasFocus
         if (hasFocus) {
+            if (!searchEventLogged) {
+                logSearchEvent()
+                searchEventLogged = true
+            }
             searchIcon.setImageResource(0)
             (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
             searchViewContainer.setBackgroundResource(R.color.white)
@@ -226,7 +233,7 @@ class CatalogFragment : FragmentBase(),
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     it.onSubmitted(query)
-                    if (true) {
+                    if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
                         searchView.onActionViewCollapsed()
                         searchView.onActionViewExpanded()
                         searchView.clearFocus()
@@ -332,5 +339,10 @@ class CatalogFragment : FragmentBase(),
     override fun onStop() {
         SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
         super.onStop()
+    }
+
+    private fun logSearchEvent() {
+        analytic.reportEvent(Analytic.Search.SEARCH_OPENED)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Search.COURSE_SEARCH_CLICKED)
     }
 }
