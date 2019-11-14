@@ -120,10 +120,14 @@ class CourseSearchFragment: CourseListFragmentBase() {
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setIconifiedByDefault(false)
         backIcon.setOnClickListener {
-            searchViewToolbar.onActionViewCollapsed()
-            searchViewToolbar.onActionViewExpanded()
-            searchViewToolbar.clearFocus()
-            activity?.finish()
+            val hasFocus = searchViewToolbar.hasFocus()
+            if (hasFocus) {
+                searchViewToolbar.onActionViewCollapsed()
+                searchViewToolbar.onActionViewExpanded()
+                searchViewToolbar.clearFocus()
+            } else {
+                activity?.finish()
+            }
         }
     }
 
