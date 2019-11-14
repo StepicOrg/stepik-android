@@ -104,7 +104,7 @@ class CatalogFragment : FragmentBase(),
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
         searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
-        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+        if (true) {
             setupSearchBar()
         }
 
@@ -201,11 +201,13 @@ class CatalogFragment : FragmentBase(),
         if (hasFocus) {
             searchIcon.setImageResource(0)
             (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
+            searchViewContainer.setBackgroundResource(R.color.white)
             searchView.setBackgroundResource(R.color.white)
         } else {
             searchIcon.setImageResource(R.drawable.ic_action_search)
             val margin = resources.getDimension(R.dimen.search_bar_margin).toInt()
             (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
+            searchViewContainer.setBackgroundResource(R.color.old_cover)
             searchView.setBackgroundResource(R.drawable.bg_catalog_search_bar)
         }
     }
@@ -224,7 +226,7 @@ class CatalogFragment : FragmentBase(),
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     it.onSubmitted(query)
-                    if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+                    if (true) {
                         searchView.onActionViewCollapsed()
                         searchView.onActionViewExpanded()
                         searchView.clearFocus()

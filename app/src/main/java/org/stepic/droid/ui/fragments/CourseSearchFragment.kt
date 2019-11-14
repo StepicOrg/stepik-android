@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -21,7 +20,7 @@ import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
 
-class CourseSearchFragment: CourseListFragmentBase(), AutoCompleteSearchView.FocusCallback {
+class CourseSearchFragment: CourseListFragmentBase() {
     companion object {
         private const val QUERY_KEY = "query_key"
 
@@ -71,7 +70,7 @@ class CourseSearchFragment: CourseListFragmentBase(), AutoCompleteSearchView.Foc
         searchCoursesPresenter.restoreState()
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         swipeRefreshLayout.post { searchCoursesPresenter.downloadData(searchQuery) }
-        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+        if (true) {
             setupCatalogABSearchBar()
         }
     }
@@ -113,31 +112,18 @@ class CourseSearchFragment: CourseListFragmentBase(), AutoCompleteSearchView.Foc
 
     private fun setupCatalogABSearchBar() {
         centeredToolbar.isVisible = false
+        backIcon.isVisible = true
         if (android.os.Build.VERSION.SDK_INT < 21) {
             toolbarShadow.isVisible = true
         }
         searchViewToolbar.isVisible = true
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setIconifiedByDefault(false)
-        searchViewToolbar.setFocusCallback(this)
         backIcon.setOnClickListener {
             searchViewToolbar.onActionViewCollapsed()
             searchViewToolbar.onActionViewExpanded()
             searchViewToolbar.clearFocus()
-        }
-    }
-
-    override fun onFocusChanged(hasFocus: Boolean) {
-        backIcon.isVisible = hasFocus
-        if (hasFocus) {
-            searchIcon.setImageResource(0)
-            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
-            searchViewToolbar.setBackgroundResource(R.color.white)
-        } else {
-            searchIcon.setImageResource(R.drawable.ic_action_search)
-            val margin = resources.getDimension(R.dimen.search_bar_margin).toInt()
-            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
-            searchViewToolbar.setBackgroundResource(R.drawable.bg_catalog_search_bar)
+            activity?.finish()
         }
     }
 

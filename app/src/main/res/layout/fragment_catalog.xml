@@ -16,8 +16,9 @@
         <include layout="@layout/view_centered_toolbar"/>
 
         <LinearLayout
+            android:id="@+id/searchViewContainer"
             android:orientation="horizontal"
-            android:background="@color/white"
+            android:background="@color/old_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 

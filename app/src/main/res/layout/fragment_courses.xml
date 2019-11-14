@@ -35,16 +35,14 @@
                 android:id="@+id/searchViewToolbar"
                 android:focusable="false"
                 android:visibility="gone"
-                android:layout_margin="@dimen/search_bar_margin"
                 android:paddingLeft="@dimen/search_bar_inner_padding"
                 android:paddingStart="@dimen/search_bar_inner_padding"
                 android:paddingRight="@dimen/search_bar_inner_padding"
                 android:paddingEnd="@dimen/search_bar_inner_padding"
                 app:closeIcon="@drawable/ic_close_dark"
-                app:searchIcon="@drawable/ic_action_search"
                 app:defaultQueryHint="find_courses_hint"
                 app:queryHint="@string/find_courses_hint"
-                android:background="@drawable/bg_catalog_search_bar"
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </LinearLayout>
