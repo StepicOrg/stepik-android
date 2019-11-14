@@ -4,6 +4,7 @@ import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.StepItem
 import org.stepik.android.model.Step
+import org.stepik.android.model.comments.DiscussionThread
 
 interface LessonView {
     sealed class State {
@@ -40,7 +41,7 @@ interface LessonView {
 
     fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
 
-    fun showComments(step: Step, discussionId: Long)
+    fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?)
 
     fun showRateDialog()
 
