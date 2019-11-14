@@ -5,11 +5,13 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.Structure
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.step.repository.StepRepository
+import org.stepik.android.model.Step
 import javax.inject.Inject
 
 @PersistenceScope
@@ -37,7 +39,7 @@ constructor(
                     .toObservable()
 
                 val attemptCompletable = Completable
-                    .concat(steps.map { resolveStepAttempt(it.id) })
+                    .concat(steps.map(::resolveStepAttempt))
 
                 progressRepository
                     .getProgresses(*steps.getProgresses())
@@ -46,10 +48,16 @@ constructor(
                     .andThen(observables)
             }
 
-    private fun resolveStepAttempt(stepId: Long): Completable =
-        attemptRepository
-            .getAttemptsForStep(stepId)
-            .maybeFirst()
-            .switchIfEmpty(attemptRepository.createAttemptForStep(stepId))
-            .ignoreElement()
+    private fun resolveStepAttempt(step: Step): Completable =
+        if (step.block?.name != null &&
+            step.block?.name != AppConstants.TYPE_TEXT &&
+            step.block?.name != AppConstants.TYPE_VIDEO) {
+            attemptRepository
+                .getAttemptsForStep(step.id)
+                .maybeFirst()
+                .switchIfEmpty(attemptRepository.createAttemptForStep(step.id))
+                .ignoreElement()
+        } else {
+            Completable.complete()
+        }
 }
