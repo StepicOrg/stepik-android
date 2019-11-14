@@ -70,7 +70,7 @@ class CourseSearchFragment: CourseListFragmentBase() {
         searchCoursesPresenter.restoreState()
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         swipeRefreshLayout.post { searchCoursesPresenter.downloadData(searchQuery) }
-        if (true) {
+        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
             setupCatalogABSearchBar()
         }
     }
@@ -122,8 +122,6 @@ class CourseSearchFragment: CourseListFragmentBase() {
         backIcon.setOnClickListener {
             val hasFocus = searchViewToolbar.hasFocus()
             if (hasFocus) {
-                searchViewToolbar.onActionViewCollapsed()
-                searchViewToolbar.onActionViewExpanded()
                 searchViewToolbar.clearFocus()
             } else {
                 activity?.finish()
