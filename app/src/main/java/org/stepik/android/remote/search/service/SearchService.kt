@@ -1,8 +1,8 @@
 package org.stepik.android.remote.search.service
 
 import io.reactivex.Single
-import org.stepic.droid.web.QueriesResponse
-import org.stepic.droid.web.SearchResultResponse
+import org.stepik.android.remote.search.model.QueriesResponse
+import org.stepik.android.remote.search.model.SearchResultResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

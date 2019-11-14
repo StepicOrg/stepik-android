@@ -15,7 +15,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.web.FailRefreshException
-import org.stepic.droid.web.UserAgentProvider
+import org.stepik.android.remote.base.UserAgentProvider
 import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.service.EmptyAuthService
 import org.stepik.android.remote.auth.service.OAuthService

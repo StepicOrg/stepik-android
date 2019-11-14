@@ -4,10 +4,10 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.notifications.model.Notification
-import org.stepic.droid.web.NotificationRequest
-import org.stepic.droid.web.NotificationResponse
-import org.stepic.droid.web.NotificationStatusesResponse
 import org.stepik.android.data.notification.source.NotificationRemoteDataSource
+import org.stepik.android.remote.notification.model.NotificationRequest
+import org.stepik.android.remote.notification.model.NotificationResponse
+import org.stepik.android.remote.notification.model.NotificationStatusesResponse
 import org.stepik.android.remote.notification.service.NotificationService
 import javax.inject.Inject
 

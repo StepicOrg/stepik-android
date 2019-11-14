@@ -2,9 +2,9 @@ package org.stepik.android.remote.search
 
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.QueriesResponse
-import org.stepic.droid.web.SearchResultResponse
 import org.stepik.android.data.search.source.SearchRemoteDataSource
+import org.stepik.android.remote.search.model.QueriesResponse
+import org.stepik.android.remote.search.model.SearchResultResponse
 import org.stepik.android.remote.search.service.SearchService
 import java.net.URLEncoder
 import javax.inject.Inject

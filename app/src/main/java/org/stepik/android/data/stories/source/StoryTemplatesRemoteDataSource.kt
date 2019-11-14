@@ -1,7 +1,7 @@
 package org.stepik.android.data.stories.source
 
 import io.reactivex.Observable
-import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse
+import org.stepik.android.remote.stories.model.StoryTemplatesResponse
 
 interface StoryTemplatesRemoteDataSource {
     fun getStoryTemplates(page: Int): Observable<StoryTemplatesResponse>

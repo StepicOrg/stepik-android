@@ -1,6 +1,6 @@
 package org.stepik.android.data.device.source
 
-import org.stepic.droid.web.DeviceResponse
+import org.stepik.android.remote.device.model.DeviceResponse
 import retrofit2.Call
 
 interface DeviceRemoteDataSource {

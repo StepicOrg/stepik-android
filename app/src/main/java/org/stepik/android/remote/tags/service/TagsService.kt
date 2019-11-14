@@ -1,8 +1,8 @@
 package org.stepik.android.remote.tags.service
 
 import io.reactivex.Single
-import org.stepic.droid.web.SearchResultResponse
-import org.stepic.droid.web.TagResponse
+import org.stepik.android.remote.search.model.SearchResultResponse
+import org.stepik.android.remote.tags.model.TagResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

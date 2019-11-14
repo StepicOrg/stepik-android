@@ -27,13 +27,13 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
-import org.stepic.droid.web.model.adaptive.RecommendationsResponse
 import org.stepik.android.data.rating.source.RatingRemoteDataSource
 import org.stepik.android.data.recommendation.source.RecommendationRemoteDataSource
 import org.stepik.android.data.unit.source.UnitRemoteDataSource
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.adaptive.Reaction
 import org.stepik.android.model.adaptive.RecommendationReaction
+import org.stepik.android.remote.recommendation.model.RecommendationsResponse
 import retrofit2.HttpException
 import java.util.ArrayDeque
 import javax.inject.Inject

@@ -3,11 +3,11 @@ package org.stepik.android.remote.rating
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.RatingService
-import org.stepic.droid.web.model.adaptive.RatingRequest
-import org.stepic.droid.web.model.adaptive.RatingRestoreResponse
 import org.stepik.android.data.rating.source.RatingRemoteDataSource
 import org.stepik.android.model.adaptive.RatingItem
+import org.stepik.android.remote.rating.model.RatingRequest
+import org.stepik.android.remote.rating.model.RatingRestoreResponse
+import org.stepik.android.remote.rating.service.RatingService
 import javax.inject.Inject
 
 class RatingRemoteDataSourceImpl

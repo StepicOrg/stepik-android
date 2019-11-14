@@ -1,9 +1,9 @@
 package org.stepik.android.data.tags.source
 
 import io.reactivex.Single
-import org.stepic.droid.web.SearchResultResponse
-import org.stepic.droid.web.TagResponse
 import org.stepik.android.model.Tag
+import org.stepik.android.remote.search.model.SearchResultResponse
+import org.stepik.android.remote.tags.model.TagResponse
 
 interface TagsRemoteDataSource {
     fun getFeaturedTags(): Single<TagResponse>

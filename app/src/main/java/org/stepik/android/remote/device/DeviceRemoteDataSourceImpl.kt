@@ -2,9 +2,9 @@ package org.stepik.android.remote.device
 
 import android.content.Context
 import org.stepic.droid.util.DeviceInfoUtil
-import org.stepic.droid.web.DeviceRequest
-import org.stepic.droid.web.DeviceResponse
 import org.stepik.android.data.device.source.DeviceRemoteDataSource
+import org.stepik.android.remote.device.model.DeviceRequest
+import org.stepik.android.remote.device.model.DeviceResponse
 import org.stepik.android.remote.device.service.DeviceService
 import retrofit2.Call
 import javax.inject.Inject

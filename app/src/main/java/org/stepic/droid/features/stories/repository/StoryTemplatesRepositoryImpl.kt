@@ -6,9 +6,9 @@ import io.reactivex.Single
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.storage.dao.IDao
-import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse
 import org.stepik.android.data.stories.source.StoryTemplatesRemoteDataSource
 import org.stepik.android.model.StoryTemplate
+import org.stepik.android.remote.stories.model.StoryTemplatesResponse
 import javax.inject.Inject
 
 @AppSingleton

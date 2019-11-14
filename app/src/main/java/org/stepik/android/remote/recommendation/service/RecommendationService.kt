@@ -2,8 +2,8 @@ package org.stepik.android.remote.recommendation.service
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepic.droid.web.model.adaptive.RecommendationReactionsRequest
-import org.stepic.droid.web.model.adaptive.RecommendationsResponse
+import org.stepik.android.remote.recommendation.model.RecommendationReactionsRequest
+import org.stepik.android.remote.recommendation.model.RecommendationsResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

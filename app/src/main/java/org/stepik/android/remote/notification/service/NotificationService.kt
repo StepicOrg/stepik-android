@@ -2,9 +2,9 @@ package org.stepik.android.remote.notification.service
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepic.droid.web.NotificationRequest
-import org.stepic.droid.web.NotificationResponse
-import org.stepic.droid.web.NotificationStatusesResponse
+import org.stepik.android.remote.notification.model.NotificationRequest
+import org.stepik.android.remote.notification.model.NotificationResponse
+import org.stepik.android.remote.notification.model.NotificationStatusesResponse
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

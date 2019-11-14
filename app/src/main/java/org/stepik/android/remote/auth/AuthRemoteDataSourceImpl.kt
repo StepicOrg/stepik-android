@@ -6,7 +6,7 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.UserRegistrationRequest
+import org.stepik.android.remote.auth.model.UserRegistrationRequest
 import org.stepik.android.data.auth.source.AuthRemoteDataSource
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.remote.auth.model.OAuthResponse
@@ -71,5 +71,9 @@ constructor(
             .doOnSuccess { saveResponse(it, isSocial = true) }
 
     override fun createAccount(credentials: RegistrationCredentials): Completable =
-        cookieAuthService.createAccount(UserRegistrationRequest(credentials))
+        cookieAuthService.createAccount(
+            UserRegistrationRequest(
+                credentials
+            )
+        )
 }

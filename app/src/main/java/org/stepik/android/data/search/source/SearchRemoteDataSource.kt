@@ -1,8 +1,8 @@
 package org.stepik.android.data.search.source
 
 import io.reactivex.Single
-import org.stepic.droid.web.QueriesResponse
-import org.stepic.droid.web.SearchResultResponse
+import org.stepik.android.remote.search.model.QueriesResponse
+import org.stepik.android.remote.search.model.SearchResultResponse
 
 interface SearchRemoteDataSource {
     fun getSearchResultsCourses(page: Int, rawQuery: String?): Single<SearchResultResponse>

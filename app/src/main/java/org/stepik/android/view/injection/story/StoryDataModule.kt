@@ -6,7 +6,7 @@ import dagger.Provides
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepositoryImpl
 import org.stepik.android.data.stories.source.StoryTemplatesRemoteDataSource
-import org.stepik.android.remote.stories.StoryTemplatesRemoteRemoteDataSourceImpl
+import org.stepik.android.remote.stories.StoryTemplatesRemoteDataSourceImpl
 import org.stepik.android.remote.stories.service.StoryService
 import org.stepik.android.view.injection.base.Authorized
 import retrofit2.Retrofit
@@ -20,7 +20,7 @@ abstract class StoryDataModule {
 
     @Binds
     internal abstract fun bindStoryTemplateRemoteDataSource(
-        storyTemplatesRemoteRemoteDataSourceImpl: StoryTemplatesRemoteRemoteDataSourceImpl
+        storyTemplatesRemoteDataSourceImpl: StoryTemplatesRemoteDataSourceImpl
     ): StoryTemplatesRemoteDataSource
 
     @Module

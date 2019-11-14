@@ -2,8 +2,8 @@ package org.stepik.android.remote.remote_storage.service
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepic.droid.web.storage.model.StorageRequest
-import org.stepic.droid.web.storage.model.StorageResponse
+import org.stepik.android.remote.remote_storage.model.StorageRequest
+import org.stepik.android.remote.remote_storage.model.StorageResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET

@@ -3,7 +3,7 @@ package org.stepik.android.remote.course.source
 import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.UserCoursesResponse
+import org.stepik.android.remote.course.model.UserCoursesResponse
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.remote.base.chunkedSingleMap

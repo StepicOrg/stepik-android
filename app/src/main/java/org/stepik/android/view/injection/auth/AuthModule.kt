@@ -15,8 +15,8 @@ import org.stepic.droid.util.DebugToolsHelper
 import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.util.setTimeoutsInSeconds
 import org.stepic.droid.web.Api
-import org.stepic.droid.web.NetworkFactory
-import org.stepic.droid.web.UserAgentProvider
+import org.stepik.android.remote.base.NetworkFactory
+import org.stepik.android.remote.base.UserAgentProvider
 import org.stepik.android.data.auth.repository.AuthRepositoryImpl
 import org.stepik.android.data.auth.source.AuthRemoteDataSource
 import org.stepik.android.domain.auth.repository.AuthRepository

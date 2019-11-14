@@ -1,7 +1,7 @@
 package org.stepik.android.remote.course.service
 
 import io.reactivex.Single
-import org.stepic.droid.web.UserCoursesResponse
+import org.stepik.android.remote.course.model.UserCoursesResponse
 import org.stepik.android.remote.course.model.CourseResponse
 import retrofit2.Call
 import retrofit2.http.GET

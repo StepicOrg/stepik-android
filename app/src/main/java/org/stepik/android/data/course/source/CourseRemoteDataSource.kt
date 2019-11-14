@@ -1,7 +1,7 @@
 package org.stepik.android.data.course.source
 
 import io.reactivex.Single
-import org.stepic.droid.web.UserCoursesResponse
+import org.stepik.android.remote.course.model.UserCoursesResponse
 import org.stepik.android.model.Course
 import org.stepik.android.remote.course.model.CourseResponse
 import retrofit2.Call

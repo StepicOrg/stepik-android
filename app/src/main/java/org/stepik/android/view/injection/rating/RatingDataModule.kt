@@ -6,10 +6,10 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import org.stepic.droid.configuration.RemoteConfig
-import org.stepic.droid.web.NetworkFactory
-import org.stepic.droid.web.RatingService
+import org.stepik.android.remote.base.NetworkFactory
 import org.stepik.android.data.rating.source.RatingRemoteDataSource
 import org.stepik.android.remote.rating.RatingRemoteDataSourceImpl
+import org.stepik.android.remote.rating.service.RatingService
 import retrofit2.Converter
 
 @Module

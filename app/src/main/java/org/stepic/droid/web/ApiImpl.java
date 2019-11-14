@@ -5,15 +5,14 @@ import android.net.Uri;
 
 import androidx.fragment.app.FragmentActivity;
 
-import org.stepic.droid.base.CookieHelper;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.social.ISocialType;
-import org.stepic.droid.util.CompatibilityExtensionsKt;
-import org.stepik.android.remote.base.CookieHelper;
-import org.stepic.droid.util.DeviceInfoUtil;
 import org.stepic.droid.util.NetworkExtensionsKt;
 import org.stepik.android.remote.auth.service.EmptyAuthService;
+import org.stepik.android.remote.base.CookieHelper;
+import org.stepik.android.remote.base.NetworkFactory;
+import org.stepik.android.remote.base.UserAgentProvider;
 
 import java.io.IOException;
 import java.net.HttpCookie;

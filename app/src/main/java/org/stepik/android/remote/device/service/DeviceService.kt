@@ -1,7 +1,7 @@
 package org.stepik.android.remote.device.service
 
-import org.stepic.droid.web.DeviceRequest
-import org.stepic.droid.web.DeviceResponse
+import org.stepik.android.remote.device.model.DeviceRequest
+import org.stepik.android.remote.device.model.DeviceResponse
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
