@@ -52,9 +52,11 @@ constructor(
     fun getSubmission(attemptId: Long): Maybe<Submission> =
         zip(
             submissionRepository
-                .getSubmissionsForAttempt(attemptId, DataSourceType.REMOTE),
+                .getSubmissionsForAttempt(attemptId, DataSourceType.REMOTE)
+                .onErrorReturnItem(emptyList()),
             submissionRepository
                 .getSubmissionsForAttempt(attemptId, DataSourceType.CACHE)
+                .onErrorReturnItem(emptyList())
         )
             .flatMapMaybe { (remoteSubmissions, localSubmissions) ->
                 val remoteSubmission = remoteSubmissions
@@ -117,6 +119,7 @@ constructor(
         submissionRepository
             .getSubmissionsForStep(stepId)
             .map { it.size }
+            .onErrorReturnItem(0)
 
     fun isNeedRecreateAttemptForNewSubmission(step: Step): Boolean =
         when (step.block?.name) {
