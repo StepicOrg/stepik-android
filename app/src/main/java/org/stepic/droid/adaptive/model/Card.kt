@@ -1,6 +1,5 @@
 package org.stepic.droid.adaptive.model
 
-import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
@@ -9,9 +8,9 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.data.attempt.source.AttemptRemoteDataSource
 import org.stepik.android.data.lesson.source.LessonRemoteDataSource
 import org.stepik.android.data.step.source.StepRemoteDataSource
+import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Step
 import org.stepik.android.model.attempts.Attempt
@@ -29,8 +28,9 @@ class Card(
     lateinit var lessonRemoteDataSource: LessonRemoteDataSource
     @Inject
     lateinit var stepRemoteDataSource: StepRemoteDataSource
+
     @Inject
-    lateinit var attemptRemoteDataSource: AttemptRemoteDataSource
+    lateinit var stepQuizInteractor: StepQuizInteractor
 
     @Inject
     @field:MainScheduler
@@ -79,22 +79,10 @@ class Card(
         }
     }
 
-//    TODO Why return type is Any ?
-//    Observable.concat(
-//    attemptRemoteDataSource.getAttemptsForStep(newStep.id).toObservable(),
-//    attemptRemoteDataSource.createAttemptForStep(newStep.id).toObservable()
-//    )
-
     private fun setStep(newStep: Step?) = newStep?.let {
         this.step = newStep
         if (attemptDisposable == null || attemptDisposable?.isDisposed == true && attempt == null) {
-            attemptDisposable = Observable.concat(
-                    attemptRemoteDataSource.getAttemptsForStepAdaptive(newStep.id).toObservable(),
-                    attemptRemoteDataSource.createAttemptForStepAdaptive(newStep.id).toObservable()
-            )
-                    .filter { it.attempts.isNotEmpty() }
-                    .take(1)
-                    .map { it.attempts.firstOrNull() }
+            attemptDisposable = stepQuizInteractor.createAttempt(newStep.id)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribe({ setAttempt(it) }, { onError(it) })

@@ -1,7 +1,6 @@
 package org.stepik.android.remote.base
 
 import android.content.Context
-import org.stepik.android.remote.base.UserAgentProvider
 import javax.inject.Inject
 
 class UserAgentProviderImpl
@@ -16,5 +15,5 @@ class UserAgentProviderImpl
         }
     }
 
-    override fun provideUserAgent() = userAgent
+    override fun provideUserAgent(): String = userAgent
 }

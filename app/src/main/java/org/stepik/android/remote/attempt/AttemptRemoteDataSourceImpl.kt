@@ -31,10 +31,4 @@ constructor(
     override fun getAttempts(vararg attemptIds: Long): Single<List<Attempt>> =
         attemptService.getExistingAttemptsReactive(attemptIds)
             .map(attemptMapper)
-
-    override fun createAttemptForStepAdaptive(stepId: Long): Single<AttemptResponse> =
-        attemptService.createNewAttemptReactive(AttemptRequest(stepId))
-
-    override fun getAttemptsForStepAdaptive(stepId: Long): Single<AttemptResponse> =
-        attemptService.getExistingAttemptsReactive(stepId, sharedPreferenceHelper.profile?.id ?: 0)
 }

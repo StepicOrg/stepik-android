@@ -17,7 +17,6 @@ object NetworkFactory {
             .client(client)
             .build()
 
-
     @JvmStatic
     inline fun <reified T> createService(host: String, okHttpClient: OkHttpClient, converterFactory: Converter.Factory): T {
         val retrofit =

@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.social.SocialManager
@@ -27,8 +26,6 @@ import org.stepik.android.view.injection.qualifiers.CookieAuthService
 import org.stepik.android.view.injection.qualifiers.SocialAuthService
 import retrofit2.Call
 import retrofit2.Converter
-import java.io.IOException
-import java.net.CookieHandler
 import java.net.URLEncoder
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
