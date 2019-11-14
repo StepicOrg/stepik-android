@@ -16,4 +16,16 @@ object DbStructureAttempt {
 
         const val TIME_LEFT = "time_left"
     }
+
+    const val TABLE_SCHEMA =
+        "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
+            "${Columns.ID} LONG PRIMARY KEY," +
+            "${Columns.STEP} LONG," +
+            "${Columns.USER} LONG," +
+            "${Columns.DATASET} TEXT," +
+            "${Columns.DATASET_URL} TEXT," +
+            "${Columns.STATUS} TEXT," +
+            "${Columns.TIME} LONG," +
+            "${Columns.TIME_LEFT} TEXT" +
+        ")"
 }
