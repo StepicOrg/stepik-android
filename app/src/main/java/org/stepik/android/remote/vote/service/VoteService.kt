@@ -9,5 +9,5 @@ import retrofit2.http.Path
 
 interface VoteService {
     @PUT("api/votes/{id}")
-    abstract fun saveVote(@Path("id") voteId: String, @Body voteRequest: VoteRequest): Single<VoteResponse>
+    fun saveVote(@Path("id") voteId: String, @Body voteRequest: VoteRequest): Single<VoteResponse>
 }
