@@ -15,9 +15,9 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.generators.FakeProfileGenerator;
 import org.stepic.droid.testUtils.generators.FakeUserGenerator;
-import org.stepic.droid.web.Api;
 import org.stepik.android.data.user.source.UserRemoteDataSource;
 import org.stepik.android.data.user_activity.source.UserActivityRemoteDataSource;
+import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.User;
 
@@ -54,7 +54,7 @@ public class ProfilePresenterTest {
     UserActivityRemoteDataSource userActivityRemoteDataSource;
 
     @Mock
-    Api api;
+    UserProfileRemoteDataSource userProfileRemoteDataSource;
 
     @Mock
     SharedPreferenceHelper sharedPreferenceHelper;
@@ -85,7 +85,7 @@ public class ProfilePresenterTest {
                 mainHandler,
                 userActivityRemoteDataSource,
                 userRemoteDataSource,
-                api,
+                userProfileRemoteDataSource,
                 sharedPreferenceHelper,
                 Observable.empty(),
                 Schedulers.io()
@@ -163,7 +163,7 @@ public class ProfilePresenterTest {
         profilePresenter.initProfile();
 
         verify(sharedPreferenceHelper).getProfile();
-        verify(api).getUserProfile(); //should request the profile of logged user (because init is called without params)
+        verify(userProfileRemoteDataSource).getUserProfile(); //should request the profile of logged user (because init is called without params)
 
         InOrder inOrder = inOrder(profileView);
         inOrder.verify(profileView).showLoadingAll();

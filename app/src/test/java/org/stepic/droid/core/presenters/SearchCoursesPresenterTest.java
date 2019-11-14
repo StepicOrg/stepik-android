@@ -16,13 +16,13 @@ import org.stepic.droid.testUtils.generators.FakeMetaGenerator;
 import org.stepic.droid.testUtils.generators.FakeSearchResultGenerator;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.SearchResolverImpl;
-import org.stepic.droid.web.SearchResultResponse;
 import org.stepik.android.data.course.source.CourseRemoteDataSource;
 import org.stepik.android.data.search.source.SearchRemoteDataSource;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Meta;
 import org.stepik.android.model.SearchResult;
 import org.stepik.android.remote.course.model.CourseResponse;
+import org.stepik.android.remote.search.model.SearchResultResponse;
 
 import java.io.IOException;
 import java.util.ArrayList;
