@@ -1,4 +1,4 @@
-package org.stepic.droid.web;
+package org.stepik.android.remote.auth.exception;
 
 public class FailRefreshException extends RuntimeException {
 

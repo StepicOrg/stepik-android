@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.web.Api;
+import org.stepik.android.domain.auth.repository.AuthRepository;
 
 import javax.inject.Inject;
 
@@ -41,7 +41,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     private static final String ERROR_TEXT_KEY = "Error_Text_Key";
 
     @Inject
-    Api api;
+    AuthRepository authRepository;
 
     public static RemindPasswordDialogFragment newInstance() {
         return new RemindPasswordDialogFragment();
@@ -127,7 +127,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             return;
         }
         if (!email.isEmpty()) {
-            api.remindPassword(email).enqueue(new Callback<Void>() {
+            authRepository.remindPassword(email).enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> response) {
                     ProgressHelper.dismiss(progressLogin);

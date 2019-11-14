@@ -23,7 +23,7 @@ import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toObject
-import org.stepic.droid.web.SocialAuthError
+import org.stepik.android.remote.auth.model.SocialAuthError
 import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.model.user.RegistrationCredentials

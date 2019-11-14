@@ -1,4 +1,4 @@
-package org.stepic.droid.web;
+package org.stepik.android.remote.auth.model;
 
 import org.jetbrains.annotations.Nullable;
 

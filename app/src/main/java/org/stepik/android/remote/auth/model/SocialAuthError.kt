@@ -1,4 +1,4 @@
-package org.stepic.droid.web
+package org.stepik.android.remote.auth.model
 
 class SocialAuthError(
     val error: String?,

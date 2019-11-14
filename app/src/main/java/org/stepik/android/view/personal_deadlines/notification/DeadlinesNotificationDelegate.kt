@@ -12,7 +12,6 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.web.Api
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
@@ -32,7 +31,6 @@ constructor(
     private val deadlinesCacheDataSource: DeadlinesCacheDataSource,
     private val sectionsRemoteDataSource: SectionRemoteDataSource,
     private val courseRemoteDataSource: CourseRemoteDataSource,
-    private val api: Api,
     private val databaseFacade: DatabaseFacade,
     private val notificationHelper: NotificationHelper,
     stepikNotificationManager: StepikNotificationManager

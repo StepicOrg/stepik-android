@@ -5,6 +5,7 @@ import io.reactivex.Single
 import org.stepic.droid.social.SocialManager
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.remote.auth.model.OAuthResponse
+import retrofit2.Call
 
 interface AuthRepository {
     fun authWithLoginPassword(login: String, password: String): Single<OAuthResponse>
@@ -12,4 +13,6 @@ interface AuthRepository {
     fun authWithCode(code: String): Single<OAuthResponse>
 
     fun createAccount(credentials: RegistrationCredentials): Completable
+
+    fun remindPassword(email: String): Call<Void>
 }

@@ -9,7 +9,6 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.web.Api
 import org.stepik.android.data.attempt.source.AttemptRemoteDataSource
 import org.stepik.android.data.lesson.source.LessonRemoteDataSource
 import org.stepik.android.data.step.source.StepRemoteDataSource
@@ -32,8 +31,6 @@ class Card(
     lateinit var stepRemoteDataSource: StepRemoteDataSource
     @Inject
     lateinit var attemptRemoteDataSource: AttemptRemoteDataSource
-    @Inject
-    lateinit var api: Api
 
     @Inject
     @field:MainScheduler

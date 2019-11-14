@@ -14,12 +14,12 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.addUserAgent
-import org.stepic.droid.web.FailRefreshException
-import org.stepik.android.remote.base.UserAgentProvider
+import org.stepik.android.remote.auth.exception.FailRefreshException
 import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.service.EmptyAuthService
 import org.stepik.android.remote.auth.service.OAuthService
 import org.stepik.android.remote.base.CookieHelper
+import org.stepik.android.remote.base.UserAgentProvider
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import org.stepik.android.view.injection.qualifiers.AuthService
 import org.stepik.android.view.injection.qualifiers.SocialAuthService
@@ -127,8 +127,16 @@ constructor(
                                     analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_INLINE_GETTING, ex)
                                 }
                             }
-                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE_EXTENDED, FailRefreshException(extendedMessage))
-                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE, FailRefreshException(message))
+                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE_EXTENDED,
+                                FailRefreshException(
+                                    extendedMessage
+                                )
+                            )
+                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE,
+                                FailRefreshException(
+                                    message
+                                )
+                            )
                             analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED)
                             return chain.proceed(request)
                         }

@@ -16,7 +16,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler;
 import org.stepic.droid.di.qualifiers.MainScheduler;
 import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.operations.DatabaseFacade;
-import org.stepic.droid.web.Api;
 import org.stepik.android.data.notification.source.NotificationRemoteDataSource;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 
@@ -32,9 +31,6 @@ import kotlin.jvm.functions.Function0;
 
 public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
-
-    @Inject
-    Api api;
 
     @Inject
     NotificationRemoteDataSource notificationRemoteDataSource;

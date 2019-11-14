@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import org.stepic.droid.di.AppSingleton
-import org.stepic.droid.web.Api
+import org.stepik.android.remote.auth.model.TokenType
 import java.io.InputStreamReader
 import java.nio.charset.Charset
 import javax.inject.Inject
@@ -51,21 +51,21 @@ private constructor() : Config {
     private val isAppInStore: Boolean = false
     private val supportEmail: String? = null
 
-    override fun getOAuthClientId(type: Api.TokenType) = when (type) {
-        Api.TokenType.social -> oauthClientIdSocial
-        Api.TokenType.loginPassword -> oauthClientId
+    override fun getOAuthClientId(type: TokenType) = when (type) {
+        TokenType.social -> oauthClientIdSocial
+        TokenType.loginPassword -> oauthClientId
     }
 
     override fun getBaseUrl() = apiHostUrl
 
-    override fun getOAuthClientSecret(type: Api.TokenType) = when (type) {
-        Api.TokenType.social -> oauthClientSecretSocial
-        Api.TokenType.loginPassword -> oauthClientSecret
+    override fun getOAuthClientSecret(type: TokenType) = when (type) {
+        TokenType.social -> oauthClientSecretSocial
+        TokenType.loginPassword -> oauthClientSecret
     }
 
-    override fun getGrantType(type: Api.TokenType) = when (type) {
-        Api.TokenType.social -> grantTypeSocial
-        Api.TokenType.loginPassword -> grantType
+    override fun getGrantType(type: TokenType) = when (type) {
+        TokenType.social -> grantTypeSocial
+        TokenType.loginPassword -> grantType
     }
 
     override fun getRefreshGrantType() = refreshGrantType
