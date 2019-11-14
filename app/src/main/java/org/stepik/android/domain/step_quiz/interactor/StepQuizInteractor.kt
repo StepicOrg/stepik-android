@@ -56,7 +56,6 @@ constructor(
                 .onErrorReturnItem(emptyList()),
             submissionRepository
                 .getSubmissionsForAttempt(attemptId, DataSourceType.CACHE)
-                .onErrorReturnItem(emptyList())
         )
             .flatMapMaybe { (remoteSubmissions, localSubmissions) ->
                 val remoteSubmission = remoteSubmissions
