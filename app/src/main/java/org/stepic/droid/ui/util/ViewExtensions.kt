@@ -16,8 +16,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.stepic.droid.R
+import org.stepik.android.domain.base.PaginationDirection
 import ru.nobird.android.view.base.ui.extension.setTextColor
 
 fun View.setHeight(height: Int) {
@@ -91,4 +94,27 @@ fun View.snackbar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
         .make(this, message, length)
         .setTextColor(ContextCompat.getColor(context, R.color.white))
         .show()
+}
+
+fun RecyclerView.setOnPaginationListener(onPagination: (PaginationDirection) -> Unit) {
+    addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
+                ?: return
+
+            val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
+            if (dy > 0) {
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+
+                if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                    post { onPagination(PaginationDirection.DOWN) }
+                }
+            } else {
+                if (pastVisibleItems == 0) {
+                    post { onPagination(PaginationDirection.UP) }
+                }
+            }
+        }
+    })
 }

@@ -15,20 +15,28 @@ class CourseContentItemMapper
 constructor(
     private val sectionDatesMapper: CourseContentSectionDatesMapper
 ) {
-    fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, progresses: List<Progress>): List<CourseContentItem> =
+    fun mapSectionsWithEmptyUnits(course: Course, sections: List<Section>, unitItems: List<CourseContentItem.UnitItem>, progresses: List<Progress>): List<CourseContentItem> =
         sections
             .flatMap { section ->
-                mapSectionWithEmptyUnits(course, section, progresses, sections)
+                mapSectionWithEmptyUnits(unitItems, course, section, progresses, sections)
             }
 
-    private fun mapSectionWithEmptyUnits(course: Course, section: Section, progresses: List<Progress>, sections: List<Section>): List<CourseContentItem> =
+    private fun mapSectionWithEmptyUnits(unitItems: List<CourseContentItem.UnitItem>, course: Course, section: Section, progresses: List<Progress>, sections: List<Section>): List<CourseContentItem> =
         listOf(CourseContentItem.SectionItem(
             section = section,
             dates = sectionDatesMapper.mapSectionDates(section),
             progress = progresses.find { it.id == section.progress },
             isEnabled = section.hasUserAccess(course),
             requiredSection = mapRequiredSection(section, sections, progresses)
-        )) + section.units.map(CourseContentItem::UnitItemPlaceholder)
+        )) + mapSectionUnits(section.units, unitItems)
+
+    private fun mapSectionUnits(unitIds: List<Long>, unitItems: List<CourseContentItem.UnitItem>): List<CourseContentItem> =
+        unitIds
+            .map { unitId ->
+                unitItems
+                    .find { it.unit.id == unitId }
+                    ?: CourseContentItem.UnitItemPlaceholder(unitId)
+            }
 
     private fun mapRequiredSection(section: Section, sections: List<Section>, progresses: List<Progress>): RequiredSection? =
         if (!section.isRequirementSatisfied) {
@@ -52,16 +60,26 @@ constructor(
             CourseContentItem.UnitItem(sectionItem.section, unit, lesson, progress, sectionItem.isEnabled)
         }
 
-    fun replaceUnitPlaceholders(items: List<CourseContentItem>, unitItems: List<CourseContentItem.UnitItem>): List<CourseContentItem> =
+    fun replaceUnits(items: List<CourseContentItem>, unitItems: List<CourseContentItem.UnitItem>, progresses: List<Progress>): List<CourseContentItem> =
         items.map { item ->
-            (item as? CourseContentItem.UnitItemPlaceholder)
-                ?.let { unitItems.find { unitItem -> it.unitId == unitItem.unit.id } }
-                ?: item
+            when (item) {
+                is CourseContentItem.UnitItem ->
+                    unitItems
+                        .find { unitItem -> item.unit.id == unitItem.unit.id  }
+                        ?: item.copy(progress = progresses.find { it.id == item.unit.progress } ?: item.progress)
+
+                is CourseContentItem.UnitItemPlaceholder ->
+                    unitItems
+                        .find { unitItem -> item.unitId == unitItem.unit.id }
+                        ?: item
+
+                else ->
+                    item
+            }
         }
 
-    fun getUnitPlaceholdersIds(items: List<CourseContentItem>): LongArray =
+    fun getUnitPlaceholdersIds(items: List<CourseContentItem>): List<Long> =
         items
-            .filterIsInstance<CourseContentItem.UnitItemPlaceholder>()
-            .map(CourseContentItem.UnitItemPlaceholder::unitId)
-            .toLongArray()
+            .filterIsInstance<CourseContentItem.SectionItem>()
+            .fold(emptyList()) { acc, sectionItem -> acc + sectionItem.section.units }
 }

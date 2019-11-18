@@ -5,6 +5,7 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.stepik.android.model.feedback.ChoiceFeedback
 import org.stepik.android.model.util.assertThatObjectParcelable
+import java.util.Date
 
 @RunWith(RobolectricTestRunner::class)
 class SubmissionTest {
@@ -15,7 +16,7 @@ class SubmissionTest {
                 status = Submission.Status.LOCAL,
                 score = "score",
                 hint = "hint",
-                time = "time",
+                time = Date(),
                 _reply = ReplyTest.createTestReply(),
                 attempt = 999,
                 session = "session",

@@ -58,10 +58,12 @@ import org.stepic.droid.web.ApiImpl
 import org.stepic.droid.web.UserAgentProvider
 import org.stepic.droid.web.UserAgentProviderImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
+import org.stepik.android.view.injection.qualifiers.AuthLock
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadPoolExecutor
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 
 @Module
@@ -141,8 +143,8 @@ abstract class AppCoreModule {
         @Provides
         @JvmStatic
         @AppSingleton
-        internal fun provideSharedPreferencesHelper(analytic: Analytic, defaultFilter: DefaultFilter, context: Context): SharedPreferenceHelper {
-            return SharedPreferenceHelper(analytic, defaultFilter, context)
+        internal fun provideSharedPreferencesHelper(analytic: Analytic, defaultFilter: DefaultFilter, context: Context, @AuthLock authLock: ReentrantReadWriteLock): SharedPreferenceHelper {
+            return SharedPreferenceHelper(analytic, defaultFilter, context, authLock)
         }
 
         @Provides

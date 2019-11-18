@@ -7,11 +7,9 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.empty_comments.*
@@ -23,10 +21,11 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.comments.Vote
@@ -118,7 +117,7 @@ class CommentsActivity :
         commentsAdapter += CommentDataAdapterDelegate(
             actionListener = object : CommentDataAdapterDelegate.ActionListener {
                 override fun onReplyClicked(parentCommentId: Long) {
-                    showCommentComposeDialog(step.id, parent = parentCommentId)
+                    showCommentComposeDialog(step, parent = parentCommentId)
                 }
 
                 override fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
@@ -126,7 +125,7 @@ class CommentsActivity :
                 }
 
                 override fun onEditCommentClicked(commentDataItem: CommentItem.Data) {
-                    showCommentComposeDialog(step.id, commentDataItem.comment.parent, commentDataItem.comment)
+                    showCommentComposeDialog(step, commentDataItem.comment.parent, commentDataItem.comment, commentDataItem.solution?.submission)
                 }
 
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
@@ -162,26 +161,7 @@ class CommentsActivity :
                     )
             ))
 
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
-                        ?: return
-
-                    val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-                    if (dy > 0) {
-                        val visibleItemCount = layoutManager.childCount
-                        val totalItemCount = layoutManager.itemCount
-
-                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                            post { commentsPresenter.onLoadMore(PaginationDirection.DOWN) }
-                        }
-                    } else {
-                        if (pastVisibleItems == 0) {
-                            post { commentsPresenter.onLoadMore(PaginationDirection.UP) }
-                        }
-                    }
-                }
-            })
+            setOnPaginationListener(commentsPresenter::onLoadMore)
 
             (itemAnimator as? SimpleItemAnimator)
                 ?.supportsChangeAnimations = false
@@ -204,8 +184,7 @@ class CommentsActivity :
             emptyComments.placeholderMessage.setText(R.string.step_solutions_empty)
         }
 
-        composeCommentButton.isVisible = discussionThread.thread == DiscussionThread.THREAD_DEFAULT
-        composeCommentButton.setOnClickListener { showCommentComposeDialog(step.id) }
+        composeCommentButton.setOnClickListener { showCommentComposeDialog(step) }
         commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
 
@@ -221,7 +200,7 @@ class CommentsActivity :
             .takeIf { it != -1L }
 
         if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
-            showCommentComposeDialog(step.id)
+            showCommentComposeDialog(step)
             intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
         }
 
@@ -302,11 +281,11 @@ class CommentsActivity :
         invalidateOptionsMenu()
     }
 
-    private fun showCommentComposeDialog(stepId: Long, parent: Long? = null, comment: Comment? = null) {
+    private fun showCommentComposeDialog(step: Step, parent: Long? = null, comment: Comment? = null, submission: Submission? = null) {
         analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
 
         ComposeCommentDialogFragment
-            .newInstance(target = stepId, parent = parent, comment = comment)
+            .newInstance(discussionThread, step, parent, comment, submission)
             .showIfNotExists(supportFragmentManager, ComposeCommentDialogFragment.TAG)
     }
 
@@ -320,7 +299,7 @@ class CommentsActivity :
 
     private fun showSolutionDialog(discussionId: Long, solution: CommentItem.Data.Solution) {
         SolutionCommentDialogFragment
-            .newInstance(intent.getParcelableExtra(EXTRA_STEP), discussionThread, discussionId, solution.attempt, solution.submission)
+            .newInstance(intent.getParcelableExtra(EXTRA_STEP), solution.attempt, solution.submission, discussionThread, discussionId)
             .showIfNotExists(supportFragmentManager, SolutionCommentDialogFragment.TAG)
     }
 

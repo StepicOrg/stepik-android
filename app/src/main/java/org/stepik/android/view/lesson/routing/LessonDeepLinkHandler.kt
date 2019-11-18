@@ -10,6 +10,7 @@ private const val PATH_SEGMENT_STEP = "step"
 
 private const val QUERY_PARAMETER_UNIT = "unit"
 private const val QUERY_PARAMETER_DISCUSSION = "discussion"
+private const val QUERY_PARAMETER_THREAD = "thread"
 
 fun Intent.getLessonIdFromDeepLink(): Long? {
     val data = this.data ?: return null
@@ -51,6 +52,9 @@ fun Intent.getDiscussionIdFromDeepLink(): Long? {
     return HtmlHelper.parseIdFromSlug(path)
 }
 
+fun Intent.getThreadTypeFromDeepLink(): String? =
+    this.data?.getQueryParameter(QUERY_PARAMETER_THREAD)
+
 fun Intent.getLessonDeepLinkData(): LessonDeepLinkData? =
     getLessonIdFromDeepLink()
         ?.let { lessonId ->
@@ -58,6 +62,7 @@ fun Intent.getLessonDeepLinkData(): LessonDeepLinkData? =
                 lessonId = lessonId,
                 stepPosition = getStepPositionFromDeepLink() ?: 1,
                 unitId = getUnitIdFromDeepLink(),
-                discussionId = getDiscussionIdFromDeepLink() // todo: handle discussion id
+                discussionId = getDiscussionIdFromDeepLink(), // todo: handle discussion id
+                discussionThread = getThreadTypeFromDeepLink()
             )
         }

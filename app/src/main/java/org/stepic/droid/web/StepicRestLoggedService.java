@@ -7,6 +7,7 @@ import org.stepic.droid.web.model.story_templates.StoryTemplatesResponse;
 import org.stepik.android.remote.assignment.model.AssignmentResponse;
 import org.stepik.android.remote.attempt.model.AttemptRequest;
 import org.stepik.android.remote.attempt.model.AttemptResponse;
+import org.stepik.android.remote.auth.model.StepikProfileResponse;
 import org.stepik.android.remote.certificate.model.CertificateResponse;
 import org.stepik.android.remote.comment.model.CommentRequest;
 import org.stepik.android.remote.comment.model.CommentResponse;
@@ -73,10 +74,7 @@ public interface StepicRestLoggedService {
     Single<UserResponse> getUsersRx(@Query("ids[]") long[] userIds);
 
     @GET("api/stepics/1")
-    Call<StepicProfileResponse> getUserProfile();
-
-    @GET("api/courses?enrolled=true")
-    Single<CourseResponse> getEnrolledCourses(@Query("page") int page);
+    Call<StepikProfileResponse> getUserProfile();
 
     @GET("api/user-courses")
     Single<UserCoursesResponse> getUserCourses(@Query("page") int page);
@@ -150,15 +148,7 @@ public interface StepicRestLoggedService {
     Single<CourseResponse> getCoursesReactive(@Query("ids[]") long[] courseIds);
 
     @POST("api/attempts")
-    Call<AttemptResponse> createNewAttempt(@Body AttemptRequest attemptRequest);
-
-    @POST("api/attempts")
     Single<AttemptResponse> createNewAttemptReactive(@Body AttemptRequest attemptRequest);
-
-    @POST("api/submissions")
-    Call<SubmissionResponse> createNewSubmission(
-            @Body SubmissionRequest submissionRequest
-    );
 
     @POST("api/submissions")
     Single<SubmissionResponse> createNewSubmissionReactive(
@@ -166,16 +156,10 @@ public interface StepicRestLoggedService {
     );
 
     @GET("api/attempts")
-    Call<AttemptResponse> getExistingAttempts(@Query("step") long stepId, @Query("user") long userId);
-
-    @GET("api/attempts")
     Single<AttemptResponse> getExistingAttemptsReactive(@Query("step") long stepId, @Query("user") long userId);
 
-    @GET("api/submissions")
-    Call<SubmissionResponse> getExistingSubmissions(
-            @Query("attempt") long attemptId,
-            @Query("order") String order
-    );
+    @GET("api/attempts")
+    Single<AttemptResponse> getExistingAttemptsReactive(@Query("ids[]") long[] ids);
 
     @GET("api/submissions")
     Single<SubmissionResponse> getExistingSubmissionsReactive(
@@ -185,9 +169,6 @@ public interface StepicRestLoggedService {
 
     @GET("api/email-addresses")
     Call<EmailAddressResponse> getEmailAddresses(@Query("ids[]") long[] ids);
-
-    @GET("api/devices")
-    Call<DeviceResponse> getDevices(@Query("user") long userId);
 
     @GET("api/devices")
     Call<DeviceResponse> getDeviceByRegistrationId(@Query("registration_id") String token);
@@ -206,9 +187,6 @@ public interface StepicRestLoggedService {
 
     @PUT("api/notifications/{id}")
     Completable putNotificationReactive(@Path("id") long notificationId, @Body NotificationRequest notificationRequest);
-
-    @DELETE("api/devices/{id}")
-    Call<Void> removeDevice(@Path("id") long deviceId);
 
     @GET("api/discussion-proxies")
     Single<DiscussionProxyResponse> getDiscussionProxies(@Query("ids[]") String[] ids);
@@ -238,10 +216,10 @@ public interface StepicRestLoggedService {
     Single<UnitResponse> getUnitsByLessonId(@Query("lesson") long lessonId);
 
     @GET("api/submissions?order=desc")
-    Call<SubmissionResponse> getExistingSubmissionsForStep(@Query("step") long stepId);
+    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId, @Query("page") int page);
 
     @GET("api/submissions?order=desc")
-    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId);
+    Single<SubmissionResponse> getExistingSubmissionsForStepReactive(@Query("step") long stepId, @Query("user") long user, @Query("page") int page);
 
     @GET("api/notifications")
     Call<NotificationResponse> getNotifications(@Query("page") int page, @Nullable @Query("type") String type);

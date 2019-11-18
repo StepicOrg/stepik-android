@@ -27,6 +27,7 @@ class AutoCompleteSearchView
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr), SearchSuggestionsView {
     private val searchQueriesAdapter = SearchQueriesAdapter(context)
     private val closeIcon: ImageView = findViewById(R.id.search_close_btn)
+    private var focusCallback: FocusCallback? = null
 
     var suggestionsOnTouchListener: OnTouchListener? = null
 
@@ -73,13 +74,19 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 setConstraint(query.toString())
                 searchQueriesRecyclerView.layoutManager?.scrollToPosition(0)
                 searchQueriesRecyclerView.visibility = View.VISIBLE
+
             } else {
                 searchQueriesRecyclerView.visibility = View.GONE
             }
+            focusCallback?.onFocusChanged(hasFocus)
         }
 
         rootView.addView(searchQueriesRecyclerView)
 
+    }
+
+    fun setFocusCallback(focusCallback: FocusCallback) {
+        this.focusCallback = focusCallback
     }
 
     fun setCloseIconDrawableRes(@DrawableRes iconRes: Int) {
@@ -118,4 +125,8 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun isEventInsideView(v: View, event: MotionEvent) =
             event.x > 0 && event.y > 0
             && event.x < v.width && event.y < v.height
+
+    interface FocusCallback {
+        fun onFocusChanged(hasFocus: Boolean)
+    }
 }

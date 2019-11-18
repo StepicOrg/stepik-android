@@ -78,12 +78,14 @@ class LessonDeepLinkHandlerTest {
         val actualStepPosition = 2
         val actualUnitId = 3L
         val actualDiscussionId = 4L
-        intent.data = Uri.parse("https://stepik.org/lesson/$actualLessonId/step/$actualStepPosition/?unit=$actualUnitId&discussion=$actualDiscussionId")
+        val actualThread = "solutions"
+        intent.data = Uri.parse("https://stepik.org/lesson/$actualLessonId/step/$actualStepPosition/?unit=$actualUnitId&discussion=$actualDiscussionId&thread=$actualThread")
 
         Assert.assertEquals(actualLessonId, intent.getLessonIdFromDeepLink())
         Assert.assertEquals(actualStepPosition, intent.getStepPositionFromDeepLink())
         Assert.assertEquals(actualUnitId, intent.getUnitIdFromDeepLink())
         Assert.assertEquals(actualDiscussionId, intent.getDiscussionIdFromDeepLink())
+        Assert.assertEquals(actualThread, intent.getThreadTypeFromDeepLink())
     }
 
     @Test
@@ -94,13 +96,15 @@ class LessonDeepLinkHandlerTest {
             lessonId = 1,
             stepPosition = 2,
             unitId = 3,
-            discussionId = 4
+            discussionId = 4,
+            discussionThread = "solutions"
         )
         intent.data = Uri.parse(
             "https://stepik.org/lesson/${actualLessonDeepLinkData.lessonId}" +
                 "/step/${actualLessonDeepLinkData.stepPosition}" +
                 "/?unit=${actualLessonDeepLinkData.unitId}" +
-                "&discussion=${actualLessonDeepLinkData.discussionId}"
+                "&discussion=${actualLessonDeepLinkData.discussionId}" +
+                "&thread=${actualLessonDeepLinkData.discussionThread}"
         )
 
         Assert.assertEquals(actualLessonDeepLinkData, intent.getLessonDeepLinkData())

@@ -5,7 +5,6 @@ import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.model.BlockPersistentWrapper
-import org.stepic.droid.model.CalendarSection
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.ViewedNotification
@@ -14,7 +13,6 @@ import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.CourseListDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
-import org.stepic.droid.storage.structure.DbStructureCalendarSection
 import org.stepic.droid.storage.structure.DbStructureCourse
 import org.stepic.droid.storage.structure.DbStructureLastStep
 import org.stepic.droid.storage.structure.DbStructureNotification
@@ -45,6 +43,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
 import org.stepik.android.model.ViewAssignment
+import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import javax.inject.Inject
 
@@ -65,7 +64,6 @@ constructor(
     private val courseDao: IDao<Course>,
     private val courseListDao: CourseListDao,
     private val notificationDao: IDao<Notification>,
-    private val calendarSectionDao: IDao<CalendarSection>,
     private val videoTimestampDao: IDao<VideoTimestamp>,
     private val lastStepDao: IDao<LastStep>,
     private val blockDao: IDao<BlockPersistentWrapper>,
@@ -75,7 +73,8 @@ constructor(
     private val sectionDateEventDao: IDao<SectionDateEvent>,
     private val submissionDao: IDao<Submission>,
     private val certificateDao: IDao<Certificate>,
-    private val discussionThreadDao: IDao<DiscussionThread>
+    private val discussionThreadDao: IDao<DiscussionThread>,
+    private val attemptDao: IDao<Attempt>
 ) {
 
     fun dropDatabase() {
@@ -102,6 +101,7 @@ constructor(
         submissionDao.removeAll()
         certificateDao.removeAll()
         discussionThreadDao.removeAll()
+        attemptDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {
@@ -184,10 +184,6 @@ constructor(
     fun addSections(sections: List<Section>) =
         sectionDao.insertOrReplaceAll(sections)
 
-    fun addStep(step: Step) {
-        stepDao.insertOrReplace(step)
-    }
-
     fun addSteps(steps: List<Step>) {
         stepDao.insertOrReplaceAll(steps)
     }
@@ -219,12 +215,6 @@ constructor(
     fun removeFromQueue(viewAssignmentWrapper: ViewAssignment?) {
         val assignmentId = viewAssignmentWrapper?.assignment ?: return
         viewAssignmentDao.remove(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
-    }
-
-    fun markProgressAsPassed(assignmentId: Long) {
-        val assignment = assignmentDao.get(DbStructureAssignment.Columns.ID, assignmentId.toString())
-        val progressId = assignment?.progress ?: return
-        markProgressAsPassedIfInDb(progressId)
     }
 
     fun markProgressAsPassedIfInDb(progressId: String) {
@@ -264,24 +254,6 @@ constructor(
             emptyList()
         }
     }
-
-    fun getCalendarSectionsByIds(ids: LongArray): Map<Long, CalendarSection> {
-        val stringIds = DbParseHelper.parseLongArrayToString(ids, AppConstants.COMMA)
-        return if (stringIds != null) {
-            calendarSectionDao
-                    .getAllInRange(DbStructureCalendarSection.Column.SECTION_ID, stringIds)
-                    .map { it.id to it }
-                    .toMap()
-        } else {
-            emptyMap()
-        }
-    }
-
-    fun addCalendarEvent(calendarSection: CalendarSection) {
-        calendarSectionDao.insertOrUpdate(calendarSection)
-    }
-
-    fun getCalendarEvent(sectionId: Long) = calendarSectionDao.get(DbStructureCalendarSection.Column.SECTION_ID, sectionId.toString())
 
     fun addTimestamp(videoTimestamp: VideoTimestamp) {
         videoTimestampDao.insertOrUpdate(videoTimestamp)

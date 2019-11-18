@@ -222,7 +222,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         for (i in 0 until courseTabs.tabCount) {
             val tab = courseTabs.getTabAt(i)
-            tab?.customView = layoutInflater.inflate(R.layout.view_course_tab, null)
+            tab?.customView = (layoutInflater.inflate(R.layout.view_course_tab, null) as TextView).also {
+                it.typeface = lightFont
+            }
         }
 
         (courseTabs.getTabAt(courseTabs.selectedTabPosition)?.customView as? TextView)
