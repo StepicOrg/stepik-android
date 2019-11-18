@@ -1,8 +1,11 @@
 package org.stepik.android.remote.search
 
 import io.reactivex.Single
-import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.util.PagedList
 import org.stepik.android.data.search.source.SearchRemoteDataSource
+import org.stepik.android.model.SearchResult
+import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.search.model.QueriesResponse
 import org.stepik.android.remote.search.model.SearchResultResponse
 import org.stepik.android.remote.search.service.SearchService
@@ -12,17 +15,15 @@ import javax.inject.Inject
 class SearchRemoteDataSourceImpl
 @Inject
 constructor(
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val searchService: SearchService
 ) : SearchRemoteDataSource {
-    override fun getSearchResultsCourses(page: Int, rawQuery: String?): Single<SearchResultResponse> {
-        val enumSet = sharedPreferenceHelper.filterForFeatured
-        val lang = enumSet.iterator().next().language
+    override fun getSearchResultsCourses(page: Int, rawQuery: String?, lang: String): Single<PagedList<SearchResult>> {
         val encodedQuery = URLEncoder.encode(rawQuery)
-
-        return searchService.getSearchResults(page, encodedQuery, lang)
+        return searchService
+            .getSearchResults(page, encodedQuery, lang)
+            .map { it.toPagedList(SearchResultResponse::searchResultList) }
     }
 
-    override fun getSearchQueries(query: String): Single<QueriesResponse> =
-        searchService.getSearchQueries(query)
+    override fun getSearchQueries(query: String): Single<List<SearchQuery>> =
+        searchService.getSearchQueries(query).map(QueriesResponse::queries)
 }

@@ -11,20 +11,20 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepik.android.data.search.source.SearchRemoteDataSource
+import org.stepik.android.domain.search.repository.SearchRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 class SearchSuggestionsPresenter
 @Inject constructor(
-        private val searchRemoteDataSource: SearchRemoteDataSource,
-        private val databaseFacade: DatabaseFacade,
-        private val analytic: Analytic,
-        @BackgroundScheduler
-        private val scheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler
+    private val searchRepository: SearchRepository,
+    private val databaseFacade: DatabaseFacade,
+    private val analytic: Analytic,
+    @BackgroundScheduler
+    private val scheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler
 ) : PresenterBase<SearchSuggestionsView>() {
 
     companion object {
@@ -51,9 +51,9 @@ class SearchSuggestionsPresenter
                 .subscribe { searchView.setSuggestions(it, SearchQuerySource.DB) })
 
         compositeDisposable.add(queryPublisher
-                .flatMap { query -> searchRemoteDataSource.getSearchQueries(query).toObservable().onErrorResumeNext(Observable.empty()) }
+                .flatMap { query -> searchRepository.getSearchQueries(query).toObservable().onErrorResumeNext(Observable.empty()) }
                 .observeOn(mainScheduler)
-                .subscribe { searchView.setSuggestions(it.queries, SearchQuerySource.API) })
+                .subscribe { searchView.setSuggestions(it, SearchQuerySource.API) })
     }
 
     fun onQueryTextChange(query: String) {
