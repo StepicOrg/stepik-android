@@ -16,6 +16,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.RWLocks
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -23,6 +24,7 @@ import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Meta
@@ -40,6 +42,7 @@ constructor(
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
     private val courseRemoteDataSource: CourseRemoteDataSource,
+    private val userCoursesRepository: UserCoursesRepository,
 
     private val progressRepository: ProgressRepository,
     private val filterApplicator: FilterApplicator,
@@ -124,14 +127,14 @@ constructor(
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
                         val page = currentPage.get()
-                        val coursesOrder = courseRemoteDataSource.getUserCourses(page)
-                                .blockingGet()
-                                .apply { handleMeta(meta) }
-                                .userCourse
-                                .map(UserCourse::course)
+                        val userCourses = userCoursesRepository.getUserCourses(page).blockingGet()
+                        handleMeta(userCourses)
+
+                        val coursesOrder = userCourses.map(UserCourse::course)
 
                         val coursesResponse = courseRemoteDataSource.getCoursesReactive(1, *coursesOrder.toLongArray())
                                 .blockingGet()
+
                         val courses = coursesResponse
                                 .courses
                                 .sortedBy { coursesOrder.indexOf(it.id) }
@@ -198,6 +201,13 @@ constructor(
                 }
                 break
             }
+        }
+    }
+
+    private fun handleMeta(meta: PagedList<out Any>) {
+        hasNextPage.set(meta.hasNext)
+        if (hasNextPage.get()) {
+            currentPage.set(meta.page + 1) // page for next loading
         }
     }
 

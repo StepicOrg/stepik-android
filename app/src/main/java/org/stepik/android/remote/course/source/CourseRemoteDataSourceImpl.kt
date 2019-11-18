@@ -7,7 +7,6 @@ import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.remote.base.chunkedSingleMap
 import org.stepik.android.remote.course.model.CourseResponse
-import org.stepik.android.remote.course.model.UserCoursesResponse
 import org.stepik.android.remote.course.service.CourseService
 import javax.inject.Inject
 
@@ -35,9 +34,6 @@ constructor(
                 courseService.getCoursesReactive(ids)
                     .map(courseResponseMapper)
             }
-
-    override fun getUserCourses(page: Int): Single<UserCoursesResponse> =
-        courseService.getUserCourses(page)
 
     override fun getPopularCourses(page: Int): Single<CourseResponse> {
         val enumSet = sharedPreferenceHelper.filterForFeatured

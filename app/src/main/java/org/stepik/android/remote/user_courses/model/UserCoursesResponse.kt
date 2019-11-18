@@ -1,4 +1,4 @@
-package org.stepik.android.remote.course.model
+package org.stepik.android.remote.user_courses.model
 
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.Meta
