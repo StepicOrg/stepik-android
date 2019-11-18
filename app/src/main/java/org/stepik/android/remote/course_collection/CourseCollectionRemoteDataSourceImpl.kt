@@ -13,5 +13,5 @@ constructor(
     private val courseCollectionService: CourseCollectionService
 ) : CourseCollectionRemoteDataSource {
     override fun getCourseCollectionList(lang: String): Single<List<CourseCollection>> =
-        courseCollectionService.getCourseLists(lang).map(CourseCollectionsResponse::courseCollections)
+        courseCollectionService.getCourseCollectionList(lang).map(CourseCollectionsResponse::courseCollections)
 }
