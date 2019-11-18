@@ -31,7 +31,7 @@ constructor(
         compositeDisposable.add(Observable
                 .fromCallable { RxOptional(sharedPreferences.profile?.id) }
                 .unwrapOptional()
-                .flatMap { userActivityRemoteDataSource.getUserActivitiesRx(it).toObservable() }
+                .flatMapSingle { userActivityRemoteDataSource.getUserActivitiesRx(it) }
                 .map { RxOptional(it.firstOrNull()?.pins) }
                 .map { optional ->
                     optional.map { StepikUtil.getCurrentStreak(it) }
