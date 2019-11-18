@@ -6,6 +6,7 @@ import org.robolectric.RobolectricTestRunner
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.attempts.DatasetWrapper
 import org.stepik.android.model.util.assertThatObjectParcelable
+import java.util.Date
 
 @RunWith(RobolectricTestRunner::class)
 class AttemptTest {
@@ -18,7 +19,7 @@ class AttemptTest {
                 _dataset = DatasetWrapper(DatasetTest.createTestDataset()),
                 datasetUrl = "some url",
                 status = "status",
-                time = "time",
+                time = Date(),
                 timeLeft = "time left"
             )
     }

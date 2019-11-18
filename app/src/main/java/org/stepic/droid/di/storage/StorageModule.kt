@@ -43,6 +43,7 @@ import org.stepic.droid.storage.dao.ViewAssignmentDaoImpl
 import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
+import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.download.dao.DownloadedCoursesDaoImpl
@@ -74,6 +75,7 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
 import org.stepik.android.model.ViewAssignment
+import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
 
@@ -209,6 +211,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindDiscussionThreadDao(discussionThreadDaoImpl: DiscussionThreadDaoImpl): IDao<DiscussionThread>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindAttmptDao(attemptDaoImpl: AttemptDaoImpl): IDao<Attempt>
 
     @StorageSingleton
     @Binds
