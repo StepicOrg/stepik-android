@@ -64,7 +64,7 @@
     <string name="gb">ГБ</string>
     <string name="clear_videos">Вы уверены, что хотите удалить все закешированные видео?</string>
     <string name="empty_downloading">Нет загруженных видео</string>
-    <string name="find_courses_hint">Поиск курсов</string>
+    <string name="find_courses_hint">Искать курсы</string>
     <string name="search_title">Поиск</string>
     <string name="empty_search">Курсы не найдены</string>
     <string name="submit">Отправить</string>
@@ -738,6 +738,7 @@
     <!-- Comment -->
     <string name="comment_compose_hint">Оставьте комментарий</string>
     <string name="comment_compose_title">Комментарий</string>
+    <string name="solutions_compose_title">Решение</string>
     <string name="comment_action_create">Написать комментарий</string>
     <string name="comment_action_edit">Изменить</string>
     <string name="comment_action_remove">Удалить</string>
@@ -777,4 +778,8 @@
 
     <!-- Downloads -->
     <string name="downloads_title">Загруженные курсы</string>
+
+    <!-- Submissions -->
+    <string name="submissions_title">Решения</string>
+    <string name="submissions_select_title">Выберите решение</string>
 </resources>

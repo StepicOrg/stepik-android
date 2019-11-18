@@ -2,6 +2,7 @@ package org.stepik.android.cache.comment_banner.structure
 
 import android.database.sqlite.SQLiteDatabase
 
+@Deprecated("Removed structure")
 object DbStructureCommentBanner {
     const val TABLE_NAME = "comments_banner"
 

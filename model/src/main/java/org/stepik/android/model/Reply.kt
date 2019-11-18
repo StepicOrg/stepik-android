@@ -23,7 +23,9 @@ data class Reply(
     val code: String? = null,
 
     @SerializedName("solve_sql")
-    val solveSql: String? = null
+    val solveSql: String? = null,
+
+    var tableChoices: List<TableChoiceAnswer>? = null //this is not serialize by default, because  field 'choices' is already created by different type
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeList(choices)
@@ -35,6 +37,7 @@ data class Reply(
         parcel.writeString(language)
         parcel.writeString(code)
         parcel.writeString(solveSql)
+        parcel.writeTypedList(tableChoices)
     }
 
     override fun describeContents(): Int = 0
@@ -50,7 +53,8 @@ data class Reply(
                 parcel.readArrayList(Int::class.java.classLoader) as? List<Int>,
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readString()
+                parcel.readString(),
+                parcel.createTypedArrayList(TableChoiceAnswer)
             )
 
         override fun newArray(size: Int): Array<Reply?> =

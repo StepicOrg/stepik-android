@@ -11,6 +11,7 @@ import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
 import com.vk.sdk.VKSdk
 import com.yandex.metrica.YandexMetrica
+import com.yandex.metrica.YandexMetricaConfig
 import io.branch.referral.Branch
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.analytic.experiments.SplitTestsHolder
@@ -22,7 +23,7 @@ import org.stepic.droid.di.DaggerAppCoreComponent
 import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.util.NotificationChannelInitializer
-import org.stepic.droid.util.StethoHelper
+import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
 import ru.nobird.android.view.base.ui.extension.isMainProcess
 import timber.log.Timber
@@ -85,7 +86,7 @@ class App : MultiDexApplication() {
     private fun init() {
         application = this
 
-        StethoHelper.initStetho(this)
+        DebugToolsHelper.initDebugTools(this)
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
@@ -120,7 +121,7 @@ class App : MultiDexApplication() {
         componentManager = ComponentManagerImpl(component)
 
         // init AppMetrica SDK
-        YandexMetrica.activate(applicationContext, "fd479031-bdf4-419e-8d8f-6895aab23502")
+        YandexMetrica.activate(applicationContext, YandexMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build())
         YandexMetrica.enableActivityAutoTracking(this)
 
         Branch.getAutoInstance(this)

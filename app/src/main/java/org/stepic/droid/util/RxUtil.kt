@@ -9,6 +9,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
+import org.stepic.droid.util.rx.ObservableReduceMap
 import java.util.concurrent.TimeUnit
 
 
@@ -135,3 +136,9 @@ fun <T : Any, R : Any> reduce(sources: List<Single<T>>, seed: R, transform: (R, 
     } else {
         Observable.empty<R>()
     }
+
+/**
+ * Performs reduce operation with [seed] over values in current observable and emits every obtained value
+ */
+fun <T : Any, R : Any> Observable<T>.reduceMap(seed: R, transform: (R, T) -> R): Observable<R> =
+    ObservableReduceMap<T, R>(this, seed, transform)

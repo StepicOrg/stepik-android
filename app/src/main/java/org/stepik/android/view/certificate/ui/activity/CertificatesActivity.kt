@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_certificates.*
 import kotlinx.android.synthetic.main.empty_certificates.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -18,7 +17,9 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.ui.dialogs.CertificateShareDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.presentation.certificate.CertificatesPresenter
 import org.stepik.android.presentation.certificate.CertificatesView
 import org.stepik.android.view.certificate.ui.adapter.CertificatesAdapterDelegate
@@ -69,24 +70,11 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
             adapter = certificatesAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
-                        ?: return
-
-                    if (dy > 0) {
-                        val visibleItemCount = layoutManager.childCount
-                        val totalItemCount = layoutManager.itemCount
-                        val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-
-                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                            post {
-                                certificatesPresenter.fetchNextPageFromRemote(userId)
-                            }
-                        }
-                    }
+            setOnPaginationListener { paginationDirection ->
+                if (paginationDirection == PaginationDirection.DOWN) {
+                    certificatesPresenter.fetchNextPageFromRemote(userId)
                 }
-            })
+            }
         }
 
         initViewStateDelegate()

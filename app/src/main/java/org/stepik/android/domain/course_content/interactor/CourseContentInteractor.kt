@@ -3,13 +3,14 @@ package org.stepik.android.domain.course_content.interactor
 import com.google.firebase.perf.FirebasePerformance
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles.zip
+import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.toObservable
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.util.concat
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.plus
-import org.stepic.droid.util.reduce
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -21,6 +22,7 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
 import org.stepik.android.presentation.course_content.mapper.CourseContentItemMapper
 import org.stepik.android.view.course_content.model.CourseContentItem
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 class CourseContentInteractor
@@ -38,75 +40,115 @@ constructor(
         private const val UNITS_CHUNK_SIZE = 10
     }
 
-    fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> =
-        courseObservableSource
+    fun getCourseContent(shouldSkipStoredValue: Boolean = false): Observable<Pair<Course, List<CourseContentItem>>> {
+        val count = AtomicInteger(0)
+
+        return courseObservableSource
             .skip(if (shouldSkipStoredValue) 1 else 0)
             .switchMap { course ->
-                getEmptySections(course) concat getContent(course)
+                val shouldUseCache = !shouldSkipStoredValue && count.getAndIncrement() < 1
+                val contentObservable =
+                    if (shouldUseCache) {
+                        val cacheSource = getContent(course, emptyList(), DataSourceType.CACHE)
+                            .share()
+
+                        val remoteSource = cacheSource
+                            .lastOrError()
+                            .flatMapObservable { (_, items) ->
+                                getContent(course, items, DataSourceType.REMOTE)
+                            }
+
+                        Observable.concat(cacheSource, remoteSource)
+                    } else {
+                        getContent(course, emptyList(), DataSourceType.REMOTE)
+                    }
+
+                Observable.concat(getEmptySections(course), contentObservable)
             }
+    }
 
     private fun getEmptySections(course: Course): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable.just(course to emptyList())
 
-    private fun getContent(course: Course): Observable<Pair<Course, List<CourseContentItem>>> {
+    private fun getContent(course: Course, items: List<CourseContentItem>, dataSourceType: DataSourceType): Observable<Pair<Course, List<CourseContentItem>>> {
         val courseContentLoadingTrace = FirebasePerformance.getInstance().newTrace(Analytic.Traces.COURSE_CONTENT_LOADING)
         courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.COURSE, course.id.toString())
+        courseContentLoadingTrace.putAttribute(AmplitudeAnalytic.Course.Params.SOURCE, dataSourceType.name)
         courseContentLoadingTrace.start()
 
-        return getSectionsOfCourse(course)
-            .flatMap { populateSections(course, it) }
-            .flatMapObservable { items ->
-                Observable.just(course to items) + loadUnits(course, items)
+        return getSectionsOfCourse(course, dataSourceType)
+            .flatMap { populateSections(course, it, items, dataSourceType) }
+            .flatMapObservable { populatedItems ->
+                Observable.just(course to populatedItems) + loadUnits(course, populatedItems, dataSourceType)
             }
             .doOnComplete {
                 courseContentLoadingTrace.stop()
             }
     }
 
-    private fun getSectionsOfCourse(course: Course): Single<List<Section>> =
+    private fun getSectionsOfCourse(course: Course, dataSourceType: DataSourceType): Single<List<Section>> =
         sectionRepository
-            .getSections(*course.sections ?: longArrayOf(), primarySourceType = DataSourceType.REMOTE)
+            .getSections(*course.sections ?: longArrayOf(), primarySourceType = dataSourceType)
 
-    private fun populateSections(course: Course, sections: List<Section>): Single<List<CourseContentItem>> =
-        progressRepository
-            .getProgresses(*sections.getProgresses())
+    private fun populateSections(course: Course, sections: List<Section>, items: List<CourseContentItem>, dataSourceType: DataSourceType): Single<List<CourseContentItem>> =
+        if (dataSourceType == DataSourceType.CACHE) {
+            Single.just(emptyList())
+        } else {
+            progressRepository
+                .getProgresses(*sections.getProgresses())
+        }
             .map { progresses ->
-                courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, progresses)
+                courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, items.filterIsInstance<CourseContentItem.UnitItem>(), progresses)
             }
 
-    private fun loadUnits(course: Course, items: List<CourseContentItem>): Observable<Pair<Course, List<CourseContentItem>>> =
+    private fun loadUnits(course: Course, items: List<CourseContentItem>, dataSourceType: DataSourceType): Observable<Pair<Course, List<CourseContentItem>>> =
         Observable
-            .just(courseContentItemMapper.getUnitPlaceholdersIds(items))
+            .fromCallable { courseContentItemMapper.getUnitPlaceholdersIds(items) }
             .flatMap { unitIds ->
-                val sources = unitIds
-                    .asIterable()
+                val subject = PublishSubject.create<Array<String>>()
+
+                val unitsSource = unitIds
                     .chunked(UNITS_CHUNK_SIZE)
-                    .map { getUnits(it.toLongArray()) }
+                    .toObservable()
+                    .concatMapSingle { ids ->
+                        getUnits(ids.toLongArray(), dataSourceType)
+                            .flatMap { units ->
+                                lessonRepository
+                                    .getLessons(*units.mapToLongArray(Unit::lesson), primarySourceType = dataSourceType)
+                                    .map { units to it }
+                                    .doOnSuccess { subject.onNext(units.getProgresses()) }
+                            }
+                    }
 
-                reduce(sources, items) { newItems, units ->
-                    val sectionItems = newItems
-                        .filterIsInstance<CourseContentItem.SectionItem>()
+                val progressesSource =
+                    if (dataSourceType == DataSourceType.CACHE) {
+                        Observable.just(emptyList())
+                    } else {
+                        Observable.concat(
+                            Observable.just(emptyList()),
+                            subject
+                                .observeOn(Schedulers.io())
+                                .flatMapSingle { progressIds ->
+                                    progressRepository.getProgresses(*progressIds)
+                                }
+                        )
+                    }
 
-                    populateUnits(sectionItems, units)
-                        .map { unitItems ->
-                            courseContentItemMapper.replaceUnitPlaceholders(newItems, unitItems)
-                        }
-                }
+                Observables
+                    .combineLatest(progressesSource, unitsSource) { progresses, (units, lessons) ->
+                        Triple(units, lessons, progresses)
+                    }
+                    .scan(items) { newItems, (units, lessons, progresses) ->
+                        val sectionItems = newItems
+                            .filterIsInstance<CourseContentItem.SectionItem>()
+                        val unitItems = courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
+
+                        courseContentItemMapper.replaceUnits(newItems, unitItems, progresses)
+                    }
             }
             .map { course to it }
 
-    private fun getUnits(unitIds: LongArray): Single<List<Unit>> =
+    private fun getUnits(unitIds: LongArray, dataSourceType: DataSourceType): Single<List<Unit>> =
         unitRepository
-            .getUnits(*unitIds, primarySourceType = DataSourceType.REMOTE)
-
-    private fun populateUnits(sectionItems: List<CourseContentItem.SectionItem>, units: List<Unit>): Single<List<CourseContentItem.UnitItem>> =
-        zip(
-            progressRepository
-                .getProgresses(*units.getProgresses()),
-            lessonRepository
-                .getLessons(*units.mapToLongArray(Unit::lesson), primarySourceType = DataSourceType.REMOTE)
-        )
-            .map { (progresses, lessons) ->
-                courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
-            }
+            .getUnits(*unitIds, primarySourceType = dataSourceType)
 }

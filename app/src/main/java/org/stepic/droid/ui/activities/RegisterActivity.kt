@@ -12,8 +12,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import com.google.android.gms.auth.api.credentials.Credential
-import com.google.firebase.analytics.FirebaseAnalytics
 import kotlinx.android.synthetic.main.activity_register.*
+import okhttp3.ResponseBody
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
@@ -32,9 +32,6 @@ import org.stepic.droid.util.toBundle
 import org.stepic.droid.web.Api
 import org.stepic.droid.web.RegistrationResponse
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
@@ -196,34 +193,20 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
         if (isOk) {
             onLoadingWhileLogin()
-            api.signUp(firstName, lastName, email, password).enqueue(object : Callback<RegistrationResponse> {
-                override fun onResponse(call: Call<RegistrationResponse>, response: Response<RegistrationResponse>) {
-                    if (response.isSuccessful) {
-                        analytic.reportEvent(FirebaseAnalytics.Event.SIGN_UP)
-
-                        loginPresenter.login(email, password, isAfterRegistration = true)
-                    } else {
-                        ProgressHelper.dismiss(progressBar)
-                        response.errorBody()
-                        val errorConverter = retrofit.responseBodyConverter<RegistrationResponse>(RegistrationResponse::class.java, arrayOfNulls<Annotation>(0))
-                        var error: RegistrationResponse? = null
-                        try {
-                            error = errorConverter.convert(response.errorBody()!!)
-                        } catch (e: Exception) {
-                            analytic.reportError(Analytic.Error.REGISTRATION_IMPORTANT_ERROR, e) //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
-                        }
-
-                        handleErrorRegistrationResponse(error)
-                    }
-
-                }
-
-                override fun onFailure(call: Call<RegistrationResponse>, t: Throwable) {
-                    ProgressHelper.dismiss(progressBar)
-                    Toast.makeText(this@RegisterActivity, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
-                }
-            })
+            loginPresenter.signUp(firstName, lastName, email, password)
         }
+    }
+
+    override fun onRegistrationFailed(responseBody: ResponseBody?) {
+        ProgressHelper.dismiss(progressBar)
+        val errorConverter = retrofit.responseBodyConverter<RegistrationResponse>(RegistrationResponse::class.java, arrayOfNulls<Annotation>(0))
+        var error: RegistrationResponse? = null
+        try {
+            error = errorConverter.convert(responseBody!!)
+        } catch (e: Exception) {
+            analytic.reportError(Analytic.Error.REGISTRATION_IMPORTANT_ERROR, e) //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
+        }
+        handleErrorRegistrationResponse(error)
     }
 
     private fun onClearError() {

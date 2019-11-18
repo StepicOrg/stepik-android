@@ -25,6 +25,7 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
+import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
 import org.stepik.android.view.injection.step_quiz.StepQuizBus
@@ -165,22 +166,39 @@ constructor(
     }
 
     private fun handleDiscussionId() {
-        val state = (state as? LessonView.State.LessonLoaded)
+        val oldState = (state as? LessonView.State.LessonLoaded)
             ?: return
 
-        val discussionId = state
+        val discussionId = oldState
             .lessonData
             .discussionId
             ?: return
 
-        val step = (state.stepsState as? LessonView.StepsState.Loaded)
+        val discussionThreadType = oldState
+            .lessonData
+            .discussionThread
+            ?: DiscussionThread.THREAD_DEFAULT
+
+        val step = (oldState.stepsState as? LessonView.StepsState.Loaded)
             ?.stepItems
-            ?.getOrNull(state.lessonData.stepPosition)
+            ?.getOrNull(oldState.lessonData.stepPosition)
             ?.stepWrapper
             ?.step
             ?: return
 
-        view?.showComments(step, discussionId)
+        compositeDisposable += lessonInteractor
+            .getDiscussionThreads(step)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onSuccess = { discussionThreads ->
+                    val discussionThread = discussionThreads.find { it.thread == discussionThreadType }
+                    view?.showComments(step, discussionId, discussionThread)
+                },
+                onError = {
+                    view?.showComments(step, discussionId, null)
+                }
+            )
     }
 
     /**
