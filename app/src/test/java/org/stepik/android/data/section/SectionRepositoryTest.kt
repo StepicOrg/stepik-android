@@ -34,7 +34,7 @@ class SectionRepositoryTest {
 
         whenever(sectionCacheDataSource.getSections(sectionId)) doReturn Single.just(listOf(section))
         whenever(sectionCacheDataSource.saveSections(any())) doReturn Completable.complete()
-        whenever(sectionRemoteDataSource.getSectionsRx(any())) doReturn Single.just(emptyList())
+        whenever(sectionRemoteDataSource.getSections(any())) doReturn Single.just(emptyList())
 
         sectionRepository
             .getSection(sectionId, primarySourceType = DataSourceType.CACHE)
@@ -52,7 +52,7 @@ class SectionRepositoryTest {
         val section = Section(id = sectionId)
 
         whenever(sectionCacheDataSource.getSections(sectionId)) doReturn Single.just(listOf(section))
-        whenever(sectionRemoteDataSource.getSectionsRx(sectionId)) doReturn Single.error(IOException(""))
+        whenever(sectionRemoteDataSource.getSections(sectionId)) doReturn Single.error(IOException(""))
 
         sectionRepository
             .getSection(sectionId, primarySourceType = DataSourceType.REMOTE)
@@ -72,7 +72,7 @@ class SectionRepositoryTest {
 
         whenever(sectionCacheDataSource.getSections(sectionId)) doReturn Single.just(emptyList())
         whenever(sectionCacheDataSource.saveSections(sectionList)) doReturn Completable.complete()
-        whenever(sectionRemoteDataSource.getSectionsRx(sectionId)) doReturn Single.just(sectionList)
+        whenever(sectionRemoteDataSource.getSections(sectionId)) doReturn Single.just(sectionList)
 
         sectionRepository
             .getSection(sectionId)
@@ -96,8 +96,8 @@ class SectionRepositoryTest {
 
         whenever(sectionCacheDataSource.getSections(*sectionsIds)) doReturn Single.just(cacheList)
         whenever(sectionCacheDataSource.saveSections(remoteList)) doReturn Completable.complete()
-        whenever(sectionRemoteDataSource.getSectionsRx(*sectionsIds)) doReturn Single.just(emptyList())
-        whenever(sectionRemoteDataSource.getSectionsRx(sectionsIds[1])) doReturn Single.just(remoteList)
+        whenever(sectionRemoteDataSource.getSections(*sectionsIds)) doReturn Single.just(emptyList())
+        whenever(sectionRemoteDataSource.getSections(sectionsIds[1])) doReturn Single.just(remoteList)
 
         sectionRepository
             .getSections(*sectionsIds)

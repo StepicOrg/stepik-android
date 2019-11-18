@@ -132,7 +132,7 @@ constructor(
     private fun getSection(sectionId: Long): Section? {
         var section: Section? = databaseFacade.getSectionById(sectionId)
         if (section == null) {
-            section = sectionsRemoteDataSource.getSections(sectionId).execute()?.body()?.sections?.firstOrNull()
+            section = sectionsRemoteDataSource.getSections(sectionId).blockingGet().firstOrNull()
         }
         return section
     }
