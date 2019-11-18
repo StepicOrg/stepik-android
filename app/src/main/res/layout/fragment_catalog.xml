@@ -8,9 +8,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <include
-        android:id="@+id/appBarLayout"
-        layout="@layout/view_centered_appbar"/>
+    <include layout="@layout/view_catalog_search_toolbar" />
 
     <FrameLayout
         android:id="@+id/catalogContainer"

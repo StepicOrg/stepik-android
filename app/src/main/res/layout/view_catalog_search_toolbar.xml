@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appBarLayout"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize">
+
+    <include layout="@layout/view_centered_toolbar"/>
+
+    <LinearLayout
+        android:id="@+id/searchViewContainer"
+        android:orientation="horizontal"
+        android:background="@color/old_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ImageView
+            android:id="@+id/backIcon"
+            android:src="?attr/homeAsUpIndicator"
+            android:visibility="gone"
+            android:background="?selectableItemBackgroundBorderless"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/back_button_left_margin"
+            android:layout_marginLeft="@dimen/back_button_left_margin"
+            android:layout_marginRight="@dimen/back_button_right_margin"
+            android:layout_marginEnd="@dimen/back_button_right_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <org.stepic.droid.ui.custom.AutoCompleteSearchView
+            android:id="@+id/searchViewToolbar"
+            android:focusable="false"
+            android:visibility="gone"
+            android:layout_margin="@dimen/search_bar_margin"
+            android:paddingLeft="@dimen/search_bar_inner_padding"
+            android:paddingStart="@dimen/search_bar_inner_padding"
+            android:paddingRight="@dimen/search_bar_inner_padding"
+            android:paddingEnd="@dimen/search_bar_inner_padding"
+            app:closeIcon="@drawable/ic_close_dark"
+            app:searchIcon="@drawable/ic_action_search"
+            app:defaultQueryHint="find_courses_hint"
+            app:queryHint="@string/find_courses_hint"
+            android:background="@drawable/bg_catalog_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/toolbarShadow"
+        android:visibility="gone"
+        layout="@layout/drop_shadow_view" />
+
+</com.google.android.material.appbar.AppBarLayout>
