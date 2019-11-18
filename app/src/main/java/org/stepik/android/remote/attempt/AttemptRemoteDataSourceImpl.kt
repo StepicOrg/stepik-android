@@ -2,7 +2,6 @@ package org.stepik.android.remote.attempt
 
 import io.reactivex.Single
 import io.reactivex.functions.Function
-import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.first
 import org.stepik.android.data.attempt.source.AttemptRemoteDataSource
 import org.stepik.android.model.attempts.Attempt
@@ -14,8 +13,7 @@ import javax.inject.Inject
 class AttemptRemoteDataSourceImpl
 @Inject
 constructor(
-    private val attemptService: AttemptService,
-    private val sharedPreferenceHelper: SharedPreferenceHelper
+    private val attemptService: AttemptService
 ) : AttemptRemoteDataSource {
     private val attemptMapper = Function(AttemptResponse::attempts)
 
@@ -24,8 +22,8 @@ constructor(
             .map(attemptMapper)
             .first()
 
-    override fun getAttemptsForStep(stepId: Long): Single<List<Attempt>> =
-        attemptService.getAttemptsForStep(stepId, userId = sharedPreferenceHelper.profile?.id ?: 0)
+    override fun getAttemptsForStep(stepId: Long, userId: Long): Single<List<Attempt>> =
+        attemptService.getAttemptsForStep(stepId, userId)
             .map(attemptMapper)
 
     override fun getAttempts(vararg attemptIds: Long): Single<List<Attempt>> =

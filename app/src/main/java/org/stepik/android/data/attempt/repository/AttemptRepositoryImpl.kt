@@ -14,8 +14,8 @@ constructor(
     override fun createAttemptForStep(stepId: Long): Single<Attempt> =
         attemptRemoteDataSource.createAttemptForStep(stepId)
 
-    override fun getAttemptsForStep(stepId: Long): Single<List<Attempt>> =
-        attemptRemoteDataSource.getAttemptsForStep(stepId)
+    override fun getAttemptsForStep(stepId: Long, userId: Long): Single<List<Attempt>> =
+        attemptRemoteDataSource.getAttemptsForStep(stepId, userId)
 
     override fun getAttempts(vararg attemptIds: Long): Single<List<Attempt>> =
         attemptRemoteDataSource.getAttempts(*attemptIds)
