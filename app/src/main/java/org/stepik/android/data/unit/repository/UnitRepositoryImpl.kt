@@ -18,7 +18,7 @@ constructor(
 ) : UnitRepository {
     override fun getUnits(vararg unitIds: Long, primarySourceType: DataSourceType): Single<List<Unit>> {
         val remoteSource = unitRemoteDataSource
-            .getUnitsByCourseAndLessonId(*unitIds)
+            .getUnits(*unitIds)
             .doCompletableOnSuccess(unitCacheDataSource::saveUnits)
 
         val cacheSource = unitCacheDataSource
@@ -32,7 +32,7 @@ constructor(
                 cacheSource.flatMap { cachedUnits ->
                     val ids = (unitIds.toList() - cachedUnits.map(Unit::id)).toLongArray()
                     unitRemoteDataSource
-                        .getUnitsByCourseAndLessonId(*ids)
+                        .getUnits(*ids)
                         .doCompletableOnSuccess(unitCacheDataSource::saveUnits)
                         .map { remoteUnits -> cachedUnits + remoteUnits }
                 }
@@ -63,4 +63,7 @@ constructor(
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
         }
     }
+
+    override fun getUnitsByCourseAndLessonId(courseId: Long, lessonId: Long): Single<List<Unit>> =
+        unitRemoteDataSource.getUnitsByCourseAndLessonId(courseId, lessonId)
 }

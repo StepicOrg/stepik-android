@@ -28,8 +28,8 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
 import org.stepik.android.data.recommendation.source.RecommendationRemoteDataSource
-import org.stepik.android.data.unit.source.UnitRemoteDataSource
 import org.stepik.android.domain.rating.repository.RatingRepository
+import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.adaptive.Reaction
 import org.stepik.android.model.adaptive.RecommendationReaction
@@ -45,7 +45,7 @@ constructor(
     @CourseId
     private val courseId: Long,
     private val recommendationRemoteDataSource: RecommendationRemoteDataSource,
-    private val unitRemoteDataSource: UnitRemoteDataSource,
+    private val unitRepository: UnitRepository,
     private val ratingRepository: RatingRepository,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -241,7 +241,7 @@ constructor(
                 AmplitudeAnalytic.Steps.Params.STEP to step.id
         ))
 
-        compositeDisposable += unitRemoteDataSource
+        compositeDisposable += unitRepository
             .getUnitsByCourseAndLessonId(courseId, card.lessonId)
             .flatMapCompletable { units ->
                 val unit = units.firstOrNull()
