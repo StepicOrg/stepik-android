@@ -20,15 +20,15 @@ constructor(
     private val attemptMapper = Function(AttemptResponse::attempts)
 
     override fun createAttemptForStep(stepId: Long): Single<Attempt> =
-        attemptService.createNewAttemptReactive(AttemptRequest(stepId))
+        attemptService.createNewAttempt(AttemptRequest(stepId))
             .map(attemptMapper)
             .first()
 
     override fun getAttemptsForStep(stepId: Long): Single<List<Attempt>> =
-        attemptService.getExistingAttemptsReactive(stepId, sharedPreferenceHelper.profile?.id ?: 0)
+        attemptService.getAttemptsForStep(stepId, userId = sharedPreferenceHelper.profile?.id ?: 0)
             .map(attemptMapper)
 
     override fun getAttempts(vararg attemptIds: Long): Single<List<Attempt>> =
-        attemptService.getExistingAttemptsReactive(attemptIds)
+        attemptService.getAttemptsForStep(attemptIds)
             .map(attemptMapper)
 }

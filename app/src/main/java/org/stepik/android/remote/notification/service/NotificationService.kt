@@ -16,7 +16,7 @@ import retrofit2.http.Query
 
 interface NotificationService {
     @PUT("api/notifications/{id}")
-    fun putNotificationReactive(
+    fun putNotification(
         @Path("id") notificationId: Long,
         @Body notificationRequest: NotificationRequest
     ): Completable

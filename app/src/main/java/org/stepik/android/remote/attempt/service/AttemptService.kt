@@ -10,11 +10,11 @@ import retrofit2.http.Query
 
 interface AttemptService {
     @POST("api/attempts")
-    fun createNewAttemptReactive(@Body attemptRequest: AttemptRequest): Single<AttemptResponse>
+    fun createNewAttempt(@Body attemptRequest: AttemptRequest): Single<AttemptResponse>
 
     @GET("api/attempts")
-    fun getExistingAttemptsReactive(@Query("step") stepId: Long, @Query("user") userId: Long): Single<AttemptResponse>
+    fun getAttemptsForStep(@Query("step") stepId: Long, @Query("user") userId: Long): Single<AttemptResponse>
 
     @GET("api/attempts")
-    fun getExistingAttemptsReactive(@Query("ids[]") ids: LongArray): Single<AttemptResponse>
+    fun getAttemptsForStep(@Query("ids[]") ids: LongArray): Single<AttemptResponse>
 }

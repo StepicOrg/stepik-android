@@ -21,7 +21,7 @@ constructor(
         Completable.concat(notificationIds.map { id ->
             val notification = Notification()
             notification.isUnread = !isRead
-            notificationService.putNotificationReactive(id, NotificationRequest(notification))
+            notificationService.putNotification(id, NotificationRequest(notification))
         })
 
     override fun getNotificationsResponse(notificationCategory: NotificationCategory, page: Int): Single<NotificationResponse> {

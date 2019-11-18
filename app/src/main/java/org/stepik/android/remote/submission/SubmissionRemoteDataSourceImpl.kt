@@ -20,19 +20,19 @@ constructor(
     private val submissionMapper = Function(SubmissionResponse::submissions)
 
     override fun createSubmission(submission: Submission): Single<Submission> =
-        submissionService.createNewSubmissionReactive(SubmissionRequest(submission))
+        submissionService.createNewSubmission(SubmissionRequest(submission))
             .map(submissionMapper)
             .first()
 
     override fun getSubmissionsForAttempt(attemptId: Long): Single<List<Submission>> =
-        submissionService.getExistingSubmissionsReactive(attemptId)
+        submissionService.getSubmissions(attemptId)
             .map(submissionMapper)
 
     override fun getSubmissionsForStep(stepId: Long, userId: Long?, page: Int): Single<PagedList<Submission>> =
         if (userId == null) {
-            submissionService.getExistingSubmissionsForStepReactive(stepId, page)
+            submissionService.getSubmissions(stepId, page)
         } else {
-            submissionService.getExistingSubmissionsForStepReactive(stepId, userId, page)
+            submissionService.getSubmissions(stepId, userId, page)
         }
             .map { it.toPagedList(submissionMapper::apply) }
 }

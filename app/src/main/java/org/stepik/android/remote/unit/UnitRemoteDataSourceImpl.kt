@@ -20,7 +20,7 @@ constructor(
     override fun getUnitsByCourseAndLessonId(vararg unitIds: Long): Single<List<Unit>> =
         unitIds
             .chunkedSingleMap { ids ->
-                unitService.getUnitsRx(ids)
+                unitService.getUnits(ids)
                     .map(unitResponseMapper)
             }
 

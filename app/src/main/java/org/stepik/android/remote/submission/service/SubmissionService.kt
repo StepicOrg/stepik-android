@@ -10,23 +10,23 @@ import retrofit2.http.Query
 
 interface SubmissionService {
     @POST("api/submissions")
-    fun createNewSubmissionReactive(
+    fun createNewSubmission(
         @Body submissionRequest: SubmissionRequest
     ): Single<SubmissionResponse>
 
     @GET("api/submissions?order=desc")
-    fun getExistingSubmissionsReactive(
+    fun getSubmissions(
         @Query("attempt") attemptId: Long
     ): Single<SubmissionResponse>
 
     @GET("api/submissions?order=desc")
-    fun getExistingSubmissionsForStepReactive(
+    fun getSubmissions(
         @Query("step") stepId: Long,
         @Query("page") page: Int
     ): Single<SubmissionResponse>
 
     @GET("api/submissions?order=desc")
-    fun getExistingSubmissionsForStepReactive(
+    fun getSubmissions(
         @Query("step") stepId: Long,
         @Query("user") user: Long,
         @Query("page") page: Int

@@ -82,7 +82,7 @@ abstract class AuthModule {
             converterFactory: Converter.Factory
         ): OAuthService =
             createAuthService(
-                Credentials.basic(config.getOAuthClientId(TokenType.social), config.getOAuthClientSecret(TokenType.social)),
+                Credentials.basic(config.getOAuthClientId(TokenType.SOCIAL), config.getOAuthClientSecret(TokenType.SOCIAL)),
                 userAgentProvider.provideUserAgent(),
                 config.baseUrl,
                 converterFactory
@@ -99,8 +99,8 @@ abstract class AuthModule {
         ): OAuthService =
             createAuthService(
                 Credentials.basic(
-                    config.getOAuthClientId(TokenType.loginPassword),
-                    config.getOAuthClientSecret(TokenType.loginPassword)
+                    config.getOAuthClientId(TokenType.LOGIN_PASSWORD),
+                    config.getOAuthClientSecret(TokenType.LOGIN_PASSWORD)
                 ),
                 userAgentProvider.provideUserAgent(),
                 config.baseUrl,

@@ -52,20 +52,20 @@ private constructor() : Config {
     private val supportEmail: String? = null
 
     override fun getOAuthClientId(type: TokenType) = when (type) {
-        TokenType.social -> oauthClientIdSocial
-        TokenType.loginPassword -> oauthClientId
+        TokenType.SOCIAL -> oauthClientIdSocial
+        TokenType.LOGIN_PASSWORD -> oauthClientId
     }
 
     override fun getBaseUrl() = apiHostUrl
 
     override fun getOAuthClientSecret(type: TokenType) = when (type) {
-        TokenType.social -> oauthClientSecretSocial
-        TokenType.loginPassword -> oauthClientSecret
+        TokenType.SOCIAL -> oauthClientSecretSocial
+        TokenType.LOGIN_PASSWORD -> oauthClientSecret
     }
 
     override fun getGrantType(type: TokenType) = when (type) {
-        TokenType.social -> grantTypeSocial
-        TokenType.loginPassword -> grantType
+        TokenType.SOCIAL -> grantTypeSocial
+        TokenType.LOGIN_PASSWORD -> grantType
     }
 
     override fun getRefreshGrantType() = refreshGrantType

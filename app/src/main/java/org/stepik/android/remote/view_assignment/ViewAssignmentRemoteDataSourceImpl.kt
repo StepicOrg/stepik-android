@@ -13,5 +13,5 @@ constructor(
     private val viewAssignmentService: ViewAssignmentService
 ) : ViewAssignmentRemoteDataSource  {
     override fun createViewAssignment(viewAssignment: ViewAssignment): Completable =
-        viewAssignmentService.postViewedReactive(ViewAssignmentRequest(viewAssignment))
+        viewAssignmentService.postViewed(ViewAssignmentRequest(viewAssignment))
 }

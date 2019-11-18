@@ -35,7 +35,7 @@ interface OAuthService {
     ): Single<OAuthResponse>
 
     @FormUrlEncoded
-    @POST("/oauth2/social-token/")
+    @POST("/oauth2/SOCIAL-token/")
     fun getTokenByNativeCode(
         @Field("provider") providerName: String,
         @Field("code") providerCode: String,

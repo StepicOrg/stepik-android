@@ -13,7 +13,7 @@ constructor(
     private val lastStepService: LastStepService
 ) : LastStepRemoteDataSource {
     override fun getLastStep(id: String): Maybe<LastStep> =
-        lastStepService.getLastStepResponse(id)
+        lastStepService.getLastStep(id)
             .mapNotNull { response ->
                 response
                     .lastSteps

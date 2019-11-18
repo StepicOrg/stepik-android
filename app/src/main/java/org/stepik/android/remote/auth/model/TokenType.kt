@@ -1,5 +1,5 @@
 package org.stepik.android.remote.auth.model
 
 enum class TokenType {
-    social, loginPassword
+    SOCIAL, LOGIN_PASSWORD
 }

@@ -63,7 +63,7 @@ constructor(
 
     override fun authWithLoginPassword(login: String, password: String): Single<OAuthResponse> =
         authService
-            .authWithLoginPassword(config.getGrantType(TokenType.loginPassword), URLEncoder.encode(login), URLEncoder.encode(password))
+            .authWithLoginPassword(config.getGrantType(TokenType.LOGIN_PASSWORD), URLEncoder.encode(login), URLEncoder.encode(password))
             .doOnSuccess { saveResponse(it, isSocial = false) }
 
     override fun authWithNativeCode(code: String, type: SocialManager.SocialType, email: String?): Single<OAuthResponse> =
@@ -71,7 +71,7 @@ constructor(
             .getTokenByNativeCode(
                 type.identifier,
                 code,
-                config.getGrantType(TokenType.social),
+                config.getGrantType(TokenType.SOCIAL),
                 config.redirectUri,
                 if (type.needUseAccessTokenInsteadOfCode()) ACCESS_TOKEN else null,
                 email
@@ -80,7 +80,7 @@ constructor(
 
     override fun authWithCode(code: String): Single<OAuthResponse> =
         socialAuthService
-            .getTokenByCode(config.getGrantType(TokenType.social), code, config.redirectUri)
+            .getTokenByCode(config.getGrantType(TokenType.SOCIAL), code, config.redirectUri)
             .doOnSuccess { saveResponse(it, isSocial = true) }
 
     override fun createAccount(credentials: RegistrationCredentials): Completable =

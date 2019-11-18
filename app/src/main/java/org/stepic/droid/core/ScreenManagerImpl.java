@@ -721,7 +721,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void loginWithSocial(FragmentActivity activity, ISocialType type) {
         String socialIdentifier = type.getIdentifier();
-        String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.social) + "&response_type=code");
+        String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.SOCIAL) + "&response_type=code");
         Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
         activity.startActivity(intent);
