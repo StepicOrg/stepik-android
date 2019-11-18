@@ -6,8 +6,8 @@ import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.di.mainscreen.MainScreenScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.data.email_address.source.EmailAddressRemoteDataSource
 import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource
+import org.stepik.android.domain.email_address.repository.EmailAddressRepository
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -18,7 +18,7 @@ class ProfileMainFeedPresenter
 @Inject constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val mainHandler: MainHandler,
-    private val emailAddressRemoteDataSource: EmailAddressRemoteDataSource,
+    private val emailAddressRepository: EmailAddressRepository,
     private val userProfileRemoteDataSource: UserProfileRemoteDataSource,
     private val threadPoolExecutor: ThreadPoolExecutor,
     analytic: Analytic,
@@ -63,7 +63,7 @@ class ProfileMainFeedPresenter
                     val emailIds = tempProfile.emailAddresses
                     if (emailIds?.isNotEmpty() == true) {
                         try {
-                            emailAddressRemoteDataSource.getEmailAddressesResponse(*emailIds).blockingGet().emailAddresses.let {
+                            emailAddressRepository.getEmailAddresses(*emailIds).blockingGet().let {
                                 if (it.isNotEmpty()) {
                                     sharedPreferenceHelper.storeEmailAddresses(it)
                                 }

@@ -31,8 +31,4 @@ constructor(
     override fun removeEmailAddress(emailId: Long): Completable =
         emailAddressService
             .removeEmailAddress(emailId)
-
-    override fun getEmailAddressesResponse(vararg emailIds: Long): Single<EmailAddressResponse> =
-        emailAddressService
-            .getEmailAddresses(emailIds)
 }
