@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_catalog.*
+import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -106,7 +107,7 @@ class CatalogFragment : FragmentBase(),
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
-        searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
+        searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
             setupSearchBar()
         }
@@ -186,16 +187,16 @@ class CatalogFragment : FragmentBase(),
         if (android.os.Build.VERSION.SDK_INT < 21) {
             toolbarShadow.isVisible = true
         }
-        searchView.isVisible = true
-        searchView.onActionViewExpanded()
-        searchView.clearFocus()
-        searchView.setIconifiedByDefault(false)
-        setupSearchView(searchView)
-        searchView.setFocusCallback(this)
+        searchViewToolbar.isVisible = true
+        searchViewToolbar.onActionViewExpanded()
+        searchViewToolbar.clearFocus()
+        searchViewToolbar.setIconifiedByDefault(false)
+        setupSearchView(searchViewToolbar)
+        searchViewToolbar.setFocusCallback(this)
         backIcon.setOnClickListener {
-            searchView.onActionViewCollapsed()
-            searchView.onActionViewExpanded()
-            searchView.clearFocus()
+            searchViewToolbar.onActionViewCollapsed()
+            searchViewToolbar.onActionViewExpanded()
+            searchViewToolbar.clearFocus()
         }
     }
 
@@ -207,15 +208,15 @@ class CatalogFragment : FragmentBase(),
                 searchEventLogged = true
             }
             searchIcon.setImageResource(0)
-            (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
+            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
             searchViewContainer.setBackgroundResource(R.color.white)
-            searchView.setBackgroundResource(R.color.white)
+            searchViewToolbar.setBackgroundResource(R.color.white)
         } else {
             searchIcon.setImageResource(R.drawable.ic_action_search)
             val margin = resources.getDimension(R.dimen.search_bar_margin).toInt()
-            (searchView.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
+            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
             searchViewContainer.setBackgroundResource(R.color.old_cover)
-            searchView.setBackgroundResource(R.drawable.bg_catalog_search_bar)
+            searchViewToolbar.setBackgroundResource(R.drawable.bg_catalog_search_bar)
         }
     }
 

@@ -5,11 +5,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_courses.*
+import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.experiments.CatalogSearchSplitTest
@@ -117,6 +119,10 @@ class CourseSearchFragment: CourseListFragmentBase() {
             toolbarShadow.isVisible = true
         }
         searchViewToolbar.isVisible = true
+        searchViewContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        searchViewToolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        searchIcon.setImageResource(0)
+        (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setIconifiedByDefault(false)
         backIcon.setOnClickListener {
