@@ -19,7 +19,7 @@ constructor(
     override fun getSections(vararg sectionIds: Long): Single<List<Section>> =
         sectionIds
             .chunkedSingleMap { ids ->
-                sectionService.getSectionsRx(ids)
+                sectionService.getSections(ids)
                     .map(sectionResponseMapper)
             }
 }
