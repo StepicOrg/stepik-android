@@ -17,7 +17,6 @@ import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
-import org.stepik.android.view.injection.network.NetworkModule
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.splash.SplashComponent
@@ -76,6 +75,7 @@ import org.stepik.android.view.injection.feedback.FeedbackComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
+import org.stepik.android.view.injection.network.NetworkModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
@@ -105,7 +105,6 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
     ],
     modules = [
         AppCoreModule::class,
-        RepositoryModule::class,
         AnalyticModule::class,
         AppFiltersModule::class,
         GoogleModule::class,
