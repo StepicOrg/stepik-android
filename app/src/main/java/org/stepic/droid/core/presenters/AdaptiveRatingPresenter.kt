@@ -17,7 +17,7 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addDisposable
-import org.stepik.android.data.rating.source.RatingRemoteDataSource
+import org.stepik.android.domain.rating.repository.RatingRepository
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.adaptive.RatingItem
 import retrofit2.HttpException
@@ -28,7 +28,7 @@ class AdaptiveRatingPresenter
 constructor(
     @CourseId
     private val courseId: Long,
-    private val ratingRemoteDataSource: RatingRemoteDataSource,
+    private val ratingRepository: RatingRepository,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -65,7 +65,7 @@ constructor(
         val left = BiFunction<Any, Any, Any> { a, _ -> a}
 
         RATING_PERIODS.forEachIndexed { pos, period ->
-            compositeDisposable addDisposable resolveUsers(ratingRemoteDataSource.getRating(courseId, ITEMS_PER_PAGE, period))
+            compositeDisposable addDisposable resolveUsers(ratingRepository.getRating(courseId, ITEMS_PER_PAGE, period))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .doOnError(this::onError)

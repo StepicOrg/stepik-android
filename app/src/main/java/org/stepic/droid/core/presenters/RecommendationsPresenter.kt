@@ -27,9 +27,9 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
-import org.stepik.android.data.rating.source.RatingRemoteDataSource
 import org.stepik.android.data.recommendation.source.RecommendationRemoteDataSource
 import org.stepik.android.data.unit.source.UnitRemoteDataSource
+import org.stepik.android.domain.rating.repository.RatingRepository
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.adaptive.Reaction
 import org.stepik.android.model.adaptive.RecommendationReaction
@@ -46,7 +46,7 @@ constructor(
     private val courseId: Long,
     private val recommendationRemoteDataSource: RecommendationRemoteDataSource,
     private val unitRemoteDataSource: UnitRemoteDataSource,
-    private val ratingRemoteDataSource: RatingRemoteDataSource,
+    private val ratingRepository: RatingRepository,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -276,10 +276,10 @@ constructor(
 
     private fun fetchExpFromAPI() {
         compositeDisposable.add(
-            ratingRemoteDataSource.restoreRating(courseId)
+            ratingRepository.restoreRating(courseId)
                     .subscribeOn(backgroundScheduler)
                     .map {
-                        databaseFacade.syncExp(courseId, it.exp)
+                        databaseFacade.syncExp(courseId, exp)
                     }
                     .observeOn(mainScheduler)
                     .subscribe({
@@ -310,5 +310,5 @@ constructor(
     }
 
     private fun syncRating() = Single.fromCallable { databaseFacade.getExpForCourse(courseId) }
-            .flatMap { localExp -> ratingRemoteDataSource.putRating(courseId, localExp).toSingle { localExp } }
+            .flatMap { localExp -> ratingRepository.putRating(courseId, localExp).toSingle { localExp } }
 }

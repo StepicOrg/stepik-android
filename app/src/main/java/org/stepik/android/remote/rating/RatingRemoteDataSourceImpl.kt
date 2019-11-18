@@ -22,8 +22,8 @@ constructor(
     override fun putRating(courseId: Long, exp: Long): Completable =
         ratingService.putRating(RatingRequest(exp, courseId, getAccessToken()))
 
-    override fun restoreRating(courseId: Long): Single<RatingRestoreResponse> =
-        ratingService.restoreRating(courseId, getAccessToken())
+    override fun restoreRating(courseId: Long): Single<Long> =
+        ratingService.restoreRating(courseId, getAccessToken()).map(RatingRestoreResponse::exp)
 
     private fun getCurrentUserId(): Long =
         sharedPreferenceHelper.profile?.id ?: 0
