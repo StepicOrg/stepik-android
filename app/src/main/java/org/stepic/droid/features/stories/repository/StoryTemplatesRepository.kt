@@ -5,7 +5,7 @@ import io.reactivex.Single
 import org.stepik.android.model.StoryTemplate
 
 interface StoryTemplatesRepository {
-    fun getStoryTemplates(): Single<List<StoryTemplate>>
+    fun getStoryTemplates(lang: String): Single<List<StoryTemplate>>
 
     fun getViewedStoriesIds(): Single<Set<Long>>
 

@@ -1,14 +1,12 @@
 package org.stepic.droid.features.stories.repository
 
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.storage.dao.IDao
 import org.stepik.android.data.stories.source.StoryTemplatesRemoteDataSource
 import org.stepik.android.model.StoryTemplate
-import org.stepik.android.remote.stories.model.StoryTemplatesResponse
 import javax.inject.Inject
 
 @AppSingleton
@@ -22,26 +20,13 @@ constructor(
         const val STORY_TEMPLATES_VERSION = 1
     }
 
-    override fun getStoryTemplates(): Single<List<StoryTemplate>> =
-        getStoryTemplatesByPage(1)
-            .toList()
-            .map { responses ->
-                responses.asSequence()
-                    .flatMap { it.storyTemplates.asSequence() }
+    override fun getStoryTemplates(lang: String): Single<List<StoryTemplate>> =
+        storyTemplatesRemoteRemoteDataSource.getStoryTemplates(lang)
+            .map { storyTemplates ->
+                storyTemplates.asSequence()
                     .filter { template -> template.version <= STORY_TEMPLATES_VERSION }
                     .sortedBy(StoryTemplate::position)
                     .toList()
-            }
-
-    private fun getStoryTemplatesByPage(page: Int): Observable<StoryTemplatesResponse> =
-        storyTemplatesRemoteRemoteDataSource.getStoryTemplates(page)
-            .concatMap {
-                val templatesObservable = Observable.just(it)
-                if (it.meta.hasNext) {
-                    templatesObservable.concatWith(getStoryTemplatesByPage(it.meta.page + 1))
-                } else {
-                    templatesObservable
-                }
             }
 
     override fun getViewedStoriesIds(): Single<Set<Long>> =
