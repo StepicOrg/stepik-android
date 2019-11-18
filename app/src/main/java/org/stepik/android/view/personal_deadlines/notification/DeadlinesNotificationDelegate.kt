@@ -124,7 +124,7 @@ constructor(
         if (courseId == null) return null
         var course: Course? = databaseFacade.getCourseById(courseId)
         if (course == null) {
-            course = courseRemoteDataSource.getCourses(courseId).execute()?.body()?.courses?.firstOrNull()
+            course = courseRemoteDataSource.getCoursesReactive(courseId).blockingGet().firstOrNull()
         }
         return course
     }

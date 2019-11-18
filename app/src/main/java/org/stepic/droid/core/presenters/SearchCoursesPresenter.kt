@@ -65,7 +65,7 @@ class SearchCoursesPresenter
                             view?.showEmptyCourses()
                         }
                     } else {
-                        val courses = courseRemoteDataSource.getCourses(1, *courseIdsForSearch).execute().body()?.courses //FIXME: WARNING, here may pagination not working for query with ids[]
+                        val courses = courseRemoteDataSource.getCoursesReactive(1, *courseIdsForSearch).blockingGet()?.courses //FIXME: WARNING, here may pagination not working for query with ids[]
                         if (courses == null || courses.isEmpty()) {
                             mainHandler.post { view?.showEmptyCourses() }
                         } else {
