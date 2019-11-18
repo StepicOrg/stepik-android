@@ -52,11 +52,8 @@ fun Intent.getDiscussionIdFromDeepLink(): Long? {
     return HtmlHelper.parseIdFromSlug(path)
 }
 
-fun Intent.getThreadTypeFromDeepLink(): String? {
-    val data = this.data ?: return null
-
-    return data.getQueryParameter(QUERY_PARAMETER_THREAD) ?: null
-}
+fun Intent.getThreadTypeFromDeepLink(): String? =
+    this.data?.getQueryParameter(QUERY_PARAMETER_DISCUSSION)
 
 fun Intent.getLessonDeepLinkData(): LessonDeepLinkData? =
     getLessonIdFromDeepLink()
