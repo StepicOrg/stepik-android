@@ -14,8 +14,8 @@ import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepik.android.data.user.source.UserRemoteDataSource
-import org.stepik.android.data.user_activity.source.UserActivityRemoteDataSource
 import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource
+import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -26,7 +26,7 @@ constructor(
     private val threadPoolExecutor: ThreadPoolExecutor,
     analytic: Analytic,
     private val mainHandler: MainHandler,
-    private val userActivityRemoteDataSource: UserActivityRemoteDataSource,
+    private val userActivityRepository: UserActivityRepository,
     private val userRemoteDataSource: UserRemoteDataSource,
     private val userProfileRemoteDataSource: UserProfileRemoteDataSource,
     private val sharedPreferences: SharedPreferenceHelper,
@@ -159,7 +159,7 @@ constructor(
     @WorkerThread
     private fun showStreaks(userId: Long) {
         val pins = try {
-            userActivityRemoteDataSource.getUserActivities(userId).execute().body()?.userActivities?.firstOrNull()?.pins
+            userActivityRepository.getUserActivities(userId).blockingGet().firstOrNull()?.pins
         } catch (exception: Exception) {
             //if we do not have Internet or do not have access to streaks, just do nothing, because streaks is not primary on profile screen
             null

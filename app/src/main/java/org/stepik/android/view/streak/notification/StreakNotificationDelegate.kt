@@ -14,7 +14,7 @@ import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepik.android.data.user_activity.source.UserActivityRemoteDataSource
+import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
@@ -26,7 +26,7 @@ class StreakNotificationDelegate
 constructor(
     private val context: Context,
     private val analytic: Analytic,
-    private val userActivityRemoteDataSource: UserActivityRemoteDataSource,
+    private val userActivityRepository: UserActivityRepository,
     private val screenManager: ScreenManager,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val notificationHelper: NotificationHelper,
@@ -42,12 +42,10 @@ constructor(
             val numberOfStreakNotifications = sharedPreferenceHelper.numberOfStreakNotifications
             if (numberOfStreakNotifications < AppConstants.MAX_NUMBER_OF_NOTIFICATION_STREAK) {
                 try {
-                    val pins: ArrayList<Long> = userActivityRemoteDataSource.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth"))
-                            .execute()
-                            ?.body()
-                            ?.userActivities
-                            ?.firstOrNull()
-                            ?.pins!!
+                    val pins: ArrayList<Long> = userActivityRepository.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth"))
+                        .blockingGet()
+                        ?.firstOrNull()
+                        ?.pins!!
                     val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
                     if (currentStreak <= 0) {
                         analytic.reportEvent(Analytic.Streak.GET_ZERO_STREAK_NOTIFICATION)

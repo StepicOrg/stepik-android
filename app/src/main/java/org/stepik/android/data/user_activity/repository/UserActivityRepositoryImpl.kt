@@ -13,5 +13,5 @@ constructor(
 ) : UserActivityRepository {
 
     override fun getUserActivities(userId: Long): Single<List<UserActivity>> =
-        userActivityRemoteDataSource.getUserActivitiesRx(userId)
+        userActivityRemoteDataSource.getUserActivities(userId)
 }

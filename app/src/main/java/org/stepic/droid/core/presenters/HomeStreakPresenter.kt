@@ -11,7 +11,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.RxOptional
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.unwrapOptional
-import org.stepik.android.data.user_activity.source.UserActivityRemoteDataSource
+import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import javax.inject.Inject
 
 @HomeScope
@@ -22,7 +22,7 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    private val userActivityRemoteDataSource: UserActivityRemoteDataSource,
+    private val userActivityRepository: UserActivityRepository,
     private val sharedPreferences: SharedPreferenceHelper
 ): PresenterBase<HomeStreakView>() {
     private val compositeDisposable = CompositeDisposable()
@@ -31,7 +31,7 @@ constructor(
         compositeDisposable.add(Observable
                 .fromCallable { RxOptional(sharedPreferences.profile?.id) }
                 .unwrapOptional()
-                .flatMapSingle { userActivityRemoteDataSource.getUserActivitiesRx(it) }
+                .flatMapSingle { userActivityRepository.getUserActivities(it) }
                 .map { RxOptional(it.firstOrNull()?.pins) }
                 .map { optional ->
                     optional.map { StepikUtil.getCurrentStreak(it) }
