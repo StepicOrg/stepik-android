@@ -3,7 +3,9 @@ package org.stepik.android.data.course_list.repository
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.model.CourseListType
+import org.stepic.droid.util.PagedList
 import org.stepik.android.data.course_list.source.CourseListCacheDataSource
+import org.stepik.android.data.course_list.source.CourseListRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.model.Course
@@ -12,15 +14,17 @@ import javax.inject.Inject
 class CourseListRepositoryImpl
 @Inject
 constructor(
-    private val courseListCacheDataSource: CourseListCacheDataSource
+    private val courseListCacheDataSource: CourseListCacheDataSource,
+    private val courseListRemoteDataSource: CourseListRemoteDataSource
 ) : CourseListRepository {
-    override fun getCourseList(courseListType: CourseListType, primarySourceType: DataSourceType): Single<List<Course>> {
-        if (primarySourceType != DataSourceType.CACHE) {
-            throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }
+    override fun getCourseList(courseListType: CourseListType, page: Int, lang: String, sourceType: DataSourceType): Single<PagedList<Course>> =
+        when (sourceType) {
+            DataSourceType.REMOTE ->
+                courseListRemoteDataSource.getPopularCourses(page, lang)
 
-        return courseListCacheDataSource.getCourseList(courseListType)
-    }
+            DataSourceType.CACHE ->
+                courseListCacheDataSource.getCourseList(courseListType)
+        }
 
     override fun addCourseToList(courseListType: CourseListType, courseId: Long): Completable =
         courseListCacheDataSource.addCourseToList(courseListType, courseId)

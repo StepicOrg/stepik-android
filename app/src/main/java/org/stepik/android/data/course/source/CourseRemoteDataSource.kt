@@ -7,5 +7,4 @@ import org.stepik.android.remote.course.model.CourseResponse
 interface CourseRemoteDataSource {
     fun getCoursesReactive(page: Int, vararg courseIds: Long): Single<CourseResponse>
     fun getCoursesReactive(vararg courseIds: Long): Single<List<Course>>
-    fun getPopularCourses(page: Int): Single<CourseResponse>
 }

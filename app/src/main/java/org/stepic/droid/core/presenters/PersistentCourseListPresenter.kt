@@ -21,6 +21,7 @@ import org.stepic.droid.util.RWLocks
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
+import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
@@ -42,6 +43,7 @@ constructor(
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
     private val courseRemoteDataSource: CourseRemoteDataSource,
+    private val courseListRepository: CourseListRepository,
     private val userCoursesRepository: UserCoursesRepository,
 
     private val progressRepository: ProgressRepository,
@@ -120,9 +122,14 @@ constructor(
         while (hasNextPage.get()) {
             val coursesFromInternet: List<Course>? = try {
                 if (courseType == CourseListType.FEATURED) {
-                    val response = courseRemoteDataSource.getPopularCourses(currentPage.get()).blockingGet()
-                    handleMeta(response.meta)
-                    response.courses
+                    val response = courseListRepository.getCourseList(
+                        CourseListType.FEATURED,
+                        currentPage.get(),
+                        getLang(),
+                        sourceType = DataSourceType.REMOTE
+                    ).blockingGet()
+                    handleMeta(response)
+                    response
                 } else {
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
@@ -300,5 +307,10 @@ constructor(
 
     fun loadMore(courseType: CourseListType) {
         downloadData(courseType, isRefreshing = false, isLoadMore = true)
+    }
+
+    private fun getLang(): String {
+        val enumSet = sharedPreferenceHelper.filterForFeatured
+        return enumSet.iterator().next().language
     }
 }

@@ -2,7 +2,6 @@ package org.stepik.android.remote.course.source
 
 import io.reactivex.Single
 import io.reactivex.functions.Function
-import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.remote.base.chunkedSingleMap
@@ -13,7 +12,6 @@ import javax.inject.Inject
 class CourseRemoteDataSourceImpl
 @Inject
 constructor(
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val courseService: CourseService
 ) : CourseRemoteDataSource {
     private val courseResponseMapper =
@@ -34,10 +32,4 @@ constructor(
                 courseService.getCoursesReactive(ids)
                     .map(courseResponseMapper)
             }
-
-    override fun getPopularCourses(page: Int): Single<CourseResponse> {
-        val enumSet = sharedPreferenceHelper.filterForFeatured
-        val lang = enumSet.iterator().next().language
-        return courseService.getPopularCourses(page, lang)
-    }
 }

@@ -11,7 +11,4 @@ interface CourseService {
 
     @GET("api/courses")
     fun getCoursesReactive(@Query("ids[]") ids: LongArray): Single<CourseResponse>
-
-    @GET("api/courses?exclude_ended=true&is_public=true&order=-activity")
-    fun getPopularCourses(@Query("page") page: Int, @Query("language") language: String): Single<CourseResponse>
 }
