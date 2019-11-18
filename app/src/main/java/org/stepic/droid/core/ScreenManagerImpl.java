@@ -602,6 +602,18 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void openSubmissionInWeb(Context context, long stepId, long submissionId) {
+        String url =
+                config.getBaseUrl() +
+                        "/submissions/" + stepId +
+                        "/" + submissionId +
+                        "/?from_mobile_app=true"
+                ;
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
+        context.startActivity(intent);
+    }
+
+    @Override
     public void openSyllabusInWeb(Context context, long courseId) {
         openCourseTabInWeb(context, courseId, CourseScreenTab.SYLLABUS.getPath(), null);
     }

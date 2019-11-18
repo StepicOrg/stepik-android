@@ -35,6 +35,7 @@ import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
+import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -172,6 +173,8 @@ class StepFragment : Fragment(), StepView,
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.step_menu, menu)
+        menu.findItem(R.id.menu_item_submissions)
+            ?.isVisible = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -179,6 +182,11 @@ class StepFragment : Fragment(), StepView,
         when (item.itemId) {
             R.id.menu_item_share -> {
                 showShareDialog()
+                true
+            }
+
+            R.id.menu_item_submissions -> {
+                showSubmissionsDialog()
                 true
             }
 
@@ -194,6 +202,16 @@ class StepFragment : Fragment(), StepView,
         StepShareDialogFragment
             .newInstance(stepWrapper.step, lessonData.lesson, lessonData.unit)
             .showIfNotExists(supportFragmentManager, StepShareDialogFragment.TAG)
+    }
+
+    private fun showSubmissionsDialog() {
+        val supportFragmentManager = activity
+            ?.supportFragmentManager
+            ?: return
+
+        SubmissionsDialogFragment
+            .newInstance(stepWrapper.step)
+            .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
     }
 
     override fun setState(state: StepView.State) {

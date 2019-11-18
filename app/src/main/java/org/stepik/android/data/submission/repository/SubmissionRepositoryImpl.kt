@@ -2,6 +2,7 @@ package org.stepik.android.data.submission.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.stepic.droid.util.PagedList
 import org.stepik.android.data.submission.source.SubmissionCacheDataSource
 import org.stepik.android.data.submission.source.SubmissionRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -33,8 +34,8 @@ constructor(
                 submissionRemoteDataSource.getSubmissionsForAttempt(attemptId)
         }
 
-    override fun getSubmissionsForStep(stepId: Long): Single<List<Submission>> =
-        submissionRemoteDataSource.getSubmissionsForStep(stepId)
+    override fun getSubmissionsForStep(stepId: Long, userId: Long?, page: Int): Single<PagedList<Submission>> =
+        submissionRemoteDataSource.getSubmissionsForStep(stepId, userId, page)
 
     override fun removeSubmissionsForAttempt(attemptId: Long): Completable =
         submissionCacheDataSource.removeSubmissionsForAttempt(attemptId)

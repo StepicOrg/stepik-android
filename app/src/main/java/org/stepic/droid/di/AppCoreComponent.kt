@@ -17,7 +17,7 @@ import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
-import org.stepic.droid.di.network.NetworkModule
+import org.stepik.android.view.injection.network.NetworkModule
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.splash.SplashComponent
@@ -83,6 +83,7 @@ import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
 import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
+import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
@@ -183,6 +184,8 @@ interface AppCoreComponent {
     fun downloadComponentBuilder(): DownloadComponent.Builder
 
     fun fontSizeComponentBuilder(): FontSizeComponent.Builder
+
+    fun submissionComponentBuilder(): SubmissionComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

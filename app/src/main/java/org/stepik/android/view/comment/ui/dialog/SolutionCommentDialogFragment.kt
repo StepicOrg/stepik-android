@@ -45,14 +45,20 @@ class SolutionCommentDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "SolutionCommentDialogFragment"
 
-        fun newInstance(step: Step, discussionThread: DiscussionThread, discussionId: Long, attempt: Attempt, submission: Submission): DialogFragment =
+        private const val DISCUSSION_ID_EMPTY = -1L
+        private const val ARG_DISCUSSION_THREAD = "discussion_thread"
+
+        fun newInstance(step: Step, attempt: Attempt, submission: Submission, discussionThread: DiscussionThread? = null, discussionId: Long = DISCUSSION_ID_EMPTY): DialogFragment =
             SolutionCommentDialogFragment()
                 .apply {
                     this.step = step
-                    this.discussionThread = discussionThread
                     this.discussionId = discussionId
                     this.attempt = attempt
                     this.submission = submission
+
+                    if (discussionThread != null) {
+                        arguments?.putParcelable(ARG_DISCUSSION_THREAD, discussionThread)
+                    }
                 }
     }
 
@@ -60,10 +66,11 @@ class SolutionCommentDialogFragment : DialogFragment() {
     lateinit var screenManager: ScreenManager
 
     private var step: Step by argument()
-    private var discussionThread: DiscussionThread by argument()
-    private var discussionId: Long by argument()
     private var attempt: Attempt by argument()
     private var submission: Submission by argument()
+
+    private val discussionThread: DiscussionThread? by lazy { arguments?.getParcelable<DiscussionThread>(ARG_DISCUSSION_THREAD) }
+    private var discussionId: Long by argument()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = Dialog(requireContext(), theme)
@@ -142,7 +149,14 @@ class SolutionCommentDialogFragment : DialogFragment() {
             stepQuizCodeContainer?.updateLayoutParams<ViewGroup.MarginLayoutParams> { topMargin = 0 }
             codeStepLayout?.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
         } else {
-            stepQuizAction.setOnClickListener { screenManager.openDiscussionInWeb(context, step, discussionThread, discussionId) }
+            stepQuizAction.setOnClickListener {
+                val discussionThread = this.discussionThread
+                if (discussionThread != null) {
+                    screenManager.openDiscussionInWeb(context, step, discussionThread, discussionId)
+                } else {
+                    screenManager.openSubmissionInWeb(context, step.id, submission.id)
+                }
+            }
             stepQuizAction.setText(R.string.step_quiz_unsupported_solution_action)
             stepQuizAction.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 bottomMargin = resources.getDimensionPixelOffset(R.dimen.space_normal)
