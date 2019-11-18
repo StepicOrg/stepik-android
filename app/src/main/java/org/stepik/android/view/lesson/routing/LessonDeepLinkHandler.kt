@@ -53,7 +53,7 @@ fun Intent.getDiscussionIdFromDeepLink(): Long? {
 }
 
 fun Intent.getThreadTypeFromDeepLink(): String? =
-    this.data?.getQueryParameter(QUERY_PARAMETER_DISCUSSION)
+    this.data?.getQueryParameter(QUERY_PARAMETER_THREAD)
 
 fun Intent.getLessonDeepLinkData(): LessonDeepLinkData? =
     getLessonIdFromDeepLink()
