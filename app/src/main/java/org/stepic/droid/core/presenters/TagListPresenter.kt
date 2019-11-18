@@ -11,11 +11,13 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepik.android.data.course.source.CourseRemoteDataSource
-import org.stepik.android.data.tags.source.TagsRemoteDataSource
+import org.stepik.android.domain.tags.repository.TagsRepository
 import org.stepik.android.model.Course
-import org.stepik.android.model.Meta
+import org.stepik.android.model.SearchResult
 import org.stepik.android.model.Tag
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -25,9 +27,10 @@ import javax.inject.Inject
 class TagListPresenter
 @Inject
 constructor(
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val tag: Tag,
     private val courseRemoteDataSource: CourseRemoteDataSource,
-    private val tagsRemoteDataSource: TagsRemoteDataSource,
+    private val tagsRepository: TagsRepository,
     private val searchResolver: SearchResolver,
     @MainScheduler
     private val mainScheduler: Scheduler,
@@ -51,11 +54,10 @@ constructor(
             }
             .observeOn(backgroundScheduler)
             .flatMap {
-                tagsRemoteDataSource.getSearchResultsOfTag(it, tag)
+                tagsRepository.getSearchResultsOfTag(it, tag, getLang())
                     .toObservable()
             }
-            .doOnNext { handleMeta(it.meta) }
-            .map { it.searchResultList }
+            .doOnNext { handleMeta(it) }
             .map { searchResolver.getCourseIdsFromSearchResults(it) }
             .flatMap {
                 zipIdsAndCourses(it)
@@ -86,7 +88,7 @@ constructor(
         }
     }
 
-    private fun handleMeta(meta: Meta) {
+    private fun handleMeta(meta: PagedList<SearchResult>) {
         hasNextPage.set(meta.hasNext)
         currentPage.set(meta.page + 1)
     }
@@ -130,5 +132,10 @@ constructor(
     override fun detachView(view: CoursesView) {
         super.detachView(view)
         compositeDisposable.clear()
+    }
+
+    private fun getLang(): String {
+        val enumSet = sharedPreferenceHelper.filterForFeatured
+        return enumSet.iterator().next().language
     }
 }
