@@ -24,6 +24,6 @@ constructor(
                     .map(stepResponseMapper)
             }
 
-    override fun getStepByLessonId(lessonId: Long): Single<StepResponse> =
-        stepService.getStepsByLessonId(lessonId)
+    override fun getStepByLessonId(lessonId: Long): Single<Step> =
+        stepService.getStepsByLessonId(lessonId).map { it.steps.firstOrNull() }
 }

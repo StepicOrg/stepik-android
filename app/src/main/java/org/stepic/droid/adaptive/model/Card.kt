@@ -8,8 +8,8 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.data.step.source.StepRemoteDataSource
 import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Step
@@ -27,7 +27,7 @@ class Card(
     @Inject
     lateinit var lessonRepository: LessonRepository
     @Inject
-    lateinit var stepRemoteDataSource: StepRemoteDataSource
+    lateinit var stepRepository: StepRepository
 
     @Inject
     lateinit var stepQuizInteractor: StepQuizInteractor
@@ -63,10 +63,10 @@ class Card(
         error = null
 
         if (stepSubscription == null || stepSubscription?.isDisposed == true && step == null) {
-            stepSubscription = stepRemoteDataSource.getStepByLessonId(lessonId)// api.getStepsByLessonId(lessonId)
+            stepSubscription = stepRepository.getStepByLessonId(lessonId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
-                    .subscribe({ setStep(it.steps.firstOrNull()) }, { onError(it) })
+                    .subscribe({ setStep(it) }, { onError(it) })
         } else {
             setStep(step)
         }
