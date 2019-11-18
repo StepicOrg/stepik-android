@@ -5,14 +5,14 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.model.ViewedNotification
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepik.android.data.notification.source.NotificationRemoteDataSource
+import org.stepik.android.domain.notification.repository.NotificationRepository
 import javax.inject.Inject
 
 @AppSingleton
 class NotificationsViewPusher
 @Inject
 constructor(
-    private val notificationRemoteDataSource: NotificationRemoteDataSource,
+    private val notificationRepository: NotificationRepository,
     private val databaseFacade: DatabaseFacade,
     @BackgroundScheduler
     private val scheduler:  Scheduler
@@ -20,7 +20,7 @@ constructor(
     fun pushToViewedNotificationsQueue(notificationId: Long) {
         if (notificationId == 0L) return
 
-        notificationRemoteDataSource.putNotifications(notificationId, isRead = true)
+        notificationRepository.putNotifications(notificationId, isRead = true)
                 .subscribeOn(scheduler)
                 .subscribe({}) {
                     databaseFacade.addToViewedNotificationsQueue(ViewedNotification(notificationId))

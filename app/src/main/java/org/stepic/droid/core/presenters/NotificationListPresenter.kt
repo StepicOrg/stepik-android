@@ -25,8 +25,8 @@ import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.not
 import org.stepic.droid.util.substringOrNull
-import org.stepik.android.data.notification.source.NotificationRemoteDataSource
 import org.stepik.android.data.user.source.UserRemoteDataSource
+import org.stepik.android.domain.notification.repository.NotificationRepository
 import org.stepik.android.view.notification.FcmNotificationHandler
 import timber.log.Timber
 import java.util.ArrayList
@@ -43,7 +43,7 @@ class NotificationListPresenter
 @Inject constructor(
     private val threadPoolExecutor: ThreadPoolExecutor,
     private val mainHandler: MainHandler,
-    private val notificationRemoteDataSource: NotificationRemoteDataSource,
+    private val notificationRepository: NotificationRepository,
     private val userRemoteDataSource: UserRemoteDataSource,
 
     @MainScheduler
@@ -122,15 +122,14 @@ class NotificationListPresenter
     @WorkerThread
     private fun getNotificationFromOnePage(notificationCategory: NotificationCategory): Iterable<Notification> {
         Timber.d("loading from page %d", page.get())
-        val notificationResponse = notificationRemoteDataSource.getNotificationsResponse(notificationCategory, page.get()).blockingGet() ?: throw NullPointerException("notifications null body")
-        hasNextPage.set(notificationResponse.meta.hasNext)
-        page.set(notificationResponse.meta.page + 1)
+        val notifications = notificationRepository.getNotifications(notificationCategory, page.get()).blockingGet() ?: throw NullPointerException("notifications null body")
+        hasNextPage.set(notifications.hasNext)
+        page.set(notifications.page + 1)
 
         val baseUrl = config.baseUrl
 
-        var notifications = notificationResponse.notifications
         Timber.d("before filter size is %d", notifications.size)
-        notifications = notifications
+        val filteredNotifications = notifications
                 .filter {
                     it.htmlText?.isNotBlank() ?: false
                 }
@@ -138,7 +137,7 @@ class NotificationListPresenter
         val userIdToNotificationsIndexes = LongSparseArray<MutableList<Int>>()  // userId -> notifications index where avatar should be set
         val userIds = ArraySet<Long>()
 
-        notifications.forEachIndexed { index, notification ->
+        filteredNotifications.forEachIndexed { index, notification ->
             val notificationHtmlText = notification.htmlText ?: ""
             val fixedHtml = notificationHtmlText.replace("href=\"/", "href=\"$baseUrl/")
             notification.htmlText = fixedHtml
@@ -211,7 +210,7 @@ class NotificationListPresenter
     }
 
     fun markAsRead(id: Long) {
-        compositeDisposable += notificationRemoteDataSource
+        compositeDisposable += notificationRepository
             .putNotifications(id, isRead = true)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -254,7 +253,7 @@ class NotificationListPresenter
             view?.onLoadingMarkingAsRead()
             threadPoolExecutor.execute {
                 try {
-                    notificationRemoteDataSource.markNotificationAsRead(notificationCategoryLocal).blockingAwait()
+                    notificationRepository.markNotificationAsRead(notificationCategoryLocal).blockingAwait()
                     notificationsBadgesManager.syncCounter()
                     notificationList.forEach {
                         it.isUnread = false

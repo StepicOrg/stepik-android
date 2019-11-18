@@ -12,8 +12,7 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.mapNotNull
-import org.stepik.android.data.notification.source.NotificationRemoteDataSource
+import org.stepik.android.domain.notification.repository.NotificationRepository
 import javax.inject.Inject
 
 @AppSingleton
@@ -21,7 +20,7 @@ class NotificationsBadgesManager
 @Inject
 constructor(
     private val context: Context,
-    private val notificationRemoteDataSrouce: NotificationRemoteDataSource,
+    private val notificationRepository: NotificationRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val firebaseRemoteConfig: FirebaseRemoteConfig,
     private val listenerContainer: ListenerContainer<NotificationsBadgesListener>,
@@ -41,9 +40,9 @@ constructor(
     }
 
     fun syncCounter() {
-        notificationRemoteDataSrouce.getNotificationStatuses()
-                .mapNotNull {
-                    it.notificationStatuses?.firstOrNull()?.total
+        notificationRepository.getNotificationStatuses()
+                .map {
+                    it.firstOrNull()?.total
                 }
                 .map {
                     sharedPreferenceHelper.notificationsCount = it

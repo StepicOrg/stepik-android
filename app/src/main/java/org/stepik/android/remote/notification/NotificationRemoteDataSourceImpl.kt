@@ -4,7 +4,10 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.notifications.model.Notification
+import org.stepic.droid.notifications.model.NotificationStatuses
+import org.stepic.droid.util.PagedList
 import org.stepik.android.data.notification.source.NotificationRemoteDataSource
+import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.notification.model.NotificationRequest
 import org.stepik.android.remote.notification.model.NotificationResponse
 import org.stepik.android.remote.notification.model.NotificationStatusesResponse
@@ -24,9 +27,11 @@ constructor(
             notificationService.putNotification(id, NotificationRequest(notification))
         })
 
-    override fun getNotificationsResponse(notificationCategory: NotificationCategory, page: Int): Single<NotificationResponse> {
+    override fun getNotifications(notificationCategory: NotificationCategory, page: Int): Single<PagedList<Notification>> {
         val category = getNotificationCategoryString(notificationCategory)
-        return notificationService.getNotifications(page, category)
+        return notificationService
+            .getNotifications(page, category)
+            .map { it.toPagedList(NotificationResponse::notifications) }
     }
 
     override fun markNotificationAsRead(notificationCategory: NotificationCategory): Completable {
@@ -34,8 +39,8 @@ constructor(
         return notificationService.markNotificationAsRead(category)
     }
 
-    override fun getNotificationStatuses(): Single<NotificationStatusesResponse> =
-        notificationService.getNotificationStatuses()
+    override fun getNotificationStatuses(): Single<List<NotificationStatuses>?> =
+        notificationService.getNotificationStatuses().map(NotificationStatusesResponse::notificationStatuses)
 
     private fun getNotificationCategoryString(notificationCategory: NotificationCategory): String? =
         if (notificationCategory === NotificationCategory.all) {

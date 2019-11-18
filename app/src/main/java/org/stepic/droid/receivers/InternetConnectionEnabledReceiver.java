@@ -16,7 +16,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler;
 import org.stepic.droid.di.qualifiers.MainScheduler;
 import org.stepic.droid.model.ViewedNotification;
 import org.stepic.droid.storage.operations.DatabaseFacade;
-import org.stepik.android.data.notification.source.NotificationRemoteDataSource;
+import org.stepik.android.domain.notification.repository.NotificationRepository;
 import org.stepik.android.domain.progress.interactor.LocalProgressInteractor;
 
 import java.util.List;
@@ -31,9 +31,8 @@ import kotlin.jvm.functions.Function0;
 
 public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
 
-
     @Inject
-    NotificationRemoteDataSource notificationRemoteDataSource;
+    NotificationRepository notificationRepository;
 
     @Inject
     @MainScheduler
@@ -97,7 +96,7 @@ public class InternetConnectionEnabledReceiver extends BroadcastReceiver {
         List<ViewedNotification> viewedNotifications = databaseFacade.getViewedNotificationsQueue();
         for (ViewedNotification viewedNotification : viewedNotifications) {
             try {
-                notificationRemoteDataSource.putNotifications(new long[]{viewedNotification.getNotificationId()}, true).blockingAwait();
+                notificationRepository.putNotifications(new long[]{viewedNotification.getNotificationId()}, true).blockingAwait();
                 databaseFacade.removeViewedNotification(viewedNotification);
             } catch (Exception e) {
                 // no internet, just ignore and send next time
