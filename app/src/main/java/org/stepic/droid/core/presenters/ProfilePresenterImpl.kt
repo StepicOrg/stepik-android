@@ -14,8 +14,8 @@ import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepik.android.data.user.source.UserRemoteDataSource
-import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
+import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -28,7 +28,7 @@ constructor(
     private val mainHandler: MainHandler,
     private val userActivityRepository: UserActivityRepository,
     private val userRemoteDataSource: UserRemoteDataSource,
-    private val userProfileRemoteDataSource: UserProfileRemoteDataSource,
+    private val userProfileRepository: UserProfileRepository,
     private val sharedPreferences: SharedPreferenceHelper,
 
     private val profileObservable: Observable<Profile>,
@@ -90,7 +90,7 @@ constructor(
                 showLocalProfile(profile)
             } else if (profileId == 0L && (profile != null && profile.isGuest || profile == null)) {
                 try {
-                    val realProfile = userProfileRemoteDataSource.getUserProfile().blockingGet()?.getProfile() ?: throw IllegalStateException("profile can't be null on API here")
+                    val realProfile = userProfileRepository.getUserProfile().blockingGet()?.second ?: throw IllegalStateException("profile can't be null on API here")
                     sharedPreferences.storeProfile(realProfile)
                     showLocalProfile(realProfile)
                 } catch (noInternetOrPermission: Exception) {

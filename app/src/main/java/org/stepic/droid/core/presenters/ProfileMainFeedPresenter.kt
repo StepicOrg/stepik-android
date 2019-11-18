@@ -6,8 +6,8 @@ import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.di.mainscreen.MainScreenScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource
 import org.stepik.android.domain.email_address.repository.EmailAddressRepository
+import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -19,7 +19,7 @@ class ProfileMainFeedPresenter
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val mainHandler: MainHandler,
     private val emailAddressRepository: EmailAddressRepository,
-    private val userProfileRemoteDataSource: UserProfileRemoteDataSource,
+    private val userProfileRepository: UserProfileRepository,
     private val threadPoolExecutor: ThreadPoolExecutor,
     analytic: Analytic,
     private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
@@ -59,7 +59,7 @@ class ProfileMainFeedPresenter
 
                 //after that try to update profile, because user can change avatar or something at web.
                 try {
-                    val tempProfile = userProfileRemoteDataSource.getUserProfile().blockingGet()?.getProfile() ?: throw IllegalStateException("profile can't be null")
+                    val tempProfile = userProfileRepository.getUserProfile().blockingGet()?.second ?: throw IllegalStateException("profile can't be null")
                     val emailIds = tempProfile.emailAddresses
                     if (emailIds?.isNotEmpty() == true) {
                         try {
