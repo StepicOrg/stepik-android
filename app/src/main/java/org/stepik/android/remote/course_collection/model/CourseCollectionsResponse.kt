@@ -1,4 +1,4 @@
-package org.stepik.android.remote.course_list.model
+package org.stepik.android.remote.course_collection.model
 
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.CourseCollection

@@ -6,7 +6,7 @@ import org.stepik.android.data.course_list.source.CourseListRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.course.model.CourseResponse
-import org.stepik.android.remote.course_list.model.CourseCollectionsResponse
+import org.stepik.android.remote.course_collection.model.CourseCollectionsResponse
 import org.stepik.android.remote.course_list.service.CourseListService
 import javax.inject.Inject
 
@@ -15,9 +15,6 @@ class CourseListRemoteDataSourceImpl
 constructor(
     private val courseListService: CourseListService
 ) : CourseListRemoteDataSource {
-    override fun getCourseCollections(language: String): Single<CourseCollectionsResponse> =
-        courseListService.getCourseLists(language)
-
     override fun getPopularCourses(page: Int, lang: String): Single<PagedList<Course>> =
         courseListService
             .getPopularCourses(page, lang)
