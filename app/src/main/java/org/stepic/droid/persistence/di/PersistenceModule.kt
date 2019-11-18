@@ -36,6 +36,7 @@ import org.stepik.android.view.injection.lesson.LessonDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.section.SectionDataModule
 import org.stepik.android.view.injection.step.StepDataModule
+import org.stepik.android.view.injection.submission.SubmissionDataModule
 import org.stepik.android.view.injection.unit.UnitDataModule
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
@@ -53,7 +54,8 @@ import java.util.concurrent.locks.ReentrantLock
     UnitDataModule::class,
     SectionDataModule::class,
     ProgressDataModule::class,
-    StepDataModule::class
+    StepDataModule::class,
+    SubmissionDataModule::class
 ])
 abstract class PersistenceModule {
 

@@ -53,4 +53,40 @@ constructor(
             put(DbStructureAttempt.Columns.TIME, persistentObject.time?.time ?: -1)
             put(DbStructureAttempt.Columns.TIME_LEFT, persistentObject.timeLeft)
         }
+
+    override fun insertOrReplaceAll(persistentObjects: List<Attempt>) {
+        persistentObjects.forEach(::insertOrReplace)
+    }
+
+    override fun insertOrReplace(persistentObject: Attempt) {
+        executeSql("""
+            INSERT OR REPLACE INTO ${DbStructureAttempt.TABLE_NAME} (
+                ${DbStructureAttempt.Columns.ID},
+                ${DbStructureAttempt.Columns.STEP},
+                ${DbStructureAttempt.Columns.USER},
+                ${DbStructureAttempt.Columns.DATASET},
+                ${DbStructureAttempt.Columns.DATASET_URL},
+                ${DbStructureAttempt.Columns.STATUS},
+                ${DbStructureAttempt.Columns.TIME},
+                ${DbStructureAttempt.Columns.TIME_LEFT}
+            )
+            SELECT ?, ?, ?, ?, ?, ?, ?, ?
+            WHERE NOT EXISTS (
+                SELECT * FROM ${DbStructureAttempt.TABLE_NAME} 
+                WHERE ${DbStructureAttempt.Columns.ID} > ?
+            )
+        """.trimIndent(),
+            arrayOf(
+                persistentObject.id,
+                persistentObject.step,
+                persistentObject.user,
+                persistentObject.dataset?.let(gson::toJson),
+                persistentObject.datasetUrl,
+                persistentObject.status,
+                persistentObject.time?.time ?: -1,
+                persistentObject.timeLeft,
+                persistentObject.id
+            )
+        )
+    }
 }
