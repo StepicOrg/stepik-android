@@ -18,7 +18,7 @@ constructor(
 ) : LessonRepository {
     override fun getLessons(vararg lessonIds: Long, primarySourceType: DataSourceType): Single<List<Lesson>> {
         val remoteSource = lessonRemoteDataSource
-            .getLessonsRx(*lessonIds)
+            .getLessons(*lessonIds)
             .doCompletableOnSuccess(lessonCacheDataSource::saveLessons)
 
         val cacheSource = lessonCacheDataSource
@@ -32,7 +32,7 @@ constructor(
                 cacheSource.flatMap { cachedLessons ->
                     val ids = (lessonIds.toList() - cachedLessons.map(Lesson::id)).toLongArray()
                     lessonRemoteDataSource
-                        .getLessonsRx(*ids)
+                        .getLessons(*ids)
                         .doCompletableOnSuccess(lessonCacheDataSource::saveLessons)
                         .map { remoteLessons -> cachedLessons + remoteLessons }
                 }
