@@ -18,7 +18,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addDisposable
 import org.stepik.android.data.rating.source.RatingRemoteDataSource
-import org.stepik.android.data.user.source.UserRemoteDataSource
+import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.adaptive.RatingItem
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -34,7 +34,7 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler,
     private val ratingNamesGenerator: RatingNamesGenerator,
-    private val userRemoteDataSource: UserRemoteDataSource,
+    private val userRepository: UserRepository,
 
     context: Context,
     sharedPreferenceHelper: SharedPreferenceHelper
@@ -84,7 +84,7 @@ constructor(
                 if (userIds.isEmpty()) {
                     Single.just(emptyList())
                 } else {
-                    userRemoteDataSource.getUsers(*userIds)
+                    userRepository.getUsers(*userIds)
                 }.zipWith(Single.just(it))
             }.map { (users, items) ->
                 items.mapIndexed { index, item ->

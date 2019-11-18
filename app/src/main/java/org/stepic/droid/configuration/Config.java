@@ -9,9 +9,9 @@ public interface Config {
 
     String getBaseUrl();
 
-    String getOAuthClientSecret(TokenType type);
+    String getOAuthClientSecret(@NotNull TokenType type);
 
-    String getGrantType(TokenType type);
+    String getGrantType(@NotNull TokenType type);
 
     String getRefreshGrantType();
 

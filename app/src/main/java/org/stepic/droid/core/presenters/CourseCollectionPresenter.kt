@@ -70,12 +70,10 @@ constructor(
 
     private fun getReviewsSingle(reviewIds: LongArray): Single<List<CourseReviewSummary>> =
         courseReviewsSummaryRemoteDataSource.getCourseReviewSummaries(*reviewIds)
-            .map { it }
             .subscribeOn(backgroundScheduler)
 
     private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> =
         progressRemoteDataSource.getProgresses(*progressIds)
-            .map { it }
             .map { it.associateBy(Progress::id) }
             .subscribeOn(backgroundScheduler)
 
