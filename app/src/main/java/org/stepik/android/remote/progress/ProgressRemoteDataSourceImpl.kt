@@ -24,7 +24,7 @@ constructor(
     override fun getProgresses(vararg progressIds: String?): Single<List<Progress>> =
         progressIds
             .chunkedSingleMap { ids ->
-                progressService.getProgressesReactive(ids)
+                progressService.getProgresses(ids)
                     .map(progressResponseMapper)
             }
 }
