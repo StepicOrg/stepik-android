@@ -21,7 +21,7 @@ constructor(
         getProgresses(progressId)
             .map { it.first() }
 
-    override fun getProgresses(vararg progressIds: String?): Single<List<Progress>> =
+    override fun getProgresses(vararg progressIds: String): Single<List<Progress>> =
         progressIds
             .chunkedSingleMap { ids ->
                 progressService.getProgresses(ids)

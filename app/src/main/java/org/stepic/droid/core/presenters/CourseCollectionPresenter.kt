@@ -12,8 +12,9 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.CourseUtil
 import org.stepik.android.data.course.source.CourseRemoteDataSource
-import org.stepik.android.data.course.source.CourseReviewSummaryRemoteDataSource
-import org.stepik.android.data.progress.source.ProgressRemoteDataSource
+import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
+import org.stepik.android.domain.progress.mapper.getProgresses
+import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
@@ -28,9 +29,9 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    private val courseReviewsSummaryRemoteDataSource: CourseReviewSummaryRemoteDataSource,
+    private val courseReviewSummaryRepository: CourseReviewSummaryRepository,
     private val courseRemoteDataSource: CourseRemoteDataSource,
-    private val progressRemoteDataSource: ProgressRemoteDataSource
+    private val progressRepository: ProgressRepository
 ) : PresenterBase<CoursesView>() {
 
     companion object {
@@ -45,7 +46,7 @@ constructor(
         compositeDisposable += courseRemoteDataSource.getCoursesReactive(DEFAULT_PAGE, *courseIds)
             .map(CourseResponse::courses)
             .flatMap {
-                val progressIds = it.map(Course::progress).toTypedArray()
+                val progressIds = it.getProgresses()
                 val reviewIds = it.map(Course::reviewSummary).toLongArray()
 
                 zip(Single.just(it), getProgressesSingle(progressIds), getReviewsSingle(reviewIds)) { courses, progressMap, reviews ->
@@ -69,11 +70,11 @@ constructor(
     }
 
     private fun getReviewsSingle(reviewIds: LongArray): Single<List<CourseReviewSummary>> =
-        courseReviewsSummaryRemoteDataSource.getCourseReviewSummaries(*reviewIds)
+        courseReviewSummaryRepository.getCourseReviewSummaries(*reviewIds)
             .subscribeOn(backgroundScheduler)
 
-    private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> =
-        progressRemoteDataSource.getProgresses(*progressIds)
+    private fun getProgressesSingle(progressIds: Array<String>): Single<Map<String?, Progress>> =
+        progressRepository.getProgresses(*progressIds)
             .map { it.associateBy(Progress::id) }
             .subscribeOn(backgroundScheduler)
 
