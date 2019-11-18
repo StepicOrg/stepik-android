@@ -24,6 +24,7 @@ import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.activity_launch.*
+import okhttp3.ResponseBody
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -366,4 +367,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         super.onSaveInstanceState(outState)
     }
 
+    override fun onRegistrationFailed(responseBody: ResponseBody?) {
+        // no op
+    }
 }
