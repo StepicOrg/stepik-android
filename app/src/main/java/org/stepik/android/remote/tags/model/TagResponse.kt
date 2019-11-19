@@ -8,5 +8,6 @@ import org.stepik.android.remote.base.model.MetaResponse
 class TagResponse(
     @SerializedName("meta")
     override val meta: Meta,
+    @SerializedName("tags")
     val tags: List<Tag>
 ) : MetaResponse

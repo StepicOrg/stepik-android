@@ -8,7 +8,6 @@ import org.stepik.android.remote.base.model.MetaResponse
 class DiscussionThreadResponse(
     @SerializedName("meta")
     override val meta: Meta,
-
     @SerializedName("discussion-threads")
     val discussionThreads: List<DiscussionThread>
 ) : MetaResponse
