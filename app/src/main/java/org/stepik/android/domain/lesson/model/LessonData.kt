@@ -14,7 +14,8 @@ data class LessonData(
     val course: Course?,
 
     val stepPosition: Int = 0,
-    val discussionId: Long? = null
+    val discussionId: Long? = null,
+    val discussionThread: String? = null
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeParcelable(lesson, flags)
@@ -23,6 +24,7 @@ data class LessonData(
         parcel.writeParcelable(course, flags)
         parcel.writeInt(stepPosition)
         parcel.writeValue(discussionId)
+        parcel.writeString(discussionThread)
     }
 
     override fun describeContents(): Int = 0
@@ -35,7 +37,8 @@ data class LessonData(
                 parcel.readParcelable(Section::class.java.classLoader),
                 parcel.readParcelable(Course::class.java.classLoader),
                 parcel.readInt(),
-                parcel.readValue(Long::class.java.classLoader) as Long?
+                parcel.readValue(Long::class.java.classLoader) as Long?,
+                parcel.readString()
             )
 
         override fun newArray(size: Int): Array<LessonData?> =

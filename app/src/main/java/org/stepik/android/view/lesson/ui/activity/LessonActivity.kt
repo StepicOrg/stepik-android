@@ -297,17 +297,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             ?.play()
     }
 
-    override fun showComments(step: Step, discussionId: Long) {
-        val discussionThread =
-            step.discussionProxy
-                ?.let {
-                    DiscussionThread(
-                        id = step.discussionThreads?.firstOrNull() ?: "",
-                        thread = DiscussionThread.THREAD_DEFAULT,
-                        discussionsCount = step.discussionsCount,
-                        discussionProxy = it
-                    )
-                }
+    override fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?) {
         if (discussionThread != null) {
             screenManager.openComments(this, discussionThread, step, discussionId, false)
         } else {
