@@ -8,16 +8,17 @@ import org.mockito.MockitoAnnotations;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.concurrency.MainHandler;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
+import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.storage.operations.DatabaseFacade;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
-import org.stepic.droid.testUtils.ResponseGeneratorKt;
 import org.stepic.droid.testUtils.generators.FakeCourseGenerator;
 import org.stepic.droid.testUtils.generators.FakeMetaGenerator;
 import org.stepic.droid.testUtils.generators.FakeSearchResultGenerator;
 import org.stepic.droid.util.resolvers.SearchResolver;
 import org.stepic.droid.util.resolvers.SearchResolverImpl;
-import org.stepik.android.data.course.source.CourseRemoteDataSource;
-import org.stepik.android.data.search.source.SearchRemoteDataSource;
+import org.stepik.android.domain.base.DataSourceType;
+import org.stepik.android.domain.course.repository.CourseRepository;
+import org.stepik.android.domain.search.repository.SearchRepository;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.Meta;
 import org.stepik.android.model.SearchResult;
@@ -42,10 +43,13 @@ public class SearchCoursesPresenterTest {
     private SearchCoursesPresenter searchCoursesPresenter;
 
     @Mock
-    CourseRemoteDataSource courseRemoteDataSource;
+    SharedPreferenceHelper sharedPreferenceHelper;
 
     @Mock
-    SearchRemoteDataSource searchRemoteDataSource;
+    CourseRepository courseRepository;
+
+    @Mock
+    SearchRepository searchRepository;
 
     @Mock
     ThreadPoolExecutor threadPoolExecutor;
@@ -74,7 +78,16 @@ public class SearchCoursesPresenterTest {
 
         searchResolver = spy(new SearchResolverImpl());
 
-        searchCoursesPresenter = new SearchCoursesPresenter(courseRemoteDataSource, searchRemoteDataSource, threadPoolExecutor, mainHandler, searchResolver, databaseFacade, analytic);
+        searchCoursesPresenter = new SearchCoursesPresenter(
+                sharedPreferenceHelper,
+                courseRepository,
+                searchRepository,
+                threadPoolExecutor,
+                mainHandler,
+                searchResolver,
+                databaseFacade,
+                analytic
+        );
     }
 
     @Test
@@ -105,14 +118,14 @@ public class SearchCoursesPresenterTest {
         Course expectedCourse = FakeCourseGenerator.INSTANCE.generate(expectedCourseId);
         expectedCourses.add(expectedCourse);
         when(coursesStepicResponse.getCourses()).thenReturn(expectedCourses);
-        ResponseGeneratorKt.useMockInsteadCall(when(courseRemoteDataSource.getCourses(1, courseIds)), coursesStepicResponse);
+        // ResponseGeneratorKt.useMockInsteadCall(when(courseRepository.getCourses(courseIds, DataSourceType.REMOTE).blockingGet(), coursesStepicResponse);
 
         //call method of tested object
         searchCoursesPresenter.downloadData(searchQuery);
 
         //verify calling of dependencies
-        verify(searchRemoteDataSource).getSearchResultsCourses(1, searchQuery);
-        verify(courseRemoteDataSource).getCourses(1, courseIds);
+        verify(searchRepository).getSearchResultsCourses(1, searchQuery, "");
+        verify(courseRepository).getCourses(courseIds, DataSourceType.REMOTE);
 
         verify(threadPoolExecutor).execute(any(Runnable.class));
         verify(searchResolver).getCourseIdsFromSearchResults(any(List.class));

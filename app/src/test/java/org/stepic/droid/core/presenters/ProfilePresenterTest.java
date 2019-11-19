@@ -15,9 +15,10 @@ import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.testUtils.ConcurrencyUtilForTest;
 import org.stepic.droid.testUtils.generators.FakeProfileGenerator;
 import org.stepic.droid.testUtils.generators.FakeUserGenerator;
-import org.stepik.android.data.user.source.UserRemoteDataSource;
-import org.stepik.android.data.user_activity.source.UserActivityRemoteDataSource;
-import org.stepik.android.data.user_profile.source.UserProfileRemoteDataSource;
+import org.stepik.android.domain.base.DataSourceType;
+import org.stepik.android.domain.user.repository.UserRepository;
+import org.stepik.android.domain.user_activity.repository.UserActivityRepository;
+import org.stepik.android.domain.user_profile.repository.UserProfileRepository;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.model.user.User;
 
@@ -48,13 +49,13 @@ public class ProfilePresenterTest {
     MainHandler mainHandler;
 
     @Mock
-    UserRemoteDataSource userRemoteDataSource;
+    UserActivityRepository userActivityRepository;
 
     @Mock
-    UserActivityRemoteDataSource userActivityRemoteDataSource;
+    UserRepository userRepository;
 
     @Mock
-    UserProfileRemoteDataSource userProfileRemoteDataSource;
+    UserProfileRepository userProfileRepository;
 
     @Mock
     SharedPreferenceHelper sharedPreferenceHelper;
@@ -83,9 +84,9 @@ public class ProfilePresenterTest {
                 threadPoolExecutor,
                 analytic,
                 mainHandler,
-                userActivityRemoteDataSource,
-                userRemoteDataSource,
-                userProfileRemoteDataSource,
+                userActivityRepository,
+                userRepository,
+                userProfileRepository,
                 sharedPreferenceHelper,
                 Observable.empty(),
                 Schedulers.io()
@@ -138,7 +139,7 @@ public class ProfilePresenterTest {
                 .thenReturn(preferencesProfileModel);
 
         profilePresenter.initProfile();
-        verify(userRemoteDataSource, never()).getUsers(any(long[].class));
+        verify(userRepository, never()).getUsers(any(long[].class), DataSourceType.REMOTE);
         verify(threadPoolExecutor).execute(any(Runnable.class));
 
         //verify that errors was not called
@@ -157,13 +158,13 @@ public class ProfilePresenterTest {
 
         when(sharedPreferenceHelper.getProfile())
                 .thenReturn(null);
-        when(userRemoteDataSource.getUsers(any(long[].class)))
+        when(userRepository.getUsers(any(long[].class), DataSourceType.REMOTE))
                 .thenThrow(RuntimeException.class); //throw exception on getting from api instead of executing for simplify testing
 
         profilePresenter.initProfile();
 
         verify(sharedPreferenceHelper).getProfile();
-        verify(userProfileRemoteDataSource).getUserProfile(); //should request the profile of logged user (because init is called without params)
+        verify(userProfileRepository).getUserProfile(); //should request the profile of logged user (because init is called without params)
 
         InOrder inOrder = inOrder(profileView);
         inOrder.verify(profileView).showLoadingAll();

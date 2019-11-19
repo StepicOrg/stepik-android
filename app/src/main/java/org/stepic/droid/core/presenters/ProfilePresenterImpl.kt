@@ -13,7 +13,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepik.android.data.user.source.UserRemoteDataSource
+import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.Profile
@@ -27,7 +27,7 @@ constructor(
     analytic: Analytic,
     private val mainHandler: MainHandler,
     private val userActivityRepository: UserActivityRepository,
-    private val userRemoteDataSource: UserRemoteDataSource,
+    private val userRepository: UserRepository,
     private val userProfileRepository: UserProfileRepository,
     private val sharedPreferences: SharedPreferenceHelper,
 
@@ -119,7 +119,7 @@ constructor(
         //3) user hide profile == Anonymous. We do not need handle this situation
 
         val user = try {
-            userRemoteDataSource.getUsers(userId).blockingGet().firstOrNull()
+            userRepository.getUsers(userId).blockingGet().firstOrNull()
         } catch (exception: Exception) {
             null
         }
