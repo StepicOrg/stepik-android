@@ -17,16 +17,7 @@ constructor(
     private val courseResponseMapper =
         Function<CourseResponse, List<Course>>(CourseResponse::courses)
 
-    override fun getCoursesReactive(page: Int, vararg courseIds: Long): Single<CourseResponse> {
-        val ids = if (courseIds.isEmpty()) {
-            longArrayOf(0)
-        } else {
-            courseIds
-        }
-        return courseService.getCoursesReactive(page, ids)
-    }
-
-    override fun getCoursesReactive(vararg courseIds: Long): Single<List<Course>> =
+    override fun getCourses(vararg courseIds: Long): Single<List<Course>> =
         courseIds
             .chunkedSingleMap { ids ->
                 courseService.getCoursesReactive(ids)

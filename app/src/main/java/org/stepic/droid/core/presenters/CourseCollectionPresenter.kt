@@ -11,14 +11,14 @@ import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.CourseUtil
-import org.stepik.android.data.course.source.CourseRemoteDataSource
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
-import org.stepik.android.remote.course.model.CourseResponse
 import javax.inject.Inject
 
 @CourseListScope
@@ -30,21 +30,15 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler,
     private val courseReviewSummaryRepository: CourseReviewSummaryRepository,
-    private val courseRemoteDataSource: CourseRemoteDataSource,
+    private val courseRepository: CourseRepository,
     private val progressRepository: ProgressRepository
 ) : PresenterBase<CoursesView>() {
-
-    companion object {
-        //collections are small (less than 10 courses), so pagination is not needed
-        private const val DEFAULT_PAGE = 1
-    }
 
     private val compositeDisposable = CompositeDisposable()
 
     fun onShowCollections(courseIds: LongArray) {
         view?.showLoading()
-        compositeDisposable += courseRemoteDataSource.getCoursesReactive(DEFAULT_PAGE, *courseIds)
-            .map(CourseResponse::courses)
+        compositeDisposable += courseRepository.getCourses(*courseIds, primarySourceType = DataSourceType.REMOTE)
             .flatMap {
                 val progressIds = it.getProgresses()
                 val reviewIds = it.map(Course::reviewSummary).toLongArray()

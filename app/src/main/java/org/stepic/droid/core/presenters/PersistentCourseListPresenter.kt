@@ -18,8 +18,8 @@ import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.RWLocks
-import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
@@ -42,7 +42,7 @@ constructor(
     private val databaseFacade: DatabaseFacade,
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
-    private val courseRemoteDataSource: CourseRemoteDataSource,
+    private val courseRepository: CourseRepository,
     private val courseListRepository: CourseListRepository,
     private val userCoursesRepository: UserCoursesRepository,
 
@@ -139,11 +139,10 @@ constructor(
 
                         val coursesOrder = userCourses.map(UserCourse::course)
 
-                        val coursesResponse = courseRemoteDataSource.getCoursesReactive(1, *coursesOrder.toLongArray())
+                        val coursesResponse = courseRepository.getCourses(*coursesOrder.toLongArray(), primarySourceType = DataSourceType.REMOTE)
                                 .blockingGet()
 
                         val courses = coursesResponse
-                                .courses
                                 .sortedBy { coursesOrder.indexOf(it.id) }
                         
                         allMyCourses.addAll(courses)

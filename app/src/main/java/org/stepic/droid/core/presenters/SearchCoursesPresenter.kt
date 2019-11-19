@@ -8,7 +8,8 @@ import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepik.android.data.course.source.CourseRemoteDataSource
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.search.repository.SearchRepository
 import org.stepik.android.model.Course
 import java.util.ArrayList
@@ -21,7 +22,7 @@ import javax.inject.Inject
 class SearchCoursesPresenter
 @Inject constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val courseRemoteDataSource: CourseRemoteDataSource,
+    private val courseRepository: CourseRepository,
     private val searchRepository: SearchRepository,
     private val threadPoolExecutor: ThreadPoolExecutor,
     private val mainHandler: MainHandler,
@@ -68,7 +69,7 @@ class SearchCoursesPresenter
                             view?.showEmptyCourses()
                         }
                     } else {
-                        val courses = courseRemoteDataSource.getCoursesReactive(1, *courseIdsForSearch).blockingGet()?.courses //FIXME: WARNING, here may pagination not working for query with ids[]
+                        val courses = courseRepository.getCourses(*courseIdsForSearch, primarySourceType = DataSourceType.REMOTE).blockingGet() //FIXME: WARNING, here may pagination not working for query with ids[]
                         if (courses == null || courses.isEmpty()) {
                             mainHandler.post { view?.showEmptyCourses() }
                         } else {

@@ -14,7 +14,8 @@ import org.stepic.droid.di.tags.TagScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepik.android.data.course.source.CourseRemoteDataSource
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.tags.repository.TagsRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.SearchResult
@@ -29,7 +30,7 @@ class TagListPresenter
 constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val tag: Tag,
-    private val courseRemoteDataSource: CourseRemoteDataSource,
+    private val courseRepository: CourseRepository,
     private val tagsRepository: TagsRepository,
     private val searchResolver: SearchResolver,
     @MainScheduler
@@ -37,9 +38,6 @@ constructor(
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler
 ) : PresenterBase<CoursesView>() {
-    companion object {
-        private const val FIRST_PAGE = 1
-    }
 
     private val currentPage = AtomicInteger(1)
     private val hasNextPage = AtomicBoolean(true)
@@ -96,10 +94,9 @@ constructor(
     private fun zipIdsAndCourses(it: LongArray): Observable<Pair<LongArray, List<Course>>>? {
         return Observable.zip(
                 Observable.just(it),
-                courseRemoteDataSource
-                    .getCoursesReactive(FIRST_PAGE, *it)
-                    .toObservable()
-                    .map { it.courses },
+                courseRepository
+                    .getCourses(*it, primarySourceType = DataSourceType.REMOTE)
+                    .toObservable(),
                 BiFunction<LongArray, List<Course>, Pair<LongArray, List<Course>>> { courseIds, courses ->
                     courseIds to courses
                 }
