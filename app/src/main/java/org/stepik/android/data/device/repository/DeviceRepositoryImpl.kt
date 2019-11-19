@@ -1,25 +1,24 @@
-package org.stepik.android.remote.device
+package org.stepik.android.data.device.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.model.Device
 import org.stepik.android.data.device.source.DeviceRemoteDataSource
+import org.stepik.android.domain.device.repository.DeviceRepository
 import org.stepik.android.remote.device.model.DeviceRequest
-import org.stepik.android.remote.device.model.DeviceResponse
-import org.stepik.android.remote.device.service.DeviceService
 import javax.inject.Inject
 
-class DeviceRemoteDataSourceImpl
+class DeviceRepositoryImpl
 @Inject
 constructor(
-    private val deviceService: DeviceService
-) : DeviceRemoteDataSource {
+    private val deviceRemoteDataSource: DeviceRemoteDataSource
+) : DeviceRepository {
     override fun getDevicesByRegistrationId(token: String): Single<List<Device?>?> =
-        deviceService.getDeviceByRegistrationId(token).map(DeviceResponse::devices)
+        deviceRemoteDataSource.getDevicesByRegistrationId(token)
 
     override fun renewDeviceRegistration(deviceId: Long, deviceRequest: DeviceRequest): Completable =
-        deviceService.renewDeviceRegistration(deviceId, deviceRequest)
+        deviceRemoteDataSource.renewDeviceRegistration(deviceId, deviceRequest)
 
     override fun registerDevice(deviceRequest: DeviceRequest): Completable =
-        deviceService.registerDevice(deviceRequest)
+        deviceRemoteDataSource.registerDevice(deviceRequest)
 }
