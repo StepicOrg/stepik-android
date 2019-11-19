@@ -24,6 +24,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
+import org.stepic.droid.di.qualifiers.BackgroundScheduler;
+import org.stepic.droid.di.qualifiers.MainScheduler;
 import org.stepic.droid.util.ProgressHelper;
 import org.stepik.android.domain.auth.repository.AuthRepository;
 
@@ -31,17 +33,26 @@ import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.CompositeDisposable;
 import kotlin.text.StringsKt;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RemindPasswordDialogFragment extends DialogFragment {
 
     private static final String ERROR_TEXT_KEY = "Error_Text_Key";
 
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     @Inject
     AuthRepository authRepository;
+
+    @Inject
+    @MainScheduler
+    Scheduler mainScheduler;
+
+    @Inject
+    @BackgroundScheduler
+    Scheduler backgroundScheduler;
 
     public static RemindPasswordDialogFragment newInstance() {
         return new RemindPasswordDialogFragment();
@@ -126,10 +137,10 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             ProgressHelper.dismiss(progressLogin);
             return;
         }
-        if (!email.isEmpty()) {
-            authRepository.remindPassword(email).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+        compositeDisposable.add(authRepository.remindPassword(email)
+                .observeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribe((response) -> {
                     ProgressHelper.dismiss(progressLogin);
                     okhttp3.Response rawResponse = response.raw();
                     if (rawResponse.priorResponse() != null && rawResponse.priorResponse().code() == 302) {
@@ -145,21 +156,17 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                             Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                         }
                     }
-
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                }, (error) -> {
                     ProgressHelper.dismiss(progressLogin);
 
                     final Context context = getContext();
                     if (context != null) {
                         Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                     }
-                }
-            });
-        }
+                })
+        );
     }
+
     private void bindEmailChangeToButton(final Button button) {
         EditText email = emailTextWrapper.getEditText();
         if (email != null) {
@@ -189,6 +196,12 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         if (emailTextWrapper != null && emailTextWrapper.getError() != null)
             outState.putString(ERROR_TEXT_KEY, emailTextWrapper.getError().toString());
 
+    }
+
+    @Override
+    public void onStop() {
+        compositeDisposable.clear();
+        super.onStop();
     }
 
     @Override

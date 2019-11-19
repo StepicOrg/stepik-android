@@ -24,8 +24,8 @@ import org.stepik.android.view.injection.qualifiers.AuthLock
 import org.stepik.android.view.injection.qualifiers.AuthService
 import org.stepik.android.view.injection.qualifiers.CookieAuthService
 import org.stepik.android.view.injection.qualifiers.SocialAuthService
-import retrofit2.Call
 import retrofit2.Converter
+import retrofit2.Response
 import java.net.URLEncoder
 import java.util.concurrent.locks.ReentrantReadWriteLock
 import javax.inject.Inject
@@ -90,7 +90,7 @@ constructor(
             )
         )
 
-    override fun remindPassword(email: String): Call<Void> {
+    override fun remindPassword(email: String): Single<Response<Void>> {
         val encodedEmail = URLEncoder.encode(email)
 
         val interceptor = Interceptor { chain ->

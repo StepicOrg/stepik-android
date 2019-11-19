@@ -8,7 +8,7 @@ import org.stepik.android.data.auth.source.AuthRemoteDataSource
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.remote.auth.model.OAuthResponse
-import retrofit2.Call
+import retrofit2.Response
 import javax.inject.Inject
 
 @AppSingleton
@@ -30,6 +30,6 @@ constructor(
     override fun createAccount(credentials: RegistrationCredentials): Completable =
         authRemoteDataSource.createAccount(credentials)
 
-    override fun remindPassword(email: String): Call<Void> =
+    override fun remindPassword(email: String): Single<Response<Void>> =
         authRemoteDataSource.remindPassword(email)
 }
