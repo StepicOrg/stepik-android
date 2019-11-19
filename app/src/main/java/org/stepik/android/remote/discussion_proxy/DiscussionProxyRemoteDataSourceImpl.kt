@@ -19,7 +19,7 @@ constructor(
 
     override fun getDiscussionProxies(vararg discussionProxyIds: String): Single<List<DiscussionProxy>> =
         discussionProxyIds
-            .chunkedSingleMap {ids ->
+            .chunkedSingleMap { ids ->
                 discussionProxyService.getDiscussionProxies(ids)
                     .map(discussionProxyResponseMapper)
             }

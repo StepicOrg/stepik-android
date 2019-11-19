@@ -24,45 +24,46 @@ constructor(
     override fun getAchievement(userId: Long, kind: String): Single<AchievementFlatItem> =
         getAchievementWithProgressByKind(userId, kind).firstOrError()
 
-    private fun getDistinctAchievementKindsOrderedByObtainDate(userId: Long, count: Int = -1): Observable<String> = Observable.create { emitter ->
-        val kinds = LinkedHashSet<String>()
-        var hasNextPage = true
-        var page = 1
+    private fun getDistinctAchievementKindsOrderedByObtainDate(userId: Long, count: Int = -1): Observable<String> =
+        Observable.create { emitter ->
+            val kinds = LinkedHashSet<String>()
+            var hasNextPage = true
+            var page = 1
 
-        paginationLoop@ while (hasNextPage) {
-            val response = achievementsService.getAchievementProgresses(user = userId, page = page, order = "-obtain_date").blockingGet()
+            paginationLoop@ while (hasNextPage) {
+                val response = achievementsService.getAchievementProgresses(user = userId, page = page, order = "-obtain_date").blockingGet()
 
-            for (item in response.achievementsProgresses) {
-                kinds.add(item.kind)
-                if (kinds.size == count) {
-                    break@paginationLoop
+                for (item in response.achievementsProgresses) {
+                    kinds.add(item.kind)
+                    if (kinds.size == count) {
+                        break@paginationLoop
+                    }
                 }
+
+                hasNextPage = response.meta.hasNext
+                page = response.meta.page + 1
             }
 
-            hasNextPage = response.meta.hasNext
-            page = response.meta.page + 1
-        }
+            hasNextPage = true
+            page = 1
 
-        hasNextPage = true
-        page = 1
+            paginationLoop@ while (hasNextPage && (count == -1 || kinds.size < count)) {
+                val response = achievementsService.getAchievements(page = page).blockingGet()
 
-        paginationLoop@ while (hasNextPage && (count == -1 || kinds.size < count)) {
-            val response = achievementsService.getAchievements(page = page).blockingGet()
-
-            for (item in response.achievements) {
-                kinds.add(item.kind)
-                if (kinds.size == count) {
-                    break@paginationLoop
+                for (item in response.achievements) {
+                    kinds.add(item.kind)
+                    if (kinds.size == count) {
+                        break@paginationLoop
+                    }
                 }
+
+                hasNextPage = response.meta.hasNext
+                page = response.meta.page + 1
             }
 
-            hasNextPage = response.meta.hasNext
-            page = response.meta.page + 1
+            kinds.forEach(emitter::onNext) // in order to handle errors in correct way
+            emitter.onComplete()
         }
-
-        kinds.forEach(emitter::onNext) // in order to handle errors in correct way
-        emitter.onComplete()
-    }
 
     private fun getAllAchievementsByKind(kind: String): Single<List<Achievement>> =
         Observable.range(0, Int.MAX_VALUE)

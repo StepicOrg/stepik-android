@@ -6,7 +6,6 @@ import org.stepik.android.data.course_list.source.CourseListRemoteDataSource
 import org.stepik.android.model.Course
 import org.stepik.android.remote.base.mapper.toPagedList
 import org.stepik.android.remote.course.model.CourseResponse
-import org.stepik.android.remote.course_collection.model.CourseCollectionsResponse
 import org.stepik.android.remote.course_list.service.CourseListService
 import javax.inject.Inject
 

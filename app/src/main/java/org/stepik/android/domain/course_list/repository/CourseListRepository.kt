@@ -8,7 +8,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.Course
 
 interface CourseListRepository {
-    fun getCourseList(courseListType: CourseListType,page: Int, lang: String, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<Course>>
+    fun getCourseList(courseListType: CourseListType, page: Int, lang: String, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<Course>>
 
     fun addCourseToList(courseListType: CourseListType, courseId: Long): Completable
     fun removeCourseFromList(courseListType: CourseListType, courseId: Long): Completable

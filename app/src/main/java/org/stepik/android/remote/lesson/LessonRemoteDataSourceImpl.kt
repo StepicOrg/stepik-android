@@ -7,7 +7,6 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.remote.base.chunkedSingleMap
 import org.stepik.android.remote.lesson.model.LessonResponse
 import org.stepik.android.remote.lesson.service.LessonService
-import retrofit2.Call
 import javax.inject.Inject
 
 class LessonRemoteDataSourceImpl

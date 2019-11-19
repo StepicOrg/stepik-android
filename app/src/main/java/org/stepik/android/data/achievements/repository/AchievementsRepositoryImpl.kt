@@ -10,7 +10,7 @@ class AchievementsRepositoryImpl
 @Inject
 constructor(
     private val achievementsRemoteDataSource: AchievementsRemoteDataSource
-): AchievementsRepository {
+) : AchievementsRepository {
 
     override fun getAchievements(userId: Long, count: Int): Single<List<AchievementFlatItem>> =
         achievementsRemoteDataSource.getAchievements(userId, count)
