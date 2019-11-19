@@ -1,4 +1,4 @@
-package org.stepik.android.remote.achievement.model
+package org.stepik.android.remote.achievements.model
 
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.Meta

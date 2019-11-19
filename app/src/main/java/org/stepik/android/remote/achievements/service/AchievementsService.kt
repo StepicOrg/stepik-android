@@ -1,9 +1,8 @@
-package org.stepik.android.remote.achievement.service
+package org.stepik.android.remote.achievements.service
 
-import io.reactivex.Observable
 import io.reactivex.Single
-import org.stepik.android.remote.achievement.model.AchievementProgressesResponse
-import org.stepik.android.remote.achievement.model.AchievementsResponse
+import org.stepik.android.remote.achievements.model.AchievementProgressesResponse
+import org.stepik.android.remote.achievements.model.AchievementsResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -13,7 +12,7 @@ interface AchievementsService {
         @Query("ids[]") ids: LongArray? = null,
         @Query("kind") kind: String? = null,
         @Query("page") page: Int? = null
-    ): Observable<AchievementsResponse>
+    ): Single<AchievementsResponse>
 
     @GET("api/achievement-progresses")
     fun getAchievementProgresses(
