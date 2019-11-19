@@ -21,9 +21,9 @@ constructor(
 
     override fun getAttemptsForStep(stepId: Long, userId: Long): Single<List<Attempt>> =
         attemptRemoteDataSource
-            .getAttemptsForStep(stepId)
+            .getAttemptsForStep(stepId, userId)
             .doCompletableOnSuccess(attemptCacheDataSource::saveAttempts)
-            .onErrorResumeNext(attemptCacheDataSource.getAttemptsForStep(stepId, userId))
+            .onErrorResumeNext(attemptCacheDataSource.getAttemptsForStep(stepId))
 
     override fun getAttempts(vararg attemptIds: Long): Single<List<Attempt>> =
         attemptRemoteDataSource
