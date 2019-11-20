@@ -9,6 +9,8 @@ import org.stepic.droid.R
 
 class LogoutAreYouSureDialog : DialogFragment() {
     companion object {
+        const val TAG = "logout_are_you_sure_dialog"
+
         fun newInstance(): LogoutAreYouSureDialog =
                 LogoutAreYouSureDialog()
 
