@@ -71,4 +71,41 @@ constructor(
             put(DbStructureSubmission.Columns.ETA, persistentObject.eta)
             put(DbStructureSubmission.Columns.FEEDBACK, persistentObject.feedback?.let(gson::toJson))
         }
+
+    override fun insertOrReplace(persistentObject: Submission) {
+        executeSql("""
+            INSERT OR REPLACE INTO ${DbStructureSubmission.TABLE_NAME} (
+                ${DbStructureSubmission.Columns.ID},
+                ${DbStructureSubmission.Columns.STATUS},
+                ${DbStructureSubmission.Columns.SCORE},
+                ${DbStructureSubmission.Columns.HINT},
+                ${DbStructureSubmission.Columns.TIME},
+                ${DbStructureSubmission.Columns.REPLY},
+                ${DbStructureSubmission.Columns.ATTEMPT_ID},
+                ${DbStructureSubmission.Columns.SESSION},
+                ${DbStructureSubmission.Columns.ETA},
+                ${DbStructureSubmission.Columns.FEEDBACK}
+            )
+            SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            WHERE NOT EXISTS (
+                SELECT * FROM ${DbStructureSubmission.TABLE_NAME} 
+                WHERE ${DbStructureSubmission.Columns.ID} > ? AND ${DbStructureSubmission.Columns.ATTEMPT_ID} = ?
+            )
+        """.trimIndent(),
+            arrayOf(
+                persistentObject.id,
+                persistentObject.status?.ordinal,
+                persistentObject.score,
+                persistentObject.hint,
+                persistentObject.time?.let(utcDateAdapter::dateToString),
+                persistentObject.reply?.let(gson::toJson),
+                persistentObject.attempt,
+                persistentObject.session,
+                persistentObject.eta,
+                persistentObject.feedback?.let(gson::toJson),
+                persistentObject.id,
+                persistentObject.attempt
+            )
+        )
+    }
 }

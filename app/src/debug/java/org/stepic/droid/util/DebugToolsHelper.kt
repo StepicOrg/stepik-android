@@ -6,7 +6,6 @@ import com.facebook.flipper.android.utils.FlipperUtils
 import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin
 import com.facebook.flipper.plugins.inspector.DescriptorMapping
 import com.facebook.flipper.plugins.inspector.InspectorFlipperPlugin
-import com.facebook.flipper.plugins.leakcanary.LeakCanaryFlipperPlugin
 import com.facebook.flipper.plugins.navigation.NavigationFlipperPlugin
 import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
@@ -29,7 +28,6 @@ object DebugToolsHelper {
             client.addPlugin(InspectorFlipperPlugin(app, DescriptorMapping.withDefaults()))
             client.addPlugin(DatabasesFlipperPlugin(app))
             client.addPlugin(SharedPreferencesFlipperPlugin(app))
-            client.addPlugin(LeakCanaryFlipperPlugin())
             client.addPlugin(NavigationFlipperPlugin.getInstance())
             client.addPlugin(networkPlugin)
 

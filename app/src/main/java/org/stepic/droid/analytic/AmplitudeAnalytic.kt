@@ -89,6 +89,7 @@ interface AmplitudeAnalytic {
     }
 
     object Search {
+        const val COURSE_SEARCH_CLICKED = "Course search clicked"
         const val SEARCHED = "Course searched"
 
         const val PARAM_SUGGESTION = "suggestion"

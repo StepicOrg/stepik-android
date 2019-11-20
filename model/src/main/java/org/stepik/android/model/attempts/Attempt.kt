@@ -3,6 +3,9 @@ package org.stepik.android.model.attempts
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.util.readDate
+import org.stepik.android.model.util.writeDate
+import java.util.Date
 
 data class Attempt(
     @SerializedName("id")
@@ -20,7 +23,7 @@ data class Attempt(
     @SerializedName("status")
     val status: String? = null,
     @SerializedName("time")
-    val time: String? = null,
+    val time: Date? = null,
 
     @SerializedName("time_left")
     val timeLeft: String? = null
@@ -35,7 +38,7 @@ data class Attempt(
         parcel.writeParcelable(_dataset, flags)
         parcel.writeString(datasetUrl)
         parcel.writeString(status)
-        parcel.writeString(time)
+        parcel.writeDate(time)
         parcel.writeString(timeLeft)
     }
 
@@ -50,7 +53,7 @@ data class Attempt(
                 parcel.readParcelable(DatasetWrapper::class.java.classLoader),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readString(),
+                parcel.readDate(),
                 parcel.readString()
             )
 

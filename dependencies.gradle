@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2051,
-        name                 : '1.101',
+        code                 : 2054,
+        name                 : '1.102',
 
         minSdk               : 16,
         targetSdk            : 28,
@@ -217,7 +217,6 @@ ext.libraries = [
         ktlint               : "com.pinterest:ktlint:$versions.ktlint",
 
         flipperCore          : "com.facebook.flipper:flipper:$versions.flipper",
-        flipperLeakcanary    : "com.facebook.flipper:flipper-leakcanary-plugin:$versions.flipper",
         flipperNetwork       : "com.facebook.flipper:flipper-network-plugin:$versions.flipper",
         flipperNoop          : "com.facebook.flipper:flipper-noop:$versions.flipper",
         soloader             : "com.facebook.soloader:soloader:$versions.soloader"

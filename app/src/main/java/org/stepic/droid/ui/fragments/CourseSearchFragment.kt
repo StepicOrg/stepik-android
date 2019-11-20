@@ -5,9 +5,16 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.experiments.CatalogSearchSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.presenters.SearchCoursesPresenter
 import org.stepic.droid.model.CourseListType
@@ -34,6 +41,11 @@ class CourseSearchFragment: CourseListFragmentBase() {
     @Inject
     lateinit var searchCoursesPresenter: SearchCoursesPresenter
 
+    @Inject
+    lateinit var catalogSearchSplitTest: CatalogSearchSplitTest
+
+    lateinit var searchIcon: ImageView
+
     override fun injectComponent() {
         App
             .componentManager()
@@ -58,7 +70,11 @@ class CourseSearchFragment: CourseListFragmentBase() {
         emptySearch.isFocusable = false
         searchCoursesPresenter.attachView(this)
         searchCoursesPresenter.restoreState()
+        searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         swipeRefreshLayout.post { searchCoursesPresenter.downloadData(searchQuery) }
+        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
+            setupCatalogABSearchBar()
+        }
     }
 
     override fun onDestroyView() {
@@ -84,7 +100,42 @@ class CourseSearchFragment: CourseListFragmentBase() {
         inflater.inflate(R.menu.search_menu, menu)
         val searchMenuItem = menu.findItem(R.id.action_search)
         val searchView = searchMenuItem.actionView as AutoCompleteSearchView
+        setupSearchView(searchView, searchMenuItem)
+        this.searchView = searchView
+    }
 
+    override fun onNeedDownloadNextPage() {
+        searchCoursesPresenter.downloadData(searchQuery)
+    }
+
+    override fun onRefresh() {
+        searchCoursesPresenter.refreshData(searchQuery)
+    }
+
+    private fun setupCatalogABSearchBar() {
+        centeredToolbar.isVisible = false
+        backIcon.isVisible = true
+        if (android.os.Build.VERSION.SDK_INT < 21) {
+            toolbarShadow.isVisible = true
+        }
+        searchViewToolbar.isVisible = true
+        searchViewContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        searchViewToolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+        searchIcon.setImageResource(0)
+        (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
+        setupSearchView(searchViewToolbar)
+        searchViewToolbar.setIconifiedByDefault(false)
+        backIcon.setOnClickListener {
+            val hasFocus = searchViewToolbar.hasFocus()
+            if (hasFocus) {
+                searchViewToolbar.clearFocus()
+            } else {
+                activity?.finish()
+            }
+        }
+    }
+
+    private fun setupSearchView(searchView: AutoCompleteSearchView, searchMenuItem: MenuItem? = null) {
         searchView.setCloseIconDrawableRes(getCloseIconDrawableRes())
         searchView.setSearchable(requireActivity())
         searchView.initSuggestions(rootView)
@@ -101,26 +152,20 @@ class CourseSearchFragment: CourseListFragmentBase() {
             }
         })
 
-        searchMenuItem.expandActionView()
+        if (searchMenuItem == null) {
+            searchView.onActionViewExpanded()
+        } else {
+            searchMenuItem.expandActionView()
+            searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem): Boolean = true
+
+                override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                    activity?.finish()
+                    return true
+                }
+            })
+        }
         searchQuery?.let { searchView.setQuery(it, false) }
         searchView.clearFocus()
-
-        searchMenuItem.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem): Boolean = true
-
-            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
-                activity?.finish()
-                return true
-            }
-        })
-        this.searchView = searchView
-    }
-
-    override fun onNeedDownloadNextPage() {
-        searchCoursesPresenter.downloadData(searchQuery)
-    }
-
-    override fun onRefresh() {
-        searchCoursesPresenter.refreshData(searchQuery)
     }
 }
