@@ -1,4 +1,4 @@
-package org.stepik.android.view.course_content.ui.adaptet
+package org.stepik.android.view.course_content.ui.adapter
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -7,7 +7,6 @@ import org.robolectric.RobolectricTestRunner
 import org.stepik.android.model.Section
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.model.CourseContentSectionDate
-import org.stepik.android.view.course_content.ui.adapter.CourseContentDiffCallback
 import java.util.*
 
 @RunWith(RobolectricTestRunner::class)
