@@ -39,6 +39,7 @@ import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.profile.ui.adapter.ProfileSettingsAdapterDelegate
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -46,7 +47,7 @@ import java.util.Date
 import java.util.TimeZone
 import javax.inject.Inject
 
-class ProfileFragment : Fragment(), ProfileView {
+class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragment.Companion.Callback {
 
     companion object {
         private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
@@ -75,6 +76,9 @@ class ProfileFragment : Fragment(), ProfileView {
     private var achievementsToDisplay: Int = 0
     private var isShortInfoExpanded: Boolean = false
     private var userId: Long by argument()
+
+    private val viewStateDelegate =
+        ViewStateDelegate<ProfileView.State>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,7 +156,7 @@ class ProfileFragment : Fragment(), ProfileView {
         }
 
         certificatesTitleContainer.setOnClickListener {
-//            screenManager.showCertificates(requireContext(), userId)
+            screenManager.showCertificates(requireContext(), userId)
         }
     }
 
@@ -201,6 +205,14 @@ class ProfileFragment : Fragment(), ProfileView {
         }
     }
 
+    private fun initViewStateDelegate() {
+        viewStateDelegate.addState<ProfileView.State.Loading>(profileLoadingView)
+        viewStateDelegate.addState<ProfileView.State.NetworkError>(profileReportProblem)
+        viewStateDelegate.addState<ProfileView.State.UserNotFoundError>(profileEmptyUser)
+        viewStateDelegate.addState<ProfileView.State.NeedAuthError>(profileNeedAuth)
+        viewStateDelegate.addState<ProfileView.State.ProfileLoaded>(contentRoot)
+    }
+
     override fun setState(state: ProfileView.State) {
         // no op
     }
@@ -239,9 +251,7 @@ class ProfileFragment : Fragment(), ProfileView {
         }
 
         notificationStreakSwitch.setOnCheckedChangeListener { _, isChecked ->
-            // TODO ProfilePresenter
-            //streakPresenter.switchNotificationStreak(isChecked)
-            hideNotificationTime(!isChecked)
+            profilePresenter.switchNotificationStreak(isChecked)
         }
 
         //need to set for show default value, when user enable it
@@ -258,6 +268,11 @@ class ProfileFragment : Fragment(), ProfileView {
 
     override fun setNewTimeInterval(timePresentationString: String) {
         notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
+    }
+
+    override fun onTimeIntervalPicked(chosenInterval: Int) {
+        profilePresenter.setStreakTime(chosenInterval)
+        analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, chosenInterval.toString())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

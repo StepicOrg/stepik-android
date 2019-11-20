@@ -5,7 +5,9 @@ import org.stepic.droid.model.AchievementFlatItem
 interface ProfileView {
     sealed class State {
         object Idle : State()
-        object Error : State()
+        object NetworkError : State()
+        object UserNotFoundError: State()
+        object NeedAuthError : State()
         object Loading : State()
         class ProfileLoaded() : State()
     }
