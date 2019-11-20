@@ -2,31 +2,61 @@ package org.stepik.android.view.profile.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.empty_login.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
+import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
+import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
+import org.stepic.droid.model.AchievementFlatItem
+import org.stepic.droid.ui.activities.MainFeedActivity
+import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
+import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
+import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
+import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.profile.ui.adapter.ProfileSettingsAdapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import java.util.Date
+import java.util.TimeZone
 import javax.inject.Inject
 
 class ProfileFragment : Fragment(), ProfileView {
 
     companion object {
-        fun newInstance(): Fragment = ProfileFragment()
+        private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
+        private const val DETAILED_INFO_CONTAINER_KEY = "detailedInfoContainerKey"
+
+        fun newInstance(): ProfileFragment = newInstance(0)
+
+        fun newInstance(userId: Long = 0) = ProfileFragment().apply {
+            this.userId = userId
+        }
     }
 
     @Inject
@@ -41,6 +71,10 @@ class ProfileFragment : Fragment(), ProfileView {
     private lateinit var profilePresenter: ProfilePresenter
 
     private var profileSettingsAdapter: DefaultDelegateAdapter<ProfileSettingsViewModel> = DefaultDelegateAdapter()
+
+    private var achievementsToDisplay: Int = 0
+    private var isShortInfoExpanded: Boolean = false
+    private var userId: Long by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +94,65 @@ class ProfileFragment : Fragment(), ProfileView {
         inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        achievementsToDisplay = resources.getInteger(R.integer.achievements_to_display)
+        super.onViewCreated(view, savedInstanceState)
+        initToolbar()
+        initTimezone()
+
+        // app:fontFamily doesn't work on this view
+        notificationStreakSwitch.typeface = ResourcesCompat.getFont(requireContext(), R.font.roboto_light)
+        // Profile recycler
         setupProfileSettingsAdapter()
         with(profileSettingsRecyclerView) {
             adapter = profileSettingsAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+        }
+
+        achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
+        achievementsTilesContainer.adapter = AchievementsTileAdapter().apply { onAchievementItemClick = {
+            // AchievementDetailsDialog.newInstance(it, localUserViewModel?.isMyProfile ?: false).show(childFragmentManager, AchievementDetailsDialog.TAG)
+        }}
+        achievementsTilesContainer.isNestedScrollingEnabled = false
+        initAchievementsPlaceholders()
+
+        profileImage.setOnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_IMAGE) }
+        val clickStreakValue = View.OnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_STREAK_VALUE) }
+        currentStreakValue.setOnClickListener(clickStreakValue)
+        maxStreakValue.setOnClickListener(clickStreakValue)
+        profileName.setOnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_FULL_NAME) }
+
+        notificationIntervalChooserContainer.setOnClickListener {
+            val supportFragmentManager = activity
+                ?.supportFragmentManager
+                ?: return@setOnClickListener
+
+            val dialog = TimeIntervalPickerDialogFragment.newInstance()
+            dialog.setTargetFragment(this@ProfileFragment, 0)
+            dialog.showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
+            analytic.reportEvent(Analytic.Interaction.CLICK_CHOOSE_NOTIFICATION_INTERVAL)
+        }
+
+        shortBioInfoContainer.setOnClickListener {
+            changeStateOfUserInfo()
+        }
+
+        authAction.setOnClickListener {
+            screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX)
+        }
+
+        shortBioSecondText.textView.textSize = 14f
+        shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
+
+        achievementsLoadingError.tryAgain.setOnClickListener {
+//            achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0,
+//            MAX_ACHIEVEMENTS_TO_DISPLAY, true)
+        }
+        viewAllAchievements.setOnClickListener {
+            // screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false)
+        }
+
+        certificatesTitleContainer.setOnClickListener {
+//            screenManager.showCertificates(requireContext(), userId)
         }
     }
 
@@ -75,6 +164,141 @@ class ProfileFragment : Fragment(), ProfileView {
     override fun onStop() {
         profilePresenter.detachView(this)
         super.onStop()
+    }
+
+    private fun changeStateOfUserInfo() {
+        shortBioArrowImageView.changeState()
+        val isExpanded = shortBioArrowImageView.isExpanded()
+        isShortInfoExpanded = isExpanded
+        if (isExpanded) {
+            StepikAnimUtils.expand(detailedInfoContainer)
+        } else {
+            StepikAnimUtils.collapse(detailedInfoContainer)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(DETAILED_INFO_CONTAINER_KEY, isShortInfoExpanded)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        savedInstanceState?.let {
+            isShortInfoExpanded = it.getBoolean(DETAILED_INFO_CONTAINER_KEY)
+            restoreVisibility(detailedInfoContainer, it,
+                DETAILED_INFO_CONTAINER_KEY
+            )
+        }
+
+    }
+
+    private fun restoreVisibility(view: View, bundle: Bundle, bundleKey: String) {
+        view.visibility = if (bundle.getBoolean(bundleKey)) {
+            View.VISIBLE
+        } else {
+            View.GONE
+        }
+    }
+
+    override fun setState(state: ProfileView.State) {
+        // no op
+    }
+
+    override fun showAchievements(achievements: List<AchievementFlatItem>) {
+        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
+        achievementsLoadingPlaceholder.isVisible = false
+        achievementsLoadingError.isVisible = false
+        achievementsTilesContainer.isVisible = true
+        achievementsContainer.isVisible = true
+    }
+
+    override fun onAchievementsLoadingError() {
+        achievementsContainer.isVisible = true
+        achievementsLoadingPlaceholder.isVisible = false
+        achievementsLoadingError.isVisible = true
+        achievementsTilesContainer.isVisible = false
+    }
+
+    override fun onAchievementsLoading() {
+        achievementsContainer.isVisible = true
+        achievementsLoadingPlaceholder.isVisible = true
+        achievementsLoadingError.isVisible = false
+        achievementsTilesContainer.isVisible = false
+    }
+
+    override fun showNotificationEnabledState(notificationEnabled: Boolean, notificationTimeValue: String) {
+        notificationStreakSwitch.isChecked = notificationEnabled
+        if (notificationStreakSwitch.visibility != View.VISIBLE) {
+            notificationStreakSwitch.visibility = View.VISIBLE
+        }
+        if (notificationEnabled) {
+            hideNotificationTime(false)
+        } else {
+            hideNotificationTime(true)
+        }
+
+        notificationStreakSwitch.setOnCheckedChangeListener { _, isChecked ->
+            // TODO ProfilePresenter
+            //streakPresenter.switchNotificationStreak(isChecked)
+            hideNotificationTime(!isChecked)
+        }
+
+        //need to set for show default value, when user enable it
+        notificationIntervalTitle.text = resources.getString(R.string.notification_time, notificationTimeValue)
+    }
+
+    override fun hideNotificationTime(needHide: Boolean) {
+        if (needHide) {
+            StepikAnimUtils.collapse(notificationIntervalChooserContainer)
+        } else {
+            StepikAnimUtils.expand(notificationIntervalChooserContainer)
+        }
+    }
+
+    override fun setNewTimeInterval(timePresentationString: String) {
+        notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.menu_item_share -> {
+                // shareProfile()
+                true
+            }
+            R.id.menu_item_edit -> {
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)
+                screenManager.showProfileEdit(context)
+                true
+            }
+            else ->
+                false
+        }
+
+    private fun initTimezone() {
+        val timezone = TimeZone.getDefault()
+        val nowDate = Date()
+        val isDaylight = timezone.inDaylightTime(nowDate)
+        val print = String.format("%s\n%s",
+            DateTimeHelper.hourMinutesOfMidnightDiffWithUtc(timezone, nowDate),
+            timezone.getDisplayName(isDaylight, TimeZone.LONG))
+        notificationTimeZoneInfo.text = getString(R.string.streak_updated_timezone, print)
+    }
+
+    private fun initToolbar() {
+        val needCloseButton = context is CloseButtonInToolbar
+        initCenteredToolbar(R.string.profile_title, needCloseButton, getCloseIconDrawableRes())
+    }
+
+    private fun initAchievementsPlaceholders() {
+        for (i in 0 until achievementsToDisplay) {
+            val view = layoutInflater.inflate(R.layout.view_achievement_tile_placeholder, achievementsLoadingPlaceholder, false)
+            view.layoutParams = (view.layoutParams as LinearLayout.LayoutParams).apply {
+                weight = 1f
+                width = 0
+            }
+            achievementsLoadingPlaceholder.addView(view)
+        }
     }
 
     private fun setupProfileSettingsAdapter() {
