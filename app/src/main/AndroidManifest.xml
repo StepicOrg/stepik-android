@@ -239,8 +239,7 @@
 
         <activity
             android:name=".features.stories.ui.activity.StoriesActivity"
-            android:theme="@style/StoryActivityTheme"
-            android:screenOrientation="portrait" />
+            android:theme="@style/StoryActivityTheme" />
 
         <activity
             android:name="org.stepik.android.view.course.ui.activity.CourseActivity">
