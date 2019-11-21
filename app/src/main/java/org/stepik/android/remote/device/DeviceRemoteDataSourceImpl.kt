@@ -14,12 +14,16 @@ class DeviceRemoteDataSourceImpl
 constructor(
     private val deviceService: DeviceService
 ) : DeviceRemoteDataSource {
-    override fun getDevicesByRegistrationId(token: String): Single<List<Device?>?> =
-        deviceService.getDeviceByRegistrationId(token).map(DeviceResponse::devices)
+    override fun getDevicesByRegistrationId(token: String): Single<List<Device>> =
+        deviceService
+            .getDeviceByRegistrationId(token)
+            .map(DeviceResponse::devices)
 
     override fun renewDeviceRegistration(deviceId: Long, deviceRequest: DeviceRequest): Completable =
-        deviceService.renewDeviceRegistration(deviceId, deviceRequest)
+        deviceService
+            .renewDeviceRegistration(deviceId, deviceRequest)
 
     override fun registerDevice(deviceRequest: DeviceRequest): Completable =
-        deviceService.registerDevice(deviceRequest)
+        deviceService
+            .registerDevice(deviceRequest)
 }

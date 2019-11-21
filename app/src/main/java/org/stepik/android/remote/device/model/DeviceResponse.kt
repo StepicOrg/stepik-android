@@ -9,5 +9,5 @@ class DeviceResponse(
     @SerializedName("meta")
     override val meta: Meta,
     @SerializedName("devices")
-    val devices: List<Device?>?
+    val devices: List<Device>
 ) : MetaResponse

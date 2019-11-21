@@ -44,7 +44,7 @@ constructor(
                 try {
                     val pins: ArrayList<Long> = userActivityRepository.getUserActivities(sharedPreferenceHelper.profile?.id ?: throw Exception("User is not auth"))
                         .blockingGet()
-                        ?.firstOrNull()
+                        .firstOrNull()
                         ?.pins!!
                     val (currentStreak, isSolvedToday) = StepikUtil.getCurrentStreakExtended(pins)
                     if (currentStreak <= 0) {

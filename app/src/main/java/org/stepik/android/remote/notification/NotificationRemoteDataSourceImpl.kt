@@ -27,20 +27,19 @@ constructor(
             notificationService.putNotification(id, NotificationRequest(notification))
         })
 
-    override fun getNotifications(notificationCategory: NotificationCategory, page: Int): Single<PagedList<Notification>> {
-        val category = getNotificationCategoryString(notificationCategory)
-        return notificationService
-            .getNotifications(page, category)
+    override fun getNotifications(notificationCategory: NotificationCategory, page: Int): Single<PagedList<Notification>> =
+        notificationService
+            .getNotifications(page, type = getNotificationCategoryString(notificationCategory))
             .map { it.toPagedList(NotificationResponse::notifications) }
-    }
 
-    override fun markNotificationAsRead(notificationCategory: NotificationCategory): Completable {
-        val category = getNotificationCategoryString(notificationCategory)
-        return notificationService.markNotificationAsRead(category)
-    }
+    override fun markNotificationAsRead(notificationCategory: NotificationCategory): Completable =
+        notificationService
+            .markNotificationAsRead(getNotificationCategoryString(notificationCategory))
 
-    override fun getNotificationStatuses(): Single<List<NotificationStatuses>?> =
-        notificationService.getNotificationStatuses().map(NotificationStatusesResponse::notificationStatuses)
+    override fun getNotificationStatuses(): Single<List<NotificationStatuses>> =
+        notificationService
+            .getNotificationStatuses()
+            .map(NotificationStatusesResponse::notificationStatuses)
 
     private fun getNotificationCategoryString(notificationCategory: NotificationCategory): String? =
         if (notificationCategory === NotificationCategory.all) {

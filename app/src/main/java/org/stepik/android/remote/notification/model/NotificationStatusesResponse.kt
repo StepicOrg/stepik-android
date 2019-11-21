@@ -9,5 +9,5 @@ class NotificationStatusesResponse(
     @SerializedName("meta")
     override val meta: Meta,
     @SerializedName("notification-statuses")
-    val notificationStatuses: List<NotificationStatuses>?
+    val notificationStatuses: List<NotificationStatuses>
 ) : MetaResponse

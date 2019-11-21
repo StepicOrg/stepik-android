@@ -13,7 +13,7 @@ class DeviceRepositoryImpl
 constructor(
     private val deviceRemoteDataSource: DeviceRemoteDataSource
 ) : DeviceRepository {
-    override fun getDevicesByRegistrationId(token: String): Single<List<Device?>?> =
+    override fun getDevicesByRegistrationId(token: String): Single<List<Device>> =
         deviceRemoteDataSource.getDevicesByRegistrationId(token)
 
     override fun renewDeviceRegistration(deviceId: Long, deviceRequest: DeviceRequest): Completable =

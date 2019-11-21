@@ -122,12 +122,14 @@ constructor(
         while (hasNextPage.get()) {
             val coursesFromInternet: List<Course>? = try {
                 if (courseType == CourseListType.FEATURED) {
-                    val response = courseListRepository.getCourseList(
-                        CourseListType.FEATURED,
-                        currentPage.get(),
-                        getLang(),
-                        sourceType = DataSourceType.REMOTE
-                    ).blockingGet()
+                    val response = courseListRepository
+                        .getCourseList(
+                            CourseListType.FEATURED,
+                            currentPage.get(),
+                            getLang(),
+                            sourceType = DataSourceType.REMOTE
+                        )
+                        .blockingGet()
                     handleMeta(response)
                     response
                 } else {

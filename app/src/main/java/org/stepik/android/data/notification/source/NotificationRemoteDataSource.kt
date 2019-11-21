@@ -11,5 +11,5 @@ interface NotificationRemoteDataSource {
     fun putNotifications(vararg notificationIds: Long, isRead: Boolean): Completable
     fun getNotifications(notificationCategory: NotificationCategory, page: Int): Single<PagedList<Notification>>
     fun markNotificationAsRead(notificationCategory: NotificationCategory): Completable
-    fun getNotificationStatuses(): Single<List<NotificationStatuses>?>
+    fun getNotificationStatuses(): Single<List<NotificationStatuses>>
 }

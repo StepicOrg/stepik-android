@@ -20,7 +20,11 @@ constructor(
     override fun getCourseList(courseListType: CourseListType, page: Int, lang: String, sourceType: DataSourceType): Single<PagedList<Course>> =
         when (sourceType) {
             DataSourceType.REMOTE ->
-                courseListRemoteDataSource.getPopularCourses(page, lang)
+                if (courseListType == CourseListType.FEATURED) {
+                    courseListRemoteDataSource.getPopularCourses(page, lang)
+                } else {
+                    throw IllegalArgumentException("Unsupported course list type = $courseListType for source = $sourceType")
+                }
 
             DataSourceType.CACHE ->
                 courseListCacheDataSource.getCourseList(courseListType)

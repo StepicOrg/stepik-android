@@ -17,13 +17,13 @@ class SearchRemoteDataSourceImpl
 constructor(
     private val searchService: SearchService
 ) : SearchRemoteDataSource {
-    override fun getSearchResultsCourses(page: Int, rawQuery: String?, lang: String): Single<PagedList<SearchResult>> {
-        val encodedQuery = URLEncoder.encode(rawQuery)
-        return searchService
-            .getSearchResults(page, encodedQuery, lang)
+    override fun getSearchResultsCourses(page: Int, rawQuery: String?, lang: String): Single<PagedList<SearchResult>> =
+        searchService
+            .getSearchResults(page, URLEncoder.encode(rawQuery), lang)
             .map { it.toPagedList(SearchResultResponse::searchResultList) }
-    }
 
     override fun getSearchQueries(query: String): Single<List<SearchQuery>> =
-        searchService.getSearchQueries(query).map(QueriesResponse::queries)
+        searchService
+            .getSearchQueries(query)
+            .map(QueriesResponse::queries)
 }

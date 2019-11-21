@@ -6,6 +6,8 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.Singles.zip
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.PublishSubject
@@ -17,6 +19,7 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.addDisposable
+import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.rating.repository.RatingRepository
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.adaptive.RatingItem
@@ -65,7 +68,7 @@ constructor(
         val left = BiFunction<Any, Any, Any> { a, _ -> a}
 
         RATING_PERIODS.forEachIndexed { pos, period ->
-            compositeDisposable addDisposable resolveUsers(ratingRepository.getRating(courseId, ITEMS_PER_PAGE, period))
+            compositeDisposable += resolveUsers(ratingRepository.getRating(courseId, ITEMS_PER_PAGE, period))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .doOnError(this::onError)
@@ -80,18 +83,20 @@ constructor(
 
     private fun resolveUsers(single: Single<List<RatingItem>>): Single<List<RatingItem>> =
             single.flatMap {
-                val userIds = it.filter{ it.isNotFake }.map { it.user }.toLongArray()
-                if (userIds.isEmpty()) {
-                    Single.just(emptyList())
-                } else {
-                    userRepository.getUsers(*userIds)
-                }.zipWith(Single.just(it))
+                val userIds = it
+                    .filter(RatingItem::isNotFake)
+                    .mapToLongArray(RatingItem::user)
+
+                zip(userRepository.getUsers(*userIds), Single.just(it))
             }.map { (users, items) ->
                 items.mapIndexed { index, item ->
                     val user = users.find { it.id == item.user }
                     val name = user?.fullName ?: ratingNamesGenerator.getName(item.user)
 
-                    item.copy(rank = if (item.rank == 0) index + 1 else item.rank, name = name)
+                    item.copy(
+                        rank = if (item.rank == 0) index + 1 else item.rank,
+                        name = name
+                    )
                 }
             }
 

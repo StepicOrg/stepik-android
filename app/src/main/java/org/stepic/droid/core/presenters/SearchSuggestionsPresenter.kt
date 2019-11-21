@@ -3,6 +3,7 @@ package org.stepic.droid.core.presenters
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -42,18 +43,18 @@ class SearchSuggestionsPresenter
 
     private fun initSearchView(searchView: SearchSuggestionsView) {
         val queryPublisher = publisher
-                .debounce(AUTOCOMPLETE_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
-                .subscribeOn(scheduler)
+            .debounce(AUTOCOMPLETE_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
+            .subscribeOn(scheduler)
 
-        compositeDisposable.add(queryPublisher
-                .flatMap { query -> Observable.fromCallable { databaseFacade.getSearchQueries(query, DB_ELEMENTS_COUNT) } }
-                .observeOn(mainScheduler)
-                .subscribe { searchView.setSuggestions(it, SearchQuerySource.DB) })
+        compositeDisposable += queryPublisher
+            .flatMap { query -> Observable.fromCallable { databaseFacade.getSearchQueries(query, DB_ELEMENTS_COUNT) } }
+            .observeOn(mainScheduler)
+            .subscribe { searchView.setSuggestions(it, SearchQuerySource.DB) }
 
-        compositeDisposable.add(queryPublisher
+        compositeDisposable += queryPublisher
                 .flatMap { query -> searchRepository.getSearchQueries(query).toObservable().onErrorResumeNext(Observable.empty()) }
                 .observeOn(mainScheduler)
-                .subscribe { searchView.setSuggestions(it, SearchQuerySource.API) })
+                .subscribe { searchView.setSuggestions(it, SearchQuerySource.API) }
     }
 
     fun onQueryTextChange(query: String) {

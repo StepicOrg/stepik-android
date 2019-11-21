@@ -42,7 +42,7 @@ constructor(
     }
 
     private fun renewDeviceRegistration(token: String) {
-        val deviceId = deviceRepository.getDevicesByRegistrationId(token).blockingGet()?.firstOrNull()?.id
+        val deviceId = deviceRepository.getDevicesByRegistrationId(token).blockingGet().firstOrNull()?.id
         if (deviceId != null) {
             deviceRepository.renewDeviceRegistration(deviceId, createDeviceRequest(token)).blockingAwait()
         } else {

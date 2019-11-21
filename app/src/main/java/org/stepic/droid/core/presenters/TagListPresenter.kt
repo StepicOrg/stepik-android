@@ -1,9 +1,9 @@
 package org.stepic.droid.core.presenters
 
-import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
@@ -51,17 +51,14 @@ constructor(
                 view?.showLoading()
             }
             .observeOn(backgroundScheduler)
-            .flatMap {
+            .flatMapSingle {
                 tagsRepository.getSearchResultsOfTag(it, tag, getLang())
-                    .toObservable()
             }
-            .doOnNext { handleMeta(it) }
-            .map { searchResolver.getCourseIdsFromSearchResults(it) }
-            .flatMap {
-                zipIdsAndCourses(it)
-            }
-            .map {
-                sortByIdsInSearch(it.first, it.second)
+            .doOnNext(::handleMeta)
+            .map(searchResolver::getCourseIdsFromSearchResults)
+            .flatMapSingle(::zipIdsAndCourses)
+            .map { (courseIds, courses) ->
+                sortByIdsInSearch(courseIds, courses)
             }
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -91,17 +88,11 @@ constructor(
         currentPage.set(meta.page + 1)
     }
 
-    private fun zipIdsAndCourses(it: LongArray): Observable<Pair<LongArray, List<Course>>>? {
-        return Observable.zip(
-                Observable.just(it),
-                courseRepository
-                    .getCourses(*it, primarySourceType = DataSourceType.REMOTE)
-                    .toObservable(),
-                BiFunction<LongArray, List<Course>, Pair<LongArray, List<Course>>> { courseIds, courses ->
-                    courseIds to courses
-                }
+    private fun zipIdsAndCourses(it: LongArray): Single<Pair<LongArray, List<Course>>> =
+        Singles.zip(
+            Single.just(it),
+            courseRepository.getCourses(*it, primarySourceType = DataSourceType.REMOTE)
         )
-    }
 
     private fun sortByIdsInSearch(courseIds: LongArray, courses: List<Course>): List<Course> {
         val idToPositionMap: Map<Long, Int> = courseIds

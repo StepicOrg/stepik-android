@@ -122,7 +122,7 @@ class NotificationListPresenter
     @WorkerThread
     private fun getNotificationFromOnePage(notificationCategory: NotificationCategory): Iterable<Notification> {
         Timber.d("loading from page %d", page.get())
-        val notifications = notificationRepository.getNotifications(notificationCategory, page.get()).blockingGet() ?: throw NullPointerException("notifications null body")
+        val notifications = notificationRepository.getNotifications(notificationCategory, page.get()).blockingGet()
         hasNextPage.set(notifications.hasNext)
         page.set(notifications.page + 1)
 
@@ -130,9 +130,9 @@ class NotificationListPresenter
 
         Timber.d("before filter size is %d", notifications.size)
         val filteredNotifications = notifications
-                .filter {
-                    it.htmlText?.isNotBlank() ?: false
-                }
+            .filter {
+                it.htmlText?.isNotBlank() ?: false
+            }
 
         val userIdToNotificationsIndexes = LongSparseArray<MutableList<Int>>()  // userId -> notifications index where avatar should be set
         val userIds = ArraySet<Long>()

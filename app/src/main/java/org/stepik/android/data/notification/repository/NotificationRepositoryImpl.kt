@@ -29,6 +29,6 @@ constructor(
     override fun markNotificationAsRead(notificationCategory: NotificationCategory): Completable =
         notificationRemoteDataSource.markNotificationAsRead(notificationCategory)
 
-    override fun getNotificationStatuses(): Single<List<NotificationStatuses>?> =
+    override fun getNotificationStatuses(): Single<List<NotificationStatuses>> =
         notificationRemoteDataSource.getNotificationStatuses()
 }

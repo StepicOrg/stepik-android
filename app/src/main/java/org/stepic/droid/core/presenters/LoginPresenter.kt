@@ -166,10 +166,7 @@ class LoginPresenter
                             if (socialType == null) return@fromRunnable
 
                             val event: String = try {
-                                val request = userProfileRepository.getUserProfile().blockingGet()
-
-                                val user = request?.first
-                                val profile = request?.second
+                                val (user, profile) = userProfileRepository.getUserProfile().blockingGet()
 
                                 if (profile != null) {
                                     sharedPreferenceHelper.storeProfile(profile)

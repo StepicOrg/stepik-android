@@ -12,5 +12,5 @@ interface NotificationRepository {
     fun getNotificationsByCourseId(courseId: Long): Single<List<Notification>>
     fun getNotifications(notificationCategory: NotificationCategory, page: Int): Single<PagedList<Notification>>
     fun markNotificationAsRead(notificationCategory: NotificationCategory): Completable
-    fun getNotificationStatuses(): Single<List<NotificationStatuses>?>
+    fun getNotificationStatuses(): Single<List<NotificationStatuses>>
 }

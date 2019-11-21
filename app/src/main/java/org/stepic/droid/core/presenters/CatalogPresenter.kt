@@ -35,13 +35,10 @@ constructor(
         val lang = filters.first().language
         disposableContainer +=
             courseCollectionRepository.getCourseCollection(lang)
-                .map {
-                    it.sortedBy { courseCollection ->
-                        courseCollection.position
-                    }
-                }
-                .map {
-                    mapper.map(it)
+                .map { collections ->
+                    collections
+                        .sortedBy(CourseCollection::position)
+                        .let(mapper::map)
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)

@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.attempt.repository.AttemptRepository
@@ -20,7 +21,7 @@ import javax.inject.Inject
 class StepStructureResolverImpl
 @Inject
 constructor(
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val userPreferences: UserPreferences,
     private val stepRepository: StepRepository,
     private val progressRepository: ProgressRepository,
     private val attemptRepository: AttemptRepository,
@@ -57,7 +58,7 @@ constructor(
             step.block?.name != AppConstants.TYPE_TEXT &&
             step.block?.name != AppConstants.TYPE_VIDEO) {
             attemptRepository
-                .getAttemptsForStep(step.id, sharedPreferenceHelper.profile?.id ?: 0)
+                .getAttemptsForStep(step.id, userPreferences.userId)
                 .maybeFirst()
                 .flatMapSingleElement { attempt ->
                     submissionRepository
