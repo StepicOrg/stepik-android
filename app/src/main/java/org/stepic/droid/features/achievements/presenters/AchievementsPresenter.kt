@@ -6,8 +6,8 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.core.presenters.PresenterBase
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.util.addDisposable
+import org.stepik.android.domain.achievements.repository.AchievementsRepository
 import javax.inject.Inject
 
 class AchievementsPresenter

@@ -1,17 +1,17 @@
 package org.stepic.droid.configuration;
 
 import org.jetbrains.annotations.NotNull;
-import org.stepic.droid.web.Api;
+import org.stepik.android.remote.auth.model.TokenType;
 
 public interface Config {
 
-    String getOAuthClientId(@NotNull Api.TokenType type);
+    String getOAuthClientId(@NotNull TokenType type);
 
     String getBaseUrl();
 
-    String getOAuthClientSecret(Api.TokenType type);
+    String getOAuthClientSecret(@NotNull TokenType type);
 
-    String getGrantType(Api.TokenType type);
+    String getGrantType(@NotNull TokenType type);
 
     String getRefreshGrantType();
 

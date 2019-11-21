@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepic.droid.util.PagedList
 import org.stepik.android.data.course_list.source.CourseListCacheDataSource
 import org.stepik.android.model.Course
 import javax.inject.Inject
@@ -13,9 +14,9 @@ class CourseListCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : CourseListCacheDataSource {
-    override fun getCourseList(courseListType: CourseListType): Single<List<Course>> =
+    override fun getCourseList(courseListType: CourseListType): Single<PagedList<Course>> =
         Single.fromCallable {
-            databaseFacade.getAllCourses(courseListType)
+            PagedList(databaseFacade.getAllCourses(courseListType))
         }
 
     override fun addCourseToList(courseListType: CourseListType, courseId: Long): Completable =

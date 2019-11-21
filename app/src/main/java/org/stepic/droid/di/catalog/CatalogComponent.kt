@@ -2,9 +2,11 @@ package org.stepic.droid.di.catalog
 
 import dagger.Subcomponent
 import org.stepic.droid.ui.fragments.CatalogFragment
+import org.stepik.android.view.injection.course_list.CourseListDataModule
+import org.stepik.android.view.injection.tags.TagsDataModule
 
 @CatalogScope
-@Subcomponent(modules = arrayOf(CatalogModule::class))
+@Subcomponent(modules = [CatalogModule::class, TagsDataModule::class, CourseListDataModule::class])
 interface CatalogComponent {
 
     @Subcomponent.Builder

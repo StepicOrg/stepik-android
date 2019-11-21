@@ -12,9 +12,11 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.web.Api
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.view.course.ui.activity.CourseActivity
@@ -27,8 +29,9 @@ class DeadlinesNotificationDelegate
 @Inject
 constructor(
     private val context: Context,
+    private val courseRepository: CourseRepository,
     private val deadlinesCacheDataSource: DeadlinesCacheDataSource,
-    private val api: Api,
+    private val sectionRepository: SectionRepository,
     private val databaseFacade: DatabaseFacade,
     private val notificationHelper: NotificationHelper,
     stepikNotificationManager: StepikNotificationManager
@@ -122,7 +125,7 @@ constructor(
         if (courseId == null) return null
         var course: Course? = databaseFacade.getCourseById(courseId)
         if (course == null) {
-            course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
+            course = courseRepository.getCourses(courseId, primarySourceType = DataSourceType.REMOTE).blockingGet().firstOrNull()
         }
         return course
     }
@@ -130,7 +133,7 @@ constructor(
     private fun getSection(sectionId: Long): Section? {
         var section: Section? = databaseFacade.getSectionById(sectionId)
         if (section == null) {
-            section = api.getSections(longArrayOf(sectionId)).execute()?.body()?.sections?.firstOrNull()
+            section = sectionRepository.getSections(sectionId, primarySourceType = DataSourceType.REMOTE).blockingGet().firstOrNull()
         }
         return section
     }

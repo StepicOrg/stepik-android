@@ -1,9 +1,9 @@
 package org.stepic.droid.core.presenters
 
-import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
@@ -11,10 +11,14 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.di.tags.TagScope
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.tags.repository.TagsRepository
 import org.stepik.android.model.Course
-import org.stepik.android.model.Meta
+import org.stepik.android.model.SearchResult
 import org.stepik.android.model.Tag
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
@@ -24,17 +28,16 @@ import javax.inject.Inject
 class TagListPresenter
 @Inject
 constructor(
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val tag: Tag,
-    private val api: Api,
+    private val courseRepository: CourseRepository,
+    private val tagsRepository: TagsRepository,
     private val searchResolver: SearchResolver,
     @MainScheduler
     private val mainScheduler: Scheduler,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler
 ) : PresenterBase<CoursesView>() {
-    companion object {
-        private const val FIRST_PAGE = 1
-    }
 
     private val currentPage = AtomicInteger(1)
     private val hasNextPage = AtomicBoolean(true)
@@ -48,18 +51,14 @@ constructor(
                 view?.showLoading()
             }
             .observeOn(backgroundScheduler)
-            .flatMap {
-                api.getSearchResultsOfTag(it, tag)
-                    .toObservable()
+            .flatMapSingle {
+                tagsRepository.getSearchResultsOfTag(it, tag, getLang())
             }
-            .doOnNext { handleMeta(it.meta) }
-            .map { it.searchResultList }
-            .map { searchResolver.getCourseIdsFromSearchResults(it) }
-            .flatMap {
-                zipIdsAndCourses(it)
-            }
-            .map {
-                sortByIdsInSearch(it.first, it.second)
+            .doOnNext(::handleMeta)
+            .map(searchResolver::getCourseIdsFromSearchResults)
+            .flatMapSingle(::zipIdsAndCourses)
+            .map { (courseIds, courses) ->
+                sortByIdsInSearch(courseIds, courses)
             }
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -84,23 +83,16 @@ constructor(
         }
     }
 
-    private fun handleMeta(meta: Meta) {
+    private fun handleMeta(meta: PagedList<SearchResult>) {
         hasNextPage.set(meta.hasNext)
         currentPage.set(meta.page + 1)
     }
 
-    private fun zipIdsAndCourses(it: LongArray): Observable<Pair<LongArray, List<Course>>>? {
-        return Observable.zip(
-                Observable.just(it),
-                api
-                        .getCoursesReactive(FIRST_PAGE, it)
-                        .toObservable()
-                        .map { it.courses },
-                BiFunction<LongArray, List<Course>, Pair<LongArray, List<Course>>> { courseIds, courses ->
-                    courseIds to courses
-                }
+    private fun zipIdsAndCourses(it: LongArray): Single<Pair<LongArray, List<Course>>> =
+        Singles.zip(
+            Single.just(it),
+            courseRepository.getCourses(*it, primarySourceType = DataSourceType.REMOTE)
         )
-    }
 
     private fun sortByIdsInSearch(courseIds: LongArray, courses: List<Course>): List<Course> {
         val idToPositionMap: Map<Long, Int> = courseIds
@@ -128,5 +120,10 @@ constructor(
     override fun detachView(view: CoursesView) {
         super.detachView(view)
         compositeDisposable.clear()
+    }
+
+    private fun getLang(): String {
+        val enumSet = sharedPreferenceHelper.filterForFeatured
+        return enumSet.iterator().next().language
     }
 }

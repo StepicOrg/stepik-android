@@ -3,21 +3,21 @@ package org.stepik.android.remote.course_payments
 import io.reactivex.Single
 import org.solovyev.android.checkout.Purchase
 import org.solovyev.android.checkout.Sku
-import org.stepic.droid.web.StepicRestLoggedService
 import org.stepik.android.data.course_payments.source.CoursePaymentsRemoteDataSource
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.remote.course_payments.model.CoursePaymentRequest
 import org.stepik.android.remote.course_payments.model.CoursePaymentsResponse
+import org.stepik.android.remote.course_payments.service.CoursePaymentService
 import javax.inject.Inject
 
 class CoursePaymentsRemoteDataSourceImpl
 @Inject
 constructor(
-    private val loggedService: StepicRestLoggedService
+    private val coursePaymentService: CoursePaymentService
 ) : CoursePaymentsRemoteDataSource {
 
     override fun createCoursePayment(courseId: Long, sku: Sku, purchase: Purchase): Single<CoursePayment> =
-        loggedService
+        coursePaymentService
             .createCoursePayment(
                 CoursePaymentRequest(CoursePaymentRequest.Body(
                     course   = courseId,
@@ -34,7 +34,7 @@ constructor(
             .map { it.coursePayments.first() }
 
     override fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status?): Single<List<CoursePayment>> =
-        loggedService
+        coursePaymentService
             .getCoursePaymentsByCourseId(courseId)
             .map(CoursePaymentsResponse::coursePayments)
             .map { payments ->

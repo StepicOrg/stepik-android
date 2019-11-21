@@ -1,6 +1,5 @@
 package org.stepic.droid.adaptive.model
 
-import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.SingleObserver
@@ -9,7 +8,9 @@ import io.reactivex.disposables.Disposable
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.lesson.repository.LessonRepository
+import org.stepik.android.domain.step.repository.StepRepository
+import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Step
 import org.stepik.android.model.attempts.Attempt
@@ -24,7 +25,12 @@ class Card(
         var attempt: Attempt? = null
 ) : Single<Card>() {
     @Inject
-    lateinit var api: Api
+    lateinit var lessonRepository: LessonRepository
+    @Inject
+    lateinit var stepRepository: StepRepository
+
+    @Inject
+    lateinit var stepQuizInteractor: StepQuizInteractor
 
     @Inject
     @field:MainScheduler
@@ -57,32 +63,26 @@ class Card(
         error = null
 
         if (stepSubscription == null || stepSubscription?.isDisposed == true && step == null) {
-            stepSubscription = api.getStepsByLessonId(lessonId)
+            stepSubscription = stepRepository.getStepByLessonId(lessonId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
-                    .subscribe({ setStep(it.steps.firstOrNull()) }, { onError(it) })
+                    .subscribe({ setStep(it) }, { onError(it) })
         } else {
             setStep(step)
         }
 
         if (lessonDisposable == null || lessonDisposable?.isDisposed == true && lesson == null) {
-            lessonDisposable = api.getLessons(lessonId)
+            lessonDisposable = lessonRepository.getLesson(lessonId)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
-                    .subscribe({ setLesson(it.lessons.firstOrNull()) }, { onError(it) })
+                    .subscribe({ setLesson(it) }, { onError(it) })
         }
     }
 
     private fun setStep(newStep: Step?) = newStep?.let {
         this.step = newStep
         if (attemptDisposable == null || attemptDisposable?.isDisposed == true && attempt == null) {
-            attemptDisposable = Observable.concat(
-                    api.getExistingAttemptsReactive(newStep.id).toObservable(),
-                    api.createNewAttemptReactive(newStep.id).toObservable()
-            )
-                    .filter { it.attempts.isNotEmpty() }
-                    .take(1)
-                    .map { it.attempts.firstOrNull() }
+            attemptDisposable = stepQuizInteractor.createAttempt(newStep.id)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribe({ setAttempt(it) }, { onError(it) })

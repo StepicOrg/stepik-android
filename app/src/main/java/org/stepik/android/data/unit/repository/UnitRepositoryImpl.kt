@@ -63,4 +63,7 @@ constructor(
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
         }
     }
+
+    override fun getUnitsByCourseAndLessonId(courseId: Long, lessonId: Long): Single<List<Unit>> =
+        unitRemoteDataSource.getUnitsByCourseAndLessonId(courseId, lessonId)
 }

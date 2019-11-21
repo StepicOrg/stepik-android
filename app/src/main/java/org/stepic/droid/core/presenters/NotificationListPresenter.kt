@@ -5,6 +5,10 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.collection.ArraySet
 import androidx.collection.LongSparseArray
+import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.Client
 import org.stepic.droid.concurrency.MainHandler
@@ -12,6 +16,8 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.core.internetstate.contract.InternetEnabledListener
 import org.stepic.droid.core.presenters.contracts.NotificationListView
 import org.stepic.droid.di.notifications.NotificationsScope
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.NotificationCategory
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.notifications.model.Notification
@@ -19,7 +25,8 @@ import org.stepic.droid.notifications.model.NotificationType
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.not
 import org.stepic.droid.util.substringOrNull
-import org.stepic.droid.web.Api
+import org.stepik.android.data.user.source.UserRemoteDataSource
+import org.stepik.android.domain.notification.repository.NotificationRepository
 import org.stepik.android.view.notification.FcmNotificationHandler
 import timber.log.Timber
 import java.util.ArrayList
@@ -36,7 +43,15 @@ class NotificationListPresenter
 @Inject constructor(
     private val threadPoolExecutor: ThreadPoolExecutor,
     private val mainHandler: MainHandler,
-    private val api: Api,
+    private val notificationRepository: NotificationRepository,
+    private val userRemoteDataSource: UserRemoteDataSource,
+
+    @MainScheduler
+    private val mainScheduler: Scheduler,
+
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+
     private val config: Config,
     private val analytic: Analytic,
     private val internetEnabledListenerClient: Client<InternetEnabledListener>,
@@ -49,6 +64,8 @@ class NotificationListPresenter
     private val page = AtomicInteger(1)
     val notificationList: MutableList<Notification> = ArrayList()
     val notificationMapIdToPosition: MutableMap<Long, Int> = HashMap()
+
+    private val compositeDisposable = CompositeDisposable()
 
     /**
      * return false if were cancelled
@@ -104,23 +121,22 @@ class NotificationListPresenter
     @WorkerThread
     private fun getNotificationFromOnePage(notificationCategory: NotificationCategory): Iterable<Notification> {
         Timber.d("loading from page %d", page.get())
-        val notificationResponse = api.getNotifications(notificationCategory, page.get()).execute().body() ?: throw NullPointerException("notifications null body")
-        hasNextPage.set(notificationResponse.meta.hasNext)
-        page.set(notificationResponse.meta.page + 1)
+        val notifications = notificationRepository.getNotifications(notificationCategory, page.get()).blockingGet()
+        hasNextPage.set(notifications.hasNext)
+        page.set(notifications.page + 1)
 
         val baseUrl = config.baseUrl
 
-        var notifications = notificationResponse.notifications
         Timber.d("before filter size is %d", notifications.size)
-        notifications = notifications
-                .filter {
-                    it.htmlText?.isNotBlank() ?: false
-                }
+        val filteredNotifications = notifications
+            .filter {
+                it.htmlText?.isNotBlank() ?: false
+            }
 
         val userIdToNotificationsIndexes = LongSparseArray<MutableList<Int>>()  // userId -> notifications index where avatar should be set
         val userIds = ArraySet<Long>()
 
-        notifications.forEachIndexed { index, notification ->
+        filteredNotifications.forEachIndexed { index, notification ->
             val notificationHtmlText = notification.htmlText ?: ""
             val fixedHtml = notificationHtmlText.replace("href=\"/", "href=\"$baseUrl/")
             notification.htmlText = fixedHtml
@@ -135,7 +151,7 @@ class NotificationListPresenter
         }
 
         if (userIds.isNotEmpty()) {
-            api.getUsers(userIds.toLongArray()).execute().body()?.users?.forEach {
+            userRemoteDataSource.getUsers(*userIds.toLongArray()).blockingGet().forEach {
                 val avatar = it.avatar
                 userIdToNotificationsIndexes[it.id]?.forEach { notificationIndex ->
                     notifications[notificationIndex].userAvatarUrl = avatar
@@ -193,32 +209,22 @@ class NotificationListPresenter
     }
 
     fun markAsRead(id: Long) {
-        threadPoolExecutor.execute {
-            try {
-                val isSuccess = api.setReadStatusForNotification(id, true).execute().isSuccessful
-                if (isSuccess) {
-                    mainHandler.post {
-                        onNotificationShouldBeRead(id)
-                        notificationsBadgesManager.syncCounter()
-                    }
-                } else {
+        compositeDisposable += notificationRepository
+            .putNotifications(id, isRead = true)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onComplete = {
+                    onNotificationShouldBeRead(id)
+                    notificationsBadgesManager.syncCounter()
+                },
+                onError = {
                     val pos = notificationMapIdToPosition[id]
-                    mainHandler.post {
-                        if (pos != null) {
-                            view?.notCheckNotification(pos, id)
-                        }
-                    }
-                }
-
-            } catch (ex: Exception) {
-                val pos = notificationMapIdToPosition[id]
-                mainHandler.post {
                     if (pos != null) {
                         view?.notCheckNotification(pos, id)
                     }
                 }
-            }
-        }
+            )
     }
 
     fun notificationIdIsNull() {
@@ -246,16 +252,14 @@ class NotificationListPresenter
             view?.onLoadingMarkingAsRead()
             threadPoolExecutor.execute {
                 try {
-                    val response = api.markAsReadAllType(notificationCategoryLocal).execute()
-                    if (response.isSuccessful) {
-                        notificationsBadgesManager.syncCounter()
-                        notificationList.forEach {
-                            it.isUnread = false
-                        }
-                        mainHandler.post {
-                            onMarkCategoryRead(notificationCategoryLocal)
-                            view?.markAsReadSuccessfully()
-                        }
+                    notificationRepository.markNotificationAsRead(notificationCategoryLocal).blockingAwait()
+                    notificationsBadgesManager.syncCounter()
+                    notificationList.forEach {
+                        it.isUnread = false
+                    }
+                    mainHandler.post {
+                        onMarkCategoryRead(notificationCategoryLocal)
+                        view?.markAsReadSuccessfully()
                     }
                 } catch (exception: Exception) {
                     mainHandler.post {
@@ -350,6 +354,7 @@ class NotificationListPresenter
     override fun detachView(view: NotificationListView) {
         super.detachView(view)
         internetEnabledListenerClient.unsubscribe(this)
+        compositeDisposable.clear()
     }
 
 

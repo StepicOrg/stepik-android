@@ -41,4 +41,7 @@ constructor(
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
         }.map { steps -> steps.sortedBy { stepIds.indexOf(it.id) } }
     }
+
+    override fun getStepByLessonId(lessonId: Long): Single<Step> =
+        stepRemoteDataSource.getStepByLessonId(lessonId)
 }

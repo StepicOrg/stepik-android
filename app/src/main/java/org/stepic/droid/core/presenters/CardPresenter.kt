@@ -13,21 +13,20 @@ import org.stepic.droid.core.presenters.contracts.CardView
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.getStepType
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Submission
 import org.stepik.android.model.adaptive.Reaction
-import org.stepik.android.remote.submission.model.SubmissionResponse
 import retrofit2.HttpException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CardPresenter(
-        val card: Card,
-        private val listener: AdaptiveReactionListener?,
-        private val answerListener: AnswerListener?
+    val card: Card,
+    private val listener: AdaptiveReactionListener?,
+    private val answerListener: AnswerListener?
 ) : PresenterBase<CardView>() {
     @Inject
-    lateinit var api: Api
+    lateinit var submissionRepository: SubmissionRepository
 
     @Inject
     @field:MainScheduler
@@ -50,8 +49,8 @@ class CardPresenter(
 
     init {
         App.componentManager()
-                .adaptiveCourseComponent(card.courseId)
-                .inject(this)
+            .adaptiveCourseComponent(card.courseId)
+            .inject(this)
     }
 
     override fun attachView(view: CardView) {
@@ -113,9 +112,9 @@ class CardPresenter(
             val submission = Submission(
                     _reply = view?.getQuizViewDelegate()?.createReply(),
                     attempt = card.attempt?.id ?: 0)
-            disposable = api.createNewSubmissionReactive(submission)
+            disposable = submissionRepository.createSubmission(submission)
                     .ignoreElement()
-                    .andThen(api.getSubmissionsReactive(submission.attempt))
+                    .andThen(submissionRepository.getSubmissionsForAttempt(submission.attempt))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribe(this::onSubmissionLoaded, this::onError)
@@ -131,11 +130,11 @@ class CardPresenter(
         submission = null
     }
 
-    private fun onSubmissionLoaded(submissionResponse: SubmissionResponse) {
-        submission = submissionResponse.submissions.firstOrNull()
+    private fun onSubmissionLoaded(submissions: List<Submission>) {
+        submission = submissions.firstOrNull()
         submission?.let {
             if (it.status == Submission.Status.EVALUATION) {
-                disposable =  api.getSubmissionsReactive(it.attempt)
+                disposable =  submissionRepository.getSubmissionsForAttempt(it.attempt)
                         .delay(1, TimeUnit.SECONDS)
                         .subscribeOn(backgroundScheduler)
                         .observeOn(mainScheduler)

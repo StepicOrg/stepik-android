@@ -1,8 +1,10 @@
 package org.stepik.android.remote.auth.service
 
+import io.reactivex.Single
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.remote.auth.model.StepikProfileResponse
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -16,7 +18,7 @@ interface EmptyAuthService {
 
     @FormUrlEncoded
     @POST("accounts/password/reset/")
-    fun remindPassword(@Field(value = "email", encoded = true) email: String): Call<Void>
+    fun remindPassword(@Field(value = "email", encoded = true) email: String): Single<Response<Void>>
 
     @GET("api/stepics/1")
     fun getUserProfileWithCookie(
