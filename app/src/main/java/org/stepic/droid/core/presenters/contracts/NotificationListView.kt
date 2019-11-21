@@ -4,11 +4,11 @@ import org.stepic.droid.notifications.model.Notification
 
 interface NotificationListView {
 
-    fun onConnectionProblem();
+    fun onConnectionProblem()
 
     fun onNeedShowNotifications(notifications: List<Notification>)
 
-    fun onLoading();
+    fun onLoading()
 
     fun onNeedShowLoadingFooter()
 
@@ -24,4 +24,5 @@ interface NotificationListView {
 
     fun onConnectionProblemWhenMarkAllFail()
 
+    fun openNotification(notification: Notification)
 }
