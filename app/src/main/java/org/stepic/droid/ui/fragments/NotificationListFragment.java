@@ -29,6 +29,7 @@ import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepik.android.view.notification.FcmNotificationHandler;
 
 import java.util.List;
 
@@ -54,6 +55,9 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Inject
     NotificationListPresenter notificationListPresenter;
+
+    @Inject
+    FcmNotificationHandler fcmNotificationHandler;
 
     NotificationCategory notificationCategory;
 
@@ -242,6 +246,11 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     @Override
     public void onConnectionProblemWhenMarkAllFail() {
         showConnectionProblemMessage();
+    }
+
+    @Override
+    public void openNotification(@NotNull Notification notification) {
+        fcmNotificationHandler.tryOpenNotificationInstantly(requireContext(), notification);
     }
 
     private void showConnectionProblemMessage() {

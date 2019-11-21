@@ -54,7 +54,6 @@ class NotificationListPresenter
 
     private val config: Config,
     private val analytic: Analytic,
-    private val fcmNotificationHandler: FcmNotificationHandler,
     private val internetEnabledListenerClient: Client<InternetEnabledListener>,
     private val notificationsBadgesManager: NotificationsBadgesManager
 ) : PresenterBase<NotificationListView>(), InternetEnabledListener {
@@ -368,7 +367,7 @@ class NotificationListPresenter
 
     fun tryToOpenNotification(notification: Notification) {
         analytic.reportEvent(Analytic.Notification.NOTIFICATION_CENTER_OPENED)
-        fcmNotificationHandler.tryOpenNotificationInstantly(notification)
+        view?.openNotification(notification)
     }
 
     fun trackClickOnNotification(notification: Notification) {

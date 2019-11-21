@@ -56,7 +56,8 @@ constructor(
     private fun resolveStepAttempt(step: Step): Completable =
         if (step.block?.name != null &&
             step.block?.name != AppConstants.TYPE_TEXT &&
-            step.block?.name != AppConstants.TYPE_VIDEO) {
+            step.block?.name != AppConstants.TYPE_VIDEO &&
+            step.status == Step.Status.READY) {
             attemptRepository
                 .getAttemptsForStep(step.id, userPreferences.userId)
                 .maybeFirst()
