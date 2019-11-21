@@ -34,7 +34,7 @@ import javax.inject.Inject
 class FcmNotificationHandlerImpl
 @Inject
 constructor(
-    private val context: Context,
+    private val applicationContext: Context,
     private val configs: Config,
     private val screenManager: ScreenManager,
     private val analytic: Analytic,
@@ -61,13 +61,22 @@ constructor(
         }
     }
 
-    override fun tryOpenNotificationInstantly(notification: Notification) {
+    override fun tryOpenNotificationInstantly(context: Context, notification: Notification) {
         val isShown = when (notification.type) {
-            NotificationType.learn -> openLearnNotification(notification)
-            NotificationType.comments -> openCommentNotification(notification)
-            NotificationType.review -> openReviewNotification(notification)
-            NotificationType.teach -> openTeach(notification)
-            NotificationType.other -> openDefault(notification)
+            NotificationType.learn ->
+                openLearnNotification(context, notification)
+
+            NotificationType.comments ->
+                openCommentNotification(context, notification)
+
+            NotificationType.review ->
+                openReviewNotification(context, notification)
+
+            NotificationType.teach ->
+                openTeach(context, notification)
+
+            NotificationType.other ->
+                openDefault(context, notification)
             null -> false
         }
 
@@ -102,16 +111,16 @@ constructor(
     }
 
     private fun sendTeachNotification(stepikNotification: Notification, htmlText: String, id: Long) {
-        val title = context.getString(R.string.teaching_title)
+        val title = applicationContext.getString(R.string.teaching_title)
         val justText: String = textResolver.fromHtml(htmlText).toString()
 
-        val intent = getTeachIntent(notification = stepikNotification)
+        val intent = getTeachIntent(applicationContext, notification = stepikNotification)
         if (intent == null) {
             analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
             return
         }
 
-        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+        val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
         taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
@@ -123,16 +132,16 @@ constructor(
     private fun sendDefaultNotification(stepikNotification: Notification, htmlText: String, id: Long) {
         val action = stepikNotification.action
         if (action != null && action == NotificationActionsHelper.ADDED_TO_GROUP) {
-            val title = context.getString(R.string.added_to_group_title)
+            val title = applicationContext.getString(R.string.added_to_group_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val intent = getDefaultIntent(notification = stepikNotification)
+            val intent = getDefaultIntent(applicationContext, notification = stepikNotification)
             if (intent == null) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
                 return
             }
 
-            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
             taskBuilder.addParentStack(CourseActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
@@ -148,16 +157,16 @@ constructor(
         // here is supportable action, but we need identify it
         val action = stepikNotification.action
         if (action != null && action == NotificationActionsHelper.REVIEW_TAKEN) {
-            val title = context.getString(R.string.received_review_title)
+            val title = applicationContext.getString(R.string.received_review_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val intent = getReviewIntent(notification = stepikNotification)
+            val intent = getReviewIntent(applicationContext, notification = stepikNotification)
             if (intent == null) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, stepikNotification.id.toString())
                 return
             }
 
-            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
             taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
@@ -172,16 +181,16 @@ constructor(
     private fun sendCommentNotification(stepikNotification: Notification, htmlText: String, id: Long) {
         val action = stepikNotification.action
         if (action != null && (action == NotificationActionsHelper.REPLIED || action == NotificationActionsHelper.COMMENTED)) {
-            val title = context.getString(R.string.new_message_title)
+            val title = applicationContext.getString(R.string.new_message_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val intent = getCommentIntent(stepikNotification)
+            val intent = getCommentIntent(applicationContext, stepikNotification)
             if (intent == null) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
                 return
             }
 
-            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
             taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(intent, id))
 
@@ -196,22 +205,22 @@ constructor(
     private fun sendLearnNotification(stepikNotification: Notification, rawMessageHtml: String, id: Long) {
         val action = stepikNotification.action
         if (action != null && action == NotificationActionsHelper.ISSUED_CERTIFICATE) {
-            val title = context.getString(R.string.get_certifcate_title)
+            val title = applicationContext.getString(R.string.get_certifcate_title)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
-            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
             taskBuilder.addParentStack(LessonActivity::class.java)
             taskBuilder.addNextIntent(prepareNotificationIntent(screenManager.certificateIntent, id))
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type?.name)
             val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification, justText, taskBuilder, title, id = id)
             stepikNotificationManager.showNotification(id, notification.build())
         } else if (action == NotificationActionsHelper.ISSUED_LICENSE) {
-            val title = context.getString(R.string.get_license_message)
+            val title = applicationContext.getString(R.string.get_license_message)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
             val intent = getLicenseIntent(notification = stepikNotification) ?: return
 
-            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
             taskBuilder.addNextIntent(intent)
 
             analytic.reportEventWithIdName(Analytic.Notification.NOTIFICATION_SHOWN, id.toString(), stepikNotification.type.name)
@@ -239,24 +248,24 @@ constructor(
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepikNotification.htmlText)
             val intent =
                 if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                    CourseActivity.createIntent(context, courseId, tab = CourseScreenTab.SYLLABUS)
+                    CourseActivity.createIntent(applicationContext, courseId, tab = CourseScreenTab.SYLLABUS)
                 } else {
-                    CourseActivity.createIntent(context, relatedCourse, tab = CourseScreenTab.SYLLABUS)
+                    CourseActivity.createIntent(applicationContext, relatedCourse, tab = CourseScreenTab.SYLLABUS)
                 }
             intent.action = AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
+            val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(applicationContext)
             taskBuilder.addParentStack(CourseActivity::class.java)
             taskBuilder.addNextIntent(intent)
 
             val pendingIntent = taskBuilder.getPendingIntent(courseId.toInt(), PendingIntent.FLAG_ONE_SHOT)
 
-            val title = context.getString(R.string.app_name)
+            val title = applicationContext.getString(R.string.app_name)
             val justText: String = textResolver.fromHtml(rawMessageHtml).toString()
 
             val notification = NotificationCompat
-                    .Builder(context, stepikNotification.type.channel.channelId)
+                    .Builder(applicationContext, stepikNotification.type.channel.channelId)
                     .setLargeIcon(largeIcon)
                     .setSmallIcon(R.drawable.ic_notification_icon_1) // 1 is better
                     .setContentTitle(title)
@@ -268,7 +277,7 @@ constructor(
                     .setDeleteIntent(notificationHelper.getDeleteIntent(courseId))
 
             val numberOfNotification = notificationOfCourseList.size
-            val summaryText = context.resources.getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
+            val summaryText = applicationContext.resources.getQuantityString(R.plurals.notification_plural, numberOfNotification, numberOfNotification)
             if (notificationOfCourseList.size == 1) {
                 notification.setStyle(
                     NotificationCompat.BigTextStyle()
@@ -298,7 +307,7 @@ constructor(
         }
     }
 
-    private fun openLearnNotification(notification: Notification): Boolean {
+    private fun openLearnNotification(context: Context, notification: Notification): Boolean {
         if (notification.action != null && notification.action == NotificationActionsHelper.ISSUED_CERTIFICATE) {
             analytic.reportEvent(Analytic.Certificate.OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER)
             screenManager.showCertificates(context)
@@ -312,7 +321,7 @@ constructor(
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
 
             if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                val intent = CourseActivity.createIntent(context, courseId, tab = CourseScreenTab.SYLLABUS) // Intent(context, SectionActivity::class.java)
+                val intent = CourseActivity.createIntent(context, courseId, tab = CourseScreenTab.SYLLABUS) // Intent(applicationContext, SectionActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
                 return true
@@ -322,30 +331,30 @@ constructor(
         }
     }
 
-    private fun openCommentNotification(notification: Notification): Boolean {
-        val intent: Intent = getCommentIntent(notification) ?: return false
+    private fun openCommentNotification(context: Context, notification: Notification): Boolean {
+        val intent: Intent = getCommentIntent(context, notification) ?: return false
         analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
         context.startActivity(intent)
         return true
     }
 
-    private fun openReviewNotification(notification: Notification): Boolean {
-        val intent = getReviewIntent(notification) ?: return false
+    private fun openReviewNotification(context: Context, notification: Notification): Boolean {
+        val intent = getReviewIntent(context, notification) ?: return false
         context.startActivity(intent)
         analytic.reportEvent(Analytic.Notification.OPEN_LESSON_NOTIFICATION_LINK)
         return true
     }
 
-    private fun openTeach(notification: Notification): Boolean {
-        val intent: Intent? = getTeachIntent(notification) ?: return false
+    private fun openTeach(context: Context, notification: Notification): Boolean {
+        val intent: Intent? = getTeachIntent(context, notification) ?: return false
         analytic.reportEvent(Analytic.Notification.OPEN_TEACH_CENTER)
         context.startActivity(intent)
         return true
     }
 
-    private fun openDefault(notification: Notification): Boolean {
+    private fun openDefault(context: Context, notification: Notification): Boolean {
         if (notification.action != null && notification.action == NotificationActionsHelper.ADDED_TO_GROUP) {
-            val intent = getDefaultIntent(notification) ?: return false
+            val intent = getDefaultIntent(context, notification) ?: return false
             analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
             context.startActivity(intent)
             return true
@@ -360,7 +369,7 @@ constructor(
             putExtra(AppConstants.KEY_NOTIFICATION_ID, notificationId)
         }
 
-    private fun getTeachIntent(notification: Notification): Intent? {
+    private fun getTeachIntent(context: Context, notification: Notification): Intent? {
         val link = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
         try {
             val url = Uri.parse(link)
@@ -388,7 +397,7 @@ constructor(
         return intent
     }
 
-    private fun getDefaultIntent(notification: Notification): Intent? {
+    private fun getDefaultIntent(context: Context, notification: Notification): Intent? {
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1) ?: return null
         val intent = Intent(context, CourseActivity::class.java)
         intent.data = Uri.parse(data)
@@ -396,7 +405,7 @@ constructor(
         return intent
     }
 
-    private fun getReviewIntent(notification: Notification): Intent? {
+    private fun getReviewIntent(context: Context, notification: Notification): Intent? {
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
         val intent = Intent(context, LessonActivity::class.java)
         intent.data = Uri.parse(data)
@@ -404,7 +413,7 @@ constructor(
         return intent
     }
 
-    private fun getCommentIntent(notification: Notification): Intent? {
+    private fun getCommentIntent(context: Context, notification: Notification): Intent? {
         val action = notification.action
         val htmlText = notification.htmlText ?: ""
         val link =
