@@ -1,18 +1,26 @@
 package org.stepik.android.view.profile.ui.fragment
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -23,9 +31,12 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
+import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
 import org.stepic.droid.model.AchievementFlatItem
+import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
@@ -33,8 +44,11 @@ import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
 import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.ProfileSettingsHelper
+import org.stepic.droid.util.copyTextToClipboard
+import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
@@ -53,11 +67,13 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
         private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
         private const val DETAILED_INFO_CONTAINER_KEY = "detailedInfoContainerKey"
 
-        fun newInstance(): ProfileFragment = newInstance(0)
+        fun newInstance(): ProfileFragment =
+            newInstance(0)
 
-        fun newInstance(userId: Long = 0) = ProfileFragment().apply {
-            this.userId = userId
-        }
+        fun newInstance(userId: Long = 0): ProfileFragment =
+            ProfileFragment().apply {
+                this.userId = userId
+            }
     }
 
     @Inject
@@ -65,6 +81,9 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var shareHelper: ShareHelper
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -76,13 +95,16 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
     private var achievementsToDisplay: Int = 0
     private var isShortInfoExpanded: Boolean = false
     private var userId: Long by argument()
+    private var localUserViewModel: UserViewModel? = null
 
     private val viewStateDelegate =
         ViewStateDelegate<ProfileView.State>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         injectComponent()
+        analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
 
         profilePresenter = ViewModelProviders.of(this, viewModelFactory).get(ProfilePresenter::class.java)
     }
@@ -105,17 +127,22 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
 
         // app:fontFamily doesn't work on this view
         notificationStreakSwitch.typeface = ResourcesCompat.getFont(requireContext(), R.font.roboto_light)
+
         // Profile recycler
         setupProfileSettingsAdapter()
         with(profileSettingsRecyclerView) {
             adapter = profileSettingsAdapter
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL,false)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         }
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
-        achievementsTilesContainer.adapter = AchievementsTileAdapter().apply { onAchievementItemClick = {
-            // AchievementDetailsDialog.newInstance(it, localUserViewModel?.isMyProfile ?: false).show(childFragmentManager, AchievementDetailsDialog.TAG)
-        }}
+        achievementsTilesContainer.adapter = AchievementsTileAdapter().apply {
+            onAchievementItemClick = {
+                AchievementDetailsDialog
+                    .newInstance(it, localUserViewModel?.isMyProfile ?: false)
+                    .show(childFragmentManager, AchievementDetailsDialog.TAG)
+            }
+        }
         achievementsTilesContainer.isNestedScrollingEnabled = false
         initAchievementsPlaceholders()
 
@@ -148,16 +175,17 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
 
         achievementsLoadingError.tryAgain.setOnClickListener {
-//            achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0,
-//            MAX_ACHIEVEMENTS_TO_DISPLAY, true)
+            profilePresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true)
         }
         viewAllAchievements.setOnClickListener {
-            // screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false)
+            screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false)
         }
-
         certificatesTitleContainer.setOnClickListener {
             screenManager.showCertificates(requireContext(), userId)
         }
+
+        initViewStateDelegate()
+        profilePresenter.initProfile(userId)
     }
 
     override fun onStart() {
@@ -190,11 +218,8 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
         super.onViewStateRestored(savedInstanceState)
         savedInstanceState?.let {
             isShortInfoExpanded = it.getBoolean(DETAILED_INFO_CONTAINER_KEY)
-            restoreVisibility(detailedInfoContainer, it,
-                DETAILED_INFO_CONTAINER_KEY
-            )
+            restoreVisibility(detailedInfoContainer, it, DETAILED_INFO_CONTAINER_KEY)
         }
-
     }
 
     private fun restoreVisibility(view: View, bundle: Bundle, bundleKey: String) {
@@ -210,11 +235,108 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
         viewStateDelegate.addState<ProfileView.State.NetworkError>(profileReportProblem)
         viewStateDelegate.addState<ProfileView.State.UserNotFoundError>(profileEmptyUser)
         viewStateDelegate.addState<ProfileView.State.NeedAuthError>(profileNeedAuth)
-        viewStateDelegate.addState<ProfileView.State.ProfileLoaded>(contentRoot)
     }
 
     override fun setState(state: ProfileView.State) {
-        // no op
+        if (state is ProfileView.State.ProfileLoaded) {
+            /***
+             *  Too many views inside contentRoot
+             */
+            profileNeedAuth.visibility = View.GONE
+            profileEmptyUser.visibility = View.GONE
+            profileReportProblem.visibility = View.GONE
+            profileLoadingView.visibility = View.GONE
+            contentRoot.visibility = View.VISIBLE
+
+            val userViewModel = state.userLocalViewModel
+            this.localUserViewModel = userViewModel
+            activity?.invalidateOptionsMenu()
+            if (userViewModel.isMyProfile) {
+                profilePresenter.showNotificationSetting()
+                profileSettingsRecyclerView.visibility = View.VISIBLE
+
+                notificationIntervalChooserContainer.visibility = View.VISIBLE
+                setupUserId()
+            } else {
+                // show user info expanded for strangers
+                if (!shortBioArrowImageView.isExpanded()) {
+                    changeStateOfUserInfo()
+                }
+            }
+
+            if (!userViewModel.isPrivate && !userViewModel.isOrganization) {
+                profilePresenter.showAchievementsForUser(
+                    userViewModel.id,
+                    MAX_ACHIEVEMENTS_TO_DISPLAY
+                )
+                certificatesTitleContainer.visibility = View.VISIBLE
+            }
+
+            mainInfoRoot.visibility = View.VISIBLE
+            val nameArray = userViewModel
+                .fullName
+                .split("\\s+".toRegex())
+                .dropLastWhile { it.isEmpty() }
+                .toTypedArray()
+            val builder = StringBuilder()
+            for (nameArrayItem in nameArray) {
+                if (builder.isNotEmpty()) {
+                    builder.append("\n")
+                }
+                builder.append(nameArrayItem)
+            }
+
+            profileName.text = builder.toString()
+            val userPlaceholder =
+                ContextCompat.getDrawable(requireContext(), R.drawable.general_placeholder)
+            if (userViewModel.imageLink != null && userViewModel.imageLink.endsWith(AppConstants.SVG_EXTENSION)) {
+                val svgRequestBuilder = GlideSvgRequestFactory.create(context, userPlaceholder)
+                val uri = Uri.parse(userViewModel.imageLink)
+                svgRequestBuilder
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .load(uri)
+                    .into(profileImage)
+            } else {
+                Glide.with(requireContext())
+                    .asBitmap()
+                    .load(userViewModel.imageLink)
+                    .placeholder(userPlaceholder)
+                    .into(profileImage)
+            }
+
+            with(userViewModel) {
+                shortBioInfoContainer.isVisible = shortBio.isNotBlank() || information.isNotBlank()
+                shortBioSecondHeader.isVisible = shortBio.isNotBlank() && information.isNotBlank()
+                when {
+                    shortBio.isBlank() && information.isNotBlank() ->
+                        shortBioFirstHeader.setText(R.string.user_info) // show header with 'information'
+
+                    shortBio.isNotBlank() && information.isBlank() ->
+                        shortBioFirstHeader.setText(R.string.short_bio)
+
+                    shortBio.isNotBlank() && information.isNotBlank() -> { // show general header and all info
+                        shortBioFirstHeader.setText(R.string.short_bio_and_info)
+                        shortBioSecondHeader.setText(R.string.user_info)
+                    }
+                }
+
+                if (shortBio.isBlank()) {
+                    shortBioFirstText.visibility = View.GONE
+                } else {
+                    shortBioFirstText.text = shortBio.trim()
+                    shortBioFirstText.visibility = View.VISIBLE
+                }
+
+                if (information.isBlank()) {
+                    shortBioSecondText.visibility = View.GONE
+                } else {
+                    shortBioSecondText.setPlainOrLaTeXTextWithCustomFontColored(
+                        information, R.font.roboto_light, R.color.new_accent_color, false
+                    )
+                    shortBioSecondText.visibility = View.VISIBLE
+                }
+            }
+        }
     }
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
@@ -254,7 +376,7 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
             profilePresenter.switchNotificationStreak(isChecked)
         }
 
-        //need to set for show default value, when user enable it
+        // need to set for show default value, when user enable it
         notificationIntervalTitle.text = resources.getString(R.string.notification_time, notificationTimeValue)
     }
 
@@ -270,15 +392,40 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
         notificationIntervalTitle.text = resources.getString(R.string.notification_time, timePresentationString)
     }
 
+    override fun onStreaksLoaded(currentStreak: Int, maxStreak: Int, haveSolvedToday: Boolean) {
+        val suffixCurrent = resources.getQuantityString(R.plurals.day_number, currentStreak)
+        val suffixMax = resources.getQuantityString(R.plurals.day_number, maxStreak)
+
+        currentStreakValue.text = String.format("%d %s", currentStreak, suffixCurrent)
+        maxStreakValue.text = String.format("%d %s", maxStreak, suffixMax)
+
+        if (haveSolvedToday) {
+            streakIndicator.setImageResource(R.drawable.ic_lightning)
+        } else {
+            streakIndicator.setImageResource(R.drawable.ic_lightning_inactive)
+        }
+
+        setStreakInfoVisibility(true)
+    }
+
     override fun onTimeIntervalPicked(chosenInterval: Int) {
         profilePresenter.setStreakTime(chosenInterval)
         analytic.reportEvent(Analytic.Streak.CHOOSE_INTERVAL_PROFILE, chosenInterval.toString())
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (localUserViewModel != null) {
+            inflater.inflate(R.menu.profile_menu, menu)
+
+            menu.findItem(R.id.menu_item_edit)?.isVisible =
+                localUserViewModel?.isMyProfile == true
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
         when (item.itemId) {
             R.id.menu_item_share -> {
-                // shareProfile()
+                shareProfile()
                 true
             }
             R.id.menu_item_edit -> {
@@ -289,6 +436,21 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
             else ->
                 false
         }
+
+    private fun shareProfile() {
+        localUserViewModel?.let {
+            val intent = shareHelper.getIntentForProfileSharing(it)
+            startActivity(intent)
+        }
+    }
+
+    private fun setStreakInfoVisibility(needShow: Boolean) {
+        currentStreakSuffix.isInvisible = !needShow
+        currentStreakValue.isInvisible = !needShow
+        maxStreakSuffix.isInvisible = !needShow
+        maxStreakValue.isInvisible = !needShow
+        streakIndicator.isInvisible = !needShow
+    }
 
     private fun initTimezone() {
         val timezone = TimeZone.getDefault()
@@ -313,6 +475,17 @@ class ProfileFragment : Fragment(), ProfileView, TimeIntervalPickerDialogFragmen
                 width = 0
             }
             achievementsLoadingPlaceholder.addView(view)
+        }
+    }
+
+    private fun setupUserId() {
+        profileIdSeparator.visibility = View.VISIBLE
+        profileId.visibility = View.VISIBLE
+        profileId.text = getString(R.string.profile_user_id, localUserViewModel?.id)
+        profileId.setOnLongClickListener {
+            val textToCopy = (it as TextView).text.toString()
+            requireContext().copyTextToClipboard(textToCopy = textToCopy, toastMessage = getString(R.string.copied_to_clipboard_toast))
+            true
         }
     }
 

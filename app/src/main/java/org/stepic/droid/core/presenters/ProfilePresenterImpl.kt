@@ -15,6 +15,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.web.Api
 import org.stepik.android.model.user.Profile
+import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -110,6 +111,7 @@ constructor(
 
     @WorkerThread
     private fun showInternetProfile(userId: Long) {
+        Timber.d("Hi")
         //1) show profile
         //2) no internet
         //3) user hide profile == Anonymous. We do not need handle this situation

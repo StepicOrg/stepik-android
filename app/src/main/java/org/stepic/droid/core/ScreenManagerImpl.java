@@ -425,15 +425,18 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openProfile(Activity activity) {
-        final Intent intent = new Intent(activity, ProfileActivity.class);
+//        final Intent intent = new Intent(activity, ProfileActivity.class);
+        final Intent intent = new Intent(activity, org.stepik.android.view.profile.ui.activity.ProfileActivity.class);
         activity.startActivity(intent);
     }
 
     @Override
     public void openProfile(Activity activity, long userId) {
-        final Intent intent = new Intent(activity, ProfileActivity.class);
+        // final Intent intent = new Intent(activity, ProfileActivity.class);
+        final Intent intent = new Intent(activity, org.stepik.android.view.profile.ui.activity.ProfileActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putLong(ProfileActivity.optionalUserIdKey, userId);
+        // bundle.putLong(ProfileActivity.optionalUserIdKey, userId);
+        bundle.putLong(org.stepik.android.view.profile.ui.activity.ProfileActivity.optionalUserIdKey, userId);
         intent.putExtras(bundle);
         activity.startActivity(intent);
     }
@@ -453,7 +456,8 @@ public class ScreenManagerImpl implements ScreenManager {
     @Nullable
     @Override
     public Intent getProfileIntent(@NotNull Context context) {
-        Intent intent = new Intent(context, ProfileActivity.class);
+//        Intent intent = new Intent(context, ProfileActivity.class);
+        Intent intent = new Intent(context, org.stepik.android.view.profile.ui.activity.ProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }

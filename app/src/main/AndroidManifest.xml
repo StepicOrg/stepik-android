@@ -150,26 +150,26 @@
         <activity
             android:name="org.stepik.android.view.comment.ui.activity.CommentsActivity" />
 
-        <activity
-            android:name=".ui.activities.ProfileActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW" />
+<!--        <activity-->
+<!--            android:name=".ui.activities.ProfileActivity"-->
+<!--            android:windowSoftInputMode="adjustResize|stateHidden">-->
+<!--            &lt;!&ndash; Parent activity meta-data to support 4.0 and lower &ndash;&gt;-->
+<!--            <intent-filter-->
+<!--                android:autoVerify="true"-->
+<!--                tools:ignore="UnusedAttribute">-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <category android:name="android.intent.category.BROWSABLE" />-->
 
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="@string/secondary_host_name" />
-                <data android:host="@string/host_name" />
-                <data android:pathPattern="/users/.*" />
-                <data android:pathPattern="/users/.*/" />
-            </intent-filter>
-        </activity>
+<!--                <data android:scheme="https" />-->
+<!--                <data android:scheme="http" />-->
+<!--                <data android:host="@string/secondary_host_name" />-->
+<!--                <data android:host="@string/host_name" />-->
+<!--                <data android:pathPattern="/users/.*" />-->
+<!--                <data android:pathPattern="/users/.*/" />-->
+<!--            </intent-filter>-->
+<!--        </activity>-->
 
         <activity android:name=".ui.activities.CourseListActivity" />
 
@@ -341,6 +341,27 @@
 
         <activity
             android:name="org.stepik.android.view.download.ui.activity.DownloadActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.profile.ui.activity.ProfileActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/secondary_host_name" />
+                <data android:host="@string/host_name" />
+                <data android:pathPattern="/users/.*" />
+                <data android:pathPattern="/users/.*/" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
