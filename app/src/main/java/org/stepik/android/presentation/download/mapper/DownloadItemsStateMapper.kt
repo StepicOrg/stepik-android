@@ -9,7 +9,7 @@ import javax.inject.Inject
 class DownloadItemsStateMapper
 @Inject
 constructor() {
-    fun addDownloadItem(state: DownloadView.State, downloadItem: DownloadItem): DownloadView.State {
+    fun replaceDownloadItem(state: DownloadView.State, downloadItem: DownloadItem): DownloadView.State {
         val downloadedCourses = if (state is DownloadView.State.DownloadedCoursesLoaded) {
             state.courses
         } else {

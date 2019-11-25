@@ -778,6 +778,7 @@
 
     <!-- Downloads -->
     <string name="downloads_title">Загруженные курсы</string>
+    <string name="downloads_remove_task_error">При удалении элемента возникла ошибка</string>
 
     <!-- Submissions -->
     <string name="submissions_title">Решения</string>

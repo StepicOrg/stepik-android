@@ -20,6 +20,7 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.download.DownloadPresenter
@@ -135,5 +136,9 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
 
     override fun onRemoveCourseDownloadConfirmed(course: Course) {
         downloadPresenter.removeCourseDownload(course)
+    }
+
+    override fun showRemoveTaskError() {
+        root.snackbar(messageRes = R.string.downloads_remove_task_error)
     }
 }
