@@ -32,7 +32,7 @@ class DownloadedCoursesAdapterDelegate(
 
         private val downloadedCourseTitle = root.downloadedCourseName
         private val downloadedCourseImage = root.downloadedCourseImage
-        private val downloadedCourseSize = root.downloadedCourseSize
+        private val downloadedCourseStatus = root.downloadedCourseStatus
 
         private val coursePlaceholderBitmap = BitmapFactory.decodeResource(
             context.resources,
@@ -47,13 +47,18 @@ class DownloadedCoursesAdapterDelegate(
         private val imageViewTarget: BitmapImageViewTarget =  RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), downloadedCourseImage)
 
         init {
-            root.setOnClickListener { onItemClick(itemData as DownloadItem) }
+            root.setOnClickListener { itemData?.let(onItemClick) }
+            downloadedCourseStatus.setOnClickListener {
+                if (downloadedCourseStatus.status is DownloadProgress.Status.Cached) {
+                    itemData?.let(onItemRemoveClick)
+                }
+            }
             circularBitmapDrawable.cornerRadius = context.resources.getDimension(R.dimen.course_image_radius)
         }
 
         override fun onBind(data: DownloadItem) {
             downloadedCourseTitle.text = data.course.title
-            downloadedCourseSize.text = TextUtil.formatBytes((data.status as DownloadProgress.Status.Cached).bytesTotal, SMALLEST_FORMAT_UNIT)
+            downloadedCourseStatus.status = data.status
 
             Glide.with(context)
                 .asBitmap()

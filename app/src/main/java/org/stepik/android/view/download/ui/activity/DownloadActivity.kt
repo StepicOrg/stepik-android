@@ -63,7 +63,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         initCenteredToolbar(R.string.downloads_title, showHomeButton = true)
 
         downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate(
-            onItemClick = ::showRemoveCourseDialog, // { screenManager.showCourseModules(this, it.course) },
+            onItemClick = { screenManager.showCourseModules(this, it.course) },
             onItemRemoveClick = ::showRemoveCourseDialog
         )
 
