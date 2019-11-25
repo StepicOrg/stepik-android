@@ -11,7 +11,6 @@ import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.util.TextUtil
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
