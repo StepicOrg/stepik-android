@@ -66,9 +66,9 @@ constructor(
         }
 
     private fun getAllAchievementsByKind(kind: String): Single<List<Achievement>> =
-        Observable.range(0, Int.MAX_VALUE)
+        Observable.range(1, Int.MAX_VALUE)
             .concatMapSingle { achievementsService.getAchievements(kind = kind, page = it) }
-            .takeUntil { it.meta.hasNext }
+            .takeUntil { !it.meta.hasNext }
             .map { it.achievements }
             .reduce(emptyList()) { a, b -> a + b }
 
