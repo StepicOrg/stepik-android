@@ -66,8 +66,8 @@ class RemoveCachedContentDialog : DialogFragment() {
             }
 
     interface Callback {
-        fun onRemoveCourseDownloadConfirmed(course: Course)
-        fun onRemoveSectionDownloadConfirmed(section: Section)
-        fun onRemoveUnitDownloadConfirmed(unit: Unit)
+        fun onRemoveCourseDownloadConfirmed(course: Course) {}
+        fun onRemoveSectionDownloadConfirmed(section: Section) {}
+        fun onRemoveUnitDownloadConfirmed(unit: Unit) {}
     }
 }

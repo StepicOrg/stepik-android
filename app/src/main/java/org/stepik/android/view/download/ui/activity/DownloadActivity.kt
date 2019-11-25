@@ -18,14 +18,17 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.download.DownloadPresenter
 import org.stepik.android.presentation.download.DownloadView
+import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.download.ui.adapter.DownloadedCoursesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class DownloadActivity : FragmentActivityBase(), DownloadView {
+class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedContentDialog.Callback {
     companion object {
         fun createIntent(context: Context): Intent =
             Intent(context, DownloadActivity::class.java)
@@ -52,7 +55,10 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
 
         initCenteredToolbar(R.string.downloads_title, showHomeButton = true)
 
-        downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate { screenManager.showCourseModules(this, it.course) }
+        downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate(
+            onItemClick = ::showRemoveCourseDialog, // { screenManager.showCourseModules(this, it.course) },
+            onItemRemoveClick = ::showRemoveCourseDialog
+        )
 
         with(downloadsRecyclerView) {
             (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
@@ -105,5 +111,15 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
         if (state is DownloadView.State.DownloadedCoursesLoaded) {
             downloadedCoursesAdapter.items = state.courses
         }
+    }
+
+    private fun showRemoveCourseDialog(downloadItem: DownloadItem) {
+        RemoveCachedContentDialog
+            .newInstance(course = downloadItem.course)
+            .showIfNotExists(supportFragmentManager, RemoveCachedContentDialog.TAG)
+    }
+
+    override fun onRemoveCourseDownloadConfirmed(course: Course) {
+        downloadPresenter.removeCourseDownload(course)
     }
 }

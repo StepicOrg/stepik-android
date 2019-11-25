@@ -5,7 +5,7 @@ import org.stepic.droid.persistence.model.DownloadItem
 import org.stepik.android.domain.download.repository.DownloadRepository
 import javax.inject.Inject
 
-class DownloadInteractor
+class DownloadsInteractor
 @Inject
 constructor(
     private val downloadRepository: DownloadRepository

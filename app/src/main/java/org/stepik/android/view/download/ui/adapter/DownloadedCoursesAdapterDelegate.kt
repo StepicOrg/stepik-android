@@ -16,7 +16,8 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class DownloadedCoursesAdapterDelegate(
-    private val onItemClick: (DownloadItem) -> Unit
+    private val onItemClick: (DownloadItem) -> Unit,
+    private val onItemRemoveClick: (DownloadItem) -> Unit
 ) : AdapterDelegate<DownloadItem, DelegateViewHolder<DownloadItem>>() {
     companion object {
         private const val SMALLEST_FORMAT_UNIT = 1024 * 1024L // 1 mb
