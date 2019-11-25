@@ -6,8 +6,9 @@ import org.stepik.android.model.Unit
 
 interface UnitStructureResolver: StructureResolver<Unit> {
     fun resolveStructure(
-            courseId: Long,
-            sectionId: Long,
-            vararg unitIds: Long
+        courseId: Long,
+        sectionId: Long,
+        vararg unitIds: Long,
+        resolveNestedObjects: Boolean
     ): Observable<Structure>
 }

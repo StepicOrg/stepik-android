@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -17,7 +18,9 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.persistence.model.DownloadItem
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.download.DownloadPresenter
 import org.stepik.android.presentation.download.DownloadView
@@ -43,6 +46,9 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
 
     private val viewStateDelegate =
         ViewStateDelegate<DownloadView.State>()
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +116,14 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         viewStateDelegate.switchState(state)
         if (state is DownloadView.State.DownloadedCoursesLoaded) {
             downloadedCoursesAdapter.items = state.courses
+        }
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
         }
     }
 

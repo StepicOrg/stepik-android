@@ -6,12 +6,12 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
-import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.download.interactor.DownloadsInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.download.mapper.DownloadItemsStateMapper
+import timber.log.Timber
 import javax.inject.Inject
 
 class DownloadPresenter
@@ -33,6 +33,12 @@ constructor(
             view?.setState(state)
         }
 
+    private var isBlockingLoading = false
+        set(value) {
+            field = value
+            view?.setBlockingLoading(value)
+        }
+
     override fun attachView(view: DownloadView) {
         super.attachView(view)
         view.setState(state)
@@ -49,10 +55,15 @@ constructor(
     }
 
     fun removeCourseDownload(course: Course) {
+        isBlockingLoading = true
         compositeDisposable += courseDownloadInteractor
             .removeTask(course)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
-            .subscribeBy()
+            .doFinally { isBlockingLoading = false }
+            .subscribeBy(
+                onComplete = { Timber.d("Completed") },
+                onError = { it.printStackTrace() }
+            )
     }
 }
