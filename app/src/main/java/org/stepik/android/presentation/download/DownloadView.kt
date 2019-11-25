@@ -11,4 +11,7 @@ interface DownloadView {
     }
 
     fun setState(state: State)
+    fun setBlockingLoading(isLoading: Boolean)
+
+    fun showRemoveTaskError()
 }

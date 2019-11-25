@@ -11,12 +11,12 @@ import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.util.TextUtil
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class DownloadedCoursesAdapterDelegate(
-    private val onItemClick: (DownloadItem) -> Unit
+    private val onItemClick: (DownloadItem) -> Unit,
+    private val onItemRemoveClick: (DownloadItem) -> Unit
 ) : AdapterDelegate<DownloadItem, DelegateViewHolder<DownloadItem>>() {
     companion object {
         private const val SMALLEST_FORMAT_UNIT = 1024 * 1024L // 1 mb
@@ -31,7 +31,7 @@ class DownloadedCoursesAdapterDelegate(
 
         private val downloadedCourseTitle = root.downloadedCourseName
         private val downloadedCourseImage = root.downloadedCourseImage
-        private val downloadedCourseSize = root.downloadedCourseSize
+        private val downloadedCourseStatus = root.downloadedCourseStatus
 
         private val coursePlaceholderBitmap = BitmapFactory.decodeResource(
             context.resources,
@@ -46,13 +46,18 @@ class DownloadedCoursesAdapterDelegate(
         private val imageViewTarget: BitmapImageViewTarget =  RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), downloadedCourseImage)
 
         init {
-            root.setOnClickListener { onItemClick(itemData as DownloadItem) }
+            root.setOnClickListener { itemData?.let(onItemClick) }
+            downloadedCourseStatus.setOnClickListener {
+                if (downloadedCourseStatus.status is DownloadProgress.Status.Cached) {
+                    itemData?.let(onItemRemoveClick)
+                }
+            }
             circularBitmapDrawable.cornerRadius = context.resources.getDimension(R.dimen.course_image_radius)
         }
 
         override fun onBind(data: DownloadItem) {
             downloadedCourseTitle.text = data.course.title
-            downloadedCourseSize.text = TextUtil.formatBytes((data.status as DownloadProgress.Status.Cached).bytesTotal, SMALLEST_FORMAT_UNIT)
+            downloadedCourseStatus.status = data.status
 
             Glide.with(context)
                 .asBitmap()
