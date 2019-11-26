@@ -13,7 +13,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.features.achievements.repository.AchievementsRepository
 import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
@@ -23,6 +22,7 @@ import org.stepic.droid.ui.util.toBitmap
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.util.toObject
+import org.stepik.android.domain.achievements.repository.AchievementsRepository
 import javax.inject.Inject
 
 class AchievementsNotificationService : JobIntentService() {

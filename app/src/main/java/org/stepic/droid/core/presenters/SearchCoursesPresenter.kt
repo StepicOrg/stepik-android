@@ -5,9 +5,12 @@ import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.SearchQuery
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.search.repository.SearchRepository
 import org.stepik.android.model.Course
 import java.util.ArrayList
 import java.util.concurrent.ThreadPoolExecutor
@@ -18,7 +21,9 @@ import javax.inject.Inject
 @CourseListScope
 class SearchCoursesPresenter
 @Inject constructor(
-    private val api: Api,
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val courseRepository: CourseRepository,
+    private val searchRepository: SearchRepository,
     private val threadPoolExecutor: ThreadPoolExecutor,
     private val mainHandler: MainHandler,
     private val searchResolver: SearchResolver,
@@ -51,23 +56,20 @@ class SearchCoursesPresenter
                     if (searchQuery != null) {
                         databaseFacade.addSearchQuery(SearchQuery(searchQuery))
                     }
-                    val response = api.getSearchResultsCourses(currentPage.get(), searchQuery).execute()
-                    if (!response.isSuccessful) {
-                        analytic.reportEvent(Analytic.Error.SEARCH_COURSE_UNSUCCESSFUL, "${response.code()}  ${response.errorBody()?.string()}")
-                    }
 
-                    val searchResultResponseBody = response.body()!!
-                    val searchResultList = searchResultResponseBody.searchResultList
-                    val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultList)
-                    hasNextPage.set(searchResultResponseBody.meta.hasNext)
-                    currentPage.set(searchResultResponseBody.meta.page + 1)
+
+
+                    val searchResultResponseBody = searchRepository.getSearchResultsCourses(currentPage.get(), searchQuery, getLang()).blockingGet()
+                    val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultResponseBody)
+                    hasNextPage.set(searchResultResponseBody.hasNext)
+                    currentPage.set(searchResultResponseBody.page + 1)
 
                     if (courseIdsForSearch.isEmpty()) {
                         mainHandler.post {
                             view?.showEmptyCourses()
                         }
                     } else {
-                        val courses = api.getCourses(1, courseIdsForSearch).execute().body()?.courses //FIXME: WARNING, here may pagination not working for query with ids[]
+                        val courses = courseRepository.getCourses(*courseIdsForSearch, primarySourceType = DataSourceType.REMOTE).blockingGet() //FIXME: WARNING, here may pagination not working for query with ids[]
                         if (courses == null || courses.isEmpty()) {
                             mainHandler.post { view?.showEmptyCourses() }
                         } else {
@@ -112,6 +114,11 @@ class SearchCoursesPresenter
         currentPage.set(1)
         hasNextPage.set(true)
         downloadData(searchQuery)
+    }
+
+    private fun getLang(): String {
+        val enumSet = sharedPreferenceHelper.filterForFeatured
+        return enumSet.iterator().next().language
     }
 
 }

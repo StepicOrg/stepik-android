@@ -53,11 +53,9 @@ import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.util.resolvers.text.TextResolverImpl
-import org.stepic.droid.web.Api
-import org.stepic.droid.web.ApiImpl
-import org.stepic.droid.web.UserAgentProvider
-import org.stepic.droid.web.UserAgentProviderImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
+import org.stepik.android.remote.base.UserAgentProvider
+import org.stepik.android.remote.base.UserAgentProviderImpl
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -88,10 +86,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideIApi(api: ApiImpl): Api
 
     @AppSingleton
     @Binds

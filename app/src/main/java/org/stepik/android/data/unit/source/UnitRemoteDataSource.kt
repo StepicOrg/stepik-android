@@ -12,4 +12,6 @@ interface UnitRemoteDataSource {
     fun getUnits(vararg unitIds: Long): Single<List<Unit>>
 
     fun getUnitsByLessonId(lessonId: Long): Single<List<Unit>>
+
+    fun getUnitsByCourseAndLessonId(courseId: Long, lessonId: Long): Single<List<Unit>>
 }

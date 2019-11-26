@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.CoursesCarouselInfo;
+import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
@@ -155,4 +156,6 @@ public interface ScreenManager {
     void openTextFeedBack(Context context, SupportEmailData supportEmailData);
 
     void openSocialMediaLink(Context context, SocialMedia socialLink);
+
+    void loginWithSocial(FragmentActivity activity, ISocialType type);
 }

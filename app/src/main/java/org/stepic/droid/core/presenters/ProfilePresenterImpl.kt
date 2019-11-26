@@ -13,7 +13,9 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.user.repository.UserRepository
+import org.stepik.android.domain.user_activity.repository.UserActivityRepository
+import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -24,7 +26,9 @@ constructor(
     private val threadPoolExecutor: ThreadPoolExecutor,
     analytic: Analytic,
     private val mainHandler: MainHandler,
-    private val api: Api,
+    private val userActivityRepository: UserActivityRepository,
+    private val userRepository: UserRepository,
+    private val userProfileRepository: UserProfileRepository,
     private val sharedPreferences: SharedPreferenceHelper,
 
     private val profileObservable: Observable<Profile>,
@@ -86,7 +90,7 @@ constructor(
                 showLocalProfile(profile)
             } else if (profileId == 0L && (profile != null && profile.isGuest || profile == null)) {
                 try {
-                    val realProfile = api.userProfile.execute().body()?.getProfile() ?: throw IllegalStateException("profile can't be null on API here")
+                    val realProfile = userProfileRepository.getUserProfile().blockingGet()?.second ?: throw IllegalStateException("profile can't be null on API here")
                     sharedPreferences.storeProfile(realProfile)
                     showLocalProfile(realProfile)
                 } catch (noInternetOrPermission: Exception) {
@@ -115,7 +119,7 @@ constructor(
         //3) user hide profile == Anonymous. We do not need handle this situation
 
         val user = try {
-            api.getUsers(longArrayOf(userId)).execute().body()?.users?.firstOrNull()
+            userRepository.getUsers(userId).blockingGet().firstOrNull()
         } catch (exception: Exception) {
             null
         }
@@ -155,7 +159,7 @@ constructor(
     @WorkerThread
     private fun showStreaks(userId: Long) {
         val pins = try {
-            api.getUserActivities(userId).execute().body()?.userActivities?.firstOrNull()?.pins
+            userActivityRepository.getUserActivities(userId).blockingGet().firstOrNull()?.pins
         } catch (exception: Exception) {
             //if we do not have Internet or do not have access to streaks, just do nothing, because streaks is not primary on profile screen
             null

@@ -20,14 +20,14 @@ class DownloadInteractorBase<T>(
         getConfiguration(configuration)
             .flatMapCompletable { config ->
                 addDownloadTasksHelper
-                    .addTasks(structureResolver.resolveStructure(*ids), config)
+                    .addTasks(structureResolver.resolveStructure(*ids, resolveNestedObjects = true), config)
             }
 
     override fun addTask(vararg items: T, configuration: DownloadConfiguration): Completable =
         getConfiguration(configuration)
             .flatMapCompletable { config ->
                 addDownloadTasksHelper
-                    .addTasks(structureResolver.resolveStructure(*items), config)
+                    .addTasks(structureResolver.resolveStructure(*items, resolveNestedObjects = true), config)
             }
 
     private fun getConfiguration(configuration: DownloadConfiguration): Single<DownloadConfiguration> =
@@ -49,8 +49,8 @@ class DownloadInteractorBase<T>(
             }
 
     override fun removeTask(vararg item: T): Completable =
-        removeDownloadTaskHelper.removeTasks(structureResolver.resolveStructure(*item))
+        removeDownloadTaskHelper.removeTasks(structureResolver.resolveStructure(*item, resolveNestedObjects = false))
 
     override fun removeTask(vararg id: Long): Completable =
-        removeDownloadTaskHelper.removeTasks(structureResolver.resolveStructure(*id))
+        removeDownloadTaskHelper.removeTasks(structureResolver.resolveStructure(*id, resolveNestedObjects = false))
 }

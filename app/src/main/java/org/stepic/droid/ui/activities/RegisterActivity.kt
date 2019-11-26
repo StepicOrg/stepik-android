@@ -29,8 +29,7 @@ import org.stepic.droid.util.ValidatorUtil
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.stripUnderlinesFromLinks
 import org.stepic.droid.util.toBundle
-import org.stepic.droid.web.Api
-import org.stepic.droid.web.RegistrationResponse
+import org.stepik.android.remote.auth.model.RegistrationResponse
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import retrofit2.Retrofit
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
@@ -60,9 +59,6 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
     @Inject
     internal lateinit var retrofit: Retrofit
-
-    @Inject
-    internal lateinit var api: Api
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -199,7 +195,8 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
 
     override fun onRegistrationFailed(responseBody: ResponseBody?) {
         ProgressHelper.dismiss(progressBar)
-        val errorConverter = retrofit.responseBodyConverter<RegistrationResponse>(RegistrationResponse::class.java, arrayOfNulls<Annotation>(0))
+        val errorConverter = retrofit.responseBodyConverter<RegistrationResponse>(
+            RegistrationResponse::class.java, arrayOfNulls<Annotation>(0))
         var error: RegistrationResponse? = null
         try {
             error = errorConverter.convert(responseBody!!)

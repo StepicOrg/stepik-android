@@ -14,8 +14,9 @@ import org.stepik.android.domain.personal_deadlines.repository.DeadlinesReposito
 import org.stepik.android.domain.personal_deadlines.resolver.DeadlinesResolver
 import org.stepik.android.domain.personal_deadlines.resolver.DeadlinesResolverImpl
 import org.stepik.android.remote.personal_deadlines.DeadlinesRemoteDataSourceImpl
+import org.stepik.android.view.injection.remote_storage.RemoteStorageDataModule
 
-@Module
+@Module(includes = [RemoteStorageDataModule::class])
 abstract class PersonalDeadlinesDataModule {
     @Binds
     internal abstract fun bindDeadlinesRepository(

@@ -14,17 +14,17 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.util.setTimeoutsInSeconds
-import org.stepic.droid.web.Api
-import org.stepic.droid.web.NetworkFactory
-import org.stepic.droid.web.UserAgentProvider
 import org.stepik.android.data.auth.repository.AuthRepositoryImpl
 import org.stepik.android.data.auth.source.AuthRemoteDataSource
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.remote.auth.AuthRemoteDataSourceImpl
 import org.stepik.android.remote.auth.interceptor.AuthInterceptor
+import org.stepik.android.remote.auth.model.TokenType
 import org.stepik.android.remote.auth.service.EmptyAuthService
 import org.stepik.android.remote.auth.service.OAuthService
 import org.stepik.android.remote.base.CookieHelper
+import org.stepik.android.remote.base.NetworkFactory
+import org.stepik.android.remote.base.UserAgentProvider
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import org.stepik.android.view.injection.qualifiers.AuthService
 import org.stepik.android.view.injection.qualifiers.CookieAuthService
@@ -82,7 +82,7 @@ abstract class AuthModule {
             converterFactory: Converter.Factory
         ): OAuthService =
             createAuthService(
-                Credentials.basic(config.getOAuthClientId(Api.TokenType.social), config.getOAuthClientSecret(Api.TokenType.social)),
+                Credentials.basic(config.getOAuthClientId(TokenType.SOCIAL), config.getOAuthClientSecret(TokenType.SOCIAL)),
                 userAgentProvider.provideUserAgent(),
                 config.baseUrl,
                 converterFactory
@@ -99,8 +99,8 @@ abstract class AuthModule {
         ): OAuthService =
             createAuthService(
                 Credentials.basic(
-                    config.getOAuthClientId(Api.TokenType.loginPassword),
-                    config.getOAuthClientSecret(Api.TokenType.loginPassword)
+                    config.getOAuthClientId(TokenType.LOGIN_PASSWORD),
+                    config.getOAuthClientSecret(TokenType.LOGIN_PASSWORD)
                 ),
                 userAgentProvider.provideUserAgent(),
                 config.baseUrl,

@@ -40,7 +40,7 @@ constructor(
 ) {
     fun getAttempt(stepId: Long): Single<Attempt> =
         attemptRepository
-            .getAttemptsForStep(stepId)
+            .getAttemptsForStep(stepId, sharedPreferenceHelper.profile?.id ?: 0)
             .maybeFirst()
             .filter { it.status == "active" }
             .switchIfEmpty(attemptRepository.createAttemptForStep(stepId))

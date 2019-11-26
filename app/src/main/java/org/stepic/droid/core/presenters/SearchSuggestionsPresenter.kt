@@ -3,6 +3,7 @@ package org.stepic.droid.core.presenters
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -11,20 +12,20 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.search.repository.SearchRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 class SearchSuggestionsPresenter
 @Inject constructor(
-        private val api: Api,
-        private val databaseFacade: DatabaseFacade,
-        private val analytic: Analytic,
-        @BackgroundScheduler
-        private val scheduler: Scheduler,
-        @MainScheduler
-        private val mainScheduler: Scheduler
+    private val searchRepository: SearchRepository,
+    private val databaseFacade: DatabaseFacade,
+    private val analytic: Analytic,
+    @BackgroundScheduler
+    private val scheduler: Scheduler,
+    @MainScheduler
+    private val mainScheduler: Scheduler
 ) : PresenterBase<SearchSuggestionsView>() {
 
     companion object {
@@ -42,18 +43,18 @@ class SearchSuggestionsPresenter
 
     private fun initSearchView(searchView: SearchSuggestionsView) {
         val queryPublisher = publisher
-                .debounce(AUTOCOMPLETE_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
-                .subscribeOn(scheduler)
+            .debounce(AUTOCOMPLETE_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
+            .subscribeOn(scheduler)
 
-        compositeDisposable.add(queryPublisher
-                .flatMap { query -> Observable.fromCallable { databaseFacade.getSearchQueries(query, DB_ELEMENTS_COUNT) } }
-                .observeOn(mainScheduler)
-                .subscribe { searchView.setSuggestions(it, SearchQuerySource.DB) })
+        compositeDisposable += queryPublisher
+            .flatMap { query -> Observable.fromCallable { databaseFacade.getSearchQueries(query, DB_ELEMENTS_COUNT) } }
+            .observeOn(mainScheduler)
+            .subscribe { searchView.setSuggestions(it, SearchQuerySource.DB) }
 
-        compositeDisposable.add(queryPublisher
-                .flatMap { query -> api.getSearchQueries(query).toObservable().onErrorResumeNext(Observable.empty()) }
+        compositeDisposable += queryPublisher
+                .flatMap { query -> searchRepository.getSearchQueries(query).toObservable().onErrorResumeNext(Observable.empty()) }
                 .observeOn(mainScheduler)
-                .subscribe { searchView.setSuggestions(it.queries, SearchQuerySource.API) })
+                .subscribe { searchView.setSuggestions(it, SearchQuerySource.API) }
     }
 
     fun onQueryTextChange(query: String) {
