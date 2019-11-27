@@ -8,6 +8,7 @@ import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.getBoolean
 import org.stepic.droid.util.getDate
+import org.stepic.droid.util.getDouble
 import org.stepic.droid.util.getInt
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
@@ -48,6 +49,8 @@ constructor(
             discussionProxy = cursor.getString(DbStructureStep.Column.DISCUSSION_PROXY),
             discussionThreads = DbParseHelper.parseStringToStringList(cursor.getString(DbStructureStep.Column.DISCUSSION_THREADS)),
 
+            correctRatio = cursor.getDouble(DbStructureStep.Column.CORRECT_RATIO),
+
             actions = Actions(
                 vote = false, edit = false, delete = false, pin = false,
                 testSection = null,
@@ -74,6 +77,7 @@ constructor(
         values.put(DbStructureStep.Column.DISCUSSION_COUNT, step.discussionsCount)
         values.put(DbStructureStep.Column.DISCUSSION_PROXY, step.discussionProxy)
         values.put(DbStructureStep.Column.DISCUSSION_THREADS, DbParseHelper.parseStringArrayToString(step.discussionThreads?.toTypedArray()))
+        values.put(DbStructureStep.Column.CORRECT_RATIO, step.correctRatio)
         values.put(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, step.hasSubmissionRestriction)
         values.put(DbStructureStep.Column.MAX_SUBMISSION_COUNT, step.maxSubmissionCount)
         values.put(DbStructureStep.Column.PEER_REVIEW, step.actions?.doReview)
