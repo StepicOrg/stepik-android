@@ -11,4 +11,6 @@ interface StepRepository {
         getSteps(stepId, primarySourceType = primarySourceType).maybeFirst()
 
     fun getSteps(vararg stepIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Step>>
+
+    fun getStepByLessonId(lessonId: Long): Single<Step>
 }

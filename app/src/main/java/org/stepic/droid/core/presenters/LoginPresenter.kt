@@ -23,20 +23,20 @@ import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toObject
-import org.stepic.droid.web.Api
-import org.stepic.droid.web.SocialAuthError
 import org.stepik.android.domain.auth.repository.AuthRepository
+import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.remote.auth.model.OAuthResponse
+import org.stepik.android.remote.auth.model.SocialAuthError
 import retrofit2.HttpException
 import javax.inject.Inject
 
 @LoginScope
 class LoginPresenter
 @Inject constructor(
-    private val api: Api,
     private val analytic: Analytic,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val userProfileRepository: UserProfileRepository,
     private val authRepository: AuthRepository,
 
     @MainScheduler
@@ -166,10 +166,7 @@ class LoginPresenter
                             if (socialType == null) return@fromRunnable
 
                             val event: String = try {
-                                val request = api.userProfile.execute().body()
-
-                                val user = request?.getUser()
-                                val profile = request?.getProfile()
+                                val (user, profile) = userProfileRepository.getUserProfile().blockingGet()
 
                                 if (profile != null) {
                                     sharedPreferenceHelper.storeProfile(profile)

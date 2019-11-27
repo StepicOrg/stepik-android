@@ -812,6 +812,7 @@
 
     <!-- Downloads -->
     <string name="downloads_title">Downloaded courses</string>
+    <string name="downloads_remove_task_error">Failed to remove item</string>
 
     <!-- Submissions -->
     <string name="submissions_title">Submissions</string>

@@ -16,13 +16,16 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.RWLocks
-import org.stepic.droid.web.Api
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
+import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Meta
@@ -39,7 +42,9 @@ constructor(
     private val databaseFacade: DatabaseFacade,
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
-    private val api: Api,
+    private val courseRepository: CourseRepository,
+    private val courseListRepository: CourseListRepository,
+    private val userCoursesRepository: UserCoursesRepository,
 
     private val progressRepository: ProgressRepository,
     private val filterApplicator: FilterApplicator,
@@ -117,23 +122,29 @@ constructor(
         while (hasNextPage.get()) {
             val coursesFromInternet: List<Course>? = try {
                 if (courseType == CourseListType.FEATURED) {
-                    val response = api.getPopularCourses(currentPage.get()).blockingGet()
-                    handleMeta(response.meta)
-                    response.courses
+                    val response = courseListRepository
+                        .getCourseList(
+                            CourseListType.FEATURED,
+                            currentPage.get(),
+                            getLang(),
+                            sourceType = DataSourceType.REMOTE
+                        )
+                        .blockingGet()
+                    handleMeta(response)
+                    response
                 } else {
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
                         val page = currentPage.get()
-                        val coursesOrder = api.getUserCourses(page)
-                                .blockingGet()
-                                .apply { handleMeta(meta) }
-                                .userCourse
-                                .map(UserCourse::course)
+                        val userCourses = userCoursesRepository.getUserCourses(page).blockingGet()
+                        handleMeta(userCourses)
 
-                        val coursesResponse = api.getCoursesReactive(1, coursesOrder.toLongArray())
+                        val coursesOrder = userCourses.map(UserCourse::course)
+
+                        val coursesResponse = courseRepository.getCourses(*coursesOrder.toLongArray(), primarySourceType = DataSourceType.REMOTE)
                                 .blockingGet()
+
                         val courses = coursesResponse
-                                .courses
                                 .sortedBy { coursesOrder.indexOf(it.id) }
                         
                         allMyCourses.addAll(courses)
@@ -198,6 +209,13 @@ constructor(
                 }
                 break
             }
+        }
+    }
+
+    private fun handleMeta(meta: PagedList<out Any>) {
+        hasNextPage.set(meta.hasNext)
+        if (hasNextPage.get()) {
+            currentPage.set(meta.page + 1) // page for next loading
         }
     }
 
@@ -290,5 +308,10 @@ constructor(
 
     fun loadMore(courseType: CourseListType) {
         downloadData(courseType, isRefreshing = false, isLoadMore = true)
+    }
+
+    private fun getLang(): String {
+        val enumSet = sharedPreferenceHelper.filterForFeatured
+        return enumSet.iterator().next().language
     }
 }

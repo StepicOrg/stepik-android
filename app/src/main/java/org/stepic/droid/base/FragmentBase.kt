@@ -21,7 +21,6 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.util.CloseIconHolder
 import org.stepic.droid.util.resolvers.text.TextResolver
-import org.stepic.droid.web.Api
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -47,9 +46,6 @@ open class FragmentBase : Fragment() {
 
     @Inject
     lateinit var config: Config
-
-    @Inject
-    lateinit var api: Api
 
     @Inject
     lateinit var screenManager: ScreenManager

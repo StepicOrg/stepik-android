@@ -6,7 +6,8 @@ import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.di.mainscreen.MainScreenScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.email_address.repository.EmailAddressRepository
+import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.Profile
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.atomic.AtomicBoolean
@@ -15,12 +16,13 @@ import javax.inject.Inject
 @MainScreenScope
 class ProfileMainFeedPresenter
 @Inject constructor(
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val mainHandler: MainHandler,
-        private val api: Api,
-        private val threadPoolExecutor: ThreadPoolExecutor,
-        analytic: Analytic,
-        private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val mainHandler: MainHandler,
+    private val emailAddressRepository: EmailAddressRepository,
+    private val userProfileRepository: UserProfileRepository,
+    private val threadPoolExecutor: ThreadPoolExecutor,
+    analytic: Analytic,
+    private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
 
     private val isProfileFetching = AtomicBoolean(false)
     private var profile: Profile? = null
@@ -57,11 +59,11 @@ class ProfileMainFeedPresenter
 
                 //after that try to update profile, because user can change avatar or something at web.
                 try {
-                    val tempProfile = api.userProfile.execute().body()?.getProfile() ?: throw IllegalStateException("profile can't be null")
+                    val tempProfile = userProfileRepository.getUserProfile().blockingGet()?.second ?: throw IllegalStateException("profile can't be null")
                     val emailIds = tempProfile.emailAddresses
                     if (emailIds?.isNotEmpty() == true) {
                         try {
-                            api.getEmailAddresses(emailIds).execute().body()?.emailAddresses?.let {
+                            emailAddressRepository.getEmailAddresses(*emailIds).blockingGet().let {
                                 if (it.isNotEmpty()) {
                                     sharedPreferenceHelper.storeEmailAddresses(it)
                                 }

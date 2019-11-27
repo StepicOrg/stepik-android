@@ -163,7 +163,7 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        //if we redirect from social:
+        //if we redirect from SOCIAL:
         intent?.data?.let {
             redirectFromSocial(intent)
         }

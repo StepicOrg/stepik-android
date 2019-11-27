@@ -11,13 +11,14 @@ import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.CourseUtil
-import org.stepic.droid.web.Api
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
+import org.stepik.android.domain.progress.mapper.getProgresses
+import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
-import org.stepik.android.remote.course.model.CourseResponse
-import org.stepik.android.remote.course.model.CourseReviewSummaryResponse
-import org.stepik.android.remote.progress.model.ProgressResponse
 import javax.inject.Inject
 
 @CourseListScope
@@ -28,22 +29,18 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    private val api: Api
+    private val courseReviewSummaryRepository: CourseReviewSummaryRepository,
+    private val courseRepository: CourseRepository,
+    private val progressRepository: ProgressRepository
 ) : PresenterBase<CoursesView>() {
-
-    companion object {
-        //collections are small (less than 10 courses), so pagination is not needed
-        private const val DEFAULT_PAGE = 1
-    }
 
     private val compositeDisposable = CompositeDisposable()
 
     fun onShowCollections(courseIds: LongArray) {
         view?.showLoading()
-        compositeDisposable += api.getCoursesReactive(DEFAULT_PAGE, courseIds)
-            .map(CourseResponse::courses)
+        compositeDisposable += courseRepository.getCourses(*courseIds, primarySourceType = DataSourceType.REMOTE)
             .flatMap {
-                val progressIds = it.map(Course::progress).toTypedArray()
+                val progressIds = it.getProgresses()
                 val reviewIds = it.map(Course::reviewSummary).toLongArray()
 
                 zip(Single.just(it), getProgressesSingle(progressIds), getReviewsSingle(reviewIds)) { courses, progressMap, reviews ->
@@ -67,13 +64,11 @@ constructor(
     }
 
     private fun getReviewsSingle(reviewIds: LongArray): Single<List<CourseReviewSummary>> =
-        api.getCourseReviewSummaries(reviewIds)
-            .map(CourseReviewSummaryResponse::courseReviewSummaries)
+        courseReviewSummaryRepository.getCourseReviewSummaries(*reviewIds)
             .subscribeOn(backgroundScheduler)
 
-    private fun getProgressesSingle(progressIds: Array<String?>): Single<Map<String?, Progress>> =
-        api.getProgressesReactive(progressIds)
-            .map(ProgressResponse::progresses)
+    private fun getProgressesSingle(progressIds: Array<String>): Single<Map<String?, Progress>> =
+        progressRepository.getProgresses(*progressIds)
             .map { it.associateBy(Progress::id) }
             .subscribeOn(backgroundScheduler)
 

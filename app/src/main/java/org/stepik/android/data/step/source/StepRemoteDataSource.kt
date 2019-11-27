@@ -5,4 +5,6 @@ import org.stepik.android.model.Step
 
 interface StepRemoteDataSource {
     fun getSteps(vararg stepIds: Long): Single<List<Step>>
+
+    fun getStepByLessonId(lessonId: Long): Single<Step>
 }

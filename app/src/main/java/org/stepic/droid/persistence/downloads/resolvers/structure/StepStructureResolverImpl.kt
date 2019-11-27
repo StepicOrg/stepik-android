@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.Structure
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.attempt.repository.AttemptRepository
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class StepStructureResolverImpl
 @Inject
 constructor(
+    private val userPreferences: UserPreferences,
     private val stepRepository: StepRepository,
     private val progressRepository: ProgressRepository,
     private val attemptRepository: AttemptRepository,
@@ -29,7 +31,8 @@ constructor(
         sectionId: Long,
         unitId: Long,
         lessonId: Long,
-        vararg stepIds: Long
+        vararg stepIds: Long,
+        resolveNestedObjects: Boolean
     ): Observable<Structure> =
         stepRepository
             .getSteps(*stepIds)
@@ -40,14 +43,19 @@ constructor(
                     }
                     .toObservable()
 
-                val attemptCompletable = Completable
-                    .concat(steps.map(::resolveStepAttempt))
+                val nestedObjectsCompletableSource =
+                    if (resolveNestedObjects) {
+                        val attemptCompletable = Completable
+                            .concat(steps.map(::resolveStepAttempt))
+                        progressRepository
+                            .getProgresses(*steps.getProgresses())
+                            .ignoreElement()
+                            .andThen(attemptCompletable)
+                    } else {
+                        Completable.complete()
+                    }
 
-                progressRepository
-                    .getProgresses(*steps.getProgresses())
-                    .ignoreElement()
-                    .andThen(attemptCompletable)
-                    .andThen(observables)
+                nestedObjectsCompletableSource.andThen(observables)
             }
 
     private fun resolveStepAttempt(step: Step): Completable =
@@ -56,7 +64,7 @@ constructor(
             step.block?.name != AppConstants.TYPE_VIDEO &&
             step.status == Step.Status.READY) {
             attemptRepository
-                .getAttemptsForStep(step.id)
+                .getAttemptsForStep(step.id, userPreferences.userId)
                 .maybeFirst()
                 .flatMapSingleElement { attempt ->
                     submissionRepository

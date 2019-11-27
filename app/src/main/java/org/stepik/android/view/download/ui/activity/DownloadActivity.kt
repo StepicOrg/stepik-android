@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -17,15 +18,21 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.persistence.model.DownloadItem
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.snackbar
+import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.download.DownloadPresenter
 import org.stepik.android.presentation.download.DownloadView
+import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.download.ui.adapter.DownloadedCoursesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class DownloadActivity : FragmentActivityBase(), DownloadView {
+class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedContentDialog.Callback {
     companion object {
         fun createIntent(context: Context): Intent =
             Intent(context, DownloadActivity::class.java)
@@ -41,6 +48,9 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
     private val viewStateDelegate =
         ViewStateDelegate<DownloadView.State>()
 
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
@@ -52,7 +62,10 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
 
         initCenteredToolbar(R.string.downloads_title, showHomeButton = true)
 
-        downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate { screenManager.showCourseModules(this, it.course) }
+        downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate(
+            onItemClick = { screenManager.showCourseModules(this, it.course) },
+            onItemRemoveClick = ::showRemoveCourseDialog
+        )
 
         with(downloadsRecyclerView) {
             (itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
@@ -105,5 +118,27 @@ class DownloadActivity : FragmentActivityBase(), DownloadView {
         if (state is DownloadView.State.DownloadedCoursesLoaded) {
             downloadedCoursesAdapter.items = state.courses
         }
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
+    }
+
+    private fun showRemoveCourseDialog(downloadItem: DownloadItem) {
+        RemoveCachedContentDialog
+            .newInstance(course = downloadItem.course)
+            .showIfNotExists(supportFragmentManager, RemoveCachedContentDialog.TAG)
+    }
+
+    override fun onRemoveCourseDownloadConfirmed(course: Course) {
+        downloadPresenter.removeCourseDownload(course)
+    }
+
+    override fun showRemoveTaskError() {
+        root.snackbar(messageRes = R.string.downloads_remove_task_error)
     }
 }

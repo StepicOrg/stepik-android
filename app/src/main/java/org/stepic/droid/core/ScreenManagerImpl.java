@@ -36,6 +36,7 @@ import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
+import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
@@ -67,6 +68,7 @@ import org.stepik.android.model.Unit;
 import org.stepik.android.model.Video;
 import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
+import org.stepik.android.remote.auth.model.TokenType;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
@@ -718,5 +720,14 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openSocialMediaLink(Context context, SocialMedia socialLink) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(socialLink.getLink()));
         context.startActivity(browserIntent);
+    }
+
+    @Override
+    public void loginWithSocial(FragmentActivity activity, ISocialType type) {
+        String socialIdentifier = type.getIdentifier();
+        String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.SOCIAL) + "&response_type=code");
+        Uri uri = Uri.parse(url);
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
+        activity.startActivity(intent);
     }
 }

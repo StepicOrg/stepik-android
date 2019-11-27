@@ -2,9 +2,10 @@ package org.stepic.droid.di.mainscreen
 
 import dagger.Subcomponent
 import org.stepic.droid.ui.activities.MainFeedActivity
+import org.stepik.android.view.injection.user_profile.UserProfileDataModule
 
 @MainScreenScope
-@Subcomponent(modules = arrayOf(MainScreenModule::class))
+@Subcomponent(modules = [MainScreenModule::class, UserProfileDataModule::class])
 interface MainScreenComponent {
 
     @Subcomponent.Builder
