@@ -6,10 +6,11 @@ import androidx.core.app.TaskStackBuilder
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.notifications.model.RetentionNotificationType
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
@@ -21,7 +22,7 @@ class RetentionNotificationDelegate
 constructor(
     private val context: Context,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val databaseFacade: DatabaseFacade,
+    private val courseListRepository: CourseListRepository,
     private val notificationHelper: NotificationHelper,
     stepikNotificationManager: StepikNotificationManager
 ) : NotificationDelegate("show_retention_notification", stepikNotificationManager) {
@@ -35,7 +36,7 @@ constructor(
 
         if (sharedPreferenceHelper.authResponseFromStore == null ||
             sharedPreferenceHelper.isStreakNotificationEnabled ||
-            databaseFacade.getAllCourses(CourseListType.ENROLLED).isEmpty() ||
+            isEnrolledEmpty() ||
             now - lastSessionTimestamp < AppConstants.MILLIS_IN_24HOURS / 2
         ) {
             return
@@ -101,4 +102,15 @@ constructor(
         scheduleNotificationAt(scheduleMillis)
         sharedPreferenceHelper.saveRetentionNotificationTimestamp(scheduleMillis)
     }
+
+    private fun isEnrolledEmpty(): Boolean =
+        courseListRepository
+            .getCourseList(
+                CourseListType.ENROLLED,
+                1,
+                sharedPreferenceHelper.languageForFeatured,
+                sourceType = DataSourceType.CACHE
+            )
+            .blockingGet()
+            .isEmpty()
 }
