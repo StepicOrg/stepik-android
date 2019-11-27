@@ -1,6 +1,8 @@
 package org.stepik.android.domain.personal_deadlines.interactor
 
+import io.reactivex.Single
 import org.stepic.droid.util.AppConstants
+import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.section.repository.SectionRepository
@@ -26,7 +28,7 @@ constructor(
     fun getSection(sectionId: Long): Section? =
         sectionRepository.getSections(sectionId).blockingGet().firstOrNull()
 
-    fun getDeadlineRecordsForTimestamp(now: Long) =
+    fun getDeadlineRecordsForTimestamp(now: Long): Single<List<DeadlineEntity>> =
         deadlinesCacheDataSource.getDeadlineRecordsForTimestamp(longArrayOf(now + OFFSET_12HOURS, now + OFFSET_36HOURS))
 
     fun getClosestDeadlineTimestamp(): Long =

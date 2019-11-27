@@ -20,7 +20,7 @@ constructor(
         return isFirstDayNotificationShown && isSevenDayNotificationShown
     }
 
-    fun hasUserInteractedWithApp() =
+    fun hasUserInteractedWithApp(): Boolean =
         sharedPreferenceHelper.authResponseFromStore == null ||
         sharedPreferenceHelper.isStreakNotificationEnabled ||
         hasEnrolledCourses() ||
@@ -28,12 +28,7 @@ constructor(
 
     private fun hasEnrolledCourses(): Boolean =
         courseListRepository
-            .getCourseList(CourseListType.ENROLLED, 1, getLang(), sourceType = DataSourceType.CACHE)
+            .getCourseList(CourseListType.ENROLLED, 1, sharedPreferenceHelper.languageForFeatured, sourceType = DataSourceType.CACHE)
             .blockingGet()
             .isNotEmpty()
-
-    private fun getLang(): String {
-        val enumSet = sharedPreferenceHelper.filterForFeatured
-        return enumSet.iterator().next().language
-    }
 }
