@@ -34,6 +34,8 @@ data class User(
 
     @SerializedName("is_private")
     val isPrivate: Boolean = false,
+    @SerializedName("is_guest")
+    val isGuest: Boolean = false,
     @SerializedName("is_organization")
     val isOrganization: Boolean = false,
 
@@ -70,6 +72,7 @@ data class User(
         parcel.writeString(avatar)
         parcel.writeString(cover)
         parcel.writeBoolean(isPrivate)
+        parcel.writeBoolean(isGuest)
         parcel.writeBoolean(isOrganization)
 
         parcel.writeList(socialProfiles)
@@ -99,6 +102,7 @@ data class User(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
+                parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
                 mutableListOf<Long>().apply { parcel.readList(this, Long::class.java.classLoader) },

@@ -41,7 +41,14 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { state = ProfileView.State.Content(it) },
+                onSuccess = { profileData ->
+                    state =
+                        if (profileData.isCurrentUser && profileData.user.isGuest) {
+                            ProfileView.State.EmptyLogin
+                        } else {
+                            ProfileView.State.Content(profileData)
+                        }
+                },
                 onComplete = { state = ProfileView.State.Empty },
                 onError = { state = ProfileView.State.NetworkError }
             )

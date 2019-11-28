@@ -16,6 +16,7 @@ object DbStructureUser {
         const val AVATAR = "avatar"
         const val COVER = "cover"
         const val IS_PRIVATE = "is_private"
+        const val IS_GUEST = "is_guest"
         const val IS_ORGANIZATION = "is_organization"
 
         const val SOCIAL_PROFILES = "social_profiles"

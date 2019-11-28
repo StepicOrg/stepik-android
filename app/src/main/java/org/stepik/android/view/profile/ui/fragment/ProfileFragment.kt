@@ -16,10 +16,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.empty_login.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.header_profile.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
@@ -36,6 +39,9 @@ class ProfileFragment : Fragment(), ProfileView {
                     this.userId = userId
                 }
     }
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -66,6 +72,12 @@ class ProfileFragment : Fragment(), ProfileView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<ProfileView.State.Idle>()
+        viewStateDelegate.addState<ProfileView.State.Loading>()
+        viewStateDelegate.addState<ProfileView.State.Content>(scrollContainer)
+        viewStateDelegate.addState<ProfileView.State.Empty>(profileEmpty)
+        viewStateDelegate.addState<ProfileView.State.EmptyLogin>(profileEmptyLogin)
+        viewStateDelegate.addState<ProfileView.State.NetworkError>(profileNetworkError)
 
         (activity as? AppCompatActivity)
             ?.apply { setSupportActionBar(toolbar) }
@@ -86,6 +98,9 @@ class ProfileFragment : Fragment(), ProfileView {
 
         profileKnowledgeRank.isVisible = false
         profileReputationRank.isVisible = false
+
+        tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
+        authAction.setOnClickListener { screenManager.showLaunchScreen(context) }
 
 //        profileKnowledgeRank.text =
 //            buildSpannedString {
@@ -127,20 +142,20 @@ class ProfileFragment : Fragment(), ProfileView {
 
         when (state) {
             is ProfileView.State.Content -> {
-                Glide
-                    .with(this)
-                    .load(state.user.avatar)
-                    .placeholder(R.drawable.general_placeholder)
-                    .into(profileImage)
+                with(state.profileData) {
+                    Glide
+                        .with(this@ProfileFragment)
+                        .load(user.avatar)
+                        .placeholder(R.drawable.general_placeholder)
+                        .into(profileImage)
 
-                profileName.text = state.user.fullName
-                profileBio.text = state.user.shortBio
-                profileBio.isVisible = !state.user.shortBio.isNullOrBlank()
+                    profileName.text = user.fullName
+                    profileBio.text = user.shortBio
+                    profileBio.isVisible = !user.shortBio.isNullOrBlank()
 
-                toolbarTitle.text = state.user.fullName
-                toolbarTitle.translationY = 1000f
-
-
+                    toolbarTitle.text = user.fullName
+                    toolbarTitle.translationY = 1000f
+                }
             }
 
             ProfileView.State.Loading,

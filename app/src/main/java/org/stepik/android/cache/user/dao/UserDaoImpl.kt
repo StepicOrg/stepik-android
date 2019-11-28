@@ -40,6 +40,7 @@ constructor(
         values.put(DbStructureUser.Columns.AVATAR, user.avatar)
         values.put(DbStructureUser.Columns.COVER, user.cover)
         values.put(DbStructureUser.Columns.IS_PRIVATE, user.isPrivate)
+        values.put(DbStructureUser.Columns.IS_GUEST, user.isGuest)
         values.put(DbStructureUser.Columns.IS_ORGANIZATION, user.isOrganization)
         values.put(DbStructureUser.Columns.SOCIAL_PROFILES, DbParseHelper.parseLongListToString(user.socialProfiles))
         values.put(DbStructureUser.Columns.KNOWLEDGE, user.knowledge)
@@ -68,6 +69,7 @@ constructor(
             avatar      = cursor.getString(DbStructureUser.Columns.AVATAR),
             cover       = cursor.getString(DbStructureUser.Columns.COVER),
             isPrivate   = cursor.getBoolean(DbStructureUser.Columns.IS_PRIVATE),
+            isGuest     = cursor.getBoolean(DbStructureUser.Columns.IS_GUEST),
             isOrganization = cursor.getBoolean(DbStructureUser.Columns.IS_ORGANIZATION),
             socialProfiles = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureUser.Columns.SOCIAL_PROFILES)).orEmpty(),
 
