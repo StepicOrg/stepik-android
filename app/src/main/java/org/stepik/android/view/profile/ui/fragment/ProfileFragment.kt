@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
-import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -16,12 +15,13 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.header_profile.*
-import org.stepik.android.presentation.profile.ProfilePresenter
-import org.stepik.android.presentation.profile.ProfileView
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepik.android.presentation.profile.ProfilePresenter
+import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
+import kotlin.math.min
 
 class ProfileFragment : Fragment() {
     companion object {
@@ -68,6 +68,9 @@ class ProfileFragment : Fragment() {
         profileName.text = "Konstantin Konstantin"
         profileBio.text = "Saint Petersburg State University, Bioinformatics Institute, VK, Saint Petersburg State University, Bioinformatics Institute, VK, Saint Petersburg State University, Bioinformatics Institute, VK"
 
+        toolbarTitle.text = profileName.text
+        toolbarTitle.translationY = 1000f
+
         Glide
             .with(this)
             .load("https://i.pinimg.com/originals/a2/de/39/a2de3954697c636276192afea0a6f661.jpg")
@@ -77,6 +80,9 @@ class ProfileFragment : Fragment() {
 
         scrollContainer.setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, _: Int ->
             ViewCompat.setElevation(appbar, if (scrollY > header.height) ViewCompat.getElevation(header) else 0f)
+
+            val scroll = min(toolbar.height, scrollY)
+            toolbarTitle.translationY = toolbar.height.toFloat() - scroll
         }
     }
 
