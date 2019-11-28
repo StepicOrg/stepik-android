@@ -3,9 +3,11 @@ package org.stepik.android.view.injection.profile
 import dagger.Subcomponent
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
+import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld
 
 @Subcomponent(modules = [
+    ProfileModuleOld::class,
     ProfileModule::class,
     ProfileDataModule::class,
     UserDataModule::class,
@@ -18,5 +20,5 @@ interface ProfileComponent {
     }
 
     fun inject(profileFragmentOld: ProfileFragmentOld)
-    fun inject(profileFragment: org.stepik.android.view.profile.ui.fragment.ProfileFragment)
+    fun inject(profileFragment: ProfileFragment)
 }

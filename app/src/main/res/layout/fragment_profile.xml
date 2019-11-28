@@ -9,6 +9,7 @@
         android:id="@+id/scrollContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -20,10 +21,6 @@
             <include
                 android:id="@+id/header"
                 layout="@layout/header_profile" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1000dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>

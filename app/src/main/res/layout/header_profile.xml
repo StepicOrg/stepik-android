@@ -92,6 +92,10 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="16dp"
 
+            android:drawableStart="@drawable/ic_profile_knowledge"
+            android:drawableLeft="@drawable/ic_profile_knowledge"
+            android:drawablePadding="8dp"
+
             tools:text="Knowledge 700" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -106,6 +110,10 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="16dp"
+
+            android:drawableStart="@drawable/ic_profile_reputation"
+            android:drawableLeft="@drawable/ic_profile_reputation"
+            android:drawablePadding="8dp"
 
             tools:text="Reputation 25k" />
 

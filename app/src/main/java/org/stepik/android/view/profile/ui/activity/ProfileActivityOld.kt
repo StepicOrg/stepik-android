@@ -12,7 +12,6 @@ import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
-import org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld
 
 class ProfileActivityOld : SingleFragmentActivity(),
     CloseButtonInToolbar {
@@ -41,11 +40,11 @@ class ProfileActivityOld : SingleFragmentActivity(),
 
         val userIdInternal: Long? = intent?.extras?.getLong(optionalUserIdKey)
         return if (userIdInternal != null && userIdInternal != 0L) {
-            ProfileFragment.newInstance()//(userIdInternal)
+            ProfileFragment.newInstance(userIdInternal)
         } else {
             val dataUri = intent?.data
             val userId = getUserId(dataUri)
-            ProfileFragment.newInstance()//(userId)
+            ProfileFragment.newInstance(userId)
         }
     }
 

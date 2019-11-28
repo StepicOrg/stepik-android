@@ -50,8 +50,8 @@ import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.copyTextToClipboard
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
-import org.stepik.android.presentation.profile.ProfilePresenter
-import org.stepik.android.presentation.profile.ProfileView
+import org.stepik.android.presentation.profile_old.ProfilePresenter
+import org.stepik.android.presentation.profile_old.ProfileView
 import org.stepik.android.view.profile.ui.adapter.ProfileSettingsAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
