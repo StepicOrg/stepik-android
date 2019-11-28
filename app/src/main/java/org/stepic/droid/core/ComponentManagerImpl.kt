@@ -8,7 +8,9 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.util.SuppressFBWarnings
 import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.profile.ProfileComponent
 import timber.log.Timber
+import java.lang.ref.WeakReference
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
 
@@ -68,6 +70,15 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             _courseComponentMap[courseId]
                     ?.release()
                     ?: throw IllegalStateException("release course = $courseId component, which is not allocated")
+
+    // Profile
+
+    private val _profileComponentMap = hashMapOf<Long, WeakComponentHolder<ProfileComponent>>()
+
+    override fun profileComponent(userId: Long): ProfileComponent =
+        _profileComponentMap.getOrPut(userId, ::WeakComponentHolder).get {
+            appCoreComponent.profileComponentBuilderNew().build()
+        }
 
     // Login
 
@@ -143,4 +154,15 @@ class ComponentHolder<T> {
         }
     }
 
+}
+
+class WeakComponentHolder<T> {
+    private var componentReference: WeakReference<T> = WeakReference<T>(null)
+
+    fun get(creationBlock: () -> T): T {
+        val component = componentReference.get() ?: creationBlock()
+        componentReference = WeakReference(component)
+
+        return component
+    }
 }

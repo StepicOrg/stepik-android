@@ -36,6 +36,7 @@ import org.stepik.android.model.user.User
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -62,6 +63,7 @@ class ProfileFragment : Fragment(), ProfileView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private lateinit var profileComponent: ProfileComponent
     private lateinit var profilePresenter: ProfilePresenter
 
     private var userId by argument<Long>()
@@ -131,10 +133,10 @@ class ProfileFragment : Fragment(), ProfileView {
     }
 
     private fun injectComponent() {
-        App.component()
-            .profileComponentBuilderNew()
-            .build()
-            .inject(this)
+        profileComponent = App
+            .componentManager()
+            .profileComponent(userId)
+        profileComponent.inject(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
