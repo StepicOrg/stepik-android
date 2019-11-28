@@ -166,7 +166,6 @@ class ProfileFragment : Fragment(), ProfileView {
                 super.onOptionsItemSelected(item)
         }
 
-
     override fun onStart() {
         super.onStart()
         profilePresenter.attachView(this)
