@@ -17,7 +17,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <include layout="@layout/header_profile" />
+            <include
+                android:id="@+id/header"
+                layout="@layout/header_profile" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1000dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
@@ -26,7 +32,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp" >
+        app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
