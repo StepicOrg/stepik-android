@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.storage.dao.DaoBase
 import org.stepic.droid.storage.operations.DatabaseOperations
+import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.getBoolean
 import org.stepic.droid.util.getDate
 import org.stepic.droid.util.getLong
@@ -37,8 +38,14 @@ constructor(
         values.put(DbStructureUser.Columns.SHORT_BIO, user.shortBio)
         values.put(DbStructureUser.Columns.DETAILS, user.details)
         values.put(DbStructureUser.Columns.AVATAR, user.avatar)
+        values.put(DbStructureUser.Columns.COVER, user.cover)
         values.put(DbStructureUser.Columns.IS_PRIVATE, user.isPrivate)
         values.put(DbStructureUser.Columns.IS_ORGANIZATION, user.isOrganization)
+        values.put(DbStructureUser.Columns.SOCIAL_PROFILES, DbParseHelper.parseLongListToString(user.socialProfiles))
+        values.put(DbStructureUser.Columns.KNOWLEDGE, user.knowledge)
+        values.put(DbStructureUser.Columns.KNOWLEDGE_RANK, user.knowledgeRank)
+        values.put(DbStructureUser.Columns.REPUTATION, user.reputation)
+        values.put(DbStructureUser.Columns.REPUTATION_RANK, user.reputationRank)
         values.put(DbStructureUser.Columns.JOIN_DATE, user.joinDate?.time ?: -1)
 
         return values
@@ -54,8 +61,14 @@ constructor(
             shortBio    = cursor.getString(DbStructureUser.Columns.SHORT_BIO),
             details     = cursor.getString(DbStructureUser.Columns.DETAILS),
             avatar      = cursor.getString(DbStructureUser.Columns.AVATAR),
+            cover       = cursor.getString(DbStructureUser.Columns.COVER),
             isPrivate   = cursor.getBoolean(DbStructureUser.Columns.IS_PRIVATE),
             isOrganization = cursor.getBoolean(DbStructureUser.Columns.IS_ORGANIZATION),
+            socialProfiles = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureUser.Columns.SOCIAL_PROFILES)).orEmpty(),
+            knowledge   = cursor.getLong(DbStructureUser.Columns.KNOWLEDGE),
+            knowledgeRank = cursor.getLong(DbStructureUser.Columns.KNOWLEDGE_RANK),
+            reputation  = cursor.getLong(DbStructureUser.Columns.REPUTATION),
+            reputationRank = cursor.getLong(DbStructureUser.Columns.REPUTATION_RANK),
             joinDate    = cursor.getDate(DbStructureUser.Columns.JOIN_DATE)
         )
 }

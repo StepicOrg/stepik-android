@@ -14,8 +14,16 @@ object DbStructureUser {
         const val SHORT_BIO = "short_bio"
         const val DETAILS = "details"
         const val AVATAR = "avatar"
+        const val COVER = "cover"
         const val IS_PRIVATE = "is_private"
         const val IS_ORGANIZATION = "is_organization"
+
+        const val SOCIAL_PROFILES = "social_profiles"
+        const val KNOWLEDGE = "knowledge"
+        const val KNOWLEDGE_RANK = "knowledge_rank"
+        const val REPUTATION = "reputation"
+        const val REPUTATION_RANK = "reputation_rank"
+
         const val JOIN_DATE = "join_date"
     }
 
