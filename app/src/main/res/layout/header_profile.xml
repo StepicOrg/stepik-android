@@ -50,6 +50,7 @@
         android:textColor="@color/new_accent_color"
         android:textSize="12sp"
         android:lineSpacingMultiplier="1.1"
+        android:letterSpacing="0.01"
 
         app:layout_constraintTop_toBottomOf="@id/profileName"
         app:layout_constraintStart_toEndOf="@id/profileImage"
@@ -62,59 +63,56 @@
 
         tools:text="Konstantin Konstantin bio dslkdjaksdjajsl adklsj l jasl dj lkjadlksakdjas adslkdj alsjd lkjasdlk lkasj lkajsdask jlaslkd" />
 
-    <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/profileDataBarrier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="profileImage,profileBio"
-        app:barrierDirection="bottom" />
-
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
+        android:id="@+id/profileStats"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/profileDataBarrier"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp">
+        app:layout_constraintTop_toBottomOf="@id/profileBio"
+        app:layout_constraintStart_toEndOf="@id/profileImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical"
+        android:layout_margin="8dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/profileKnowledgeRank"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:textColor="@color/new_accent_color"
-            android:textSize="12sp"
-
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="16dp"
+            style="@style/ProfileStat"
 
             android:drawableStart="@drawable/ic_profile_knowledge"
             android:drawableLeft="@drawable/ic_profile_knowledge"
-            android:drawablePadding="8dp"
-
             tools:text="Knowledge 700" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/profileReputationRank"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-
-            android:textColor="@color/new_accent_color"
-            android:textSize="12sp"
-
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="16dp"
+            style="@style/ProfileStat"
 
             android:drawableStart="@drawable/ic_profile_reputation"
             android:drawableLeft="@drawable/ic_profile_reputation"
-            android:drawablePadding="8dp"
+            tools:text="Reputation 25k" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/profileCertificatesIssued"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ProfileStat"
+
+            android:drawableStart="@drawable/ic_profile_reputation"
+            android:drawableLeft="@drawable/ic_profile_reputation"
+            tools:text="Reputation 25k" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/profileCoursesPublished"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ProfileStat"
+
+            android:drawableStart="@drawable/ic_profile_courses"
+            android:drawableLeft="@drawable/ic_profile_courses"
             tools:text="Reputation 25k" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

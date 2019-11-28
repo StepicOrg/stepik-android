@@ -60,4 +60,14 @@
         <item quantity="one">%d reply</item>
         <item quantity="other">%d replies</item>
     </plurals>
+
+    <plurals name="certificates_issued">
+        <item quantity="one">%d certificate issued</item>
+        <item quantity="other">%d certificates issued</item>
+    </plurals>
+
+    <plurals name="courses_published">
+        <item quantity="one">%d course published</item>
+        <item quantity="other">%d courses published</item>
+    </plurals>
 </resources>

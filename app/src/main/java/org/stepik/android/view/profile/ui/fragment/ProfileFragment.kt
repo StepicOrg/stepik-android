@@ -1,6 +1,8 @@
 package org.stepik.android.view.profile.ui.fragment
 
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,6 +10,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
@@ -25,10 +30,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
+import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.model.user.User
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
+import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -119,24 +126,8 @@ class ProfileFragment : Fragment(), ProfileView {
             toolbarTitle.translationY = toolbar.height.toFloat() - scroll
         }
 
-        profileKnowledgeRank.isVisible = false
-        profileReputationRank.isVisible = false
-
         tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
         authAction.setOnClickListener { screenManager.showLaunchScreen(context) }
-
-//        profileKnowledgeRank.text =
-//            buildSpannedString {
-//                append("Знания ")
-//                bold { append("2132") }
-//                append(" (25й по знаниям)")
-//            }
-//        profileReputationRank.text =
-//            buildSpannedString {
-//                append("Репутация ")
-//                bold { append("132") }
-//                append(" (250й по репутации)")
-//            }
     }
 
     private fun injectComponent() {
@@ -205,6 +196,8 @@ class ProfileFragment : Fragment(), ProfileView {
 
                     isEditMenuItemVisible = isCurrentUser
                     isShareMenuItemVisible = true
+
+                    setProfileStats(user)
                 }
             }
 
@@ -215,6 +208,47 @@ class ProfileFragment : Fragment(), ProfileView {
                 isEditMenuItemVisible = false
                 isShareMenuItemVisible = false
             }
+        }
+    }
+
+    private fun setProfileStats(user: User) {
+        profileStats.hideAllChildren()
+        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(requireContext(), R.font.roboto_bold))
+
+        if (user.isOrganization) {
+            val certificatesIssued = resources
+                .getQuantityString(R.plurals.certificates_issued, user.issuedCertificatesCount.toInt(), user.issuedCertificatesCount)
+                .let(::SpannableString)
+                .apply {
+                    setSpan(typefaceSpan, 0, user.issuedCertificatesCount.toString().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
+
+            profileCertificatesIssued.text = certificatesIssued
+            profileCertificatesIssued.isVisible = true
+
+            val coursesPublished = resources
+                .getQuantityString(R.plurals.courses_published, user.createdCoursesCount.toInt(), user.createdCoursesCount)
+                .let(::SpannableString)
+                .apply {
+                    setSpan(typefaceSpan, 0, user.createdCoursesCount.toString().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
+
+            profileCoursesPublished.text = coursesPublished
+            profileCoursesPublished.isVisible = true
+        } else {
+            profileKnowledgeRank.text =
+                buildSpannedString {
+                    append(getString(R.string.profile_stat_knowledge))
+                    bold { append(getString(R.string.profile_stat_top, user.knowledge, user.knowledgeRank)) }
+                }
+            profileKnowledgeRank.isVisible = true
+
+            profileReputationRank.text =
+                buildSpannedString {
+                    append(getString(R.string.profile_stat_reputation))
+                    bold { append(getString(R.string.profile_stat_top, user.reputation, user.reputationRank)) }
+                }
+            profileReputationRank.isVisible = true
         }
     }
 

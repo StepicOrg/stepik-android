@@ -817,4 +817,11 @@
     <!-- Submissions -->
     <string name="submissions_title">Submissions</string>
     <string name="submissions_select_title">Choose submission</string>
+
+    <!-- Profile -->
+    <string name="profile_stat_knowledge">Knowledge</string>
+    <string name="profile_stat_reputation">Reputation</string>
+    <string name="profile_stat_certificates">issued</string>
+    <string name="profile_stat_courses">published</string>
+    <string name="profile_stat_top">" %d | Top %d"</string>
 </resources>

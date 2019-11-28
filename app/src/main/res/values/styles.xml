@@ -508,4 +508,15 @@
         <item name="android:textSize">12sp</item>
         <item name="android:letterSpacing" tools:targetApi="lollipop">0.03</item>
     </style>
+
+    <style name="ProfileStat">
+        <item name="android:background">@drawable/bg_rounded_selectable_item</item>
+        <item name="android:textColor">@color/new_accent_color</item>
+        <item name="fontFamily">@font/roboto</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:drawablePadding">8dp</item>
+
+    </style>
 </resources>
