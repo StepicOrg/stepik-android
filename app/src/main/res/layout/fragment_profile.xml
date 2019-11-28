@@ -40,6 +40,11 @@
         layout="@layout/empty_login"
         tools:visibility="gone" />
 
+    <include
+        android:id="@+id/profileLoading"
+        layout="@layout/progress_bar_on_empty_screen"
+        tools:visibility="gone" />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"

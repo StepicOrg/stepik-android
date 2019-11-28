@@ -73,7 +73,7 @@ class ProfileFragment : Fragment(), ProfileView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<ProfileView.State.Idle>()
-        viewStateDelegate.addState<ProfileView.State.Loading>()
+        viewStateDelegate.addState<ProfileView.State.Loading>(profileLoading)
         viewStateDelegate.addState<ProfileView.State.Content>(scrollContainer)
         viewStateDelegate.addState<ProfileView.State.Empty>(profileEmpty)
         viewStateDelegate.addState<ProfileView.State.EmptyLogin>(profileEmptyLogin)
@@ -158,9 +158,7 @@ class ProfileFragment : Fragment(), ProfileView {
                 }
             }
 
-            ProfileView.State.Loading,
-            ProfileView.State.Empty,
-            ProfileView.State.NetworkError -> {
+            else -> {
                 toolbarTitle.setText(R.string.profile_title)
                 toolbarTitle.translationY = 0f
             }
