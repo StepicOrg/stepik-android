@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.profile
 
 import org.stepik.android.domain.profile.model.ProfileData
+import org.stepik.android.model.user.User
 
 
 interface ProfileView {
@@ -15,5 +16,7 @@ interface ProfileView {
     }
 
     fun setState(state: State)
+
+    fun shareUser(user: User)
     fun showNetworkError()
 }

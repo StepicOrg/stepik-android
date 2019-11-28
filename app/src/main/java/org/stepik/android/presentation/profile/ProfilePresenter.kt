@@ -63,4 +63,12 @@ constructor(
                 }
             )
     }
+
+    fun onShareProfileClicked() {
+        val user = (state as? ProfileView.State.Content)
+            ?.profileData
+            ?.user
+            ?: return
+        view?.shareUser(user)
+    }
 }

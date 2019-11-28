@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.bold
-import androidx.core.text.buildSpannedString
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
@@ -21,9 +20,13 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.header_profile.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.ui.util.snackbar
+import org.stepik.android.model.user.User
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -41,6 +44,12 @@ class ProfileFragment : Fragment(), ProfileView {
     }
 
     @Inject
+    internal lateinit var analytic: Analytic
+
+    @Inject
+    internal lateinit var shareHelper: ShareHelper
+
+    @Inject
     internal lateinit var screenManager: ScreenManager
 
     @Inject
@@ -51,6 +60,20 @@ class ProfileFragment : Fragment(), ProfileView {
     private var userId by argument<Long>()
 
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileView.State>
+
+    private var shareMenuItem: MenuItem? = null
+    private var isShareMenuItemVisible: Boolean = false
+        set(value) {
+            field = value
+            shareMenuItem?.isVisible = value
+        }
+
+    private var editMenuItem: MenuItem? = null
+    private var isEditMenuItemVisible: Boolean = false
+        set(value) {
+            field = value
+            editMenuItem?.isVisible = value
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +148,31 @@ class ProfileFragment : Fragment(), ProfileView {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.profile_menu, menu)
+
+        editMenuItem = menu.findItem(R.id.menu_item_edit)
+        editMenuItem?.isVisible = isEditMenuItemVisible
+
+        shareMenuItem = menu.findItem(R.id.menu_item_share)
+        shareMenuItem?.isVisible = isShareMenuItemVisible
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.menu_item_edit -> {
+                analytic.reportAmplitudeEvent(AmplitudeAnalytic.ProfileEdit.SCREEN_OPENED)
+                screenManager.showProfileEdit(context)
+                true
+            }
+
+            R.id.menu_item_share -> {
+                profilePresenter.onShareProfileClicked()
+                true
+            }
+
+            else ->
+                super.onOptionsItemSelected(item)
+        }
+
 
     override fun onStart() {
         super.onStart()
@@ -155,17 +202,27 @@ class ProfileFragment : Fragment(), ProfileView {
 
                     toolbarTitle.text = user.fullName
                     toolbarTitle.translationY = 1000f
+
+                    isEditMenuItemVisible = isCurrentUser
+                    isShareMenuItemVisible = true
                 }
             }
 
             else -> {
                 toolbarTitle.setText(R.string.profile_title)
                 toolbarTitle.translationY = 0f
+
+                isEditMenuItemVisible = false
+                isShareMenuItemVisible = false
             }
         }
     }
 
     override fun showNetworkError() {
         view?.snackbar(messageRes = R.string.connectionProblems)
+    }
+
+    override fun shareUser(user: User) {
+        startActivity(shareHelper.getIntentForUserSharing(user))
     }
 }
