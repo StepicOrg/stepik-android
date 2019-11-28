@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profileImage"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        tools:src="@drawable/dialog_background" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/profileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:textColor="@color/new_accent_color"
+        app:fontFamily="@font/roboto_medium"
+        android:textSize="20sp"
+
+        app:layout_constraintTop_toTopOf="@id/profileImage"
+        app:layout_constraintStart_toEndOf="@id/profileImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/profileBio"
+
+        app:layout_constraintVertical_bias="0"
+
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+
+        tools:text="Konstantin Konstantin"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/profileBio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:textColor="@color/new_accent_color"
+        android:textSize="12sp"
+
+        app:layout_constraintTop_toBottomOf="@id/profileName"
+        app:layout_constraintStart_toEndOf="@id/profileImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/profileImage"
+
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="4dp"
+
+        tools:text="Konstantin Konstantin bio dslkdjaksdjajsl adklsj l jasl dj lkjadlksakdjas adslkdj alsjd lkjasdlk lkasj lkajsdask jlaslkd" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/profileDataBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="profileImage,profileBio"
+        app:barrierDirection="bottom" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toBottomOf="@id/profileDataBarrier"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/profileKnowledgeRank"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:textColor="@color/new_accent_color"
+            android:textSize="12sp"
+
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+
+            tools:text="Knowledge 700" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/profileReputationRank"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+
+            android:textColor="@color/new_accent_color"
+            android:textSize="12sp"
+
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="16dp"
+
+            tools:text="Reputation 25k" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

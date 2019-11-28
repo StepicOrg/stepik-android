@@ -47,7 +47,6 @@ import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
-import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
 import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
@@ -428,17 +427,17 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void openProfile(Activity activity) {
 //        final Intent intent = new Intent(activity, ProfileActivity.class);
-        final Intent intent = new Intent(activity, org.stepik.android.view.profile.ui.activity.ProfileActivity.class);
+        final Intent intent = new Intent(activity, org.stepik.android.view.profile.ui.activity.ProfileActivityOld.class);
         activity.startActivity(intent);
     }
 
     @Override
     public void openProfile(Activity activity, long userId) {
         // final Intent intent = new Intent(activity, ProfileActivity.class);
-        final Intent intent = new Intent(activity, org.stepik.android.view.profile.ui.activity.ProfileActivity.class);
+        final Intent intent = new Intent(activity, org.stepik.android.view.profile.ui.activity.ProfileActivityOld.class);
         Bundle bundle = new Bundle();
         // bundle.putLong(ProfileActivity.optionalUserIdKey, userId);
-        bundle.putLong(org.stepik.android.view.profile.ui.activity.ProfileActivity.optionalUserIdKey, userId);
+        bundle.putLong(org.stepik.android.view.profile.ui.activity.ProfileActivityOld.optionalUserIdKey, userId);
         intent.putExtras(bundle);
         activity.startActivity(intent);
     }
@@ -459,7 +458,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public Intent getProfileIntent(@NotNull Context context) {
 //        Intent intent = new Intent(context, ProfileActivity.class);
-        Intent intent = new Intent(context, org.stepik.android.view.profile.ui.activity.ProfileActivity.class);
+        Intent intent = new Intent(context, org.stepik.android.view.profile.ui.activity.ProfileActivityOld.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }

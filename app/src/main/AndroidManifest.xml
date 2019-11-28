@@ -342,7 +342,7 @@
             android:name="org.stepik.android.view.download.ui.activity.DownloadActivity" />
 
         <activity
-            android:name="org.stepik.android.view.profile.ui.activity.ProfileActivity"
+            android:name="org.stepik.android.view.profile.ui.activity.ProfileActivityOld"
             android:windowSoftInputMode="adjustResize|stateHidden">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <intent-filter
