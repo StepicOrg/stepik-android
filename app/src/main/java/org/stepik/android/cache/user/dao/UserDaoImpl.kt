@@ -46,6 +46,11 @@ constructor(
         values.put(DbStructureUser.Columns.KNOWLEDGE_RANK, user.knowledgeRank)
         values.put(DbStructureUser.Columns.REPUTATION, user.reputation)
         values.put(DbStructureUser.Columns.REPUTATION_RANK, user.reputationRank)
+
+        values.put(DbStructureUser.Columns.CREATED_COURSES_COUNT, user.createdCoursesCount)
+        values.put(DbStructureUser.Columns.FOLLOWERS_COUNT, user.followersCount)
+        values.put(DbStructureUser.Columns.ISSUED_CERTIFICATES_COUNT, user.issuedCertificatesCount)
+
         values.put(DbStructureUser.Columns.JOIN_DATE, user.joinDate?.time ?: -1)
 
         return values
@@ -65,10 +70,16 @@ constructor(
             isPrivate   = cursor.getBoolean(DbStructureUser.Columns.IS_PRIVATE),
             isOrganization = cursor.getBoolean(DbStructureUser.Columns.IS_ORGANIZATION),
             socialProfiles = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureUser.Columns.SOCIAL_PROFILES)).orEmpty(),
+
             knowledge   = cursor.getLong(DbStructureUser.Columns.KNOWLEDGE),
             knowledgeRank = cursor.getLong(DbStructureUser.Columns.KNOWLEDGE_RANK),
             reputation  = cursor.getLong(DbStructureUser.Columns.REPUTATION),
             reputationRank = cursor.getLong(DbStructureUser.Columns.REPUTATION_RANK),
+
+            createdCoursesCount = cursor.getLong(DbStructureUser.Columns.CREATED_COURSES_COUNT),
+            followersCount = cursor.getLong(DbStructureUser.Columns.FOLLOWERS_COUNT),
+            issuedCertificatesCount = cursor.getLong(DbStructureUser.Columns.ISSUED_CERTIFICATES_COUNT),
+
             joinDate    = cursor.getDate(DbStructureUser.Columns.JOIN_DATE)
         )
 }

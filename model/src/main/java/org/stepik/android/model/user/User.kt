@@ -49,6 +49,13 @@ data class User(
     @SerializedName("reputation_rank")
     val reputationRank: Long = 0,
 
+    @SerializedName("created_courses_count")
+    val createdCoursesCount: Long = 0,
+    @SerializedName("followers_count")
+    val followersCount: Long = 0,
+    @SerializedName("issued_certificates_count")
+    val issuedCertificatesCount: Long = 0,
+
     @SerializedName("join_date")
     val joinDate: Date?
 ) : Parcelable {
@@ -64,11 +71,17 @@ data class User(
         parcel.writeString(cover)
         parcel.writeBoolean(isPrivate)
         parcel.writeBoolean(isOrganization)
+
         parcel.writeList(socialProfiles)
         parcel.writeLong(knowledge)
         parcel.writeLong(knowledgeRank)
         parcel.writeLong(reputation)
         parcel.writeLong(reputationRank)
+
+        parcel.writeLong(createdCoursesCount)
+        parcel.writeLong(followersCount)
+        parcel.writeLong(issuedCertificatesCount)
+
         parcel.writeDate(joinDate)
     }
 
@@ -93,6 +106,11 @@ data class User(
                 parcel.readLong(),
                 parcel.readLong(),
                 parcel.readLong(),
+
+                parcel.readLong(),
+                parcel.readLong(),
+                parcel.readLong(),
+
                 parcel.readDate()
             )
 

@@ -24,6 +24,10 @@ object DbStructureUser {
         const val REPUTATION = "reputation"
         const val REPUTATION_RANK = "reputation_rank"
 
+        const val CREATED_COURSES_COUNT = "created_courses_count"
+        const val FOLLOWERS_COUNT = "followers_count"
+        const val ISSUED_CERTIFICATES_COUNT = "issued_certificates_count"
+
         const val JOIN_DATE = "join_date"
     }
 

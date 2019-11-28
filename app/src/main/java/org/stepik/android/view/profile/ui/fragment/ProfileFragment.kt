@@ -139,6 +139,8 @@ class ProfileFragment : Fragment(), ProfileView {
 
                 toolbarTitle.text = state.user.fullName
                 toolbarTitle.translationY = 1000f
+
+
             }
 
             ProfileView.State.Loading,
