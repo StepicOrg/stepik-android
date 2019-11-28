@@ -77,7 +77,7 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
 
     override fun profileComponent(userId: Long): ProfileComponent =
         _profileComponentMap.getOrPut(userId, ::WeakComponentHolder).get {
-            appCoreComponent.profileComponentBuilderNew().build()
+            appCoreComponent.profileComponentBuilderNew().userId(userId).build()
         }
 
     // Login
