@@ -107,9 +107,7 @@ public interface ScreenManager {
 
     Intent getOpenInWebIntent(String path);
 
-    void openProfile(Activity activity);
-
-    void openProfile(Activity activity, long userId);
+    void openProfile(@NonNull Context context, long userId);
 
     void openFeedbackActivity(Activity activity);
 

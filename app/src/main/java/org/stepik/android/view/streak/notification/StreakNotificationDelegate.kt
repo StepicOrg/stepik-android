@@ -139,7 +139,7 @@ constructor(
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         val profileIntent = screenManager.getProfileIntent(context)
 //        taskBuilder.addParentStack(ProfileActivity::class.java)
-        taskBuilder.addParentStack(org.stepik.android.view.profile.ui.activity.ProfileActivityOld::class.java)
+        taskBuilder.addParentStack(org.stepik.android.view.profile.ui.activity.ProfileActivity::class.java)
         taskBuilder.addNextIntent(profileIntent)
         val message = context.getString(R.string.streak_notification_not_working)
         val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification = null,

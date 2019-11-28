@@ -71,7 +71,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         courseReviewsAdapter = DefaultDelegateAdapter()
         courseReviewsAdapter +=
             CourseReviewDataDelegate(
-                onUserClicked = { screenManager.openProfile(activity, it.id) },
+                onUserClicked = { screenManager.openProfile(requireContext(), it.id) },
                 onEditReviewClicked = ::showCourseReviewEditDialog,
                 onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
             )
