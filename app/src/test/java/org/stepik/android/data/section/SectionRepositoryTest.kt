@@ -17,6 +17,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.Section
 import java.io.IOException
 
+@RunWith(MockitoJUnitRunner::class)
 class SectionRepositoryTest {
     @Mock
     private lateinit var sectionRemoteDataSource: SectionRemoteDataSource
