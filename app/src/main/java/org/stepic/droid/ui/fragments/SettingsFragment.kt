@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
@@ -96,6 +98,26 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
                 .newInstance()
                 .showIfNotExists(requireFragmentManager(), ChooseFontSizeDialogFragment.TAG)
         }
+
+        downloadsSettingsButton.setOnClickListener {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_DOWNLOADS)
+            screenManager.showDownloads(requireContext())
+        }
+
+        feedbackSettingsButton.setOnClickListener {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_FEEDBACK)
+            screenManager.openFeedbackActivity(requireActivity())
+        }
+
+        aboutSettingsButton.setOnClickListener {
+            analytic.reportEvent(Analytic.Screens.USER_OPEN_ABOUT_APP)
+            screenManager.openAboutActivity(requireActivity())
+        }
+
+        logoutSettingsButton.setOnClickListener {
+            Toast.makeText(requireContext(), "Under construction", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     override fun onDestroyView() {
