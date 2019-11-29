@@ -203,6 +203,8 @@ interface AppCoreComponent {
 
     fun submissionComponentBuilder(): SubmissionComponent.Builder
 
+    fun profileComponentBuilderNew(): org.stepik.android.view.injection.profile.ProfileComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)

@@ -16,6 +16,6 @@ interface ProfileComponent {
         fun build(): ProfileComponent
     }
 
-    fun inject(profileFragment: ProfileFragment)
+    fun inject(profileFragmentOld: ProfileFragment)
     fun inject(achievementsListFragment: AchievementsListFragment)
 }

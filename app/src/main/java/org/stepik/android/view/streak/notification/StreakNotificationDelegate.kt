@@ -10,7 +10,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.ui.activities.ProfileActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.StepikUtil
@@ -139,7 +138,8 @@ constructor(
         sharedPreferenceHelper.isStreakNotificationEnabled = false
         val taskBuilder: TaskStackBuilder = TaskStackBuilder.create(context)
         val profileIntent = screenManager.getProfileIntent(context)
-        taskBuilder.addParentStack(ProfileActivity::class.java)
+//        taskBuilder.addParentStack(ProfileActivity::class.java)
+        taskBuilder.addParentStack(org.stepik.android.view.profile.ui.activity.ProfileActivity::class.java)
         taskBuilder.addNextIntent(profileIntent)
         val message = context.getString(R.string.streak_notification_not_working)
         val notification = notificationHelper.makeSimpleNotificationBuilder(stepikNotification = null,

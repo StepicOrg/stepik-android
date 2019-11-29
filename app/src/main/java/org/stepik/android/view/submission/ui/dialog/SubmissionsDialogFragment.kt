@@ -111,7 +111,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
                 }
 
                 override fun onUserClicked(user: User) {
-                    screenManager.openProfile(activity, user.id)
+                    screenManager.openProfile(requireContext(), user.id)
                 }
 
                 override fun onItemClicked(data: SubmissionItem.Data) {

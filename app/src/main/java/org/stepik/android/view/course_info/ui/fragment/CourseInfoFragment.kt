@@ -56,7 +56,7 @@ class CourseInfoFragment : Fragment(), CourseInfoView {
                 screenManager.showVideo(this, mediaData, false)
             },
             onUserClicked = { user ->
-                screenManager.openProfile(activity, user.id)
+                screenManager.openProfile(requireContext(), user.id)
             }
         )
     }

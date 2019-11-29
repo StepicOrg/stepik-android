@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.stepic.droid.model.AchievementFlatItem
+import org.stepic.droid.util.onErrorSafe
 import org.stepik.android.data.achievements.source.AchievementsRemoteDataSource
 import org.stepik.android.model.achievements.Achievement
 import org.stepik.android.model.achievements.AchievementProgress
@@ -31,7 +32,12 @@ constructor(
             var page = 1
 
             paginationLoop@ while (hasNextPage) {
-                val response = achievementsService.getAchievementProgresses(user = userId, page = page, order = "-obtain_date").blockingGet()
+                val response =
+                    try {
+                        achievementsService.getAchievementProgresses(user = userId, page = page, order = "-obtain_date").blockingGet()
+                    } catch (e: Exception) {
+                        return@create emitter.onErrorSafe(e)
+                    }
 
                 for (item in response.achievementsProgresses) {
                     kinds.add(item.kind)
@@ -48,7 +54,12 @@ constructor(
             page = 1
 
             paginationLoop@ while (hasNextPage && (count == -1 || kinds.size < count)) {
-                val response = achievementsService.getAchievements(page = page).blockingGet()
+                val response =
+                    try {
+                        achievementsService.getAchievements(page = page).blockingGet()
+                    } catch (e: Exception) {
+                        return@create emitter.onErrorSafe(e)
+                    }
 
                 for (item in response.achievements) {
                     kinds.add(item.kind)

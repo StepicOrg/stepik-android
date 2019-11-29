@@ -783,4 +783,11 @@
     <!-- Submissions -->
     <string name="submissions_title">Решения</string>
     <string name="submissions_select_title">Выберите решение</string>
+
+    <!-- Profile -->
+    <string name="profile_stat_knowledge">Знания</string>
+    <string name="profile_stat_reputation">Репутация</string>
+    <string name="profile_stat_certificates">выдано</string>
+    <string name="profile_stat_courses">опубликовано</string>
+    <string name="profile_stat_top">" %d | Топ %d"</string>
 </resources>

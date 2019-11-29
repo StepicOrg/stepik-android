@@ -92,4 +92,18 @@
         <item quantity="many">%d ответов</item>
         <item quantity="other">%d ответов</item>
     </plurals>
+
+    <plurals name="certificates_issued">
+        <item quantity="one">%d сертификат выдан</item>
+        <item quantity="few">%d сертификата выдано</item>
+        <item quantity="many">%d сертификатов выдано</item>
+        <item quantity="other">%d сертификатов выдано</item>
+    </plurals>
+
+    <plurals name="courses_published">
+        <item quantity="one">%d курс опубликован</item>
+        <item quantity="few">%d курса опубликовано</item>
+        <item quantity="many">%d курсов опубликовано</item>
+        <item quantity="other">%d курсов опубликовано</item>
+    </plurals>
 </resources>

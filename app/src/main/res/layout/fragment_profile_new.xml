@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    android:orientation="vertical"
-    tools:context=".ui.activities.ProfileActivity">
+    android:orientation="vertical">
 
     <include layout="@layout/view_centered_appbar"/>
 
