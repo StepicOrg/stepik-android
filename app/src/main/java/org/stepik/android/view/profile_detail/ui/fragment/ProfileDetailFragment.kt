@@ -55,6 +55,7 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
         profileDetails.setTextSize(14f)
         profileDetails.setLineHeight(resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
 
+        profileDetailsTitleArrow.changeState()
         profileDetailsTitle.setOnClickListener {
             profileDetailsTitleArrow.changeState()
             val isExpanded = profileDetailsTitleArrow.isExpanded()
@@ -64,6 +65,8 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
                 StepikAnimUtils.collapse(profileDetails)
             }
         }
+
+        view.isVisible = false
     }
 
     private fun injectComponent() {
