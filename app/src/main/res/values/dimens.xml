@@ -266,4 +266,6 @@
     <dimen name="profile_header_elevation">4dp</dimen>
     <dimen name="profile_header_margin">16dp</dimen>
     <dimen name="profile_header_stats_margin">8dp</dimen>
+
+    <dimen name="profile_block_margin">24dp</dimen>
 </resources>

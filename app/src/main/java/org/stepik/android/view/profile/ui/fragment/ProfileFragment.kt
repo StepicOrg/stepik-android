@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
@@ -30,6 +31,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
+import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.commitNow
@@ -38,6 +40,7 @@ import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.injection.profile.ProfileComponent
+import org.stepik.android.view.profile.ui.activity.ProfileActivity
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
@@ -46,6 +49,9 @@ import kotlin.math.min
 
 class ProfileFragment : Fragment(), ProfileView {
     companion object {
+        fun newInstance(): Fragment =
+            newInstance(0)
+
         fun newInstance(userId: Long): Fragment =
             ProfileFragment()
                 .apply {
@@ -117,7 +123,7 @@ class ProfileFragment : Fragment(), ProfileView {
             ?.apply { setSupportActionBar(toolbar) }
             ?.supportActionBar
             ?.apply {
-                setDisplayHomeAsUpEnabled(true)
+                setDisplayHomeAsUpEnabled(activity is CloseButtonInToolbar)
                 setDisplayShowTitleEnabled(false)
             }
 
@@ -137,6 +143,10 @@ class ProfileFragment : Fragment(), ProfileView {
             childFragmentManager.commitNow {
                 add(R.id.container, ProfileDetailFragment.newInstance(userId))
             }
+        }
+
+        if (activity !is ProfileActivity) {
+            view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         }
     }
 
