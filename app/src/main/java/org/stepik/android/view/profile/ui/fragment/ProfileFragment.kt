@@ -128,12 +128,15 @@ class ProfileFragment : Fragment(), ProfileView {
             }
 
         ViewCompat.setElevation(header, resources.getDimension(R.dimen.profile_header_elevation))
+        toolbarSeparator.isVisible = false
 
         scrollContainer.setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, _: Int ->
             ViewCompat.setElevation(appbar, if (scrollY > header.height) ViewCompat.getElevation(header) else 0f)
 
             val scroll = min(toolbar.height, scrollY)
             toolbarTitle.translationY = toolbar.height.toFloat() - scroll
+
+            toolbarSeparator.isVisible = scrollY in 1 until header.height
         }
 
         tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
@@ -141,6 +144,7 @@ class ProfileFragment : Fragment(), ProfileView {
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
+                add(R.id.container, ProfileDetailFragment.newInstance(userId))
                 add(R.id.container, ProfileDetailFragment.newInstance(userId))
             }
         }

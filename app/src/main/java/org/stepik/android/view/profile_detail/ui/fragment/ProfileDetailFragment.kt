@@ -14,6 +14,7 @@ import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
 import org.stepik.android.presentation.profile_detail.ProfileDetailView
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.ui.util.StepikAnimUtils
 import org.stepik.android.domain.profile.model.ProfileData
 import javax.inject.Inject
 
@@ -53,6 +54,16 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         profileDetails.setTextSize(14f)
         profileDetails.setLineHeight(resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
+
+        profileDetailsTitle.setOnClickListener {
+            profileDetailsTitleArrow.changeState()
+            val isExpanded = profileDetailsTitleArrow.isExpanded()
+            if (isExpanded) {
+                StepikAnimUtils.expand(profileDetails)
+            } else {
+                StepikAnimUtils.collapse(profileDetails)
+            }
+        }
     }
 
     private fun injectComponent() {

@@ -68,5 +68,11 @@
                 android:textAppearance="@style/StepikToolbarTextAppearance"/>
         </androidx.appcompat.widget.Toolbar>
 
+        <View
+            android:id="@+id/toolbarSeparator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/grey04" />
+
     </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
