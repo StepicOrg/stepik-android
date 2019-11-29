@@ -32,11 +32,13 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.snackbar
+import org.stepic.droid.util.commitNow
 import org.stepik.android.model.user.User
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.injection.profile.ProfileComponent
+import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -63,10 +65,10 @@ class ProfileFragment : Fragment(), ProfileView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private var userId by argument<Long>()
+
     private lateinit var profileComponent: ProfileComponent
     private lateinit var profilePresenter: ProfilePresenter
-
-    private var userId by argument<Long>()
 
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileView.State>
 
@@ -130,6 +132,12 @@ class ProfileFragment : Fragment(), ProfileView {
 
         tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
         authAction.setOnClickListener { screenManager.showLaunchScreen(context) }
+
+        if (savedInstanceState == null) {
+            childFragmentManager.commitNow {
+                add(R.id.container, ProfileDetailFragment.newInstance(userId))
+            }
+        }
     }
 
     private fun injectComponent() {
