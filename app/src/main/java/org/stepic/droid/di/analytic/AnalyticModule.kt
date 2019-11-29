@@ -6,6 +6,7 @@ import dagger.multibindings.IntoSet
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.AnalyticImpl
 import org.stepic.droid.analytic.experiments.CatalogSearchSplitTest
+import org.stepic.droid.analytic.experiments.SolutionStatsSplitTest
 import org.stepic.droid.analytic.experiments.SplitTest
 import org.stepic.droid.di.AppSingleton
 
@@ -20,5 +21,10 @@ abstract class AnalyticModule {
     @Binds
     @IntoSet
     internal abstract fun bindCatalogSearchSplitTest(catalogSearchSplitTest: CatalogSearchSplitTest): SplitTest<*>
+
+    @AppSingleton
+    @Binds
+    @IntoSet
+    internal abstract fun bindSolutionStatsSplitTest(solutionStatsSplitTest: SolutionStatsSplitTest): SplitTest<*>
 
 }

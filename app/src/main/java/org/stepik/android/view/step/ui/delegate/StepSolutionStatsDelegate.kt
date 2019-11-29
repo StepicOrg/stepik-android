@@ -12,6 +12,7 @@ class StepSolutionStatsDelegate(
     containerView: View,
     step: Step,
     isHasQuiz: Boolean
+
 ) {
     private val context = containerView.context
     private val solvedAmount     = containerView.stepAmountPassed
