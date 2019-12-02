@@ -3,8 +3,10 @@ package org.stepik.android.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.*
-
+import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.readDate
+import org.stepik.android.model.util.writeBoolean
+import org.stepik.android.model.util.writeDate
 import java.util.Date
 
 data class Step(
@@ -50,7 +52,10 @@ data class Step(
     @SerializedName("has_submissions_restrictions")
     val hasSubmissionRestriction: Boolean = false,
     @SerializedName("max_submissions_count")
-    val maxSubmissionCount: Int = 0
+    val maxSubmissionCount: Int = 0,
+
+    @SerializedName("correct_ratio")
+    val correctRatio: Double? = null
 ) : Parcelable, Progressable {
     override fun describeContents() = 0
 
@@ -78,6 +83,7 @@ data class Step(
 
         dest.writeBoolean(this.hasSubmissionRestriction)
         dest.writeInt(this.maxSubmissionCount)
+        dest.writeValue(this.correctRatio)
     }
 
     companion object CREATOR : Parcelable.Creator<Step> {
@@ -106,7 +112,8 @@ data class Step(
                 parcel.createStringArrayList(),
 
                 parcel.readBoolean(),
-                parcel.readInt()
+                parcel.readInt(),
+                parcel.readValue(Long::class.java.classLoader) as Double?
             )
 
         override fun newArray(size: Int): Array<out Step?> =
