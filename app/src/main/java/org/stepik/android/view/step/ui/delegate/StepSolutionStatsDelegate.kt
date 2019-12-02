@@ -21,11 +21,9 @@ class StepSolutionStatsDelegate(
     init {
         containerView.isVisible = false
 
-        run {
-            if (!isHasQuiz) return@run
+        val correctRatio = step.correctRatio
 
-            val correctRatio = step.correctRatio ?: return@run
-
+        if (isHasQuiz && correctRatio != null) {
             containerView.isVisible = true
 
             solvedAmount.text = buildSpannedString {
