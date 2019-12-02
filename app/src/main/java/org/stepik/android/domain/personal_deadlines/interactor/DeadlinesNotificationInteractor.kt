@@ -23,10 +23,10 @@ constructor(
     }
 
     fun getCourse(courseId: Long): Course? =
-        courseRepository.getCourses(courseId).blockingGet().firstOrNull()
+        courseRepository.getCourse(courseId).blockingGet()
 
     fun getSection(sectionId: Long): Section? =
-        sectionRepository.getSections(sectionId).blockingGet().firstOrNull()
+        sectionRepository.getSection(sectionId).blockingGet()
 
     fun getDeadlineRecordsForTimestamp(now: Long): Single<List<DeadlineEntity>> =
         deadlinesCacheDataSource.getDeadlineRecordsForTimestamp(longArrayOf(now + OFFSET_12HOURS, now + OFFSET_36HOURS))
