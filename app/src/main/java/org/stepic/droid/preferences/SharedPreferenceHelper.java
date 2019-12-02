@@ -545,6 +545,11 @@ public class SharedPreferenceHelper {
         return filters;
     }
 
+    public String getLanguageForFeatured() {
+        EnumSet<StepikFilter> filters = getFilterForFeatured();
+        return filters.iterator().next().getLanguage();
+    }
+
     private void appendValueForFilter(EnumSet<StepikFilter> filter, StepikFilter value, boolean defaultValue) {
         if (getBoolean(PreferenceType.FEATURED_FILTER, mapToPreferenceName(value), defaultValue)) {
             filter.add(value);
