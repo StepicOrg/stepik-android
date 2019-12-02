@@ -32,7 +32,6 @@ import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
-import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.HomeFragment
@@ -51,7 +50,6 @@ import javax.inject.Inject
 class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         BottomNavigationView.OnNavigationItemSelectedListener,
         BottomNavigationView.OnNavigationItemReselectedListener,
-        LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
         RootScreen,
         ProfileMainFeedView,
         EarlyStreakListener,
@@ -328,10 +326,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(containerId, fragment, fragment.javaClass.simpleName)
         fragmentTransaction.commit()
-    }
-
-    override fun onLogout() {
-        profileMainFeedPresenter.logout()
     }
 
 

@@ -2,7 +2,6 @@ package org.stepic.droid.core.presenters
 
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.concurrency.MainHandler
-import org.stepic.droid.core.StepikLogoutManager
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.di.mainscreen.MainScreenScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -21,8 +20,8 @@ class ProfileMainFeedPresenter
     private val emailAddressRepository: EmailAddressRepository,
     private val userProfileRepository: UserProfileRepository,
     private val threadPoolExecutor: ThreadPoolExecutor,
-    analytic: Analytic,
-    private val stepikLogoutManager: StepikLogoutManager) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
+    analytic: Analytic
+) : PresenterWithPotentialLeak<ProfileMainFeedView>(analytic) {
 
     private val isProfileFetching = AtomicBoolean(false)
     private var profile: Profile? = null
@@ -83,15 +82,4 @@ class ProfileMainFeedPresenter
             }
         }
     }
-
-    fun logout() {
-        view?.showLogoutLoading()
-        profile = null
-        view?.showAnonymous()
-        analytic.reportEvent(Analytic.Interaction.CLICK_YES_LOGOUT)
-        stepikLogoutManager.logout {
-            view?.onLogoutSuccess()
-        }
-    }
-
 }
