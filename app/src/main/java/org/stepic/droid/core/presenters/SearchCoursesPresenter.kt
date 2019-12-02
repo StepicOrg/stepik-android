@@ -59,7 +59,7 @@ class SearchCoursesPresenter
 
 
 
-                    val searchResultResponseBody = searchRepository.getSearchResultsCourses(currentPage.get(), searchQuery, getLang()).blockingGet()
+                    val searchResultResponseBody = searchRepository.getSearchResultsCourses(currentPage.get(), searchQuery, sharedPreferenceHelper.languageForFeatured).blockingGet()
                     val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultResponseBody)
                     hasNextPage.set(searchResultResponseBody.hasNext)
                     currentPage.set(searchResultResponseBody.page + 1)
@@ -115,10 +115,4 @@ class SearchCoursesPresenter
         hasNextPage.set(true)
         downloadData(searchQuery)
     }
-
-    private fun getLang(): String {
-        val enumSet = sharedPreferenceHelper.filterForFeatured
-        return enumSet.iterator().next().language
-    }
-
 }

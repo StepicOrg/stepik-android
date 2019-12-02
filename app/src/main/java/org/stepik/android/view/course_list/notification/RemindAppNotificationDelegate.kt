@@ -7,13 +7,12 @@ import androidx.core.app.TaskStackBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.model.CourseListType
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.course_list.interactor.RemindAppNotificationInteractor
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
@@ -24,8 +23,8 @@ class RemindAppNotificationDelegate
 @Inject
 constructor(
     private val context: Context,
+    private val remindAppNotificationInteractor: RemindAppNotificationInteractor,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val databaseFacade: DatabaseFacade,
     private val analytic: Analytic,
     private val screenManager: ScreenManager,
     private val notificationHelper: NotificationHelper,
@@ -36,9 +35,7 @@ constructor(
     }
 
     override fun onNeedShowNotification() {
-        if (sharedPreferenceHelper.authResponseFromStore == null ||
-            databaseFacade.getAllCourses(CourseListType.ENROLLED).isNotEmpty() ||
-            sharedPreferenceHelper.anyStepIsSolved() || sharedPreferenceHelper.isStreakNotificationEnabled) {
+        if (remindAppNotificationInteractor.hasUserInteractedWithApp()) {
             analytic.reportEvent(Analytic.Notification.REMIND_HIDDEN)
             return
         }
@@ -86,15 +83,12 @@ constructor(
     fun scheduleRemindAppNotification() {
         val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
         val isSevenDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_SEVEN)
-        if (isFirstDayNotificationShown && isSevenDayNotificationShown) {
+        if (remindAppNotificationInteractor.isNotificationShown()) {
             // already shown.
             // do not show again
             return
         }
-        if (sharedPreferenceHelper.authResponseFromStore == null ||
-            sharedPreferenceHelper.isStreakNotificationEnabled ||
-            databaseFacade.getAllCourses(CourseListType.ENROLLED).isNotEmpty() ||
-            sharedPreferenceHelper.anyStepIsSolved()) {
+        if (remindAppNotificationInteractor.hasUserInteractedWithApp()) {
             return
         }
         // now we can plan alarm
