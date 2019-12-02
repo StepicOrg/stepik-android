@@ -16,10 +16,10 @@
             android:layout_height="match_parent"
 
             android:text="@string/profile_detail_title"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/profile_block_vertical_margin"
             android:layout_marginLeft="@dimen/profile_block_margin"
             android:layout_marginRight="@dimen/profile_block_margin"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/profile_block_vertical_margin"
             style="@style/ProfileItemHeader" />
 
         <org.stepic.droid.ui.custom.ArrowImageView
@@ -36,7 +36,7 @@
         android:id="@+id/profileDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         android:layout_marginLeft="@dimen/profile_block_margin"
         android:layout_marginRight="@dimen/profile_block_margin"
 
