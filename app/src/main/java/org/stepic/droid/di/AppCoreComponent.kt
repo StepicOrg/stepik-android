@@ -83,6 +83,7 @@ import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.search.SearchDataModule
+import org.stepik.android.view.injection.social_profile.SocialProfileComponent
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
@@ -204,6 +205,8 @@ interface AppCoreComponent {
     fun submissionComponentBuilder(): SubmissionComponent.Builder
 
     fun profileComponentBuilderNew(): org.stepik.android.view.injection.profile.ProfileComponent.Builder
+
+    fun socialProfileComponentBuilder(): SocialProfileComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
