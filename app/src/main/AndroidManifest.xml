@@ -157,7 +157,7 @@
             android:theme="@style/AppTheme.PhotoView" />
 
         <activity
-            android:name=".ui.activities.SettingsActivity" />
+            android:name="org.stepik.android.view.settings.ui.activity.SettingsActivity" />
 
         <activity
             android:name=".ui.activities.NotificationSettingsActivity"
@@ -182,17 +182,17 @@
         <activity
             android:name=".ui.activities.AboutAppActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.SettingsActivity">
+            android:parentActivityName="org.stepik.android.view.settings.ui.activity.SettingsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.SettingsActivity" />
+                android:value="org.stepik.android.view.settings.ui.activity.SettingsActivity" />
         </activity>
 
         <activity
             android:name=".ui.activities.StoreManagementActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.SettingsActivity">
+            android:parentActivityName="org.stepik.android.view.settings.ui.activity.SettingsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

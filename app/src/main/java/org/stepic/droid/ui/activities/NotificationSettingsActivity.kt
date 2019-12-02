@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import org.stepic.droid.R
 import org.stepic.droid.ui.fragments.NotificationSettingsFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.view.settings.ui.activity.SettingsActivity
 
 class NotificationSettingsActivity : SettingsActivity() {
     override fun createFragment(): Fragment = NotificationSettingsFragment.newInstance()

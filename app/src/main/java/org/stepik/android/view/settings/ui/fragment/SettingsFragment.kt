@@ -1,27 +1,77 @@
-package org.stepic.droid.ui.fragments
+package org.stepik.android.view.settings.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
+import com.facebook.login.LoginManager
+import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialog
+import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.presentation.settings.SettingsPresenter
+import org.stepik.android.presentation.settings.SettingsView
 import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import javax.inject.Inject
 
-class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback {
+class SettingsFragment :
+    FragmentBase(),
+    AllowMobileDataDialogFragment.Callback,
+    LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
+    SettingsView {
     companion object {
-        fun newInstance(): SettingsFragment = SettingsFragment()
+
+        fun newInstance(): SettingsFragment =
+            SettingsFragment()
+
+        /***
+         *  This callback is necessary, in order to sign out through
+         *  Google APIClient in host activity
+         */
+        interface SignOutListener {
+            fun onSignOut()
+        }
+    }
+
+    private lateinit var presenter: SettingsPresenter
+
+    private lateinit var signOutListener: SignOutListener
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
+
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        signOutListener = activity as SignOutListener
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        injectComponent()
+
+        presenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(SettingsPresenter::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_settings, container, false)
+        inflater.inflate(R.layout.fragment_settings, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,7 +82,7 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
             screenManager.showNotificationSettings(activity)
         }
 
-        fragmentSettingsWifiEnableSwitch.isChecked = !sharedPreferenceHelper.isMobileInternetAlsoAllowed//if first time it is true
+        fragmentSettingsWifiEnableSwitch.isChecked = !sharedPreferenceHelper.isMobileInternetAlsoAllowed // if first time it is true
 
         fragmentSettingsExternalPlayerSwitch.isChecked = userPreferences.isOpenInExternal
 
@@ -58,10 +108,10 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
         fragmentSettingsWifiEnableSwitch.setOnCheckedChangeListener { _, newCheckedState ->
             if (fragmentSettingsWifiEnableSwitch.isUserTriggered) {
                 if (newCheckedState) {
-                    //wifi only
+                    // wifi only
                     onMobileDataStateChanged(false)
                 } else {
-                    //wifi and mobile internet
+                    // wifi and mobile internet
                     fragmentSettingsWifiEnableSwitch.isChecked = true
                     val dialogFragment = AllowMobileDataDialogFragment.newInstance()
                     dialogFragment.setTargetFragment(this@SettingsFragment, 0)
@@ -71,7 +121,6 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
                 }
             }
         }
-
 
         videoQualityView.setOnClickListener {
             val videoDialog = VideoQualityDialog.newInstance(forPlaying = false)
@@ -115,9 +164,32 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
         }
 
         logoutSettingsButton.setOnClickListener {
-            Toast.makeText(requireContext(), "Under construction", Toast.LENGTH_SHORT).show()
-        }
+            val supportFragmentManager = activity
+                ?.supportFragmentManager
+                ?: return@setOnClickListener
 
+            val dialog = LogoutAreYouSureDialog.newInstance()
+            dialog.setTargetFragment(this, 0)
+            dialog.showIfNotExists(supportFragmentManager, LogoutAreYouSureDialog.TAG)
+            analytic.reportEvent(Analytic.Screens.USER_LOGOUT)
+        }
+    }
+
+    override fun injectComponent() {
+        App.component()
+            .settingsComponentBuilder()
+            .build()
+            .inject(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.attachView(this)
+    }
+
+    override fun onStop() {
+        presenter.detachView(this)
+        super.onStop()
     }
 
     override fun onDestroyView() {
@@ -138,5 +210,24 @@ class SettingsFragment : FragmentBase(), AllowMobileDataDialogFragment.Callback 
     override fun onMobileDataStateChanged(isMobileAllowed: Boolean) {
         fragmentSettingsWifiEnableSwitch.isChecked = !isMobileAllowed
         storeMobileState(isMobileAllowed)
+    }
+
+    override fun onLogout() {
+        presenter.onLogoutClicked()
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
+    }
+
+    override fun onLogoutSuccess() {
+        LoginManager.getInstance().logOut()
+        VKSdk.logout()
+        signOutListener.onSignOut()
+        screenManager.showLaunchScreenAfterLogout(requireContext())
     }
 }

@@ -23,7 +23,7 @@ class LogoutAreYouSureDialog : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = context as? OnLogoutSuccessListener
+        listener = targetFragment as? OnLogoutSuccessListener
     }
 
     override fun onDetach() {
