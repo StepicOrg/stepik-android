@@ -7,7 +7,7 @@ import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld
-import org.stepik.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
+import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 
 @ProfileScope

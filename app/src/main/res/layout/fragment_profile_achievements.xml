@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/achievementsContainer"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
-    android:visibility="gone"
-    tools:visibility="visible">
+    android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/achievementsTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
         android:text="@string/achievements_title"
-        android:layout_marginTop="@dimen/profile_block_vertical_margin"
-        android:layout_marginLeft="@dimen/profile_block_margin"
-        android:layout_marginRight="@dimen/profile_block_margin"
-        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        android:gravity="center_vertical"
+
+        android:paddingTop="@dimen/profile_block_vertical_margin"
+        android:paddingLeft="@dimen/profile_block_margin"
+        android:paddingRight="@dimen/profile_block_margin"
+        android:paddingBottom="@dimen/profile_block_vertical_margin"
+
+        app:drawableEndCompat="@drawable/ic_nav_arrow_right"
+
         style="@style/ProfileItemHeader" />
 
     <LinearLayout
@@ -40,4 +43,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/guideline_standard_padding" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey04" />
 </LinearLayout>
