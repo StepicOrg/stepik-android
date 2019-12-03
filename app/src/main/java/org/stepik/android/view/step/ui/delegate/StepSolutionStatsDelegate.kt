@@ -19,8 +19,6 @@ class StepSolutionStatsDelegate(
     private val solvedPercentage = containerView.stepSolvedPercentage
 
     init {
-        containerView.isVisible = false
-
         val correctPercentage = step.correctRatio?.let { (it * 100).toInt() } ?: 0
 
         if (isHasQuiz && correctPercentage > 0) {
@@ -37,6 +35,8 @@ class StepSolutionStatsDelegate(
                     append(context.resources.getString(R.string.percent_symbol, correctPercentage))
                 }
             }
+        } else {
+            containerView.isVisible = false
         }
     }
 }
