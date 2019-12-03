@@ -33,7 +33,6 @@
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="@dimen/profile_block_margin"
         android:layout_marginRight="@dimen/profile_block_margin"
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
@@ -41,17 +40,18 @@
 
     <include
         android:id="@+id/achievementsLoadingError"
-        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         layout="@layout/error_no_connection_with_button_small" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/achievementsTilesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginLeft="@dimen/profile_block_margin"
         android:layout_marginRight="@dimen/profile_block_margin"
-        android:layout_marginBottom="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         android:visibility="gone" />
 
     <View
