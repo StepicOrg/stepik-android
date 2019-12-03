@@ -12,13 +12,16 @@
         android:id="@+id/achievementsTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?selectableItemBackground"
 
         android:text="@string/achievements_title"
         android:gravity="center_vertical"
 
         android:paddingTop="@dimen/profile_block_vertical_margin"
         android:paddingLeft="@dimen/profile_block_margin"
-        android:paddingRight="@dimen/profile_block_margin"
+        android:paddingStart="@dimen/profile_block_margin"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="@dimen/profile_block_vertical_margin"
 
         app:drawableEndCompat="@drawable/ic_nav_arrow_right"
@@ -30,7 +33,9 @@
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/guideline_standard_padding"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         android:orientation="horizontal" />
 
     <include
@@ -42,7 +47,10 @@
         android:id="@+id/achievementsTilesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/guideline_standard_padding" />
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_margin"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"

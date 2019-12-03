@@ -123,7 +123,7 @@ constructor(
                 .subscribeBy({
                     achievementsState = AchievementsView.State.Error
                 }) {
-                    achievementsState = AchievementsView.State.AchievementsLoaded(it)
+                    achievementsState = AchievementsView.State.AchievementsLoaded(it, false)
                 }
         } else {
             setViewState(achievementsState)

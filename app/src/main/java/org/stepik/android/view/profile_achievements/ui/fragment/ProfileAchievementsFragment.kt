@@ -31,6 +31,8 @@ import javax.inject.Inject
 
 class ProfileAchievementsFragment : Fragment(), AchievementsView {
     companion object {
+        private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
+
         fun newInstance(userId: Long): Fragment =
             ProfileAchievementsFragment()
                 .apply {
@@ -53,7 +55,8 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
     private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
     private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementFlatItem>
 
-    private var achievementsToDisplay: Int = 0
+    private var achievementsToDisplay = 0
+    private var isMyProfile = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +72,12 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
         achievementsAdapter += AchievementTileAdapterDelegate(achievementResourceResolver, ::onAchievementClicked)
     }
 
+    private fun injectComponent() {
+        App.componentManager()
+            .profileComponent(userId)
+            .inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -81,20 +90,22 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
         viewStateDelegate.addState<AchievementsView.State.Idle>(view, achievementsLoadingPlaceholder)
         viewStateDelegate.addState<AchievementsView.State.Loading>(view, achievementsLoadingPlaceholder)
         viewStateDelegate.addState<AchievementsView.State.Error>(view, achievementsLoadingError)
-        viewStateDelegate.addState<AchievementsView.State.AchievementsLoaded>(view, achievementsLoadingPlaceholder)
+        viewStateDelegate.addState<AchievementsView.State.AchievementsLoaded>(view, achievementsTilesContainer)
+        viewStateDelegate.addState<AchievementsView.State.NoAchievements>()
 
-        tryAgain.setOnClickListener {  }
-        achievementsTitle.setOnClickListener { screenManager.showAchievementsList(requireContext(), userId, false) }
+        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+        achievementsTitle.setOnClickListener { screenManager.showAchievementsList(requireContext(), userId, isMyProfile) }
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
         achievementsTilesContainer.isNestedScrollingEnabled = false
+        achievementsTilesContainer.adapter = achievementsAdapter
         initAchievementsPlaceholders()
+
+        setDataToPresenter()
     }
 
-    private fun injectComponent() {
-        App.componentManager()
-            .profileComponent(userId)
-            .inject(this)
+    private fun setDataToPresenter(forceUpdate: Boolean = false) {
+        achievementsPresenter.showAchievementsForUser(achievementsToDisplay, forceUpdate)
     }
 
     private fun initAchievementsPlaceholders() {
@@ -121,7 +132,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
 
     private fun onAchievementClicked(item: AchievementFlatItem) {
         AchievementDetailsDialog
-            .newInstance(item, false)
+            .newInstance(item, canShareAchievement = isMyProfile)
             .showIfNotExists(childFragmentManager, AchievementDetailsDialog.TAG)
     }
 
@@ -130,6 +141,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
 
         if (state is AchievementsView.State.AchievementsLoaded) {
             achievementsAdapter.items = state.achievements
+            isMyProfile = state.isMyProfile
         }
     }
 }

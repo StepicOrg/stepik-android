@@ -1,4 +1,4 @@
-package org.stepik.android.view.injection.achievements
+package org.stepik.android.view.injection.achievement
 
 import dagger.Binds
 import dagger.Module
@@ -13,7 +13,7 @@ import org.stepik.android.view.injection.base.Authorized
 import retrofit2.Retrofit
 
 @Module
-abstract class AchievementsDataModule {
+abstract class AchievementDataModule {
     @Binds
     @AppSingleton
     internal abstract fun bindAchievementsRepository(

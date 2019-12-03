@@ -119,7 +119,7 @@ class AchievementsListFragment: Fragment(), AchievementsView {
     }
 
     private fun fetchAchievements(forceUpdate: Boolean = false) {
-        achievementsPresenter.showAchievementsForUser(userId, forceUpdate = forceUpdate)
+        achievementsPresenter.showAchievementsForUser(forceUpdate = forceUpdate)
     }
 
     override fun setState(state: AchievementsView.State) {
