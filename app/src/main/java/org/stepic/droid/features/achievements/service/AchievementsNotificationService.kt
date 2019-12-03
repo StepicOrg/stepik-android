@@ -22,7 +22,7 @@ import org.stepic.droid.ui.util.toBitmap
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.util.toObject
-import org.stepik.android.domain.achievements.repository.AchievementsRepository
+import org.stepik.android.domain.achievement.repository.AchievementRepository
 import javax.inject.Inject
 
 class AchievementsNotificationService : JobIntentService() {
@@ -41,7 +41,7 @@ class AchievementsNotificationService : JobIntentService() {
     internal lateinit var analytic: Analytic
 
     @Inject
-    internal lateinit var achievementsRepository: AchievementsRepository
+    internal lateinit var achievementRepository: AchievementRepository
 
     @Inject
     internal lateinit var notificationManager: NotificationManager
@@ -58,7 +58,7 @@ class AchievementsNotificationService : JobIntentService() {
             val rawMessage = intent.getStringExtra(EXTRA_RAW_MESSAGE) ?: return
             val achievementNotification = rawMessage.toObject<AchievementNotification>()
 
-            val achievement = achievementsRepository
+            val achievement = achievementRepository
                     .getAchievement(achievementNotification.user, achievementNotification.kind)
                     .blockingGet()
 

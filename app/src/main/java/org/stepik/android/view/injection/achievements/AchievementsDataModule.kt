@@ -4,11 +4,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.stepic.droid.di.AppSingleton
-import org.stepik.android.data.achievements.repository.AchievementsRepositoryImpl
-import org.stepik.android.data.achievements.source.AchievementsRemoteDataSource
-import org.stepik.android.domain.achievements.repository.AchievementsRepository
-import org.stepik.android.remote.achievements.AchievementsRemoteDataSourceImpl
-import org.stepik.android.remote.achievements.service.AchievementsService
+import org.stepik.android.data.achievement.repository.AchievementRepositoryImpl
+import org.stepik.android.data.achievement.source.AchievementRemoteDataSource
+import org.stepik.android.domain.achievement.repository.AchievementRepository
+import org.stepik.android.remote.achievement.AchievementRemoteDataSourceImpl
+import org.stepik.android.remote.achievement.service.AchievementsService
 import org.stepik.android.view.injection.base.Authorized
 import retrofit2.Retrofit
 
@@ -17,13 +17,13 @@ abstract class AchievementsDataModule {
     @Binds
     @AppSingleton
     internal abstract fun bindAchievementsRepository(
-        achievementsRepositoryImpl: AchievementsRepositoryImpl
-    ): AchievementsRepository
+        achievementsRepositoryImpl: AchievementRepositoryImpl
+    ): AchievementRepository
 
     @Binds
     internal abstract fun bindAchievementsRemoteDataSource(
-        achievementsRemoteDataSourceImpl: AchievementsRemoteDataSourceImpl
-    ): AchievementsRemoteDataSource
+        achievementsRemoteDataSourceImpl: AchievementRemoteDataSourceImpl
+    ): AchievementRemoteDataSource
 
     @Module
     companion object {

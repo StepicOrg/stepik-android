@@ -5,14 +5,14 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.domain.achievements.repository.AchievementsRepository
+import org.stepik.android.domain.achievement.repository.AchievementRepository
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
 class AchievementsPresenter
 @Inject
 constructor(
-    private val achievementsRepository: AchievementsRepository,
+    private val achievementRepository: AchievementRepository,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -33,21 +33,15 @@ constructor(
 
     fun showAchievementsForUser(userId: Long, count: Int = -1, forceUpdate: Boolean = false) {
         if (state == AchievementsView.State.Idle || (forceUpdate && state == AchievementsView.State.Error)) {
-            state =
-                AchievementsView.State.Loading
-            compositeDisposable += achievementsRepository
+            state = AchievementsView.State.Loading
+            compositeDisposable += achievementRepository
                 .getAchievements(userId, count)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
-                    .subscribeBy({
-                        state =
-                            AchievementsView.State.Error
-                    }) {
-                        state =
-                            AchievementsView.State.AchievementsLoaded(
-                                it
-                            )
-                    }
+                .subscribeBy(
+                    onSuccess = { state = AchievementsView.State.AchievementsLoaded(it) },
+                    onError = { state = AchievementsView.State.Error }
+                )
         }
     }
 }

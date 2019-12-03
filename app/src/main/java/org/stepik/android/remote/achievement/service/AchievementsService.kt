@@ -1,8 +1,8 @@
-package org.stepik.android.remote.achievements.service
+package org.stepik.android.remote.achievement.service
 
 import io.reactivex.Single
-import org.stepik.android.remote.achievements.model.AchievementProgressesResponse
-import org.stepik.android.remote.achievements.model.AchievementsResponse
+import org.stepik.android.remote.achievement.model.AchievementProgressesResponse
+import org.stepik.android.remote.achievement.model.AchievementsResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

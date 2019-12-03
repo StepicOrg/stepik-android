@@ -1,22 +1,22 @@
-package org.stepik.android.remote.achievements
+package org.stepik.android.remote.achievement
 
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.util.onErrorSafe
-import org.stepik.android.data.achievements.source.AchievementsRemoteDataSource
+import org.stepik.android.data.achievement.source.AchievementRemoteDataSource
 import org.stepik.android.model.achievements.Achievement
 import org.stepik.android.model.achievements.AchievementProgress
-import org.stepik.android.remote.achievements.service.AchievementsService
+import org.stepik.android.remote.achievement.service.AchievementsService
 import javax.inject.Inject
 import kotlin.math.min
 
-class AchievementsRemoteDataSourceImpl
+class AchievementRemoteDataSourceImpl
 @Inject
 constructor(
     private val achievementsService: AchievementsService
-) : AchievementsRemoteDataSource {
+) : AchievementRemoteDataSource {
     override fun getAchievements(userId: Long, count: Int): Single<List<AchievementFlatItem>> =
         getDistinctAchievementKindsOrderedByObtainDate(userId, count).flatMap { kind ->
             getAchievementWithProgressByKind(userId, kind)

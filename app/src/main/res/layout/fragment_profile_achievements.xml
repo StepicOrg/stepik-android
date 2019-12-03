@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/achievementsContainer"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:visibility="gone"
+    tools:visibility="visible">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:text="@string/profile_activities_title"
+        android:layout_marginTop="@dimen/profile_block_vertical_margin"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        style="@style/ProfileItemHeader" />
+
+    <LinearLayout
+        android:id="@+id/achievementsLoadingPlaceholder"
+        android:baselineAligned="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/guideline_standard_padding"
+        android:orientation="horizontal" />
+
+    <include
+        android:id="@+id/achievementsLoadingError"
+        android:visibility="gone"
+        layout="@layout/error_no_connection_with_button_small" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/achievementsTilesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/guideline_standard_padding" />
+</LinearLayout>
