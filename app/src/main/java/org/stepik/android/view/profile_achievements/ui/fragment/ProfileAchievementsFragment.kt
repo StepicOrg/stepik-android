@@ -105,7 +105,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
-        achievementsPresenter.showAchievementsForUser(achievementsToDisplay, forceUpdate)
+        achievementsPresenter.showAchievementsForUser(MAX_ACHIEVEMENTS_TO_DISPLAY, forceUpdate)
     }
 
     private fun initAchievementsPlaceholders() {
@@ -140,7 +140,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
         viewStateDelegate.switchState(state)
 
         if (state is AchievementsView.State.AchievementsLoaded) {
-            achievementsAdapter.items = state.achievements
+            achievementsAdapter.items = state.achievements.take(achievementsToDisplay)
             isMyProfile = state.isMyProfile
         }
     }
