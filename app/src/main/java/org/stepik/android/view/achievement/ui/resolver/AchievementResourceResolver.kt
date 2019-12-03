@@ -82,7 +82,7 @@ constructor(
             context.getString(description, context.resources.getQuantityString(plural, achievementFlatItem.targetScore, achievementFlatItem.targetScore))
         } ?: context.getString(R.string.achievement_unknown_description)
 
-    fun resolveAchievementIcon(achievementFlatItem: AchievementFlatItem, targetImageView: ImageView? = null) =
+    fun resolveAchievementIcon(achievementFlatItem: AchievementFlatItem, targetImageView: ImageView? = null): String =
         if (achievementFlatItem.isLocked || achievementFlatItem.currentLevel == 0) {
             "file:///android_asset/images/vector/achievements/ic_empty_achievement.svg"
         } else {

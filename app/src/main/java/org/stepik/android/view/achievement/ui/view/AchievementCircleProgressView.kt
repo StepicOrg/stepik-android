@@ -13,7 +13,7 @@ import kotlin.properties.Delegates
 
 class AchievementCircleProgressView
 @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): View(context, attrs, defStyleAttr) {
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
     private val backgroundAlpha = 0x3FFFFFFF
     private val backgroundColors = context.resources.getIntArray(R.array.achievements_circle_progress_background_colors).map { it and backgroundAlpha }.toIntArray()
     private val backgroundColorsPositions = floatArrayOf(0f, 0.1f, 0.2f, 0.45f, 1f)

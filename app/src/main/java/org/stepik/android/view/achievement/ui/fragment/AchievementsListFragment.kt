@@ -28,9 +28,9 @@ import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class AchievementsListFragment: Fragment(), AchievementsView {
+class AchievementsListFragment : Fragment(), AchievementsView {
     companion object {
-        fun newInstance(userId: Long, isMyProfile: Boolean) =
+        fun newInstance(userId: Long, isMyProfile: Boolean): Fragment =
             AchievementsListFragment().apply {
                 this.userId = userId
                 this.isMyProfile = isMyProfile

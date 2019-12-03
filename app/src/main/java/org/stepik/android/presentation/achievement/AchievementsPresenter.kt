@@ -7,7 +7,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.achievement.interactor.AchievementInteractor
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.presentation.profile.ProfileView
 import javax.inject.Inject
 
 class AchievementsPresenter
@@ -19,7 +18,7 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-): PresenterBase<AchievementsView>() {
+) : PresenterBase<AchievementsView>() {
     private var state: AchievementsView.State = AchievementsView.State.Idle
         set(value) {
             field = value

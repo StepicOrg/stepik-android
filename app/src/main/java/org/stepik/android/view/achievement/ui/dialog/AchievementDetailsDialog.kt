@@ -17,7 +17,7 @@ import org.stepic.droid.ui.util.wrapWithGlide
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class AchievementDetailsDialog: DialogFragment() {
+class AchievementDetailsDialog : DialogFragment() {
     companion object {
         const val TAG = "achievement_details_dialog"
 

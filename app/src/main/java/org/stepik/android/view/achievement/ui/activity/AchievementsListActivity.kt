@@ -26,7 +26,7 @@ class AchievementsListActivity : SingleFragmentActivity() {
             )
 
     override fun applyTransitionPrev() {
-        //no-op
+        // no-op
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

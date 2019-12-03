@@ -16,7 +16,7 @@ import kotlin.properties.Delegates
 
 class VectorRatingBar
 @JvmOverloads
-constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0): View(context, attrs, defStyleAttr) {
+constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
 
     private lateinit var progressBitmap: Bitmap
     private lateinit var secondaryProgressBitmap: Bitmap
@@ -64,7 +64,6 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         }
     }
 
-
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val widthMode = MeasureSpec.getMode(widthMeasureSpec)
         val widthSize = MeasureSpec.getSize(widthMeasureSpec)
@@ -83,7 +82,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
                 (gap * (total - 1)).toInt()
 
         @SuppressLint("SwitchIntDef")
-        val width = when(widthMode) {
+        val width = when (widthMode) {
             MeasureSpec.EXACTLY -> widthSize
             MeasureSpec.AT_MOST -> min(widthSize, totalWidth)
             else -> totalWidth
@@ -95,7 +94,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private fun getBitmap(@DrawableRes resId: Int, heightMode: Int, heightSize: Int): Bitmap {
         val drawable = AppCompatResources.getDrawable(context, resId)!!
 
-        val targetHeight = when(heightMode) {
+        val targetHeight = when (heightMode) {
             MeasureSpec.EXACTLY -> heightSize
             MeasureSpec.AT_MOST -> min(drawable.intrinsicHeight, heightSize)
             else -> drawable.intrinsicHeight

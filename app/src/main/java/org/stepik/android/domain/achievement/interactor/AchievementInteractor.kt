@@ -22,5 +22,4 @@ constructor(
                     .getAchievements(profileData.user.id, count)
                     .map { it to profileData.isCurrentUser }
             }
-
 }
