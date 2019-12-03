@@ -17,13 +17,13 @@
         android:text="@string/achievements_title"
         android:gravity="center_vertical"
 
-        android:paddingTop="@dimen/profile_block_vertical_margin"
         android:paddingLeft="@dimen/profile_block_margin"
         android:paddingStart="@dimen/profile_block_margin"
         android:paddingRight="16dp"
         android:paddingEnd="16dp"
-        android:paddingBottom="@dimen/profile_block_vertical_margin"
 
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
         app:drawableEndCompat="@drawable/ic_nav_arrow_right"
 
         style="@style/ProfileItemHeader" />
@@ -33,6 +33,7 @@
         android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginLeft="@dimen/profile_block_margin"
         android:layout_marginRight="@dimen/profile_block_margin"
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
@@ -47,6 +48,7 @@
         android:id="@+id/achievementsTilesContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginLeft="@dimen/profile_block_margin"
         android:layout_marginRight="@dimen/profile_block_margin"
         android:layout_marginBottom="@dimen/profile_block_margin"
