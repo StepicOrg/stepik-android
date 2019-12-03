@@ -34,7 +34,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
-import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
+import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity

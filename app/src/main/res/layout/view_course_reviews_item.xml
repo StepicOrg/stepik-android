@@ -61,7 +61,7 @@
 
         tools:text="Evgeny Kubrakov" />
 
-    <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+    <org.stepik.android.view.achievement.ui.view.VectorRatingBar
         android:id="@+id/reviewRating"
         app:backgroundIcon="@drawable/ic_progress_star_white_filled"
         app:secondaryIcon="@drawable/ic_progress_star_white_filled"

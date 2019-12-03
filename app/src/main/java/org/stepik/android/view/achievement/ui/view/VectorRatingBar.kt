@@ -1,4 +1,4 @@
-package org.stepic.droid.features.achievements.ui.custom
+package org.stepik.android.view.achievement.ui.view
 
 import android.annotation.SuppressLint
 import android.content.Context

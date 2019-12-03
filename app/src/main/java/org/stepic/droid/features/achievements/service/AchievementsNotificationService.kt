@@ -13,7 +13,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity
+import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.AchievementNotification

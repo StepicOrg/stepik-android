@@ -3,8 +3,8 @@ package org.stepic.droid.features.achievements.ui.adapters.holders
 import android.view.View
 import androidx.core.view.isGone
 import kotlinx.android.synthetic.main.view_achievement_tile.view.*
-import org.stepic.droid.features.achievements.ui.custom.AchievementCircleProgressView
-import org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+import org.stepik.android.view.achievement.ui.view.AchievementCircleProgressView
+import org.stepik.android.view.achievement.ui.view.VectorRatingBar
 import org.stepic.droid.features.achievements.util.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.adapters.viewhoders.GenericViewHolder

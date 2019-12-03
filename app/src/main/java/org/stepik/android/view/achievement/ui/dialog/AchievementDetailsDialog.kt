@@ -1,4 +1,4 @@
-package org.stepic.droid.features.achievements.ui.dialogs
+package org.stepik.android.view.achievement.ui.dialog
 
 import android.app.Dialog
 import android.content.Intent
@@ -22,17 +22,18 @@ class AchievementDetailsDialog: DialogFragment() {
         const val TAG = "achievement_details_dialog"
 
         fun newInstance(achievementFlatItem: AchievementFlatItem, canShareAchievement: Boolean): AchievementDetailsDialog =
-                AchievementDetailsDialog().apply {
+            AchievementDetailsDialog()
+                .apply {
                     achievementItem = achievementFlatItem
                     canShare = canShareAchievement
                 }
     }
 
-    private var achievementItem: AchievementFlatItem by argument()
-    private var canShare: Boolean by argument()
-
     @Inject
     lateinit var achievementResourceResolver: AchievementResourceResolver
+
+    private var achievementItem: AchievementFlatItem by argument()
+    private var canShare: Boolean by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

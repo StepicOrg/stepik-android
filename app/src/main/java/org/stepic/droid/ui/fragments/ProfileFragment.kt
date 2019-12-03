@@ -33,11 +33,11 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
-import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
-import org.stepic.droid.features.achievements.presenters.AchievementsView
+import org.stepik.android.presentation.achievement.AchievementsPresenter
+import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
-import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
+import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -62,7 +62,7 @@ import javax.inject.Inject
 class   ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView,
-        AchievementsView,
+    AchievementsView,
         TimeIntervalPickerDialogFragment.Companion.Callback{
 
     companion object {

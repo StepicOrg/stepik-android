@@ -24,7 +24,7 @@ import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
-import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
+import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver

@@ -1,30 +1,33 @@
-package org.stepic.droid.features.achievements.ui.fragments
+package org.stepik.android.view.achievement.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_achievements_list.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
-import org.stepic.droid.features.achievements.presenters.AchievementsView
+import org.stepik.android.presentation.achievement.AchievementsPresenter
+import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
-import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setHeight
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class AchievementsListFragment: FragmentBase(), AchievementsView {
+class AchievementsListFragment: Fragment(),
+    AchievementsView {
     companion object {
         fun newInstance(userId: Long, isMyProfile: Boolean) =
             AchievementsListFragment().apply {
@@ -34,25 +37,42 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
     }
 
     @Inject
-    lateinit var achievementsPresenter: AchievementsPresenter
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var achievementsPresenter: AchievementsPresenter
+    private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
 
     private var userId: Long by argument()
     private var isMyProfile: Boolean by argument()
 
-    override fun injectComponent() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        injectComponent()
+
+        achievementsPresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(AchievementsPresenter::class.java)
+    }
+
+    private fun injectComponent() {
         App
-                .component()
-                .profileComponentBuilder()
-                .build()
-                .inject(this)
+            .componentManager()
+            .profileComponent(userId)
+            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_achievements_list, container, false)
+        inflater.inflate(R.layout.fragment_achievements_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val context = requireContext()
+
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<AchievementsView.State.Idle>(progress)
+        viewStateDelegate.addState<AchievementsView.State.Loading>(progress)
+        viewStateDelegate.addState<AchievementsView.State.Error>(error)
+        viewStateDelegate.addState<AchievementsView.State.AchievementsLoaded>(recycler)
 
         initPlaceholders()
 
@@ -60,7 +80,9 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
 
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = AchievementsAdapter().apply { onAchievementItemClick = {
-            AchievementDetailsDialog.newInstance(it, isMyProfile).show(childFragmentManager, AchievementDetailsDialog.TAG)
+            AchievementDetailsDialog
+                .newInstance(it, isMyProfile)
+                .showIfNotExists(childFragmentManager, AchievementDetailsDialog.TAG)
         }}
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
@@ -90,23 +112,12 @@ class AchievementsListFragment: FragmentBase(), AchievementsView {
         achievementsPresenter.showAchievementsForUser(userId, forceUpdate = forceUpdate)
     }
 
-    override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        recycler.isVisible = true
-        progress.isVisible = false
-        error.isVisible = false
-        (recycler.adapter as? BaseAchievementsAdapter)?.achievements = achievements
-    }
+    override fun setState(state: AchievementsView.State) {
+        viewStateDelegate.switchState(state)
 
-    override fun onAchievementsLoadingError() {
-        recycler.isVisible = false
-        progress.isVisible = false
-        error.isVisible = true
-    }
-
-    override fun onAchievementsLoading() {
-        recycler.isVisible = false
-        progress.isVisible = true
-        error.isVisible = false
+        if (state is AchievementsView.State.AchievementsLoaded) {
+            (recycler.adapter as? BaseAchievementsAdapter)?.achievements = state.achievements
+        }
     }
 
     override fun onDestroyView() {
