@@ -18,16 +18,19 @@ import org.stepik.android.presentation.achievement.AchievementsPresenter
 import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
+import org.stepic.droid.features.achievements.util.AchievementResourceResolver
+import org.stepic.droid.model.AchievementFlatItem
 import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setHeight
+import org.stepik.android.view.achievement.ui.adapter.delegate.AchievementAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class AchievementsListFragment: Fragment(),
-    AchievementsView {
+class AchievementsListFragment: Fragment(), AchievementsView {
     companion object {
         fun newInstance(userId: Long, isMyProfile: Boolean) =
             AchievementsListFragment().apply {
@@ -39,8 +42,13 @@ class AchievementsListFragment: Fragment(),
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var achievementResourceResolver: AchievementResourceResolver
+
     private lateinit var achievementsPresenter: AchievementsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
+
+    private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementFlatItem>
 
     private var userId: Long by argument()
     private var isMyProfile: Boolean by argument()
@@ -52,6 +60,9 @@ class AchievementsListFragment: Fragment(),
         achievementsPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(AchievementsPresenter::class.java)
+
+        achievementsAdapter = DefaultDelegateAdapter()
+        achievementsAdapter += AchievementAdapterDelegate(achievementResourceResolver, ::onAchievementClicked)
     }
 
     private fun injectComponent() {
@@ -106,6 +117,12 @@ class AchievementsListFragment: Fragment(),
             stroke.setHeight(1)
             progress.addView(stroke)
         }
+    }
+
+    private fun onAchievementClicked(item: AchievementFlatItem) {
+        AchievementDetailsDialog
+            .newInstance(item, isMyProfile)
+            .showIfNotExists(childFragmentManager, AchievementDetailsDialog.TAG)
     }
 
     private fun fetchAchievements(forceUpdate: Boolean = false) {
