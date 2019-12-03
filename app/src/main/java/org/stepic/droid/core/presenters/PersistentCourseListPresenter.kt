@@ -126,7 +126,7 @@ constructor(
                         .getCourseList(
                             CourseListType.FEATURED,
                             currentPage.get(),
-                            getLang(),
+                            sharedPreferenceHelper.languageForFeatured,
                             sourceType = DataSourceType.REMOTE
                         )
                         .blockingGet()
@@ -308,10 +308,5 @@ constructor(
 
     fun loadMore(courseType: CourseListType) {
         downloadData(courseType, isRefreshing = false, isLoadMore = true)
-    }
-
-    private fun getLang(): String {
-        val enumSet = sharedPreferenceHelper.filterForFeatured
-        return enumSet.iterator().next().language
     }
 }

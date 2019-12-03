@@ -705,6 +705,8 @@
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
 
     <!-- Step -->
+    <string name="step_amount_passed">Passed:&#160;</string>
+    <string name="step_correct_submissions_percentage">Correct submissions:&#160;</string>
     <string name="step_navigation_next">Next lesson</string>
     <string name="step_navigation_prev">Previous lesson</string>
     <string name="step_discussion_show">Show discussions (%d)</string>

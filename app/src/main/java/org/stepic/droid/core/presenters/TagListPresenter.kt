@@ -52,7 +52,7 @@ constructor(
             }
             .observeOn(backgroundScheduler)
             .flatMapSingle {
-                tagsRepository.getSearchResultsOfTag(it, tag, getLang())
+                tagsRepository.getSearchResultsOfTag(it, tag, sharedPreferenceHelper.languageForFeatured)
             }
             .doOnNext(::handleMeta)
             .map(searchResolver::getCourseIdsFromSearchResults)
@@ -120,10 +120,5 @@ constructor(
     override fun detachView(view: CoursesView) {
         super.detachView(view)
         compositeDisposable.clear()
-    }
-
-    private fun getLang(): String {
-        val enumSet = sharedPreferenceHelper.filterForFeatured
-        return enumSet.iterator().next().language
     }
 }
