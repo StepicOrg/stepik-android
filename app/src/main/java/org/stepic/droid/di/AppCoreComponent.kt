@@ -22,8 +22,6 @@ import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
@@ -281,15 +279,10 @@ interface AppCoreComponent {
 
     fun inject(codeEditor: CodeEditor)
 
-
     fun inject(editDeadlinesDialog: EditDeadlinesDialog)
     fun inject(learningRateDialog: LearningRateDialog)
 
-
-    fun inject(achievementsTileAdapter: AchievementsTileAdapter)
-    fun inject(achievementsAdapter: AchievementsAdapter)
     fun inject(achievementDetailsDialog: AchievementDetailsDialog)
-
 
     fun inject(downloadCompleteService: DownloadCompleteService)
     fun inject(fileTransferService: FileTransferService)

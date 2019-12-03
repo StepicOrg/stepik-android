@@ -35,7 +35,6 @@ import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
 import org.stepik.android.presentation.achievement.AchievementsPresenter
 import org.stepik.android.presentation.achievement.AchievementsView
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
 import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.model.AchievementFlatItem
@@ -246,27 +245,27 @@ class   ProfileFragment : FragmentBase(),
         }
     }
 
-    override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
-        achievementsLoadingPlaceholder.isVisible = false
-        achievementsLoadingError.isVisible = false
-        achievementsTilesContainer.isVisible = true
-        achievementsContainer.isVisible = true
-    }
-
-    override fun onAchievementsLoadingError() {
-        achievementsContainer.isVisible = true
-        achievementsLoadingPlaceholder.isVisible = false
-        achievementsLoadingError.isVisible = true
-        achievementsTilesContainer.isVisible = false
-    }
-
-    override fun onAchievementsLoading() {
-        achievementsContainer.isVisible = true
-        achievementsLoadingPlaceholder.isVisible = true
-        achievementsLoadingError.isVisible = false
-        achievementsTilesContainer.isVisible = false
-    }
+//    override fun showAchievements(achievements: List<AchievementFlatItem>) {
+//        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
+//        achievementsLoadingPlaceholder.isVisible = false
+//        achievementsLoadingError.isVisible = false
+//        achievementsTilesContainer.isVisible = true
+//        achievementsContainer.isVisible = true
+//    }
+//
+//    override fun onAchievementsLoadingError() {
+//        achievementsContainer.isVisible = true
+//        achievementsLoadingPlaceholder.isVisible = false
+//        achievementsLoadingError.isVisible = true
+//        achievementsTilesContainer.isVisible = false
+//    }
+//
+//    override fun onAchievementsLoading() {
+//        achievementsContainer.isVisible = true
+//        achievementsLoadingPlaceholder.isVisible = true
+//        achievementsLoadingError.isVisible = false
+//        achievementsTilesContainer.isVisible = false
+//    }
 
     /**
      * This method is invoked only for My Profile

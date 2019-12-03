@@ -16,9 +16,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepik.android.presentation.achievement.AchievementsPresenter
 import org.stepik.android.presentation.achievement.AchievementsView
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
-import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
-import org.stepic.droid.features.achievements.util.AchievementResourceResolver
+import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.ui.util.initCenteredToolbar
@@ -66,8 +64,7 @@ class AchievementsListFragment: Fragment(), AchievementsView {
     }
 
     private fun injectComponent() {
-        App
-            .componentManager()
+        App.componentManager()
             .profileComponent(userId)
             .inject(this)
     }
@@ -90,11 +87,7 @@ class AchievementsListFragment: Fragment(), AchievementsView {
         initCenteredToolbar(R.string.achievements_title, showHomeButton = true)
 
         recycler.layoutManager = LinearLayoutManager(context)
-        recycler.adapter = AchievementsAdapter().apply { onAchievementItemClick = {
-            AchievementDetailsDialog
-                .newInstance(it, isMyProfile)
-                .showIfNotExists(childFragmentManager, AchievementDetailsDialog.TAG)
-        }}
+        recycler.adapter = achievementsAdapter
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
         divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
@@ -133,7 +126,7 @@ class AchievementsListFragment: Fragment(), AchievementsView {
         viewStateDelegate.switchState(state)
 
         if (state is AchievementsView.State.AchievementsLoaded) {
-            (recycler.adapter as? BaseAchievementsAdapter)?.achievements = state.achievements
+            achievementsAdapter.items = state.achievements
         }
     }
 

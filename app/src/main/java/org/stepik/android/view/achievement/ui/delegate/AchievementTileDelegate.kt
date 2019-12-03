@@ -3,7 +3,7 @@ package org.stepik.android.view.achievement.ui.delegate
 import android.view.View
 import androidx.core.view.isGone
 import kotlinx.android.synthetic.main.view_achievement_tile.view.*
-import org.stepic.droid.features.achievements.util.AchievementResourceResolver
+import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepik.android.view.achievement.ui.view.AchievementCircleProgressView

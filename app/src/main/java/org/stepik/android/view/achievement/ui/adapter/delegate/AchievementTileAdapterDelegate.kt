@@ -2,10 +2,8 @@ package org.stepik.android.view.achievement.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import kotlinx.android.synthetic.main.view_achievement_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.features.achievements.util.AchievementResourceResolver
+import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepik.android.view.achievement.ui.delegate.AchievementTileDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate

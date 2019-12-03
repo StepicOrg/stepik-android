@@ -32,8 +32,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
-import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
 import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.UserViewModel
@@ -136,13 +134,6 @@ class ProfileFragmentOld : Fragment(), ProfileView, TimeIntervalPickerDialogFrag
         }
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
-        achievementsTilesContainer.adapter = AchievementsTileAdapter().apply {
-            onAchievementItemClick = {
-                AchievementDetailsDialog
-                    .newInstance(it, localUserViewModel?.isMyProfile ?: false)
-                    .show(childFragmentManager, AchievementDetailsDialog.TAG)
-            }
-        }
         achievementsTilesContainer.isNestedScrollingEnabled = false
         initAchievementsPlaceholders()
 
@@ -340,7 +331,7 @@ class ProfileFragmentOld : Fragment(), ProfileView, TimeIntervalPickerDialogFrag
     }
 
     override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
+//        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
         achievementsLoadingPlaceholder.isVisible = false
         achievementsLoadingError.isVisible = false
         achievementsTilesContainer.isVisible = true
