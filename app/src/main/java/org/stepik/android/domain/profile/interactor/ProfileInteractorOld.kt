@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.first
@@ -35,7 +35,7 @@ constructor(
     fun fetchProfile(userId: Long): Single<User> =
         userRepository.getUsers(userId).first()
 
-    fun fetchAchievementsForUser(userId: Long, count: Int = -1): Single<List<AchievementFlatItem>> =
+    fun fetchAchievementsForUser(userId: Long, count: Int = -1): Single<List<AchievementItem>> =
         achievementRepository.getAchievements(userId, count)
 
     /**

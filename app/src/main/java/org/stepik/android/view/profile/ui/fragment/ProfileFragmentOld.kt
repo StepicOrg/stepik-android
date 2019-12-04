@@ -32,7 +32,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
@@ -329,7 +329,7 @@ class ProfileFragmentOld : Fragment(), ProfileView, TimeIntervalPickerDialogFrag
         }
     }
 
-    override fun showAchievements(achievements: List<AchievementFlatItem>) {
+    override fun showAchievements(achievements: List<AchievementItem>) {
 //        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
         achievementsLoadingPlaceholder.isVisible = false
         achievementsLoadingError.isVisible = false

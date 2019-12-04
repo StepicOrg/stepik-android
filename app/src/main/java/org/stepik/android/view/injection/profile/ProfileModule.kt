@@ -10,7 +10,6 @@ import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.domain.profile.model.ProfileData
-import org.stepik.android.presentation.achievement.AchievementsPresenter
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter

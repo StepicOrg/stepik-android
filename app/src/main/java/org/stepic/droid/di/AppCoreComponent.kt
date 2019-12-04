@@ -285,8 +285,6 @@ interface AppCoreComponent {
     fun inject(editDeadlinesDialog: EditDeadlinesDialog)
     fun inject(learningRateDialog: LearningRateDialog)
 
-    fun inject(achievementDetailsDialog: AchievementDetailsDialog)
-
     fun inject(downloadCompleteService: DownloadCompleteService)
     fun inject(fileTransferService: FileTransferService)
 

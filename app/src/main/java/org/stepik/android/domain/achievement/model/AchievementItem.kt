@@ -1,4 +1,4 @@
-package org.stepic.droid.model
+package org.stepik.android.domain.achievement.model
 
 import android.os.Parcel
 import android.os.Parcelable
@@ -8,7 +8,7 @@ import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
 import ru.nobird.android.core.model.Identifiable
 
-data class AchievementFlatItem(
+data class AchievementItem(
     val uploadcareUUID: String?,
 
     val isLocked: Boolean,
@@ -19,7 +19,7 @@ data class AchievementFlatItem(
     val currentLevel: Int,
     val maxLevel: Int
 ) : Parcelable, Identifiable<String> {
-    constructor(parcel: Parcel): this(
+    constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readBoolean(),
         parcel.readString(),
@@ -36,7 +36,7 @@ data class AchievementFlatItem(
 
         currentLevel: Int,
         maxLevel: Int
-    ): this(
+    ) : this(
         currentLevelAchievement?.uploadcareUUID,
         currentLevelAchievement == null,
         nextLevelAchievement.kind,
@@ -58,10 +58,13 @@ data class AchievementFlatItem(
         parcel.writeInt(maxLevel)
     }
 
-    override fun describeContents() = 0
+    override fun describeContents(): Int = 0
 
-    companion object CREATOR : Parcelable.Creator<AchievementFlatItem> {
-        override fun createFromParcel(parcel: Parcel) = AchievementFlatItem(parcel)
-        override fun newArray(size: Int) = arrayOfNulls<AchievementFlatItem?>(size)
+    companion object CREATOR : Parcelable.Creator<AchievementItem> {
+        override fun createFromParcel(parcel: Parcel): AchievementItem =
+            AchievementItem(parcel)
+
+        override fun newArray(size: Int): Array<AchievementItem?> =
+            arrayOfNulls<AchievementItem?>(size)
     }
 }

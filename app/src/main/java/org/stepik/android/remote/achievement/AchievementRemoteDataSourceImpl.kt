@@ -3,7 +3,7 @@ package org.stepik.android.remote.achievement
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.util.onErrorSafe
 import org.stepik.android.data.achievement.source.AchievementRemoteDataSource
 import org.stepik.android.model.achievements.Achievement
@@ -17,12 +17,12 @@ class AchievementRemoteDataSourceImpl
 constructor(
     private val achievementsService: AchievementsService
 ) : AchievementRemoteDataSource {
-    override fun getAchievements(userId: Long, count: Int): Single<List<AchievementFlatItem>> =
+    override fun getAchievements(userId: Long, count: Int): Single<List<AchievementItem>> =
         getDistinctAchievementKindsOrderedByObtainDate(userId, count).flatMap { kind ->
             getAchievementWithProgressByKind(userId, kind)
         }.toList()
 
-    override fun getAchievement(userId: Long, kind: String): Single<AchievementFlatItem> =
+    override fun getAchievement(userId: Long, kind: String): Single<AchievementItem> =
         getAchievementWithProgressByKind(userId, kind).firstOrError()
 
     private fun getDistinctAchievementKindsOrderedByObtainDate(userId: Long, count: Int = -1): Observable<String> =
@@ -83,7 +83,7 @@ constructor(
             .map { it.achievements }
             .reduce(emptyList()) { a, b -> a + b }
 
-    private fun getAchievementWithProgressByKind(userId: Long, kind: String): Observable<AchievementFlatItem> =
+    private fun getAchievementWithProgressByKind(userId: Long, kind: String): Observable<AchievementItem> =
         getAllAchievementsByKind(kind)
             .toObservable()
             .flatMap { achievementsList -> Observable.fromIterable(achievementsList) }
@@ -100,7 +100,7 @@ constructor(
                 val firstCompleted = sorted.indexOfLast { (_, progress) -> progress.obtainDate != null }
                 val level = firstCompleted + 1
 
-                AchievementFlatItem(
+                AchievementItem(
                     sorted.getOrNull(firstCompleted)?.first,
                     sorted[min(level, sorted.size - 1)].first,
                     sorted[min(level, sorted.size - 1)].second,

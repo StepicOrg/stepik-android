@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.ImageView
 import org.stepic.droid.R
 import org.stepic.droid.di.AppSingleton
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.util.liftM2
 import javax.inject.Inject
 
@@ -77,16 +77,16 @@ constructor(
     fun resolveTitleForKind(kind: String): String =
         context.getString(kindToTitleResId[kind] ?: R.string.achievement_unknown_title)
 
-    fun resolveDescription(achievementFlatItem: AchievementFlatItem): String =
-        kindToPluralResID[achievementFlatItem.kind].liftM2(kindToDescriptionResID[achievementFlatItem.kind]) { plural, description ->
-            context.getString(description, context.resources.getQuantityString(plural, achievementFlatItem.targetScore, achievementFlatItem.targetScore))
+    fun resolveDescription(achievementItem: AchievementItem): String =
+        kindToPluralResID[achievementItem.kind].liftM2(kindToDescriptionResID[achievementItem.kind]) { plural, description ->
+            context.getString(description, context.resources.getQuantityString(plural, achievementItem.targetScore, achievementItem.targetScore))
         } ?: context.getString(R.string.achievement_unknown_description)
 
-    fun resolveAchievementIcon(achievementFlatItem: AchievementFlatItem, targetImageView: ImageView? = null): String =
-        if (achievementFlatItem.isLocked || achievementFlatItem.currentLevel == 0) {
+    fun resolveAchievementIcon(achievementItem: AchievementItem, targetImageView: ImageView? = null): String =
+        if (achievementItem.isLocked || achievementItem.currentLevel == 0) {
             "file:///android_asset/images/vector/achievements/ic_empty_achievement.svg"
         } else {
-            "file:///android_asset/images/vector/achievements/${achievementFlatItem.kind}/${achievementFlatItem.currentLevel}.svg"
+            "file:///android_asset/images/vector/achievements/${achievementItem.kind}/${achievementItem.currentLevel}.svg"
 //            "${achievementFlatItem.iconId ?: ""}/${targetImageView.width}x${targetImageView.height}" // todo: update after backend support
         }
 }

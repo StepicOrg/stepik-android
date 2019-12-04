@@ -17,7 +17,7 @@ import org.stepic.droid.base.App
 import org.stepik.android.presentation.achievement.AchievementsPresenter
 import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setHeight
@@ -46,7 +46,7 @@ class AchievementsListFragment : Fragment(), AchievementsView {
     private lateinit var achievementsPresenter: AchievementsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
 
-    private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementFlatItem>
+    private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementItem>
 
     private var userId: Long by argument()
     private var isMyProfile: Boolean by argument()
@@ -113,7 +113,7 @@ class AchievementsListFragment : Fragment(), AchievementsView {
         }
     }
 
-    private fun onAchievementClicked(item: AchievementFlatItem) {
+    private fun onAchievementClicked(item: AchievementItem) {
         AchievementDetailsDialog
             .newInstance(item, isMyProfile)
             .showIfNotExists(childFragmentManager, AchievementDetailsDialog.TAG)

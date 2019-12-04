@@ -4,7 +4,7 @@ import android.view.View
 import androidx.core.view.isGone
 import kotlinx.android.synthetic.main.view_achievement_tile.view.*
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepik.android.view.achievement.ui.view.AchievementCircleProgressView
 import org.stepik.android.view.achievement.ui.view.VectorRatingBar
@@ -17,7 +17,7 @@ class AchievementTileDelegate(
     private val achievementLevelProgress: AchievementCircleProgressView = root.achievementLevelProgress
     private val achievementIcon = root.achievementIcon.wrapWithGlide()
 
-    fun setAchievement(item: AchievementFlatItem) {
+    fun setAchievement(item: AchievementItem) {
         achievementLevels.progress = item.currentLevel
         achievementLevels.total = item.maxLevel
 

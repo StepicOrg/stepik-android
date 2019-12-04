@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.ui.util.wrapWithGlide
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -21,23 +21,26 @@ class AchievementDetailsDialog : DialogFragment() {
     companion object {
         const val TAG = "achievement_details_dialog"
 
-        fun newInstance(achievementFlatItem: AchievementFlatItem, canShareAchievement: Boolean): AchievementDetailsDialog =
+        fun newInstance(achievementItem: AchievementItem, canShareAchievement: Boolean): AchievementDetailsDialog =
             AchievementDetailsDialog()
                 .apply {
-                    achievementItem = achievementFlatItem
-                    canShare = canShareAchievement
+                    this.achievementItem = achievementItem
+                    this.canShare = canShareAchievement
                 }
     }
 
     @Inject
     lateinit var achievementResourceResolver: AchievementResourceResolver
 
-    private var achievementItem: AchievementFlatItem by argument()
+    private var achievementItem: AchievementItem by argument()
     private var canShare: Boolean by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        App.component().inject(this)
+        App.component()
+            .achievementsComponentBuilder()
+            .build()
+            .inject(this)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

@@ -15,7 +15,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.model.AchievementNotification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.ui.util.toBitmap
@@ -94,7 +94,7 @@ class AchievementsNotificationService : JobIntentService() {
         } catch (e: Exception) {}
     }
 
-    private fun getAchievementImageBitmap(achievement: AchievementFlatItem): Bitmap {
+    private fun getAchievementImageBitmap(achievement: AchievementItem): Bitmap {
         val iconSize = resources.getDimension(R.dimen.notification_large_icon_size).toInt()
         return GlideSvgRequestFactory.create(this, null)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)

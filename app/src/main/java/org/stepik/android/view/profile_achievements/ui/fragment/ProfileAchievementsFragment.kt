@@ -18,8 +18,7 @@ import kotlinx.android.synthetic.main.fragment_profile_achievements.achievements
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.model.AchievementFlatItem
-import org.stepik.android.presentation.achievement.AchievementsPresenter
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
 import org.stepik.android.view.achievement.ui.adapter.delegate.AchievementTileAdapterDelegate
@@ -54,7 +53,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
 
     private lateinit var achievementsPresenter: ProfileAchievementsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
-    private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementFlatItem>
+    private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementItem>
 
     private var achievementsToDisplay = 0
     private var isMyProfile = false
@@ -131,7 +130,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
         super.onStop()
     }
 
-    private fun onAchievementClicked(item: AchievementFlatItem) {
+    private fun onAchievementClicked(item: AchievementItem) {
         AchievementDetailsDialog
             .newInstance(item, canShareAchievement = isMyProfile)
             .showIfNotExists(childFragmentManager, AchievementDetailsDialog.TAG)
