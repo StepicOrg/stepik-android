@@ -8,7 +8,6 @@ import org.stepic.droid.preferences.UserPreferences
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.domain.user.repository.UserRepository
-import org.stepik.android.model.user.User
 import javax.inject.Inject
 
 class ProfileInteractor
@@ -16,7 +15,7 @@ class ProfileInteractor
 constructor(
     private val userRepository: UserRepository,
     private val userPreferences: UserPreferences,
-    private val userSubject: BehaviorSubject<User>
+    private val userSubject: BehaviorSubject<ProfileData>
 ) {
     fun getUser(userId: Long): Observable<ProfileData> =
         Single
@@ -29,8 +28,8 @@ constructor(
                     )
                     .toObservable()
             }
-            .doOnNext(userSubject::onNext)
             .map { user ->
                 ProfileData(user, user.id == userPreferences.userId)
             }
+            .doOnNext(userSubject::onNext)
 }

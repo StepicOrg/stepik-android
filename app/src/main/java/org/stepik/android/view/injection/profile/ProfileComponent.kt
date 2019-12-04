@@ -6,6 +6,7 @@ import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld
+import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 
 @ProfileScope
 @Subcomponent(modules = [
@@ -26,4 +27,5 @@ interface ProfileComponent {
 
     fun inject(profileFragmentOld: ProfileFragmentOld)
     fun inject(profileFragment: ProfileFragment)
+    fun inject(profileDetailFragment: ProfileDetailFragment)
 }
