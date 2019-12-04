@@ -21,6 +21,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.AchievementFlatItem
 import org.stepik.android.presentation.achievement.AchievementsPresenter
 import org.stepik.android.presentation.achievement.AchievementsView
+import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
 import org.stepik.android.view.achievement.ui.adapter.delegate.AchievementTileAdapterDelegate
 import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
@@ -51,7 +52,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
 
     private var userId: Long by argument()
 
-    private lateinit var achievementsPresenter: AchievementsPresenter
+    private lateinit var achievementsPresenter: ProfileAchievementsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
     private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementFlatItem>
 
@@ -66,7 +67,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
 
         achievementsPresenter = ViewModelProviders
             .of(this, viewModelFactory)
-            .get(AchievementsPresenter::class.java)
+            .get(ProfileAchievementsPresenter::class.java)
 
         achievementsAdapter = DefaultDelegateAdapter()
         achievementsAdapter += AchievementTileAdapterDelegate(achievementResourceResolver, ::onAchievementClicked)

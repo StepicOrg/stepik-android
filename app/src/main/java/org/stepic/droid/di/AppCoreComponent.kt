@@ -59,6 +59,7 @@ import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
@@ -200,6 +201,8 @@ interface AppCoreComponent {
     fun fontSizeComponentBuilder(): FontSizeComponent.Builder
 
     fun submissionComponentBuilder(): SubmissionComponent.Builder
+
+    fun achievementsComponentBuilder(): AchievementsComponent.Builder
 
     fun profileComponentBuilderNew(): org.stepik.android.view.injection.profile.ProfileComponent.Builder
 

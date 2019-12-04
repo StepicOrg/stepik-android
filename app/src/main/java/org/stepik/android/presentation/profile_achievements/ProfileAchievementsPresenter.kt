@@ -1,17 +1,21 @@
-package org.stepik.android.presentation.achievement
+package org.stepik.android.presentation.profile_achievements
 
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.achievement.interactor.AchievementInteractor
+import org.stepik.android.domain.profile.model.ProfileData
+import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
-class AchievementsPresenter
+class ProfileAchievementsPresenter
 @Inject
 constructor(
+    private val profileDataObservable: Observable<ProfileData>,
     private val achievementInteractor: AchievementInteractor,
 
     @BackgroundScheduler
@@ -30,17 +34,24 @@ constructor(
         view.setState(state)
     }
 
-    fun showAchievementsForUser(userId: Long, isMyProfile: Boolean, forceUpdate: Boolean = false) {
+    fun showAchievementsForUser(count: Int = -1, forceUpdate: Boolean = false) {
         if (state == AchievementsView.State.Idle || (forceUpdate && state == AchievementsView.State.Error)) {
             state = AchievementsView.State.Loading
-            compositeDisposable += achievementInteractor
-                .getAchievements(userId)
+            compositeDisposable += profileDataObservable
+                .firstElement()
+                .filter { !it.user.isOrganization && !it.user.isPrivate }
+                .flatMapSingleElement { profileData ->
+                    achievementInteractor
+                        .getAchievements(profileData.user.id, count)
+                        .map { it to profileData.isCurrentUser }
+                }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { achievements ->
+                    onSuccess = { (achievements, isMyProfile) ->
                         state = AchievementsView.State.AchievementsLoaded(achievements, isMyProfile)
                     },
+                    onComplete = { state = AchievementsView.State.NoAchievements },
                     onError = { state = AchievementsView.State.Error }
                 )
         }

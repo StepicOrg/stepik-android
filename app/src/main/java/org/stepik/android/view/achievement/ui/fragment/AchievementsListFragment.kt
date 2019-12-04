@@ -64,8 +64,9 @@ class AchievementsListFragment : Fragment(), AchievementsView {
     }
 
     private fun injectComponent() {
-        App.componentManager()
-            .profileComponent(userId)
+        App.component()
+            .achievementsComponentBuilder()
+            .build()
             .inject(this)
     }
 
@@ -119,7 +120,7 @@ class AchievementsListFragment : Fragment(), AchievementsView {
     }
 
     private fun fetchAchievements(forceUpdate: Boolean = false) {
-        achievementsPresenter.showAchievementsForUser(forceUpdate = forceUpdate)
+        achievementsPresenter.showAchievementsForUser(userId, isMyProfile, forceUpdate = forceUpdate)
     }
 
     override fun setState(state: AchievementsView.State) {
