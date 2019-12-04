@@ -147,7 +147,7 @@
         taken by
         the video tutorials. Deleting all downloaded videos can take a few minutes.
     </string>
-    <string name="storage">Storage</string>
+    <string name="storage">Downloaded content</string>
     <string name="notMountExplanation">The SD card is not plugged into the device. To save videos
         to the SD card, plug it into the phone and restart the App.
     </string>
@@ -803,6 +803,7 @@
 
     <!-- Settings -->
     <string name="setting_section_learning">Learning</string>
+    <string name="setting_section_other">Other</string>
 
     <string name="setting_autoplay">Auto-transition to next step on video end</string>
     <string name="setting_autoplay_short">Auto-transition to next step</string>

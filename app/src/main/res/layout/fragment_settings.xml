@@ -275,6 +275,23 @@
                     android:text="@string/storage"/>
 
                 <FrameLayout
+                    android:id="@+id/downloadsSettingsButton"
+                    style="@style/SettingSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/non_radius_foreground">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/downloads"
+                        android:textSize="16sp"/>
+                </FrameLayout>
+
+
+                <FrameLayout
                     android:id="@+id/storageManagementButton"
                     style="@style/SettingSwitch"
                     android:layout_width="match_parent"
@@ -307,24 +324,7 @@
                 style="@style/SettingHeaderTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Etc" />
-
-
-                <FrameLayout
-                    android:id="@+id/downloadsSettingsButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/downloads"
-                        android:textSize="16sp"/>
-                </FrameLayout>
+                android:text="@string/setting_section_other" />
 
                 <FrameLayout
                     android:id="@+id/feedbackSettingsButton"

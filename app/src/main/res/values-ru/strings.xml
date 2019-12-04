@@ -125,7 +125,7 @@
         занимают видео-уроки. Удаление всех загруженных видео может занять несколько минут.
     </string>
     <string name="empty">Пусто</string>
-    <string name="storage">Память</string>
+    <string name="storage">Загруженный контент</string>
     <string name="notMountExplanation">Карта памяти не установлена на устройство. Для того, чтобы
         сохранять видео на карту памяти, вставьте ее в телефон и перезапустите приложение.
     </string>
@@ -769,6 +769,7 @@
 
     <!-- Settings -->
     <string name="setting_section_learning">Обучение</string>
+    <string name="setting_section_other">Прочее</string>
 
     <string name="setting_autoplay">Автопереход на следующий шаг по окончании видео</string>
     <string name="setting_autoplay_short">Автопереход на следующий шаг</string>
