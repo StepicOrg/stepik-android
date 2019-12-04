@@ -33,12 +33,8 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
-import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
-import org.stepic.droid.features.achievements.presenters.AchievementsView
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
-import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
-import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.presentation.achievement.AchievementsPresenter
+import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
@@ -62,7 +58,6 @@ import javax.inject.Inject
 class   ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView,
-        AchievementsView,
         TimeIntervalPickerDialogFragment.Companion.Callback{
 
     companion object {
@@ -81,9 +76,6 @@ class   ProfileFragment : FragmentBase(),
 
     @Inject
     lateinit var streakPresenter: StreakPresenter
-
-    @Inject
-    lateinit var achievementsPresenter: AchievementsPresenter
 
     private var userId: Long by argument()
     private var localUserViewModel: UserViewModel? = null
@@ -128,15 +120,11 @@ class   ProfileFragment : FragmentBase(),
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
-        achievementsTilesContainer.adapter = AchievementsTileAdapter().apply { onAchievementItemClick = {
-            AchievementDetailsDialog.newInstance(it, localUserViewModel?.isMyProfile ?: false).show(childFragmentManager, AchievementDetailsDialog.TAG)
-        }}
         achievementsTilesContainer.isNestedScrollingEnabled = false
         initAchievementsPlaceholders()
 
         profilePresenter.attachView(this)
         streakPresenter.attachView(this)
-        achievementsPresenter.attachView(this)
         profilePresenter.initProfile(userId)
 
         profileImage.setOnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_IMAGE) }
@@ -165,7 +153,6 @@ class   ProfileFragment : FragmentBase(),
         shortBioSecondText.textView.textSize = 14f
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
 
-        achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
 
         certificatesTitleContainer.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
@@ -178,7 +165,6 @@ class   ProfileFragment : FragmentBase(),
         maxStreakValue.setOnClickListener(null)
         profileImage.setOnClickListener(null)
         notificationIntervalChooserContainer.setOnClickListener(null)
-        achievementsPresenter.detachView(this)
         streakPresenter.detachView(this)
         profilePresenter.detachView(this)
         shortBioInfoContainer.setOnClickListener(null)
@@ -246,27 +232,27 @@ class   ProfileFragment : FragmentBase(),
         }
     }
 
-    override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
-        achievementsLoadingPlaceholder.isVisible = false
-        achievementsLoadingError.isVisible = false
-        achievementsTilesContainer.isVisible = true
-        achievementsContainer.isVisible = true
-    }
-
-    override fun onAchievementsLoadingError() {
-        achievementsContainer.isVisible = true
-        achievementsLoadingPlaceholder.isVisible = false
-        achievementsLoadingError.isVisible = true
-        achievementsTilesContainer.isVisible = false
-    }
-
-    override fun onAchievementsLoading() {
-        achievementsContainer.isVisible = true
-        achievementsLoadingPlaceholder.isVisible = true
-        achievementsLoadingError.isVisible = false
-        achievementsTilesContainer.isVisible = false
-    }
+//    override fun showAchievements(achievements: List<AchievementFlatItem>) {
+//        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
+//        achievementsLoadingPlaceholder.isVisible = false
+//        achievementsLoadingError.isVisible = false
+//        achievementsTilesContainer.isVisible = true
+//        achievementsContainer.isVisible = true
+//    }
+//
+//    override fun onAchievementsLoadingError() {
+//        achievementsContainer.isVisible = true
+//        achievementsLoadingPlaceholder.isVisible = false
+//        achievementsLoadingError.isVisible = true
+//        achievementsTilesContainer.isVisible = false
+//    }
+//
+//    override fun onAchievementsLoading() {
+//        achievementsContainer.isVisible = true
+//        achievementsLoadingPlaceholder.isVisible = true
+//        achievementsLoadingError.isVisible = false
+//        achievementsTilesContainer.isVisible = false
+//    }
 
     /**
      * This method is invoked only for My Profile
@@ -321,7 +307,7 @@ class   ProfileFragment : FragmentBase(),
         }
 
         if (!userViewModel.isPrivate && !userViewModel.isOrganization) {
-            achievementsPresenter.showAchievementsForUser(userViewModel.id, MAX_ACHIEVEMENTS_TO_DISPLAY)
+//            achievementsPresenter.showAchievementsForUser(userViewModel.id, MAX_ACHIEVEMENTS_TO_DISPLAY)
             certificatesTitleContainer.visibility = View.VISIBLE
         }
 

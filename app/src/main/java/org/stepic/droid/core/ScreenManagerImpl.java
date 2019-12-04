@@ -30,7 +30,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.CoursesCarouselInfo;

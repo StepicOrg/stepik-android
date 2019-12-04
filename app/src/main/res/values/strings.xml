@@ -825,4 +825,6 @@
     <string name="profile_stat_certificates">issued</string>
     <string name="profile_stat_courses">published</string>
     <string name="profile_stat_top">" %d | Top %d"</string>
+
+    <string name="profile_detail_title">Details</string>
 </resources>

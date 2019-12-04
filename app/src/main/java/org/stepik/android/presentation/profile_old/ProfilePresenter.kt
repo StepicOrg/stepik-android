@@ -6,7 +6,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.features.achievements.presenters.AchievementsView
+import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
@@ -123,7 +123,7 @@ constructor(
                 .subscribeBy({
                     achievementsState = AchievementsView.State.Error
                 }) {
-                    achievementsState = AchievementsView.State.AchievementsLoaded(it)
+                    achievementsState = AchievementsView.State.AchievementsLoaded(it, false)
                 }
         } else {
             setViewState(achievementsState)
