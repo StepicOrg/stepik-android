@@ -43,6 +43,7 @@ constructor(
 
     override fun setUserId(userId: String) {
         firebaseAnalytics.setUserId(userId)
+        Crashlytics.setUserIdentifier(userId)
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STEPIK_ID, userId))
     }
 
@@ -68,6 +69,7 @@ constructor(
             }
         }
         amplitude.logEvent(eventName, properties)
+        Crashlytics.log("$eventName=$params")
     }
 
     override fun setUserProperty(name: String, value: String) =
