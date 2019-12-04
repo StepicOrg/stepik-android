@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.profile_old
 
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.model.UserViewModel
 
 interface ProfileView {
@@ -16,7 +16,7 @@ interface ProfileView {
     fun setState(state: State)
 
     // Achievements related
-    fun showAchievements(achievements: List<AchievementFlatItem>)
+    fun showAchievements(achievements: List<AchievementItem>)
     fun onAchievementsLoadingError()
     fun onAchievementsLoading()
 

@@ -12,6 +12,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.profile.ProfilePresenter
+import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
 import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
 
 @Module
@@ -28,6 +29,11 @@ abstract class ProfileModule {
     @IntoMap
     @ViewModelKey(ProfileDetailPresenter::class)
     internal abstract fun bindProfileDetailPresenter(profileDetailPresenter: ProfileDetailPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProfileAchievementsPresenter::class)
+    internal abstract fun bindAchievementsPresenter(profileAchievementsPresenter: ProfileAchievementsPresenter): ViewModel
 
     @Module
     companion object {

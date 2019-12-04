@@ -214,7 +214,7 @@
             android:theme="@style/Adaptive.White" />
 
         <activity
-            android:name=".features.achievements.ui.activity.AchievementsListActivity" />
+            android:name="org.stepik.android.view.achievement.ui.activity.AchievementsListActivity" />
 
         <activity
             android:name=".features.stories.ui.activity.StoriesActivity"
