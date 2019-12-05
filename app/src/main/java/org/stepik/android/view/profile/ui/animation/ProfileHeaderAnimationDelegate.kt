@@ -19,6 +19,11 @@ class ProfileHeaderAnimationDelegate(
 
     private val onMenuColorChanged: (ColorStateList) -> Unit
 ) {
+    companion object {
+        private const val MASK_OPACITY = 0xFF
+        private const val MASK_NO_OPACITY = 0x00FFFFFF
+    }
+
     private val profileCover = view.profileCover
     private val profileImage = view.profileImage
 
@@ -35,11 +40,11 @@ class ProfileHeaderAnimationDelegate(
         val toolbarHeight = appbar.height
         val headerHeight =  header.height
 
-        val coverScrollPercent = ((scrollY + 1).toFloat() safeDiv (coverHeight - toolbarHeight).coerceAtLeast(1).toFloat())
+        val coverScrollPercent = ((scrollY + 1f) / (coverHeight - toolbarHeight).coerceAtLeast(1))
             .coerceIn(0f, 1f)
 
-        val toolbarBackgroundOpacity = (coverScrollPercent * 0xFF).toInt().shl(24)
-        val toolbarBackground = toolbarBackgroundOpacity or (0x00FFFFFF and colorStart)
+        val toolbarBackgroundOpacity = (coverScrollPercent * MASK_OPACITY).toInt() shl 24
+        val toolbarBackground = toolbarBackgroundOpacity or (MASK_NO_OPACITY and colorStart)
         appbar.setBackgroundColor(toolbarBackground)
 
         val menuColor = argbEvaluator.evaluate(coverScrollPercent, colorStart, colorEnd) as Int
