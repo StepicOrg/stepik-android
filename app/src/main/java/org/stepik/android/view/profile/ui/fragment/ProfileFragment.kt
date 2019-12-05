@@ -1,5 +1,6 @@
 package org.stepik.android.view.profile.ui.fragment
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -12,9 +13,12 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
@@ -41,12 +45,12 @@ import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.profile.ui.activity.ProfileActivity
+import org.stepik.android.view.profile.ui.animation.ProfileHeaderAnimationDelegate
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
-import kotlin.math.min
 
 class ProfileFragment : Fragment(), ProfileView {
     companion object {
@@ -78,6 +82,7 @@ class ProfileFragment : Fragment(), ProfileView {
     private lateinit var profilePresenter: ProfilePresenter
 
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileView.State>
+    private lateinit var headerAnimationDelegate: ProfileHeaderAnimationDelegate
 
     private var shareMenuItem: MenuItem? = null
     private var isShareMenuItemVisible: Boolean = false
@@ -93,6 +98,15 @@ class ProfileFragment : Fragment(), ProfileView {
             editMenuItem?.isVisible = value
         }
 
+    private var menuTintStateList: ColorStateList = ColorStateList.valueOf(0x0)
+        set(value) {
+            field = value
+
+            toolbar?.navigationIcon?.let { DrawableCompat.setTintList(it, value) }
+            editMenuItem?.let { MenuItemCompat.setIconTintList(it, value) }
+            shareMenuItem?.let { MenuItemCompat.setIconTintList(it, value) }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -102,6 +116,13 @@ class ProfileFragment : Fragment(), ProfileView {
             .of(this, viewModelFactory)
             .get(ProfilePresenter::class.java)
         profilePresenter.onData(userId)
+    }
+
+    private fun injectComponent() {
+        profileComponent = App
+            .componentManager()
+            .profileComponent(userId)
+        profileComponent.inject(this)
     }
 
     override fun onCreateView(
@@ -129,22 +150,28 @@ class ProfileFragment : Fragment(), ProfileView {
             }
 
         ViewCompat.setElevation(header, resources.getDimension(R.dimen.profile_header_elevation))
-        toolbarSeparator.isVisible = false
+        toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }
 
-        scrollContainer.setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, _: Int ->
-            ViewCompat.setElevation(appbar, if (scrollY > header.height) ViewCompat.getElevation(header) else 0f)
+        headerAnimationDelegate =
+            ProfileHeaderAnimationDelegate(
+                view,
+                colorStart = ContextCompat.getColor(requireContext(), R.color.white),
+                colorEnd = ContextCompat.getColor(requireContext(), R.color.new_accent_color)
+            ) { menuTintStateList = it }
 
-            val scroll = min(toolbar.height, scrollY)
-            toolbarTitle.translationY = toolbar.height.toFloat() - scroll
-
-            toolbarSeparator.isVisible = scrollY in 1 until header.height
-        }
+        scrollContainer
+            .setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, _: Int ->
+                headerAnimationDelegate.onScroll(scrollY)
+            }
+        view.doOnNextLayout { headerAnimationDelegate.onScroll(scrollContainer.scrollY) }
 
         tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
         authAction.setOnClickListener { screenManager.showLaunchScreen(context) }
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
+                add(R.id.container, ProfileDetailFragment.newInstance(userId))
+                add(R.id.container, ProfileDetailFragment.newInstance(userId))
                 add(R.id.container, ProfileDetailFragment.newInstance(userId))
                 add(R.id.container, ProfileAchievementsFragment.newInstance(userId))
             }
@@ -155,21 +182,16 @@ class ProfileFragment : Fragment(), ProfileView {
         }
     }
 
-    private fun injectComponent() {
-        profileComponent = App
-            .componentManager()
-            .profileComponent(userId)
-        profileComponent.inject(this)
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.profile_menu, menu)
 
         editMenuItem = menu.findItem(R.id.menu_item_edit)
         editMenuItem?.isVisible = isEditMenuItemVisible
+        editMenuItem?.let { MenuItemCompat.setIconTintList(it, menuTintStateList) }
 
         shareMenuItem = menu.findItem(R.id.menu_item_share)
         shareMenuItem?.isVisible = isShareMenuItemVisible
+        shareMenuItem?.let { MenuItemCompat.setIconTintList(it, menuTintStateList) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -222,6 +244,16 @@ class ProfileFragment : Fragment(), ProfileView {
                     isShareMenuItemVisible = true
 
                     setProfileStats(user)
+
+                    profileCover.isVisible = !user.cover.isNullOrEmpty()
+                    Glide
+                        .with(requireContext())
+                        .asBitmap()
+                        .centerCrop()
+                        .load(user.cover)
+                        .into(profileCover)
+
+                    view?.doOnNextLayout { headerAnimationDelegate.onScroll(scrollContainer.scrollY) }
                 }
             }
 
