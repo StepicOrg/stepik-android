@@ -2,8 +2,6 @@ package org.stepik.android.view.profile.ui.fragment
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -12,10 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.text.bold
-import androidx.core.text.buildSpannedString
 import androidx.core.view.MenuItemCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.doOnNextLayout
@@ -36,16 +31,15 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
-import org.stepic.droid.ui.util.hideAllChildren
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.commitNow
 import org.stepik.android.model.user.User
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
-import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.profile.ui.activity.ProfileActivity
 import org.stepik.android.view.profile.ui.animation.ProfileHeaderAnimationDelegate
+import org.stepik.android.view.profile.ui.delegate.ProfileStatsDelegate
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -82,6 +76,8 @@ class ProfileFragment : Fragment(), ProfileView {
     private lateinit var profilePresenter: ProfilePresenter
 
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileView.State>
+
+    private lateinit var profileStatsDelegate: ProfileStatsDelegate
     private lateinit var headerAnimationDelegate: ProfileHeaderAnimationDelegate
 
     private var shareMenuItem: MenuItem? = null
@@ -148,6 +144,8 @@ class ProfileFragment : Fragment(), ProfileView {
                 setDisplayHomeAsUpEnabled(activity is CloseButtonInToolbar)
                 setDisplayShowTitleEnabled(false)
             }
+
+        profileStatsDelegate = ProfileStatsDelegate(view)
 
         ViewCompat.setElevation(header, resources.getDimension(R.dimen.profile_header_elevation))
         toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }
@@ -243,7 +241,7 @@ class ProfileFragment : Fragment(), ProfileView {
                     isEditMenuItemVisible = isCurrentUser
                     isShareMenuItemVisible = true
 
-                    setProfileStats(user)
+                    profileStatsDelegate.setProfileStats(user)
 
                     profileCover.isVisible = !user.cover.isNullOrEmpty()
                     Glide
@@ -264,47 +262,6 @@ class ProfileFragment : Fragment(), ProfileView {
                 isEditMenuItemVisible = false
                 isShareMenuItemVisible = false
             }
-        }
-    }
-
-    private fun setProfileStats(user: User) {
-        profileStats.hideAllChildren()
-        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(requireContext(), R.font.roboto_bold))
-
-        if (user.isOrganization) {
-            val certificatesIssued = resources
-                .getQuantityString(R.plurals.certificates_issued, user.issuedCertificatesCount.toInt(), user.issuedCertificatesCount)
-                .let(::SpannableString)
-                .apply {
-                    setSpan(typefaceSpan, 0, user.issuedCertificatesCount.toString().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                }
-
-            profileCertificatesIssued.text = certificatesIssued
-            profileCertificatesIssued.isVisible = true
-
-            val coursesPublished = resources
-                .getQuantityString(R.plurals.courses_published, user.createdCoursesCount.toInt(), user.createdCoursesCount)
-                .let(::SpannableString)
-                .apply {
-                    setSpan(typefaceSpan, 0, user.createdCoursesCount.toString().length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-                }
-
-            profileCoursesPublished.text = coursesPublished
-            profileCoursesPublished.isVisible = true
-        } else {
-            profileKnowledgeRank.text =
-                buildSpannedString {
-                    append(getString(R.string.profile_stat_knowledge))
-                    bold { append(getString(R.string.profile_stat_top, user.knowledge, user.knowledgeRank)) }
-                }
-            profileKnowledgeRank.isVisible = true
-
-            profileReputationRank.text =
-                buildSpannedString {
-                    append(getString(R.string.profile_stat_reputation))
-                    bold { append(getString(R.string.profile_stat_top, user.reputation, user.reputationRank)) }
-                }
-            profileReputationRank.isVisible = true
         }
     }
 

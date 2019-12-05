@@ -8,7 +8,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.header_profile.view.*
-import org.stepic.droid.util.safeDiv
 
 class ProfileHeaderAnimationDelegate(
     view: View,
