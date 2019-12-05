@@ -16,6 +16,11 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 class ProfileStatsDelegate(
     view: View
 ) {
+    companion object {
+        private const val MIN_REPUTATION_RANK = 1000
+        private const val MIN_KNOWLEDGE = 10
+    }
+
     private val context = view.context
     private val resources = context.resources
 
@@ -51,19 +56,23 @@ class ProfileStatsDelegate(
             profileCoursesPublished.text = coursesPublished
             profileCoursesPublished.isVisible = true
         } else {
-            profileKnowledgeRank.text =
-                buildSpannedString {
-                    append(context.getString(R.string.profile_stat_knowledge))
-                    bold { append(context.getString(R.string.profile_stat_top, user.knowledge, user.knowledgeRank)) }
-                }
-            profileKnowledgeRank.isVisible = true
+            if (user.knowledge > MIN_KNOWLEDGE) {
+                profileKnowledgeRank.text =
+                    buildSpannedString {
+                        append(context.getString(R.string.profile_stat_knowledge))
+                        bold { append(context.getString(R.string.profile_stat_top, user.knowledge, user.knowledgeRank)) }
+                    }
+                profileKnowledgeRank.isVisible = true
+            }
 
-            profileReputationRank.text =
-                buildSpannedString {
-                    append(context.getString(R.string.profile_stat_reputation))
-                    bold { append(context.getString(R.string.profile_stat_top, user.reputation, user.reputationRank)) }
-                }
-            profileReputationRank.isVisible = true
+            if (user.reputationRank < MIN_REPUTATION_RANK) {
+                profileReputationRank.text =
+                    buildSpannedString {
+                        append(context.getString(R.string.profile_stat_reputation))
+                        bold { append(context.getString(R.string.profile_stat_top, user.reputation, user.reputationRank)) }
+                    }
+                profileReputationRank.isVisible = true
+            }
         }
     }
 }
