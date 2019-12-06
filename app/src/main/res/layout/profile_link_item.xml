@@ -7,8 +7,12 @@
     android:drawableLeft="@drawable/ic_profile_twitter"
     android:drawableStart="@drawable/ic_profile_twitter"
     android:drawablePadding="8dp"
-    android:layout_marginBottom="14dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
     android:textSize="14sp"
     android:textColor="@color/violet1"
     app:fontFamily="@font/roboto_medium"
+    android:background="?selectableItemBackground"
     android:letterSpacing="0.02" />
