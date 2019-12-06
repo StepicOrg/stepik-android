@@ -831,5 +831,5 @@
     <string name="profile_activities_current_streak_start">Solve today to start a streak</string>
     <string name="profile_activities_current_streak_continue">Solve today to continue the streak</string>
     <string name="profile_activities_current_streak_active">You’re on a streak</string>
-    <string name="profile_activities_max_streak">Max streak: %s</string>
+    <string name="profile_activities_max_streak">Max streak</string>
 </resources>

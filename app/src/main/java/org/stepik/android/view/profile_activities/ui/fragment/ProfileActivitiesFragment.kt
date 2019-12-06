@@ -1,9 +1,12 @@
 package org.stepik.android.view.profile_activities.ui.fragment
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
@@ -90,12 +93,37 @@ class ProfileActivitiesFragment : Fragment(), ProfileActivitiesView {
     override fun setState(state: ProfileActivitiesView.State) {
         viewStateDelegate.switchState(state)
 
-        when (state) {
+        if (state is ProfileActivitiesView.State.Content) {
+            with(state.profileActivitiesData) {
+                val tintColor =
+                    if (isSolvedToday) {
+                        R.color.green03
+                    } else {
+                        R.color.yellow1
+                    }
+                TextViewCompat.setCompoundDrawableTintList(currentStreak, ColorStateList.valueOf(tintColor))
 
+                currentStreakCount.text = streak
+                    .takeIf { it > 0 }
+                    ?.toString()
+                    .orEmpty()
+
+                @StringRes
+                val currentStreakRes =
+                    when {
+                        isSolvedToday ->
+                            R.string.profile_activities_current_streak_active
+
+                        streak > 0 ->
+                            R.string.profile_activities_current_streak_continue
+
+                        else ->
+                            R.string.profile_activities_current_streak_start
+                    }
+                currentStreak.setText(currentStreakRes)
+
+                maxStreakCount.text = maxStreak.toString()
+            }
         }
-    }
-
-    override fun showNetworkError() {
-
     }
 }

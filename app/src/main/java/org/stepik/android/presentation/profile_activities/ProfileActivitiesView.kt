@@ -15,5 +15,4 @@ interface ProfileActivitiesView {
     }
 
     fun setState(state: State)
-    fun showNetworkError()
 }

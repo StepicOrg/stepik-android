@@ -797,5 +797,5 @@
     <string name="profile_activities_current_streak_start">Начните учиться сегодня</string>
     <string name="profile_activities_current_streak_continue">Решайте сегодня, чтобы продолжить серию</string>
     <string name="profile_activities_current_streak_active">Текущая серия</string>
-    <string name="profile_activities_max_streak">Максимальная серия: %s</string>
+    <string name="profile_activities_max_streak">Максимальная серия</string>
 </resources>

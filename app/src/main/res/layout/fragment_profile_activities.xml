@@ -96,6 +96,7 @@
             android:textColor="@color/new_accent_color"
             android:ellipsize="end"
             app:fontFamily="@font/roboto_light"
+            android:text="@string/profile_activities_max_streak"
 
             app:layout_constraintTop_toBottomOf="@id/currentStreak"
             app:layout_constraintStart_toStartOf="parent"
