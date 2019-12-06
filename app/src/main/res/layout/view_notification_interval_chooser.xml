@@ -5,16 +5,14 @@
     android:id="@+id/notificationIntervalChooserContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:foreground="@drawable/non_radius_foreground"
-    android:visibility="gone"
     tools:visibility="visible">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/notificationIntervalTitle"
             app:fontFamily="@font/roboto_light"
             android:layout_width="wrap_content"
@@ -22,9 +20,9 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:paddingBottom="4dp"
-            android:paddingLeft="@dimen/left_right_margin_in_profile"
-            android:paddingRight="@dimen/left_right_margin_in_profile"
-            android:paddingTop="@dimen/guideline_standard_padding"
+            android:paddingStart="@dimen/profile_block_margin"
+            android:paddingLeft="@dimen/profile_block_margin"
+            android:paddingTop="8dp"
             android:text="@string/notification_time"
             android:textSize="@dimen/text_header"
             tools:ignore="MissingPrefix"
@@ -32,31 +30,33 @@
 
 
         <ImageView
-            android:id="@+id/notification_arrow_image"
+            android:id="@+id/notificationArrowImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="24dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
             android:clickable="false"
-            android:contentDescription=""
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:src="@drawable/ic_nav_arrow_right"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/notificationTimeZoneInfo"
             app:fontFamily="@font/roboto_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/notificationIntervalTitle"
             android:layout_marginBottom="16dp"
-            android:layout_toLeftOf="@id/notification_arrow_image"
+            android:layout_toStartOf="@id/notificationArrowImage"
+            android:layout_toLeftOf="@id/notificationArrowImage"
             android:paddingEnd="@dimen/guideline_standard_padding"
-            android:paddingLeft="@dimen/left_right_margin_in_profile"
+            android:paddingLeft="@dimen/profile_block_margin"
             android:paddingRight="@dimen/guideline_standard_padding"
-            android:paddingStart="@dimen/left_right_margin_in_profile"
-            android:textSize="@dimen/text_height"
+            android:paddingStart="@dimen/profile_block_margin"
+            android:textSize="12sp"
             tools:ignore="MissingPrefix"
             tools:text="Рекорды обновляются"/>
     </RelativeLayout>

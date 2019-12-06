@@ -294,7 +294,7 @@
     </plurals>
     <string name="choose_notification_time_interval">Change notification interval</string>
     <string name="notification_time">Notification time: %s</string>
-    <string name="notification_about_learning">Notifications about learning</string>
+    <string name="notification_about_learning">Learning notifications enabled</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
     <string name="streak_description_not_positive">Correct! Solve assignments every day to improve
         your record. You can also turn on reminders!
@@ -827,4 +827,5 @@
 
     <string name="profile_detail_title">Details</string>
     <string name="profile_external_links_title">External links</string>
+    <string name="profile_notifcation_title">Notifications</string>
 </resources>
