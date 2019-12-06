@@ -185,6 +185,12 @@ class ProfileFragment : Fragment(), ProfileView {
                 true
             }
 
+            R.id.menu_item_settings -> {
+                analytic.reportEvent(Analytic.Screens.USER_OPEN_SETTINGS)
+                screenManager.showSettings(activity)
+                true
+            }
+
             else ->
                 super.onOptionsItemSelected(item)
         }
