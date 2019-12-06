@@ -704,6 +704,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void openSocialMediaLink(Context context, String link) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        context.startActivity(browserIntent);
+    }
+
+    @Override
     public void openSocialMediaLink(Context context, SocialMedia socialLink) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(socialLink.getLink()));
         context.startActivity(browserIntent);

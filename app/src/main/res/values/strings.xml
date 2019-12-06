@@ -826,4 +826,5 @@
     <string name="profile_stat_top">" %d | Top %d"</string>
 
     <string name="profile_detail_title">Details</string>
+    <string name="profile_external_links_title">External links</string>
 </resources>

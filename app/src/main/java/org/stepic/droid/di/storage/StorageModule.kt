@@ -45,13 +45,14 @@ import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
+import org.stepik.android.cache.discussion_thread.dao.DiscussionThreadDaoImpl
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.download.dao.DownloadedCoursesDaoImpl
-import org.stepik.android.cache.discussion_thread.dao.DiscussionThreadDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDaoImpl
+import org.stepik.android.cache.social_profile.dao.SocialProfileDaoImpl
 import org.stepik.android.cache.submission.dao.SubmissionDaoImpl
 import org.stepik.android.cache.user.dao.UserDaoImpl
 import org.stepik.android.cache.video.dao.VideoDao
@@ -71,6 +72,7 @@ import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
+import org.stepik.android.model.SocialProfile
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
@@ -214,11 +216,15 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun bindAttmptDao(attemptDaoImpl: AttemptDaoImpl): IDao<Attempt>
+    internal abstract fun bindAttemptDao(attemptDaoImpl: AttemptDaoImpl): IDao<Attempt>
 
     @StorageSingleton
     @Binds
     internal abstract fun bindDownloadeCoursesDao(downloadedCoursesDaoImpl: DownloadedCoursesDaoImpl): DownloadedCoursesDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindSocialProfileDao(socialProfileDaoImpl: SocialProfileDaoImpl): IDao<SocialProfile>
 
     @Module
     companion object {

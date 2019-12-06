@@ -153,6 +153,7 @@ public interface ScreenManager {
 
     void openTextFeedBack(Context context, SupportEmailData supportEmailData);
 
+    void openSocialMediaLink(Context context, String link);
     void openSocialMediaLink(Context context, SocialMedia socialLink);
 
     void loginWithSocial(FragmentActivity activity, ISocialType type);

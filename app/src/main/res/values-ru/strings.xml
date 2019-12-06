@@ -792,4 +792,5 @@
     <string name="profile_stat_top">" %d | Топ %d"</string>
 
     <string name="profile_detail_title">О себе</string>
+    <string name="profile_external_links_title">Ссылки</string>
 </resources>

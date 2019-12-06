@@ -42,6 +42,7 @@ import org.stepik.android.view.profile.ui.animation.ProfileHeaderAnimationDelega
 import org.stepik.android.view.profile.ui.delegate.ProfileStatsDelegate
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
+import org.stepik.android.view.profile_links.ui.fragment.ProfileLinksFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -168,8 +169,9 @@ class ProfileFragment : Fragment(), ProfileView {
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
-                add(R.id.container, ProfileAchievementsFragment.newInstance(userId))
                 add(R.id.container, ProfileDetailFragment.newInstance(userId))
+                add(R.id.container, ProfileAchievementsFragment.newInstance(userId))
+                add(R.id.container, ProfileLinksFragment.newInstance(userId))
             }
         }
 
