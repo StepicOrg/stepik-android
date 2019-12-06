@@ -49,7 +49,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/notificationIntervalTitle"
-            android:layout_marginBottom="16dp"
             android:layout_toStartOf="@id/notificationArrowImage"
             android:layout_toLeftOf="@id/notificationArrowImage"
             android:paddingEnd="@dimen/guideline_standard_padding"

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -14,7 +16,8 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.collapse
+import org.stepic.droid.ui.util.expand
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.profile_notification.ProfileNotificationPresenter
@@ -73,6 +76,8 @@ class ProfileNotificationFragment : Fragment(), ProfileNotificationView, TimeInt
             dialog.setTargetFragment(this@ProfileNotificationFragment, 0)
             dialog.showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
         }
+
+        view.isVisible = false
     }
 
     private fun injectComponent() {
@@ -98,8 +103,6 @@ class ProfileNotificationFragment : Fragment(), ProfileNotificationView, TimeInt
             view?.isVisible = true
             initTimezone()
             profileNotificationPresenter.tryShowNotificationSetting()
-        } else {
-            view?.isVisible = false
         }
     }
 
@@ -130,9 +133,33 @@ class ProfileNotificationFragment : Fragment(), ProfileNotificationView, TimeInt
 
     override fun hideNotificationTime(needHide: Boolean) {
         if (needHide) {
-            StepikAnimUtils.collapse(notificationIntervalChooserContainer)
+            collapse(view = notificationIntervalChooserContainer, animationListener = object : Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {}
+                override fun onAnimationEnd(animation: Animation?) {
+                    (notificationStreakSwitch.layoutParams as LinearLayoutCompat.LayoutParams).apply {
+                        setMargins(
+                            resources.getDimension(R.dimen.profile_block_margin).toInt(),
+                            0,
+                            resources.getDimension(R.dimen.profile_block_margin).toInt(),
+                            resources.getDimension(R.dimen.profile_block_vertical_margin).toInt()
+                        )
+                    }
+                }
+                override fun onAnimationStart(animation: Animation?) {}
+            })
         } else {
-            StepikAnimUtils.expand(notificationIntervalChooserContainer)
+            expand(view = notificationIntervalChooserContainer, animationListener = object : Animation.AnimationListener {
+                override fun onAnimationRepeat(animation: Animation?) {}
+                override fun onAnimationEnd(animation: Animation?) {
+                    notificationTimeZoneInfo.setPadding(
+                        resources.getDimension(R.dimen.profile_block_margin).toInt(),
+                        0,
+                        resources.getDimension(R.dimen.profile_block_margin).toInt(),
+                        resources.getDimension(R.dimen.profile_block_vertical_margin).toInt()
+                    )
+                }
+                override fun onAnimationStart(animation: Animation?) {}
+            })
         }
     }
 

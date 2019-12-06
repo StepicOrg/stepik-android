@@ -32,14 +32,14 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
-import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
-import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.collapse
+import org.stepic.droid.ui.util.expand
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -47,6 +47,7 @@ import org.stepic.droid.util.ProfileSettingsHelper
 import org.stepic.droid.util.copyTextToClipboard
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
 import org.stepic.droid.viewmodel.ProfileSettingsViewModel
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.presentation.profile_old.ProfilePresenter
 import org.stepik.android.presentation.profile_old.ProfileView
 import org.stepik.android.view.profile.ui.adapter.ProfileSettingsAdapterDelegate
@@ -193,9 +194,9 @@ class ProfileFragmentOld : Fragment(), ProfileView, TimeIntervalPickerDialogFrag
         val isExpanded = shortBioArrowImageView.isExpanded()
         isShortInfoExpanded = isExpanded
         if (isExpanded) {
-            StepikAnimUtils.expand(detailedInfoContainer)
+            expand(view = detailedInfoContainer)
         } else {
-            StepikAnimUtils.collapse(detailedInfoContainer)
+            collapse(view = detailedInfoContainer)
         }
     }
 
@@ -372,9 +373,9 @@ class ProfileFragmentOld : Fragment(), ProfileView, TimeIntervalPickerDialogFrag
 
     override fun hideNotificationTime(needHide: Boolean) {
         if (needHide) {
-            StepikAnimUtils.collapse(notificationIntervalChooserContainer)
+            collapse(view = notificationIntervalChooserContainer)
         } else {
-            StepikAnimUtils.expand(notificationIntervalChooserContainer)
+            expand(view = notificationIntervalChooserContainer)
         }
     }
 

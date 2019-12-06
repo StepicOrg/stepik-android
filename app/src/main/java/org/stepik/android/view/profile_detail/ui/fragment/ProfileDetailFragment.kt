@@ -11,7 +11,8 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_profile_detail.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.collapse
+import org.stepic.droid.ui.util.expand
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
 import org.stepik.android.presentation.profile_detail.ProfileDetailView
@@ -60,9 +61,9 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
             profileDetailsTitleArrow.changeState()
             val isExpanded = profileDetailsTitleArrow.isExpanded()
             if (isExpanded) {
-                StepikAnimUtils.expand(profileDetails)
+                expand(view = profileDetails)
             } else {
-                StepikAnimUtils.collapse(profileDetails)
+                collapse(view = profileDetails)
             }
         }
 

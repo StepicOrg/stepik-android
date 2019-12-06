@@ -29,6 +29,7 @@
     <include layout="@layout/view_notification_interval_chooser"/>
 
     <View
+        android:id="@+id/profileNotificationDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey04" />

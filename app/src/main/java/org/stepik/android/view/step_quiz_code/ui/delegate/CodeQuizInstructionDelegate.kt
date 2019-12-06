@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.collapse
+import org.stepic.droid.ui.util.expand
 import org.stepik.android.model.Step
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
@@ -45,9 +46,9 @@ class CodeQuizInstructionDelegate(
             stepQuizCodeDetails.setOnClickListener {
                 stepQuizCodeDetailsArrow.changeState()
                 if (stepQuizCodeDetailsArrow.isExpanded()) {
-                    StepikAnimUtils.expand(stepQuizCodeDetailsContent)
+                    expand(view = stepQuizCodeDetailsContent)
                 } else {
-                    StepikAnimUtils.collapse(stepQuizCodeDetailsContent)
+                    collapse(view = stepQuizCodeDetailsContent)
                 }
             }
         } else {
