@@ -37,7 +37,6 @@ class ProfileActivitiesFragment : Fragment(), ProfileActivitiesView {
 
     private lateinit var profileActivitiesPresenter: ProfileActivitiesPresenter
 
-
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileActivitiesView.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {

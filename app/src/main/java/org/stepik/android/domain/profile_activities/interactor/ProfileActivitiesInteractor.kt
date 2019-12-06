@@ -24,7 +24,7 @@ constructor(
         var maxStreak = 0
         var buffer = 0
 
-        for (i in 0 .. userActivity.pins.size) {
+        for (i in 0..userActivity.pins.size) {
             val pin = userActivity.pins.getOrElse(i) { 0 }
             if (pin > 0) {
                 buffer++
