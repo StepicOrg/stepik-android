@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginLeft="@dimen/profile_block_margin"
+    android:layout_marginRight="@dimen/profile_block_margin">
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+
+        android:layout_marginBottom="8dp"/>
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

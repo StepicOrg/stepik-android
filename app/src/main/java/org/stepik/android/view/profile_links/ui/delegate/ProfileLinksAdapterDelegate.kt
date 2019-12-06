@@ -26,7 +26,7 @@ class ProfileLinksAdapterDelegate(
         private val profileLinkTextView = root as AppCompatTextView
 
         init {
-            root.setOnClickListener { onItemClick(itemData?.url?: "") }
+            root.setOnClickListener { onItemClick(itemData?.url ?: "") }
         }
 
         override fun onBind(data: SocialProfile) {

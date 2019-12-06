@@ -15,14 +15,28 @@
         style="@style/ProfileItemHeader"
         android:text="@string/profile_external_links_title"/>
 
+    <include
+        android:id="@+id/profileExternalLinksLoading"
+        layout="@layout/profile_details_loading_view" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profileExternalLinksRecycler"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp" />
 
+    <include
+        android:id="@+id/profileExternalLinksLoadingError"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        layout="@layout/error_no_connection_with_button_small" />
+
     <View
+        android:id="@+id/profileExternalLinksDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey04" />

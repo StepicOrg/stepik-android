@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_links.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -17,9 +18,9 @@ import org.stepik.android.model.SocialProfile
 import org.stepik.android.presentation.profile_links.ProfileLinksPresenter
 import org.stepik.android.presentation.profile_links.ProfileLinksView
 import org.stepik.android.view.profile_links.ui.delegate.ProfileLinksAdapterDelegate
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
-import timber.log.Timber
 import javax.inject.Inject
 
 class ProfileLinksFragment : Fragment(), ProfileLinksView {
@@ -43,6 +44,8 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
 
     private var profileLinksAdapter: DefaultDelegateAdapter<SocialProfile> = DefaultDelegateAdapter()
 
+    private lateinit var viewStateDelegate: ViewStateDelegate<ProfileLinksView.State>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,7 +68,14 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
         inflater.inflate(R.layout.fragment_profile_links, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        view.isVisible = false
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<ProfileLinksView.State.Idle>(view)
+        viewStateDelegate.addState<ProfileLinksView.State.Loading>(view, profileExternalLinksTitle, profileExternalLinksLoading, profileExternalLinksDivider)
+        viewStateDelegate.addState<ProfileLinksView.State.Error>(view, profileExternalLinksLoadingError)
+        viewStateDelegate.addState<ProfileLinksView.State.ProfileLinksLoaded>(view, profileExternalLinksRecycler)
+
+        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+
         with(profileExternalLinksRecycler) {
             adapter = profileLinksAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -73,14 +83,17 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
         setDataToPresenter()
     }
 
-    private fun setDataToPresenter() {
-        profileLinksPresenter.showSocialProfiles()
+    private fun setDataToPresenter(forceUpdate: Boolean = false) {
+        profileLinksPresenter.showSocialProfiles(forceUpdate)
     }
 
     override fun setState(state: ProfileLinksView.State) {
+        if (state is ProfileLinksView.State.Empty) {
+            view?.isVisible = false
+        }
         if (state is ProfileLinksView.State.ProfileLinksLoaded) {
-            Timber.d("Profiles: ${state.profileLinks}")
-            view?.isVisible = true
+            profileExternalLinksLoading.isVisible = false
+            profileExternalLinksRecycler.isVisible = true
             profileLinksAdapter.items = state.profileLinks
         }
     }
