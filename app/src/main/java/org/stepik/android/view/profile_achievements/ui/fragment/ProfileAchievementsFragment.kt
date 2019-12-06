@@ -87,7 +87,8 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<AchievementsView.State.Idle>(view, achievementsLoadingPlaceholder)
+        viewStateDelegate.addState<AchievementsView.State.Idle>()
+        viewStateDelegate.addState<AchievementsView.State.SilentLoading>()
         viewStateDelegate.addState<AchievementsView.State.Loading>(view, achievementsLoadingPlaceholder)
         viewStateDelegate.addState<AchievementsView.State.Error>(view, achievementsLoadingError)
         viewStateDelegate.addState<AchievementsView.State.AchievementsLoaded>(view, achievementsTilesContainer)

@@ -13,3 +13,10 @@ infix fun Float.safeDiv(d: Long): Float =
     } else {
         this / d
     }
+
+infix fun Float.safeDiv(d: Float): Float =
+    if (d == 0f) {
+        0f
+    } else {
+        this / d
+    }
