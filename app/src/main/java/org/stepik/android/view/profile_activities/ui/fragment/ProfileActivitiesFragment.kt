@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
+import kotlinx.android.synthetic.main.fragment_profile_activities.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepik.android.presentation.profile_activities.ProfileActivitiesPresenter
@@ -44,6 +46,12 @@ class ProfileActivitiesFragment : Fragment(), ProfileActivitiesView {
             .get(ProfileActivitiesPresenter::class.java)
     }
 
+    private fun injectComponent() {
+        App.componentManager()
+            .profileComponent(userId)
+            .inject(this)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,13 +60,20 @@ class ProfileActivitiesFragment : Fragment(), ProfileActivitiesView {
         inflater.inflate(R.layout.fragment_profile_activities, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<ProfileActivitiesView.State.Idle>()
+        viewStateDelegate.addState<ProfileActivitiesView.State.SilentLoading>()
+        viewStateDelegate.addState<ProfileActivitiesView.State.Empty>()
+        viewStateDelegate.addState<ProfileActivitiesView.State.Loading>(view, streakLoadingPlaceholder)
+        viewStateDelegate.addState<ProfileActivitiesView.State.Error>(view, streakLoadingError)
+        viewStateDelegate.addState<ProfileActivitiesView.State.Content>(view, streakContainer)
 
+        setDataToPresenter()
+        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
     }
 
-    private fun injectComponent() {
-        App.componentManager()
-            .profileComponent(userId)
-            .inject(this)
+    private fun setDataToPresenter(forceUpdate: Boolean = false) {
+        profileActivitiesPresenter.fetchUserActivities(forceUpdate)
     }
 
     override fun onStart() {
@@ -73,6 +88,8 @@ class ProfileActivitiesFragment : Fragment(), ProfileActivitiesView {
     }
 
     override fun setState(state: ProfileActivitiesView.State) {
+        viewStateDelegate.switchState(state)
+
         when (state) {
 
         }

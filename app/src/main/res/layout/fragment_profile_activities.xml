@@ -18,7 +18,33 @@
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         style="@style/ProfileItemHeader" />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/streakLoadingPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin">
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+
+            android:layout_marginTop="8dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <include
+        android:id="@+id/streakLoadingError"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        layout="@layout/error_no_connection_with_button_small" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/streakContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
