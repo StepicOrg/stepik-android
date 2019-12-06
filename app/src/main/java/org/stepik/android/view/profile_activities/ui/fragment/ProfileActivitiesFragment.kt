@@ -5,8 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
-import androidx.core.widget.TextViewCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
@@ -95,13 +96,16 @@ class ProfileActivitiesFragment : Fragment(), ProfileActivitiesView {
 
         if (state is ProfileActivitiesView.State.Content) {
             with(state.profileActivitiesData) {
-                val tintColor =
+                @ColorRes
+                val streakTintColorRes =
                     if (isSolvedToday) {
-                        R.color.green03
+                        R.color.green01
                     } else {
                         R.color.yellow1
                     }
-                TextViewCompat.setCompoundDrawableTintList(currentStreak, ColorStateList.valueOf(tintColor))
+
+                currentStreak.supportCompoundDrawablesTintList = ColorStateList
+                    .valueOf(ContextCompat.getColor(requireContext(), streakTintColorRes))
 
                 currentStreakCount.text = streak
                     .takeIf { it > 0 }
