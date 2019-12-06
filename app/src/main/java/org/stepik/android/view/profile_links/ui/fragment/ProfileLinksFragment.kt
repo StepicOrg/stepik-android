@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -69,10 +68,11 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
-        viewStateDelegate.addState<ProfileLinksView.State.Idle>(view)
-        viewStateDelegate.addState<ProfileLinksView.State.Loading>(view, profileExternalLinksTitle, profileExternalLinksLoading, profileExternalLinksDivider)
+        viewStateDelegate.addState<ProfileLinksView.State.Idle>()
+        viewStateDelegate.addState<ProfileLinksView.State.Loading>(view, profileExternalLinksLoading)
         viewStateDelegate.addState<ProfileLinksView.State.Error>(view, profileExternalLinksLoadingError)
         viewStateDelegate.addState<ProfileLinksView.State.ProfileLinksLoaded>(view, profileExternalLinksRecycler)
+        viewStateDelegate.addState<ProfileLinksView.State.Empty>()
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
@@ -88,12 +88,8 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
     }
 
     override fun setState(state: ProfileLinksView.State) {
-        if (state is ProfileLinksView.State.Empty) {
-            view?.isVisible = false
-        }
+        viewStateDelegate.switchState(state)
         if (state is ProfileLinksView.State.ProfileLinksLoaded) {
-            profileExternalLinksLoading.isVisible = false
-            profileExternalLinksRecycler.isVisible = true
             profileLinksAdapter.items = state.profileLinks
         }
     }

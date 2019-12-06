@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -17,6 +18,7 @@
 
     <include
         android:id="@+id/profileExternalLinksLoading"
+        android:visibility="gone"
         layout="@layout/profile_details_loading_view" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -29,14 +31,12 @@
 
     <include
         android:id="@+id/profileExternalLinksLoadingError"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         layout="@layout/error_no_connection_with_button_small" />
 
     <View
-        android:id="@+id/profileExternalLinksDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/grey04" />

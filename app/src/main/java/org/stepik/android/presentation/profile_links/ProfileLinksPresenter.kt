@@ -28,6 +28,11 @@ constructor(
             view?.setState(value)
         }
 
+    override fun attachView(view: ProfileLinksView) {
+        super.attachView(view)
+        view.setState(state)
+    }
+
     fun showSocialProfiles(forceUpdate: Boolean = false) {
         if (state == ProfileLinksView.State.Idle || (forceUpdate && state == ProfileLinksView.State.Error)) {
             state = ProfileLinksView.State.Loading
@@ -47,6 +52,9 @@ constructor(
                         } else {
                             ProfileLinksView.State.Empty
                         }
+                    },
+                    onComplete = {
+                        state = ProfileLinksView.State.Empty
                     },
                     onError = {
                         state = ProfileLinksView.State.Error

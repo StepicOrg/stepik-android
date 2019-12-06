@@ -13,6 +13,13 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class ProfileLinksAdapterDelegate(
     private val onItemClick: (String) -> Unit
 ) : AdapterDelegate<SocialProfile, DelegateViewHolder<SocialProfile>>() {
+    companion object {
+        private const val FACEBOOK = "facebook"
+        private const val INSTAGRAM = "instagram"
+        private const val TWITTER = "twitter"
+        private const val VK = "vk"
+    }
+
     override fun isForViewType(position: Int, data: SocialProfile): Boolean =
         true
 
@@ -38,13 +45,13 @@ class ProfileLinksAdapterDelegate(
 
     private fun resolveProfileLinkDrawable(provider: String): Int =
         when (provider) {
-            "facebook" ->
+            FACEBOOK ->
                 R.drawable.ic_profile_fb
-            "instagram" ->
+            INSTAGRAM ->
                 R.drawable.ic_profile_instagram
-            "twitter" ->
+            TWITTER ->
                 R.drawable.ic_profile_twitter
-            "vk" ->
+            VK ->
                 R.drawable.ic_profile_vk
             else ->
                 R.drawable.ic_profile_web
