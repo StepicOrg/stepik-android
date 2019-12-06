@@ -43,6 +43,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.Course
 import org.stepik.android.model.user.Profile
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -300,7 +301,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, CatalogFragment.Companion::newInstance)
             }
             R.id.profile -> {
-                getNextFragmentOrNull(currentFragmentTag, org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld::class.java.simpleName, org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld.Companion::newInstance)
+                getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
 //                getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
             }
             R.id.notifications -> {

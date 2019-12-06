@@ -790,4 +790,6 @@
     <string name="profile_stat_certificates">выдано</string>
     <string name="profile_stat_courses">опубликовано</string>
     <string name="profile_stat_top">" %d | Топ %d"</string>
+
+    <string name="profile_detail_title">О себе</string>
 </resources>

@@ -22,9 +22,7 @@ import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsAdapter
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
-import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
+import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.notifications.HackFcmListener
 import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
@@ -61,6 +59,7 @@ import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
@@ -204,6 +203,8 @@ interface AppCoreComponent {
 
     fun submissionComponentBuilder(): SubmissionComponent.Builder
 
+    fun achievementsComponentBuilder(): AchievementsComponent.Builder
+
     fun profileComponentBuilderNew(): org.stepik.android.view.injection.profile.ProfileComponent.Builder
 
     fun socialProfileComponentBuilder(): SocialProfileComponent.Builder
@@ -284,15 +285,8 @@ interface AppCoreComponent {
 
     fun inject(codeEditor: CodeEditor)
 
-
     fun inject(editDeadlinesDialog: EditDeadlinesDialog)
     fun inject(learningRateDialog: LearningRateDialog)
-
-
-    fun inject(achievementsTileAdapter: AchievementsTileAdapter)
-    fun inject(achievementsAdapter: AchievementsAdapter)
-    fun inject(achievementDetailsDialog: AchievementDetailsDialog)
-
 
     fun inject(downloadCompleteService: DownloadCompleteService)
     fun inject(fileTransferService: FileTransferService)

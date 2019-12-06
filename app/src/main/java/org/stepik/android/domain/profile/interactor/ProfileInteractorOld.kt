@@ -4,12 +4,12 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.first
 import org.stepic.droid.util.toMaybe
-import org.stepik.android.domain.achievements.repository.AchievementsRepository
+import org.stepik.android.domain.achievement.repository.AchievementRepository
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
@@ -23,7 +23,7 @@ class ProfileInteractorOld
 constructor(
     private val profileRepository: ProfileRepository,
     private val userRepository: UserRepository,
-    private val achievementsRepository: AchievementsRepository,
+    private val achievementRepository: AchievementRepository,
     private val userActivityRepository: UserActivityRepository,
     private val analytic: Analytic,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
@@ -35,8 +35,8 @@ constructor(
     fun fetchProfile(userId: Long): Single<User> =
         userRepository.getUsers(userId).first()
 
-    fun fetchAchievementsForUser(userId: Long, count: Int = -1): Single<List<AchievementFlatItem>> =
-        achievementsRepository.getAchievements(userId, count)
+    fun fetchAchievementsForUser(userId: Long, count: Int = -1): Single<List<AchievementItem>> =
+        achievementRepository.getAchievements(userId, count)
 
     /**
      * Streak related

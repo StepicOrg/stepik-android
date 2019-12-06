@@ -9,9 +9,11 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepik.android.model.user.User
+import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.profile.ProfilePresenter
+import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
+import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
 
 @Module
 abstract class ProfileModule {
@@ -23,18 +25,28 @@ abstract class ProfileModule {
     @ViewModelKey(ProfilePresenter::class)
     internal abstract fun bindProfilePresenter(profilePresenter: ProfilePresenter): ViewModel
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProfileDetailPresenter::class)
+    internal abstract fun bindProfileDetailPresenter(profileDetailPresenter: ProfileDetailPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProfileAchievementsPresenter::class)
+    internal abstract fun bindAchievementsPresenter(profileAchievementsPresenter: ProfileAchievementsPresenter): ViewModel
+
     @Module
     companion object {
         @Provides
         @JvmStatic
         @ProfileScope
-        fun provideUserSubject(): BehaviorSubject<User> =
+        fun provideUserSubject(): BehaviorSubject<ProfileData> =
             BehaviorSubject.create()
 
         @Provides
         @JvmStatic
         @ProfileScope
-        fun providesUserObservable(subject: BehaviorSubject<User>, @BackgroundScheduler scheduler: Scheduler): Observable<User> =
+        fun providesUserObservable(subject: BehaviorSubject<ProfileData>, @BackgroundScheduler scheduler: Scheduler): Observable<ProfileData> =
             subject.observeOn(scheduler)
     }
 }
