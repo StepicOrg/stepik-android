@@ -17,5 +17,6 @@ object DbStructureSocialProfile {
             "${Columns.USER} LONG," +
             "${Columns.PROVIDER} TEXT," +
             "${Columns.NAME} TEXT," +
-            "${Columns.URL} TEXT"
+            "${Columns.URL} TEXT" +
+        ")"
 }

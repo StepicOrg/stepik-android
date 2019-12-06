@@ -17,5 +17,5 @@ constructor(
         Function<SocialProfilesResponse, List<SocialProfile>>(SocialProfilesResponse::socialProfiles)
 
     override fun getSocialProfiles(vararg socialProfileIds: Long): Single<List<SocialProfile>> =
-        socialProfilesService.getSocialProfiles().map(socialProfileResponseMapper)
+        socialProfilesService.getSocialProfiles(socialProfileIds).map(socialProfileResponseMapper)
 }
