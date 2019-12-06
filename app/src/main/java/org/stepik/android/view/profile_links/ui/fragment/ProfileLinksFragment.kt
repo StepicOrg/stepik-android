@@ -8,10 +8,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.fragment_profile_links.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
+import org.stepik.android.model.SocialProfile
 import org.stepik.android.presentation.profile_links.ProfileLinksPresenter
 import org.stepik.android.presentation.profile_links.ProfileLinksView
+import org.stepik.android.view.profile_links.ui.delegate.ProfileLinksAdapterDelegate
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,9 +34,14 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var screenManager: ScreenManager
+
     private var userId by argument<Long>()
 
     private lateinit var profileLinksPresenter: ProfileLinksPresenter
+
+    private var profileLinksAdapter: DefaultDelegateAdapter<SocialProfile> = DefaultDelegateAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +51,10 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
         profileLinksPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(ProfileLinksPresenter::class.java)
+
+        profileLinksAdapter += ProfileLinksAdapterDelegate(
+            onItemClick = { screenManager.openSocialMediaLink(requireContext(), it) }
+        )
     }
 
     override fun onCreateView(
@@ -51,6 +66,10 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.isVisible = false
+        with(profileExternalLinksRecycler) {
+            adapter = profileLinksAdapter
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        }
         setDataToPresenter()
     }
 
@@ -62,7 +81,7 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
         if (state is ProfileLinksView.State.ProfileLinksLoaded) {
             Timber.d("Profiles: ${state.profileLinks}")
             view?.isVisible = true
-            // TODO Adapter
+            profileLinksAdapter.items = state.profileLinks
         }
     }
 

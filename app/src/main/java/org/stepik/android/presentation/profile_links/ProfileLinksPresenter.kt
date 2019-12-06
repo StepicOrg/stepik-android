@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.domain.social_profile.interactor.SocialProfileInteractor
 import org.stepik.android.presentation.base.PresenterBase
+import timber.log.Timber
 import javax.inject.Inject
 
 class ProfileLinksPresenter
@@ -35,6 +36,7 @@ constructor(
                 .firstElement()
                 .filter { !it.user.isPrivate }
                 .flatMapSingleElement { profileData ->
+                    Timber.d("Ids: ${profileData.user.socialProfiles}")
                     socialProfileInteractor
                         .getSocialProfiles(*profileData.user.socialProfiles.toLongArray())
                 }
