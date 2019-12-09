@@ -1,6 +1,7 @@
 package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
+import org.stepik.android.cache.social_profile.structure.DbStructureSocialProfile
 import org.stepik.android.cache.user.structure.DbStructureUser
 
 object MigrationFrom48To49 : Migration {
@@ -16,5 +17,7 @@ object MigrationFrom48To49 : Migration {
         db.execSQL("ALTER TABLE ${DbStructureUser.TABLE_NAME} ADD COLUMN ${DbStructureUser.Columns.FOLLOWERS_COUNT} LONG")
         db.execSQL("ALTER TABLE ${DbStructureUser.TABLE_NAME} ADD COLUMN ${DbStructureUser.Columns.ISSUED_CERTIFICATES_COUNT} LONG")
         db.execSQL("ALTER TABLE ${DbStructureUser.TABLE_NAME} ADD COLUMN ${DbStructureUser.Columns.IS_GUEST} INTEGER")
+
+        db.execSQL(DbStructureSocialProfile.TABLE_SCHEMA)
     }
 }
