@@ -6,16 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_profile_detail.*
-import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
-import org.stepik.android.presentation.profile_detail.ProfileDetailView
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.collapse
+import org.stepic.droid.ui.util.expand
 import org.stepik.android.domain.profile.model.ProfileData
+import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
+import org.stepik.android.presentation.profile_detail.ProfileDetailView
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
 class ProfileDetailFragment : Fragment(), ProfileDetailView {
@@ -60,9 +61,9 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
             profileDetailsTitleArrow.changeState()
             val isExpanded = profileDetailsTitleArrow.isExpanded()
             if (isExpanded) {
-                StepikAnimUtils.expand(profileDetails)
+                profileDetails.expand()
             } else {
-                StepikAnimUtils.collapse(profileDetails)
+                profileDetails.collapse()
             }
         }
 
@@ -77,7 +78,6 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
 
     override fun onStart() {
         super.onStart()
-
         profileDetailPresenter.attachView(this)
     }
 
