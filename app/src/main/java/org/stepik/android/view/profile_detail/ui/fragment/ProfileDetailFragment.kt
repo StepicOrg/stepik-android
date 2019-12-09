@@ -61,9 +61,9 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
             profileDetailsTitleArrow.changeState()
             val isExpanded = profileDetailsTitleArrow.isExpanded()
             if (isExpanded) {
-                expand(view = profileDetails)
+                profileDetails.expand()
             } else {
-                collapse(view = profileDetails)
+                profileDetails.collapse()
             }
         }
 

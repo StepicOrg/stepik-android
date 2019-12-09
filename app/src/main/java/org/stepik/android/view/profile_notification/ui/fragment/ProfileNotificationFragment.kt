@@ -133,7 +133,7 @@ class ProfileNotificationFragment : Fragment(), ProfileNotificationView, TimeInt
 
     override fun hideNotificationTime(needHide: Boolean) {
         if (needHide) {
-            collapse(view = notificationIntervalChooserContainer, animationListener = object : Animation.AnimationListener {
+            notificationIntervalChooserContainer.collapse(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(animation: Animation?) {}
                 override fun onAnimationEnd(animation: Animation?) {
                     (notificationStreakSwitch.layoutParams as LinearLayoutCompat.LayoutParams).apply {
@@ -148,7 +148,7 @@ class ProfileNotificationFragment : Fragment(), ProfileNotificationView, TimeInt
                 override fun onAnimationStart(animation: Animation?) {}
             })
         } else {
-            expand(view = notificationIntervalChooserContainer, animationListener = object : Animation.AnimationListener {
+            notificationIntervalChooserContainer.expand(object : Animation.AnimationListener {
                 override fun onAnimationRepeat(animation: Animation?) {}
                 override fun onAnimationEnd(animation: Animation?) {
                     notificationTimeZoneInfo.setPadding(

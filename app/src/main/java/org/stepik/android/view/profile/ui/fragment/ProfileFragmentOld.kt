@@ -194,9 +194,9 @@ class ProfileFragmentOld : Fragment(), ProfileView, TimeIntervalPickerDialogFrag
         val isExpanded = shortBioArrowImageView.isExpanded()
         isShortInfoExpanded = isExpanded
         if (isExpanded) {
-            expand(view = detailedInfoContainer)
+            detailedInfoContainer.expand()
         } else {
-            collapse(view = detailedInfoContainer)
+            detailedInfoContainer.collapse()
         }
     }
 
@@ -373,9 +373,9 @@ class ProfileFragmentOld : Fragment(), ProfileView, TimeIntervalPickerDialogFrag
 
     override fun hideNotificationTime(needHide: Boolean) {
         if (needHide) {
-            collapse(view = notificationIntervalChooserContainer)
+            notificationIntervalChooserContainer.collapse()
         } else {
-            expand(view = notificationIntervalChooserContainer)
+            notificationIntervalChooserContainer.expand()
         }
     }
 

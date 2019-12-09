@@ -46,9 +46,9 @@ class CodeQuizInstructionDelegate(
             stepQuizCodeDetails.setOnClickListener {
                 stepQuizCodeDetailsArrow.changeState()
                 if (stepQuizCodeDetailsArrow.isExpanded()) {
-                    expand(view = stepQuizCodeDetailsContent)
+                    stepQuizCodeDetailsContent.expand()
                 } else {
-                    collapse(view = stepQuizCodeDetailsContent)
+                    stepQuizCodeDetailsContent.collapse()
                 }
             }
         } else {
