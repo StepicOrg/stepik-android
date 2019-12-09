@@ -373,7 +373,6 @@ class   ProfileFragment : FragmentBase(),
                 shortBioSecondText.visibility = View.VISIBLE
             }
         }
-        sendScreenOpenEvent(userViewModel)
     }
 
     override fun onInternetFailed() {
@@ -485,19 +484,5 @@ class   ProfileFragment : FragmentBase(),
             requireContext().copyTextToClipboard(textToCopy = textToCopy, toastMessage = getString(R.string.copied_to_clipboard_toast))
             true
         }
-    }
-
-    private fun sendScreenOpenEvent(userViewModel: UserViewModel) {
-        val state = if (userViewModel.isMyProfile) {
-            getString(R.string.profile_self_state)
-        } else {
-            getString(R.string.profile_other_state)
-        }
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Profile.PROFILE_SCREEN_OPENED, mapOf(
-            AmplitudeAnalytic.Profile.Params.STATE to state
-        ))
-        analytic.reportEvent(Analytic.Profile.PROFILE_SCREEN_OPENED, Bundle().apply {
-            putString(Analytic.Profile.Params.STATE, state)
-        })
     }
 }

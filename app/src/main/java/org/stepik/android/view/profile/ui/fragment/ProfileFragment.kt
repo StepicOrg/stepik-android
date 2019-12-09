@@ -264,7 +264,6 @@ class ProfileFragment : Fragment(), ProfileView {
                         .into(profileCover)
 
                     view?.doOnNextLayout { headerAnimationDelegate.onScroll(scrollContainer.scrollY) }
-                    sendScreenOpenEvent(isCurrentUser)
                 }
             }
 
@@ -284,19 +283,5 @@ class ProfileFragment : Fragment(), ProfileView {
 
     override fun shareUser(user: User) {
         startActivity(shareHelper.getIntentForUserSharing(user))
-    }
-
-    private fun sendScreenOpenEvent(isCurrentUser: Boolean) {
-        val state = if (isCurrentUser) {
-            getString(R.string.profile_self_state)
-        } else {
-            getString(R.string.profile_other_state)
-        }
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Profile.PROFILE_SCREEN_OPENED, mapOf(
-            AmplitudeAnalytic.Profile.Params.STATE to state
-        ))
-        analytic.reportEvent(Analytic.Profile.PROFILE_SCREEN_OPENED, Bundle().apply {
-            putString(Analytic.Profile.Params.STATE, state)
-        })
     }
 }
