@@ -12,17 +12,19 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-            <include
-                android:id="@+id/header"
-                layout="@layout/header_profile" />
+                <include
+                    android:id="@+id/header"
+                    layout="@layout/header_profile" />
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
     </androidx.core.widget.NestedScrollView>
 
     <include
