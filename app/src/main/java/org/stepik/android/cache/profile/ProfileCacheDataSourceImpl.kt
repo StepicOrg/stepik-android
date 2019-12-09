@@ -14,12 +14,12 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : ProfileCacheDataSource {
     override fun getProfile(): Maybe<Profile> =
-        sharedPreferenceHelper
-            .profile
-            .toMaybe()
+        Maybe
+            .fromCallable { sharedPreferenceHelper.profile }
 
     override fun saveProfile(profile: Profile): Completable =
-        Completable.fromAction {
-            sharedPreferenceHelper.storeProfile(profile)
-        }
+        Completable
+            .fromAction {
+                sharedPreferenceHelper.storeProfile(profile)
+            }
 }

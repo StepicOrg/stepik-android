@@ -26,6 +26,7 @@ import org.stepik.android.remote.auth.model.OAuthResponse;
 import org.stepik.android.view.injection.qualifiers.AuthLock;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -678,14 +679,14 @@ public class SharedPreferenceHelper {
     public List<EmailAddress> getStoredEmails() {
         String json = getString(PreferenceType.LOGIN, EMAIL_LIST);
         if (json == null) {
-            return null;
+            return Collections.emptyList();
         }
         Gson gson = new GsonBuilder().create();
         List<EmailAddress> result;
         try {
             result = gson.fromJson(json, new TypeToken<List<EmailAddress>>(){}.getType());
         } catch (Exception e) {
-            result = null;
+            result = Collections.emptyList();
         }
         return result;
 
