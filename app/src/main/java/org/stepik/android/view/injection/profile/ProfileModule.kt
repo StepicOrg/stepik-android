@@ -15,6 +15,7 @@ import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
 import org.stepik.android.presentation.profile_activities.ProfileActivitiesPresenter
 import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
+import org.stepik.android.presentation.profile_id.ProfileIdPresenter
 import org.stepik.android.presentation.profile_links.ProfileLinksPresenter
 import org.stepik.android.presentation.profile_notification.ProfileNotificationPresenter
 
@@ -52,6 +53,11 @@ abstract class ProfileModule {
     @IntoMap
     @ViewModelKey(ProfileNotificationPresenter::class)
     internal abstract fun bindProfileNotificationPresenter(profileNotificationPresenter: ProfileNotificationPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProfileIdPresenter::class)
+    internal abstract fun bindProfileIdPresenter(profileIdPresenter: ProfileIdPresenter): ViewModel
 
     @Module
     companion object {
