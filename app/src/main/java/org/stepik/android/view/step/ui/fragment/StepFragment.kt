@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_step.*
 import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.experiments.SolutionStatsSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -33,6 +34,7 @@ import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
+import org.stepik.android.view.step.ui.delegate.StepSolutionStatsDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
@@ -67,11 +69,15 @@ class StepFragment : Fragment(), StepView,
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    lateinit var solutionStatsSplitTest: SolutionStatsSplitTest
+
     private lateinit var stepPresenter: StepPresenter
 
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonData: LessonData by argument()
 
+    private lateinit var stepSolutionStatsDelegate: StepSolutionStatsDelegate
     private lateinit var stepNavigationDelegate: StepNavigationDelegate
     private lateinit var stepDiscussionsDelegate: StepDiscussionsDelegate
 
@@ -99,6 +105,12 @@ class StepFragment : Fragment(), StepView,
         inflater.inflate(R.layout.fragment_step, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        stepSolutionStatsDelegate = StepSolutionStatsDelegate(
+            stepSolutionStats,
+            stepWrapper.step,
+            solutionStatsSplitTest.currentGroup.isStatsVisible && stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+        )
+
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(view) { discussionThread ->

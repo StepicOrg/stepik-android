@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,6 +52,10 @@ class CatalogFragment : FragmentBase(),
         fun newInstance(): FragmentBase = CatalogFragment()
 
         private const val CATALOG_STORIES_KEY = "catalog_stories"
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
+        }
     }
 
     @Inject

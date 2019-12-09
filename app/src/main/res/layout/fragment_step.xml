@@ -46,6 +46,10 @@
                 android:layout_margin="16dp" />
 
             <include
+                android:id="@+id/stepSolutionStats"
+                layout="@layout/view_step_solution_stats" />
+
+            <include
                 android:id="@+id/stepDiscussions"
                 layout="@layout/view_step_discussion" />
 

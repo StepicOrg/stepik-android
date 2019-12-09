@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -32,6 +33,10 @@ class CourseSearchFragment: CourseListFragmentBase() {
             bundle.putString(QUERY_KEY, query)
             fragment.arguments = bundle
             return fragment
+        }
+
+        init {
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
     }
 

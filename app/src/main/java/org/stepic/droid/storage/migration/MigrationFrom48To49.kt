@@ -18,6 +18,8 @@ object MigrationFrom48To49 : Migration {
         db.execSQL("ALTER TABLE ${DbStructureUser.TABLE_NAME} ADD COLUMN ${DbStructureUser.Columns.ISSUED_CERTIFICATES_COUNT} LONG")
         db.execSQL("ALTER TABLE ${DbStructureUser.TABLE_NAME} ADD COLUMN ${DbStructureUser.Columns.IS_GUEST} INTEGER")
 
+        db.execSQL("ALTER TABLE ${DbStructureStep.TABLE_NAME} ADD COLUMN ${DbStructureStep.Column.CORRECT_RATIO} REAL")
+
         db.execSQL(DbStructureSocialProfile.TABLE_SCHEMA)
     }
 }

@@ -671,6 +671,8 @@
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
 
     <!-- Step -->
+    <string name="step_amount_passed">Решило:&#160;</string>
+    <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>
     <string name="step_navigation_next">Следующий урок</string>
     <string name="step_navigation_prev">Предыдущий урок</string>
     <string name="step_discussion_show">Открыть комментарии (%d)</string>
