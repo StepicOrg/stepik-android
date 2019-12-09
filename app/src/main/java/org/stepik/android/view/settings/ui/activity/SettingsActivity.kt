@@ -8,7 +8,7 @@ import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.view.settings.ui.fragment.SettingsFragment
 
-open class SettingsActivity : SmartLockActivityBase(), SettingsFragment.Companion.SignOutListener {
+open class SettingsActivity : SmartLockActivityBase(), SettingsFragment.SignOutListener {
 
     open fun createFragment(): Fragment =
         SettingsFragment.newInstance()
