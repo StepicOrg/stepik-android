@@ -11,6 +11,7 @@ import org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.profile_links.ui.fragment.ProfileLinksFragment
+import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificationFragment
 
 @ProfileScope
 @Subcomponent(modules = [
@@ -36,4 +37,5 @@ interface ProfileComponent {
     fun inject(profileAchievementsFragment: ProfileAchievementsFragment)
     fun inject(profileDetailFragment: ProfileDetailFragment)
     fun inject(profileLinksFragment: ProfileLinksFragment)
+    fun inject(profileNotificationFragment: ProfileNotificationFragment)
 }

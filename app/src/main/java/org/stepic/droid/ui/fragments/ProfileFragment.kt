@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.empty_login.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_profile_new.*
 import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
@@ -33,14 +32,13 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
-import org.stepik.android.presentation.achievement.AchievementsPresenter
-import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.collapse
+import org.stepic.droid.ui.util.expand
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -178,9 +176,9 @@ class   ProfileFragment : FragmentBase(),
         val isExpanded = shortBioArrowImageView.isExpanded()
         isShortInfoExpanded = isExpanded
         if (isExpanded) {
-            StepikAnimUtils.expand(detailedInfoContainer)
+            detailedInfoContainer.expand()
         } else {
-            StepikAnimUtils.collapse(detailedInfoContainer)
+            detailedInfoContainer.collapse()
         }
     }
 
@@ -424,9 +422,9 @@ class   ProfileFragment : FragmentBase(),
 
     override fun hideNotificationTime(needHide: Boolean) {
         if (needHide) {
-            StepikAnimUtils.collapse(notificationIntervalChooserContainer)
+            notificationIntervalChooserContainer.collapse()
         } else {
-            StepikAnimUtils.expand(notificationIntervalChooserContainer)
+            notificationIntervalChooserContainer.expand()
         }
     }
 
