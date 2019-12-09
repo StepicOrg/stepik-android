@@ -39,6 +39,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
+import org.stepik.android.model.SocialProfile
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
@@ -74,7 +75,8 @@ constructor(
     private val submissionDao: IDao<Submission>,
     private val certificateDao: IDao<Certificate>,
     private val discussionThreadDao: IDao<DiscussionThread>,
-    private val attemptDao: IDao<Attempt>
+    private val attemptDao: IDao<Attempt>,
+    private val socialProfileDao: IDao<SocialProfile>
 ) {
 
     fun dropDatabase() {
@@ -102,6 +104,7 @@ constructor(
         certificateDao.removeAll()
         discussionThreadDao.removeAll()
         attemptDao.removeAll()
+        socialProfileDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {

@@ -8,16 +8,34 @@
     android:background="@color/white">
     <!-- background is required for elevation -->
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/profileCover"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:adjustViewBounds="true"
+
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/fg_profile_cover"
+        app:layout_constraintTop_toTopOf="@id/profileCover"
+        app:layout_constraintBottom_toBottomOf="@id/profileCover" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profileImage"
         android:layout_width="64dp"
         android:layout_height="64dp"
 
+        android:layout_marginTop="@dimen/profile_header_margin"
+        app:layout_goneMarginTop="?actionBarSize"
         android:layout_marginStart="@dimen/profile_header_margin"
         android:layout_marginLeft="@dimen/profile_header_margin"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileCover"
 
         tools:src="@drawable/dialog_background" />
 

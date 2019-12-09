@@ -36,10 +36,13 @@ constructor(
 
     fun showAchievementsForUser(count: Int = -1, forceUpdate: Boolean = false) {
         if (state == AchievementsView.State.Idle || (forceUpdate && state == AchievementsView.State.Error)) {
-            state = AchievementsView.State.Loading
+            state = AchievementsView.State.SilentLoading
             compositeDisposable += profileDataObservable
                 .firstElement()
                 .filter { !it.user.isOrganization && !it.user.isPrivate }
+                .observeOn(mainScheduler)
+                .doOnSuccess { state = AchievementsView.State.Loading } // post public loading to view
+                .observeOn(backgroundScheduler)
                 .flatMapSingleElement { profileData ->
                     achievementInteractor
                         .getAchievements(profileData.user.id, count)
