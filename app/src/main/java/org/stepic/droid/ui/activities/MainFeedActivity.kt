@@ -14,10 +14,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
-import com.facebook.login.LoginManager
 import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -31,16 +29,13 @@ import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
-import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.model.Course
-import org.stepik.android.model.user.Profile
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import timber.log.Timber
@@ -328,31 +323,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         fragmentTransaction.replace(containerId, fragment, fragment.javaClass.simpleName)
         fragmentTransaction.commit()
     }
-
-
-    //profileMainFeedView methods
-    override fun showAnonymous() {
-        //stub
-    }
-
-    override fun showProfile(profile: Profile) {
-        //stub
-    }
-
-    override fun showLogoutLoading() {
-        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
-        ProgressHelper.activate(loadingProgressDialogFragment, supportFragmentManager, progressLogoutTag)
-    }
-
-    override fun onLogoutSuccess() {
-        ProgressHelper.dismiss(supportFragmentManager, progressLogoutTag)
-        LoginManager.getInstance().logOut()
-        VKSdk.logout()
-        signOutFromGoogle()
-        screenManager.showLaunchScreenAfterLogout(this)
-    }
-
-    //end profileMainFeedView methods
 
     //RootScreen methods
     override fun showCatalog() {
