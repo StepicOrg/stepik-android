@@ -1,6 +1,5 @@
 package org.stepik.android.view.settings.ui.fragment
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -36,30 +35,15 @@ class SettingsFragment :
 
         fun newInstance(): SettingsFragment =
             SettingsFragment()
-
-        /***
-         *  This callback is necessary, in order to sign out through
-         *  Google APIClient in host activity
-         */
-        interface SignOutListener {
-            fun onSignOut()
-        }
     }
 
     private lateinit var presenter: SettingsPresenter
-
-    private lateinit var signOutListener: SignOutListener
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        signOutListener = activity as SignOutListener
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -227,7 +211,15 @@ class SettingsFragment :
     override fun onLogoutSuccess() {
         LoginManager.getInstance().logOut()
         VKSdk.logout()
-        signOutListener.onSignOut()
+        (activity as? SignOutListener)?.onSignOut()
         screenManager.showLaunchScreenAfterLogout(requireContext())
+    }
+
+    /***
+     *  This callback is necessary, in order to sign out through
+     *  Google APIClient in host activity
+     */
+    interface SignOutListener {
+        fun onSignOut()
     }
 }
