@@ -826,6 +826,13 @@
     <string name="profile_stat_top">" %d | Top %d"</string>
 
     <string name="profile_detail_title">Details</string>
+
+    <string name="profile_activities_title">Activity</string>
+    <string name="profile_activities_current_streak_start">Solve today to start a streak</string>
+    <string name="profile_activities_current_streak_continue">Solve today to continue the streak</string>
+    <string name="profile_activities_current_streak_active">You’re on a streak</string>
+    <string name="profile_activities_max_streak">Max streak</string>
+
     <string name="profile_external_links_title">External links</string>
     <string name="profile_notifcation_title">Notifications</string>
 </resources>

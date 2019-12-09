@@ -9,6 +9,7 @@ import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
+import org.stepik.android.view.profile_activities.ui.fragment.ProfileActivitiesFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.profile_links.ui.fragment.ProfileLinksFragment
 import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificationFragment
@@ -36,6 +37,7 @@ interface ProfileComponent {
     fun inject(achievementsListFragment: AchievementsListFragment)
     fun inject(profileAchievementsFragment: ProfileAchievementsFragment)
     fun inject(profileDetailFragment: ProfileDetailFragment)
+    fun inject(profileActivitiesFragment: ProfileActivitiesFragment)
     fun inject(profileLinksFragment: ProfileLinksFragment)
     fun inject(profileNotificationFragment: ProfileNotificationFragment)
 }

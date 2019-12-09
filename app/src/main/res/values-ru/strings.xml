@@ -792,6 +792,13 @@
     <string name="profile_stat_top">" %d | Топ %d"</string>
 
     <string name="profile_detail_title">О себе</string>
+
+    <string name="profile_activities_title">Активность</string>
+    <string name="profile_activities_current_streak_start">Начните учиться сегодня</string>
+    <string name="profile_activities_current_streak_continue">Решайте сегодня, чтобы продолжить серию</string>
+    <string name="profile_activities_current_streak_active">Текущая серия</string>
+    <string name="profile_activities_max_streak">Максимальная серия</string>
+
     <string name="profile_external_links_title">Ссылки</string>
     <string name="profile_notifcation_title">Уведомления</string>
 </resources>
