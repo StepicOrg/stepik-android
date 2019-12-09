@@ -2,6 +2,7 @@ package org.stepic.droid.storage.migration
 
 import android.database.sqlite.SQLiteDatabase
 import org.stepik.android.cache.social_profile.structure.DbStructureSocialProfile
+import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.cache.user.structure.DbStructureUser
 
 object MigrationFrom48To49 : Migration {
