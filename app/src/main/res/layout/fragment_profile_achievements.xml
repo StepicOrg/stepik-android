@@ -24,7 +24,8 @@
 
         android:paddingTop="11dp"
         android:paddingBottom="11dp"
-        app:drawableEndCompat="@drawable/ic_nav_arrow_right"
+        android:drawableEnd="@drawable/ic_nav_arrow_right"
+        android:drawableRight="@drawable/ic_nav_arrow_right"
 
         style="@style/ProfileItemHeader" />
 

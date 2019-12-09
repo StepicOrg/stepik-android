@@ -81,6 +81,7 @@ import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.search.SearchDataModule
+import org.stepik.android.view.injection.settings.SettingsComponent
 import org.stepik.android.view.injection.social_profile.SocialProfileComponent
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
@@ -205,6 +206,8 @@ interface AppCoreComponent {
     fun achievementsComponentBuilder(): AchievementsComponent.Builder
 
     fun profileComponentBuilderNew(): org.stepik.android.view.injection.profile.ProfileComponent.Builder
+
+    fun settingsComponentBuilder(): SettingsComponent.Builder
 
     fun socialProfileComponentBuilder(): SocialProfileComponent.Builder
 

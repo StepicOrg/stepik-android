@@ -108,10 +108,14 @@ class ProfileFragmentOld : Fragment(), ProfileView, TimeIntervalPickerDialogFrag
     }
 
     private fun injectComponent() {
-        App.component()
-            .profileComponentBuilderNew()
-            .build()
+        App
+            .componentManager()
+            .profileComponent(userId)
             .inject(this)
+//        App.component()
+//            .profileComponentBuilderNew()
+//            .build()
+//            .inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
