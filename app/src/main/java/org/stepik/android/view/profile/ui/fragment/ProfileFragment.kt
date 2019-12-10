@@ -98,6 +98,13 @@ class ProfileFragment : Fragment(), ProfileView {
             editMenuItem?.isVisible = value
         }
 
+    private var settingsMenuItem: MenuItem? = null
+    private var isSettingsMenuItemVisible: Boolean = false
+        set(value) {
+            field = value
+            settingsMenuItem?.isVisible = value
+        }
+
     private var menuTintStateList: ColorStateList = ColorStateList.valueOf(0x0)
         set(value) {
             field = value
@@ -105,6 +112,7 @@ class ProfileFragment : Fragment(), ProfileView {
             toolbar?.navigationIcon?.let { DrawableCompat.setTintList(it, value) }
             editMenuItem?.let { MenuItemCompat.setIconTintList(it, value) }
             shareMenuItem?.let { MenuItemCompat.setIconTintList(it, value) }
+            settingsMenuItem?.let { MenuItemCompat.setIconTintList(it, value) }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -196,6 +204,10 @@ class ProfileFragment : Fragment(), ProfileView {
         shareMenuItem = menu.findItem(R.id.menu_item_share)
         shareMenuItem?.isVisible = isShareMenuItemVisible
         shareMenuItem?.let { MenuItemCompat.setIconTintList(it, menuTintStateList) }
+
+        settingsMenuItem = menu.findItem(R.id.menu_item_settings)
+        settingsMenuItem?.isVisible = isSettingsMenuItemVisible
+        settingsMenuItem?.let { MenuItemCompat.setIconTintList(it, menuTintStateList) }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -252,6 +264,7 @@ class ProfileFragment : Fragment(), ProfileView {
 
                     isEditMenuItemVisible = isCurrentUser
                     isShareMenuItemVisible = true
+                    isSettingsMenuItemVisible = isCurrentUser
 
                     profileStatsDelegate.setProfileStats(user)
 
@@ -273,6 +286,7 @@ class ProfileFragment : Fragment(), ProfileView {
 
                 isEditMenuItemVisible = false
                 isShareMenuItemVisible = false
+                isSettingsMenuItemVisible = false
             }
         }
     }
