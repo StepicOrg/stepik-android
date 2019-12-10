@@ -26,7 +26,6 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 import javax.inject.Inject
 
 class AchievementsListFragment : Fragment(), AchievementsView {
@@ -62,7 +61,6 @@ class AchievementsListFragment : Fragment(), AchievementsView {
 
         achievementsAdapter = DefaultDelegateAdapter()
         achievementsAdapter += AchievementAdapterDelegate(achievementResourceResolver, ::onAchievementClicked)
-        Timber.d("USer id:$userId")
     }
 
     private fun injectComponent() {

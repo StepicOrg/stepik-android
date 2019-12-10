@@ -137,15 +137,16 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
     override fun setState(state: AchievementsView.State) {
         viewStateDelegate.switchState(state)
 
-        if (state is AchievementsView.State.Loading) {
-            userId = state.userId
-            isMyProfile = state.isMyProfile
-        }
-
-        if (state is AchievementsView.State.AchievementsLoaded) {
-            achievementsAdapter.items = state.achievements.take(achievementsToDisplay)
-            userId = state.userId
-            isMyProfile = state.isMyProfile
+        when (state) {
+            is AchievementsView.State.Loading -> {
+                userId = state.userId
+                isMyProfile = state.isMyProfile
+            }
+            is AchievementsView.State.AchievementsLoaded -> {
+                achievementsAdapter.items = state.achievements.take(achievementsToDisplay)
+                userId = state.userId
+                isMyProfile = state.isMyProfile
+            }
         }
     }
 }
