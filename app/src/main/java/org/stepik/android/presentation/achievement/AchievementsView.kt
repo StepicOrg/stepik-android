@@ -6,8 +6,8 @@ interface AchievementsView {
     sealed class State {
         object Idle : State()
         object SilentLoading : State()
-        object Loading : State()
-        class AchievementsLoaded(val achievements: List<AchievementItem>, val isMyProfile: Boolean) : State()
+        class Loading(val userId: Long, val isMyProfile: Boolean) : State()
+        class AchievementsLoaded(val achievements: List<AchievementItem>, val userId: Long, val isMyProfile: Boolean) : State()
         object Error : State()
         object NoAchievements : State()
     }

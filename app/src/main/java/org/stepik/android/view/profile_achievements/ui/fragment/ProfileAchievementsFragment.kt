@@ -6,15 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_achievements.*
-import kotlinx.android.synthetic.main.fragment_profile_achievements.achievementsLoadingError
-import kotlinx.android.synthetic.main.fragment_profile_achievements.achievementsLoadingPlaceholder
-import kotlinx.android.synthetic.main.fragment_profile_achievements.achievementsTilesContainer
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -26,6 +22,7 @@ import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
@@ -140,9 +137,16 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
     override fun setState(state: AchievementsView.State) {
         viewStateDelegate.switchState(state)
 
-        if (state is AchievementsView.State.AchievementsLoaded) {
-            achievementsAdapter.items = state.achievements.take(achievementsToDisplay)
-            isMyProfile = state.isMyProfile
+        when (state) {
+            is AchievementsView.State.Loading -> {
+                userId = state.userId
+                isMyProfile = state.isMyProfile
+            }
+            is AchievementsView.State.AchievementsLoaded -> {
+                achievementsAdapter.items = state.achievements.take(achievementsToDisplay)
+                userId = state.userId
+                isMyProfile = state.isMyProfile
+            }
         }
     }
 }

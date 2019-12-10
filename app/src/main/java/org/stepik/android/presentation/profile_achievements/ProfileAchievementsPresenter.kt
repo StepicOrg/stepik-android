@@ -41,18 +41,20 @@ constructor(
                 .firstElement()
                 .filter { !it.user.isOrganization && !it.user.isPrivate }
                 .observeOn(mainScheduler)
-                .doOnSuccess { state = AchievementsView.State.Loading } // post public loading to view
+                .doOnSuccess { profileData ->
+                    state = AchievementsView.State.Loading(profileData.user.id, profileData.isCurrentUser)
+                } // post public loading to view
                 .observeOn(backgroundScheduler)
                 .flatMapSingleElement { profileData ->
                     achievementInteractor
                         .getAchievements(profileData.user.id, count)
-                        .map { it to profileData.isCurrentUser }
+                        .map { Triple(it, profileData.user.id, profileData.isCurrentUser) }
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { (achievements, isMyProfile) ->
-                        state = AchievementsView.State.AchievementsLoaded(achievements, isMyProfile)
+                    onSuccess = { (achievements, userId, isMyProfile) ->
+                        state = AchievementsView.State.AchievementsLoaded(achievements, userId, isMyProfile)
                     },
                     onComplete = { state = AchievementsView.State.NoAchievements },
                     onError = { state = AchievementsView.State.Error }

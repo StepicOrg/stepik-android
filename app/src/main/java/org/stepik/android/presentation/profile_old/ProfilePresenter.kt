@@ -6,12 +6,12 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepik.android.domain.profile.interactor.ProfileInteractorOld
 import org.stepik.android.model.user.Profile
+import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepik.android.presentation.base.PresenterBase
 import timber.log.Timber
 import javax.inject.Inject
@@ -116,14 +116,14 @@ constructor(
 
     fun showAchievementsForUser(userId: Long, count: Int = -1, forceUpdate: Boolean = false) {
         if (achievementsState == AchievementsView.State.Idle || (forceUpdate && achievementsState == AchievementsView.State.Error)) {
-            achievementsState = AchievementsView.State.Loading
+            achievementsState = AchievementsView.State.Loading(userId, false)
             compositeDisposable += profileInteractor.fetchAchievementsForUser(userId, count)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy({
                     achievementsState = AchievementsView.State.Error
                 }) {
-                    achievementsState = AchievementsView.State.AchievementsLoaded(it, false)
+                    achievementsState = AchievementsView.State.AchievementsLoaded(it, userId, false)
                 }
         } else {
             setViewState(achievementsState)
