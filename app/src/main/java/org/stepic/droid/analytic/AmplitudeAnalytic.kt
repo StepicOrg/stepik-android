@@ -195,6 +195,11 @@ interface AmplitudeAnalytic {
         object Params {
             const val STATE = "state"
         }
+
+        object Values {
+            const val SELF = "self"
+            const val OTHER = "other"
+        }
     }
 
     object Notifications {

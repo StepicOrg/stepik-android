@@ -157,6 +157,7 @@
     <color name="green04">#ACD1AC</color>
     <color name="violet1">#6C7BDF</color>
     <color name="violet2">#E9EBFA</color>
+    <color name="yellow1">#FFA961</color>
 
     <!--adaptive-->
     <color name="adaptive_color_easy">#227300</color>

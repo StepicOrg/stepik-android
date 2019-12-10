@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
+import org.stepic.droid.util.ContextExtensionsKt;
 import org.stepic.droid.util.DpPixelsHelper;
 import org.stepic.droid.util.HtmlHelper;
 
@@ -52,7 +53,7 @@ public class LatexSupportableWebView extends WebView implements View.OnClickList
     }
 
     public LatexSupportableWebView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(ContextExtensionsKt.contextForWebView(context), attrs, defStyleAttr);
 
         int[] set = {
                 android.R.attr.textColorHighlight

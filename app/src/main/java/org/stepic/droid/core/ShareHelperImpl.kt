@@ -15,6 +15,7 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
+import org.stepik.android.model.user.User
 import javax.inject.Inject
 
 @AppSingleton
@@ -72,6 +73,22 @@ constructor(
             }
 
             val uriForSharing = Uri.parse(StringUtil.getUriForProfile(config.baseUrl, userViewModel.id)).toString()
+            append(uriForSharing)
+        }
+        val textForSharing = stringBuilder.toString()
+        return getShareIntentBase(textForSharing)
+    }
+
+    override fun getIntentForUserSharing(user: User): Intent {
+        val stringBuilder = StringBuilder()
+        with(stringBuilder) {
+            if (!user.fullName.isNullOrBlank()) {
+                append(user.fullName)
+                append("\r\n")
+                append("\r\n")
+            }
+
+            val uriForSharing = Uri.parse(StringUtil.getUriForProfile(config.baseUrl, user.id)).toString()
             append(uriForSharing)
         }
         val textForSharing = stringBuilder.toString()

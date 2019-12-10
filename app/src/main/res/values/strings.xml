@@ -147,7 +147,7 @@
         taken by
         the video tutorials. Deleting all downloaded videos can take a few minutes.
     </string>
-    <string name="storage">Storage</string>
+    <string name="storage">Downloaded content</string>
     <string name="notMountExplanation">The SD card is not plugged into the device. To save videos
         to the SD card, plug it into the phone and restart the App.
     </string>
@@ -294,7 +294,7 @@
     </plurals>
     <string name="choose_notification_time_interval">Change notification interval</string>
     <string name="notification_time">Notification time: %s</string>
-    <string name="notification_about_learning">Notifications about learning</string>
+    <string name="notification_about_learning">Learning notifications enabled</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
     <string name="streak_description_not_positive">Correct! Solve assignments every day to improve
         your record. You can also turn on reminders!
@@ -372,8 +372,6 @@
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
     <string name="profile_user_id" translatable="false">User ID: %d</string>
-    <string name="profile_self_state" translatable="false">self</string>
-    <string name="profile_other_state" translatable="false">other</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
@@ -805,6 +803,7 @@
 
     <!-- Settings -->
     <string name="setting_section_learning">Learning</string>
+    <string name="setting_section_other">Other</string>
 
     <string name="setting_autoplay">Auto-transition to next step on video end</string>
     <string name="setting_autoplay_short">Auto-transition to next step</string>
@@ -819,4 +818,23 @@
     <!-- Submissions -->
     <string name="submissions_title">Submissions</string>
     <string name="submissions_select_title">Choose submission</string>
+
+    <!-- Profile -->
+    <string name="profile_stat_knowledge">Knowledge</string>
+    <string name="profile_stat_reputation">Reputation</string>
+    <string name="profile_stat_certificates">issued</string>
+    <string name="profile_stat_courses">published</string>
+    <string name="profile_stat_top">" %d | Top %d"</string>
+
+    <string name="profile_detail_title">Details</string>
+
+    <string name="profile_activities_title">Activity</string>
+    <string name="profile_activities_current_streak_start">Solve today to start a streak</string>
+    <string name="profile_activities_current_streak_continue">Solve today to continue the streak</string>
+    <string name="profile_activities_current_streak_active">You’re on a streak</string>
+    <string name="profile_activities_max_streak">Max streak</string>
+
+    <string name="profile_external_links_title">External links</string>
+    <string name="profile_notifcation_title">Notifications</string>
+    <string name="profile_settings_menu_item">Settings</string>
 </resources>

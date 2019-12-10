@@ -30,7 +30,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
+import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.CoursesCarouselInfo;
@@ -47,9 +47,7 @@ import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
-import org.stepic.droid.ui.activities.ProfileActivity;
 import org.stepic.droid.ui.activities.RegisterActivity;
-import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
@@ -75,11 +73,13 @@ import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
+import org.stepik.android.view.profile.ui.activity.ProfileActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
+import org.stepik.android.view.settings.ui.activity.SettingsActivity;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
@@ -426,18 +426,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openProfile(Activity activity) {
-        final Intent intent = new Intent(activity, ProfileActivity.class);
-        activity.startActivity(intent);
-    }
-
-    @Override
-    public void openProfile(Activity activity, long userId) {
-        final Intent intent = new Intent(activity, ProfileActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putLong(ProfileActivity.optionalUserIdKey, userId);
-        intent.putExtras(bundle);
-        activity.startActivity(intent);
+    public void openProfile(@NonNull Context context, long userId) {
+        context.startActivity(ProfileActivity.Companion.createIntent(context, userId));
     }
 
     @Override
@@ -455,7 +445,8 @@ public class ScreenManagerImpl implements ScreenManager {
     @Nullable
     @Override
     public Intent getProfileIntent(@NotNull Context context) {
-        Intent intent = new Intent(context, ProfileActivity.class);
+//        Intent intent = new Intent(context, ProfileActivity.class);
+        Intent intent = new Intent(context, org.stepik.android.view.profile.ui.activity.ProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
@@ -710,6 +701,12 @@ public class ScreenManagerImpl implements ScreenManager {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, supportEmailData.getSubject());
         emailIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "org.stepic.droid.provider", supportEmailData.getBody()));
         context.startActivity(IntentExtensionsKt.createEmailOnlyChooserIntent(emailIntent, context, context.getString(R.string.feedback_email_chooser_title)));
+    }
+
+    @Override
+    public void openSocialMediaLink(Context context, String link) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        context.startActivity(browserIntent);
     }
 
     @Override

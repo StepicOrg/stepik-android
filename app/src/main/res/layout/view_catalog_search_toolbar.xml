@@ -17,7 +17,7 @@
 
         <ImageView
             android:id="@+id/backIcon"
-            android:src="?attr/homeAsUpIndicator"
+            app:srcCompat="?attr/homeAsUpIndicator"
             android:visibility="gone"
             android:background="?selectableItemBackgroundBorderless"
             android:layout_gravity="center_vertical"

@@ -9,6 +9,8 @@ import org.stepic.droid.R
 
 class LogoutAreYouSureDialog : DialogFragment() {
     companion object {
+        const val TAG = "logout_are_you_sure_dialog"
+
         fun newInstance(): LogoutAreYouSureDialog =
                 LogoutAreYouSureDialog()
 
@@ -21,7 +23,7 @@ class LogoutAreYouSureDialog : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = context as? OnLogoutSuccessListener
+        listener = targetFragment as? OnLogoutSuccessListener
     }
 
     override fun onDetach() {

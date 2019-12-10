@@ -4,10 +4,14 @@ import dagger.Subcomponent
 import org.stepic.droid.ui.activities.LaunchActivity
 import org.stepic.droid.ui.activities.LoginActivity
 import org.stepic.droid.ui.activities.RegisterActivity
+import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_profile.UserProfileDataModule
 
 @LoginScope
-@Subcomponent(modules = [UserProfileDataModule::class])
+@Subcomponent(modules = [
+    UserDataModule::class,
+    UserProfileDataModule::class
+])
 interface LoginComponent {
 
     @Subcomponent.Builder

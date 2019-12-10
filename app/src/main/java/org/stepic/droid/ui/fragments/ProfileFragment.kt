@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.android.synthetic.main.empty_login.*
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_profile_new.*
 import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
@@ -33,18 +32,13 @@ import org.stepic.droid.core.ProfilePresenter
 import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.NotificationTimeView
 import org.stepic.droid.core.presenters.contracts.ProfileView
-import org.stepic.droid.features.achievements.presenters.AchievementsPresenter
-import org.stepic.droid.features.achievements.presenters.AchievementsView
-import org.stepic.droid.features.achievements.ui.adapters.AchievementsTileAdapter
-import org.stepic.droid.features.achievements.ui.adapters.BaseAchievementsAdapter
-import org.stepic.droid.features.achievements.ui.dialogs.AchievementDetailsDialog
-import org.stepic.droid.model.AchievementFlatItem
 import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.adapters.ProfileSettingsAdapter
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.ui.util.collapse
+import org.stepic.droid.ui.util.expand
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -62,7 +56,6 @@ import javax.inject.Inject
 class   ProfileFragment : FragmentBase(),
         ProfileView,
         NotificationTimeView,
-        AchievementsView,
         TimeIntervalPickerDialogFragment.Companion.Callback{
 
     companion object {
@@ -81,9 +74,6 @@ class   ProfileFragment : FragmentBase(),
 
     @Inject
     lateinit var streakPresenter: StreakPresenter
-
-    @Inject
-    lateinit var achievementsPresenter: AchievementsPresenter
 
     private var userId: Long by argument()
     private var localUserViewModel: UserViewModel? = null
@@ -128,15 +118,11 @@ class   ProfileFragment : FragmentBase(),
         profileSettingsRecyclerView.isNestedScrollingEnabled = false
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
-        achievementsTilesContainer.adapter = AchievementsTileAdapter().apply { onAchievementItemClick = {
-            AchievementDetailsDialog.newInstance(it, localUserViewModel?.isMyProfile ?: false).show(childFragmentManager, AchievementDetailsDialog.TAG)
-        }}
         achievementsTilesContainer.isNestedScrollingEnabled = false
         initAchievementsPlaceholders()
 
         profilePresenter.attachView(this)
         streakPresenter.attachView(this)
-        achievementsPresenter.attachView(this)
         profilePresenter.initProfile(userId)
 
         profileImage.setOnClickListener { analytic.reportEvent(Analytic.Profile.CLICK_IMAGE) }
@@ -165,7 +151,6 @@ class   ProfileFragment : FragmentBase(),
         shortBioSecondText.textView.textSize = 14f
         shortBioSecondText.textView.setLineSpacing(0f, 1.6f)
 
-        achievementsLoadingError.tryAgain.setOnClickListener { achievementsPresenter.showAchievementsForUser(localUserViewModel?.id ?: 0, MAX_ACHIEVEMENTS_TO_DISPLAY, true) }
         viewAllAchievements.setOnClickListener { screenManager.showAchievementsList(context, localUserViewModel?.id ?: 0, localUserViewModel?.isMyProfile ?: false) }
 
         certificatesTitleContainer.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
@@ -178,7 +163,6 @@ class   ProfileFragment : FragmentBase(),
         maxStreakValue.setOnClickListener(null)
         profileImage.setOnClickListener(null)
         notificationIntervalChooserContainer.setOnClickListener(null)
-        achievementsPresenter.detachView(this)
         streakPresenter.detachView(this)
         profilePresenter.detachView(this)
         shortBioInfoContainer.setOnClickListener(null)
@@ -192,9 +176,9 @@ class   ProfileFragment : FragmentBase(),
         val isExpanded = shortBioArrowImageView.isExpanded()
         isShortInfoExpanded = isExpanded
         if (isExpanded) {
-            StepikAnimUtils.expand(detailedInfoContainer)
+            detailedInfoContainer.expand()
         } else {
-            StepikAnimUtils.collapse(detailedInfoContainer)
+            detailedInfoContainer.collapse()
         }
     }
 
@@ -246,27 +230,27 @@ class   ProfileFragment : FragmentBase(),
         }
     }
 
-    override fun showAchievements(achievements: List<AchievementFlatItem>) {
-        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
-        achievementsLoadingPlaceholder.isVisible = false
-        achievementsLoadingError.isVisible = false
-        achievementsTilesContainer.isVisible = true
-        achievementsContainer.isVisible = true
-    }
-
-    override fun onAchievementsLoadingError() {
-        achievementsContainer.isVisible = true
-        achievementsLoadingPlaceholder.isVisible = false
-        achievementsLoadingError.isVisible = true
-        achievementsTilesContainer.isVisible = false
-    }
-
-    override fun onAchievementsLoading() {
-        achievementsContainer.isVisible = true
-        achievementsLoadingPlaceholder.isVisible = true
-        achievementsLoadingError.isVisible = false
-        achievementsTilesContainer.isVisible = false
-    }
+//    override fun showAchievements(achievements: List<AchievementFlatItem>) {
+//        (achievementsTilesContainer.adapter as BaseAchievementsAdapter).achievements = achievements.take(achievementsToDisplay)
+//        achievementsLoadingPlaceholder.isVisible = false
+//        achievementsLoadingError.isVisible = false
+//        achievementsTilesContainer.isVisible = true
+//        achievementsContainer.isVisible = true
+//    }
+//
+//    override fun onAchievementsLoadingError() {
+//        achievementsContainer.isVisible = true
+//        achievementsLoadingPlaceholder.isVisible = false
+//        achievementsLoadingError.isVisible = true
+//        achievementsTilesContainer.isVisible = false
+//    }
+//
+//    override fun onAchievementsLoading() {
+//        achievementsContainer.isVisible = true
+//        achievementsLoadingPlaceholder.isVisible = true
+//        achievementsLoadingError.isVisible = false
+//        achievementsTilesContainer.isVisible = false
+//    }
 
     /**
      * This method is invoked only for My Profile
@@ -321,7 +305,7 @@ class   ProfileFragment : FragmentBase(),
         }
 
         if (!userViewModel.isPrivate && !userViewModel.isOrganization) {
-            achievementsPresenter.showAchievementsForUser(userViewModel.id, MAX_ACHIEVEMENTS_TO_DISPLAY)
+//            achievementsPresenter.showAchievementsForUser(userViewModel.id, MAX_ACHIEVEMENTS_TO_DISPLAY)
             certificatesTitleContainer.visibility = View.VISIBLE
         }
 
@@ -389,7 +373,6 @@ class   ProfileFragment : FragmentBase(),
                 shortBioSecondText.visibility = View.VISIBLE
             }
         }
-        sendScreenOpenEvent(userViewModel)
     }
 
     override fun onInternetFailed() {
@@ -438,9 +421,9 @@ class   ProfileFragment : FragmentBase(),
 
     override fun hideNotificationTime(needHide: Boolean) {
         if (needHide) {
-            StepikAnimUtils.collapse(notificationIntervalChooserContainer)
+            notificationIntervalChooserContainer.collapse()
         } else {
-            StepikAnimUtils.expand(notificationIntervalChooserContainer)
+            notificationIntervalChooserContainer.expand()
         }
     }
 
@@ -501,19 +484,5 @@ class   ProfileFragment : FragmentBase(),
             requireContext().copyTextToClipboard(textToCopy = textToCopy, toastMessage = getString(R.string.copied_to_clipboard_toast))
             true
         }
-    }
-
-    private fun sendScreenOpenEvent(userViewModel: UserViewModel) {
-        val state = if (userViewModel.isMyProfile) {
-            getString(R.string.profile_self_state)
-        } else {
-            getString(R.string.profile_other_state)
-        }
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Profile.PROFILE_SCREEN_OPENED, mapOf(
-            AmplitudeAnalytic.Profile.Params.STATE to state
-        ))
-        analytic.reportEvent(Analytic.Profile.PROFILE_SCREEN_OPENED, Bundle().apply {
-            putString(Analytic.Profile.Params.STATE, state)
-        })
     }
 }

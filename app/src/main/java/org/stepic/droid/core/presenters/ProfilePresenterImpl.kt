@@ -17,6 +17,7 @@ import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.Profile
+import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -114,6 +115,7 @@ constructor(
 
     @WorkerThread
     private fun showInternetProfile(userId: Long) {
+        Timber.d("Hi")
         //1) show profile
         //2) no internet
         //3) user hide profile == Anonymous. We do not need handle this situation
