@@ -14,18 +14,19 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_achievements_list.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepik.android.presentation.achievement.AchievementsPresenter
-import org.stepik.android.presentation.achievement.AchievementsView
-import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
-import org.stepik.android.domain.achievement.model.AchievementItem
-import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setHeight
+import org.stepik.android.domain.achievement.model.AchievementItem
+import org.stepik.android.presentation.achievement.AchievementsPresenter
+import org.stepik.android.presentation.achievement.AchievementsView
 import org.stepik.android.view.achievement.ui.adapter.delegate.AchievementAdapterDelegate
+import org.stepik.android.view.achievement.ui.dialog.AchievementDetailsDialog
+import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import javax.inject.Inject
 
 class AchievementsListFragment : Fragment(), AchievementsView {
@@ -61,6 +62,7 @@ class AchievementsListFragment : Fragment(), AchievementsView {
 
         achievementsAdapter = DefaultDelegateAdapter()
         achievementsAdapter += AchievementAdapterDelegate(achievementResourceResolver, ::onAchievementClicked)
+        Timber.d("USer id:$userId")
     }
 
     private fun injectComponent() {

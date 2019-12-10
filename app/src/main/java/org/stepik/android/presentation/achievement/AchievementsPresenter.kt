@@ -32,14 +32,14 @@ constructor(
 
     fun showAchievementsForUser(userId: Long, isMyProfile: Boolean, forceUpdate: Boolean = false) {
         if (state == AchievementsView.State.Idle || (forceUpdate && state == AchievementsView.State.Error)) {
-            state = AchievementsView.State.Loading
+            state = AchievementsView.State.Loading(userId, isMyProfile)
             compositeDisposable += achievementInteractor
                 .getAchievements(userId)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = { achievements ->
-                        state = AchievementsView.State.AchievementsLoaded(achievements, isMyProfile)
+                        state = AchievementsView.State.AchievementsLoaded(achievements, userId, isMyProfile)
                     },
                     onError = { state = AchievementsView.State.Error }
                 )
