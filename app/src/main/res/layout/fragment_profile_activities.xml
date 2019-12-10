@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:text="@string/profile_activities_title"
+        android:layout_marginTop="@dimen/profile_block_vertical_margin"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        style="@style/ProfileItemHeader" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/streakLoadingPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin">
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+
+            android:layout_marginTop="8dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <include
+        android:id="@+id/streakLoadingError"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        layout="@layout/error_no_connection_with_button_small" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/streakContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/currentStreak"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:textSize="16sp"
+            android:textColor="@color/new_accent_color"
+            android:ellipsize="end"
+            app:fontFamily="@font/roboto_light"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/currentStreakCount"
+
+            app:drawableStartCompat="@drawable/ic_profile_activities_streak"
+            app:drawableLeftCompat="@drawable/ic_profile_activities_streak"
+            android:drawablePadding="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+
+            tools:text="You’re on a current streak" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/currentStreakCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textSize="16sp"
+            android:textColor="@color/new_accent_color"
+            app:fontFamily="@font/roboto_light"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            tools:text="460 days" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/maxStreak"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            android:textSize="12sp"
+            android:textColor="@color/new_accent_color"
+            android:ellipsize="end"
+            app:fontFamily="@font/roboto_light"
+            android:text="@string/profile_activities_max_streak"
+
+            app:layout_constraintTop_toBottomOf="@id/currentStreak"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/maxStreakCount"
+
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+
+            tools:text="Max streak: 2018, Nov 1 — Nov 23" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/maxStreakCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:textSize="12sp"
+            android:textColor="@color/new_accent_color"
+            app:fontFamily="@font/roboto_light"
+
+            app:layout_constraintTop_toBottomOf="@id/currentStreakCount"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:layout_marginTop="8dp"
+
+            tools:text="23 days" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey04" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

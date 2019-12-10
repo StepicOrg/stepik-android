@@ -13,4 +13,10 @@
         android:icon="@drawable/ic_edit"
         android:title="@string/profile_edit_menu_item"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/menu_item_settings"
+        android:icon="@drawable/ic_settings_dark"
+        android:title="@string/profile_settings_menu_item"
+        app:showAsAction="ifRoom" />
 </menu>

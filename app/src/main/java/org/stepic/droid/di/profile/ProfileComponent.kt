@@ -2,7 +2,6 @@ package org.stepic.droid.di.profile
 
 import dagger.Subcomponent
 import org.stepic.droid.di.streak.StreakModule
-import org.stepic.droid.features.achievements.ui.fragments.AchievementsListFragment
 import org.stepic.droid.ui.fragments.ProfileFragment
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_profile.UserProfileDataModule
@@ -16,6 +15,5 @@ interface ProfileComponent {
         fun build(): ProfileComponent
     }
 
-    fun inject(profileFragment: ProfileFragment)
-    fun inject(achievementsListFragment: AchievementsListFragment)
+    fun inject(profileFragmentOld: ProfileFragment)
 }

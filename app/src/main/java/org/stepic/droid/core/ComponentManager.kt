@@ -7,6 +7,7 @@ import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.profile.ProfileComponent
 
 // TODO: 16.03.17 make more generic solution, for every component handling
 interface ComponentManager {
@@ -39,4 +40,7 @@ interface ComponentManager {
 
     @MainThread
     fun releaseCourseComponent(courseId: Long)
+
+    @MainThread
+    fun profileComponent(userId: Long): ProfileComponent
 }

@@ -85,7 +85,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_vertical">
 
-        <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
+        <org.stepik.android.view.achievement.ui.view.VectorRatingBar
             android:id="@+id/courseRating"
             app:backgroundIcon="@drawable/ic_progress_star_white"
             app:secondaryIcon="@drawable/ic_progress_star_white"

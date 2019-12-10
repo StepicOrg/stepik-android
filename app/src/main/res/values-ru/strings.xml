@@ -125,7 +125,7 @@
         занимают видео-уроки. Удаление всех загруженных видео может занять несколько минут.
     </string>
     <string name="empty">Пусто</string>
-    <string name="storage">Память</string>
+    <string name="storage">Загруженный контент</string>
     <string name="notMountExplanation">Карта памяти не установлена на устройство. Для того, чтобы
         сохранять видео на карту памяти, вставьте ее в телефон и перезапустите приложение.
     </string>
@@ -289,7 +289,7 @@
     <string name="later_tatle">Позже</string>
     <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
-    <string name="notification_about_learning">Уведомления о занятиях</string>
+    <string name="notification_about_learning">Уведомления о занятиях активны</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
     <plurals name="streak_notification_message_call_to_action">
         <item quantity="one">Вы молодец! Вы решаете уже %d день без перерыва. Не останавливайтесь,
@@ -771,6 +771,7 @@
 
     <!-- Settings -->
     <string name="setting_section_learning">Обучение</string>
+    <string name="setting_section_other">Прочее</string>
 
     <string name="setting_autoplay">Автопереход на следующий шаг по окончании видео</string>
     <string name="setting_autoplay_short">Автопереход на следующий шаг</string>
@@ -785,4 +786,23 @@
     <!-- Submissions -->
     <string name="submissions_title">Решения</string>
     <string name="submissions_select_title">Выберите решение</string>
+
+    <!-- Profile -->
+    <string name="profile_stat_knowledge">Знания</string>
+    <string name="profile_stat_reputation">Репутация</string>
+    <string name="profile_stat_certificates">выдано</string>
+    <string name="profile_stat_courses">опубликовано</string>
+    <string name="profile_stat_top">" %d | Топ %d"</string>
+
+    <string name="profile_detail_title">О себе</string>
+
+    <string name="profile_activities_title">Активность</string>
+    <string name="profile_activities_current_streak_start">Начните учиться сегодня</string>
+    <string name="profile_activities_current_streak_continue">Решайте сегодня, чтобы продолжить серию</string>
+    <string name="profile_activities_current_streak_active">Текущая серия</string>
+    <string name="profile_activities_max_streak">Максимальная серия</string>
+
+    <string name="profile_external_links_title">Ссылки</string>
+    <string name="profile_notifcation_title">Уведомления</string>
+    <string name="profile_settings_menu_item">Настройки</string>
 </resources>
