@@ -180,9 +180,9 @@ class ProfileFragment : Fragment(), ProfileView {
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
+                add(R.id.container, ProfileNotificationFragment.newInstance(userId))
                 add(R.id.container, ProfileActivitiesFragment.newInstance(userId))
                 add(R.id.container, ProfileAchievementsFragment.newInstance(userId))
-                add(R.id.container, ProfileNotificationFragment.newInstance(userId))
                 add(R.id.container, ProfileLinksFragment.newInstance(userId))
                 add(R.id.container, ProfileDetailFragment.newInstance(userId))
                 add(R.id.container, ProfileIdFragment.newInstance(userId))
