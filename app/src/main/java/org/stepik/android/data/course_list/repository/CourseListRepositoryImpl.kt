@@ -7,6 +7,7 @@ import org.stepic.droid.util.PagedList
 import org.stepik.android.data.course_list.source.CourseListCacheDataSource
 import org.stepik.android.data.course_list.source.CourseListRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.model.Course
 import javax.inject.Inject
@@ -29,6 +30,9 @@ constructor(
             DataSourceType.CACHE ->
                 courseListCacheDataSource.getCourseList(courseListType)
         }
+
+    override fun getCourseList(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
+        courseListRemoteDataSource.getCourseList(courseListQuery)
 
     override fun addCourseToList(courseListType: CourseListType, courseId: Long): Completable =
         courseListCacheDataSource.addCourseToList(courseListType, courseId)

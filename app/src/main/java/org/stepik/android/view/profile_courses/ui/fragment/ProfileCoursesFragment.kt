@@ -1,19 +1,15 @@
 package org.stepik.android.view.profile_courses.ui.fragment
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorRes
-import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
-import kotlinx.android.synthetic.main.fragment_profile_activities.*
+import kotlinx.android.synthetic.main.fragment_profile_courses.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
@@ -67,9 +63,8 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         viewStateDelegate.addState<ProfileCoursesView.State.Idle>()
         viewStateDelegate.addState<ProfileCoursesView.State.SilentLoading>()
         viewStateDelegate.addState<ProfileCoursesView.State.Empty>()
-        viewStateDelegate.addState<ProfileCoursesView.State.Loading>(view, streakLoadingPlaceholder)
-        viewStateDelegate.addState<ProfileCoursesView.State.Error>(view, streakLoadingError)
-        viewStateDelegate.addState<ProfileCoursesView.State.Content>(view, streakContainer)
+        viewStateDelegate.addState<ProfileCoursesView.State.Error>(view, profileCoursesLoadingError)
+        viewStateDelegate.addState<ProfileCoursesView.State.Content>(view, profileCoursesRecycler)
 
         setDataToPresenter()
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
@@ -93,39 +88,9 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     override fun setState(state: ProfileCoursesView.State) {
         viewStateDelegate.switchState(state)
 
-        if (state is ProfileCoursesView.State.Content) {
-            with(state.profileActivitiesData) {
-                @ColorRes
-                val streakTintColorRes =
-                    if (isSolvedToday) {
-                        R.color.green01
-                    } else {
-                        R.color.yellow1
-                    }
-
-                currentStreak.supportCompoundDrawablesTintList = ColorStateList
-                    .valueOf(ContextCompat.getColor(requireContext(), streakTintColorRes))
-
-                currentStreakCount.text = streak
-                    .takeIf { it > 0 }
-                    ?.toString()
-                    .orEmpty()
-
-                @StringRes
-                val currentStreakRes =
-                    when {
-                        isSolvedToday ->
-                            R.string.profile_activities_current_streak_active
-
-                        streak > 0 ->
-                            R.string.profile_activities_current_streak_continue
-
-                        else ->
-                            R.string.profile_activities_current_streak_start
-                    }
-                currentStreak.setText(currentStreakRes)
-
-                maxStreakCount.text = maxStreak.toString()
+        when (state) {
+            is ProfileCoursesView.State.Content -> {
+                profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courses.size, state.courses.size)
             }
         }
     }

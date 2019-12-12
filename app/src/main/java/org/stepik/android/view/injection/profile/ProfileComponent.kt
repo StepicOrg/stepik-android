@@ -3,6 +3,7 @@ package org.stepik.android.view.injection.profile
 import dagger.BindsInstance
 import dagger.Subcomponent
 import org.stepik.android.view.achievement.ui.fragment.AchievementsListFragment
+import org.stepik.android.view.injection.course_list.CourseListDataModule
 import org.stepik.android.view.injection.social_profile.SocialProfileDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
@@ -20,6 +21,8 @@ import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificat
 @Subcomponent(modules = [
     ProfileModuleOld::class,
     ProfileModule::class,
+
+    CourseListDataModule::class,
     ProfileDataModule::class,
     UserDataModule::class,
     UserActivityDataModule::class,

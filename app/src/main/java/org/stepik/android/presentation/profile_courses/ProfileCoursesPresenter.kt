@@ -6,8 +6,9 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.profile.model.ProfileData
-import org.stepik.android.domain.profile_activities.interactor.ProfileActivitiesInteractor
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -15,7 +16,7 @@ class ProfileCoursesPresenter
 @Inject
 constructor(
     private val profileDataObservable: Observable<ProfileData>,
-    private val profileActivitiesInteractor: ProfileActivitiesInteractor,
+    private val courseListInteractor: CourseListInteractor,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -34,18 +35,20 @@ constructor(
     }
 
     fun fetchUserActivities(forceUpdate: Boolean = false) {
-        if (state == ProfileCoursesView.State.Idle || (forceUpdate && state == ProfileCoursesView.State.Error)) {
+        if (state == ProfileCoursesView.State.Idle || (forceUpdate && state is ProfileCoursesView.State.Error)) {
             state = ProfileCoursesView.State.SilentLoading
             compositeDisposable += profileDataObservable
                 .firstElement()
-                .filter { it.isCurrentUser && !it.user.isOrganization && !it.user.isPrivate }
-                .observeOn(mainScheduler)
-                .doOnSuccess { state = ProfileCoursesView.State.Loading } // post public loading to view
-                .observeOn(backgroundScheduler)
                 .flatMapSingleElement { profileData ->
-                    profileActivitiesInteractor
-                        .getProfileActivities(profileData.user.id)
+                    courseListInteractor
+                        .getCourseList(
+                            CourseListQuery(
+                                teacher = profileData.user.id,
+                                order = CourseListQuery.ORDER_POPULARITY_DESC
+                            )
+                        )
                 }
+                .filter { it.isNotEmpty() }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(

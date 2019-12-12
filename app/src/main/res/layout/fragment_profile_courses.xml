@@ -50,8 +50,14 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profileCoursesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileCoursesPlaceholder"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
