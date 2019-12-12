@@ -3,7 +3,7 @@ package org.stepik.android.view.step_quiz.ui.factory
 import androidx.fragment.app.Fragment
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
-import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_matching.ui.fragment.MatchingStepQuizFragment
@@ -17,30 +17,30 @@ import javax.inject.Inject
 class StepQuizFragmentFactoryImpl
 @Inject
 constructor() : StepQuizFragmentFactory {
-    override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
+    override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper, stepQuizLessonData: StepQuizLessonData): Fragment =
         when (stepPersistentWrapper.step.block?.name) {
             AppConstants.TYPE_STRING,
             AppConstants.TYPE_NUMBER,
             AppConstants.TYPE_MATH,
             AppConstants.TYPE_FREE_ANSWER ->
-                TextStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+                TextStepQuizFragment.newInstance(stepPersistentWrapper, stepQuizLessonData)
             AppConstants.TYPE_CHOICE ->
-                ChoiceStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+                ChoiceStepQuizFragment.newInstance(stepPersistentWrapper, stepQuizLessonData)
 
             AppConstants.TYPE_CODE ->
-                CodeStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+                CodeStepQuizFragment.newInstance(stepPersistentWrapper, stepQuizLessonData)
 
             AppConstants.TYPE_SORTING ->
-                SortingStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+                SortingStepQuizFragment.newInstance(stepPersistentWrapper, stepQuizLessonData)
 
             AppConstants.TYPE_MATCHING ->
-                MatchingStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+                MatchingStepQuizFragment.newInstance(stepPersistentWrapper, stepQuizLessonData)
 
             AppConstants.TYPE_PYCHARM ->
                 PyCharmStepQuizFragment.newInstance()
 
             AppConstants.TYPE_SQL ->
-                SqlStepQuizFragment.newInstance(stepPersistentWrapper, lessonData)
+                SqlStepQuizFragment.newInstance(stepPersistentWrapper, stepQuizLessonData)
 
             else ->
                 UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper)
