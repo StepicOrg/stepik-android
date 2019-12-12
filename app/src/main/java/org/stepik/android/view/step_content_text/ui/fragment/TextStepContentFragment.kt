@@ -18,7 +18,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.util.getStepType
-import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
@@ -33,11 +32,12 @@ class TextStepContentFragment :
     TextStepContentView,
     EditStepSourceDialogFragment.Callback {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
+        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonTitle: String, canEditLesson: Boolean): Fragment =
             TextStepContentFragment()
                 .apply {
                     this.stepWrapper = stepPersistentWrapper
-                    this.lessonData = lessonData
+                    this.lessonTitle = lessonTitle
+                    this.canEditLesson = canEditLesson
                 }
     }
 
@@ -50,7 +50,8 @@ class TextStepContentFragment :
     private lateinit var presenter: TextStepContentPresenter
 
     private var stepWrapper: StepPersistentWrapper by argument()
-    private var lessonData: LessonData by argument()
+    private var lessonTitle: String by argument()
+    private var canEditLesson: Boolean by argument()
 
     private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
 
@@ -122,8 +123,7 @@ class TextStepContentFragment :
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.step_edit_menu, menu)
-        menu.findItem(R.id.menu_item_edit)?.isVisible =
-            lessonData.lesson.actions?.editLesson != null
+        menu.findItem(R.id.menu_item_edit)?.isVisible = canEditLesson
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -142,7 +142,7 @@ class TextStepContentFragment :
         reportStepAction(Analytic.Steps.STEP_EDIT_OPENED, AmplitudeAnalytic.Steps.STEP_EDIT_OPENED, stepWrapper.step)
 
         EditStepSourceDialogFragment
-            .newInstance(stepWrapper, lessonData)
+            .newInstance(stepWrapper, lessonTitle)
             .showIfNotExists(childFragmentManager, EditStepSourceDialogFragment.TAG)
     }
 

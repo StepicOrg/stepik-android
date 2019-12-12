@@ -37,11 +37,11 @@ class EditStepSourceDialogFragment :
     companion object {
         const val TAG = "ComposeCommentDialogFragment"
 
-        fun newInstance(stepWrapper: StepPersistentWrapper, lessonData: LessonData): DialogFragment =
+        fun newInstance(stepWrapper: StepPersistentWrapper, lessonTitle: String): DialogFragment =
             EditStepSourceDialogFragment()
                 .apply {
                     this.stepWrapper = stepWrapper
-                    this.lessonData = lessonData
+                    this.lessonTitle = lessonTitle
                 }
     }
 
@@ -51,7 +51,7 @@ class EditStepSourceDialogFragment :
     private lateinit var editStepContentPresenter: EditStepSourcePresenter
 
     private var stepWrapper: StepPersistentWrapper by argument()
-    private var lessonData: LessonData by argument()
+    private var lessonTitle: String by argument()
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -91,7 +91,7 @@ class EditStepSourceDialogFragment :
         inflater.inflate(R.layout.dialog_step_source_edit, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbarTitle.text = "${lessonData.lesson.title} - ${stepWrapper.originalStep.position}"
+        centeredToolbarTitle.text = "${lessonTitle} - ${stepWrapper.originalStep.position}"
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.comment_compose_menu)
