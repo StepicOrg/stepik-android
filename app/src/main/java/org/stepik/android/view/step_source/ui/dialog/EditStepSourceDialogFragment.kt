@@ -21,7 +21,6 @@ import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_source.EditStepSourcePresenter
 import org.stepik.android.presentation.step_source.EditStepSourceView
 import ru.nobird.android.view.base.ui.extension.argument
@@ -91,7 +90,7 @@ class EditStepSourceDialogFragment :
         inflater.inflate(R.layout.dialog_step_source_edit, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbarTitle.text = "${lessonTitle} - ${stepWrapper.originalStep.position}"
+        centeredToolbarTitle.text = "$lessonTitle - ${stepWrapper.originalStep.position}"
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.comment_compose_menu)
