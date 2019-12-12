@@ -837,4 +837,6 @@
     <string name="profile_external_links_title">External links</string>
     <string name="profile_notifcation_title">Notifications</string>
     <string name="profile_settings_menu_item">Settings</string>
+
+    <string name="profile_courses_title">Courses</string>
 </resources>
