@@ -18,7 +18,7 @@
         android:paddingRight="@dimen/profile_block_margin"
 
         android:paddingTop="11dp"
-        android:paddingBottom="@dimen/profile_block_vertical_margin">
+        android:paddingBottom="8dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
@@ -53,7 +53,15 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profileCoursesRecycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+
+        android:clipToPadding="false"
+
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="@dimen/home_right_recycler_padding"
+        android:paddingEnd="@dimen/home_right_recycler_padding"
+        android:paddingBottom="16dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/profileCoursesPlaceholder"
