@@ -7,7 +7,7 @@ import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
-import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.code.CodeOptions
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -18,13 +18,18 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepQuizFormDelega
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog.CodeStepQuizFullScreenDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
-class CodeStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, CodeStepQuizFullScreenDialogFragment.Callback {
+class CodeStepQuizFragment :
+    DefaultStepQuizFragment(),
+    StepQuizView,
+    ChangeCodeLanguageDialog.Callback,
+    ProgrammingLanguageChooserDialogFragment.Callback,
+    CodeStepQuizFullScreenDialogFragment.Callback {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
+        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, stepQuizLessonData: StepQuizLessonData): Fragment =
             CodeStepQuizFragment()
                 .apply {
                     this.stepWrapper = stepPersistentWrapper
-                    this.lessonData = lessonData
+                    this.stepQuizLessonData = stepQuizLessonData
                 }
     }
 
@@ -86,7 +91,7 @@ class CodeStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, ChangeCode
     }
 
     private fun onFullScreenClicked(lang: String, code: String) {
-        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, codeOptions.codeTemplates, stepWrapper, lessonData)
+        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, codeOptions.codeTemplates, stepWrapper, stepQuizLessonData.lessonTitle)
         dialog.setTargetFragment(this, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
         dialog.showIfNotExists(requireFragmentManager(), CodeStepQuizFullScreenDialogFragment.TAG)
     }

@@ -31,7 +31,6 @@ import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
@@ -46,14 +45,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         private const val ARG_LANG = "LANG"
         private const val ARG_CODE = "CODE"
 
-        fun newInstance(lang: String, code: String, codeTemplates: Map<String, String>, stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): DialogFragment =
+        fun newInstance(lang: String, code: String, codeTemplates: Map<String, String>, stepPersistentWrapper: StepPersistentWrapper, lessonTitle: String): DialogFragment =
             CodeStepQuizFullScreenDialogFragment()
                 .apply {
                     this.lang = lang
                     this.code = code
                     this.codeTemplates = codeTemplates
                     this.stepWrapper = stepPersistentWrapper
-                    this.lessonData = lessonData
+                    this.lessonTitle = lessonTitle
                 }
     }
 
@@ -77,7 +76,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     private var lang: String by argument()
     private var code: String by argument()
     private var codeTemplates: Map<String, String> by argument()
-    private var lessonData: LessonData by argument()
+    private var lessonTitle: String by argument()
     private var stepWrapper: StepPersistentWrapper by argument()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -103,7 +102,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
         callback = targetFragment as Callback
 
-        centeredToolbarTitle.text = lessonData.lesson.title
+        centeredToolbarTitle.text = lessonTitle
         centeredToolbar.inflateMenu(R.menu.code_playground_menu)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)

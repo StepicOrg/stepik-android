@@ -12,10 +12,9 @@ import org.stepic.droid.util.maybeFirst
 import org.stepic.droid.util.toMaybe
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.domain.submission.repository.SubmissionRepository
-import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
@@ -97,7 +96,7 @@ constructor(
         submissionRepository
             .createSubmission(submission, dataSourceType = DataSourceType.CACHE)
 
-    fun getStepRestrictions(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizRestrictions> =
+    fun getStepRestrictions(stepPersistentWrapper: StepPersistentWrapper, stepQuizLessonData: StepQuizLessonData): Single<StepQuizRestrictions> =
         getStepSubmissionCount(stepPersistentWrapper.step.id)
             .map { submissionCount ->
                 StepQuizRestrictions(
@@ -107,10 +106,7 @@ constructor(
                         .maxSubmissionCount
                         .takeIf { stepPersistentWrapper.step.hasSubmissionRestriction }
                         ?: -1,
-                    discountingPolicyType = lessonData
-                        .section
-                        ?.discountingPolicy
-                        ?: DiscountingPolicyType.NoDiscount
+                    discountingPolicyType = stepQuizLessonData.discountingPolicyType
                 )
             }
 
