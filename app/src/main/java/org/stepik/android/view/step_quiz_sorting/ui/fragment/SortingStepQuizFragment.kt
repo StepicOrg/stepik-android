@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_sorting.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
@@ -13,11 +13,11 @@ import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizForm
 
 class SortingStepQuizFragment : DefaultStepQuizFragment(), StepQuizView {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
+        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, stepQuizLessonData: StepQuizLessonData): Fragment =
             SortingStepQuizFragment()
                 .apply {
                     this.stepWrapper = stepPersistentWrapper
-                    this.lessonData = lessonData
+                    this.stepQuizLessonData = stepQuizLessonData
                 }
     }
 

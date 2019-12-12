@@ -14,9 +14,9 @@ constructor() : StepContentFragmentFactory {
     override fun createStepContentFragment(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
         when (stepPersistentWrapper.step.block?.name) {
             AppConstants.TYPE_VIDEO ->
-                VideoStepContentFragment.newInstance(stepPersistentWrapper, lessonData)
+                VideoStepContentFragment.newInstance(stepPersistentWrapper, lessonData.lesson.title.orEmpty())
 
             else ->
-                TextStepContentFragment.newInstance(stepPersistentWrapper, lessonData)
+                TextStepContentFragment.newInstance(stepPersistentWrapper, lessonData.lesson.title.orEmpty(), lessonData.lesson.actions?.editLesson != null)
         }
 }

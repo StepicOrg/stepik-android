@@ -1,6 +1,6 @@
 package org.stepik.android.view.step_quiz.resolver
 
-import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizView
@@ -16,14 +16,14 @@ object StepQuizFormResolver {
         isSubmissionInTerminalState(state) &&
         with(state.restrictions) { maxSubmissionCount < 0 || maxSubmissionCount > submissionCount }
 
-    fun canMoveToNextStep(step: Step, lessonData: LessonData, state: StepQuizView.State.AttemptLoaded): Boolean =
+    fun canMoveToNextStep(step: Step, stepQuizLessonData: StepQuizLessonData, state: StepQuizView.State.AttemptLoaded): Boolean =
         isQuizActionEnabled(state) &&
         (state.submissionState as? StepQuizView.SubmissionState.Loaded)?.submission?.status == Submission.Status.CORRECT &&
-        step.position < lessonData.lesson.steps.size
+        step.position < stepQuizLessonData.stepCount
 
-    fun canOnlyRetry(step: Step, lessonData: LessonData, state: StepQuizView.State.AttemptLoaded): Boolean =
+    fun canOnlyRetry(step: Step, stepQuizLessonData: StepQuizLessonData, state: StepQuizView.State.AttemptLoaded): Boolean =
         isSubmissionInTerminalState(state) &&
-        !canMoveToNextStep(step, lessonData, state) &&
+        !canMoveToNextStep(step, stepQuizLessonData, state) &&
         with(state.restrictions) { maxSubmissionCount < 0 || maxSubmissionCount > submissionCount }
 
     fun isSubmissionInTerminalState(state: StepQuizView.State.AttemptLoaded): Boolean =
