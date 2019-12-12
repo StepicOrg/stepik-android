@@ -16,7 +16,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
@@ -36,7 +36,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
 
     private lateinit var presenter: StepQuizPresenter
 
-    protected var lessonData: LessonData by argument()
+    protected var stepQuizLessonData: StepQuizLessonData by argument()
     protected var stepWrapper: StepPersistentWrapper by argument()
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizView.State>
@@ -54,7 +54,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         presenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(StepQuizPresenter::class.java)
-        presenter.onStepData(stepWrapper, lessonData)
+        presenter.onStepData(stepWrapper, stepQuizLessonData)
     }
 
     private fun injectComponent() {
@@ -79,12 +79,12 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizDescription, stepQuizActionContainer, *quizViews)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
-        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
+        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, stepQuizLessonData, forceUpdate = true) }
 
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
-                lessonData = lessonData,
+                stepQuizLessonData = stepQuizLessonData,
                 stepQuizFormDelegate = createStepQuizFormDelegate(view),
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(

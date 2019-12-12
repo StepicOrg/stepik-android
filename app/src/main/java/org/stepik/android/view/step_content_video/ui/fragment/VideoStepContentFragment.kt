@@ -20,7 +20,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
@@ -32,10 +31,10 @@ import javax.inject.Inject
 
 class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
+        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonTitle: String): Fragment =
             VideoStepContentFragment()
                 .apply {
-                    this.lessonData = lessonData
+                    this.lessonTitle = lessonTitle
                     this.stepWrapper = stepPersistentWrapper
                 }
     }
@@ -51,7 +50,7 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
 
     private lateinit var presenter: VideoStepContentPresenter
 
-    private var lessonData: LessonData by argument()
+    private var lessonTitle: String by argument()
     private var stepWrapper: StepPersistentWrapper by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +97,7 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
                 ?: stepWrapper.step.block?.video?.thumbnail
             screenManager.showVideo(this, VideoPlayerMediaData(
                 thumbnail = thumbnail,
-                title = lessonData.lesson.title ?: "",
+                title = lessonTitle,
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
             ), true)
