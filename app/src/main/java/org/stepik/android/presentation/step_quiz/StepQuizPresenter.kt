@@ -12,6 +12,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Reply
@@ -42,19 +43,19 @@ constructor(
         view.setState(state)
     }
 
-    fun onStepData(stepWrapper: StepPersistentWrapper, stepQuizLessonData: StepQuizLessonData, forceUpdate: Boolean = false) {
+    fun onStepData(stepWrapper: StepPersistentWrapper, lessonData: LessonData, forceUpdate: Boolean = false) {
         if (state == StepQuizView.State.Idle ||
             state == StepQuizView.State.NetworkError && forceUpdate) {
-            fetchAttempt(stepWrapper, stepQuizLessonData)
+            fetchAttempt(stepWrapper, lessonData)
         }
     }
 
-    private fun fetchAttempt(stepWrapper: StepPersistentWrapper, stepQuizLessonData: StepQuizLessonData) {
+    private fun fetchAttempt(stepWrapper: StepPersistentWrapper, lessonData: LessonData) {
         state = StepQuizView.State.Loading
         compositeDisposable += stepQuizInteractor
             .getAttempt(stepWrapper.step.id)
             .flatMap { attempt ->
-                zip(getSubmissionState(attempt.id), stepQuizInteractor.getStepRestrictions(stepWrapper, stepQuizLessonData))
+                zip(getSubmissionState(attempt.id), stepQuizInteractor.getStepRestrictions(stepWrapper, lessonData))
                     .map { (submissionState, stepRestrictions) ->
                         StepQuizView.State.AttemptLoaded(attempt, submissionState, stepRestrictions)
                     }

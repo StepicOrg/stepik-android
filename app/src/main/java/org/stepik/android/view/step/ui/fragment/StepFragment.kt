@@ -27,7 +27,6 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.model.StepNavigationDirection
-import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
@@ -163,7 +162,7 @@ class StepFragment : Fragment(), StepView,
             val isQuizFragmentEmpty = childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null
 
             if (isQuizFragmentEmpty || isNeedReload) {
-                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, StepQuizLessonData(lessonData))
+                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper)
 
                 childFragmentManager.commitNow {
                     if (isQuizFragmentEmpty) {

@@ -13,11 +13,10 @@ import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDe
 
 class ChoiceStepQuizFragment : DefaultStepQuizFragment(), StepQuizView {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, stepQuizLessonData: StepQuizLessonData): Fragment =
+        fun newInstance(stepId: Long): Fragment =
             ChoiceStepQuizFragment()
                 .apply {
-                    this.stepWrapper = stepPersistentWrapper
-                    this.stepQuizLessonData = stepQuizLessonData
+                    this.stepId = stepId
                 }
     }
 
