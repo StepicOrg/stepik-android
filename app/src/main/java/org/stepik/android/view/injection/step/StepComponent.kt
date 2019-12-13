@@ -1,9 +1,13 @@
 package org.stepik.android.view.injection.step
 
+import dagger.BindsInstance
 import dagger.Subcomponent
+import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.discussion_thread.DiscussionThreadDataModule
 import org.stepik.android.view.injection.step_content.StepContentModule
+import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
 import org.stepik.android.view.injection.step_source.StepSourceModule
 import org.stepik.android.view.injection.step_quiz.StepQuizModule
 import org.stepik.android.view.injection.step_quiz.StepQuizPresentationModule
@@ -30,7 +34,15 @@ interface StepComponent {
     @Subcomponent.Builder
     interface Builder {
         fun build(): StepComponent
+
+        @BindsInstance
+        fun stepWrapper(stepPersistentWrapper: StepPersistentWrapper): Builder
+
+        @BindsInstance
+        fun stepQuizLessonData(stepQuizLessonData: StepQuizLessonData): Builder
     }
+
+    fun textStepContentComponentBuilder(): TextStepContentComponent.Builder
 
     fun inject(stepFragment: StepFragment)
     fun inject(editStepContentDialogFragment: EditStepSourceDialogFragment)

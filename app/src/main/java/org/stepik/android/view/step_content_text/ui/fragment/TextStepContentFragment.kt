@@ -35,7 +35,9 @@ class TextStepContentFragment :
         fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonTitle: String, canEditLesson: Boolean): Fragment =
             TextStepContentFragment()
                 .apply {
-                    this.stepWrapper = stepPersistentWrapper
+                    this.stepId = stepPersistentWrapper.step.id
+
+//                    this.stepWrapper = stepPersistentWrapper
                     this.lessonTitle = lessonTitle
                     this.canEditLesson = canEditLesson
                 }
@@ -49,7 +51,11 @@ class TextStepContentFragment :
 
     private lateinit var presenter: TextStepContentPresenter
 
-    private var stepWrapper: StepPersistentWrapper by argument()
+    private var stepId: Long by argument()
+
+    @Inject
+    lateinit var stepWrapper: StepPersistentWrapper
+
     private var lessonTitle: String by argument()
     private var canEditLesson: Boolean by argument()
 
@@ -67,7 +73,8 @@ class TextStepContentFragment :
     }
 
     private fun injectComponent() {
-        App.component()
+        App.componentManager()
+            .stepComponent(stepId)
             .textStepContentComponentBuilder()
             .build()
             .inject(this)

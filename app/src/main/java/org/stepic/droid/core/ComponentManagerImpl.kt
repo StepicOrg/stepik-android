@@ -6,9 +6,12 @@ import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
+import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.profile.ProfileComponent
+import org.stepik.android.view.injection.step.StepComponent
 import timber.log.Timber
 import java.lang.ref.WeakReference
 
@@ -79,6 +82,26 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
         _profileComponentMap.getOrPut(userId, ::WeakComponentHolder).get {
             appCoreComponent.profileComponentBuilderNew().userId(userId).build()
         }
+
+    /**
+     * Steps
+     */
+    private val _stepComponentMap = hashMapOf<Long, WeakComponentHolder<StepComponent>>()
+
+    override fun stepParentComponent(
+        stepPersistentWrapper: StepPersistentWrapper,
+        stepQuizLessonData: StepQuizLessonData
+    ): StepComponent =
+        _stepComponentMap.getOrPut(stepPersistentWrapper.step.id, ::WeakComponentHolder).get {
+            appCoreComponent
+                .stepComponentBuilder()
+                .stepWrapper(stepPersistentWrapper)
+                .stepQuizLessonData(stepQuizLessonData)
+                .build()
+        }
+
+    override fun stepComponent(stepId: Long): StepComponent =
+        _stepComponentMap[stepId]?.get() ?: throw IllegalStateException("StepComponent with id=$stepId not initialized")
 
     // Login
 
@@ -165,4 +188,7 @@ class WeakComponentHolder<T> {
 
         return component
     }
+
+    fun get(): T? =
+        componentReference.get()
 }
