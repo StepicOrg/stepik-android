@@ -8,14 +8,15 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
-import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.injection.profile.UserId
 import javax.inject.Inject
 
 class ProfileCoursesPresenter
 @Inject
 constructor(
-    private val profileDataObservable: Observable<ProfileData>,
+    @UserId
+    private val userId: Long,
     private val courseListInteractor: CourseListInteractor,
 
     @BackgroundScheduler
@@ -37,17 +38,13 @@ constructor(
     fun fetchUserActivities(forceUpdate: Boolean = false) {
         if (state == ProfileCoursesView.State.Idle || (forceUpdate && state is ProfileCoursesView.State.Error)) {
             state = ProfileCoursesView.State.SilentLoading
-            compositeDisposable += profileDataObservable
-                .firstElement()
-                .flatMapSingleElement { profileData ->
-                    courseListInteractor
-                        .getCourseList(
-                            CourseListQuery(
-                                teacher = profileData.user.id,
-                                order = CourseListQuery.ORDER_POPULARITY_DESC
-                            )
-                        )
-                }
+            compositeDisposable += courseListInteractor
+                .getCourseList(
+                    CourseListQuery(
+                        teacher = userId,
+                        order = CourseListQuery.ORDER_POPULARITY_DESC
+                    )
+                )
                 .filter { it.isNotEmpty() }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)

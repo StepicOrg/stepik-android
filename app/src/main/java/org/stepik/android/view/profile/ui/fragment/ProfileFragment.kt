@@ -117,9 +117,10 @@ class ProfileFragment : Fragment(), ProfileView {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        injectComponent()
+
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        injectComponent()
 
         profilePresenter = ViewModelProviders
             .of(this, viewModelFactory)
