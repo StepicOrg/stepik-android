@@ -3,7 +3,6 @@ package org.stepik.android.view.step_quiz.ui.factory
 import androidx.fragment.app.Fragment
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
-import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
 import org.stepik.android.view.step_quiz_matching.ui.fragment.MatchingStepQuizFragment

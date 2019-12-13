@@ -4,7 +4,6 @@ import dagger.BindsInstance
 import dagger.Subcomponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.discussion_thread.DiscussionThreadDataModule
 import org.stepik.android.view.injection.step_content.StepContentModule

@@ -14,7 +14,6 @@ import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
-import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
