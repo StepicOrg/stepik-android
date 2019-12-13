@@ -98,7 +98,8 @@ class StepFragment : Fragment(), StepView,
     }
 
     private fun injectComponent() {
-        stepComponent = App.componentManager()
+        stepComponent = App
+            .componentManager()
             .stepParentComponent(stepWrapper, StepQuizLessonData(lessonData))
         stepComponent.inject(this)
     }

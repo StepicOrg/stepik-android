@@ -49,15 +49,14 @@ class TextStepContentFragment :
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var presenter: TextStepContentPresenter
-
-    private var stepId: Long by argument()
-
     @Inject
     lateinit var stepWrapper: StepPersistentWrapper
 
+    private var stepId: Long by argument()
     private var lessonTitle: String by argument()
     private var canEditLesson: Boolean by argument()
+
+    private lateinit var presenter: TextStepContentPresenter
 
     private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
 
