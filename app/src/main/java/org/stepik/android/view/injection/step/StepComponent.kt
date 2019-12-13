@@ -3,11 +3,13 @@ package org.stepik.android.view.injection.step
 import dagger.BindsInstance
 import dagger.Subcomponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.view.injection.attempt.AttemptDataModule
 import org.stepik.android.view.injection.discussion_thread.DiscussionThreadDataModule
 import org.stepik.android.view.injection.step_content.StepContentModule
 import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
+import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_source.StepSourceModule
 import org.stepik.android.view.injection.step_quiz.StepQuizModule
 import org.stepik.android.view.injection.step_quiz.StepQuizPresentationModule
@@ -36,12 +38,13 @@ interface StepComponent {
         fun build(): StepComponent
 
         @BindsInstance
-        fun stepWrapper(stepPersistentWrapper: StepPersistentWrapper): Builder
+        fun lessonData(lessonData: LessonData): Builder
 
         @BindsInstance
-        fun stepQuizLessonData(stepQuizLessonData: StepQuizLessonData): Builder
+        fun stepWrapper(stepPersistentWrapper: StepPersistentWrapper): Builder
     }
 
+    fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder
     fun textStepContentComponentBuilder(): TextStepContentComponent.Builder
 
     fun inject(stepFragment: StepFragment)

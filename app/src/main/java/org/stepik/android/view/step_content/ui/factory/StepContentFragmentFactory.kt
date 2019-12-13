@@ -5,5 +5,5 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 
 interface StepContentFragmentFactory {
-    fun createStepContentFragment(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment
+    fun createStepContentFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment
 }

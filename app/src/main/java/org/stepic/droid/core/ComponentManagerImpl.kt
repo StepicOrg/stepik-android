@@ -8,7 +8,7 @@ import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.SuppressFBWarnings
-import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.step.StepComponent
@@ -90,13 +90,13 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
 
     override fun stepParentComponent(
         stepPersistentWrapper: StepPersistentWrapper,
-        stepQuizLessonData: StepQuizLessonData
+        lessonData: LessonData
     ): StepComponent =
         _stepComponentMap.getOrPut(stepPersistentWrapper.step.id, ::WeakComponentHolder).get {
             appCoreComponent
                 .stepComponentBuilder()
                 .stepWrapper(stepPersistentWrapper)
-                .stepQuizLessonData(stepQuizLessonData)
+                .lessonData(lessonData)
                 .build()
         }
 

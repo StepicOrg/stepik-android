@@ -187,8 +187,6 @@ interface AppCoreComponent {
 
     fun stepComponentBuilder(): StepComponent.Builder
 
-    fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder
-
     fun certificatesComponentBuilder(): CertificateComponent.Builder
 
     fun composeCommentComponentBuilder(): ComposeCommentComponent.Builder

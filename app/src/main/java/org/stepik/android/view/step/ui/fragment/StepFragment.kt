@@ -100,7 +100,7 @@ class StepFragment : Fragment(), StepView,
     private fun injectComponent() {
         stepComponent = App
             .componentManager()
-            .stepParentComponent(stepWrapper, StepQuizLessonData(lessonData))
+            .stepParentComponent(stepWrapper, lessonData)
         stepComponent.inject(this)
     }
 
@@ -145,7 +145,7 @@ class StepFragment : Fragment(), StepView,
 
         if (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) == null) {
             val stepContentFragment =
-                stepContentFragmentFactory.createStepContentFragment(stepWrapper, lessonData)
+                stepContentFragmentFactory.createStepContentFragment(stepWrapper)
 
             childFragmentManager
                 .beginTransaction()
