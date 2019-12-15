@@ -19,7 +19,9 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseAdapterDelegate(
-    private val adaptiveCoursesResolver: AdaptiveCoursesResolver
+    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
+    private val onItemClicked: (Course) -> Unit,
+    private val onContinueCourseClicked: (Course) -> Unit
 ) : AdapterDelegate<Course, DelegateViewHolder<Course>>() {
     override fun isForViewType(position: Int, data: Course): Boolean =
         true
@@ -50,6 +52,9 @@ class CourseAdapterDelegate(
 
         init {
             coursePropertiesDelegate.setTextColor(ContextCompat.getColor(context, R.color.new_accent_color))
+
+            root.setOnClickListener { itemData?.let(onItemClicked) }
+            courseContinueButton.setOnClickListener { itemData?.let(onContinueCourseClicked) }
         }
 
         override fun onBind(data: Course) {
@@ -63,7 +68,7 @@ class CourseAdapterDelegate(
 
             courseItemName.text = data.title
 
-            val isEnrolled =  data.enrollment != 0L
+            val isEnrolled = data.enrollment != 0L
             courseContinueButton.isVisible = isEnrolled
             courseButtonSeparator.isVisible = isEnrolled
             courseDescription.isVisible = !isEnrolled

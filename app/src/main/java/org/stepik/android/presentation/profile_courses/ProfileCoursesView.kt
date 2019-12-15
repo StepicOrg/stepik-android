@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.profile_courses
 
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 
 interface ProfileCoursesView {
@@ -13,4 +14,7 @@ interface ProfileCoursesView {
     }
 
     fun setState(state: State)
+
+    fun showCourse(course: Course, isAdaptive: Boolean)
+    fun showSteps(course: Course, lastStep: LastStep)
 }

@@ -13,9 +13,12 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesView
@@ -41,6 +44,12 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     @Inject
     internal lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
 
+    @Inject
+    internal lateinit var analytic: Analytic
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
+
     private var userId by argument<Long>()
 
     private lateinit var profileCoursesPresenter: ProfileCoursesPresenter
@@ -58,7 +67,11 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
             .get(ProfileCoursesPresenter::class.java)
 
         coursesAdapter = DefaultDelegateAdapter()
-        coursesAdapter += CourseAdapterDelegate(adaptiveCoursesResolver)
+        coursesAdapter += CourseAdapterDelegate(
+            adaptiveCoursesResolver,
+            onItemClicked = ::onCourseClicked,
+            onContinueCourseClicked = profileCoursesPresenter::continueCourse
+        )
     }
 
     private fun injectComponent() {
@@ -96,7 +109,7 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
-        profileCoursesPresenter.fetchUserActivities(forceUpdate)
+        profileCoursesPresenter.fetchCourses(forceUpdate)
     }
 
     override fun onStart() {
@@ -118,6 +131,31 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
                 profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courses.size, state.courses.size)
                 coursesAdapter.items = state.courses
             }
+        }
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        if (isAdaptive) {
+            screenManager.continueAdaptiveCourse(activity, course)
+        } else {
+            screenManager.showCourseModules(activity, course)
+        }
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        screenManager.continueCourse(activity, course.id, lastStep)
+    }
+
+    private fun onCourseClicked(course: Course) {
+        analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
+        if (course.enrollment != 0L) {
+            if (adaptiveCoursesResolver.isAdaptive(course.id)) {
+                screenManager.continueAdaptiveCourse(activity, course)
+            } else {
+                screenManager.showCourseModules(activity, course)
+            }
+        } else {
+            screenManager.showCourseDescription(activity, course)
         }
     }
 }
