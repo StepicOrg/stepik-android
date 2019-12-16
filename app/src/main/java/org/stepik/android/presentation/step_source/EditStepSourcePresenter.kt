@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.step_source.interactor.StepSourceInteractor
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
@@ -51,6 +52,7 @@ constructor(
         state = EditStepSourceView.State.Loading
         compositeDisposable += stepSourceInteractor
             .fetchStep(stepPersistentWrapper.step)
+            .onErrorReturnItem(stepPersistentWrapper)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
@@ -58,10 +60,7 @@ constructor(
                     state = EditStepSourceView.State.StepLoaded
                     view?.setStepWrapperInfo(it)
                 },
-                onError = {
-                    state = EditStepSourceView.State.StepLoaded
-                    view?.setStepWrapperInfo(stepPersistentWrapper)
-                }
+                onError = emptyOnErrorStub
             )
     }
 }
