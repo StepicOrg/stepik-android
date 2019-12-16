@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/course_item_height"
     android:background="@drawable/bg_course_item_placeholder"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="16dp"
     android:layout_marginEnd="@dimen/course_list_side_padding"
     android:layout_marginLeft="@dimen/course_list_side_padding"
     android:layout_marginRight="@dimen/course_list_side_padding"
