@@ -121,7 +121,7 @@ constructor(
                 onError = emptyOnErrorStub
             )
     }
-    
+
     fun continueCourse(course: Course) {
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.reportAmplitudeEvent(
