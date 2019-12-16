@@ -42,6 +42,7 @@ import org.stepik.android.view.profile.ui.animation.ProfileHeaderAnimationDelega
 import org.stepik.android.view.profile.ui.delegate.ProfileStatsDelegate
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_activities.ui.fragment.ProfileActivitiesFragment
+import org.stepik.android.view.profile_courses.ui.fragment.ProfileCoursesFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.profile_id.ui.fragment.ProfileIdFragment
 import org.stepik.android.view.profile_links.ui.fragment.ProfileLinksFragment
@@ -116,9 +117,10 @@ class ProfileFragment : Fragment(), ProfileView {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        injectComponent()
+
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        injectComponent()
 
         profilePresenter = ViewModelProviders
             .of(this, viewModelFactory)
@@ -181,6 +183,7 @@ class ProfileFragment : Fragment(), ProfileView {
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
                 add(R.id.container, ProfileNotificationFragment.newInstance(userId))
+                add(R.id.container, ProfileCoursesFragment.newInstance(userId))
                 add(R.id.container, ProfileActivitiesFragment.newInstance(userId))
                 add(R.id.container, ProfileAchievementsFragment.newInstance(userId))
                 add(R.id.container, ProfileLinksFragment.newInstance(userId))
