@@ -20,7 +20,6 @@ import org.stepik.android.view.certificate.ui.adapter.CertificateProfileAdapterD
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
-import timber.log.Timber
 import javax.inject.Inject
 
 class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
@@ -46,6 +45,8 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCertificatesView.State>
     private lateinit var certificatesAdapter: DefaultDelegateAdapter<CertificateViewItem>
 
+    private var profileId = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -57,8 +58,6 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
 
         certificatesAdapter = DefaultDelegateAdapter()
         certificatesAdapter += CertificateProfileAdapterDelegate(::onCertificateClicked)
-
-        Timber.d("User id: $userId")
     }
 
     private fun injectComponent() {
@@ -85,7 +84,7 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
         viewStateDelegate.addState<ProfileCertificatesView.State.NoCertificates>()
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        profileCertificatesTitle.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
+        profileCertificatesTitle.setOnClickListener { screenManager.showCertificates(requireContext(), profileId) }
 
         profileCertificatesRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         profileCertificatesRecycler.isNestedScrollingEnabled = false
@@ -117,15 +116,15 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
 
         when (state) {
             is ProfileCertificatesView.State.Loading -> {
-                userId = state.userId
+                profileId = state.userId
             }
             is ProfileCertificatesView.State.CertificatesCache -> {
                 certificatesAdapter.items = state.certificates.take(CERTIFICATES_TO_DISPLAY)
-                userId = state.userId
+                profileId = state.userId
             }
             is ProfileCertificatesView.State.CertificatesRemote -> {
                 certificatesAdapter.items = state.certificates.take(CERTIFICATES_TO_DISPLAY)
-                userId = state.userId
+                profileId = state.userId
             }
         }
     }

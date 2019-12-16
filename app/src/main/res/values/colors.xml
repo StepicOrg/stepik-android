@@ -231,6 +231,6 @@
     <color name="course_item_separator_dark">#30999999</color>
 
     <!-- Certificate icon color -->
-    <color name="certificate_distinction">#EA9F30</color>
-    <color name="certificate_regular">#75CE61</color>
+    <color name="certificate_distinction">@color/yellow1</color>
+    <color name="certificate_regular">@color/green01</color>
 </resources>
