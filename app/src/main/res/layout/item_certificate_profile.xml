@@ -10,7 +10,10 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:textSize="14sp"
+    android:gravity="center_vertical"
     android:textColor="@color/new_accent_color"
     app:fontFamily="@font/roboto_medium"
+    app:drawableLeftCompat="@drawable/ic_certificate"
+    app:drawableStartCompat="@drawable/ic_certificate"
     android:background="?selectableItemBackground"
     android:letterSpacing="0.02" />

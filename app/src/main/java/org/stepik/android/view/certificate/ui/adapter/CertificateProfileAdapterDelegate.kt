@@ -1,12 +1,10 @@
 package org.stepik.android.view.certificate.ui.adapter
 
-import android.graphics.drawable.Drawable
+import android.content.res.ColorStateList
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import org.stepic.droid.R
 import org.stepic.droid.model.CertificateViewItem
 import org.stepik.android.model.Certificate
@@ -20,7 +18,7 @@ class CertificateProfileAdapterDelegate(
         true
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CertificateViewItem> =
-        ViewHolder(createView(parent, R.layout.certificate_profile_item))
+        ViewHolder(createView(parent, R.layout.item_certificate_profile))
 
     private inner class ViewHolder(
         root: View
@@ -29,29 +27,23 @@ class CertificateProfileAdapterDelegate(
         private val certificateTextView = root as AppCompatTextView
 
         init {
-            root.setOnClickListener { onItemClick(itemData?.certificate?.url ?: "") }
+            root.setOnClickListener { onItemClick(itemData?.certificate?.url.orEmpty()) }
         }
 
         override fun onBind(data: CertificateViewItem) {
-            certificateTextView.text = data.title ?: ""
+            certificateTextView.text = data.title.orEmpty()
 
-            val draw = AppCompatResources
-                .getDrawable(context, R.drawable.ic_certificate)
-                ?.let(DrawableCompat::wrap)
-                ?.let(Drawable::mutate)
-
-            if (draw != null) {
-                val colorRes = when (data.certificate.type) {
-                    Certificate.Type.REGULAR ->
-                        R.color.certificate_regular
-                    Certificate.Type.DISTINCTION ->
-                        R.color.certificate_distinction
-                    else ->
-                        R.color.white
-                }
-                DrawableCompat.setTint(draw, ContextCompat.getColor(context, colorRes))
-                certificateTextView.setCompoundDrawablesRelativeWithIntrinsicBounds(draw, null, null, null)
+            val tintColorRes = when (data.certificate.type) {
+                Certificate.Type.REGULAR ->
+                    R.color.certificate_regular
+                Certificate.Type.DISTINCTION ->
+                    R.color.certificate_distinction
+                else ->
+                    R.color.white
             }
+
+            certificateTextView.supportCompoundDrawablesTintList = ColorStateList
+                .valueOf(ContextCompat.getColor(context, tintColorRes))
         }
     }
 }
