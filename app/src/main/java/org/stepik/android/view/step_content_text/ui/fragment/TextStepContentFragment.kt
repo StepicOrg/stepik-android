@@ -33,11 +33,10 @@ class TextStepContentFragment :
     TextStepContentView,
     EditStepSourceDialogFragment.Callback {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
+        fun newInstance(stepId: Long): Fragment =
             TextStepContentFragment()
                 .apply {
-                    this.stepWrapper = stepPersistentWrapper
-                    this.lessonData = lessonData
+                    this.stepId = stepId
                 }
     }
 
@@ -47,10 +46,15 @@ class TextStepContentFragment :
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var presenter: TextStepContentPresenter
+    @Inject
+    lateinit var stepWrapper: StepPersistentWrapper
 
-    private var stepWrapper: StepPersistentWrapper by argument()
-    private var lessonData: LessonData by argument()
+    @Inject
+    lateinit var lessonData: LessonData
+
+    private var stepId: Long by argument()
+
+    private lateinit var presenter: TextStepContentPresenter
 
     private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
 
@@ -66,7 +70,8 @@ class TextStepContentFragment :
     }
 
     private fun injectComponent() {
-        App.component()
+        App.componentManager()
+            .stepComponent(stepId)
             .textStepContentComponentBuilder()
             .build()
             .inject(this)
@@ -142,7 +147,7 @@ class TextStepContentFragment :
         reportStepAction(Analytic.Steps.STEP_EDIT_OPENED, AmplitudeAnalytic.Steps.STEP_EDIT_OPENED, stepWrapper.step)
 
         EditStepSourceDialogFragment
-            .newInstance(stepWrapper, lessonData)
+            .newInstance(stepWrapper, lessonData.lesson.title.orEmpty())
             .showIfNotExists(childFragmentManager, EditStepSourceDialogFragment.TAG)
     }
 

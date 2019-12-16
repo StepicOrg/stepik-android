@@ -30,6 +30,7 @@ import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
@@ -72,10 +73,11 @@ class StepFragment : Fragment(), StepView,
     @Inject
     lateinit var solutionStatsSplitTest: SolutionStatsSplitTest
 
-    private lateinit var stepPresenter: StepPresenter
-
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonData: LessonData by argument()
+
+    private lateinit var stepComponent: StepComponent
+    private lateinit var stepPresenter: StepPresenter
 
     private lateinit var stepSolutionStatsDelegate: StepSolutionStatsDelegate
     private lateinit var stepNavigationDelegate: StepNavigationDelegate
@@ -85,20 +87,20 @@ class StepFragment : Fragment(), StepView,
         LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        injectComponent()
+
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        injectComponent()
 
         stepPresenter = ViewModelProviders.of(this, viewModelFactory).get(StepPresenter::class.java)
         stepPresenter.onLessonData(stepWrapper, lessonData)
     }
 
     private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
-            .inject(this)
+        stepComponent = App
+            .componentManager()
+            .stepParentComponent(stepWrapper, lessonData)
+        stepComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -142,7 +144,7 @@ class StepFragment : Fragment(), StepView,
 
         if (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) == null) {
             val stepContentFragment =
-                stepContentFragmentFactory.createStepContentFragment(stepWrapper, lessonData)
+                stepContentFragmentFactory.createStepContentFragment(stepWrapper)
 
             childFragmentManager
                 .beginTransaction()
@@ -160,7 +162,7 @@ class StepFragment : Fragment(), StepView,
             val isQuizFragmentEmpty = childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null
 
             if (isQuizFragmentEmpty || isNeedReload) {
-                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData)
+                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper)
 
                 childFragmentManager.commitNow {
                     if (isQuizFragmentEmpty) {

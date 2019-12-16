@@ -5,8 +5,6 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import org.stepic.droid.R
 import org.stepic.droid.model.code.ProgrammingLanguage
-import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz.ui.fragment.DefaultStepQuizFragment
@@ -16,11 +14,10 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class SqlStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, CodeStepQuizFullScreenDialogFragment.Callback {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Fragment =
+        fun newInstance(stepId: Long): Fragment =
             SqlStepQuizFragment()
                 .apply {
-                    this.stepWrapper = stepPersistentWrapper
-                    this.lessonData = lessonData
+                    this.stepId = stepId
                 }
     }
 
@@ -48,7 +45,7 @@ class SqlStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, CodeStepQui
     }
 
     private fun onFullScreenClicked(lang: String, code: String) {
-        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, mapOf(ProgrammingLanguage.SQL.serverPrintableName to ""), stepWrapper, lessonData)
+        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, mapOf(ProgrammingLanguage.SQL.serverPrintableName to ""), stepWrapper, lessonData.lesson.title.orEmpty())
         dialog.setTargetFragment(this, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
         dialog.showIfNotExists(requireFragmentManager(), CodeStepQuizFullScreenDialogFragment.TAG)
     }

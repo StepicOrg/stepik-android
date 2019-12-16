@@ -107,10 +107,7 @@ constructor(
                         .maxSubmissionCount
                         .takeIf { stepPersistentWrapper.step.hasSubmissionRestriction }
                         ?: -1,
-                    discountingPolicyType = lessonData
-                        .section
-                        ?.discountingPolicy
-                        ?: DiscountingPolicyType.NoDiscount
+                    discountingPolicyType = lessonData.section?.discountingPolicy ?: DiscountingPolicyType.NoDiscount
                 )
             }
 

@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.course
 
-import android.os.Bundle
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -52,10 +51,6 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : PresenterBase<CourseView>() {
-    companion object {
-        private const val KEY_COURSE_HEADER_DATA = "course_header_data"
-    }
-
     private var state: CourseView.State = CourseView.State.Idle
         set(value) {
             field = value
@@ -90,13 +85,6 @@ constructor(
     /**
      * Data initialization variants
      */
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        if (state != CourseView.State.Idle) return
-        val data = savedInstanceState.getParcelable(KEY_COURSE_HEADER_DATA)
-                as? CourseHeaderData ?: return
-        courseInteractor.restoreCourse(data.course)
-        state = CourseView.State.CourseLoaded(data)
-    }
 
     fun onCourseId(courseId: Long, forceUpdate: Boolean = false) {
         observeCourseData(courseInteractor.getCourseHeaderData(courseId), forceUpdate)
@@ -333,9 +321,5 @@ constructor(
             ?: return
 
         view?.shareCourse(course)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(KEY_COURSE_HEADER_DATA, (state as? CourseView.State.CourseLoaded)?.courseHeaderData)
     }
 }

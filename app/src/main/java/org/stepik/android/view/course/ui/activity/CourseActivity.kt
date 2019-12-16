@@ -144,8 +144,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                     CourseScreenTab.SYLLABUS -> 2
                     else -> 0
                 }
-        } else {
-            coursePresenter.onRestoreInstanceState(savedInstanceState)
         }
         setDataToPresenter()
 
@@ -364,11 +362,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
         screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        coursePresenter.onSaveInstanceState(outState)
-        super.onSaveInstanceState(outState)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

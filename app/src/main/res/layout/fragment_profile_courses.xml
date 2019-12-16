@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/profileCoursesTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:orientation="vertical"
+
+        android:paddingLeft="@dimen/profile_block_margin"
+        android:paddingRight="@dimen/profile_block_margin"
+
+        android:paddingTop="11dp"
+        android:paddingBottom="8dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:text="@string/profile_courses_title"
+
+            android:gravity="center_vertical"
+
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+
+            style="@style/ProfileItemHeader" />
+        <!--
+            android:drawableEnd="@drawable/ic_nav_arrow_right"
+            android:drawableRight="@drawable/ic_nav_arrow_right"
+        -->
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/profileCoursesCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:fontFamily="@font/roboto_light"
+            android:textSize="16sp"
+            android:textColor="@color/new_accent_color"
+
+            tools:text="9 courses" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profileCoursesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:clipToPadding="false"
+
+        android:paddingLeft="16dp"
+        android:paddingStart="16dp"
+        android:paddingRight="@dimen/home_right_recycler_padding"
+        android:paddingEnd="@dimen/home_right_recycler_padding"
+        android:paddingBottom="16dp" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/profileCoursesPlaceholder"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin">
+        <include
+            layout="@layout/course_item_loading_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginBottom="16dp" />
+        <include
+            layout="@layout/course_item_loading_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <include
+        android:id="@+id/profileCoursesLoadingError"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        layout="@layout/error_no_connection_with_button_small" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey04" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
