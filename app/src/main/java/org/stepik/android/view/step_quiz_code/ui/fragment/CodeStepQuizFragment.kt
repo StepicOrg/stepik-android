@@ -4,10 +4,8 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.layout_step_quiz_code.*
 import org.stepic.droid.R
-import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
-import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.code.CodeOptions
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -25,11 +23,10 @@ class CodeStepQuizFragment :
     ProgrammingLanguageChooserDialogFragment.Callback,
     CodeStepQuizFullScreenDialogFragment.Callback {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, stepQuizLessonData: StepQuizLessonData): Fragment =
+        fun newInstance(stepId: Long): Fragment =
             CodeStepQuizFragment()
                 .apply {
-                    this.stepWrapper = stepPersistentWrapper
-                    this.stepQuizLessonData = stepQuizLessonData
+                    this.stepId = stepId
                 }
     }
 
@@ -91,7 +88,7 @@ class CodeStepQuizFragment :
     }
 
     private fun onFullScreenClicked(lang: String, code: String) {
-        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, codeOptions.codeTemplates, stepWrapper, stepQuizLessonData.lessonTitle)
+        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, codeOptions.codeTemplates, stepWrapper, lessonData.lesson.title.orEmpty())
         dialog.setTargetFragment(this, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
         dialog.showIfNotExists(requireFragmentManager(), CodeStepQuizFullScreenDialogFragment.TAG)
     }

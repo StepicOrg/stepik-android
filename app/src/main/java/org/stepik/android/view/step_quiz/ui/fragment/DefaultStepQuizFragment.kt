@@ -16,6 +16,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
@@ -34,10 +35,14 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     @Inject
     internal lateinit var screenManager: ScreenManager
 
-    private lateinit var presenter: StepQuizPresenter
+    @Inject
+    internal lateinit var stepWrapper: StepPersistentWrapper
+    @Inject
+    internal lateinit var lessonData: LessonData
 
-    protected var stepQuizLessonData: StepQuizLessonData by argument()
-    protected var stepWrapper: StepPersistentWrapper by argument()
+    protected var stepId: Long by argument()
+
+    private lateinit var presenter: StepQuizPresenter
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizView.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate
@@ -54,13 +59,12 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         presenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(StepQuizPresenter::class.java)
-        presenter.onStepData(stepWrapper, stepQuizLessonData)
+        presenter.onStepData(stepWrapper, lessonData)
     }
 
     private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
+        App.componentManager()
+            .stepComponent(stepId)
             .inject(this)
     }
 
@@ -79,12 +83,12 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizDescription, stepQuizActionContainer, *quizViews)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
-        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, stepQuizLessonData, forceUpdate = true) }
+        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
 
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
-                stepQuizLessonData = stepQuizLessonData,
+                stepQuizLessonData = StepQuizLessonData(lessonData),
                 stepQuizFormDelegate = createStepQuizFormDelegate(view),
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(
