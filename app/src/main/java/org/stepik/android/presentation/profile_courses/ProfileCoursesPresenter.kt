@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.profile_courses
 
+import android.os.Bundle
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
@@ -9,6 +10,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -32,6 +34,10 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : PresenterBase<ProfileCoursesView>() {
+    companion object {
+        private const val KEY_COURSES = "courses"
+    }
+
     private var state: ProfileCoursesView.State = ProfileCoursesView.State.Idle
         set(value) {
             field = value
@@ -41,6 +47,13 @@ constructor(
     override fun attachView(view: ProfileCoursesView) {
         super.attachView(view)
         view.setState(state)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        val courses = savedInstanceState.getParcelableArrayList<Course>(KEY_COURSES)
+        if (courses != null) {
+            state = ProfileCoursesView.State.Content(PagedList(courses))
+        }
     }
 
     fun fetchCourses(forceUpdate: Boolean = false) {
@@ -88,5 +101,12 @@ constructor(
                     onError = { view?.showCourse(course, isAdaptive = false) }
                 )
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        val courses = (state as? ProfileCoursesView.State.Content)
+            ?.courses
+            ?: return
+        outState.putParcelableArrayList(KEY_COURSES, ArrayList(courses))
     }
 }

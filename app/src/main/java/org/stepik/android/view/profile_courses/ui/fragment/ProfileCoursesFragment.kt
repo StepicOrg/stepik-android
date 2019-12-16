@@ -65,6 +65,7 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         profileCoursesPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(ProfileCoursesPresenter::class.java)
+        savedInstanceState?.let(profileCoursesPresenter::onRestoreInstanceState)
 
         coursesAdapter = DefaultDelegateAdapter()
         coursesAdapter += CourseAdapterDelegate(
@@ -157,5 +158,10 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         } else {
             screenManager.showCourseDescription(activity, course)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        profileCoursesPresenter.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 }
