@@ -10,13 +10,15 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import javax.inject.Inject
 
 class ProfileCoursesPresenter
@@ -28,6 +30,9 @@ constructor(
 
     private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
     private val continueLearningInteractor: ContinueLearningInteractor,
+
+    @EnrollmentCourseUpdates
+    private val enrollmentUpdatesObservable: Observable<Course>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -50,6 +55,10 @@ constructor(
             view?.setBlockingLoading(value)
         }
 
+    init {
+        subscriberForEnrollmentUpdates()
+    }
+
     override fun attachView(view: ProfileCoursesView) {
         super.attachView(view)
         view.setBlockingLoading(isBlockingLoading)
@@ -57,9 +66,19 @@ constructor(
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        val courses = savedInstanceState.getParcelableArrayList<Course>(KEY_COURSES)
-        if (courses != null) {
-            state = ProfileCoursesView.State.Content(PagedList(courses))
+        val courseIds = savedInstanceState.getLongArray(KEY_COURSES)
+        if (courseIds != null) {
+            if (state == ProfileCoursesView.State.Idle) {
+                state = ProfileCoursesView.State.SilentLoading
+                compositeDisposable += courseListInteractor
+                    .getCourseList(courseIds)
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = { state = ProfileCoursesView.State.Content(it) },
+                        onError = { state = ProfileCoursesView.State.Idle; fetchCourses() }
+                    )
+            }
         }
     }
 
@@ -86,6 +105,21 @@ constructor(
                     onError = { state = ProfileCoursesView.State.Error }
                 )
         }
+    }
+
+    private fun subscriberForEnrollmentUpdates() {
+        compositeDisposable += enrollmentUpdatesObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { course ->
+                    val oldState = state
+                    if (oldState is ProfileCoursesView.State.Content) {
+                        state = ProfileCoursesView.State.Content(oldState.courses.map { if (it.id == course.id) course else it })
+                    }
+                },
+                onError = emptyOnErrorStub
+            )
     }
     
     fun continueCourse(course: Course) {
@@ -116,6 +150,7 @@ constructor(
         val courses = (state as? ProfileCoursesView.State.Content)
             ?.courses
             ?: return
-        outState.putParcelableArrayList(KEY_COURSES, ArrayList(courses))
+
+        outState.putLongArray(KEY_COURSES, courses.mapToLongArray(Course::id))
     }
 }

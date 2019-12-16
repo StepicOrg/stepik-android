@@ -4,6 +4,8 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.doCompletableOnSuccess
+import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course_list.source.CourseListCacheDataSource
 import org.stepik.android.data.course_list.source.CourseListRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -16,7 +18,8 @@ class CourseListRepositoryImpl
 @Inject
 constructor(
     private val courseListCacheDataSource: CourseListCacheDataSource,
-    private val courseListRemoteDataSource: CourseListRemoteDataSource
+    private val courseListRemoteDataSource: CourseListRemoteDataSource,
+    private val courseCacheDataSource: CourseCacheDataSource
 ) : CourseListRepository {
     override fun getCourseList(courseListType: CourseListType, page: Int, lang: String, sourceType: DataSourceType): Single<PagedList<Course>> =
         when (sourceType) {
@@ -33,6 +36,7 @@ constructor(
 
     override fun getCourseList(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
         courseListRemoteDataSource.getCourseList(courseListQuery)
+            .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
 
     override fun addCourseToList(courseListType: CourseListType, courseId: Long): Completable =
         courseListCacheDataSource.addCourseToList(courseListType, courseId)
