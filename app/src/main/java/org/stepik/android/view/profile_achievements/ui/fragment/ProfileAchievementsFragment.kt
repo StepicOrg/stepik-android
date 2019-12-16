@@ -65,6 +65,8 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
         achievementsPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(ProfileAchievementsPresenter::class.java)
+        savedInstanceState
+            ?.let(achievementsPresenter::onRestoreInstanceState)
 
         achievementsAdapter = DefaultDelegateAdapter()
         achievementsAdapter += AchievementTileAdapterDelegate(achievementResourceResolver, ::onAchievementClicked)
@@ -149,5 +151,10 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
                 isMyProfile = state.isMyProfile
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        achievementsPresenter.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 }
