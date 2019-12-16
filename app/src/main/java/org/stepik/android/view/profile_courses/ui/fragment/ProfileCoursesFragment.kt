@@ -29,6 +29,7 @@ import org.stepik.android.view.course_list.ui.adapter.delegate.CourseAdapterDele
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import javax.inject.Inject
+import kotlin.math.min
 
 class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     companion object {
@@ -137,6 +138,8 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
             is ProfileCoursesView.State.Content -> {
                 profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courses.size, state.courses.size)
                 coursesAdapter.items = state.courses
+                (profileCoursesRecycler.layoutManager as? GridLayoutManager)
+                    ?.spanCount = min(ROW_COUNT, state.courses.size)
             }
         }
     }
