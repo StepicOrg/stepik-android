@@ -54,6 +54,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
 
     private var achievementsToDisplay = 0
     private var isMyProfile = false
+    private var profileId = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,7 +93,7 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
         viewStateDelegate.addState<AchievementsView.State.NoAchievements>()
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        achievementsTitle.setOnClickListener { screenManager.showAchievementsList(requireContext(), userId, isMyProfile) }
+        achievementsTitle.setOnClickListener { screenManager.showAchievementsList(requireContext(), profileId, isMyProfile) }
 
         achievementsTilesContainer.layoutManager = GridLayoutManager(context, achievementsToDisplay)
         achievementsTilesContainer.isNestedScrollingEnabled = false
@@ -139,12 +140,12 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
 
         when (state) {
             is AchievementsView.State.Loading -> {
-                userId = state.userId
+                profileId = state.userId
                 isMyProfile = state.isMyProfile
             }
             is AchievementsView.State.AchievementsLoaded -> {
                 achievementsAdapter.items = state.achievements.take(achievementsToDisplay)
-                userId = state.userId
+                profileId = state.userId
                 isMyProfile = state.isMyProfile
             }
         }
