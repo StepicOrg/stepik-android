@@ -97,6 +97,7 @@
 
     <dimen name="course_list_side_padding">20dp</dimen> <!-- Horizontal offset of content on HomeFragment & CatalogFragment -->
 
+    <dimen name="course_item_height">141dp</dimen>
     <dimen name="course_item_radius">8dp</dimen>
     <dimen name="course_item_margin">8dp</dimen> <!-- Total offset is 8 + 8 = 16 -->
     <dimen name="course_list_padding">8dp</dimen> <!-- Padding for regular course lists @see CourseListFragmentBase -->

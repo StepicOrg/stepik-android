@@ -805,4 +805,6 @@
     <string name="profile_external_links_title">Ссылки</string>
     <string name="profile_notifcation_title">Уведомления</string>
     <string name="profile_settings_menu_item">Настройки</string>
+
+    <string name="profile_courses_title">Курсы</string>
 </resources>

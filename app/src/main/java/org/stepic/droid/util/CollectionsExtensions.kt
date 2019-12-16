@@ -79,3 +79,12 @@ inline fun <T> List<T>.mutate(mutation: MutableList<T>.() -> Unit): List<T> =
  */
 inline fun <T> PagedList<T>.mutate(mutation: MutableList<T>.() -> Unit): PagedList<T> =
     PagedList(this.toMutableList().apply(mutation), hasPrev = hasPrev, hasNext = hasNext, page = page)
+
+/**
+ * Puts [value] in map if it is not null
+ */
+fun <K, V> MutableMap<K, V>.putNullable(key: K, value: V?) {
+    if (value != null) {
+        put(key, value)
+    }
+}
