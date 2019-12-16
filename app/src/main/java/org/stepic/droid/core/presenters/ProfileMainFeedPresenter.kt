@@ -76,7 +76,6 @@ class ProfileMainFeedPresenter
                     teacher = userId
                 )
             )
-            .filter { it.isNotEmpty() }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
