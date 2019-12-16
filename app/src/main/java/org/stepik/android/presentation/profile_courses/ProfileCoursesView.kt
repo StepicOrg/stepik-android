@@ -15,6 +15,8 @@ interface ProfileCoursesView {
 
     fun setState(state: State)
 
+    fun setBlockingLoading(isLoading: Boolean)
+
     fun showCourse(course: Course, isAdaptive: Boolean)
     fun showSteps(course: Course, lastStep: LastStep)
 }

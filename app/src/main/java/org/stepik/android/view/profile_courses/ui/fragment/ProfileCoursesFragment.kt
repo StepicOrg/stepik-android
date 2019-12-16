@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
@@ -17,7 +18,9 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
@@ -56,6 +59,9 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
 
     private lateinit var coursesAdapter: DefaultDelegateAdapter<Course>
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCoursesView.State>
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,6 +138,14 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
                 profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courses.size, state.courses.size)
                 coursesAdapter.items = state.courses
             }
+        }
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
         }
     }
 

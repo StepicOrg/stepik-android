@@ -44,8 +44,15 @@ constructor(
             view?.setState(value)
         }
 
+    private var isBlockingLoading: Boolean = false
+        set(value) {
+            field = value
+            view?.setBlockingLoading(value)
+        }
+
     override fun attachView(view: ProfileCoursesView) {
         super.attachView(view)
+        view.setBlockingLoading(isBlockingLoading)
         view.setState(state)
     }
 
@@ -92,10 +99,12 @@ constructor(
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {
             view?.showCourse(course, isAdaptive = true)
         } else {
+            isBlockingLoading = true
             compositeDisposable += continueLearningInteractor
                 .getLastStepForCourse(course)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
+                .doFinally { isBlockingLoading = false }
                 .subscribeBy(
                     onSuccess = { view?.showSteps(course, it) },
                     onError = { view?.showCourse(course, isAdaptive = false) }
