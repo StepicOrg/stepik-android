@@ -335,7 +335,7 @@
                     android:foreground="@drawable/non_radius_foreground">
 
                     <TextView
-                        android:id="@+id/certificatesTitle"
+                        android:id="@+id/profileCertificatesTitle"
                         app:fontFamily="@font/roboto_light"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
