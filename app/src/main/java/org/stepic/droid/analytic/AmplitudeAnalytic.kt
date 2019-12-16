@@ -9,6 +9,7 @@ interface AmplitudeAnalytic {
         const val APPLICATION_ID = "application_id"
         const val PUSH_PERMISSION = "push_permission"
         const val STREAKS_NOTIFICATIONS_ENABLED = "streaks_notifications_enabled"
+        const val TEACHING_COURSES_COUNT = "teaching_courses_count"
     }
 
     object Launch {
