@@ -20,6 +20,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
@@ -31,11 +32,10 @@ import javax.inject.Inject
 
 class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     companion object {
-        fun newInstance(stepPersistentWrapper: StepPersistentWrapper, lessonTitle: String): Fragment =
+        fun newInstance(stepId: Long): Fragment =
             VideoStepContentFragment()
                 .apply {
-                    this.lessonTitle = lessonTitle
-                    this.stepWrapper = stepPersistentWrapper
+                    this.stepId = stepId
                 }
     }
 
@@ -48,10 +48,14 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var presenter: VideoStepContentPresenter
+    @Inject
+    internal lateinit var stepWrapper: StepPersistentWrapper
 
-    private var lessonTitle: String by argument()
-    private var stepWrapper: StepPersistentWrapper by argument()
+    @Inject
+    internal lateinit var lessonData: LessonData
+
+    private lateinit var presenter: VideoStepContentPresenter
+    private var stepId: Long by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +71,8 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     }
 
     private fun injectComponent() {
-        App.component()
+        App.componentManager()
+            .stepComponent(stepId)
             .videoStepContentComponentBuilder()
             .build()
             .inject(this)
@@ -97,7 +102,7 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
                 ?: stepWrapper.step.block?.video?.thumbnail
             screenManager.showVideo(this, VideoPlayerMediaData(
                 thumbnail = thumbnail,
-                title = lessonTitle,
+                title = lessonData.lesson.title.orEmpty(),
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
             ), true)

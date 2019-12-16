@@ -16,17 +16,20 @@ import javax.inject.Inject
 
 class UnsupportedStepQuizFragment : Fragment() {
     companion object {
-        fun newInstance(stepWrapper: StepPersistentWrapper): UnsupportedStepQuizFragment =
+        fun newInstance(stepId: Long): UnsupportedStepQuizFragment =
             UnsupportedStepQuizFragment()
                 .apply {
-                    this.stepWrapper = stepWrapper
+                    this.stepId = stepId
                 }
     }
 
     @Inject
     internal lateinit var screenManager: ScreenManager
 
-    private var stepWrapper: StepPersistentWrapper by argument()
+    @Inject
+    internal lateinit var stepWrapper: StepPersistentWrapper
+
+    private var stepId: Long by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +37,8 @@ class UnsupportedStepQuizFragment : Fragment() {
     }
 
     private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
+        App.componentManager()
+            .stepComponent(stepId)
             .inject(this)
     }
 
