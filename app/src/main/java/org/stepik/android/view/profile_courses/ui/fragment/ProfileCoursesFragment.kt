@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
@@ -26,8 +27,10 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesView
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseAdapterDelegate
+import org.stepik.android.view.profile_courses.ui.adapter.diffutil.CourseDiffUtilCallback
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.diff.DiffCallbackFactory
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -74,7 +77,12 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
             .get(ProfileCoursesPresenter::class.java)
         savedInstanceState?.let(profileCoursesPresenter::onRestoreInstanceState)
 
-        coursesAdapter = DefaultDelegateAdapter()
+        coursesAdapter = DefaultDelegateAdapter(
+            diffCallbackFactory = object : DiffCallbackFactory<Course> {
+                override fun createDiffUtil(oldList: List<Course>, newList: List<Course>): DiffUtil.Callback =
+                    CourseDiffUtilCallback(oldList, newList)
+            }
+        )
         coursesAdapter += CourseAdapterDelegate(
             adaptiveCoursesResolver,
             onItemClicked = ::onCourseClicked,
