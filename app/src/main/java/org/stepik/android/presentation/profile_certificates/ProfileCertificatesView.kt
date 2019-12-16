@@ -7,7 +7,8 @@ interface ProfileCertificatesView {
         object Idle : State()
         object SilentLoading : State()
         class Loading(val userId: Long) : State()
-        class CertificatesLoaded(val certificates: List<CertificateViewItem>, val userId: Long) : State()
+        class CertificatesCache(val certificates: List<CertificateViewItem>, val userId: Long) : State()
+        class CertificatesRemote(val certificates: List<CertificateViewItem>, val userId: Long) : State()
         object Error : State()
         object NoCertificates : State()
     }

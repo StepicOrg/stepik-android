@@ -229,4 +229,8 @@
     <!-- Course item -->
     <color name="course_item_separator_light">@color/grey04</color>
     <color name="course_item_separator_dark">#30999999</color>
+
+    <!-- Certificate icon color -->
+    <color name="certificate_distinction">#EA9F30</color>
+    <color name="certificate_regular">#75CE61</color>
 </resources>

@@ -1,11 +1,14 @@
 package org.stepik.android.presentation.profile_certificates
 
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.interactor.CertificatesInteractor
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.base.PresenterBase
@@ -38,26 +41,43 @@ constructor(
             state = ProfileCertificatesView.State.SilentLoading
             compositeDisposable += profileDataObservable
                 .firstElement()
-                .filter { !it.user.isPrivate }
+                .filter { !it.user.isOrganization && !it.user.isPrivate }
                 .observeOn(mainScheduler)
                 .doOnSuccess { profileData ->
                     state = ProfileCertificatesView.State.Loading(profileData.user.id)
                 } // post public loading to view
                 .observeOn(backgroundScheduler)
                 .flatMapSingleElement { profileData ->
-                     certificatesInteractor
-                         .getCertificates(profileData.user.id)
-                         .map { it to profileData.user.id }
+                    val userId = profileData.user.id
+                    fetchCertificatesFromCache(userId)
+                        .switchIfEmpty(fetchCertificatesFromRemote(userId))
                 }
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { (certificates, userId) ->
-                        state = ProfileCertificatesView.State.CertificatesLoaded(certificates, userId)
+                    onSuccess = {
+                        state = it
                     },
-                    onComplete = { state = ProfileCertificatesView.State.NoCertificates},
+                    onComplete = { state = ProfileCertificatesView.State.NoCertificates },
                     onError = { state = ProfileCertificatesView.State.Error }
                 )
         }
     }
+
+    private fun fetchCertificatesFromCache(userId: Long): Maybe<ProfileCertificatesView.State> =
+        certificatesInteractor
+            .getCertificates(userId, page = 1, sourceType = DataSourceType.CACHE)
+            .filter { it.isNotEmpty() }
+            .map { ProfileCertificatesView.State.CertificatesCache(it, userId) }
+
+    private fun fetchCertificatesFromRemote(userId: Long): Single<ProfileCertificatesView.State> =
+        certificatesInteractor
+            .getCertificates(userId, page = 1, sourceType = DataSourceType.REMOTE)
+            .map { certificates ->
+                if (certificates.isEmpty()) {
+                    ProfileCertificatesView.State.NoCertificates
+                } else {
+                    ProfileCertificatesView.State.CertificatesRemote(certificates, userId)
+                }
+            }
 }

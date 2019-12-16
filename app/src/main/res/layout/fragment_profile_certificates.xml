@@ -8,12 +8,12 @@
     android:layout_height="wrap_content">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/certificatesTitle"
+        android:id="@+id/profileCertificatesTitle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?selectableItemBackground"
 
-        android:text="Certificates"
+        android:text="@string/certificates_title"
         android:gravity="center_vertical"
 
         android:paddingLeft="@dimen/profile_block_margin"
@@ -29,17 +29,21 @@
         style="@style/ProfileItemHeader" />
 
     <include
+        android:id="@+id/profileCertificatesLoading"
+        android:visibility="gone"
+        layout="@layout/profile_details_loading_view" />
+
+    <include
         android:id="@+id/certificatesLoadingError"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_marginBottom="@dimen/profile_block_vertical_margin" />
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        layout="@layout/error_no_connection_with_button_small" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/certificatesRecycler"
+        android:id="@+id/profileCertificatesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/profile_block_margin"
-        android:layout_marginStart="@dimen/profile_block_margin"
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         android:visibility="gone" />
 

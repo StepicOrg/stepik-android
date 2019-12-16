@@ -14,12 +14,13 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.CertificateViewItem
-import org.stepik.android.model.Certificate
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesPresenter
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesView
+import org.stepik.android.view.certificate.ui.adapter.CertificateProfileAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
+import timber.log.Timber
 import javax.inject.Inject
 
 class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
@@ -48,7 +49,6 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         injectComponent()
 
         certificatesPresenter = ViewModelProviders
@@ -56,6 +56,9 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
             .get(ProfileCertificatesPresenter::class.java)
 
         certificatesAdapter = DefaultDelegateAdapter()
+        certificatesAdapter += CertificateProfileAdapterDelegate(::onCertificateClicked)
+
+        Timber.d("User id: $userId")
     }
 
     private fun injectComponent() {
@@ -75,17 +78,18 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<ProfileCertificatesView.State.Idle>()
         viewStateDelegate.addState<ProfileCertificatesView.State.SilentLoading>()
-        viewStateDelegate.addState<ProfileCertificatesView.State.Loading>(view)
+        viewStateDelegate.addState<ProfileCertificatesView.State.Loading>(view, profileCertificatesLoading)
         viewStateDelegate.addState<ProfileCertificatesView.State.Error>(view, certificatesLoadingError)
-        viewStateDelegate.addState<ProfileCertificatesView.State.CertificatesLoaded>(view, certificatesRecycler)
+        viewStateDelegate.addState<ProfileCertificatesView.State.CertificatesCache>(view, profileCertificatesRecycler)
+        viewStateDelegate.addState<ProfileCertificatesView.State.CertificatesRemote>(view, profileCertificatesRecycler)
         viewStateDelegate.addState<ProfileCertificatesView.State.NoCertificates>()
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
-        certificatesTitle.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
+        profileCertificatesTitle.setOnClickListener { screenManager.showCertificates(requireContext(), userId) }
 
-        certificatesRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        certificatesRecycler.isNestedScrollingEnabled = false
-        certificatesRecycler.adapter = certificatesAdapter
+        profileCertificatesRecycler.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        profileCertificatesRecycler.isNestedScrollingEnabled = false
+        profileCertificatesRecycler.adapter = certificatesAdapter
 
         setDataToPresenter()
     }
@@ -104,8 +108,8 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
         super.onStop()
     }
 
-    private fun onCertificateClicked(item: Certificate) {
-
+    private fun onCertificateClicked(path: String) {
+        screenManager.showPdfInBrowserByGoogleDocs(requireActivity(), path)
     }
 
     override fun setState(state: ProfileCertificatesView.State) {
@@ -115,8 +119,12 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
             is ProfileCertificatesView.State.Loading -> {
                 userId = state.userId
             }
-            is ProfileCertificatesView.State.CertificatesLoaded -> {
-                certificatesAdapter.items = state.certificates
+            is ProfileCertificatesView.State.CertificatesCache -> {
+                certificatesAdapter.items = state.certificates.take(CERTIFICATES_TO_DISPLAY)
+                userId = state.userId
+            }
+            is ProfileCertificatesView.State.CertificatesRemote -> {
+                certificatesAdapter.items = state.certificates.take(CERTIFICATES_TO_DISPLAY)
                 userId = state.userId
             }
         }
