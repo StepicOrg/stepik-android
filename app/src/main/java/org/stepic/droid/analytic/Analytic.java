@@ -578,6 +578,7 @@ public interface Analytic {
     void setSubmissionsCount(long submissionsCount);
     void setScreenOrientation(int orientation);
     void setStreaksNotificationsEnabled(boolean isEnabled);
+    void setTeachingCoursesCount(int coursesCount);
     void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
     void reportAmplitudeEvent(@NotNull String eventName);
 
