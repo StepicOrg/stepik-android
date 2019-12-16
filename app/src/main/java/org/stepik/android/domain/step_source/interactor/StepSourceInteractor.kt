@@ -29,4 +29,10 @@ constructor(
                     .toSingle()
             }
             .flatMap(stepContentResolver::resolvePersistentContent)
+
+    fun fetchStep(step: Step): Single<StepPersistentWrapper> =
+        stepRepository
+            .getStep(step.id, primarySourceType = DataSourceType.REMOTE)
+            .toSingle()
+            .flatMap(stepContentResolver::resolvePersistentContent)
 }
