@@ -22,7 +22,7 @@ data class AchievementItem(
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readBoolean(),
-        parcel.readString(),
+        parcel.readString()!!,
         parcel.readInt(),
         parcel.readInt(),
         parcel.readInt(),

@@ -59,6 +59,9 @@ constructor(
     override fun setStreaksNotificationsEnabled(isEnabled: Boolean) =
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled"))
 
+    override fun setTeachingCoursesCount(coursesCount: Int) =
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount))
+
     override fun reportAmplitudeEvent(eventName: String) = reportAmplitudeEvent(eventName, null)
     override fun reportAmplitudeEvent(eventName: String, params: MutableMap<String, Any>?) {
         syncAmplitudeProperties()

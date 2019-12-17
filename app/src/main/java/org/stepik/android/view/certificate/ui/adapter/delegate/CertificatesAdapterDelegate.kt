@@ -1,4 +1,4 @@
-package org.stepik.android.view.certificate.ui.adapter
+package org.stepik.android.view.certificate.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup

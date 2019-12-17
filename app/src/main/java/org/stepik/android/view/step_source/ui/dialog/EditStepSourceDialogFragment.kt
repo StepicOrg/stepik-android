@@ -80,9 +80,8 @@ class EditStepSourceDialogFragment :
     }
 
     private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
+        App.componentManager()
+            .stepComponent(stepWrapper.step.id)
             .inject(this)
     }
 
@@ -104,7 +103,7 @@ class EditStepSourceDialogFragment :
         }
 
         if (savedInstanceState == null) {
-            stepContentEditText.setText(stepWrapper.originalStep.block?.text)
+            editStepContentPresenter.fetchStepContent(stepWrapper)
         }
         invalidateMenuState()
 
@@ -142,16 +141,16 @@ class EditStepSourceDialogFragment :
 
     private fun submit() {
         stepContentEditText.hideKeyboard()
-        editStepContentPresenter.changeStepBlockText(stepWrapper.originalStep, stepContentEditText.text.toString())
+        editStepContentPresenter.changeStepBlockText(stepWrapper, stepContentEditText.text.toString())
     }
 
     override fun setState(state: EditStepSourceView.State) {
         when (state) {
-            EditStepSourceView.State.Idle ->
-                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
-
             EditStepSourceView.State.Loading ->
                 ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            is EditStepSourceView.State.StepLoaded ->
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
 
             is EditStepSourceView.State.Complete -> {
                 ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
@@ -186,6 +185,16 @@ class EditStepSourceDialogFragment :
 
     override fun onDiscardConfirmed() {
         super.dismiss()
+    }
+
+    override fun setStepWrapperInfo(stepWrapper: StepPersistentWrapper) {
+        (activity as? Callback
+            ?: parentFragment as? Callback
+            ?: targetFragment as? Callback)
+            ?.onStepContentChanged(stepWrapper)
+
+        this.stepWrapper = stepWrapper
+        stepContentEditText.setText(stepWrapper.originalStep.block?.text)
     }
 
     interface Callback {

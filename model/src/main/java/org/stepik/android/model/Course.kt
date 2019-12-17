@@ -5,7 +5,6 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
-import java.util.*
 
 class Course(
     @SerializedName("id")
@@ -123,7 +122,7 @@ class Course(
     var progressObject: Progress? = null,
     var rating: Double = 0.0
 ): Progressable, Parcelable {
-    override fun equals(other: Any?): Boolean {
+    override fun equals(other: Any?): Boolean { // todo use data class
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 

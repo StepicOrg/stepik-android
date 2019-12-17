@@ -262,8 +262,6 @@ public class ScreenManagerImpl implements ScreenManager {
     private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
         Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll, tab);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -502,17 +500,10 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep) {
+        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, CourseScreenTab.SYLLABUS);
         Intent stepsIntent = LessonActivity.Companion.createIntent(activity, lastStep);
-
-        Intent courseIntent = CourseActivity.Companion.createIntent(activity,
-                courseId, CourseScreenTab.SYLLABUS);
-
-        TaskStackBuilder.create(activity)
-                .addNextIntent(new Intent(activity, MainFeedActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(courseIntent)
-                .addNextIntent(stepsIntent)
-                .startActivities();
+        activity.startActivity(courseIntent);
+        activity.startActivity(stepsIntent);
     }
 
     @Override

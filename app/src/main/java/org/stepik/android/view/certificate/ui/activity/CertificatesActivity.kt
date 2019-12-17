@@ -22,7 +22,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.presentation.certificate.CertificatesPresenter
 import org.stepik.android.presentation.certificate.CertificatesView
-import org.stepik.android.view.certificate.ui.adapter.CertificatesAdapterDelegate
+import org.stepik.android.view.certificate.ui.adapter.delegate.CertificatesAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists

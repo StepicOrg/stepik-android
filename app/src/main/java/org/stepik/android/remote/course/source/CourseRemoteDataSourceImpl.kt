@@ -20,7 +20,7 @@ constructor(
     override fun getCourses(vararg courseIds: Long): Single<List<Course>> =
         courseIds
             .chunkedSingleMap { ids ->
-                courseService.getCoursesReactive(ids)
+                courseService.getCourses(ids)
                     .map(courseResponseMapper)
             }
 }

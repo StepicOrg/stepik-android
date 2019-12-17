@@ -24,7 +24,7 @@ class ProfileLinksAdapterDelegate(
         true
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SocialProfile> =
-        ViewHolder(createView(parent, R.layout.profile_link_item))
+        ViewHolder(createView(parent, R.layout.item_profile_link))
 
     private inner class ViewHolder(
         root: View

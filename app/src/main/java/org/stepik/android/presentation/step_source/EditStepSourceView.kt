@@ -6,9 +6,11 @@ interface EditStepSourceView {
     sealed class State {
         object Idle : State()
         object Loading : State()
+        object StepLoaded : State()
         class Complete(val stepWrapper: StepPersistentWrapper) : State()
     }
 
     fun setState(state: State)
     fun showNetworkError()
+    fun setStepWrapperInfo(stepWrapper: StepPersistentWrapper)
 }
