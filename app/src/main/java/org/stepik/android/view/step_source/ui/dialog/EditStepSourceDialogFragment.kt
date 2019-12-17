@@ -155,7 +155,10 @@ class EditStepSourceDialogFragment :
             is EditStepSourceView.State.Complete -> {
                 ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
 
-                passStepContent(state.stepWrapper)
+                (activity as? Callback
+                    ?: parentFragment as? Callback
+                    ?: targetFragment as? Callback)
+                    ?.onStepContentChanged(state.stepWrapper)
 
                 super.dismiss()
             }
@@ -172,7 +175,6 @@ class EditStepSourceDialogFragment :
 
     private fun onClose() {
         if (stepContentEditText.text?.toString() == stepWrapper.originalStep.block?.text) {
-            passStepContent(stepWrapper)
             super.dismiss()
         } else {
             DiscardTextDialogFragment
@@ -182,20 +184,17 @@ class EditStepSourceDialogFragment :
     }
 
     override fun onDiscardConfirmed() {
-        passStepContent(stepWrapper)
         super.dismiss()
     }
 
     override fun setStepWrapperInfo(stepWrapper: StepPersistentWrapper) {
-        this.stepWrapper = stepWrapper
-        stepContentEditText.setText(stepWrapper.originalStep.block?.text)
-    }
-
-    private fun passStepContent(stepWrapper: StepPersistentWrapper) {
         (activity as? Callback
             ?: parentFragment as? Callback
             ?: targetFragment as? Callback)
             ?.onStepContentChanged(stepWrapper)
+
+        this.stepWrapper = stepWrapper
+        stepContentEditText.setText(stepWrapper.originalStep.block?.text)
     }
 
     interface Callback {
