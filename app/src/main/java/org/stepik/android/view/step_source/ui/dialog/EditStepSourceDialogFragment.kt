@@ -80,9 +80,8 @@ class EditStepSourceDialogFragment :
     }
 
     private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
+        App.componentManager()
+            .stepComponent(stepWrapper.step.id)
             .inject(this)
     }
 
