@@ -3,10 +3,9 @@ package org.stepik.android.presentation.course
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.billing.BillingView
 import org.stepik.android.presentation.course.model.EnrollmentError
 
-interface CourseView : BillingView {
+interface CourseView {
     sealed class State {
         object Idle : State()
         object Loading : State()

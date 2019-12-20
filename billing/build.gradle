@@ -30,6 +30,11 @@ dependencies {
     implementation project(':model')
     implementation libraries.kotlinStd
 
+    //<DI>
+    implementation libraries.dagger
+    kapt libraries.daggerCompiler
+    //</DI>
+
     implementation libraries.rxAndroid
     implementation libraries.rxJava2
     implementation libraries.rxKotlin

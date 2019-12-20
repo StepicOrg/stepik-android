@@ -59,7 +59,6 @@ import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
-import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
@@ -85,8 +84,6 @@ import org.stepik.android.view.injection.settings.SettingsComponent
 import org.stepik.android.view.injection.social_profile.SocialProfileComponent
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
-import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
-import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.story.StoryDataModule
 import org.stepik.android.view.injection.submission.SubmissionComponent
@@ -117,8 +114,6 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
         NetworkModule::class,
         NetworkDataModule::class,
         RemoteMessageHandlersModule::class,
-
-        BillingModule::class,
 
         CourseEnrollmentBusModule::class, // todo unite it in BusModule::class
         ProfileBusModule::class,

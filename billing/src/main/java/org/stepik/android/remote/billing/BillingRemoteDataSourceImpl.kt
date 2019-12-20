@@ -10,7 +10,6 @@ import org.solovyev.android.checkout.Purchase
 import org.solovyev.android.checkout.Purchases
 import org.solovyev.android.checkout.RequestListener
 import org.solovyev.android.checkout.Sku
-import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.billing.extension.consumeRx
 import org.stepik.android.domain.billing.extension.onReady
 import org.stepik.android.data.billing.source.BillingRemoteDataSource
@@ -26,7 +25,6 @@ constructor(
     @SystemCheckout
     private val checkout: Checkout,
 
-    @MainScheduler
     private val mainScheduler: Scheduler
 ) : BillingRemoteDataSource {
     override fun getInventory(productType: String, skuIds: List<String>): Single<List<Sku>> =
