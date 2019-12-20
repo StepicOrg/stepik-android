@@ -17,7 +17,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.maybeFirst
-import org.stepic.droid.util.startPurchaseFlowRx
+import org.stepik.android.domain.billing.extension.startPurchaseFlowRx
 import org.stepic.droid.util.toObject
 import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
 import org.stepik.android.domain.billing.repository.BillingRepository

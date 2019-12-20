@@ -21,7 +21,11 @@ class SkuSerializableWrapperTest {
             Sku.Price(0, "USD"),
             "subscriptionPeriod", "freeTrialPeriod", "introductoryPricePeriod", 0)
 
-        outputStream.writeObject(SkuSerializableWrapper(sku))
+        outputStream.writeObject(
+            SkuSerializableWrapper(
+                sku
+            )
+        )
         outputStream.close()
 
         val bytes = byteOutputStream.toByteArray()

@@ -31,7 +31,11 @@ class CourseHeaderDataTest {
             review = 1.0,
             progress = Progress(),
             readiness = 1.0,
-            enrollmentState = EnrollmentState.NotEnrolledInApp(SkuSerializableWrapper(sku))
+            enrollmentState = EnrollmentState.NotEnrolledInApp(
+                SkuSerializableWrapper(
+                    sku
+                )
+            )
         )
 
         courseHeaderData.assertThatObjectParcelable<CourseHeaderData>()

@@ -102,12 +102,9 @@ android {
     }
 }
 
-kapt {
-    generateStubs = true
-}
-
 dependencies {
     implementation project(':androidsvg')
+    implementation project(':billing')
     implementation project(':model')
     implementation libraries.kotlinStd
 
@@ -168,8 +165,6 @@ dependencies {
     implementation libraries.firebaseCore
     implementation libraries.firebaseConfig
     implementation libraries.firebasePerf
-
-    implementation libraries.checkout
 
     implementation libraries.facebookSdk
     implementation libraries.vkSdk
