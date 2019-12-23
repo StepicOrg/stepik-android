@@ -5,7 +5,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -23,7 +22,7 @@ import javax.inject.Inject
 class CourseInteractor
 @Inject
 constructor(
-    private val billingRepository: BillingRepository,
+//    private val billingRepository: BillingRepository,
     private val courseRepository: CourseRepository,
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
