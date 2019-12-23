@@ -1,4 +1,4 @@
-package org.stepic.droid.util
+package org.stepik.android.domain.billing.extension
 
 import io.reactivex.Completable
 import io.reactivex.Single

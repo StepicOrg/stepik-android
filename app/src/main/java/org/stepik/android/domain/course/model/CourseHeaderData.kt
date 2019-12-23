@@ -42,8 +42,26 @@ data class CourseHeaderData(
                 parcel.readDouble(),
                 parcel.readParcelable(Progress::class.java.classLoader),
                 parcel.readDouble(),
-                parcel.readSerializable() as EnrollmentState
+                restoreEnrollmentState(parcel.readSerializable() as EnrollmentState)
             )
+
+        /**
+         * Reason is that deserialized [enrollmentState] object has different reference from one in [EnrollmentState]
+         */
+        private fun restoreEnrollmentState(enrollmentState: EnrollmentState): EnrollmentState =
+            when (enrollmentState) {
+                is EnrollmentState.Enrolled ->
+                    EnrollmentState.Enrolled
+
+                is EnrollmentState.NotEnrolledFree ->
+                    EnrollmentState.NotEnrolledFree
+
+                is EnrollmentState.NotEnrolledWeb ->
+                    EnrollmentState.NotEnrolledWeb
+
+                is EnrollmentState.Pending ->
+                    EnrollmentState.Pending
+            }
 
         override fun newArray(size: Int): Array<CourseHeaderData?> =
             arrayOfNulls(size)
