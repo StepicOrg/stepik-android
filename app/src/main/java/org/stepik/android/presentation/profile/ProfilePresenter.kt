@@ -29,6 +29,10 @@ constructor(
             view?.setState(value)
         }
 
+    init {
+        analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
+    }
+
     override fun attachView(view: ProfileView) {
         super.attachView(view)
         view.setState(state)

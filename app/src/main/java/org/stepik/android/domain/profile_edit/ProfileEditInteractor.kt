@@ -18,7 +18,8 @@ constructor(
     private val profileSubject: PublishSubject<Profile>
 ) {
     fun getProfileWithEmail(): Single<ProfileWrapper> =
-        profileRepository.getProfile(primarySourceType = DataSourceType.CACHE)
+        profileRepository
+            .getProfile(primarySourceType = DataSourceType.CACHE)
             .flatMap { profile ->
                 if (profile.emailAddresses == null) {
                     return@flatMap Single.just(ProfileWrapper(profile))
