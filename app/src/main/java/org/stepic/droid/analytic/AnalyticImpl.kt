@@ -44,6 +44,7 @@ constructor(
     override fun setUserId(userId: String) {
         firebaseAnalytics.setUserId(userId)
         Crashlytics.setUserIdentifier(userId)
+        YandexMetrica.setUserProfileID(userId)
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STEPIK_ID, userId))
     }
 

@@ -2,7 +2,6 @@ package org.stepic.droid.core
 
 import android.content.Intent
 import org.stepic.droid.model.CertificateViewItem
-import org.stepic.droid.model.UserViewModel
 import org.stepik.android.model.Course
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
@@ -18,8 +17,6 @@ interface ShareHelper {
     fun getIntentForStepSharing(step: Step, lesson: Lesson, unit: Unit?): Intent
 
     fun getIntentForSectionSharing(section: Section): Intent
-
-    fun getIntentForProfileSharing(userViewModel: UserViewModel): Intent
 
     fun getIntentForUserSharing(user: User): Intent
 }

@@ -13,25 +13,6 @@ object StepikUtil {
         return isConnectedOrConnecting
     }
 
-    fun getMaxStreak(pins: List<Long>): Int {
-        var maxStreak: Int = 0
-        var currentStreak = 0
-        pins.forEach {
-            if (it != 0L) {
-                currentStreak++
-            } else {
-                if (currentStreak > maxStreak) {
-                    maxStreak = currentStreak
-                }
-                currentStreak = 0
-            }
-        }
-        if (currentStreak > maxStreak) {
-            maxStreak = currentStreak
-        }
-        return maxStreak
-    }
-
     /**
      * *Positive* current streak, which is not zero in the start of day and increased if today user solve some tasks.
      */

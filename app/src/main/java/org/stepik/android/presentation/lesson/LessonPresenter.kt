@@ -10,7 +10,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
-import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.app_rating.interactor.AppRatingInteractor
 import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
 import org.stepik.android.domain.last_step.model.LastStep
@@ -18,6 +17,7 @@ import org.stepik.android.domain.lesson.interactor.LessonContentInteractor
 import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
+import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.interactor.StepIndexingInteractor
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
@@ -279,13 +279,7 @@ constructor(
          * Analytic
          */
         val step = stepItem.stepWrapper.step
-        analytic.reportEventWithName(Analytic.Steps.STEP_OPENED, step.getStepType())
-        analytic.reportAmplitudeEvent(
-            AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
-                AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
-                AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
-                AmplitudeAnalytic.Steps.Params.STEP to step.id
-            ))
+        analytic.reportStepEvent(Analytic.Steps.STEP_OPENED, AmplitudeAnalytic.Steps.STEP_OPENED, step)
     }
 
     /**

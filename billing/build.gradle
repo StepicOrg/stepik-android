@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode versions.code
+        versionName versions.name
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation project(':model')
+    implementation libraries.kotlinStd
+
+    //<DI>
+    implementation libraries.dagger
+    kapt libraries.daggerCompiler
+    //</DI>
+
+    implementation libraries.rxAndroid
+    implementation libraries.rxJava2
+    implementation libraries.rxKotlin
+
+    testImplementation libraries.junit
+    testImplementation libraries.robolectric
+    testImplementation libraries.mockitoCore
+    testImplementation libraries.mockitoKt
+    testImplementation libraries.jodaTime
+    testImplementation libraries.hamcrest
+
+    androidTestImplementation libraries.testRunner
+    androidTestImplementation libraries.testRules
+    androidTestImplementation libraries.espressoCore
+    androidTestImplementation libraries.espressoContrib
+    androidTestImplementation libraries.espressoIntents
+
+    api libraries.checkout
+}

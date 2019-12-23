@@ -3,9 +3,7 @@ package org.stepik.android.domain.course.model
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.solovyev.android.checkout.Sku
 import org.stepic.droid.testUtils.assertThatObjectParcelable
-import org.stepik.android.domain.billing.model.SkuSerializableWrapper
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 
@@ -14,12 +12,12 @@ class CourseHeaderDataTest {
 
     @Test
     fun courseHeaderDataIsParcelable() {
-        val sku = Sku(
-            "prod", "code", "price",
-            Sku.Price(0, "USD"),
-            "title", "description", "introductoryPrice",
-            Sku.Price(0, "USD"),
-            "subscriptionPeriod", "freeTrialPeriod", "introductoryPricePeriod", 0)
+//        val sku = Sku(
+//            "prod", "code", "price",
+//            Sku.Price(0, "USD"),
+//            "title", "description", "introductoryPrice",
+//            Sku.Price(0, "USD"),
+//            "subscriptionPeriod", "freeTrialPeriod", "introductoryPricePeriod", 0)
 
 
         val courseHeaderData = CourseHeaderData(
@@ -31,7 +29,7 @@ class CourseHeaderDataTest {
             review = 1.0,
             progress = Progress(),
             readiness = 1.0,
-            enrollmentState = EnrollmentState.NotEnrolledInApp(SkuSerializableWrapper(sku))
+            enrollmentState = EnrollmentState.NotEnrolledWeb
         )
 
         courseHeaderData.assertThatObjectParcelable<CourseHeaderData>()

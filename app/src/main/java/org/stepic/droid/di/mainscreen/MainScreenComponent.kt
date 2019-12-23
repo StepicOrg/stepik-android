@@ -7,7 +7,6 @@ import org.stepik.android.view.injection.user_profile.UserProfileDataModule
 
 @MainScreenScope
 @Subcomponent(modules = [
-    MainScreenModule::class,
     UserDataModule::class,
     UserProfileDataModule::class
 ])
