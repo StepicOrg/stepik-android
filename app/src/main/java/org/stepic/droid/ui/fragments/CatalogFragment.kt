@@ -2,9 +2,6 @@ package org.stepic.droid.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -18,7 +15,6 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.CatalogSearchSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
@@ -73,14 +69,9 @@ class CatalogFragment : FragmentBase(),
     @Inject
     lateinit var storiesPresenter: StoriesPresenter
 
-    @Inject
-    lateinit var catalogSearchSplitTest: CatalogSearchSplitTest
-
     lateinit var searchIcon: ImageView
 
     private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
-
-    private var searchMenuItem: MenuItem? = null
 
     private var needShowLangWidget = false
 
@@ -89,7 +80,6 @@ class CatalogFragment : FragmentBase(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
         analytic.reportEvent(Analytic.Catalog.CATALOG_SCREEN_OPENED)
     }
@@ -113,9 +103,7 @@ class CatalogFragment : FragmentBase(),
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         initMainRecycler()
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
-        if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
-            setupSearchBar()
-        }
+        setupSearchBar()
 
         tagsPresenter.attachView(this)
         filtersClient.subscribe(this)
@@ -137,11 +125,6 @@ class CatalogFragment : FragmentBase(),
     }
 
     private fun initMainRecycler() {
-        catalogRecyclerView.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                searchMenuItem?.collapseActionView()
-            }
-        }
         catalogRecyclerView.itemAnimator = null
         catalogRecyclerView.layoutManager = LinearLayoutManager(context)
         catalogRecyclerView.adapter = CatalogAdapter(
@@ -171,20 +154,6 @@ class CatalogFragment : FragmentBase(),
     override fun offlineMode() {
         val catalogAdapter = catalogRecyclerView.adapter as CatalogAdapter
         catalogAdapter.enableOfflineMode()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-
-        searchMenuItem = menu.findItem(R.id.action_search)
-        val searchView = searchMenuItem?.actionView as? AutoCompleteSearchView
-
-        searchMenuItem?.setOnMenuItemClickListener {
-            logSearchEvent()
-            false
-        }
-        setupSearchView(searchView)
     }
 
     private fun setupSearchBar() {
@@ -239,13 +208,9 @@ class CatalogFragment : FragmentBase(),
             it.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     it.onSubmitted(query)
-                    if (catalogSearchSplitTest.currentGroup.isUpdatedSearchVisible) {
-                        searchView.onActionViewCollapsed()
-                        searchView.onActionViewExpanded()
-                        searchView.clearFocus()
-                    } else {
-                        searchMenuItem?.collapseActionView()
-                    }
+                    searchView.onActionViewCollapsed()
+                    searchView.onActionViewExpanded()
+                    searchView.clearFocus()
                     return false
                 }
 
@@ -255,14 +220,6 @@ class CatalogFragment : FragmentBase(),
                 }
             })
         }
-    }
-
-
-
-    override fun onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu()
-        (searchMenuItem?.actionView as? SearchView)?.setOnQueryTextListener(null)
-        searchMenuItem = null
     }
 
     override fun onFiltersPrepared(filters: EnumSet<StepikFilter>) {
