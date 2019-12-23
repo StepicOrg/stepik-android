@@ -814,6 +814,10 @@
     <!-- Downloads -->
     <string name="downloads_title">Downloaded courses</string>
     <string name="downloads_remove_task_error">Failed to remove item</string>
+    <string name="downloads_is_used_by_stepik">&#160;is used by Stepik</string>
+    <string name="downloads_free_space">%s free</string>
+    <string name="downloads_stepik" translatable="false">Stepik</string>
+    <string name="downloads_other_apps">Other apps</string>
 
     <!-- Submissions -->
     <string name="submissions_title">Submissions</string>
