@@ -39,5 +39,18 @@ dependencies {
     implementation libraries.rxJava2
     implementation libraries.rxKotlin
 
+    testImplementation libraries.junit
+    testImplementation libraries.robolectric
+    testImplementation libraries.mockitoCore
+    testImplementation libraries.mockitoKt
+    testImplementation libraries.jodaTime
+    testImplementation libraries.hamcrest
+
+    androidTestImplementation libraries.testRunner
+    androidTestImplementation libraries.testRules
+    androidTestImplementation libraries.espressoCore
+    androidTestImplementation libraries.espressoContrib
+    androidTestImplementation libraries.espressoIntents
+
     api libraries.checkout
 }
