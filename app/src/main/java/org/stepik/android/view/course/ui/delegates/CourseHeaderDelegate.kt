@@ -136,9 +136,9 @@ class CourseHeaderDelegate(
                 coursePresenter.openCoursePurchaseInWeb(queryParams)
             }
 
-            courseBuyInAppAction.setOnClickListener {
-                coursePresenter.purchaseCourse()
-            }
+//            courseBuyInAppAction.setOnClickListener {
+//                coursePresenter.purchaseCourse()
+//            }
         }
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
@@ -195,14 +195,14 @@ class CourseHeaderDelegate(
                 courseEnrollmentProgress.isVisible = this is EnrollmentState.Pending
                 courseContinueAction.isVisible = this is EnrollmentState.Enrolled
                 courseBuyInWebAction.isVisible = this is EnrollmentState.NotEnrolledWeb
-                courseBuyInAppAction.isVisible = this is EnrollmentState.NotEnrolledInApp
+                courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
 
-                if (this is EnrollmentState.NotEnrolledInApp) {
-                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
-                }
+//                if (this is EnrollmentState.NotEnrolledInApp) {
+//                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
+//                }
 
                 dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
-                restorePurchaseCourseMenuItem?.isVisible = this is EnrollmentState.NotEnrolledInApp
+                restorePurchaseCourseMenuItem?.isVisible = false // this is EnrollmentState.NotEnrolledInApp
             }
 
             shareCourseMenuItem?.isVisible = true
@@ -254,7 +254,7 @@ class CourseHeaderDelegate(
         }
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
-        restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp
+        restorePurchaseCourseMenuItem?.isVisible = false // courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -276,7 +276,7 @@ class CourseHeaderDelegate(
                 true
             }
             R.id.restore_purchase -> {
-                coursePresenter.restoreCoursePurchase()
+//                coursePresenter.restoreCoursePurchase()
                 true
             }
             else ->
