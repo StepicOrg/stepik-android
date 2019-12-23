@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_step.*
 import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.SolutionStatsSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -26,6 +28,7 @@ import org.stepic.droid.ui.dialogs.StepShareDialogFragment
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
@@ -57,6 +60,9 @@ class StepFragment : Fragment(), StepView,
                     this.lessonData = lessonData
                 }
     }
+
+    @Inject
+    internal lateinit var analytic: Analytic
 
     @Inject
     internal lateinit var screenManager: ScreenManager
@@ -226,6 +232,9 @@ class StepFragment : Fragment(), StepView,
         SubmissionsDialogFragment
             .newInstance(stepWrapper.step)
             .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
+
+        analytic
+            .reportStepEvent(AmplitudeAnalytic.Steps.STEP_SOLUTIONS_OPENED, AmplitudeAnalytic.Steps.STEP_SOLUTIONS_OPENED, stepWrapper.step)
     }
 
     override fun setState(state: StepView.State) {

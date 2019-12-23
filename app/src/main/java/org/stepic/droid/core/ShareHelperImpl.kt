@@ -7,7 +7,6 @@ import org.stepic.droid.R
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.model.CertificateViewItem
-import org.stepic.droid.model.UserViewModel
 import org.stepic.droid.util.StringUtil
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepik.android.model.Course
@@ -60,22 +59,6 @@ constructor(
 
     override fun getIntentForSectionSharing(section: Section): Intent {
         val textForSharing = Uri.parse(StringUtil.getAbsoluteUriForSection(config, section)).toString()
-        return getShareIntentBase(textForSharing)
-    }
-
-    override fun getIntentForProfileSharing(userViewModel: UserViewModel): Intent {
-        val stringBuilder = StringBuilder()
-        with(stringBuilder) {
-            if (userViewModel.fullName.isNotBlank()) {
-                append(userViewModel.fullName)
-                append("\r\n")
-                append("\r\n")
-            }
-
-            val uriForSharing = Uri.parse(StringUtil.getUriForProfile(config.baseUrl, userViewModel.id)).toString()
-            append(uriForSharing)
-        }
-        val textForSharing = stringBuilder.toString()
         return getShareIntentBase(textForSharing)
     }
 

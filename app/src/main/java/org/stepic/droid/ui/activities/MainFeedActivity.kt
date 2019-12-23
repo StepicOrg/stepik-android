@@ -24,7 +24,6 @@ import org.stepic.droid.base.Client
 import org.stepic.droid.core.StepikDevicePoster
 import org.stepic.droid.core.earlystreak.contract.EarlyStreakListener
 import org.stepic.droid.core.presenters.ProfileMainFeedPresenter
-import org.stepic.droid.core.presenters.StreakPresenter
 import org.stepic.droid.core.presenters.contracts.ProfileMainFeedView
 import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
@@ -35,6 +34,7 @@ import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
@@ -94,7 +94,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     lateinit var notificationsBadgesClient: Client<NotificationsBadgesListener>
 
     @Inject
-    lateinit var streakPresenter: StreakPresenter
+    lateinit var streakPresenter: StreakInteractor
 
     @Inject
     lateinit var notificationsBadgesManager: NotificationsBadgesManager
