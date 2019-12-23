@@ -18,7 +18,6 @@ import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
-import org.stepic.droid.di.profile.ProfileComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
@@ -78,6 +77,7 @@ import org.stepik.android.view.injection.network.NetworkModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
 import org.stepik.android.view.injection.profile.ProfileBusModule
+import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.search.SearchDataModule
@@ -85,8 +85,6 @@ import org.stepik.android.view.injection.settings.SettingsComponent
 import org.stepik.android.view.injection.social_profile.SocialProfileComponent
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
-import org.stepik.android.view.injection.step_content_text.TextStepContentComponent
-import org.stepik.android.view.injection.step_content_video.VideoStepContentComponent
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.story.StoryDataModule
 import org.stepik.android.view.injection.submission.SubmissionComponent
@@ -159,8 +157,6 @@ interface AppCoreComponent {
 
     fun loginComponentBuilder(): LoginComponent.Builder
 
-    fun profileComponentBuilder(): ProfileComponent.Builder
-
     fun homeComponentBuilder(): HomeComponent.Builder
 
     fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
@@ -201,7 +197,7 @@ interface AppCoreComponent {
 
     fun achievementsComponentBuilder(): AchievementsComponent.Builder
 
-    fun profileComponentBuilderNew(): org.stepik.android.view.injection.profile.ProfileComponent.Builder
+    fun profileComponentBuilder(): ProfileComponent.Builder
 
     fun settingsComponentBuilder(): SettingsComponent.Builder
 
