@@ -1,7 +1,9 @@
 package org.stepik.android.presentation.profile
 
 import android.os.Bundle
+import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -9,6 +11,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.profile.interactor.ProfileInteractor
+import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -17,6 +20,8 @@ class ProfilePresenter
 constructor(
     private val profileInteractor: ProfileInteractor,
     private val analytic: Analytic,
+
+    private val profileObservable: Observable<Profile>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -29,8 +34,11 @@ constructor(
             view?.setState(value)
         }
 
+    private val profileUpdatesDisposable = CompositeDisposable()
+
     init {
         analytic.reportEvent(Analytic.Profile.OPEN_SCREEN_OVERALL)
+        compositeDisposable += profileUpdatesDisposable
     }
 
     override fun attachView(view: ProfileView) {
@@ -63,6 +71,7 @@ constructor(
                     if (oldState !is ProfileView.State.Content) {
                         state = ProfileView.State.Empty
                     } else {
+                        subscribeForProfileUpdates(oldState.profileData.user.id)
                         sendScreenOpenEvent(oldState.profileData.isCurrentUser)
                     }
                 },
@@ -97,5 +106,17 @@ constructor(
         analytic.reportEvent(Analytic.Profile.PROFILE_SCREEN_OPENED, Bundle().apply {
             putString(Analytic.Profile.Params.STATE, state)
         })
+    }
+
+    private fun subscribeForProfileUpdates(userId: Long) {
+        profileUpdatesDisposable.clear()
+        profileUpdatesDisposable += profileObservable
+            .filter { it.id == userId }
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onNext = { onData(userId, forceUpdate = true) },
+                onError = { subscribeForProfileUpdates(userId) }
+            )
     }
 }
