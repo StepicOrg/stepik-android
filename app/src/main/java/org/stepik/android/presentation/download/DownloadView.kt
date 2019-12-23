@@ -12,6 +12,7 @@ interface DownloadView {
 
     fun setState(state: State)
     fun setBlockingLoading(isLoading: Boolean)
+    fun setStorageInfo(contentSize: Long, avalableSize: Long, totalSize: Long)
 
     fun showRemoveTaskError()
 }

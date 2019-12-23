@@ -2,8 +2,12 @@ package org.stepik.android.view.download.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.core.content.ContextCompat
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -22,6 +26,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.TextUtil
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.download.DownloadPresenter
 import org.stepik.android.presentation.download.DownloadView
@@ -34,6 +39,8 @@ import javax.inject.Inject
 
 class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedContentDialog.Callback {
     companion object {
+        private const val MB = 1024 * 1024L
+
         fun createIntent(context: Context): Intent =
             Intent(context, DownloadActivity::class.java)
     }
@@ -76,7 +83,12 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
 
         initViewStateDelegate()
         goToCatalog.setOnClickListener { screenManager.showCatalog(this) }
+        downloadPresenter.fetchStorage()
         downloadPresenter.fetchDownloadedCourses()
+
+        downloadsOtherApps.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.custom_grey))
+        downloadsStepik.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green01))
+        downloadsFree.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey04))
     }
 
     private fun injectComponent() {
@@ -110,7 +122,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         viewStateDelegate.addState<DownloadView.State.Idle>()
         viewStateDelegate.addState<DownloadView.State.Loading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<DownloadView.State.Empty>(emptyDownloading)
-        viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(downloadsRecyclerView)
+        viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(downloadStorageContainer, downloadsRecyclerView)
     }
 
     override fun setState(state: DownloadView.State) {
@@ -126,6 +138,17 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         } else {
             ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
         }
+    }
+
+    override fun setStorageInfo(contentSize: Long, avalableSize: Long, totalSize: Long) {
+        downloadStorageUsed.text = buildSpannedString {
+            bold { append(TextUtil.formatBytes(contentSize, MB)) }
+            append(resources.getString(R.string.downloads_is_used_by_stepik))
+        }
+        downloadsFree.text = resources.getString(R.string.downloads_free_space, TextUtil.formatBytes(avalableSize, MB))
+        downloadsStorageProgress.max = (totalSize / MB).toInt()
+        downloadsStorageProgress.progress = ((totalSize - avalableSize) / MB).toInt()
+        downloadsStorageProgress.secondaryProgress = (downloadsStorageProgress.progress + (contentSize / MB)).toInt()
     }
 
     private fun showRemoveCourseDialog(downloadItem: DownloadItem) {

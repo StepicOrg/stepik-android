@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,21 +10,93 @@
 
     <include layout="@layout/progress_bar_on_empty_screen"/>
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/downloadsRootView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/downloadStorageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="4dp"
+            android:layout_alignParentTop="true"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/downloadStorageUsed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ProgressBar
+                android:id="@+id/downloadsStorageProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                style="@style/DownloadsProgressBar"
+                android:layout_below="@id/downloadStorageUsed" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/downloadsOtherApps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/downloads_other_apps"
+                android:gravity="center_vertical"
+                android:layout_below="@id/downloadsStorageProgress"
+                android:drawablePadding="8dp"
+                app:drawableLeftCompat="@drawable/ic_download_marker"
+                app:drawableStartCompat="@drawable/ic_download_marker"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/downloadsStepik"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/downloads_stepik"
+                android:gravity="center_vertical"
+                android:layout_below="@id/downloadsOtherApps"
+                android:drawablePadding="8dp"
+                app:drawableLeftCompat="@drawable/ic_download_marker"
+                app:drawableStartCompat="@drawable/ic_download_marker"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/downloadsFree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_below="@id/downloadsStepik"
+                android:drawablePadding="8dp"
+                app:drawableLeftCompat="@drawable/ic_download_marker"
+                app:drawableStartCompat="@drawable/ic_download_marker"/>
+        </RelativeLayout>
+
+        <View
+            android:id="@+id/downloadsStorageDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/downloadStorageContainer"
+            android:background="@color/grey04" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/downloadsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_below="@id/downloadsStorageDivider"
             android:clipToPadding="false"
             android:divider="@color/bpRed"
-            android:visibility="gone"
-            android:scrollbarStyle="outsideOverlay"/>
+            android:scrollbarStyle="outsideOverlay"
+            android:visibility="gone"/>
 
         <include layout="@layout/empty_downloading"/>
-    </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>
