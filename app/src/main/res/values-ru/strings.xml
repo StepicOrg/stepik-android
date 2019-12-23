@@ -782,6 +782,9 @@
     <!-- Downloads -->
     <string name="downloads_title">Загруженные курсы</string>
     <string name="downloads_remove_task_error">При удалении элемента возникла ошибка</string>
+    <string name="downloads_is_used_by_stepik">&#160;используется Stepik</string>
+    <string name="downloads_free_space">%s свободно</string>
+    <string name="downloads_other_apps">Другие приложения</string>
 
     <!-- Submissions -->
     <string name="submissions_title">Решения</string>
