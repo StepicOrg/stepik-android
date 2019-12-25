@@ -10,7 +10,6 @@ import org.stepik.android.view.injection.social_profile.SocialProfileDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
-import org.stepik.android.view.profile.ui.fragment.ProfileFragmentOld
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_activities.ui.fragment.ProfileActivitiesFragment
 import org.stepik.android.view.profile_courses.ui.fragment.ProfileCoursesFragment
@@ -22,7 +21,6 @@ import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificat
 
 @ProfileScope
 @Subcomponent(modules = [
-    ProfileModuleOld::class,
     ProfileModule::class,
 
     CourseListDataModule::class,
@@ -42,7 +40,6 @@ interface ProfileComponent {
         fun userId(@UserId userId: Long): Builder
     }
 
-    fun inject(profileFragmentOld: ProfileFragmentOld)
     fun inject(profileFragment: ProfileFragment)
     fun inject(achievementsListFragment: AchievementsListFragment)
     fun inject(profileAchievementsFragment: ProfileAchievementsFragment)

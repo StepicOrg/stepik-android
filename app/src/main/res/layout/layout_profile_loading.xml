@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginTop="?actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/profileImage"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+
+            app:radius="32dp"
+
+            android:layout_marginTop="@dimen/profile_header_margin"
+            app:layout_goneMarginTop="?actionBarSize"
+            android:layout_marginStart="@dimen/profile_header_margin"
+            android:layout_marginLeft="@dimen/profile_header_margin"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/profileName"
+            android:layout_width="0dp"
+            android:layout_height="12dp"
+            app:layout_constraintWidth_max="240dp"
+            app:layout_constraintHorizontal_bias="0"
+
+            app:layout_constraintTop_toTopOf="@id/profileImage"
+            app:layout_constraintStart_toEndOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="@dimen/profile_header_margin"
+            android:layout_marginEnd="@dimen/profile_header_margin" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/profileBio1"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+
+            app:layout_constraintWidth_max="320dp"
+            app:layout_constraintHorizontal_bias="0"
+
+            app:layout_constraintTop_toBottomOf="@id/profileName"
+            app:layout_constraintStart_toEndOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="@dimen/profile_header_margin"
+            android:layout_marginEnd="@dimen/profile_header_margin"
+            android:layout_marginTop="4dp" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/profileBio2"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+
+            app:layout_constraintWidth_max="320dp"
+            app:layout_constraintHorizontal_bias="0"
+
+            app:layout_constraintTop_toBottomOf="@id/profileBio1"
+            app:layout_constraintStart_toEndOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="@dimen/profile_header_margin"
+            android:layout_marginEnd="@dimen/profile_header_margin"
+            android:layout_marginTop="4dp" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/profileBio3"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+
+            app:layout_constraintWidth_max="140dp"
+            app:layout_constraintHorizontal_bias="0"
+
+            app:layout_constraintTop_toBottomOf="@id/profileBio2"
+            app:layout_constraintStart_toEndOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="@dimen/profile_header_margin"
+            android:layout_marginEnd="@dimen/profile_header_margin"
+            android:layout_marginTop="16dp" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/profileBio4"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+
+            app:layout_constraintWidth_max="140dp"
+            app:layout_constraintHorizontal_bias="0"
+
+            app:layout_constraintTop_toBottomOf="@id/profileBio3"
+            app:layout_constraintStart_toEndOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="@dimen/profile_header_margin"
+            android:layout_marginEnd="@dimen/profile_header_margin"
+            android:layout_marginTop="4dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey04" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="120dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/profile_header_margin"
+        android:layout_marginRight="@dimen/profile_header_margin" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/profile_header_margin"
+        android:layout_marginRight="@dimen/profile_header_margin" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="@dimen/profile_header_margin"
+        android:layout_marginRight="@dimen/profile_header_margin" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="180dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="@dimen/profile_header_margin"
+        android:layout_marginRight="@dimen/profile_header_margin" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey04"
+        android:layout_marginTop="16dp" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="140dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/profile_header_margin"
+        android:layout_marginRight="@dimen/profile_header_margin" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="@dimen/profile_header_margin"
+        android:layout_marginRight="@dimen/profile_header_margin" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="@dimen/profile_header_margin"
+        android:layout_marginRight="@dimen/profile_header_margin" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:layout_width="160dp"
+        android:layout_height="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="@dimen/profile_header_margin"
+        android:layout_marginRight="@dimen/profile_header_margin" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/grey04"
+        android:layout_marginTop="16dp" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

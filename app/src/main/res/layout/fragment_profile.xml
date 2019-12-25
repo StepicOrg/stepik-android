@@ -44,7 +44,7 @@
 
     <include
         android:id="@+id/profileLoading"
-        layout="@layout/progress_bar_on_empty_screen"
+        layout="@layout/layout_profile_loading"
         tools:visibility="gone" />
 
     <com.google.android.material.appbar.AppBarLayout

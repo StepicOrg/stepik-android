@@ -29,6 +29,7 @@ import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.rating.repository.RatingRepository
 import org.stepik.android.domain.recommendation.repository.RecommendationRepository
+import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.adaptive.Reaction
@@ -234,11 +235,7 @@ constructor(
     private fun reportView(card: Card) {
         val step = card.step ?: return
 
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
-                AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
-                AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
-                AmplitudeAnalytic.Steps.Params.STEP to step.id
-        ))
+        analytic.reportStepEvent(Analytic.Steps.STEP_OPENED, AmplitudeAnalytic.Steps.STEP_OPENED, step)
 
         compositeDisposable += unitRepository
             .getUnitsByCourseAndLessonId(courseId, card.lessonId)

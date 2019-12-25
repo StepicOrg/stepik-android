@@ -19,9 +19,6 @@ import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
-import org.solovyev.android.checkout.Billing
-import org.solovyev.android.checkout.Checkout
-import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -91,10 +88,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    internal lateinit var billing: Billing
+//    @Inject
+//    internal lateinit var billing: Billing
 
-    private lateinit var uiCheckout: UiCheckout
+//    private lateinit var uiCheckout: UiCheckout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,7 +124,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate = CourseHeaderDelegate(this, analytic, coursePresenter)
 
-        uiCheckout = Checkout.forActivity(this, billing)
+//        uiCheckout = Checkout.forActivity(this, billing)
 
         initViewPager(courseId)
         initViewStateDelegate()
@@ -357,18 +354,18 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     /**
      * BillingView
      */
-    override fun createUiCheckout(): UiCheckout =
-        uiCheckout
+//    override fun createUiCheckout(): UiCheckout =
+//        uiCheckout
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
         screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data)
-        }
-    }
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
+//            super.onActivityResult(requestCode, resultCode, data)
+//        }
+//    }
 
     override fun onDestroy() {
         releaseComponent(courseId)
