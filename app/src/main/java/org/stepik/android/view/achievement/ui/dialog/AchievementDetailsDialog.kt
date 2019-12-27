@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import com.afollestad.materialdialogs.MaterialDialog
@@ -50,7 +51,11 @@ class AchievementDetailsDialog : DialogFragment() {
             achievementTitle.text = achievementResourceResolver.resolveTitleForKind(achievementItem.kind)
             achievementDescription.text = achievementResourceResolver.resolveDescription(achievementItem)
             achievementIcon.apply {
-                wrapWithGlide().setImagePath(achievementResourceResolver.resolveAchievementIcon(achievementItem, this))
+                wrapWithGlide()
+                    .setImagePath(
+                        achievementResourceResolver.resolveAchievementIcon(achievementItem, 0),
+                        placeholder = AppCompatResources.getDrawable(context, R.drawable.ic_achievement_empty)
+                    )
             }
 
             achievementLevelProgress.progress = achievementItem.currentScore.toFloat() / achievementItem.targetScore

@@ -1,7 +1,6 @@
 package org.stepik.android.view.achievement.ui.resolver
 
 import android.content.Context
-import android.widget.ImageView
 import org.stepic.droid.R
 import org.stepic.droid.di.AppSingleton
 import org.stepik.android.domain.achievement.model.AchievementItem
@@ -82,11 +81,15 @@ constructor(
             context.getString(description, context.resources.getQuantityString(plural, achievementItem.targetScore, achievementItem.targetScore))
         } ?: context.getString(R.string.achievement_unknown_description)
 
-    fun resolveAchievementIcon(achievementItem: AchievementItem, targetImageView: ImageView? = null): String =
-        if (achievementItem.isLocked || achievementItem.currentLevel == 0) {
-            "file:///android_asset/images/vector/achievements/ic_empty_achievement.svg"
-        } else {
-            "file:///android_asset/images/vector/achievements/${achievementItem.kind}/${achievementItem.currentLevel}.svg"
-//            "${achievementFlatItem.iconId ?: ""}/${targetImageView.width}x${targetImageView.height}" // todo: update after backend support
+    fun resolveAchievementIcon(achievementItem: AchievementItem, size: Int): String =
+        when {
+            achievementItem.isLocked || achievementItem.currentLevel == 0 ->
+                "file:///android_asset/images/vector/achievements/ic_empty_achievement.svg"
+
+            achievementItem.uploadcareUUID != null ->
+                "https://ucarecdn.com/${achievementItem.uploadcareUUID}/-/resize/${size}x${size}/"
+
+            else ->
+                "file:///android_asset/images/vector/achievements/${achievementItem.kind}/${achievementItem.currentLevel}.svg"
         }
 }
