@@ -53,7 +53,7 @@ class AchievementDetailsDialog : DialogFragment() {
             achievementIcon.apply {
                 wrapWithGlide()
                     .setImagePath(
-                        achievementResourceResolver.resolveAchievementIcon(achievementItem, 0),
+                        achievementResourceResolver.resolveAchievementIcon(achievementItem, resources.getDimensionPixelSize(R.dimen.achievement_details_icon_size)),
                         placeholder = AppCompatResources.getDrawable(context, R.drawable.ic_achievement_empty)
                     )
             }
