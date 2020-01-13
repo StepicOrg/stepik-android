@@ -29,14 +29,22 @@ constructor(
         try {
             sharedPreferencesHelper.authResponseFromStore!! //for logged user only work
             val token = tokenNullable!!
-            deviceRepository.registerDevice(createDeviceRequest(token)).blockingAwait()
+
+            try {
+                deviceRepository.registerDevice(createDeviceRequest(token)).blockingAwait()
+            } catch (e: HttpException) {
+                if (e.code() == 400) {
+                    renewDeviceRegistration(token)
+                } else {
+                    throw Exception("response was failed. it is ok.", e)
+                }
+            }
+
             sharedPreferencesHelper.setIsGcmTokenOk(true)
             analytic.reportEvent(Analytic.Notification.TOKEN_UPDATED)
         } catch (e: Exception) {
-            if (e is HttpException && e.code() == 400) {
-                renewDeviceRegistration(tokenNullable!!)
-            }
             analytic.reportEvent(Analytic.Notification.TOKEN_UPDATE_FAILED)
+            analytic.reportError(Analytic.Notification.TOKEN_UPDATE_FAILED, e)
             sharedPreferencesHelper.setIsGcmTokenOk(false)
         }
     }

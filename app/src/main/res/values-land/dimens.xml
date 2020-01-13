@@ -4,6 +4,6 @@
     <dimen name="placeholders_text_max_width">200dp</dimen>
     <dimen name="placeholders_image_margin">36dp</dimen>
 
-
+    <dimen name="achievement_details_icon_size">164dp</dimen>
     <dimen name="achievement_details_dialog_width">480dp</dimen>
 </resources>
