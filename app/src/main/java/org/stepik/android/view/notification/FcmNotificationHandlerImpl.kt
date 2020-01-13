@@ -399,14 +399,12 @@ constructor(
         return intent
     }
 
-    private fun getDefaultIntent(notification: Notification): Intent? {
-        val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1) ?: return null
-        val intent = Intent()
-        intent.setPackage(BuildConfig.APPLICATION_ID)
-        intent.data = Uri.parse(data)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        return intent
-    }
+    private fun getDefaultIntent(notification: Notification): Intent? =
+        HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1)?.let { data ->
+            Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.APPLICATION_ID))
+                .setData(Uri.parse(data))
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
 
     private fun getReviewIntent(context: Context, notification: Notification): Intent? {
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 0) ?: return null
