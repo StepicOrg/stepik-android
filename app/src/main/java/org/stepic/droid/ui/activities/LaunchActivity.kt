@@ -324,7 +324,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         //fb:
         LoginManager.getInstance().logOut()
 
-        if (credential != null) {
+        if (credential != null && type == LoginFailType.EMAIL_PASSWORD_INVALID) {
             deleteCredential(credential)
         }
     }
