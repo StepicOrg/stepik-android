@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
+import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.configuration.Config
@@ -136,7 +137,7 @@ constructor(
             val title = applicationContext.getString(R.string.added_to_group_title)
             val justText: String = textResolver.fromHtml(htmlText).toString()
 
-            val intent = getDefaultIntent(applicationContext, notification = stepikNotification)
+            val intent = getDefaultIntent(stepikNotification)
             if (intent == null) {
                 analytic.reportEvent(Analytic.Notification.CANT_PARSE_NOTIFICATION, id.toString())
                 return
@@ -355,7 +356,7 @@ constructor(
 
     private fun openDefault(context: Context, notification: Notification): Boolean {
         if (notification.action != null && notification.action == NotificationActionsHelper.ADDED_TO_GROUP) {
-            val intent = getDefaultIntent(context, notification) ?: return false
+            val intent = getDefaultIntent(notification) ?: return false
             analytic.reportEvent(Analytic.Notification.OPEN_COMMENT_NOTIFICATION_LINK)
             context.startActivity(intent)
             return true
@@ -398,9 +399,10 @@ constructor(
         return intent
     }
 
-    private fun getDefaultIntent(context: Context, notification: Notification): Intent? {
+    private fun getDefaultIntent(notification: Notification): Intent? {
         val data = HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1) ?: return null
-        val intent = Intent(context, CourseActivity::class.java)
+        val intent = Intent()
+        intent.setPackage(BuildConfig.APPLICATION_ID)
         intent.data = Uri.parse(data)
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return intent
