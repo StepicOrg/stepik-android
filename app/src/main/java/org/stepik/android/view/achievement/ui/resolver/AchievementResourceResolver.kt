@@ -87,7 +87,7 @@ constructor(
                 "file:///android_asset/images/vector/achievements/ic_empty_achievement.svg"
 
             achievementItem.uploadcareUUID != null ->
-                "https://ucarecdn.com/${achievementItem.uploadcareUUID}/-/resize/${size}x${size}/"
+                "https://ucarecdn.com/${achievementItem.uploadcareUUID}/-/resize/${size}x$size/"
 
             else ->
                 "file:///android_asset/images/vector/achievements/${achievementItem.kind}/${achievementItem.currentLevel}.svg"
