@@ -428,7 +428,7 @@
     <string name="reset_code_dialog_title">Are you sure?</string>
     <string name="reset_code_dialog_explanation">Your code will be lost</string>
     <string name="change_code_dialog_explanation">After changing programming language your current code will be lost</string>
-    <string name="code_playground_title">Code</string>
+    <string name="code_playground_title" translatable="false">Code</string>
     <string name="code_playground_language" translatable="false">Code</string>
     <string name="code_playground_language_title">Language</string>
 
