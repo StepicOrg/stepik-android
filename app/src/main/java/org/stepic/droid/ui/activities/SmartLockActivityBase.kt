@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.auth.api.credentials.CredentialRequest
+import com.google.android.gms.auth.api.credentials.CredentialsOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.Scopes
 import com.google.android.gms.common.api.CommonStatusCodes
@@ -35,9 +36,10 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
 
     protected fun initGoogleApiClient(withAuth: Boolean = false, autoManage: OnConnectionFailedListener? = null) {
         if (checkPlayServices()) {
+            val credentialOptions = CredentialsOptions.Builder().forceEnableSaveDialog().build()
             val builder = GoogleApiClient.Builder(this)
                     .enableAutoManage(this, autoManage)
-                    .addApi(Auth.CREDENTIALS_API)
+                    .addApi(Auth.CREDENTIALS_API, credentialOptions)
 
             if (withAuth) {
                 val serverClientId = config.googleServerClientId
