@@ -240,7 +240,6 @@ class FastContinueFragment : FragmentBase(),
             AmplitudeAnalytic.Course.Params.COURSE to course.id,
             AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
         ))
-        screenManager.showDownloads(requireContext())
-//        continueCoursePresenter.continueCourse(course)
+        continueCoursePresenter.continueCourse(course)
     }
 }
