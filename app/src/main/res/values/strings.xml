@@ -62,6 +62,7 @@
 
     <string name="download_error">An error occurred while downloading video %s</string>
     <string name="download_error_insufficient_storage">: insufficient storage</string>
+    <string name="download_error_system_manager">A system\'s download manager error occurred while downloading content. If an error persists, please, contact support.</string>
 
     <string name="sync_problem">There was a problem syncing the data, please try again later
     </string>
@@ -427,7 +428,7 @@
     <string name="reset_code_dialog_title">Are you sure?</string>
     <string name="reset_code_dialog_explanation">Your code will be lost</string>
     <string name="change_code_dialog_explanation">After changing programming language your current code will be lost</string>
-    <string name="code_playground_title">Code</string>
+    <string name="code_playground_title" translatable="false">Code</string>
     <string name="code_playground_language" translatable="false">Code</string>
     <string name="code_playground_language_title">Language</string>
 

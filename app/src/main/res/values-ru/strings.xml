@@ -49,6 +49,7 @@
 
     <string name="download_error">Ошибка при загрузке видео %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
+    <string name="download_error_system_manager">При загрузке контента произошла ошибка системного загрузчика. Если ошибка повторяется, пожалуйста, обратитесь в поддержку.</string>
 
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите
         попытку позже
