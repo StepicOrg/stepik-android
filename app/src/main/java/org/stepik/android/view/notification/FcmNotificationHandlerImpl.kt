@@ -401,8 +401,8 @@ constructor(
 
     private fun getDefaultIntent(notification: Notification): Intent? =
         HtmlHelper.parseNLinkInText(notification.htmlText ?: "", configs.baseUrl, 1)?.let { data ->
-            Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.APPLICATION_ID))
-                .setData(Uri.parse(data))
+            Intent(Intent.ACTION_VIEW, Uri.parse(data))
+                .setPackage(BuildConfig.APPLICATION_ID)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
