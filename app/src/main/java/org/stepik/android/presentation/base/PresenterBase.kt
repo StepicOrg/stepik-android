@@ -5,13 +5,18 @@ import androidx.annotation.CallSuper
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.stepic.droid.core.presenters.PresenterContract
+import org.stepik.android.presentation.profile_courses.ViewContainer
 
-abstract class PresenterBase<V> : PresenterContract<V>, ViewModel() {
+abstract class PresenterBase<V>(
+    private val viewContainer: ViewContainer<V> = object : ViewContainer<V> { override var view: V? = null }
+) : PresenterContract<V>, ViewModel() {
     protected val compositeDisposable = CompositeDisposable()
 
-    @Volatile
-    var view: V? = null
-        private set
+    var view: V? by viewContainer::view
+//        private set(value) {
+//            viewContainer.view = value
+//        }
+//        get() = viewContainer.view
 
     @CallSuper
     override fun attachView(view: V) {

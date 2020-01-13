@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.core.presenters.PresenterContract
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
@@ -31,6 +32,8 @@ constructor(
     private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
     private val continueLearningInteractor: ContinueLearningInteractor,
 
+    private val stateContainer: DefaultStateContainer<ProfileCoursesView.State, ProfileCoursesView>,
+
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
 
@@ -38,16 +41,12 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : PresenterBase<ProfileCoursesView>() {
+) : PresenterBase<ProfileCoursesView>(stateContainer), ContinueCourseAction by ContinueCourseActionImpl(stateContainer) {
     companion object {
         private const val KEY_COURSES = "courses"
     }
 
-    private var state: ProfileCoursesView.State = ProfileCoursesView.State.Idle
-        set(value) {
-            field = value
-            view?.setState(value)
-        }
+    private var state by stateContainer
 
     private var isBlockingLoading: Boolean = false
         set(value) {
@@ -122,29 +121,29 @@ constructor(
             )
     }
 
-    fun continueCourse(course: Course) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
-        analytic.reportAmplitudeEvent(
-            AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                AmplitudeAnalytic.Course.Params.COURSE to course.id,
-                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
-            ))
-
-        if (adaptiveCoursesResolver.isAdaptive(course.id)) {
-            view?.showCourse(course, isAdaptive = true)
-        } else {
-            isBlockingLoading = true
-            compositeDisposable += continueLearningInteractor
-                .getLastStepForCourse(course)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .doFinally { isBlockingLoading = false }
-                .subscribeBy(
-                    onSuccess = { view?.showSteps(course, it) },
-                    onError = { view?.showCourse(course, isAdaptive = false) }
-                )
-        }
-    }
+//    fun continueCourse(course: Course) {
+//        analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
+//        analytic.reportAmplitudeEvent(
+//            AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
+//                AmplitudeAnalytic.Course.Params.COURSE to course.id,
+//                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
+//            ))
+//
+//        if (adaptiveCoursesResolver.isAdaptive(course.id)) {
+//            view?.showCourse(course, isAdaptive = true)
+//        } else {
+//            isBlockingLoading = true
+//            compositeDisposable += continueLearningInteractor
+//                .getLastStepForCourse(course)
+//                .subscribeOn(backgroundScheduler)
+//                .observeOn(mainScheduler)
+//                .doFinally { isBlockingLoading = false }
+//                .subscribeBy(
+//                    onSuccess = { view?.showSteps(course, it) },
+//                    onError = { view?.showCourse(course, isAdaptive = false) }
+//                )
+//        }
+//    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         val courses = (state as? ProfileCoursesView.State.Content)
