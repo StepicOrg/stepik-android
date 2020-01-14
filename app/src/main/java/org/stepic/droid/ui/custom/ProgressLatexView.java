@@ -85,7 +85,7 @@ public class ProgressLatexView extends FrameLayout {
     public void setPlainOrLaTeXText(String text) {
         if (!beforeIsEqual(text)) {
             beforeText = text;
-            optionText.setPlainOrLaTeXText(text);
+            optionText.setText(text);
         }
     }
 
