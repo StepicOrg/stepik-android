@@ -34,7 +34,7 @@ constructor(
     }
 
     private val errorsSubject =
-        PublishSubject.create<SystemDownloadRecord>()
+        PublishSubject.create<DownloadError>()
 
     private val compositeDisposable = CompositeDisposable()
 
@@ -46,11 +46,21 @@ constructor(
         compositeDisposable.clear()
         compositeDisposable += errorsSubject
             .doOnNext {
-                analytic
-                    .reportEventWithName(
-                        Analytic.DownloaderV2.SYSTEM_DOWNLOAD_ERROR,
-                        "title = ${it.title}, localUri = ${it.localUri}, reason = ${it.reason}"
-                    )
+                when (it) {
+                    is DownloadError.Record ->
+                        analytic
+                            .reportEventWithName(
+                                Analytic.DownloaderV2.SYSTEM_DOWNLOAD_ERROR,
+                                "title = ${it.record.title}, localUri = ${it.record.localUri}, reason = ${it.record.reason}"
+                            )
+
+                    is DownloadError.DownloadManager ->
+                        analytic
+                            .reportError(
+                                Analytic.DownloaderV2.SYSTEM_DOWNLOAD_ERROR,
+                                it.cause
+                            )
+                }
             }
             .debounce(ERROR_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
             .map(::resolveErrorMessage)
@@ -59,8 +69,15 @@ constructor(
             .subscribeBy(onError = { initReporter() }, onNext = ::showError)
     }
 
-    private fun resolveErrorMessage(record: SystemDownloadRecord): String =
-        context.getString(R.string.download_error, record.title + resolveErrorDescription(record))
+    private fun resolveErrorMessage(downloadError: DownloadError): String =
+        when (downloadError) {
+            is DownloadError.Record ->
+                context.getString(R.string.download_error, downloadError.record.title + resolveErrorDescription(downloadError.record))
+
+            is DownloadError.DownloadManager ->
+                context.getString(R.string.download_error_system_manager)
+        }
+
 
     private fun resolveErrorDescription(record: SystemDownloadRecord): String =
         when(record.reason) {
@@ -74,7 +91,16 @@ constructor(
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun onError(systemDownloadRecord: SystemDownloadRecord) {
-        errorsSubject.onNext(systemDownloadRecord)
+    fun onRecordError(systemDownloadRecord: SystemDownloadRecord) {
+        errorsSubject.onNext(DownloadError.Record(systemDownloadRecord))
+    }
+
+    fun onDownloadManagerError(cause: Throwable) {
+        errorsSubject.onNext(DownloadError.DownloadManager(cause))
+    }
+
+    private sealed class DownloadError {
+        data class Record(val record: SystemDownloadRecord) : DownloadError()
+        data class DownloadManager(val cause: Throwable) : DownloadError()
     }
 }

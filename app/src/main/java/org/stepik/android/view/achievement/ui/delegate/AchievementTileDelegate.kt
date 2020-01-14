@@ -1,8 +1,10 @@
 package org.stepik.android.view.achievement.ui.delegate
 
 import android.view.View
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isGone
 import kotlinx.android.synthetic.main.view_achievement_tile.view.*
+import org.stepic.droid.R
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.ui.util.wrapWithGlide
@@ -17,13 +19,18 @@ class AchievementTileDelegate(
     private val achievementLevelProgress: AchievementCircleProgressView = root.achievementLevelProgress
     private val achievementIcon = root.achievementIcon.wrapWithGlide()
 
+    private val achievementIconSize = root.resources.getDimensionPixelSize(R.dimen.achievement_tile_width)
+    private val achievementIconPlaceholder =
+        AppCompatResources.getDrawable(root.context, R.drawable.ic_achievement_empty)
+
     fun setAchievement(item: AchievementItem) {
         achievementLevels.progress = item.currentLevel
         achievementLevels.total = item.maxLevel
 
         achievementLevelProgress.progress = item.currentScore.toFloat() / item.targetScore
 
-        achievementIcon.setImagePath(achievementResourceResolver.resolveAchievementIcon(item, achievementIcon.imageView))
+        achievementIcon
+            .setImagePath(achievementResourceResolver.resolveAchievementIcon(item, achievementIconSize), achievementIconPlaceholder)
 
         val alpha = if (item.isLocked) 0.4f else 1f
         achievementIcon.imageView.alpha = alpha

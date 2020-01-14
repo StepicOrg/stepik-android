@@ -194,14 +194,25 @@ interface AmplitudeAnalytic {
 
     object Profile {
         const val PROFILE_SCREEN_OPENED = "Profile screen opened"
+        const val PROFILE_STAT_CLICKED = "Profile stat clicked"
 
         object Params {
             const val STATE = "state"
+            const val TYPE = "type"
         }
 
         object Values {
+            /**
+             * State
+             */
             const val SELF = "self"
             const val OTHER = "other"
+
+            /**
+             * Type
+             */
+            const val REPUTATION = "reputation"
+            const val KNOWLEDGE = "knowledge"
         }
     }
 

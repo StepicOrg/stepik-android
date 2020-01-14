@@ -29,8 +29,8 @@
 
         <ImageView
             android:id="@+id/achievementIcon"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
+            android:layout_width="@dimen/achievement_details_icon_size"
+            android:layout_height="@dimen/achievement_details_icon_size"
             android:contentDescription="@null" />
     </FrameLayout>
 

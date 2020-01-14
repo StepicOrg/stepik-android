@@ -109,7 +109,7 @@ constructor(
             when (record.status) {
                 DownloadManager.STATUS_FAILED -> {
                     persistentItemObserver.update(item.copy(status = PersistentItem.Status.DOWNLOAD_ERROR))
-                    downloadErrorPoster.onError(record)
+                    downloadErrorPoster.onRecordError(record)
                 }
 
                 DownloadManager.STATUS_SUCCESSFUL -> // redeliver completed download
