@@ -1,4 +1,4 @@
-package org.stepik.android.view.base.ui.widget.rule
+package org.stepik.android.domain.latex.model.rule
 
 interface ContentRule {
     /**

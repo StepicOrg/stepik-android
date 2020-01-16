@@ -1,4 +1,4 @@
-package org.stepik.android.view.base.ui.widget.block
+package org.stepik.android.domain.latex.model.block
 
 interface ContentBlock {
     val header: String
@@ -10,5 +10,6 @@ interface ContentBlock {
     val postBody: String
         get() = ""
 
-    fun isEnabled(content: String): Boolean
+    fun isEnabled(content: String): Boolean =
+        true
 }

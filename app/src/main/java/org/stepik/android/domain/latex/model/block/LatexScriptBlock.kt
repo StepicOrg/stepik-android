@@ -1,4 +1,4 @@
-package org.stepik.android.view.base.ui.widget.block
+package org.stepik.android.domain.latex.model.block
 
 class LatexScriptBlock : ContentBlock {
     override val header: String = """

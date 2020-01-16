@@ -1,4 +1,4 @@
-package org.stepik.android.view.base.ui.widget.model
+package org.stepik.android.domain.latex.model
 
 sealed class LatexData {
     data class Text(val text: CharSequence): LatexData()

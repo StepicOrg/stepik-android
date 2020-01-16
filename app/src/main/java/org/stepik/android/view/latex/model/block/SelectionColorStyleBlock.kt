@@ -1,6 +1,7 @@
-package org.stepik.android.view.base.ui.widget.block
+package org.stepik.android.view.latex.model.block
 
 import androidx.annotation.ColorInt
+import org.stepik.android.domain.latex.model.block.ContentBlock
 
 class SelectionColorStyleBlock(
     @ColorInt

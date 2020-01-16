@@ -1,4 +1,4 @@
-package org.stepik.android.view.base.ui.widget
+package org.stepik.android.view.latex.ui.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,8 +12,8 @@ import android.webkit.WebView
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.ui.util.evaluateJavascriptCompat
 import org.stepic.droid.util.toDp
-import org.stepik.android.view.base.ui.widget.attributes.TextAttributes
-import org.stepik.android.view.base.ui.widget.block.HorizontalScrollBlock
+import org.stepik.android.view.latex.model.TextAttributes
+import org.stepik.android.domain.latex.model.block.HorizontalScrollBlock
 import kotlin.math.abs
 
 @SuppressLint("AddJavascriptInterface")
@@ -33,14 +33,15 @@ constructor(
     var attributes = TextAttributes.fromAttributeSet(context, attrs)
         set(value) {
             field = value
-            settings.defaultFontSize = value.textSize
+            settings.defaultFontSize = value.textSize.toInt()
 
             setOnLongClickListener(this.takeIf { value.textIsSelectable })
         }
 
     var onImageClickListener: OnImageClickListener? = null
 
-    private var scrollState = ScrollState()
+    private var scrollState =
+        ScrollState()
 
     private var startX = 0f
     private var startY = 0f
@@ -55,7 +56,7 @@ constructor(
         settings.domStorageEnabled = true
         @SuppressLint("SetJavaScriptEnabled")
         settings.javaScriptEnabled = true
-        settings.defaultFontSize = attributes.textSize
+        settings.defaultFontSize = attributes.textSize.toInt()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             settings.mediaPlaybackRequiresUserGesture = false
         }

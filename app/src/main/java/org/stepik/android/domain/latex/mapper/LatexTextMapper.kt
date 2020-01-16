@@ -1,17 +1,17 @@
-package org.stepik.android.view.base.ui.widget.mapper
+package org.stepik.android.domain.latex.mapper
 
 import androidx.core.text.HtmlCompat
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.resolvers.text.OlLiTagHandler
-import org.stepik.android.view.base.ui.widget.block.ContentBlock
-import org.stepik.android.view.base.ui.widget.block.HighlightScriptBlock
-import org.stepik.android.view.base.ui.widget.block.HorizontalScrollBlock
-import org.stepik.android.view.base.ui.widget.block.KotlinRunnableSamplesScriptBlock
-import org.stepik.android.view.base.ui.widget.block.LatexScriptBlock
-import org.stepik.android.view.base.ui.widget.block.MinVisibleBlock
-import org.stepik.android.view.base.ui.widget.block.WebScriptBlock
-import org.stepik.android.view.base.ui.widget.model.LatexData
-import org.stepik.android.view.base.ui.widget.rule.RelativePathContentRule
+import org.stepik.android.domain.latex.model.block.ContentBlock
+import org.stepik.android.domain.latex.model.block.HighlightScriptBlock
+import org.stepik.android.domain.latex.model.block.HorizontalScrollBlock
+import org.stepik.android.domain.latex.model.block.KotlinRunnableSamplesScriptBlock
+import org.stepik.android.domain.latex.model.block.LatexScriptBlock
+import org.stepik.android.domain.latex.model.block.MinVisibleBlock
+import org.stepik.android.domain.latex.model.block.WebScriptBlock
+import org.stepik.android.domain.latex.model.LatexData
+import org.stepik.android.domain.latex.model.rule.RelativePathContentRule
 
 class LatexTextMapper(
     config: Config

@@ -44,6 +44,13 @@ fun Int.toDp(): Int =
 fun Int.toPx(): Int =
     this.toFloat().toPx().toInt()
 
+
+/**
+ * Converts current value in px to sp
+ */
+fun Int.toSp(): Int =
+    this.toFloat().toSp().toInt()
+
 /**
  * Converts current value in px to dp
  */
@@ -55,3 +62,9 @@ fun Float.toDp(): Float =
  */
 fun Float.toPx(): Float =
     this * Resources.getSystem().displayMetrics.density
+
+/**
+ * Converts current value in px to dp
+ */
+fun Float.toSp(): Float =
+    this / Resources.getSystem().displayMetrics.scaledDensity

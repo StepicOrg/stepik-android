@@ -1,4 +1,4 @@
-package org.stepik.android.view.base.ui.widget.block
+package org.stepik.android.domain.latex.model.block
 
 import android.os.Build
 

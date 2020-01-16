@@ -12,7 +12,7 @@
         app:colorControlNormal="@color/new_accent_color"
         android:textSize="16sp"/>
 
-    <org.stepic.droid.ui.custom.LatexSupportableWebView
+    <org.stepik.android.view.latex.ui.widget.LatexWebView
         android:id="@+id/webView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,6 +1,7 @@
-package org.stepik.android.view.base.ui.widget.block
+package org.stepik.android.domain.latex.model.block
 
 import android.os.Build
+import org.stepik.android.domain.latex.model.block.ContentBlock
 
 class MinVisibleBlock : ContentBlock {
     override val postBody: String =

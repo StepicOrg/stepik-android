@@ -1,13 +1,14 @@
-package org.stepik.android.view.base.ui.widget.mapper
+package org.stepik.android.view.latex.mapper
 
 import android.content.Context
 import org.stepic.droid.configuration.Config
-import org.stepik.android.view.base.ui.widget.attributes.TextAttributes
-import org.stepik.android.view.base.ui.widget.block.BaseStyleBlock
-import org.stepik.android.view.base.ui.widget.block.ContentBlock
-import org.stepik.android.view.base.ui.widget.block.MetaBlock
-import org.stepik.android.view.base.ui.widget.block.SelectionColorStyleBlock
-import org.stepik.android.view.base.ui.widget.model.LatexData
+import org.stepik.android.view.latex.model.TextAttributes
+import org.stepik.android.view.latex.model.block.BaseStyleBlock
+import org.stepik.android.domain.latex.model.block.ContentBlock
+import org.stepik.android.view.latex.model.block.MetaBlock
+import org.stepik.android.view.latex.model.block.SelectionColorStyleBlock
+import org.stepik.android.view.latex.model.block.TextColorBlock
+import org.stepik.android.domain.latex.model.LatexData
 
 class LatexWebViewMapper(
     private val config: Config,
@@ -25,14 +26,21 @@ class LatexWebViewMapper(
         val blocks =
             listOf(
                 BaseStyleBlock(fontPath),
-                MetaBlock(config.baseUrl, width),
-                SelectionColorStyleBlock(attributes.textColorHighlight)
+                MetaBlock(
+                    config.baseUrl,
+                    width
+                ),
+                SelectionColorStyleBlock(
+                    attributes.textColorHighlight
+                ),
+                TextColorBlock(
+                    attributes.textColor
+                )
             )
-            .filter { it.isEnabled(webData.body) }
 
         val header = webData.header + blocks.joinToString(separator = "", transform = ContentBlock::header)
         val preBody = webData.preBody + blocks.joinToString(separator = "", transform = ContentBlock::preBody)
-        val postBody = webData.postBody + blocks.joinToString(separator = "", transform = ContentBlock::postBody)
+        val postBody = blocks.asReversed().joinToString(separator = "", transform = ContentBlock::postBody) + webData.postBody // order is reversed to preserve tags
 
         return """
             <!DOCTYPE html>
