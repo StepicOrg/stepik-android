@@ -3,6 +3,7 @@ package org.stepic.droid.util
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.widget.Toast
@@ -30,3 +31,27 @@ fun Context.contextForWebView(): Context =
     } else {
         this
     }
+
+/**
+ * Converts current value in px to dp
+ */
+fun Int.toDp(): Int =
+    this.toFloat().toDp().toInt()
+
+/**
+ * Converts current value in dp to px
+ */
+fun Int.toPx(): Int =
+    this.toFloat().toPx().toInt()
+
+/**
+ * Converts current value in px to dp
+ */
+fun Float.toDp(): Float =
+    this / Resources.getSystem().displayMetrics.density
+
+/**
+ * Converts current value in dp to px
+ */
+fun Float.toPx(): Float =
+    this * Resources.getSystem().displayMetrics.density
