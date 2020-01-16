@@ -67,6 +67,7 @@ import org.stepik.android.model.Video;
 import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.remote.auth.model.TokenType;
+import org.stepik.android.view.attempts.ui.activity.AttemptsActivity;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
@@ -713,5 +714,11 @@ public class ScreenManagerImpl implements ScreenManager {
         Uri uri = Uri.parse(url);
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
         activity.startActivity(intent);
+    }
+
+    @Override
+    public void showCachedAttempts(@NotNull Context context) {
+        Intent intent = AttemptsActivity.Companion.createIntent(context);
+        context.startActivity(intent);
     }
 }

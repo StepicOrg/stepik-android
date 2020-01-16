@@ -341,6 +341,9 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="org.stepik.android.view.attempts.ui.activity.AttemptsActivity" />
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">

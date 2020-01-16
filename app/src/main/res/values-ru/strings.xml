@@ -811,4 +811,8 @@
     <string name="profile_settings_menu_item">Настройки</string>
 
     <string name="profile_courses_title">Курсы</string>
+
+    <!-- Cached attempts -->
+    <string name="attempts_toolbar_title">Оффлайн решения</string>
+    <string name="attempts_information_block">Это ваши закэшированные решения. Можете отредактировать или отправить для получения баллов.</string>
 </resources>

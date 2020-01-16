@@ -58,6 +58,7 @@ import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
+import org.stepik.android.view.injection.attempts.AttemptsComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
@@ -199,6 +200,8 @@ interface AppCoreComponent {
     fun settingsComponentBuilder(): SettingsComponent.Builder
 
     fun socialProfileComponentBuilder(): SocialProfileComponent.Builder
+
+    fun attemptsComponentBuilder(): AttemptsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

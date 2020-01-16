@@ -844,4 +844,8 @@
     <string name="profile_settings_menu_item">Settings</string>
 
     <string name="profile_courses_title">Courses</string>
+
+    <!-- Cached attempts -->
+    <string name="attempts_toolbar_title">Offline attempts</string>
+    <string name="attempts_information_block">This is your offline attempts. Edit or submit to score the points</string>
 </resources>
