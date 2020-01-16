@@ -10,7 +10,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.stepic.droid.configuration.Config;
 import org.stepic.droid.notifications.model.Notification;
 
 import java.util.List;
@@ -75,24 +74,6 @@ public class HtmlHelper {
         return text.contains("<code");
     }
 
-    /**
-     * get meta value
-     *
-     * @param htmlText with meta tags
-     * @param metaKey  meta key of 'name' attribute in meta tag
-     * @return value of 'content' attribute in tag meta with 'name' == metaKey
-     */
-    @Nullable
-    public static String getValueOfMetaOrNull(String htmlText, String metaKey) {
-        Document document = Jsoup.parse(htmlText);
-        Elements elements = document.select("meta");
-        try {
-            return elements.attr("name", metaKey).last().attr("content"); //WTF? first is csrf param, but jsoup can't handle
-        } catch (Exception ex) {
-            return "";
-        }
-    }
-
     @Nullable
     public static Long parseCourseIdFromNotification(@NotNull Notification notification) {
         String htmlRaw = notification.getHtmlText();
@@ -119,7 +100,7 @@ public class HtmlHelper {
             return null;
 
         try {
-            String number = slug.substring(indexOfLastDash + 1, slug.length());
+            String number = slug.substring(indexOfLastDash + 1);
             id = Long.parseLong(number);
         } catch (NumberFormatException | IndexOutOfBoundsException ignored) {
         }
@@ -352,17 +333,6 @@ public class HtmlHelper {
                     " src=\"file:///android_asset/scripts/highlight.pack.js\">\n" +
                     "</script>\n" +
                     "<script>hljs.initHighlightingOnLoad();</script>\n";
-
-    public static String getUserPath(Config config, int userId) {
-        return new StringBuilder()
-                .append(config.getBaseUrl())
-                .append(AppConstants.WEB_URI_SEPARATOR)
-                .append("users")
-                .append(AppConstants.WEB_URI_SEPARATOR)
-                .append(userId)
-                .append("/?from_mobile_app=true")
-                .toString();
-    }
 
     @Nullable
     public static String parseNLinkInText(@NotNull String htmlText, String baseUrl, int position) {

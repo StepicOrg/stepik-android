@@ -37,7 +37,7 @@ data class TextAttributes(
                     textColor = array.getColor(1, 0xFF000000.toInt()),
                     textColorHighlight = array.getColor(2, ContextCompat.getColor(context, R.color.text_color_highlight)),
                     textIsSelectable = array.getBoolean(3, false),
-                    fontResId = array.getResourceId(4, 0)
+                    fontResId = array.getResourceId(4, R.font.roboto_regular)
                 )
             } finally {
                 array.recycle()

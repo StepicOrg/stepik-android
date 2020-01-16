@@ -10,9 +10,10 @@ import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import org.stepic.droid.BuildConfig
-import org.stepic.droid.util.HtmlHelper
+import org.stepic.droid.ui.util.evaluateJavascriptCompat
 import org.stepic.droid.util.toDp
 import org.stepik.android.view.base.ui.widget.attributes.TextAttributes
+import org.stepik.android.view.base.ui.widget.block.HorizontalScrollBlock
 import kotlin.math.abs
 
 @SuppressLint("AddJavascriptInterface")
@@ -27,8 +28,6 @@ constructor(
 
     companion object {
         private const val MAX_CLICK_DURATION = 200
-
-        private const val JS_NAME = HtmlHelper.HORIZONTAL_SCROLL_LISTENER
     }
 
     var attributes = TextAttributes.fromAttributeSet(context, attrs)
@@ -61,7 +60,7 @@ constructor(
             settings.mediaPlaybackRequiresUserGesture = false
         }
 
-        addJavascriptInterface(OnScrollWebListener(), JS_NAME)
+        addJavascriptInterface(OnScrollWebListener(), HorizontalScrollBlock.SCRIPT_NAME)
         isSoundEffectsEnabled = false
     }
 
@@ -97,7 +96,7 @@ constructor(
 
                 val dpx = event.x.toDp()
                 val dpy = event.y.toDp()
-                evalScript("measureScroll($dpx, $dpy)")
+                evaluateJavascriptCompat("${HorizontalScrollBlock.METHOD_NAME}($dpx, $dpy)")
             }
 
             MotionEvent.ACTION_MOVE -> {
@@ -123,14 +122,6 @@ constructor(
         super.canScrollHorizontally(dx) ||
         dx < 0 && scrollState.canScrollLeft ||
         dx > 0 && scrollState.canScrollRight
-    
-    private fun evalScript(code: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            evaluateJavascript(code, null)
-        } else {
-            loadUrl("javascript: $code")
-        }
-    }
 
     interface OnImageClickListener {
         fun onImageClick(imagePath: String)
