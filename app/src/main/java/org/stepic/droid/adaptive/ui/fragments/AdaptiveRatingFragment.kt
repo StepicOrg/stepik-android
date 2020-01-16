@@ -112,6 +112,15 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
         adaptiveRatingPresenter.attachView(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        analytic
+            .reportAmplitudeEvent(
+                AmplitudeAnalytic.Adaptive.RATING_OPENED,
+                mapOf(AmplitudeAnalytic.Adaptive.Params.COURSE to courseId.toString())
+            )
+    }
+
     override fun onStop() {
         adaptiveRatingPresenter.detachView(this)
         super.onStop()

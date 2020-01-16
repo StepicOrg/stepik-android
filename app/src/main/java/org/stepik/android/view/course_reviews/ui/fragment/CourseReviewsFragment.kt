@@ -60,8 +60,6 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     private lateinit var courseReviewsPresenter: CourseReviewsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseReviewsView.State>
 
-    private var isVisibleToUser = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent(courseId)
@@ -78,8 +76,6 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         courseReviewsAdapter += CourseReviewPlaceholderDelegate()
         courseReviewsAdapter +=
             CourseReviewsComposeBannerDelegate { showCourseReviewEditDialog(null) }
-
-        reportIsVisibleToUser()
     }
 
     private fun injectComponent(courseId: Long) {
@@ -139,32 +135,19 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(report_empty)
     }
 
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        this.isVisibleToUser = isVisibleToUser
-        reportIsVisibleToUser()
-        fetchNewReviews()
-    }
-
-    private fun reportIsVisibleToUser() {
-        if (isVisibleToUser && this::analytic.isInitialized) {
-            analytic
-                .reportAmplitudeEvent(
-                    AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
-                    mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
-                )
-        }
-    }
-
-    private fun fetchNewReviews() {
-        if (isVisibleToUser && this::courseReviewsPresenter.isInitialized) {
-            courseReviewsPresenter.fetchNextPageFromRemote()
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         courseReviewsPresenter.attachView(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        analytic
+            .reportAmplitudeEvent(
+                AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
+                mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
+            )
+        courseReviewsPresenter.fetchNextPageFromRemote()
     }
 
     override fun onStop() {
