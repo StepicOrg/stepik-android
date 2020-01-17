@@ -28,6 +28,10 @@ constructor(
 
     companion object {
         private const val MAX_CLICK_DURATION = 200
+
+        private const val MIME_TYPE = "text/html"
+        private const val ENCODING = "UTF-8"
+        private const val ASSETS = "file:///android_asset/"
     }
 
     var attributes = TextAttributes.fromAttributeSet(context, attrs)
@@ -38,7 +42,15 @@ constructor(
             setOnLongClickListener(this.takeIf { value.textIsSelectable })
         }
 
-    var onImageClickListener: OnImageClickListener? = null
+    var onImageClickListener: ((path: String) -> Unit)? = null
+
+    var text: String = ""
+        set(value) {
+            if (field != value) { // update check in order to prevent re-rendering
+                field = value
+                post { loadDataWithBaseURL(ASSETS, text, MIME_TYPE, ENCODING, "") }
+            }
+        }
 
     private var scrollState =
         ScrollState()
@@ -71,7 +83,7 @@ constructor(
         val hr = hitTestResult
         try {
             if (hr.type == HitTestResult.IMAGE_TYPE) {
-                onImageClickListener?.onImageClick(hr.extra ?: return)
+                onImageClickListener?.invoke(hr.extra ?: return)
             }
         } catch (e: Exception) {
             if (BuildConfig.DEBUG) {
@@ -89,6 +101,7 @@ constructor(
         return false
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
@@ -123,10 +136,6 @@ constructor(
         super.canScrollHorizontally(dx) ||
         dx < 0 && scrollState.canScrollLeft ||
         dx > 0 && scrollState.canScrollRight
-
-    interface OnImageClickListener {
-        fun onImageClick(imagePath: String)
-    }
 
     private inner class OnScrollWebListener {
         @JavascriptInterface

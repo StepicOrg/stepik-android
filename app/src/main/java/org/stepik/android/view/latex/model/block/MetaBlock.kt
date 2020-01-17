@@ -10,6 +10,4 @@ class MetaBlock(
         "<meta name="viewport" content="width=$width, user-scalable=no, target-densitydpi=medium-dpi" />
         "<base href="$baseUrl">
     """.trimIndent()
-
-    override fun isEnabled(content: String): Boolean = true
 }

@@ -14,7 +14,6 @@ import androidx.annotation.ColorRes;
 import androidx.annotation.FontRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 import androidx.annotation.Px;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.widget.TextViewCompat;
@@ -151,22 +150,10 @@ public class LatexSupportableEnhancedFrameLayout extends FrameLayout {
         webView.setText(text, wantLaTeX, fontResId != null ? assetUrl + fontsDirectory + getResources().getResourceEntryName(fontResId) + fontFormat : null);
     }
 
-    private void setTextWebViewOnlyForLaTeX(String text) {
-        setTextWebView(text, true, null);
-    }
-
     private void setPlainText(CharSequence text) {
         webView.setVisibility(GONE);
         textView.setVisibility(VISIBLE);
         textView.setText(text);
-    }
-
-    public void setPlainOrLaTeXText(@NonNull String text) {
-        if (HtmlHelper.hasLaTeX(text)) {
-            setTextWebViewOnlyForLaTeX(text);
-        } else {
-            setPlainText(text);
-        }
     }
 
     public void setPlainOrLaTeXTextColored(String text, @ColorRes int colorRes) {

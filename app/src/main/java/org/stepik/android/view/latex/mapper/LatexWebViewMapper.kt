@@ -9,8 +9,11 @@ import org.stepik.android.view.latex.model.block.MetaBlock
 import org.stepik.android.view.latex.model.block.SelectionColorStyleBlock
 import org.stepik.android.view.latex.model.block.TextColorBlock
 import org.stepik.android.domain.latex.model.LatexData
+import javax.inject.Inject
 
-class LatexWebViewMapper(
+class LatexWebViewMapper
+@Inject
+constructor(
     private val config: Config,
     private val context: Context
 ) {

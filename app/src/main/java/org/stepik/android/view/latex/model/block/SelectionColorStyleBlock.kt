@@ -12,6 +12,4 @@ class SelectionColorStyleBlock(
             ::selection { background: #${Integer.toHexString(selectionColor).substring(2)}; }
         </style>
     """.trimIndent()
-
-    override fun isEnabled(content: String): Boolean = true
 }

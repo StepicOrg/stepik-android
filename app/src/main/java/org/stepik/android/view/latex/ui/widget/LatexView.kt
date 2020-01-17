@@ -1,16 +1,14 @@
 package org.stepik.android.view.latex.ui.widget
 
 import android.content.Context
-import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.annotation.LayoutRes
-import androidx.annotation.Px
+import androidx.annotation.IdRes
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.widget.TextViewCompat
-import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.inflate
 import org.stepik.android.view.latex.model.TextAttributes
@@ -35,22 +33,54 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             webView.attributes = value
         }
 
-    @LayoutRes
-    private val layoutRes = R.layout.latex_supportabe_enhanced_view
+    @IdRes
+    private val textViewId: Int
 
-    private val textView: TextView
-    private val webView: LatexWebView
+    @IdRes
+    private val webViewId: Int
+
+    lateinit var textView: TextView
+        private set
+
+    lateinit var webView: LatexWebView
+        private set
 
     init {
-        val view = this.inflate(layoutRes, attachToRoot = true)
-        textView = view.textView
-        textView.movementMethod = LinkMovementMethod.getInstance()
-        webView = view.webView
+        val array = context.obtainStyledAttributes(attrs, R.styleable.LatexView)
+
+        try {
+            val textId = array.getResourceId(R.styleable.LatexView_textViewId, 0)
+            if (textId == 0) {
+                textViewId = R.id.latex_textview
+                inflate(R.layout.layout_latex_textview, attachToRoot = true)
+            } else {
+                textViewId = textId
+            }
+
+            val webId = array.getResourceId(R.styleable.LatexView_webViewId, 0)
+            if (webId == 0) {
+                webViewId = R.id.latex_webview
+                inflate(R.layout.layout_latex_webview, attachToRoot = true)
+            } else {
+                webViewId = webId
+            }
+        } finally {
+            array.recycle()
+        }
     }
 
-    fun setLineHeight(@Px lineHeight: Int) {
-        TextViewCompat.setLineHeight(textView, lineHeight)
+    override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
+        when (child?.id) {
+            textViewId -> {
+                textView = child as TextView
+                textView.setAttributes(attributes)
+            }
+
+            webViewId -> {
+                webView = child as LatexWebView
+                webView.attributes = attributes
+            }
+        }
+        super.addView(child, index, params)
     }
-
-
 }

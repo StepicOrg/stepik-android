@@ -12,8 +12,11 @@ import org.stepik.android.domain.latex.model.block.MinVisibleBlock
 import org.stepik.android.domain.latex.model.block.WebScriptBlock
 import org.stepik.android.domain.latex.model.LatexData
 import org.stepik.android.domain.latex.model.rule.RelativePathContentRule
+import javax.inject.Inject
 
-class LatexTextMapper(
+class LatexTextMapper
+@Inject
+constructor(
     config: Config
 ) {
     private val primaryBlocks =
@@ -50,7 +53,7 @@ class LatexTextMapper(
                 header = blocks.joinToString(separator = "", transform = ContentBlock::header),
                 preBody = blocks.joinToString(separator = "", transform = ContentBlock::preBody),
                 body = content,
-                postBody = blocks.joinToString(separator = "", transform = ContentBlock::postBody)
+                postBody = blocks.asReversed().joinToString(separator = "", transform = ContentBlock::postBody)
             )
         }
     }

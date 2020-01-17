@@ -22,6 +22,4 @@ class BaseStyleBlock(
             img { max-width: 100%%; }
         </style>
     """.trimIndent()
-
-    override fun isEnabled(content: String): Boolean = true
 }

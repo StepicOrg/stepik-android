@@ -12,6 +12,4 @@ class TextColorBlock(
 
     override val postBody: String =
         "</font>"
-
-    override fun isEnabled(content: String): Boolean = true
 }
