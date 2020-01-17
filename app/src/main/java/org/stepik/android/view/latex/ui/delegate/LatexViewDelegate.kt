@@ -1,7 +1,6 @@
 package org.stepik.android.view.latex.ui.delegate
 
 import android.content.Context
-import androidx.core.view.doOnLayout
 import androidx.core.view.isVisible
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.latex.mapper.LatexTextMapper
@@ -11,9 +10,6 @@ import org.stepik.android.view.latex.mapper.LatexWebViewMapper
 import org.stepik.android.view.latex.ui.widget.LatexView
 import javax.inject.Inject
 
-/**
- * [context] - activity context, passed as separate variable as latexView context could be application context
- */
 class LatexViewDelegate
 @Inject
 constructor(
@@ -46,14 +42,13 @@ constructor(
                 latexView.textView.text = latexData.text
 
             is LatexData.Web ->
-                latexView.webView.doOnLayout {
-                    latexView.webView.text =
-                        latexWebViewMapper.mapLatexData(latexData, latexView.webView.attributes, latexView.webView.width)
-                }
-
+                latexView.webView.text = latexWebViewMapper.mapLatexData(latexData, latexView.webView.attributes)
         }
     }
 
+    /**
+     * [context] - activity context, passed as separate variable as latexView context could be application context
+     */
     fun attach(context: Context, latexView: LatexView) {
         this.latexView = latexView
         latexView.webView.onImageClickListener = { screenManager.openImage(context, it) }

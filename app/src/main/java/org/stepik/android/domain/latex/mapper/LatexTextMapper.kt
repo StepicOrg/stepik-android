@@ -11,6 +11,7 @@ import org.stepik.android.domain.latex.model.block.LatexScriptBlock
 import org.stepik.android.domain.latex.model.block.MinVisibleBlock
 import org.stepik.android.domain.latex.model.block.WebScriptBlock
 import org.stepik.android.domain.latex.model.LatexData
+import org.stepik.android.domain.latex.model.block.MetaBlock
 import org.stepik.android.domain.latex.model.rule.RelativePathContentRule
 import javax.inject.Inject
 
@@ -30,7 +31,8 @@ constructor(
     private val regularBlocks =
         listOf(
             HorizontalScrollBlock(),
-            MinVisibleBlock()
+            MinVisibleBlock(),
+            MetaBlock(config.baseUrl)
         )
 
     private val rules =

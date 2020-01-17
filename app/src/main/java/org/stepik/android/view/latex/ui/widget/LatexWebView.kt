@@ -14,6 +14,7 @@ import org.stepic.droid.ui.util.evaluateJavascriptCompat
 import org.stepic.droid.util.toDp
 import org.stepik.android.view.latex.model.TextAttributes
 import org.stepik.android.domain.latex.model.block.HorizontalScrollBlock
+import timber.log.Timber
 import kotlin.math.abs
 
 @SuppressLint("AddJavascriptInterface")

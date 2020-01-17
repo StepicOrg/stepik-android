@@ -21,14 +21,13 @@ class CourseInfoTextBlockDelegate : AdapterDelegate<CourseInfoItem, CourseInfoAd
         private val blockMessage = root.blockMessage
 
         init {
-            blockMessage.setTextSize(14f)
             blockMessage.textView.setLineSpacing(0f, 1.33f)
         }
 
         override fun onBind(data: CourseInfoItem) {
             super.onBind(data)
             data as CourseInfoItem.WithTitle.TextBlock
-            blockMessage.setPlainOrLaTeXTextWithCustomFontColored(data.text, R.font.roboto_light, R.color.new_accent_color, true)
+//            blockMessage.setPlainOrLaTeXTextWithCustomFontColored(data.text, R.font.roboto_light, R.color.new_accent_color, true)
         }
     }
 }

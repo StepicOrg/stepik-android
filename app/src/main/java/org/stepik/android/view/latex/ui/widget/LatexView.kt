@@ -1,6 +1,7 @@
 package org.stepik.android.view.latex.ui.widget
 
 import android.content.Context
+import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
@@ -74,6 +75,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             textViewId -> {
                 textView = child as TextView
                 textView.setAttributes(attributes)
+                textView.movementMethod = LinkMovementMethod.getInstance()
             }
 
             webViewId -> {

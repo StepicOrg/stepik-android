@@ -23,6 +23,7 @@ import org.stepik.android.presentation.step_content_text.TextStepContentPresente
 import org.stepik.android.presentation.step_content_text.TextStepContentView
 import org.stepik.android.view.latex.ui.delegate.LatexViewDelegate
 import org.stepik.android.view.latex.ui.widget.LatexView
+import org.stepik.android.view.latex.ui.widget.LatexWebView
 import org.stepik.android.view.step_source.ui.dialog.EditStepSourceDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -60,6 +61,7 @@ class TextStepContentFragment :
     private lateinit var presenter: TextStepContentPresenter
 
     private var latexView: LatexView? = null
+    private var latexWebView: LatexWebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +83,19 @@ class TextStepContentFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        latexView ?: LayoutInflater.from(requireContext().applicationContext).inflate(R.layout.step_text_header, container, false)
+        inflater
+            .inflate(R.layout.step_text_header, container, false)
+            .also {
+                it as ViewGroup
+
+                if (latexWebView == null) {
+                    latexWebView = LayoutInflater
+                        .from(requireContext().applicationContext)
+                        .inflate(R.layout.layout_latex_webview, it, false) as LatexWebView
+                }
+
+                latexWebView?.let(it::addView)
+            }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         if (latexView == null) {
@@ -153,8 +167,13 @@ class TextStepContentFragment :
             .showIfNotExists(childFragmentManager, EditStepSourceDialogFragment.TAG)
     }
 
+    override fun onDestroyView() {
+        (view as? ViewGroup)?.removeView(latexWebView)
+        super.onDestroyView()
+    }
+
     override fun onDestroy() {
-        latexView = null
+        latexWebView = null
         super.onDestroy()
     }
 
