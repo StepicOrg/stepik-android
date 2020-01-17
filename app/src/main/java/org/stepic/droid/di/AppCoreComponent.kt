@@ -36,7 +36,6 @@ import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
-import org.stepic.droid.ui.custom.ExpandableTextView
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.dialogs.CertificateShareDialog
@@ -249,8 +248,6 @@ interface AppCoreComponent {
     fun inject(latexSupportableWebView: LatexSupportableWebView)
 
     fun inject(latexView: LatexView)
-
-    fun inject(expandableTextView: ExpandableTextView)
 
     fun inject(autoCompleteSearchView: AutoCompleteSearchView)
 
