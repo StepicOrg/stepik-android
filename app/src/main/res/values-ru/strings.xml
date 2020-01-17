@@ -290,7 +290,7 @@
     <string name="later_tatle">Позже</string>
     <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
-    <string name="notification_about_learning">Уведомления о занятиях активны</string>
+    <string name="notification_about_learning">Напоминать о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
     <plurals name="streak_notification_message_call_to_action">
         <item quantity="one">Вы молодец! Вы решаете уже %d день без перерыва. Не останавливайтесь,
