@@ -27,7 +27,7 @@ class CourseInfoTextBlockDelegate : AdapterDelegate<CourseInfoItem, CourseInfoAd
         override fun onBind(data: CourseInfoItem) {
             super.onBind(data)
             data as CourseInfoItem.WithTitle.TextBlock
-//            blockMessage.setPlainOrLaTeXTextWithCustomFontColored(data.text, R.font.roboto_light, R.color.new_accent_color, true)
+            blockMessage.setText(data.text)
         }
     }
 }
