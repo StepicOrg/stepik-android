@@ -7,7 +7,7 @@ class MetaBlock(
     width: Int
 ) : ContentBlock {
     override val header: String = """
-        "<meta name="viewport" content="width=$width, user-scalable=no, target-densitydpi=medium-dpi" />
-        "<base href="$baseUrl">
+        <meta name="viewport" content="width=$width, user-scalable=no, target-densitydpi=medium-dpi" />
+        <base href="$baseUrl">
     """.trimIndent()
 }

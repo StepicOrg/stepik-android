@@ -48,7 +48,7 @@ constructor(
         set(value) {
             if (field != value) { // update check in order to prevent re-rendering
                 field = value
-                post { loadDataWithBaseURL(ASSETS, text, MIME_TYPE, ENCODING, "") }
+                loadDataWithBaseURL(ASSETS, text, MIME_TYPE, ENCODING, "")
             }
         }
 

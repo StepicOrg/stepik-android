@@ -16,7 +16,7 @@ class LatexScriptBlock : ContentBlock {
                     ]
                 });
             });
-        </script>;
+        </script>
     """.trimIndent()
         
     override fun isEnabled(content: String): Boolean =

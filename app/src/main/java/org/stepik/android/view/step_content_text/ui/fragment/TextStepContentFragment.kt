@@ -16,12 +16,13 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
 import org.stepik.android.presentation.step_content_text.TextStepContentView
+import org.stepik.android.view.latex.ui.delegate.LatexViewDelegate
+import org.stepik.android.view.latex.ui.widget.LatexView
 import org.stepik.android.view.step_source.ui.dialog.EditStepSourceDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -51,11 +52,14 @@ class TextStepContentFragment :
     @Inject
     lateinit var lessonData: LessonData
 
+    @Inject
+    lateinit var latexViewDelegate: LatexViewDelegate
+
     private var stepId: Long by argument()
 
     private lateinit var presenter: TextStepContentPresenter
 
-    private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
+    private var latexView: LatexView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +81,11 @@ class TextStepContentFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        latexLayout ?: inflater.inflate(R.layout.step_text_header, container, false)
+        latexView ?: LayoutInflater.from(requireContext().applicationContext).inflate(R.layout.step_text_header, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (latexLayout == null) {
-            latexLayout = view as LatexSupportableEnhancedFrameLayout
+        if (latexView == null) {
+            latexView = view as LatexView
 
             invalidateText()
         }
@@ -94,19 +98,17 @@ class TextStepContentFragment :
             ?.text
             ?.takeIf(String::isNotEmpty)
 
-        val view = latexLayout ?: return
+        val view = latexView ?: return
 
         view.isVisible = text != null
+        latexViewDelegate.setText(text)
         presenter.onSetTextContentSize()
-        if (text != null) {
-            view.setText(text)
-            view.setTextIsSelectable(true)
-        }
     }
 
     override fun onStart() {
         super.onStart()
         presenter.attachView(this)
+        latexViewDelegate.attach(requireContext(), latexView ?: return)
     }
 
     override fun onResume() {
@@ -120,6 +122,7 @@ class TextStepContentFragment :
     }
 
     override fun onStop() {
+        latexViewDelegate.detach()
         presenter.detachView(this)
         super.onStop()
     }
@@ -151,12 +154,13 @@ class TextStepContentFragment :
     }
 
     override fun onDestroy() {
-        latexLayout = null
+        latexView = null
         super.onDestroy()
     }
 
     override fun setTextContentFontSize(fontSize: FontSize) {
-        latexLayout?.setTextSize(fontSize.size) ?: return
+        val latexView = latexView ?: return
+        latexView.attributes = latexView.attributes.copy(textSize = fontSize.size)
     }
 
     override fun onStepContentChanged(stepWrapper: StepPersistentWrapper) {

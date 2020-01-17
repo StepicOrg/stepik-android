@@ -27,7 +27,7 @@ constructor(
             WebScriptBlock()
         )
 
-    private val blocks =
+    private val regularBlocks =
         listOf(
             HorizontalScrollBlock(),
             MinVisibleBlock()
@@ -47,7 +47,7 @@ constructor(
         return if (primary.isEmpty()) {
             LatexData.Text(HtmlCompat.fromHtml(content.trimEnd(Char::isWhitespace), HtmlCompat.FROM_HTML_MODE_LEGACY, null, tagHandler))
         } else {
-            val blocks = primary + blocks.filter { it.isEnabled(content) }
+            val blocks = primary + regularBlocks.filter { it.isEnabled(content) }
 
             LatexData.Web(
                 header = blocks.joinToString(separator = "", transform = ContentBlock::header),
