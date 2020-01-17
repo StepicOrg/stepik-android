@@ -23,12 +23,6 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <org.stepik.android.view.latex.ui.widget.LatexWebView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-
-                style="@style/ProfileItemText" />
-
             <include
                 android:id="@+id/homeStreak"
                 layout="@layout/home_streak_view"
