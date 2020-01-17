@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
-import kotlinx.android.synthetic.main.progressable_latex_supportable_frame_layout.view.*
 import org.stepic.droid.R
+import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -30,8 +30,8 @@ class ChoicesAdapterDelegate(
         private val itemChoiceContainer = root.itemChoiceContainer
         private val itemChoiceCheckmark = root.itemChoiceCheckmark
         private val itemChoiceLatex = root.itemChoiceLatex
+        private val itemChoiceLatexProgress = root.itemChoiceLatexProgress
         private val itemChoiceFeedback  = root.itemChoiceFeedback
-        private val itemChoiceLatexEnhancedLayout = itemChoiceLatex.latex_text
         private val layerListDrawableDelegate: LayerListDrawableDelegate
 
         init {
@@ -49,10 +49,9 @@ class ChoicesAdapterDelegate(
                     R.id.incorrect_layer,
                     R.id.incorrect_layer_with_hint
                 ),
-                itemChoiceContainer.background.mutate() as LayerDrawable)
-
-            itemChoiceLatexEnhancedLayout.setTextIsSelectable(true)
-            itemChoiceLatexEnhancedLayout.setTextSize(16f)
+                itemChoiceContainer.background.mutate() as LayerDrawable
+            )
+            itemChoiceLatex.webViewClient = ProgressableWebViewClient(itemChoiceLatexProgress, itemChoiceLatex.webView)
         }
 
         override fun onBind(data: Choice) {
@@ -63,7 +62,7 @@ class ChoicesAdapterDelegate(
             } else {
                 View.INVISIBLE
             }
-            itemChoiceLatex.setAnyText(data.option)
+            itemChoiceLatex.setText(data.option)
             layerListDrawableDelegate.showLayer(getItemBackgroundLayer(data))
             bindHint(data)
         }
