@@ -19,7 +19,7 @@ class HorizontalScrollBlock : ContentBlock {
                 }
             </style>
         """.trimIndent()
-        
+
         private val script = """
             <script type="text/javascript">
                 function $METHOD_NAME(x, y) {
@@ -37,9 +37,9 @@ class HorizontalScrollBlock : ContentBlock {
             </script>
         """.trimIndent()
     }
-    
+
     override val header: String = style + script
-    
+
     override fun isEnabled(content: String): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
 }

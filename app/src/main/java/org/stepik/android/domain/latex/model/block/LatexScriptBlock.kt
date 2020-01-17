@@ -18,7 +18,7 @@ class LatexScriptBlock : ContentBlock {
             });
         </script>
     """.trimIndent()
-        
+
     override fun isEnabled(content: String): Boolean =
         "$" in content ||
         "\\[" in content ||
