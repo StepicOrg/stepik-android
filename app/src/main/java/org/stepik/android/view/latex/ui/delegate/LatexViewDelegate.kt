@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import org.stepic.droid.core.ScreenManager
 import org.stepik.android.domain.latex.mapper.LatexTextMapper
 import org.stepik.android.domain.latex.model.LatexData
+import org.stepik.android.view.base.ui.extension.ExternalLinkWebViewClient
 import org.stepik.android.view.latex.mapper.LatexWebViewMapper
 import org.stepik.android.view.latex.ui.widget.LatexView
 import javax.inject.Inject
@@ -56,11 +57,15 @@ constructor(
     fun attach(context: Context, latexView: LatexView) {
         this.latexView = latexView
         latexView.webView.onImageClickListener = { screenManager.openImage(context, it) }
+        latexView.webView.webViewClient = ExternalLinkWebViewClient(context)
         setDataToView(latexView, latexData)
     }
 
     fun detach() {
-        latexView?.webView?.onImageClickListener = null
+        latexView?.webView?.apply {
+            onImageClickListener = null
+            webViewClient = null
+        }
         latexView = null
     }
 }
