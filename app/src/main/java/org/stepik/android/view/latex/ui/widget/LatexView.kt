@@ -6,10 +6,12 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -82,6 +84,14 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             }
         }
 
+    var webViewClient: WebViewClient? = null
+        set(value) {
+            field = value
+            if (ViewCompat.isAttachedToWindow(this)) {
+                webView.webViewClient = webViewClient
+            }
+        }
+
     init {
         App.component().inject(this)
 
@@ -127,7 +137,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         webView.onImageClickListener = { screenManager.openImage(context, it) }
-        webView.webViewClient = ExternalLinkWebViewClient(context)
+        webView.webViewClient = webViewClient ?: ExternalLinkWebViewClient(context)
     }
 
     override fun onDetachedFromWindow() {
