@@ -127,11 +127,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             ?.text
             ?.takeIf(String::isNotEmpty)
 
-        if (text != null) {
-            instructionsLayout.stepQuizCodeTextContent.setText(text)
-            instructionsLayout.stepQuizCodeTextContent.setTextSize(16f)
-            instructionsLayout.stepQuizCodeTextContent.setTextIsSelectable(true)
-        }
+        instructionsLayout.stepQuizCodeTextContent.setText(text)
 
         if (savedInstanceState != null) {
             lang = savedInstanceState.getString(ARG_LANG) ?: return
