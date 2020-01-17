@@ -47,7 +47,7 @@ constructor(
         val primary = primaryBlocks.filter { it.isEnabled(content) }
 
         return if (primary.isEmpty()) {
-            LatexData.Text(HtmlCompat.fromHtml(content.trimEnd(Char::isWhitespace), HtmlCompat.FROM_HTML_MODE_LEGACY, null, tagHandler))
+            LatexData.Text(HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY, null, tagHandler).trimEnd(Char::isWhitespace))
         } else {
             val blocks = primary + regularBlocks.filter { it.isEnabled(content) }
 
