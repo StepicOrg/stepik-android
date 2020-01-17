@@ -10,27 +10,10 @@ class TextResolverImpl
 constructor(
     config: Config
 ) : TextResolver {
-
     private val baseUrl: String = config.baseUrl
 
     companion object {
         private val tagHandler = OlLiTagHandler()
-    }
-
-    override fun resolveStepText(content: String?): TextResult {
-        if (content == null) {
-            return TextResult("")
-        }
-
-        val isForWebView = HtmlHelper.isForWebView(content)
-
-        if (!isForWebView) {
-            val fromHtml = HtmlHelper.trimTrailingWhitespace(fromHtml(content))
-            return TextResult(fromHtml)
-        } else {
-            return TextResult(prepareStepTextForWebView(content), isNeedWebView = true)
-        }
-
     }
 
     // Remove &nbsp; characters from html text in order to fit text in screen properly.
