@@ -92,6 +92,7 @@ import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
+import org.stepik.android.view.latex.ui.widget.LatexView
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
@@ -249,6 +250,8 @@ interface AppCoreComponent {
     fun inject(latexSupportableEnhancedFrameLayout: LatexSupportableEnhancedFrameLayout)
 
     fun inject(latexSupportableWebView: LatexSupportableWebView)
+
+    fun inject(latexView: LatexView)
 
     fun inject(expandableTextView: ExpandableTextView)
 

@@ -21,7 +21,6 @@ import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
 import org.stepik.android.presentation.step_content_text.TextStepContentView
-import org.stepik.android.view.latex.ui.delegate.LatexViewDelegate
 import org.stepik.android.view.latex.ui.widget.LatexView
 import org.stepik.android.view.latex.ui.widget.LatexWebView
 import org.stepik.android.view.step_source.ui.dialog.EditStepSourceDialogFragment
@@ -52,9 +51,6 @@ class TextStepContentFragment :
 
     @Inject
     lateinit var lessonData: LessonData
-
-    @Inject
-    lateinit var latexViewDelegate: LatexViewDelegate
 
     private var stepId: Long by argument()
 
@@ -115,14 +111,13 @@ class TextStepContentFragment :
         val view = latexView ?: return
 
         view.isVisible = text != null
-        latexViewDelegate.setText(text)
+        view.setText(text)
         presenter.onSetTextContentSize()
     }
 
     override fun onStart() {
         super.onStart()
         presenter.attachView(this)
-        latexViewDelegate.attach(requireContext(), latexView ?: return)
     }
 
     override fun onResume() {
@@ -136,7 +131,6 @@ class TextStepContentFragment :
     }
 
     override fun onStop() {
-        latexViewDelegate.detach()
         presenter.detachView(this)
         super.onStop()
     }

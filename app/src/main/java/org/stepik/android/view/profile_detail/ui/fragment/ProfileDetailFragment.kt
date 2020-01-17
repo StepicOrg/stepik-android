@@ -17,7 +17,6 @@ import org.stepic.droid.ui.util.expand
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
 import org.stepik.android.presentation.profile_detail.ProfileDetailView
-import org.stepik.android.view.latex.ui.delegate.LatexViewDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -32,9 +31,6 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    internal lateinit var latexViewDelegate: LatexViewDelegate
 
     private var userId by argument<Long>()
 
@@ -82,12 +78,10 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
 
     override fun onStart() {
         super.onStart()
-        latexViewDelegate.attach(requireContext(), profileDetails)
         profileDetailPresenter.attachView(this)
     }
 
     override fun onStop() {
-        latexViewDelegate.detach()
         profileDetailPresenter.detachView(this)
         super.onStop()
     }
@@ -98,7 +92,7 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
         if (details.isNullOrBlank()) {
             view?.isVisible = false
         } else {
-            latexViewDelegate.setText(details)
+            profileDetails.setText(details)
             view?.isVisible = true
         }
     }

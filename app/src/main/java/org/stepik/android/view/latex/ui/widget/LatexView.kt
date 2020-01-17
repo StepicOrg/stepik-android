@@ -10,9 +10,17 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import org.stepic.droid.R
+import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.inflate
+import org.stepik.android.domain.latex.mapper.LatexTextMapper
+import org.stepik.android.domain.latex.model.LatexData
+import org.stepik.android.view.base.ui.extension.ExternalLinkWebViewClient
+import org.stepik.android.view.latex.mapper.LatexWebViewMapper
 import org.stepik.android.view.latex.model.TextAttributes
+import javax.inject.Inject
 
 class LatexView
 @JvmOverloads
@@ -27,12 +35,14 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         }
     }
 
-    var attributes = TextAttributes.fromAttributeSet(context, attrs)
-        set(value) {
-            field = value
-            textView.setAttributes(value)
-            webView.attributes = value
-        }
+    @Inject
+    internal lateinit var latexTextMapper: LatexTextMapper
+
+    @Inject
+    internal lateinit var latexWebViewMapper: LatexWebViewMapper
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
 
     @IdRes
     private val textViewId: Int
@@ -46,7 +56,35 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     lateinit var webView: LatexWebView
         private set
 
+    var attributes = TextAttributes.fromAttributeSet(context, attrs)
+        set(value) {
+            field = value
+            textView.setAttributes(value)
+            webView.attributes = value
+        }
+
+    var latexData: LatexData? = null
+        set(value) {
+            textView.isVisible = value is LatexData.Text
+            webView.isVisible = value is LatexData.Web
+
+            if (field == value) return
+            field = value
+
+            if (value == null) return
+
+            when (value) {
+                is LatexData.Text ->
+                    textView.text = value.text
+
+                is LatexData.Web ->
+                    webView.text = latexWebViewMapper.mapLatexData(value, webView.attributes)
+            }
+        }
+
     init {
+        App.component().inject(this)
+
         val array = context.obtainStyledAttributes(attrs, R.styleable.LatexView)
 
         try {
@@ -84,5 +122,21 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             }
         }
         super.addView(child, index, params)
+    }
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        webView.onImageClickListener = { screenManager.openImage(context, it) }
+        webView.webViewClient = ExternalLinkWebViewClient(context)
+    }
+
+    override fun onDetachedFromWindow() {
+        webView.onImageClickListener = null
+        webView.webViewClient = null
+        super.onDetachedFromWindow()
+    }
+
+    fun setText(text: String?) {
+        latexData = text?.let(latexTextMapper::mapToLatexText)
     }
 }
