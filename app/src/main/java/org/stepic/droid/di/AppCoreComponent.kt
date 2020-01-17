@@ -37,7 +37,6 @@ import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.custom.ExpandableTextView
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.dialogs.CertificateShareDialog
@@ -246,8 +245,6 @@ interface AppCoreComponent {
     fun inject(videoQualityDetailedDialog: VideoQualityDetailedDialog)
 
     fun inject(coursesLangDialog: CoursesLangDialog)
-
-    fun inject(latexSupportableEnhancedFrameLayout: LatexSupportableEnhancedFrameLayout)
 
     fun inject(latexSupportableWebView: LatexSupportableWebView)
 

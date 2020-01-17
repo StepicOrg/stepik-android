@@ -2,7 +2,6 @@ package org.stepik.android.view.course_info.ui.adapter.delegates
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.view_course_info_text_block.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.course_info.model.CourseInfoItem
