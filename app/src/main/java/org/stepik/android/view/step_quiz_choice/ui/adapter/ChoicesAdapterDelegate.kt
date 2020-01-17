@@ -3,6 +3,7 @@ package org.stepik.android.view.step_quiz_choice.ui.adapter
 import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import kotlinx.android.synthetic.main.progressable_latex_supportable_frame_layout.view.*
 import org.stepic.droid.R
@@ -50,8 +51,6 @@ class ChoicesAdapterDelegate(
                 ),
                 itemChoiceContainer.background.mutate() as LayerDrawable)
 
-            itemChoiceFeedback.setTextSize(14f)
-            itemChoiceFeedback.setBackgroundResource(R.drawable.bg_step_quiz_choice_item_feedback)
             itemChoiceLatexEnhancedLayout.setTextIsSelectable(true)
             itemChoiceLatexEnhancedLayout.setTextSize(16f)
         }
@@ -70,16 +69,8 @@ class ChoicesAdapterDelegate(
         }
 
         private fun bindHint(data: Choice) {
-            if (data.feedback.isNullOrEmpty()) {
-                itemChoiceFeedback.visibility = View.GONE
-            } else {
-                itemChoiceFeedback.visibility = View.VISIBLE
-                itemChoiceFeedback.setPlainOrLaTeXTextWithCustomFontColored(
-                    data.feedback, R.font.pt_mono,
-                    R.color.new_accent_color,
-                    true
-                )
-            }
+            itemChoiceFeedback.isVisible = !data.feedback.isNullOrEmpty()
+            itemChoiceFeedback.setText(data.feedback)
         }
 
         private fun getItemBackgroundLayer(data: Choice): Int =
