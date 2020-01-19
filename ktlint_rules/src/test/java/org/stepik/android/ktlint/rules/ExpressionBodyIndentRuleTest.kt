@@ -19,6 +19,21 @@ class ExpressionBodyIndentRuleTest {
     }
 
     @Test
+    fun `no continuation indent should be at expression body function format`() {
+        assertFormat(
+            """
+                fun test(): String =
+                        "Hello"
+            """,
+            """
+                fun test(): String =
+                    "Hello"
+            """,
+            rule
+        )
+    }
+
+    @Test
     fun `expression body function longer than 10 symbols should be at next line`() {
         assertLintErrors(
             """
@@ -26,6 +41,20 @@ class ExpressionBodyIndentRuleTest {
             """,
             rule,
             2 to 17
+        )
+    }
+
+    @Test
+    fun `expression body function longer than 10 symbols should be at next line format`() {
+        assertFormat(
+            """
+                fun test(): String = "12345678910"
+            """,
+            """
+                fun test(): String =
+                    "12345678910"
+            """,
+            rule
         )
     }
 

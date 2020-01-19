@@ -34,9 +34,7 @@ class ExpressionBodyIndentRule : Rule("expression-body-indent") {
                         if (nextEq.nextSibling.textLength > MAX_EXPRESSION_BODY_LEN) {
                             emit(node.startOffset, "Expression body should be written on the next line after method declaration", true)
                             if (autoCorrect) {
-                                val newLine = LeafPsiElement(ElementType.DANGLING_NEWLINE, "\n")
-                                node.addChild(newLine, nextEq.node)
-                                node.addChild(PsiWhiteSpaceImpl(" ".repeat(funIndent + INDENT_SIZE)), newLine.treeNext)
+                                nextEq.astReplace(PsiWhiteSpaceImpl("\n" + " ".repeat(funIndent + INDENT_SIZE)))
                             }
                         }
                     } else {
