@@ -1,9 +1,13 @@
 package org.stepik.android.ktlint.rules
 
 import com.pinterest.ktlint.core.Rule
+import com.pinterest.ktlint.core.ast.ElementType
 import org.jetbrains.kotlin.com.intellij.lang.ASTNode
 import org.jetbrains.kotlin.com.intellij.psi.PsiWhiteSpace
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.LeafPsiElement
+import org.jetbrains.kotlin.com.intellij.psi.impl.source.tree.PsiWhiteSpaceImpl
 import org.jetbrains.kotlin.psi.KtNamedFunction
+import org.jetbrains.kotlin.psi.psiUtil.astReplace
 
 class ExpressionBodyIndentRule : Rule("expression-body-indent") {
     companion object {
@@ -18,18 +22,32 @@ class ExpressionBodyIndentRule : Rule("expression-body-indent") {
                 val nextEq = eq.nextSibling
 
                 if (nextEq is PsiWhiteSpace) {
+                    val funPrev = element.prevSibling
+                    val funIndent =
+                        if (funPrev is PsiWhiteSpace) {
+                            funPrev.text.split('\n').last().length
+                        } else {
+                            0
+                        }
+
                     if (!nextEq.text.startsWith('\n')) {
                         if (nextEq.nextSibling.textLength > MAX_EXPRESSION_BODY_LEN) {
-                            emit(node.startOffset, "Expression body should be written on the next line after method declaration", false)
+                            emit(node.startOffset, "Expression body should be written on the next line after method declaration", true)
+                            if (autoCorrect) {
+                                val newLine = LeafPsiElement(ElementType.DANGLING_NEWLINE, "\n")
+                                node.addChild(newLine, nextEq.node)
+                                node.addChild(PsiWhiteSpaceImpl(" ".repeat(funIndent + INDENT_SIZE)), newLine.treeNext)
+                            }
                         }
                     } else {
-                        val funPrev = element.prevSibling
                         if (funPrev is PsiWhiteSpace) {
-                            val funIndent = funPrev.text.split('\n').last().length
                             val eqIndent = nextEq.text.split('\n').last().length
 
                             if (funIndent + INDENT_SIZE != eqIndent) {
-                                emit(node.startOffset, "Unexpected indentation of expression body (expected ${funIndent + INDENT_SIZE}, actual $eqIndent) ", false)
+                                emit(node.startOffset, "Unexpected indentation of expression body (expected ${funIndent + INDENT_SIZE}, actual $eqIndent) ", true)
+                                if (autoCorrect) {
+                                    nextEq.astReplace(PsiWhiteSpaceImpl("\n" + " ".repeat(funIndent + INDENT_SIZE)))
+                                }
                             }
                         }
                     }
