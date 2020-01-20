@@ -38,9 +38,10 @@ import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
-import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
+import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
@@ -71,6 +72,19 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     private var courseId: Long = NO_ID
+    private val analyticsOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
+        override fun onPageSelected(page: Int) {
+            Timber.d("Page: $page, fragment: ${coursePagerAdapter.getItem(page)}")
+            if (coursePagerAdapter.getItem(page) is CourseContentFragment) {
+                analytic
+                    .reportAmplitudeEvent(
+                        AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
+                        mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
+                    )
+            }
+        }
+    }
+    private lateinit var coursePagerAdapter: CoursePagerAdapter
     private lateinit var coursePresenter: CoursePresenter
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
 
@@ -85,6 +99,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         ViewPager.SCROLL_STATE_IDLE
 
     private var isInSwipeableViewState = false
+
+    private var hasSavedInstanceState: Boolean = false
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -126,8 +142,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         courseHeaderDelegate = CourseHeaderDelegate(this, analytic, coursePresenter)
 
 //        uiCheckout = Checkout.forActivity(this, billing)
-        initViewPager(courseId, savedInstanceState != null)
+        initViewPager(courseId)
         initViewStateDelegate()
+
+        hasSavedInstanceState = savedInstanceState != null
+
         setDataToPresenter()
 
         courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
@@ -163,30 +182,61 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePresenter.attachView(this)
     }
 
-    override fun onStop() {
-        coursePresenter.detachView(this)
-        super.onStop()
-    }
-
-    private fun initViewPager(courseId: Long, hasSavedInstanceState: Boolean) {
-        val lightFont = ResourcesCompat.getFont(this, R.font.roboto_light)
-        val regularFont = ResourcesCompat.getFont(this, R.font.roboto_regular)
-
-        val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
-        coursePager.adapter = coursePagerAdapter
-        val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageScrollStateChanged(scrollState: Int) {
-                viewPagerScrollState = scrollState
-                resolveSwipeRefreshState()
-            }
+    override fun onResume() {
+        super.onResume()
+        coursePager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(page: Int) {
-                if (coursePagerAdapter.getItem(page) is CourseReviewsFragment) {
+                if (coursePagerAdapter.getItem(page) is CourseContentFragment) {
                     analytic
                         .reportAmplitudeEvent(
                             AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
                             mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
                         )
                 }
+            }
+        })
+        if (!hasSavedInstanceState) {
+            setCurrentTab()
+        }
+    }
+
+    override fun onPause() {
+        coursePager.removeOnPageChangeListener(analyticsOnPageChangeListener)
+        super.onPause()
+    }
+
+    override fun onStop() {
+        coursePresenter.detachView(this)
+        super.onStop()
+    }
+
+    private fun setCurrentTab() {
+        val tab = CourseScreenTab
+            .values()
+            .getOrNull(intent.getIntExtra(EXTRA_TAB, -1))
+            ?: intent.getCourseTabFromDeepLink()
+
+        coursePager.currentItem =
+            when (tab) {
+                CourseScreenTab.REVIEWS -> 1
+                CourseScreenTab.SYLLABUS -> 2
+                else -> 0
+            }
+        if (coursePager.currentItem == 0) {
+            analyticsOnPageChangeListener.onPageSelected(0)
+        }
+    }
+
+    private fun initViewPager(courseId: Long) {
+        val lightFont = ResourcesCompat.getFont(this, R.font.roboto_light)
+        val regularFont = ResourcesCompat.getFont(this, R.font.roboto_regular)
+
+        coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
+        coursePager.adapter = coursePagerAdapter
+        val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
+            override fun onPageScrollStateChanged(scrollState: Int) {
+                viewPagerScrollState = scrollState
+                resolveSwipeRefreshState()
             }
         }
         coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(coursePager, coursePagerAdapter))
@@ -217,24 +267,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         (courseTabs.getTabAt(courseTabs.selectedTabPosition)?.customView as? TextView)
             ?.typeface = regularFont
-
-        if (!hasSavedInstanceState) {
-            val tab = CourseScreenTab
-                .values()
-                .getOrNull(intent.getIntExtra(EXTRA_TAB, -1))
-                ?: intent.getCourseTabFromDeepLink()
-
-            coursePager.currentItem =
-                when (tab) {
-                    CourseScreenTab.REVIEWS -> 1
-                    CourseScreenTab.SYLLABUS -> 2
-                    else -> 0
-                }
-
-            if (coursePager.currentItem == 0) {
-                onPageChangeListener.onPageSelected(0)
-            }
-        }
     }
 
     private fun initViewStateDelegate() {
