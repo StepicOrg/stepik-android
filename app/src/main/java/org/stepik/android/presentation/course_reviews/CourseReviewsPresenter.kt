@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.course_reviews
 
-import android.os.Bundle
 import io.reactivex.Maybe
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -21,7 +20,6 @@ import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course_reviews.mapper.CourseReviewsStateMapper
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseReviewsPresenter
@@ -41,20 +39,11 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler
 ) : PresenterBase<CourseReviewsView>() {
-    companion object {
-        private const val IS_REMOTE_FETCHED = "is_remote_fetched"
-    }
 
     private var state: CourseReviewsView.State = CourseReviewsView.State.Idle
         set(value) {
             field = value
             view?.setState(value)
-        }
-
-    private var isRemoteFetched: Boolean = false
-        set(value) {
-            field = value
-            view?.setIsRemoteFetched(value)
         }
 
     private val paginationDisposable = CompositeDisposable()
@@ -69,10 +58,6 @@ constructor(
     override fun attachView(view: CourseReviewsView) {
         super.attachView(view)
         view.setState(state)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        isRemoteFetched = savedInstanceState.getBoolean(IS_REMOTE_FETCHED)
     }
 
     /**
@@ -126,15 +111,13 @@ constructor(
                 }
             }
 
-    fun setIsRemoteFetched(isRemoteFetched: Boolean) {
-        this.isRemoteFetched = isRemoteFetched
-    }
-
     /**
      * Pagination handling
      */
-    fun fetchNextPageFromRemote() {
-        Timber.d("FetchNextRemote")
+    fun fetchNextPageFromRemote(isFromOnResume: Boolean = false) {
+        if (isFromOnResume && state !is CourseReviewsView.State.CourseReviewsCache) {
+            return
+        }
         val oldState = state
 
         val oldItems = (oldState as? CourseReviewsView.State.CourseReviewsRemote)?.courseReviewItems
@@ -267,9 +250,5 @@ constructor(
                 onSuccess = { state = courseReviewsStateMapper.mergeStateWithCurrentUserReview(it, state) },
                 onError = { view?.showNetworkError() }
             )
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(IS_REMOTE_FETCHED, isRemoteFetched)
     }
 }

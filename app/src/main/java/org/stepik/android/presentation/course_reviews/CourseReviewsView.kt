@@ -15,7 +15,6 @@ interface CourseReviewsView {
         class CourseReviewsRemoteLoading(val courseReviewItems: PagedList<CourseReviewItem>) : State()
     }
 
-    fun setIsRemoteFetched(isRemoteFetched: Boolean)
     fun setState(state: State)
     fun showNetworkError()
 }
