@@ -8,11 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+        <org.stepik.android.view.latex.ui.widget.LatexView
             android:id="@+id/stepQuizCodeTextContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
+            android:textIsSelectable="true"
+            android:textSize="16sp"
             android:padding="16dp" />
 
         <FrameLayout

@@ -3,14 +3,18 @@ package org.stepik.android.view.step_quiz_choice.ui.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
+import android.view.View
 import android.widget.FrameLayout
+import androidx.core.view.children
 import org.stepic.droid.R
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+import org.stepik.android.view.latex.ui.widget.LatexView
 
 /**
  * Custom item view to infer clicks on the item and scrolling of the webview inside the item
  */
-class QuizItemView @JvmOverloads constructor(
+class QuizItemView
+@JvmOverloads
+constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
@@ -21,14 +25,14 @@ class QuizItemView @JvmOverloads constructor(
 
     private var clickDuration: Long = 0
 
-    private lateinit var latexText: LatexSupportableEnhancedFrameLayout
+    private lateinit var latexText: View
     private val latexTouchEventOffset = resources.getDimension(R.dimen.step_quiz_choice_quiz_item_padding)
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         ev.offsetLocation(-latexTouchEventOffset, -latexTouchEventOffset)
 
         if (!::latexText.isInitialized) {
-            latexText = findViewById(R.id.latex_text)
+            latexText = children.first { it is LatexView }
         }
         latexText.dispatchTouchEvent(ev)
 

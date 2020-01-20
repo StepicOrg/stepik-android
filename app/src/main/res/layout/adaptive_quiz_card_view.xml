@@ -165,7 +165,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <org.stepic.droid.ui.custom.LatexSupportableWebView
+                    <org.stepik.android.view.latex.ui.widget.LatexView
                         android:id="@+id/question"
                         android:layout_margin="16dp"
                         android:layout_width="match_parent"

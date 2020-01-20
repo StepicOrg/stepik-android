@@ -32,7 +32,7 @@
 
     </FrameLayout>
 
-    <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+    <org.stepik.android.view.latex.ui.widget.LatexView
         android:id="@+id/profileDetails"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
