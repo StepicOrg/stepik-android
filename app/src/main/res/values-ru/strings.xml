@@ -179,6 +179,8 @@
     <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %s
     </string>
     <string name="certificate_result_with_substitution">Результат: %s%%</string>
+    <string name="certificate_issuing">Выдается</string>
+    <string name="certificate_not_issuing">Не выдается</string>
     <string name="copy_link_title">Копировать ссылку</string>
     <string name="link_copied_title">Ссылка скопирована</string>
     <string name="certificate_share_share_link">Поделиться…</string>
@@ -290,7 +292,7 @@
     <string name="later_tatle">Позже</string>
     <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
-    <string name="notification_about_learning">Уведомления о занятиях активны</string>
+    <string name="notification_about_learning">Напоминать о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
     <plurals name="streak_notification_message_call_to_action">
         <item quantity="one">Вы молодец! Вы решаете уже %d день без перерыва. Не останавливайтесь,
@@ -385,8 +387,6 @@
 
 
     <string name="notification_settings_title">Настройки уведомлений</string>
-
-    <string name="manage_notification_settings">Управлять уведомлениями</string>
 
     <string name="course_item_join">Поступить на курс</string>
 

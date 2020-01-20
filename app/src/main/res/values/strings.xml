@@ -202,6 +202,8 @@
     </string>
     <string name="certificate_regular_with_substitution">Certificate for completing %s</string>
     <string name="certificate_result_with_substitution">Result: %s%%</string>
+    <string name="certificate_issuing">Issuing</string>
+    <string name="certificate_not_issuing">Not issuing</string>
     <string name="copy_link_title">Copy Link</string>
     <string name="link_copied_title">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
@@ -295,7 +297,7 @@
     </plurals>
     <string name="choose_notification_time_interval">Change notification interval</string>
     <string name="notification_time">Notification time: %s</string>
-    <string name="notification_about_learning">Learning notifications enabled</string>
+    <string name="notification_about_learning">Notify about streaks</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
     <string name="streak_description_not_positive">Correct! Solve assignments every day to improve
         your record. You can also turn on reminders!
@@ -395,8 +397,6 @@
 
 
     <string name="notification_settings_title">Notification Settings</string>
-
-    <string name="manage_notification_settings">Manage notifications</string>
 
     <string name="course_item_join">Join course</string>
 
@@ -844,4 +844,6 @@
     <string name="profile_settings_menu_item">Settings</string>
 
     <string name="profile_courses_title">Courses</string>
+
+
 </resources>
