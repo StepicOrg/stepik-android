@@ -202,6 +202,8 @@
     </string>
     <string name="certificate_regular_with_substitution">Certificate for completing %s</string>
     <string name="certificate_result_with_substitution">Result: %s%%</string>
+    <string name="certificate_issuing">Issuing</string>
+    <string name="certificate_not_issuing">Not issuing</string>
     <string name="copy_link_title">Copy Link</string>
     <string name="link_copied_title">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
@@ -844,4 +846,6 @@
     <string name="profile_settings_menu_item">Settings</string>
 
     <string name="profile_courses_title">Courses</string>
+
+
 </resources>

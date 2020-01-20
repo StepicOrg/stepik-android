@@ -179,6 +179,8 @@
     <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %s
     </string>
     <string name="certificate_result_with_substitution">Результат: %s%%</string>
+    <string name="certificate_issuing">Выдается</string>
+    <string name="certificate_not_issuing">Не выдается</string>
     <string name="copy_link_title">Копировать ссылку</string>
     <string name="link_copied_title">Ссылка скопирована</string>
     <string name="certificate_share_share_link">Поделиться…</string>
