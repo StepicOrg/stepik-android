@@ -14,6 +14,7 @@ import org.json.JSONObject
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
+import org.stepic.droid.util.isNightModeEnabled
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -33,6 +34,7 @@ constructor(
         amplitude.identify(Identify()
                 .set(AmplitudeAnalytic.Properties.APPLICATION_ID, context.packageName)
                 .set(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "granted" else "not_granted")
+                .set(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
         )
     }
 

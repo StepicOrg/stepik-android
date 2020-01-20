@@ -10,6 +10,7 @@ interface AmplitudeAnalytic {
         const val PUSH_PERMISSION = "push_permission"
         const val STREAKS_NOTIFICATIONS_ENABLED = "streaks_notifications_enabled"
         const val TEACHING_COURSES_COUNT = "teaching_courses_count"
+        const val IS_NIGHT_MODE_ENABLED = "is_night_mode_enabled"
     }
 
     object Launch {

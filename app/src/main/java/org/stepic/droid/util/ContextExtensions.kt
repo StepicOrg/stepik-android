@@ -3,6 +3,7 @@ package org.stepic.droid.util
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -68,3 +69,10 @@ fun Float.toPx(): Float =
  */
 fun Float.toSp(): Float =
     this / Resources.getSystem().displayMetrics.scaledDensity
+
+
+/**
+ * True if MODE_NIGHT enabled
+ */
+fun Context.isNightModeEnabled(): Boolean =
+    (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
