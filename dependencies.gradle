@@ -99,6 +99,7 @@ ext.versions = [
         testCore             : '1.1.1',
 
         ktlint               : '0.34.2',
+        ktlintRules          : '1.0.0',
 
         flipper              : '0.27.0',
         soloader             : '0.8.0',
@@ -216,6 +217,7 @@ ext.libraries = [
         espressoIntents      : "androidx.test.espresso:espresso-intents:$versions.espresso",
 
         ktlint               : "com.pinterest:ktlint:$versions.ktlint",
+        ktlintRules          : "ru.nobird.android.ktlint:rules:$versions.ktlintRules",
 
         flipperCore          : "com.facebook.flipper:flipper:$versions.flipper",
         flipperNetwork       : "com.facebook.flipper:flipper-network-plugin:$versions.flipper",

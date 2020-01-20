@@ -2,7 +2,6 @@ package org.stepik.android.view.course_info.ui.adapter.delegates
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.latex_supportabe_enhanced_view.view.*
 import kotlinx.android.synthetic.main.view_course_info_text_block.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.course_info.model.CourseInfoItem
@@ -21,14 +20,13 @@ class CourseInfoTextBlockDelegate : AdapterDelegate<CourseInfoItem, CourseInfoAd
         private val blockMessage = root.blockMessage
 
         init {
-            blockMessage.setTextSize(14f)
             blockMessage.textView.setLineSpacing(0f, 1.33f)
         }
 
         override fun onBind(data: CourseInfoItem) {
             super.onBind(data)
             data as CourseInfoItem.WithTitle.TextBlock
-            blockMessage.setPlainOrLaTeXTextWithCustomFontColored(data.text, R.font.roboto_light, R.color.new_accent_color, true)
+            blockMessage.setText(data.text)
         }
     }
 }

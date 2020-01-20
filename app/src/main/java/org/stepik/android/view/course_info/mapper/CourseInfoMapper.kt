@@ -36,7 +36,7 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
     items.addTextItem(CourseInfoType.LANGUAGE, mapCourseLanguage(language)?.let(context::getString))
 
     if (certificate != null) {
-        items.addTextItem(CourseInfoType.CERTIFICATE, certificate.title)
+        items.addTextItem(CourseInfoType.CERTIFICATE, certificate.title.ifEmpty { context.getString(R.string.certificate_issuing) })
 
         val certificateConditions = mutableListOf<String>()
 
@@ -53,6 +53,8 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
         }
 
         items.addTextItem(CourseInfoType.CERTIFICATE_DETAILS, certificateConditions.joinToString(NEW_LINE))
+    } else {
+        items.addTextItem(CourseInfoType.CERTIFICATE, context.getString(R.string.certificate_not_issuing))
     }
 
     return items

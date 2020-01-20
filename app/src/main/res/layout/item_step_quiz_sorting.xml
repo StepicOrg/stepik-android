@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_step_quiz_sorting_item"
@@ -9,17 +10,28 @@
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp">
 
-    <org.stepic.droid.ui.custom.ProgressLatexView
+    <org.stepik.android.view.latex.ui.widget.LatexView
         android:id="@+id/stepQuizSortingOption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
+        android:textSize="16sp"
         android:layout_margin="16dp"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/stepQuizSortingOptionBarrier"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent">
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/stepQuizSortingOptionProgress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </org.stepik.android.view.latex.ui.widget.LatexView>
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/stepQuizSortingOptionBarrier"

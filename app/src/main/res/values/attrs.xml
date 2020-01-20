@@ -56,4 +56,9 @@
 
         <attr name="itemsGap" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="LatexView">
+        <attr name="webViewId" format="reference" />
+        <attr name="textViewId" format="reference" />
+    </declare-styleable>
 </resources>

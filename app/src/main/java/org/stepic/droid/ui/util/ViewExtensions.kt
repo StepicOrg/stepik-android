@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.animation.Animation
 import android.view.animation.Transformation
+import android.webkit.WebView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
@@ -171,4 +172,12 @@ fun View.collapse(animationListener: Animation.AnimationListener? = null) {
     a.duration = durationMillis.toLong()
     animationListener?.let { a.setAnimationListener(it) }
     startAnimation(a)
+}
+
+fun WebView.evaluateJavascriptCompat(code: String) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        evaluateJavascript(code, null)
+    } else {
+        loadUrl("javascript: $code")
+    }
 }

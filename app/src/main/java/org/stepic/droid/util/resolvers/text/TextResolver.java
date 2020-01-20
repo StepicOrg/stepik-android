@@ -4,10 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface TextResolver {
-
-    @NotNull
-    TextResult resolveStepText(String content);
-
     /**
      * For SIMPLE HTML, which you can set for textview only
      */
