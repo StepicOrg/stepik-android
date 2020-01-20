@@ -114,7 +114,10 @@ constructor(
     /**
      * Pagination handling
      */
-    fun fetchNextPageFromRemote() {
+    fun fetchNextPageFromRemote(isFromOnResume: Boolean = false) {
+        if (isFromOnResume && state !is CourseReviewsView.State.CourseReviewsCache) {
+            return
+        }
         val oldState = state
 
         val oldItems = (oldState as? CourseReviewsView.State.CourseReviewsRemote)?.courseReviewItems
