@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.empty_default.view.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -142,11 +141,6 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     override fun onResume() {
         super.onResume()
-        analytic
-            .reportAmplitudeEvent(
-                AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
-                mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
-            )
         courseReviewsPresenter.fetchNextPageFromRemote()
     }
 
