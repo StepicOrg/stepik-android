@@ -51,7 +51,6 @@ class AdaptiveStatsActivity : FragmentActivityBase() {
 
     override fun onResume() {
         super.onResume()
-        courseId = intent.getLongExtra(AppConstants.KEY_COURSE_LONG_ID, 0)
         pager.addOnPageChangeListener(onPageChangeListener)
         if (!hasSavedInstanceState && pager.currentItem == 0) {
             onPageChangeListener.onPageSelected(0)
