@@ -41,7 +41,6 @@ import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
@@ -74,7 +73,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private var courseId: Long = NO_ID
     private val analyticsOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(page: Int) {
-            Timber.d("Page: $page, fragment: ${coursePagerAdapter.getItem(page)}")
             if (coursePagerAdapter.getItem(page) is CourseContentFragment) {
                 analytic
                     .reportAmplitudeEvent(
@@ -184,17 +182,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun onResume() {
         super.onResume()
-        coursePager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
-            override fun onPageSelected(page: Int) {
-                if (coursePagerAdapter.getItem(page) is CourseContentFragment) {
-                    analytic
-                        .reportAmplitudeEvent(
-                            AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
-                            mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
-                        )
-                }
-            }
-        })
+        coursePager.addOnPageChangeListener(analyticsOnPageChangeListener)
         if (!hasSavedInstanceState) {
             setCurrentTab()
         }

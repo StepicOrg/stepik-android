@@ -53,6 +53,8 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     @Inject
     internal lateinit var analytic: Analytic
 
+    private var isRemoteFetched: Boolean = false
+
     private var courseId: Long by argument()
 
     private lateinit var courseReviewsAdapter: DefaultDelegateAdapter<CourseReviewItem>
@@ -141,12 +143,19 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
 
     override fun onResume() {
         super.onResume()
-        courseReviewsPresenter.fetchNextPageFromRemote()
+        if (!isRemoteFetched) {
+            courseReviewsPresenter.setIsRemoteFetched(true)
+            courseReviewsPresenter.fetchNextPageFromRemote()
+        }
     }
 
     override fun onStop() {
         courseReviewsPresenter.detachView(this)
         super.onStop()
+    }
+
+    override fun setIsRemoteFetched(isRemoteFetched: Boolean) {
+        this.isRemoteFetched = isRemoteFetched
     }
 
     override fun setState(state: CourseReviewsView.State) {
@@ -199,6 +208,11 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
             else ->
                 super.onActivityResult(requestCode, resultCode, data)
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        courseReviewsPresenter.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onDestroy() {
