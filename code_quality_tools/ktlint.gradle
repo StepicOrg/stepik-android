@@ -8,7 +8,7 @@ configurations {
 
 dependencies {
     ktlint libraries.ktlint
-    ktlint project(":ktlint_rules")
+    ktlint libraries.ktlintRules
     // additional 3rd party ruleset(s) can be specified here
     // just add them to the classpath (ktlint 'groupId:artifactId:version') and
     // ktlint will pick them up
