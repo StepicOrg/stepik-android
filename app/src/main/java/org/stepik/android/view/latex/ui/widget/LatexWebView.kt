@@ -11,6 +11,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.ui.util.evaluateJavascriptCompat
+import org.stepic.droid.util.contextForWebView
 import org.stepic.droid.util.toDp
 import org.stepik.android.view.latex.model.TextAttributes
 import org.stepik.android.domain.latex.model.block.HorizontalScrollBlock
@@ -23,7 +24,7 @@ constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : WebView(context, attrs, defStyleAttr),
+) : WebView(context.contextForWebView(), attrs, defStyleAttr),
     View.OnLongClickListener,
     View.OnClickListener,
     View.OnTouchListener {
@@ -64,6 +65,9 @@ constructor(
         setBackgroundColor(Color.argb(1, 0, 0, 0))
         setOnLongClickListener(this.takeIf { attributes.textIsSelectable })
 
+        setOnTouchListener(this)
+        setOnClickListener(this)
+
         isFocusable = true
         isFocusableInTouchMode = true
 
@@ -98,7 +102,7 @@ constructor(
         if (event.action == MotionEvent.ACTION_UP &&
             event.downTime - event.eventTime < MAX_CLICK_DURATION
         ) {
-            performLongClick()
+            performClick()
         }
         return false
     }

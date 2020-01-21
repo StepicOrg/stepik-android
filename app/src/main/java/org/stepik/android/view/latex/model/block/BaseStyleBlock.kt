@@ -6,7 +6,7 @@ class BaseStyleBlock(
     fontPath: String
 ) : ContentBlock {
     override val header: String = """
-        <link rel="stylesheet" type="text/css" href="wysiwyg.css"/>
+        <link rel="stylesheet" type="text/css" href="file:///android_asset/wysiwyg.css"/>
         
         <style>
             @font-face {
