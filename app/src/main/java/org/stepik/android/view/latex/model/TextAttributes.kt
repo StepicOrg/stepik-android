@@ -23,13 +23,14 @@ data class TextAttributes(
     companion object {
         @SuppressLint("ResourceType")
         fun fromAttributeSet(context: Context, attrs: AttributeSet?): TextAttributes {
-            val set = intArrayOf(
-                android.R.attr.textSize,
-                android.R.attr.textColor,
-                android.R.attr.textColorHighlight,
-                android.R.attr.fontFamily,
-                android.R.attr.textIsSelectable
-            )
+            val set =
+                intArrayOf(
+                    android.R.attr.textSize,
+                    android.R.attr.textColor,
+                    android.R.attr.textColorHighlight,
+                    android.R.attr.textIsSelectable,
+                    android.R.attr.fontFamily
+                ).apply { sort() }
 
             val array = context.obtainStyledAttributes(attrs, set)
             try {

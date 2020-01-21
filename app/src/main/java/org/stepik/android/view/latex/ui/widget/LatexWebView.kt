@@ -42,7 +42,7 @@ constructor(
             field = value
             settings.defaultFontSize = value.textSize.toInt()
 
-            setOnLongClickListener(this.takeIf { value.textIsSelectable })
+            setOnLongClickListener(this.takeIf { !value.textIsSelectable })
         }
 
     var onImageClickListener: ((path: String) -> Unit)? = null
@@ -63,7 +63,7 @@ constructor(
 
     init {
         setBackgroundColor(Color.argb(1, 0, 0, 0))
-        setOnLongClickListener(this.takeIf { attributes.textIsSelectable })
+        setOnLongClickListener(this.takeIf { !attributes.textIsSelectable })
 
         setOnTouchListener(this)
         setOnClickListener(this)

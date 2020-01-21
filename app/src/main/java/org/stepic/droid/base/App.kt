@@ -14,6 +14,7 @@ import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 import io.branch.referral.Branch
 import org.stepic.droid.BuildConfig
+import org.stepic.droid.R
 import org.stepic.droid.analytic.experiments.SplitTestsHolder
 import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.core.ComponentManager
@@ -80,6 +81,9 @@ class App : MultiDexApplication() {
             return
         }
         refWatcher = LeakCanary.install(this)
+
+        setTheme(R.style.StepikTheme)
+        
         init()
     }
 
