@@ -34,17 +34,24 @@ data class TextAttributes(
             val array = context.obtainStyledAttributes(attrs, set)
             try {
                 return TextAttributes(
-                    textSize = array.getDimensionPixelSize(
-                        0,
-                        0
-                    ).takeIf { it > 0 }?.toFloat()?.toSp() ?: 14f,
-                    textColor = array.getColor(1, 0xFF000000.toInt()),
-                    textColorHighlight = array.getColor(
-                        2,
-                        ContextCompat.getColor(context, R.color.text_color_highlight)
-                    ),
-                    textIsSelectable = array.getBoolean(3, false),
-                    fontResId = array.getResourceId(4, R.font.roboto_regular)
+                    textSize =
+                        array.getDimensionPixelSize(set.indexOf(android.R.attr.textSize), 0)
+                            .takeIf { it > 0 }
+                            ?.toFloat()
+                            ?.toSp()
+                            ?: 14f,
+
+                    textColor =
+                        array.getColor(set.indexOf(android.R.attr.textColor), 0xFF000000.toInt()),
+
+                    textColorHighlight =
+                        array.getColor(set.indexOf(android.R.attr.textColorHighlight), ContextCompat.getColor(context, R.color.text_color_highlight)),
+
+                    textIsSelectable =
+                        array.getBoolean(set.indexOf(android.R.attr.textIsSelectable), false),
+
+                    fontResId =
+                        array.getResourceId(set.indexOf(android.R.attr.fontFamily), R.font.roboto_regular)
                 )
             } finally {
                 array.recycle()
