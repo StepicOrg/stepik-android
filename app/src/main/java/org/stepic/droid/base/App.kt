@@ -83,7 +83,7 @@ class App : MultiDexApplication() {
         refWatcher = LeakCanary.install(this)
 
         setTheme(R.style.StepikTheme)
-        
+
         init()
     }
 
