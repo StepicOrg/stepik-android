@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
 
-class Course(
+data class Course(
     @SerializedName("id")
     val id: Long,
     @SerializedName("title")

@@ -1,11 +1,11 @@
 package org.stepik.android.cache.attempt
 
-import org.stepik.android.data.attempt.source.AttemptCacheDataSource
-import org.stepik.android.model.attempts.Attempt
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.storage.dao.IDao
 import org.stepik.android.cache.attempt.structure.DbStructureAttempt
+import org.stepik.android.data.attempt.source.AttemptCacheDataSource
+import org.stepik.android.model.attempts.Attempt
 import javax.inject.Inject
 
 class AttemptCacheDataSourceImpl
