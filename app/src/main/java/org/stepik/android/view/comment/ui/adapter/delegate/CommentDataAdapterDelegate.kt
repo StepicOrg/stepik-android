@@ -10,6 +10,7 @@ import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
+import androidx.core.widget.TextViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.layout_comment_actions.view.*
@@ -69,9 +70,7 @@ class CommentDataAdapterDelegate(
         private val commentTagsAdapter = DefaultDelegateAdapter<CommentTag>()
 
         init {
-            commentText.setTextSize(16f)
-            commentText.setLineHeight(context.resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
-            commentText.setTextIsSelectable(true)
+            TextViewCompat.setLineHeight(commentText.textView, context.resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
 
             commentReply.setOnClickListener(this)
             commentLike.setOnClickListener(this)
@@ -115,7 +114,7 @@ class CommentDataAdapterDelegate(
 
             commentUserIconWrapper.setImagePath(data.user.avatar ?: "", commentUserIconPlaceholder)
 
-            commentText.setPlainOrLaTeXTextColored(data.comment.text, R.color.new_accent_color)
+            commentText.setText(data.comment.text)
 
             commentMenu.isVisible =
                 data.comment.actions?.delete == true || data.comment.actions?.edit == true

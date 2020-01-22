@@ -16,12 +16,13 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step_content_text.model.FontSize
 import org.stepik.android.presentation.step_content_text.TextStepContentPresenter
 import org.stepik.android.presentation.step_content_text.TextStepContentView
+import org.stepik.android.view.latex.ui.widget.LatexView
+import org.stepik.android.view.latex.ui.widget.LatexWebView
 import org.stepik.android.view.step_source.ui.dialog.EditStepSourceDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -55,7 +56,8 @@ class TextStepContentFragment :
 
     private lateinit var presenter: TextStepContentPresenter
 
-    private var latexLayout: LatexSupportableEnhancedFrameLayout? = null
+    private var latexView: LatexView? = null
+    private var latexWebView: LatexWebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +79,23 @@ class TextStepContentFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        latexLayout ?: inflater.inflate(R.layout.step_text_header, container, false)
+        inflater
+            .inflate(R.layout.step_text_header, container, false)
+            .also {
+                it as ViewGroup
+
+                if (latexWebView == null) {
+                    latexWebView = LayoutInflater
+                        .from(requireContext().applicationContext)
+                        .inflate(R.layout.layout_latex_webview, it, false) as LatexWebView
+                }
+
+                latexWebView?.let(it::addView)
+            }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (latexLayout == null) {
-            latexLayout = view as LatexSupportableEnhancedFrameLayout
+        if (latexView == null) {
+            latexView = view as LatexView
 
             invalidateText()
         }
@@ -94,14 +108,11 @@ class TextStepContentFragment :
             ?.text
             ?.takeIf(String::isNotEmpty)
 
-        val view = latexLayout ?: return
+        val view = latexView ?: return
 
         view.isVisible = text != null
+        view.setText(text)
         presenter.onSetTextContentSize()
-        if (text != null) {
-            view.setText(text)
-            view.setTextIsSelectable(true)
-        }
     }
 
     override fun onStart() {
@@ -150,13 +161,19 @@ class TextStepContentFragment :
             .showIfNotExists(childFragmentManager, EditStepSourceDialogFragment.TAG)
     }
 
+    override fun onDestroyView() {
+        (view as? ViewGroup)?.removeView(latexWebView)
+        super.onDestroyView()
+    }
+
     override fun onDestroy() {
-        latexLayout = null
+        latexWebView = null
         super.onDestroy()
     }
 
     override fun setTextContentFontSize(fontSize: FontSize) {
-        latexLayout?.setTextSize(fontSize.size) ?: return
+        val latexView = latexView ?: return
+        latexView.attributes = latexView.attributes.copy(textSize = fontSize.size)
     }
 
     override fun onStepContentChanged(stepWrapper: StepPersistentWrapper) {

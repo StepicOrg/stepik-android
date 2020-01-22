@@ -36,9 +36,6 @@ import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
-import org.stepic.droid.ui.custom.ExpandableTextView
-import org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
-import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.dialogs.CertificateShareDialog
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
@@ -92,6 +89,7 @@ import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
+import org.stepik.android.view.latex.ui.widget.LatexView
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
@@ -246,11 +244,7 @@ interface AppCoreComponent {
 
     fun inject(coursesLangDialog: CoursesLangDialog)
 
-    fun inject(latexSupportableEnhancedFrameLayout: LatexSupportableEnhancedFrameLayout)
-
-    fun inject(latexSupportableWebView: LatexSupportableWebView)
-
-    fun inject(expandableTextView: ExpandableTextView)
+    fun inject(latexView: LatexView)
 
     fun inject(autoCompleteSearchView: AutoCompleteSearchView)
 

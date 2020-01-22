@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import kotlinx.android.synthetic.main.item_step_quiz_sorting.view.*
 import org.stepic.droid.R
+import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -22,12 +23,12 @@ class MatchingItemOptionAdapterDelegate(
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<MatchingItem>(root) {
         private val stepQuizSortingOption = root.stepQuizSortingOption
+        private val stepQuizSortingOptionProgress = root.stepQuizSortingOptionProgress
+
         private val stepQuizSortingOptionUp = root.stepQuizSortingOptionUp
         private val stepQuizSortingOptionDown = root.stepQuizSortingOptionDown
 
         init {
-            stepQuizSortingOption.setTextSize(16f)
-
             stepQuizSortingOptionUp.setOnClickListener { onMoveItemClicked(adapterPosition, SortingDirection.UP) }
             stepQuizSortingOptionDown.setOnClickListener { onMoveItemClicked(adapterPosition, SortingDirection.DOWN) }
 
@@ -35,13 +36,15 @@ class MatchingItemOptionAdapterDelegate(
                 (root.layoutParams as ViewGroup.MarginLayoutParams).apply {
                     leftMargin = context.resources.getDimensionPixelOffset(R.dimen.step_quiz_matching_item_margin)
                 }
+
+            stepQuizSortingOption.webViewClient = ProgressableWebViewClient(stepQuizSortingOptionProgress, stepQuizSortingOption.webView)
         }
 
         override fun onBind(data: MatchingItem) {
             data as MatchingItem.Option
             itemView.isEnabled = data.isEnabled
 
-            stepQuizSortingOption.setPlainOrLaTeXText(data.text)
+            stepQuizSortingOption.setText(data.text)
 
             stepQuizSortingOptionUp.isEnabled = data.isEnabled && adapterPosition != 1
             stepQuizSortingOptionUp.alpha = if (stepQuizSortingOptionUp.isEnabled) 1f else 0.2f

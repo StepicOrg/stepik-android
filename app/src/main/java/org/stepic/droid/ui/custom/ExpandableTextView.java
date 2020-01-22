@@ -4,15 +4,11 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
-import android.view.View;
 
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.text.HtmlCompat;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.App;
-import org.stepic.droid.util.resolvers.text.TextResolver;
-
-import javax.inject.Inject;
 
 public class ExpandableTextView extends AppCompatTextView {
     private static final int DEFAULT_TRIM_LENGTH = 200;
@@ -23,9 +19,6 @@ public class ExpandableTextView extends AppCompatTextView {
     private boolean trim = true;
     private int trimLength;
 
-    @Inject
-    TextResolver textResolver;
-
     public ExpandableTextView(Context context) {
         this(context, null);
     }
@@ -33,27 +26,20 @@ public class ExpandableTextView extends AppCompatTextView {
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        App.Companion.component().inject(this);
-
         if (isInEditMode()) {
-            ELLIPSIS = "<font color=" + "#CCCCCC" + ">"
-                    + "more..." + "</font>";
+            ELLIPSIS = "<font color=" + "#CCCCCC" + ">" + "more..." + "</font>";
         } else {
-            ELLIPSIS = "<font color=" + App.Companion.getAppContext().getResources().getColor(R.color.default_color_of_link) + ">"
-                    + App.Companion.getAppContext().getString(R.string.tap_to_see_more) + "</font>";
+            ELLIPSIS = "<font color=" + getResources().getColor(R.color.default_color_of_link) + ">" + context.getString(R.string.tap_to_see_more) + "</font>";
         }
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);
         this.trimLength = typedArray.getInt(R.styleable.ExpandableTextView_trimLength, DEFAULT_TRIM_LENGTH);
         typedArray.recycle();
 
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                trim = !trim;
-                setText();
+        setOnClickListener(v -> {
+            trim = !trim;
+            setText();
 //                requestFocusFromTouch();
-            }
         });
     }
 
@@ -75,7 +61,9 @@ public class ExpandableTextView extends AppCompatTextView {
 
     private CharSequence getTrimmedText(CharSequence text) {
         if (originalText != null && originalText.length() > trimLength) {
-            return new SpannableStringBuilder(originalText, 0, trimLength + 1).append(" ").append(textResolver.fromHtml(ELLIPSIS));
+            return new SpannableStringBuilder(originalText, 0, trimLength + 1)
+                    .append(" ")
+                    .append(HtmlCompat.fromHtml(ELLIPSIS, HtmlCompat.FROM_HTML_MODE_COMPACT));
         } else {
             return originalText;
         }
