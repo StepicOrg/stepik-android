@@ -21,7 +21,11 @@ class AttemptSectionAdapterDelegate : AdapterDelegate<AttemptCacheItem, Delegate
 
         override fun onBind(data: AttemptCacheItem) {
             data as AttemptCacheItem.SectionItem
-            sectionTitle.text = data.section.title
+            sectionTitle.text = context.resources.getString(
+                R.string.attempts_section_placeholder,
+                data.section.position,
+                data.section.title
+            )
         }
     }
 }

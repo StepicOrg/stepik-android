@@ -21,7 +21,12 @@ class AttemptLessonAdapterDelegate : AdapterDelegate<AttemptCacheItem, DelegateV
 
         override fun onBind(data: AttemptCacheItem) {
             data as AttemptCacheItem.LessonItem
-            lessonTitle.text = data.lesson.title
+            lessonTitle.text = context.getString(
+                R.string.attempts_lesson_placeholder,
+                data.section.position,
+                data.unit.position,
+                data.lesson.title
+            )
         }
     }
 }
