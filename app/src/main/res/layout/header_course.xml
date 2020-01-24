@@ -82,6 +82,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="@dimen/course_info_margin_expanded"
         android:layout_gravity="center_horizontal"
         android:gravity="center_vertical">
 
@@ -119,6 +120,9 @@
             android:layout_height="12dp"
             android:layout_marginLeft="6dp"
             android:layout_marginStart="6dp"
+
+            android:visibility="gone"
+
             app:progressBackgroundColor="@color/white"
             app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
 
@@ -132,6 +136,8 @@
             android:layout_marginStart="2dp"
             android:layout_marginRight="6dp"
             android:layout_marginEnd="6dp"
+
+            android:visibility="gone"
 
             android:textSize="12sp"
             android:textColor="@color/white"
@@ -164,6 +170,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="@dimen/course_info_margin_expanded"
         android:gravity="center"
+        android:visibility="gone"
         android:layout_gravity="center">
 
         <ImageView

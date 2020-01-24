@@ -7,12 +7,10 @@ import android.graphics.PorterDuff
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -143,6 +141,8 @@ class CourseHeaderDelegate(
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
         with(courseActivity) {
+            courseToolbarTitle.text = courseHeaderData.title
+
             val multi = MultiTransformation<Bitmap>(
                 BlurTransformation(),
                 CenterCrop()
@@ -207,20 +207,20 @@ class CourseHeaderDelegate(
 
             shareCourseMenuItem?.isVisible = true
 
-            courseToolbarConstraint.doOnPreDraw {
-                val offset = maxOf(courseToolbar.height, courseToolbar.width - courseToolbarConstraint.right)
-                courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams)
-                    .apply {
-                        leftMargin = offset
-                        rightMargin = offset
-                    }
-
-                courseInfoPlaceholder.layoutParams = (courseInfoPlaceholder.layoutParams as LinearLayout.LayoutParams)
-                    .apply {
-                        leftMargin = offset
-                        rightMargin = offset
-                    }
-            }
+//            courseToolbarConstraint.doOnPreDraw {
+//                val offset = maxOf(courseToolbar.height, courseToolbar.width - courseToolbarConstraint.right)
+//                courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams)
+//                    .apply {
+//                        leftMargin = offset
+//                        rightMargin = offset
+//                    }
+//
+//                courseInfoPlaceholder.layoutParams = (courseInfoPlaceholder.layoutParams as LinearLayout.LayoutParams)
+//                    .apply {
+//                        leftMargin = offset
+//                        rightMargin = offset
+//                    }
+//            }
         }
 
     fun showCourseShareTooltip() {

@@ -27,6 +27,7 @@
         android:alpha="@dimen/loading_view_dark_alpha"
         android:layerType="software"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="@dimen/course_info_margin_expanded"
         android:layout_marginStart="?actionBarSize"
         android:layout_marginEnd="?actionBarSize"
         android:layout_gravity="center_horizontal" />
@@ -41,6 +42,7 @@
         android:layout_marginLeft="?actionBarSize"
         android:layout_marginRight="?actionBarSize"
         android:layout_marginTop="20dp"
+        android:visibility="gone"
         android:layout_marginBottom="@dimen/course_info_margin_expanded"
         android:gravity="center">
 
