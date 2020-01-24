@@ -90,6 +90,6 @@ class CodeStepQuizFragment :
     private fun onFullScreenClicked(lang: String, code: String) {
         CodeStepQuizFullScreenDialogFragment
             .newInstance(lang, code, codeOptions.codeTemplates, stepWrapper, lessonData.lesson.title.orEmpty())
-            .showIfNotExists(requireFragmentManager(), CodeStepQuizFullScreenDialogFragment.TAG)
+            .showIfNotExists(childFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
     }
 }
