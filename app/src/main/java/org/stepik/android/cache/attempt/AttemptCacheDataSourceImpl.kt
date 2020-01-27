@@ -22,7 +22,11 @@ constructor(
     override fun getAttempts(vararg attemptIds: Long): Single<List<Attempt>> =
         Single
             .fromCallable {
-                attemptDao.getAllInRange(DbStructureAttempt.Columns.ID, attemptIds.joinToString())
+                if (attemptIds.isNotEmpty()) {
+                    attemptDao.getAllInRange(DbStructureAttempt.Columns.ID, attemptIds.joinToString())
+                } else {
+                    attemptDao.getAll()
+                }
             }
 
     override fun saveAttempts(items: List<Attempt>): Completable =
