@@ -1,5 +1,6 @@
 package org.stepik.android.domain.attempts.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.storage.dao.IDao
@@ -90,6 +91,11 @@ constructor(
             Pair(attempts, submissions)
         }.flatMap { (attempts, submissions) ->
             getSteps(attempts.mapToLongArray { it.step }, attempts, submissions)
+        }
+
+    fun removeAttempts(attemptIds: List<Long>): Completable =
+        Completable.fromAction {
+            submissionDao.removeAllInRange(DbStructureSubmission.Columns.ATTEMPT_ID, attemptIds.mapToLongArray { it }.joinToString())
         }
 
     private fun getSteps(ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>): Single<List<AttemptCacheItem>> =

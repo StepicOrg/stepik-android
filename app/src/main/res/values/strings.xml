@@ -851,4 +851,6 @@
     <string name="attempts_section_placeholder" translatable="false">%d&#160;%s</string>
     <string name="attempts_lesson_placeholder" translatable="false">%d&#46;%d&#160;%s</string>
     <string name="attempts_selected">%d&#160;selected</string>
+    <string name="attempts_delete_dialog_title">Delete solution?</string>
+    <string name="attempts_delete_dialog_description">This item will be deleted from your device</string>
 </resources>

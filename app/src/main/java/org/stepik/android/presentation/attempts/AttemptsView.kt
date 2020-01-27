@@ -12,4 +12,5 @@ interface AttemptsView {
     }
 
     fun setState(state: State)
+    fun setBlockingLoading(isLoading: Boolean)
 }

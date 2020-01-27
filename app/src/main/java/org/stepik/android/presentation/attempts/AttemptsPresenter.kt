@@ -24,6 +24,12 @@ constructor(
             view?.setState(state)
         }
 
+    private var isBlockingLoading = false
+        set(value) {
+            field = value
+            view?.setBlockingLoading(value)
+        }
+
     override fun attachView(view: AttemptsView) {
         super.attachView(view)
         view.setState(state)
@@ -46,6 +52,19 @@ constructor(
                     }
                 },
                 onError = { state = AttemptsView.State.Error }
+            )
+    }
+
+    fun removeAttempts(attemptIds: List<Long>) {
+        isBlockingLoading = true
+        compositeDisposable += attemptsInteractor
+            .removeAttempts(attemptIds)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .doFinally { isBlockingLoading = false }
+            .subscribeBy(
+                onComplete = { state = AttemptsView.State.Idle; fetchAttemptCacheItems() },
+                onError = { it.printStackTrace() }
             )
     }
 }

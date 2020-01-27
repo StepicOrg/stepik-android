@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -17,20 +18,25 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.presentation.attempts.AttemptsPresenter
 import org.stepik.android.presentation.attempts.AttemptsView
 import org.stepik.android.view.attempts.model.AttemptCacheItem
 import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptLessonAdapterDelegate
 import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptSectionAdapterDelegate
 import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptSubmissionAdapterDelegate
+import org.stepik.android.view.attempts.ui.dialog.RemoveCachedAttemptsDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import javax.inject.Inject
 
-class AttemptsActivity : FragmentActivityBase(), AttemptsView {
+class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttemptsDialog.Callback {
     companion object {
         private const val EXTRA_COURSE_ID = "course_id"
         fun createIntent(context: Context, courseId: Long): Intent =
@@ -48,6 +54,9 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
 
     private val viewStateDelegate =
         ViewStateDelegate<AttemptsView.State>()
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +125,13 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
                 onBackPressed()
                 true
             }
+            R.id.attempts_menu_item_delete -> {
+                val items = fetchSelectedItems()
+                val attemptIds = items.map { it.submission.attempt }
+                Timber.d("Items: $items")
+                showRemoveAttemptsDialog(attemptIds)
+                true
+            }
             else ->
                 super.onOptionsItemSelected(item)
         }
@@ -133,6 +149,19 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         if (state is AttemptsView.State.AttemptsLoaded) {
             attemptsAdapter.items = state.attempts
         }
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
+    }
+
+    override fun onAttemptRemoveConfirmed(attemptIds: List<Long>) {
+        attemptsPresenter.removeAttempts(attemptIds)
+        selectionHelper.reset()
     }
 
     private fun isAllSubmissionsSelectedInLesson(lessonIndex: Int): Boolean {
@@ -259,5 +288,16 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
             }
         }
         return count
+    }
+
+    private fun fetchSelectedItems(): List<AttemptCacheItem.SubmissionItem> =
+        attemptsAdapter.items
+            .filterIndexed { index, _ -> selectionHelper.isSelected(index) }
+            .filterIsInstance<AttemptCacheItem.SubmissionItem>()
+
+    private fun showRemoveAttemptsDialog(attemptIds: List<Long>) {
+        RemoveCachedAttemptsDialog
+            .newInstance(attemptIds = attemptIds)
+            .showIfNotExists(supportFragmentManager, RemoveCachedAttemptsDialog.TAG)
     }
 }
