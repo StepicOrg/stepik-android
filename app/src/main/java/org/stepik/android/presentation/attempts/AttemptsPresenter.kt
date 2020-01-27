@@ -7,6 +7,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
 import org.stepik.android.presentation.base.PresenterBase
+import timber.log.Timber
 import javax.inject.Inject
 
 class AttemptsPresenter
@@ -39,13 +40,14 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { attempts ->
+                    Timber.d("Attempts: $attempts")
                     state = if (attempts.isEmpty()) {
                         AttemptsView.State.Empty
                     } else {
                         AttemptsView.State.AttemptsLoaded(attempts)
                     }
                 },
-                onError = { state = AttemptsView.State.Error }
+                onError = { state = AttemptsView.State.Error; it.printStackTrace() }
             )
     }
 }
