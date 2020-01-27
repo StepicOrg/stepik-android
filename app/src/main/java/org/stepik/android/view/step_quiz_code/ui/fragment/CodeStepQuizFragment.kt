@@ -88,8 +88,8 @@ class CodeStepQuizFragment :
     }
 
     private fun onFullScreenClicked(lang: String, code: String) {
-        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, codeOptions.codeTemplates, stepWrapper, lessonData.lesson.title.orEmpty())
-        dialog.setTargetFragment(this, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
-        dialog.showIfNotExists(requireFragmentManager(), CodeStepQuizFullScreenDialogFragment.TAG)
+        CodeStepQuizFullScreenDialogFragment
+            .newInstance(lang, code, codeOptions.codeTemplates, stepWrapper, lessonData.lesson.title.orEmpty())
+            .showIfNotExists(childFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
     }
 }
