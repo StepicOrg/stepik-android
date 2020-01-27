@@ -18,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:titleEnabled="false"
-            app:contentScrim="@color/new_accent_color"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <ImageView
@@ -31,6 +30,13 @@
 
             <include layout="@layout/header_course" />
             <include layout="@layout/header_course_placeholder" />
+
+            <View
+                android:id="@+id/courseToolbarScrim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0"
+                android:background="@color/course_appbar_scrim_color" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/courseToolbar"

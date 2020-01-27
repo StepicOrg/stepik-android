@@ -184,6 +184,7 @@
 
     <!-- course -->
     <color name="course_appbar_separator">#cccccc</color>
+    <color name="course_appbar_scrim_color">#6B6B7B</color>
     <color name="course_tabbar_color">#F6F6F6</color>
     <color name="course_info_organization_span">#4a90e2</color>
     <color name="course_content_section_background">#F6F6F6</color>

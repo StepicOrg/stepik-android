@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.appbar.AppBarLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
@@ -31,6 +32,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
@@ -65,9 +67,18 @@ class CourseHeaderDelegate(
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
     init {
+        initCollapsingAnimation()
         initCompoundDrawables()
         initActions()
     }
+
+    private fun initCollapsingAnimation() =
+        with(courseActivity) {
+            courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+                val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
+                courseToolbarScrim.alpha = ratio * 1.5f
+            })
+        }
 
     private fun initCompoundDrawables() =
         with(courseActivity) {
