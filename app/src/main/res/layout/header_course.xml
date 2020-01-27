@@ -9,6 +9,7 @@
     android:orientation="vertical"
     android:background="@color/fast_continue_learning_opacity"
     android:gravity="center_horizontal"
+    android:paddingTop="8dp"
     app:layout_collapseMode="pin">
 
     <TextView
@@ -81,8 +82,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="@dimen/course_info_margin_expanded"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
         android:layout_gravity="center_horizontal"
         android:gravity="center_vertical">
 

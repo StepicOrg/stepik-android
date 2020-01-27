@@ -17,7 +17,8 @@
             android:id="@+id/courseCollapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:contentScrim="@color/continue_button_pressed_color_dark"
+            app:titleEnabled="false"
+            app:contentScrim="@color/new_accent_color"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <ImageView
@@ -34,10 +35,11 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/courseToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:layout_gravity="top">
-                <TextView
+                android:layout_gravity="top"
+                app:title="">
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/courseToolbarTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

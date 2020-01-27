@@ -16,11 +16,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
-import com.google.android.material.appbar.AppBarLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
-import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -33,7 +31,6 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
@@ -68,25 +65,9 @@ class CourseHeaderDelegate(
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
     init {
-        initCollapsingAnimation()
         initCompoundDrawables()
         initActions()
     }
-
-    private fun initCollapsingAnimation() =
-        with(courseActivity) {
-            val courseInfoHeightExpanded = resources.getDimension(R.dimen.course_info_height_expanded)
-            val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
-
-            courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
-                val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
-                val targetTranslation = courseInfoMarginExpanded - (courseToolbar.height - courseInfoHeightExpanded) / 2
-
-                courseCover.alpha = 1f - ratio
-                courseInfo.translationY = ratio * targetTranslation
-                courseInfoPlaceholder.translationY = ratio * targetTranslation
-            })
-        }
 
     private fun initCompoundDrawables() =
         with(courseActivity) {
@@ -206,21 +187,6 @@ class CourseHeaderDelegate(
             }
 
             shareCourseMenuItem?.isVisible = true
-
-//            courseToolbarConstraint.doOnPreDraw {
-//                val offset = maxOf(courseToolbar.height, courseToolbar.width - courseToolbarConstraint.right)
-//                courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams)
-//                    .apply {
-//                        leftMargin = offset
-//                        rightMargin = offset
-//                    }
-//
-//                courseInfoPlaceholder.layoutParams = (courseInfoPlaceholder.layoutParams as LinearLayout.LayoutParams)
-//                    .apply {
-//                        leftMargin = offset
-//                        rightMargin = offset
-//                    }
-//            }
         }
 
     fun showCourseShareTooltip() {
