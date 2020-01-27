@@ -48,9 +48,9 @@ constructor(
             }
 
     fun removeAttempts(attemptIds: List<Long>): Completable =
-        Completable.fromAction {
-            submissionDao.removeAllInRange(DbStructureSubmission.Columns.ATTEMPT_ID, attemptIds.mapToLongArray { it }.joinToString())
-        }
+        attemptIds
+            .toObservable()
+            .flatMapCompletable { attemptId -> submissionRepository.removeSubmissionsForAttempt(attemptId) }
 
     private fun getSteps(ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>): Single<List<AttemptCacheItem>> =
         stepRepository

@@ -33,7 +33,6 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 import javax.inject.Inject
 
 class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttemptsDialog.Callback {
@@ -128,7 +127,6 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             R.id.attempts_menu_item_delete -> {
                 val items = fetchSelectedItems()
                 val attemptIds = items.map { it.submission.attempt }
-                Timber.d("Items: $items")
                 showRemoveAttemptsDialog(attemptIds)
                 true
             }
@@ -162,6 +160,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     override fun onAttemptRemoveConfirmed(attemptIds: List<Long>) {
         attemptsPresenter.removeAttempts(attemptIds)
         selectionHelper.reset()
+        invalidateOptionsMenu()
     }
 
     private fun isAllSubmissionsSelectedInLesson(lessonIndex: Int): Boolean {
