@@ -7,8 +7,12 @@ import org.stepic.droid.R
 import org.stepik.android.view.attempts.model.AttemptCacheItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import ru.nobird.android.ui.adapters.selection.SelectionHelper
 
-class AttemptLessonAdapterDelegate : AdapterDelegate<AttemptCacheItem, DelegateViewHolder<AttemptCacheItem>>() {
+class AttemptLessonAdapterDelegate(
+    private val selectionHelper: SelectionHelper,
+    private val onClick: (AttemptCacheItem.LessonItem) -> Unit
+) : AdapterDelegate<AttemptCacheItem, DelegateViewHolder<AttemptCacheItem>>() {
     override fun isForViewType(position: Int, data: AttemptCacheItem): Boolean =
         data is AttemptCacheItem.LessonItem
 
@@ -18,9 +22,19 @@ class AttemptLessonAdapterDelegate : AdapterDelegate<AttemptCacheItem, DelegateV
     private inner class ViewHolder(root: View) : DelegateViewHolder<AttemptCacheItem>(root) {
 
         private val lessonTitle = root.lessonTitle
+        private val lessonCheckBox = root.lessonCheckBox
+
+        init {
+            root.setOnClickListener { onClick(itemData as AttemptCacheItem.LessonItem) }
+            lessonCheckBox.setOnClickListener { onClick(itemData as AttemptCacheItem.LessonItem) }
+        }
 
         override fun onBind(data: AttemptCacheItem) {
             data as AttemptCacheItem.LessonItem
+            selectionHelper.isSelected(adapterPosition).let { isSelected ->
+                itemView.isSelected = isSelected
+                lessonCheckBox.isChecked = isSelected
+            }
             lessonTitle.text = context.getString(
                 R.string.attempts_lesson_placeholder,
                 data.section.position,

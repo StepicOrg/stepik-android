@@ -25,6 +25,7 @@ import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptSectionAdapte
 import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptSubmissionAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
 import javax.inject.Inject
 
 class AttemptsActivity : FragmentActivityBase(), AttemptsView {
@@ -41,6 +42,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
     private lateinit var attemptsPresenter: AttemptsPresenter
 
     private var attemptsAdapter: DefaultDelegateAdapter<AttemptCacheItem> = DefaultDelegateAdapter()
+    private val selectionHelper = MultipleChoiceSelectionHelper(attemptsAdapter)
 
     private val viewStateDelegate =
         ViewStateDelegate<AttemptsView.State>()
@@ -56,11 +58,12 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         initCenteredToolbar(R.string.attempts_toolbar_title, showHomeButton = true)
         attemptsFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
 
-        attemptsAdapter += AttemptSectionAdapterDelegate()
-        attemptsAdapter += AttemptLessonAdapterDelegate()
-        attemptsAdapter += AttemptSubmissionAdapterDelegate()
+        attemptsAdapter += AttemptSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionClick)
+        attemptsAdapter += AttemptLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonClick)
+        attemptsAdapter += AttemptSubmissionAdapterDelegate(selectionHelper, onClick = ::handleSubmissionClick)
 
         with(attemptsRecycler) {
+            itemAnimator = null
             adapter = attemptsAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
@@ -111,6 +114,119 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         viewStateDelegate.switchState(state)
         if (state is AttemptsView.State.AttemptsLoaded) {
             attemptsAdapter.items = state.attempts
+        }
+    }
+
+    private fun isAllSubmissionsSelectedInLesson(lessonIndex: Int): Boolean {
+        var areAllSelectedInLesson = true
+        for (index in lessonIndex + 1 until attemptsAdapter.items.size) {
+            val item = attemptsAdapter.items[index]
+            if (item is AttemptCacheItem.SubmissionItem) {
+                areAllSelectedInLesson = areAllSelectedInLesson && selectionHelper.isSelected(index)
+            } else {
+                break
+            }
+        }
+        return areAllSelectedInLesson
+    }
+
+    private fun isAllLessonsSelectedInSection(sectionIndex: Int, sectionId: Long): Boolean {
+        var areAllSelectedInSection = true
+        for (index in sectionIndex + 1 until attemptsAdapter.items.size) {
+            val item = attemptsAdapter.items[index]
+            if (item is AttemptCacheItem.LessonItem) {
+                if (item.section.id == sectionId) {
+                    areAllSelectedInSection = areAllSelectedInSection && selectionHelper.isSelected(index)
+                } else {
+                    break
+                }
+            }
+        }
+        return areAllSelectedInSection
+    }
+
+    private fun handleSectionClick(attemptCacheSectionItem: AttemptCacheItem.SectionItem) {
+        val itemIndex = attemptsAdapter.items.indexOf(attemptCacheSectionItem)
+        val sectionId = attemptCacheSectionItem.section.id
+        selectionHelper.toggle(itemIndex)
+        val isSelected = selectionHelper.isSelected(itemIndex)
+
+        for (index in itemIndex + 1 until attemptsAdapter.items.size) {
+            val itemSectionId = when (val item = attemptsAdapter.items[index]) {
+                is AttemptCacheItem.LessonItem ->
+                    item.section.id
+                is AttemptCacheItem.SubmissionItem ->
+                    item.section.id
+                else ->
+                    -1L
+            }
+
+            if (itemSectionId == sectionId) {
+                if (isSelected) {
+                    selectionHelper.select(index)
+                } else {
+                    selectionHelper.deselect(index)
+                }
+            } else {
+                break
+            }
+        }
+    }
+
+    private fun handleLessonClick(attemptCacheLessonItem: AttemptCacheItem.LessonItem) {
+        val itemIndex = attemptsAdapter.items.indexOf(attemptCacheLessonItem)
+        val lessonId = attemptCacheLessonItem.lesson.id
+        val sectionId = attemptCacheLessonItem.section.id
+        selectionHelper.toggle(itemIndex)
+        val isSelected = selectionHelper.isSelected(itemIndex)
+
+        for (index in itemIndex + 1 until attemptsAdapter.items.size) {
+            val item = attemptsAdapter.items[index]
+            if (item is AttemptCacheItem.SubmissionItem && item.lesson.id == lessonId) {
+                if (isSelected) {
+                    selectionHelper.select(index)
+                } else {
+                    selectionHelper.deselect(index)
+                }
+            } else {
+                break
+            }
+        }
+
+        val sectionIndex = attemptsAdapter.items.indexOfFirst { item ->
+            item is AttemptCacheItem.SectionItem && item.section.id == sectionId
+        }
+
+        if (isAllLessonsSelectedInSection(sectionIndex, sectionId)) {
+            selectionHelper.select(sectionIndex)
+        } else {
+            selectionHelper.deselect(sectionIndex)
+        }
+    }
+
+    private fun handleSubmissionClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
+        selectionHelper.toggle(attemptsAdapter.items.indexOf(attemptCacheSubmissionItem))
+        val lessonId = attemptCacheSubmissionItem.lesson.id
+        val sectionId = attemptCacheSubmissionItem.section.id
+
+        val lessonIndex = attemptsAdapter.items.indexOfFirst { item ->
+            item is AttemptCacheItem.LessonItem && item.lesson.id == lessonId
+        }
+
+        val sectionIndex = attemptsAdapter.items.indexOfFirst { item ->
+            item is AttemptCacheItem.SectionItem && item.section.id == sectionId
+        }
+
+        if (isAllSubmissionsSelectedInLesson(lessonIndex)) {
+            selectionHelper.select(lessonIndex)
+        } else {
+            selectionHelper.deselect(lessonIndex)
+        }
+
+        if (isAllLessonsSelectedInSection(sectionIndex, sectionId)) {
+            selectionHelper.select(sectionIndex)
+        } else {
+            selectionHelper.deselect(sectionIndex)
         }
     }
 }

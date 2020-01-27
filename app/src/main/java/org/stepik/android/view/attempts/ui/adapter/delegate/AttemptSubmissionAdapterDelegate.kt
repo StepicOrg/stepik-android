@@ -11,9 +11,14 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.attempts.model.AttemptCacheItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
+import ru.nobird.android.ui.adapters.selection.SelectionHelper
+import timber.log.Timber
 import java.util.TimeZone
 
-class AttemptSubmissionAdapterDelegate : AdapterDelegate<AttemptCacheItem, DelegateViewHolder<AttemptCacheItem>>() {
+class AttemptSubmissionAdapterDelegate(
+    private val selectionHelper: SelectionHelper,
+    private val onClick: (AttemptCacheItem.SubmissionItem) -> Unit
+) : AdapterDelegate<AttemptCacheItem, DelegateViewHolder<AttemptCacheItem>>() {
     override fun isForViewType(position: Int, data: AttemptCacheItem): Boolean =
         data is AttemptCacheItem.SubmissionItem
 
@@ -25,9 +30,21 @@ class AttemptSubmissionAdapterDelegate : AdapterDelegate<AttemptCacheItem, Deleg
         private val submissionQuizIcon = root.submissionQuizIcon
         private val submissionTitle = root.submissionTitle
         private val submissionTime = root.submissionTime
+        private val submissionCheckBox = root.submissionCheckBox
+
+        init {
+            root.setOnClickListener { onClick(itemData as AttemptCacheItem.SubmissionItem) }
+            submissionCheckBox.setOnClickListener { onClick(itemData as AttemptCacheItem.SubmissionItem) }
+        }
 
         override fun onBind(data: AttemptCacheItem) {
             data as AttemptCacheItem.SubmissionItem
+            selectionHelper.isSelected(adapterPosition).let { isSelected ->
+                Timber.d("Is selected: $isSelected")
+                itemView.isSelected = isSelected
+                submissionCheckBox.isChecked = isSelected
+            }
+            itemView.isSelected = selectionHelper.isSelected(adapterPosition)
             val icon = AppCompatResources
                 .getDrawable(context, R.drawable.ic_easy_quiz)
                 ?.mutate()
