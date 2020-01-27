@@ -3,6 +3,7 @@ package org.stepik.android.view.attempts.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_attempts.*
 import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
+import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -90,6 +92,22 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
     override fun onStop() {
         attemptsPresenter.detachView(this)
         super.onStop()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.attempts_menu, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        val selectedCount = fetchSelectedCount()
+        menu.findItem(R.id.attempts_menu_item_delete).isVisible = selectedCount != 0
+        centeredToolbarTitle.text = if (selectedCount == 0) {
+            getString(R.string.attempts_toolbar_title)
+        } else {
+            getString(R.string.attempts_selected, selectedCount)
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -171,6 +189,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
                 break
             }
         }
+        invalidateOptionsMenu()
     }
 
     private fun handleLessonClick(attemptCacheLessonItem: AttemptCacheItem.LessonItem) {
@@ -202,6 +221,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         } else {
             selectionHelper.deselect(sectionIndex)
         }
+        invalidateOptionsMenu()
     }
 
     private fun handleSubmissionClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
@@ -228,5 +248,16 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         } else {
             selectionHelper.deselect(sectionIndex)
         }
+        invalidateOptionsMenu()
+    }
+
+    private fun fetchSelectedCount(): Int {
+        var count = 0
+        attemptsAdapter.items.forEachIndexed { index, item ->
+            if (item is AttemptCacheItem.SubmissionItem && selectionHelper.isSelected(index)) {
+                count += 1
+            }
+        }
+        return count
     }
 }
