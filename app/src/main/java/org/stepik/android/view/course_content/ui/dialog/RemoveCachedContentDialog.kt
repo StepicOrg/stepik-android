@@ -1,6 +1,7 @@
 package org.stepik.android.view.course_content.ui.dialog
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
@@ -73,13 +74,7 @@ class RemoveCachedContentDialog : DialogFragment() {
                 unit?.let(callback::onRemoveUnitDownloadConfirmed)
             }
             .setNegativeButton(R.string.cancel) { _, _ ->
-                analytic.reportAmplitudeEvent(
-                    AmplitudeAnalytic.Downloads.DELETE_CONFIRMATION_INTERACTED,
-                    mapOf(
-                        AmplitudeAnalytic.Downloads.PARAM_CONTENT to getAmplitudeContentParameterValue(),
-                        AmplitudeAnalytic.Downloads.PARAM_RESULT to AmplitudeAnalytic.Downloads.Values.NO
-                    )
-                )
+                handleCancelAction()
             }
             .create()
             .apply {
@@ -91,6 +86,21 @@ class RemoveCachedContentDialog : DialogFragment() {
                         .setTextColor(ContextCompat.getColor(context, R.color.new_accent_color))
                 }
             }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        handleCancelAction()
+    }
+
+    private fun handleCancelAction() {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.DELETE_CONFIRMATION_INTERACTED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to getAmplitudeContentParameterValue(),
+                AmplitudeAnalytic.Downloads.PARAM_RESULT to AmplitudeAnalytic.Downloads.Values.NO
+            )
+        )
+    }
 
     private fun getAmplitudeContentParameterValue(): String =
         when {
