@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.empty_certificates.goToCatalog
 import kotlinx.android.synthetic.main.empty_downloading.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.persistence.model.DownloadItem
@@ -158,6 +159,13 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
     }
 
     override fun onRemoveCourseDownloadConfirmed(course: Course) {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.DELETED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE,
+                AmplitudeAnalytic.Downloads.PARAM_SOURCE to AmplitudeAnalytic.Downloads.Values.DOWNLOADS
+            )
+        )
         downloadPresenter.removeCourseDownload(course)
     }
 

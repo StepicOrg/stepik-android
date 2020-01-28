@@ -82,13 +82,31 @@ interface AmplitudeAnalytic {
         const val STARTED = "Download started"
         const val CANCELLED = "Download cancelled"
         const val DELETED = "Download deleted"
+        const val SCREEN_OPENED = "Downloads screen opened"
+        const val DELETE_CONFIRMATION_INTERACTED = "Delete downloads confirmation interacted"
 
         const val PARAM_CONTENT = "content"
+        const val PARAM_SOURCE = "source"
+        const val PARAM_RESULT = "result"
 
         object Values {
+            /**
+             *  Content
+             */
             const val COURSE = "course"
             const val SECTION = "section"
             const val LESSON = "lesson"
+
+            /**
+             *  Source
+             */
+            const val SYLLABUS = "syllabus"
+            const val DOWNLOADS = "downloads"
+            /**
+             *  Result
+             */
+            const val YES = "yes"
+            const val NO = "no"
         }
     }
 
