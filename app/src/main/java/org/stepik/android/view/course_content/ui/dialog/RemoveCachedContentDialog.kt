@@ -1,14 +1,19 @@
 package org.stepik.android.view.course_content.ui.dialog
 
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.base.App
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
+import javax.inject.Inject
 
 class RemoveCachedContentDialog : DialogFragment() {
     companion object {
@@ -34,6 +39,13 @@ class RemoveCachedContentDialog : DialogFragment() {
                 }
     }
 
+    init {
+        App.component().inject(this)
+    }
+
+    @Inject
+    lateinit var analytic: Analytic
+
     private val course: Course? by lazy { arguments?.getParcelable<Course>(ARG_COURSE) }
     private val section: Section? by lazy { arguments?.getParcelable<Section>(ARG_SECTION) }
     private val unit: Unit? by lazy { arguments?.getParcelable<Unit>(ARG_UNIT) }
@@ -49,11 +61,21 @@ class RemoveCachedContentDialog : DialogFragment() {
                     ?: activity as? Callback
                     ?: return@setPositiveButton
 
+                analytic.reportAmplitudeEvent(
+                    AmplitudeAnalytic.Downloads.DELETE_CONFIRMATION_INTERACTED,
+                    mapOf(
+                        AmplitudeAnalytic.Downloads.PARAM_CONTENT to getAmplitudeContentParameterValue(),
+                        AmplitudeAnalytic.Downloads.PARAM_RESULT to AmplitudeAnalytic.Downloads.Values.YES
+                    )
+                )
+
                 course?.let(callback::onRemoveCourseDownloadConfirmed)
                 section?.let(callback::onRemoveSectionDownloadConfirmed)
                 unit?.let(callback::onRemoveUnitDownloadConfirmed)
             }
-            .setNegativeButton(R.string.cancel, null)
+            .setNegativeButton(R.string.cancel) { _, _ ->
+                handleCancelAction()
+            }
             .create()
             .apply {
                 setOnShowListener {
@@ -64,6 +86,33 @@ class RemoveCachedContentDialog : DialogFragment() {
                         .setTextColor(ContextCompat.getColor(context, R.color.new_accent_color))
                 }
             }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        handleCancelAction()
+    }
+
+    private fun handleCancelAction() {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Downloads.DELETE_CONFIRMATION_INTERACTED,
+            mapOf(
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to getAmplitudeContentParameterValue(),
+                AmplitudeAnalytic.Downloads.PARAM_RESULT to AmplitudeAnalytic.Downloads.Values.NO
+            )
+        )
+    }
+
+    private fun getAmplitudeContentParameterValue(): String =
+        when {
+            course != null ->
+                AmplitudeAnalytic.Downloads.Values.COURSE
+            section != null ->
+                AmplitudeAnalytic.Downloads.Values.SECTION
+            unit != null ->
+                AmplitudeAnalytic.Downloads.Values.LESSON
+            else ->
+                ""
+        }
 
     interface Callback {
         fun onRemoveCourseDownloadConfirmed(course: Course) {}
