@@ -215,7 +215,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         canvas.drawLine(lineNumbersOffset.toFloat(), 0f, lineNumbersOffset.toFloat(), height.toFloat(), lineNumbersStrokePaint) // line numbers stroke
 
         if (layout != null) {
-            if (linesWithNumbers.isEmpty() && lines.isNotEmpty()) { // layout could be null when lines is set so we have to check and recount line numbers in such case
+            if (linesWithNumbers.isEmpty() && lines.isNotEmpty() ||
+                linesWithNumbers.isNotEmpty() && linesWithNumbers.last() >= lineCount
+            ) { // layout could be null when lines is set so we have to check and recount line numbers in such case
                 linesWithNumbers = countNumbersForLines(layout)
             }
 

@@ -462,7 +462,8 @@ class CourseContentFragment :
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Downloads.DELETED,
             mapOf(
-                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE,
+                AmplitudeAnalytic.Downloads.PARAM_SOURCE to AmplitudeAnalytic.Downloads.Values.SYLLABUS
             )
         )
         courseContentPresenter.removeCourseDownloadTask(course)
@@ -472,7 +473,8 @@ class CourseContentFragment :
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Downloads.DELETED,
             mapOf(
-                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.SECTION
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.SECTION,
+                AmplitudeAnalytic.Downloads.PARAM_SOURCE to AmplitudeAnalytic.Downloads.Values.SYLLABUS
             )
         )
         courseContentPresenter.removeSectionDownloadTask(section)
@@ -482,7 +484,8 @@ class CourseContentFragment :
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Downloads.DELETED,
             mapOf(
-                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON,
+                AmplitudeAnalytic.Downloads.PARAM_SOURCE to AmplitudeAnalytic.Downloads.Values.SYLLABUS
             )
         )
         courseContentPresenter.removeUnitDownloadTask(unit)
