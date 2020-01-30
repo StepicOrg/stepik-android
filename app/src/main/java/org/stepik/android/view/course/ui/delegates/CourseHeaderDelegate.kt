@@ -6,9 +6,7 @@ import android.graphics.PorterDuff
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -22,7 +20,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
@@ -30,17 +27,12 @@ import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
     private val courseActivity: Activity,
     private val analytic: Analytic,
     private val coursePresenter: CoursePresenter
 ) {
-    companion object {
-        private const val MIN_FEATURED_READINESS = 0.9
-    }
-
     var courseHeaderData: CourseHeaderData? = null
         set(value) {
             field = value
@@ -51,33 +43,24 @@ class CourseHeaderDelegate(
     private var shareCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
+    private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
+    private val courseProgressDelegate = CourseProgressDelegate(courseActivity.courseProgress)
+
     init {
         initCollapsingAnimation()
-        initCompoundDrawables()
         initActions()
     }
 
-    private fun initCollapsingAnimation() =
+    private fun initCollapsingAnimation() {
         with(courseActivity) {
             courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                 val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
                 courseToolbarScrim.alpha = ratio * 1.5f
             })
         }
+    }
 
-    private fun initCompoundDrawables() =
-        with(courseActivity) {
-            courseFeatured.setCompoundDrawables(start = R.drawable.ic_verified)
-
-            val learnersCountDrawable = AppCompatResources
-                .getDrawable(this, R.drawable.ic_learners)
-                ?.let(DrawableCompat::wrap)
-                ?: return@with
-            DrawableCompat.setTint(learnersCountDrawable, ContextCompat.getColor(this,  android.R.color.white))
-            courseLearnersCount.setCompoundDrawablesWithIntrinsicBounds(learnersCountDrawable, null, null, null)
-        }
-
-    private fun initActions() =
+    private fun initActions() {
         with(courseActivity) {
             courseEnrollAction.setOnClickListener {
                 coursePresenter.enrollCourse()
@@ -115,6 +98,7 @@ class CourseHeaderDelegate(
 //                coursePresenter.purchaseCourse()
 //            }
         }
+    }
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
         with(courseActivity) {
@@ -131,33 +115,9 @@ class CourseHeaderDelegate(
 
             courseToolbarTitle.text = courseHeaderData.title
 
-            courseRating.total = 5
-            courseRating.progress = courseHeaderData.review.roundToInt()
-            courseRating.isVisible = courseHeaderData.review > 0
+            // todo courseStatsDelegate.setStats()
 
-            val isNeedShowProgress = courseHeaderData.progress != null && courseHeaderData.progress.cost > 0
-            courseProgress.isVisible = isNeedShowProgress
-            courseProgressText.isVisible = isNeedShowProgress
-
-            if (isNeedShowProgress) {
-                val score = courseHeaderData
-                    .progress
-                    ?.score
-                    ?.toFloatOrNull()
-                    ?.toLong()
-                    ?: 0L
-
-                val cost = courseHeaderData
-                    .progress
-                    ?.cost
-                    ?: 0L
-
-                courseProgress.progress = (score * 100 / cost) / 100f
-                courseProgressText.text = getString(R.string.course_content_text_progress, score, cost)
-            }
-
-            courseLearnersCount.text = courseHeaderData.learnersCount.toString()
-            courseFeatured.isVisible = courseHeaderData.readiness > MIN_FEATURED_READINESS
+            // todo courseProgressDelegate.setProgress(courseHeaderData.progress)
 
             with(courseHeaderData.enrollmentState) {
                 courseEnrollAction.isVisible = this is EnrollmentState.NotEnrolledFree

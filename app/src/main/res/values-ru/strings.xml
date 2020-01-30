@@ -561,6 +561,8 @@
     <string name="course_tab_reviews">Отзывы</string>
     <string name="course_tab_modules">Модули</string>
 
+    <string name="course_progress_current">Текущий прогресс</string>
+
     <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
     <string name="course_info_requirements">Требования</string>

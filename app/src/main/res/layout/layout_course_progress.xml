@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseProgressTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintEnd_toStartOf="@id/courseProgressCircle"
+
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        app:fontFamily="@font/roboto_medium"
+        android:letterSpacing="0.03"
+        android:text="@string/course_progress_current" />
+
+    <org.stepic.droid.ui.custom.CircleProgressView
+        android:id="@+id/courseProgressCircle"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+
+        app:layout_constraintEnd_toStartOf="@id/courseProgressValue"
+        app:layout_constraintTop_toTopOf="@id/courseProgressValue"
+        app:layout_constraintBottom_toBottomOf="@id/courseProgressValue"
+
+        app:progressBackgroundColor="@color/white"
+        app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseProgressValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        app:fontFamily="@font/roboto_medium"
+        android:letterSpacing="0.03"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/courseProgressTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="21/50 баллов"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

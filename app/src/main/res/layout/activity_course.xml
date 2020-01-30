@@ -20,11 +20,12 @@
             app:titleEnabled="false"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/courseCover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
+                android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.5" />
 
