@@ -2,7 +2,6 @@ package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
 import android.view.Menu
 import android.view.MenuItem
@@ -10,7 +9,6 @@ import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -24,7 +22,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -49,18 +46,6 @@ class CourseHeaderDelegate(
             field = value
             value?.let(::setCourseData)
         }
-
-    private val courseCoverSmallTarget by lazy {
-        RoundedBitmapImageViewTarget(courseActivity.resources.getDimension(R.dimen.course_image_radius), courseActivity.courseCoverSmall)
-    }
-
-    private val courseCoverSmallPlaceHolder by lazy {
-        val resources = courseActivity.resources
-        val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
-        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, coursePlaceholderBitmap)
-        circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
-        circularBitmapDrawable
-    }
 
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
@@ -133,26 +118,18 @@ class CourseHeaderDelegate(
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
         with(courseActivity) {
-            courseToolbarTitle.text = courseHeaderData.title
-
             val multi = MultiTransformation<Bitmap>(
                 BlurTransformation(),
                 CenterCrop()
             )
-            Glide.with(this)
-                    .load(courseHeaderData.cover)
-                    .placeholder(R.drawable.general_placeholder)
-                    .apply(RequestOptions.bitmapTransform(multi))
-                    .into(courseCover)
+            Glide
+                .with(this)
+                .load(courseHeaderData.cover)
+                .placeholder(R.drawable.general_placeholder)
+                .apply(RequestOptions.bitmapTransform(multi))
+                .into(courseCover)
 
-            Glide.with(this)
-                    .asBitmap()
-                    .load(courseHeaderData.cover)
-                    .placeholder(courseCoverSmallPlaceHolder)
-                    .centerCrop()
-                    .into(courseCoverSmallTarget)
-
-            courseTitle.text = courseHeaderData.title
+            courseToolbarTitle.text = courseHeaderData.title
 
             courseRating.total = 5
             courseRating.progress = courseHeaderData.review.roundToInt()

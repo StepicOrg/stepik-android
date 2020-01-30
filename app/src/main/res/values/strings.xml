@@ -177,7 +177,7 @@
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
 
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
 
     <string name="last_discussion">Last discussion</string>
     <string name="most_liked_discussion">Most liked</string>
@@ -573,6 +573,7 @@
     <string name="achievement_notification_message">Congratulations! Obtained a new level of achievement «%s», check your profile.</string>
 
     <!-- Course -->
+    <string name="course_title">Course</string>
     <string name="course_verified">Verified</string>
     <string name="course_share_description">Share link with your friends to take this course together!</string>
 

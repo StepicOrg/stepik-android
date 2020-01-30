@@ -553,6 +553,7 @@
     <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения «%s», проверьте свой профиль.</string>
 
     <!-- Course -->
+    <string name="course_title">Курс</string>
     <string name="course_verified">Проверенный</string>
     <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
 

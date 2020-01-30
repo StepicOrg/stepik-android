@@ -129,6 +129,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL)
         }
 
+        if (course != null) {
+            courseToolbarTitle.text = course.title
+        }
+
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
             .takeIf { it != NO_ID }
             ?: course?.id

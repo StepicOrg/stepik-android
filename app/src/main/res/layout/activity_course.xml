@@ -52,6 +52,7 @@
                     android:layout_gravity="center"
                     android:ellipsize="end"
                     android:maxLines="1"
+                    android:text="@string/course_title"
                     android:textColor="@color/white"
                     android:textAppearance="@style/StepikToolbarTextAppearance"/>
             </androidx.appcompat.widget.Toolbar>
