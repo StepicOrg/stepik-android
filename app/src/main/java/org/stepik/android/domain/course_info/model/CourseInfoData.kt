@@ -2,6 +2,7 @@ package org.stepik.android.domain.course_info.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.model.user.User
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
@@ -19,7 +20,8 @@ data class CourseInfoData(
     val timeToComplete: Long = 0,
     val instructors: List<User?>? = null,
     val language: String? = null,
-    val certificate: Certificate? = null
+    val certificate: Certificate? = null,
+    val stats: CourseStats? = null
 ) : Parcelable {
     data class Certificate(
         val title: String,
@@ -57,6 +59,7 @@ data class CourseInfoData(
         parcel.writeTypedList(instructors)
         parcel.writeString(language)
         parcel.writeParcelable(certificate, flags)
+        parcel.writeParcelable(stats, flags)
     }
 
     override fun describeContents(): Int = 0
@@ -72,7 +75,8 @@ data class CourseInfoData(
                 parcel.readLong(),
                 parcel.createTypedArrayList(User),
                 parcel.readString(),
-                parcel.readParcelable(Certificate::class.java.classLoader)
+                parcel.readParcelable(Certificate::class.java.classLoader),
+                parcel.readParcelable(CourseStats::class.java.classLoader)
             )
 
         override fun newArray(size: Int): Array<CourseInfoData?> =

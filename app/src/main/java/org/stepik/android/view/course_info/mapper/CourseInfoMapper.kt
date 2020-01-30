@@ -12,6 +12,10 @@ private const val NEW_LINE = "<br/>"
 fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
     val items = arrayListOf<CourseInfoItem>()
 
+    if (stats != null) {
+        items += CourseInfoItem.StatsBlock(stats)
+    }
+
     if (organization != null) {
         items.add(CourseInfoItem.OrganizationBlock(organization))
     }

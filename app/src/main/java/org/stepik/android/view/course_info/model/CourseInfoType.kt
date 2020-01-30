@@ -13,6 +13,7 @@ enum class CourseInfoType(
     @StringRes
     val title: Int
 ) {
+    STATS(-1, -1),
     ORGANIZATION(R.drawable.ic_course_info_instructors, -1),
     VIDEO(-1, -1),
     ABOUT(R.drawable.ic_course_info_about, R.string.course_info_about),
