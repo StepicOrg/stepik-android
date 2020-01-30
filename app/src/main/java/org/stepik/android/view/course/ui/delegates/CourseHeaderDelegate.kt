@@ -26,6 +26,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import kotlin.math.abs
 
 class CourseHeaderDelegate(
@@ -46,9 +47,12 @@ class CourseHeaderDelegate(
     private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
     private val courseProgressDelegate = CourseProgressDelegate(courseActivity.courseProgress)
 
+    private val viewStateDelegate = ViewStateDelegate<EnrollmentState>()
+
     init {
         initCollapsingAnimation()
         initActions()
+        initViewStateDelegate()
     }
 
     private fun initCollapsingAnimation() {
@@ -100,6 +104,16 @@ class CourseHeaderDelegate(
         }
     }
 
+    private fun initViewStateDelegate() {
+        with(courseActivity) {
+            viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction, courseProgress, courseProgressSeparator)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
+            viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(courseBuyInWebAction)
+            // viewStateDelegate.addState<EnrollmentState.NotEnrolledInApp>(courseBuyInAppAction)
+        }
+    }
+
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
         with(courseActivity) {
             val multi = MultiTransformation<Bitmap>(
@@ -120,10 +134,8 @@ class CourseHeaderDelegate(
             // todo courseProgressDelegate.setProgress(courseHeaderData.progress)
 
             with(courseHeaderData.enrollmentState) {
-                courseEnrollAction.isVisible = this is EnrollmentState.NotEnrolledFree
-                courseEnrollmentProgress.isVisible = this is EnrollmentState.Pending
-                courseContinueAction.isVisible = this is EnrollmentState.Enrolled
-                courseBuyInWebAction.isVisible = this is EnrollmentState.NotEnrolledWeb
+                viewStateDelegate.switchState(this)
+                
                 courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
 
 //                if (this is EnrollmentState.NotEnrolledInApp) {

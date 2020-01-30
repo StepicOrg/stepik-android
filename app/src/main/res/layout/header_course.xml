@@ -88,6 +88,7 @@
         android:layout_marginBottom="24dp" />
 
     <View
+        android:id="@+id/courseProgressSeparator"
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
