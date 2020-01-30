@@ -106,7 +106,7 @@ class CourseHeaderDelegate(
 
     private fun initViewStateDelegate() {
         with(courseActivity) {
-            viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction, courseProgress, courseProgressSeparator)
+            viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
             viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
             viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(courseBuyInWebAction)
@@ -129,13 +129,20 @@ class CourseHeaderDelegate(
 
             courseToolbarTitle.text = courseHeaderData.title
 
-            // todo courseStatsDelegate.setStats()
+            val isNeedShowProgress = courseHeaderData.progress != null
+            courseProgress.isVisible = isNeedShowProgress
+            courseProgressSeparator.isVisible = isNeedShowProgress
+            courseStats.isVisible = !isNeedShowProgress
 
-            // todo courseProgressDelegate.setProgress(courseHeaderData.progress)
+            if (courseHeaderData.progress != null) {
+                courseProgressDelegate.setProgress(courseHeaderData.progress)
+            } else {
+                courseStatsDelegate.setStats(courseHeaderData.stats)
+            }
 
             with(courseHeaderData.enrollmentState) {
                 viewStateDelegate.switchState(this)
-                
+
                 courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
 
 //                if (this is EnrollmentState.NotEnrolledInApp) {
