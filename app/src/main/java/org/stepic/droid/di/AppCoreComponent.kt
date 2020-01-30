@@ -54,6 +54,7 @@ import org.stepic.droid.ui.fragments.StoreManagementFragment
 import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
@@ -283,4 +284,6 @@ interface AppCoreComponent {
     fun inject(notificationAlarmService: NotificationAlarmService)
 
     fun inject(bootCompleteService: BootCompleteService)
+
+    fun inject(removeCachedContentDialog: RemoveCachedContentDialog)
 }
