@@ -14,6 +14,13 @@ class CourseProgressDelegate(
     private val courseProgressCircle = view.courseProgressCircle
     private val courseProgressValue = view.courseProgressValue
 
+    private val courseSolutionsTitle = view.courseSolutionsTitle
+    private val courseSolutionsValue = view.courseSolutionsValue
+
+    init {
+        courseSolutionsValue.setOnClickListener { /* todo */ }
+    }
+
     fun setProgress(progress: Progress) {
         val isNeedShowProgress = progress.cost > 0
         courseProgressCircle.isVisible = isNeedShowProgress
@@ -32,5 +39,12 @@ class CourseProgressDelegate(
             courseProgressValue.text =
                 context.getString(R.string.course_content_text_progress_points, score, cost)
         }
+    }
+
+    fun setSolutionsCount(count: Int) {
+        val isNeedShowSolutions = count > 0
+        courseSolutionsTitle.isVisible = isNeedShowSolutions
+        courseSolutionsValue.isVisible = isNeedShowSolutions
+        courseSolutionsValue.text = count.toString()
     }
 }

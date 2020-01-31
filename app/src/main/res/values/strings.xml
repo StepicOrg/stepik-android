@@ -582,6 +582,7 @@
     <string name="course_tab_modules">Modules</string>
 
     <string name="course_progress_current">Current progress</string>
+    <string name="course_progress_solutions">Solution to submit</string>
 
     <string name="course_info_organization_prefix">by %s</string>
     <string name="course_info_about">About</string>

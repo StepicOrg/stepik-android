@@ -10,6 +10,7 @@
         android:id="@+id/courseProgressTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
 
@@ -17,6 +18,8 @@
 
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
 
         android:textSize="14sp"
         android:textColor="@color/white"
@@ -52,5 +55,47 @@
         app:layout_constraintEnd_toEndOf="parent"
 
         tools:text="21/50 баллов"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseSolutionsTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:text="@string/course_progress_solutions"
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        app:fontFamily="@font/roboto_medium"
+        android:letterSpacing="0.03"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseProgressTitle"
+        app:layout_constraintEnd_toStartOf="@id/courseSolutionsValue"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseSolutionsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_transparent_button"
+
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+
+        android:textSize="14sp"
+        android:textColor="@color/white"
+        app:fontFamily="@font/roboto_medium"
+        android:letterSpacing="0.03"
+        android:gravity="center_vertical"
+
+        app:drawableStartCompat="@drawable/ic_course_solutions"
+        android:drawablePadding="8dp"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/courseSolutionsTitle"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
