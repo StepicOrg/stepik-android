@@ -8,5 +8,9 @@ class CourseReviewSummary(
     @SerializedName("course")
     val course: Long,
     @SerializedName("average")
-    val average: Double
+    val average: Double,
+    @SerializedName("count")
+    val count: Int,
+    @SerializedName("distribution")
+    val distribution: LongArray
 )
