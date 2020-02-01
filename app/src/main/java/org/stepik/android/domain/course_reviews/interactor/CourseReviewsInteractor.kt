@@ -57,7 +57,10 @@ constructor(
 
                 val currentUserReviewSource =
                     if (page == 1) {
-                        resolveCurrentUserCourseReview(profileId, courseId, courseReviews.isNotEmpty(), sourceType)
+                        zip(
+                            getCourseReviewSummary(courseReviews.isNotEmpty(), sourceType),
+                            resolveCurrentUserCourseReview(profileId, courseId, courseReviews.isNotEmpty(), sourceType)
+                        ) { a, b -> a + b }
                             .onErrorReturnItem(emptyList())
                     } else {
                         Single.just(emptyList())

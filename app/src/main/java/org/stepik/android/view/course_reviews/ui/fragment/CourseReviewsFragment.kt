@@ -28,6 +28,7 @@ import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsView
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewDataDelegate
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewPlaceholderDelegate
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewSummaryDelegate
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewsComposeBannerDelegate
 import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -73,6 +74,7 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
                 onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
             )
         courseReviewsAdapter += CourseReviewPlaceholderDelegate()
+        courseReviewsAdapter += CourseReviewSummaryDelegate()
         courseReviewsAdapter +=
             CourseReviewsComposeBannerDelegate { showCourseReviewEditDialog(null) }
     }
