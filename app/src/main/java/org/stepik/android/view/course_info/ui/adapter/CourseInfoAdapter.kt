@@ -8,7 +8,6 @@ import org.stepik.android.model.user.User
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoInstructorsDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoOrganizationDelegate
-import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoStatsBlockDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoTextBlockDelegate
 import org.stepik.android.view.course_info.ui.adapter.delegates.CourseInfoVideoBlockDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
@@ -30,7 +29,6 @@ class CourseInfoAdapter(
         addDelegate(CourseInfoInstructorsDelegate(onUserClicked))
         addDelegate(CourseInfoVideoBlockDelegate(onVideoClicked))
         addDelegate(CourseInfoOrganizationDelegate(onUserClicked))
-        addDelegate(CourseInfoStatsBlockDelegate())
     }
 
     fun setSortedData(sortedBlocks: List<CourseInfoItem>) {

@@ -593,6 +593,7 @@
     <string name="course_info_language">Language</string>
     <string name="course_info_certificate">Certificate</string>
     <string name="course_info_certificate_detail">Certificate details</string>
+    <string name="course_info_learners_count">Learners count</string>
 
     <string name="course_info_certificate_regular">Certificate condition: %s</string>
     <string name="course_info_certificate_distinction">With distinction: %s</string>

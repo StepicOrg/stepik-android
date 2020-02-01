@@ -1,15 +1,10 @@
 package org.stepik.android.domain.course_info.interactor
 
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
-import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.course.model.CourseStats
-import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_info.model.CourseInfoData
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.Course
-import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.user.User
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import javax.inject.Inject
@@ -18,8 +13,7 @@ class CourseInfoInteractor
 @Inject
 constructor(
     private val courseObservableSource: Observable<Course>,
-    private val userRepository: UserRepository,
-    private val courseReviewRepository: CourseReviewSummaryRepository
+    private val userRepository: UserRepository
 ) {
     fun getCourseInfoData(): Observable<CourseInfoData> =
         courseObservableSource
@@ -32,8 +26,8 @@ constructor(
         val ownerSource = userRepository.getUsers(course.owner)
 
         val remoteSource =
-            zip(instructorsSource, ownerSource, resolveCourseReview(course)) { instructors, owners, review ->
-                mapToCourseInfoData(course, instructors, owners.firstOrNull(), review)
+            zip(instructorsSource, ownerSource) { instructors, owners ->
+                mapToCourseInfoData(course, instructors, owners.firstOrNull())
             }
 
         return emptySource
@@ -43,18 +37,7 @@ constructor(
             }
     }
 
-    private fun resolveCourseReview(course: Course): Single<Double> =
-        if (course.enrollment > 0) {
-            courseReviewRepository
-                .getCourseReviewSummary(course.reviewSummary, sourceType = DataSourceType.REMOTE)
-                .map(CourseReviewSummary::average)
-                .toSingle()
-                .onErrorReturnItem(0.0)
-        } else {
-            Single.just(0.0)
-        }
-
-    private fun mapToCourseInfoData(course: Course, instructors: List<User>? = null, organization: User? = null, review: Double = 0.0) =
+    private fun mapToCourseInfoData(course: Course, instructors: List<User>? = null, organization: User? = null): CourseInfoData =
         CourseInfoData(
             organization   = organization?.takeIf(User::isOrganization),
             videoMediaData = course.introVideo
@@ -85,6 +68,6 @@ constructor(
                         regularThreshold     = course.certificateRegularThreshold
                     )
                 },
-            stats = if (course.enrollment > 0) CourseStats(review, course.learnersCount, course.readiness) else null
+            learnersCount = course.learnersCount
         )
 }

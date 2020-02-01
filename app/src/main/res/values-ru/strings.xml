@@ -573,6 +573,7 @@
     <string name="course_info_language">Язык</string>
     <string name="course_info_certificate">Сертификат</string>
     <string name="course_info_certificate_detail">Подробнее о сертификате</string>
+    <string name="course_info_learners_count">Число записавшихся на курс</string>
 
     <string name="course_info_certificate_regular">Условие получения сертификата: %s</string>
     <string name="course_info_certificate_distinction">С отличием: %s</string>
