@@ -78,7 +78,7 @@ class ProfileStatsDelegate(
                 profileKnowledgeRank.isVisible = true
             }
 
-            if (user.reputationRank < MIN_REPUTATION_RANK) {
+            if (user.reputationRank in 1 until MIN_REPUTATION_RANK) {
                 profileReputationRank.text =
                     buildSpannedString {
                         append(context.getString(R.string.profile_stat_reputation))
