@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import kotlinx.android.synthetic.main.item_attempt_submission.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.DateTimeHelper
@@ -12,7 +13,6 @@ import org.stepik.android.view.attempts.model.AttemptCacheItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.selection.SelectionHelper
-import timber.log.Timber
 import java.util.TimeZone
 
 class AttemptSubmissionAdapterDelegate(
@@ -40,7 +40,6 @@ class AttemptSubmissionAdapterDelegate(
         override fun onBind(data: AttemptCacheItem) {
             data as AttemptCacheItem.SubmissionItem
             selectionHelper.isSelected(adapterPosition).let { isSelected ->
-                Timber.d("Is selected: $isSelected")
                 itemView.isSelected = isSelected
                 submissionCheckBox.isChecked = isSelected
             }
@@ -51,7 +50,7 @@ class AttemptSubmissionAdapterDelegate(
             icon?.setColorFilter(
                 ContextCompat.getColor(context, R.color.new_accent_color), PorterDuff.Mode.SRC_IN)
             submissionQuizIcon.setImageDrawable(icon)
-            submissionTitle.text = "Quiz"
+            submissionTitle.text = context.resources.getString(R.string.attempts_submission_placeholder, data.step.position, HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY))
             submissionTime.text = DateTimeHelper.getPrintableDate(data.time, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
         }
     }

@@ -850,4 +850,5 @@
     <string name="attempts_information_block">This is your offline attempts. Edit or submit to score the points</string>
     <string name="attempts_section_placeholder" translatable="false">%d&#160;%s</string>
     <string name="attempts_lesson_placeholder" translatable="false">%d&#46;%d&#160;%s</string>
+    <string name="attempts_submission_placeholder">%d Step &#8210;&#160;%s</string>
 </resources>
