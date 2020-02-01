@@ -12,8 +12,8 @@
         android:layout_height="16dp"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -50,7 +50,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/submissionTime"
+        android:id="@+id/submissionStep"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingBottom="12dp"
@@ -58,6 +58,19 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/submissionTitle"
+        tools:text="Step 3" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/submissionTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/submission_time"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/submissionStep"
         tools:text="29.10.2019 23:41" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

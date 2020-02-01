@@ -29,6 +29,7 @@ class AttemptSubmissionAdapterDelegate(
 
         private val submissionQuizIcon = root.submissionQuizIcon
         private val submissionTitle = root.submissionTitle
+        private val submissionStep = root.submissionStep
         private val submissionTime = root.submissionTime
         private val submissionCheckBox = root.submissionCheckBox
 
@@ -50,7 +51,8 @@ class AttemptSubmissionAdapterDelegate(
             icon?.setColorFilter(
                 ContextCompat.getColor(context, R.color.new_accent_color), PorterDuff.Mode.SRC_IN)
             submissionQuizIcon.setImageDrawable(icon)
-            submissionTitle.text = context.resources.getString(R.string.attempts_submission_placeholder, data.step.position, HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY))
+            submissionTitle.text =  HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY)
+            submissionStep.text = context.resources.getString(R.string.attempts_submission_step_position, data.step.position)
             submissionTime.text = DateTimeHelper.getPrintableDate(data.time, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
         }
     }
