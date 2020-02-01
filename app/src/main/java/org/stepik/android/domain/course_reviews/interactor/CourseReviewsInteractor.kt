@@ -121,6 +121,7 @@ constructor(
                 .flatMap { course ->
                     courseReviewSummaryRepository
                         .getCourseReviewSummary(course.reviewSummary, sourceType)
+                        .filter { it.distribution.isNotEmpty() }
                         .map { listOf(CourseReviewItem.Summary(it)) }
                         .toSingle(emptyList())
                 }
