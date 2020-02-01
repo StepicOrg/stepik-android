@@ -32,7 +32,7 @@ constructor(
             course = cursor.getLong(DbStructureCourseReviewSummary.Columns.COURSE_ID),
             average = cursor.getDouble(DbStructureCourseReviewSummary.Columns.AVERAGE),
             count = cursor.getInt(DbStructureCourseReviewSummary.Columns.COUNT),
-            distribution = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourseReviewSummary.Columns.DISTRIBUTION)) ?: longArrayOf()
+            distribution = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourseReviewSummary.Columns.DISTRIBUTION)) ?: emptyList()
         )
 
     override fun getContentValues(persistentObject: CourseReviewSummary): ContentValues =
@@ -41,6 +41,6 @@ constructor(
             put(DbStructureCourseReviewSummary.Columns.COURSE_ID, persistentObject.course)
             put(DbStructureCourseReviewSummary.Columns.AVERAGE, persistentObject.average)
             put(DbStructureCourseReviewSummary.Columns.COUNT, persistentObject.count)
-            put(DbStructureCourseReviewSummary.Columns.DISTRIBUTION, DbParseHelper.parseLongArrayToString(persistentObject.distribution))
+            put(DbStructureCourseReviewSummary.Columns.DISTRIBUTION, DbParseHelper.parseLongListToString(persistentObject.distribution))
         }
 }

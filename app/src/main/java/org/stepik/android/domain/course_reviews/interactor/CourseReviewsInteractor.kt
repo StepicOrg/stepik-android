@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.domain.course_reviews.repository.CourseReviewsRepository
@@ -25,6 +26,7 @@ constructor(
     private val profileRepository: ProfileRepository,
     private val progressRepository: ProgressRepository,
     private val courseReviewsRepository: CourseReviewsRepository,
+    private val courseReviewSummaryRepository: CourseReviewSummaryRepository,
     private val userRepository: UserRepository
 ) {
     fun getCourseUpdates(): Observable<Course> =
@@ -108,4 +110,18 @@ constructor(
                         }
                 }
             }
+
+    private fun getCourseReviewSummary(hasReviews: Boolean, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<CourseReviewItem>> =
+        if (hasReviews) {
+            courseObservableSource
+                .firstOrError()
+                .flatMap { course ->
+                    courseReviewSummaryRepository
+                        .getCourseReviewSummary(course.reviewSummary, sourceType)
+                        .map { listOf(CourseReviewItem.Summary(it)) }
+                        .toSingle(emptyList())
+                }
+        } else {
+            Single.just(emptyList())
+        }
 }
