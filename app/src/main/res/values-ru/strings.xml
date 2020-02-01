@@ -815,6 +815,5 @@
     <!-- Cached attempts -->
     <string name="attempts_toolbar_title">Оффлайн решения</string>
     <string name="attempts_information_block">Это ваши закэшированные решения. Можете отредактировать или отправить для получения баллов.</string>
-    <string name="attempts_submission_placeholder">%d Шаг &#8210;&#160;%s</string>
-    <string name="attempts_submission_step_position">Шаг %d</string>
+    <string name="attempts_submission_step_position">Шаг %d – %s</string>
 </resources>
