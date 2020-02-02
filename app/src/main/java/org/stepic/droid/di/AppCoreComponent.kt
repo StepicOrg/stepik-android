@@ -58,6 +58,7 @@ import org.stepic.droid.util.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
+import org.stepik.android.view.injection.attempts.AttemptsBusModule
 import org.stepik.android.view.injection.attempts.AttemptsComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
@@ -134,7 +135,8 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
         EmailAddressDataModule::class,
         SearchDataModule::class,
         UserCoursesDataModule::class,
-        CourseCollectionDataModule::class
+        CourseCollectionDataModule::class,
+        AttemptsBusModule::class
     ]
 )
 interface AppCoreComponent {

@@ -25,7 +25,6 @@ class AttemptLessonAdapterDelegate(
         private val lessonCheckBox = root.lessonCheckBox
 
         init {
-            root.setOnClickListener { onClick(itemData as AttemptCacheItem.LessonItem) }
             lessonCheckBox.setOnClickListener { onClick(itemData as AttemptCacheItem.LessonItem) }
         }
 

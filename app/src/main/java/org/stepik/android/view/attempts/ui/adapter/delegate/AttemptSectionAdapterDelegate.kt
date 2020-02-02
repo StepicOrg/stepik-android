@@ -25,7 +25,6 @@ class AttemptSectionAdapterDelegate(
         private val sectionCheckBox = root.sectionCheckBox
 
         init {
-            root.setOnClickListener { onClick(itemData as AttemptCacheItem.SectionItem) }
             sectionCheckBox.setOnClickListener { onClick(itemData as AttemptCacheItem.SectionItem) }
         }
 

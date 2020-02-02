@@ -18,7 +18,8 @@ import ru.nobird.android.ui.adapters.selection.SelectionHelper
 
 class AttemptSubmissionAdapterDelegate(
     private val selectionHelper: SelectionHelper,
-    private val onClick: (AttemptCacheItem.SubmissionItem) -> Unit
+    private val onCheckboxClick: (AttemptCacheItem.SubmissionItem) -> Unit,
+    private val onItemClick: (AttemptCacheItem.SubmissionItem) -> Unit
 ) : AdapterDelegate<AttemptCacheItem, DelegateViewHolder<AttemptCacheItem>>() {
     override fun isForViewType(position: Int, data: AttemptCacheItem): Boolean =
         data is AttemptCacheItem.SubmissionItem
@@ -34,8 +35,8 @@ class AttemptSubmissionAdapterDelegate(
         private val submissionCheckBox = root.submissionCheckBox
 
         init {
-            root.setOnClickListener { onClick(itemData as AttemptCacheItem.SubmissionItem) }
-            submissionCheckBox.setOnClickListener { onClick(itemData as AttemptCacheItem.SubmissionItem) }
+            root.setOnClickListener { onItemClick(itemData as AttemptCacheItem.SubmissionItem) }
+            submissionCheckBox.setOnClickListener { onCheckboxClick(itemData as AttemptCacheItem.SubmissionItem) }
         }
 
         override fun onBind(data: AttemptCacheItem) {
@@ -44,7 +45,6 @@ class AttemptSubmissionAdapterDelegate(
                 itemView.isSelected = isSelected
                 submissionCheckBox.isChecked = isSelected
             }
-            itemView.isSelected = selectionHelper.isSelected(adapterPosition)
 
             val resourceId = when (data.step.block?.name) {
                 AppConstants.TYPE_CODE ->
