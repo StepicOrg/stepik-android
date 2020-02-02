@@ -87,7 +87,10 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             })
         }
 
-        attemptsSubmitButton.setOnClickListener {  }
+        attemptsSubmitButton.setOnClickListener {
+            val selectedSubmissions = fetchSelectedItems().map { it.submission }
+            attemptsPresenter.submitSolutions(selectedSubmissions)
+        }
         initViewStateDelegate()
         attemptsPresenter.fetchAttemptCacheItems()
     }

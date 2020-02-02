@@ -7,8 +7,10 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
+import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.injection.attempts.AttemptsBus
+import timber.log.Timber
 import javax.inject.Inject
 
 class AttemptsPresenter
@@ -70,6 +72,19 @@ constructor(
             .subscribeBy(
                 onNext = { fetchAttemptCacheItems(forceUpdate = true) },
                 onError = { it.printStackTrace() }
+            )
+    }
+
+    fun submitSolutions(submissions: List<Submission>) {
+        compositeDisposable += attemptsInteractor
+            .sendSubmissions(submissions)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = {
+                    // TODO Match the statuses with the current list
+                },
+                onError = { it.printStackTrace(); Timber.d("Error: $it") }
             )
     }
 

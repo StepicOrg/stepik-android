@@ -1,9 +1,11 @@
 package org.stepik.android.domain.attempts.interactor
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.util.mapToLongArray
+import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -18,6 +20,7 @@ import org.stepik.android.model.Unit
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.attempts.mapper.AttemptCacheItemMapper
 import org.stepik.android.view.attempts.model.AttemptCacheItem
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AttemptsInteractor
@@ -32,6 +35,20 @@ constructor(
 
     private val attemptCacheItemMapper: AttemptCacheItemMapper
 ) {
+    fun sendSubmissions(submissions: List<Submission>): Single<List<Submission>> =
+        submissions.toObservable()
+            .flatMapSingle { submission ->
+                submissionRepository
+                    .createSubmission(submission)
+                    .flatMapObservable {
+                        Observable
+                            .interval(1, TimeUnit.SECONDS)
+                            .flatMapMaybe { submissionRepository.getSubmissionsForAttempt(submission.attempt).maybeFirst() }
+                            .skipWhile { it.status == Submission.Status.EVALUATION }
+                    }
+                    .firstOrError()
+            }
+            .reduce(emptyList<Submission>()) { a, b -> a + b }
 
     fun fetchAttemptCacheItems(): Single<List<AttemptCacheItem>> =
         getAttempts()
