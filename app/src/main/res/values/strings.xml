@@ -62,6 +62,7 @@
 
     <string name="download_error">An error occurred while downloading video %s</string>
     <string name="download_error_insufficient_storage">: insufficient storage</string>
+    <string name="download_error_system_manager">A system\'s download manager error occurred while downloading content. If an error persists, please, contact support.</string>
 
     <string name="sync_problem">There was a problem syncing the data, please try again later
     </string>
@@ -176,7 +177,7 @@
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
 
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
 
     <string name="last_discussion">Last discussion</string>
     <string name="most_liked_discussion">Most liked</string>
@@ -201,6 +202,8 @@
     </string>
     <string name="certificate_regular_with_substitution">Certificate for completing %s</string>
     <string name="certificate_result_with_substitution">Result: %s%%</string>
+    <string name="certificate_issuing">Issuing</string>
+    <string name="certificate_not_issuing">Not issuing</string>
     <string name="copy_link_title">Copy Link</string>
     <string name="link_copied_title">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
@@ -294,7 +297,7 @@
     </plurals>
     <string name="choose_notification_time_interval">Change notification interval</string>
     <string name="notification_time">Notification time: %s</string>
-    <string name="notification_about_learning">Learning notifications enabled</string>
+    <string name="notification_about_learning">Notify about streaks</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
     <string name="streak_description_not_positive">Correct! Solve assignments every day to improve
         your record. You can also turn on reminders!
@@ -395,8 +398,6 @@
 
     <string name="notification_settings_title">Notification Settings</string>
 
-    <string name="manage_notification_settings">Manage notifications</string>
-
     <string name="course_item_join">Join course</string>
 
     <string name="learners_count">Learners count</string>
@@ -427,7 +428,7 @@
     <string name="reset_code_dialog_title">Are you sure?</string>
     <string name="reset_code_dialog_explanation">Your code will be lost</string>
     <string name="change_code_dialog_explanation">After changing programming language your current code will be lost</string>
-    <string name="code_playground_title">Code</string>
+    <string name="code_playground_title" translatable="false">Code</string>
     <string name="code_playground_language" translatable="false">Code</string>
     <string name="code_playground_language_title">Language</string>
 
@@ -572,12 +573,16 @@
     <string name="achievement_notification_message">Congratulations! Obtained a new level of achievement «%s», check your profile.</string>
 
     <!-- Course -->
+    <string name="course_title">Course</string>
     <string name="course_verified">Verified</string>
     <string name="course_share_description">Share link with your friends to take this course together!</string>
 
     <string name="course_tab_info">Info</string>
     <string name="course_tab_reviews">Reviews</string>
     <string name="course_tab_modules">Modules</string>
+
+    <string name="course_progress_current">Current progress</string>
+    <string name="course_progress_solutions">Solution to submit</string>
 
     <string name="course_info_organization_prefix">by %s</string>
     <string name="course_info_about">About</string>
@@ -588,6 +593,7 @@
     <string name="course_info_language">Language</string>
     <string name="course_info_certificate">Certificate</string>
     <string name="course_info_certificate_detail">Certificate details</string>
+    <string name="course_info_learners_count">Learners count</string>
 
     <string name="course_info_certificate_regular">Certificate condition: %s</string>
     <string name="course_info_certificate_distinction">With distinction: %s</string>
@@ -843,4 +849,6 @@
     <string name="profile_settings_menu_item">Settings</string>
 
     <string name="profile_courses_title">Courses</string>
+
+
 </resources>

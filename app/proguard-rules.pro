@@ -126,10 +126,6 @@
 
 #keep javascript interfaces
 -keepattributes JavascriptInterface
--keep public class org.stepic.droid.ui.custom.LatexSupportableWebView$OnScrollWebListener
--keepclassmembers class org.stepic.droid.ui.custom.LatexSupportableWebView$OnScrollWebListener {
-    public *;
-}
 
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;

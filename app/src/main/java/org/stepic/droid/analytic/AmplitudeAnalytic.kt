@@ -10,6 +10,7 @@ interface AmplitudeAnalytic {
         const val PUSH_PERMISSION = "push_permission"
         const val STREAKS_NOTIFICATIONS_ENABLED = "streaks_notifications_enabled"
         const val TEACHING_COURSES_COUNT = "teaching_courses_count"
+        const val IS_NIGHT_MODE_ENABLED = "is_night_mode_enabled"
     }
 
     object Launch {
@@ -81,13 +82,31 @@ interface AmplitudeAnalytic {
         const val STARTED = "Download started"
         const val CANCELLED = "Download cancelled"
         const val DELETED = "Download deleted"
+        const val SCREEN_OPENED = "Downloads screen opened"
+        const val DELETE_CONFIRMATION_INTERACTED = "Delete downloads confirmation interacted"
 
         const val PARAM_CONTENT = "content"
+        const val PARAM_SOURCE = "source"
+        const val PARAM_RESULT = "result"
 
         object Values {
+            /**
+             *  Content
+             */
             const val COURSE = "course"
             const val SECTION = "section"
             const val LESSON = "lesson"
+
+            /**
+             *  Source
+             */
+            const val SYLLABUS = "syllabus"
+            const val DOWNLOADS = "downloads"
+            /**
+             *  Result
+             */
+            const val YES = "yes"
+            const val NO = "no"
         }
     }
 
@@ -194,14 +213,25 @@ interface AmplitudeAnalytic {
 
     object Profile {
         const val PROFILE_SCREEN_OPENED = "Profile screen opened"
+        const val PROFILE_STAT_CLICKED = "Profile stat clicked"
 
         object Params {
             const val STATE = "state"
+            const val TYPE = "type"
         }
 
         object Values {
+            /**
+             * State
+             */
             const val SELF = "self"
             const val OTHER = "other"
+
+            /**
+             * Type
+             */
+            const val REPUTATION = "reputation"
+            const val KNOWLEDGE = "knowledge"
         }
     }
 

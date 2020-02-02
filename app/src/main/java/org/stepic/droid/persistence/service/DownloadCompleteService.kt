@@ -69,7 +69,14 @@ class DownloadCompleteService: JobIntentService() {
         val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
                 .takeIf { it != -1L } ?: return
 
-        val download = systemDownloadsDao.get(downloadId).blockingGet().firstOrNull()
+        val download =
+            try {
+                systemDownloadsDao.get(downloadId).blockingGet().firstOrNull()
+            } catch (e: Exception) {
+                downloadManager.remove(downloadId)
+                downloadErrorPoster.onDownloadManagerError(e)
+                return@withLock
+            }
         val persistentItem = persistentItemDao.get(mapOf(
             DBStructurePersistentItem.Columns.DOWNLOAD_ID to downloadId.toString(),
             DBStructurePersistentItem.Columns.STATUS      to PersistentItem.Status.IN_PROGRESS.name // move file only one time
@@ -135,7 +142,7 @@ class DownloadCompleteService: JobIntentService() {
                 e is IOException &&
                 (e.cause as? ErrnoException)?.errno == OsConstants.ENOSPC
             ) {
-                downloadErrorPoster.onError(downloadRecord.copy(reason = DownloadManager.ERROR_INSUFFICIENT_SPACE))
+                downloadErrorPoster.onRecordError(downloadRecord.copy(reason = DownloadManager.ERROR_INSUFFICIENT_SPACE))
             }
             analytic.reportError(Analytic.DownloaderV2.MOVE_DOWNLOADED_FILE_ERROR, e)
         }

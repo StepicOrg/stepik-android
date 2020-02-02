@@ -38,6 +38,7 @@ import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
+import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
@@ -70,6 +71,18 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     private var courseId: Long = NO_ID
+    private val analyticsOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
+        override fun onPageSelected(page: Int) {
+            if (coursePagerAdapter.getItem(page) is CourseContentFragment) {
+                analytic
+                    .reportAmplitudeEvent(
+                        AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
+                        mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
+                    )
+            }
+        }
+    }
+    private lateinit var coursePagerAdapter: CoursePagerAdapter
     private lateinit var coursePresenter: CoursePresenter
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
 
@@ -84,6 +97,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         ViewPager.SCROLL_STATE_IDLE
 
     private var isInSwipeableViewState = false
+
+    private var hasSavedInstanceState: Boolean = false
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -114,6 +129,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL)
         }
 
+        if (course != null) {
+            courseToolbarTitle.text = course.title
+        }
+
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
             .takeIf { it != NO_ID }
             ?: course?.id
@@ -125,23 +144,11 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         courseHeaderDelegate = CourseHeaderDelegate(this, analytic, coursePresenter)
 
 //        uiCheckout = Checkout.forActivity(this, billing)
-
         initViewPager(courseId)
         initViewStateDelegate()
 
-        if (savedInstanceState == null) {
-            val tab = CourseScreenTab
-                .values()
-                .getOrNull(intent.getIntExtra(EXTRA_TAB, -1))
-                ?: intent.getCourseTabFromDeepLink()
+        hasSavedInstanceState = savedInstanceState != null
 
-            coursePager.currentItem =
-                when (tab) {
-                    CourseScreenTab.REVIEWS -> 1
-                    CourseScreenTab.SYLLABUS -> 2
-                    else -> 0
-                }
-        }
         setDataToPresenter()
 
         courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
@@ -177,27 +184,55 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePresenter.attachView(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        coursePager.addOnPageChangeListener(analyticsOnPageChangeListener)
+        if (!hasSavedInstanceState) {
+            setCurrentTab()
+        }
+    }
+
+    override fun onPause() {
+        coursePager.removeOnPageChangeListener(analyticsOnPageChangeListener)
+        super.onPause()
+    }
+
     override fun onStop() {
         coursePresenter.detachView(this)
         super.onStop()
+    }
+
+    private fun setCurrentTab() {
+        val tab = CourseScreenTab
+            .values()
+            .getOrNull(intent.getIntExtra(EXTRA_TAB, -1))
+            ?: intent.getCourseTabFromDeepLink()
+
+        coursePager.currentItem =
+            when (tab) {
+                CourseScreenTab.REVIEWS -> 1
+                CourseScreenTab.SYLLABUS -> 2
+                else -> 0
+            }
+        if (coursePager.currentItem == 0) {
+            analyticsOnPageChangeListener.onPageSelected(0)
+        }
     }
 
     private fun initViewPager(courseId: Long) {
         val lightFont = ResourcesCompat.getFont(this, R.font.roboto_light)
         val regularFont = ResourcesCompat.getFont(this, R.font.roboto_regular)
 
-        val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
+        coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
-        coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(coursePager, coursePagerAdapter))
-        coursePager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrollStateChanged(scrollState: Int) {
                 viewPagerScrollState = scrollState
                 resolveSwipeRefreshState()
             }
-
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
-            override fun onPageSelected(p0: Int) {}
-        })
+        }
+        coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(coursePager, coursePagerAdapter))
+        coursePager.addOnPageChangeListener(onPageChangeListener)
 
         courseTabs.setupWithViewPager(coursePager)
         courseTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {

@@ -160,7 +160,7 @@ class ProfileFragment : Fragment(), ProfileView {
                 setDisplayShowTitleEnabled(false)
             }
 
-        profileStatsDelegate = ProfileStatsDelegate(view)
+        profileStatsDelegate = ProfileStatsDelegate(view, analytic)
 
         ViewCompat.setElevation(header, resources.getDimension(R.dimen.profile_header_elevation))
         toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }

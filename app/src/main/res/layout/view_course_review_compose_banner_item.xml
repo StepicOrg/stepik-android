@@ -22,20 +22,19 @@
         android:textColor="@color/color_violet_1"
         android:text="@string/course_reviews_compose_banner_review_description" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/bannerButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="@string/course_reviews_action_create"
+        android:background="@drawable/bg_button_small_violet"
 
-        android:foreground="@null"
-
-        style="?android:attr/buttonStyleSmall"
-
+        android:gravity="center"
         android:layout_margin="16dp"
         android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/color_violet_1" />
+        android:textSize="16sp"
+        android:letterSpacing="0.03"
+        android:textColor="@color/white" />
 
     <include
         android:id="@+id/bannerEmpty"

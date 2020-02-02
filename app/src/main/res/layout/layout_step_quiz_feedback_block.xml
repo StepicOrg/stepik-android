@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -44,10 +44,26 @@
 
         tools:drawableStart="@drawable/ic_step_quiz_validation" />
 
-    <org.stepic.droid.ui.custom.LatexSupportableExpandableFrameLayout
+    <org.stepik.android.view.latex.ui.widget.LatexView
         android:id="@+id/stepQuizFeedbackHint"
+        android:background="@drawable/bg_step_quiz_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp" />
+
+        android:textColor="@color/new_accent_color"
+        android:textSize="14sp"
+        android:textIsSelectable="false"
+        android:fontFamily="@font/pt_mono"
+
+        app:textViewId="@id/latex_textview"
+
+        android:padding="16dp">
+        <org.stepic.droid.ui.custom.ExpandableTextView
+            android:id="@id/latex_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            app:colorControlNormal="@color/new_accent_color" />
+    </org.stepik.android.view.latex.ui.widget.LatexView>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -45,8 +45,8 @@ class SqlStepQuizFragment : DefaultStepQuizFragment(), StepQuizView, CodeStepQui
     }
 
     private fun onFullScreenClicked(lang: String, code: String) {
-        val dialog = CodeStepQuizFullScreenDialogFragment.newInstance(lang, code, mapOf(ProgrammingLanguage.SQL.serverPrintableName to ""), stepWrapper, lessonData.lesson.title.orEmpty())
-        dialog.setTargetFragment(this, CodeStepQuizFullScreenDialogFragment.CODE_PLAYGROUND_REQUEST)
-        dialog.showIfNotExists(requireFragmentManager(), CodeStepQuizFullScreenDialogFragment.TAG)
+        CodeStepQuizFullScreenDialogFragment
+            .newInstance(lang, code, mapOf(ProgrammingLanguage.SQL.serverPrintableName to ""), stepWrapper, lessonData.lesson.title.orEmpty())
+            .showIfNotExists(childFragmentManager, CodeStepQuizFullScreenDialogFragment.TAG)
     }
 }

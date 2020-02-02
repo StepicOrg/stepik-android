@@ -9,6 +9,9 @@ object DbStructureCourseReviewSummary {
         const val SUMMARY_ID = "summary_id"
         const val COURSE_ID = "course_id"
         const val AVERAGE = "average"
+
+        const val COUNT = "count"
+        const val DISTRIBUTION = "distribution"
     }
 
     fun createTable(db: SQLiteDatabase) {

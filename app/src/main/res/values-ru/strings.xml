@@ -49,6 +49,7 @@
 
     <string name="download_error">Ошибка при загрузке видео %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
+    <string name="download_error_system_manager">При загрузке контента произошла ошибка системного загрузчика. Если ошибка повторяется, пожалуйста, обратитесь в поддержку.</string>
 
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите
         попытку позже
@@ -178,6 +179,8 @@
     <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %s
     </string>
     <string name="certificate_result_with_substitution">Результат: %s%%</string>
+    <string name="certificate_issuing">Выдается</string>
+    <string name="certificate_not_issuing">Не выдается</string>
     <string name="copy_link_title">Копировать ссылку</string>
     <string name="link_copied_title">Ссылка скопирована</string>
     <string name="certificate_share_share_link">Поделиться…</string>
@@ -289,7 +292,7 @@
     <string name="later_tatle">Позже</string>
     <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
-    <string name="notification_about_learning">Уведомления о занятиях активны</string>
+    <string name="notification_about_learning">Напоминать о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
     <plurals name="streak_notification_message_call_to_action">
         <item quantity="one">Вы молодец! Вы решаете уже %d день без перерыва. Не останавливайтесь,
@@ -384,8 +387,6 @@
 
 
     <string name="notification_settings_title">Настройки уведомлений</string>
-
-    <string name="manage_notification_settings">Управлять уведомлениями</string>
 
     <string name="course_item_join">Поступить на курс</string>
 
@@ -552,12 +553,16 @@
     <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения «%s», проверьте свой профиль.</string>
 
     <!-- Course -->
+    <string name="course_title">Курс</string>
     <string name="course_verified">Проверенный</string>
     <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
 
     <string name="course_tab_info">Инфо</string>
     <string name="course_tab_reviews">Отзывы</string>
     <string name="course_tab_modules">Модули</string>
+
+    <string name="course_progress_current">Текущий прогресс</string>
+    <string name="course_progress_solutions">Неотправленные решения</string>
 
     <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
@@ -568,6 +573,7 @@
     <string name="course_info_language">Язык</string>
     <string name="course_info_certificate">Сертификат</string>
     <string name="course_info_certificate_detail">Подробнее о сертификате</string>
+    <string name="course_info_learners_count">Число записавшихся на курс</string>
 
     <string name="course_info_certificate_regular">Условие получения сертификата: %s</string>
     <string name="course_info_certificate_distinction">С отличием: %s</string>
