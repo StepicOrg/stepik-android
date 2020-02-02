@@ -38,6 +38,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -231,6 +232,12 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         }
 
         if (state is AttemptsView.State.AttemptsSent) {
+            attemptsAdapter.items.forEachIndexed { index, item ->
+                if (item is AttemptCacheItem.SubmissionItem && item.submission.status != Submission.Status.LOCAL) {
+                    selectionHelper.deselect(index)
+                }
+            }
+            invalidateOptionsMenu()
             attemptsPresenter.setDataToPresenter(attemptsAdapter.items)
         }
     }
@@ -288,20 +295,21 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             val itemSectionId = when (val item = attemptsAdapter.items[index]) {
                 is AttemptCacheItem.LessonItem ->
                     item.section.id
-                is AttemptCacheItem.SubmissionItem ->
-                    item.section.id
+                is AttemptCacheItem.SubmissionItem -> {
+                    if (item.submission.status == Submission.Status.LOCAL) {
+                        item.section.id
+                    } else {
+                        -1L
+                    }
+                }
                 else ->
                     -1L
             }
 
-            if (itemSectionId == sectionId) {
-                if (isSelected) {
-                    selectionHelper.select(index)
-                } else {
-                    selectionHelper.deselect(index)
-                }
+            if (itemSectionId == sectionId && isSelected) {
+                selectionHelper.select(index)
             } else {
-                break
+                selectionHelper.deselect(index)
             }
         }
         invalidateOptionsMenu()
@@ -316,15 +324,15 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
 
         for (index in itemIndex + 1 until attemptsAdapter.items.size) {
             val item = attemptsAdapter.items[index]
-            if (item is AttemptCacheItem.SubmissionItem && item.lesson.id == lessonId) {
-                if (isSelected) {
-                    selectionHelper.select(index)
-                } else {
-                    selectionHelper.deselect(index)
+            if (item is AttemptCacheItem.SubmissionItem &&
+                item.lesson.id == lessonId &&
+                item.submission.status == Submission.Status.LOCAL) {
+                    if (isSelected) {
+                        selectionHelper.select(index)
+                    } else {
+                        selectionHelper.deselect(index)
+                    }
                 }
-            } else {
-                break
-            }
         }
 
         val sectionIndex = attemptsAdapter.items.indexOfFirst { item ->
@@ -390,6 +398,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         attemptsAdapter.items
             .filterIndexed { index, _ -> selectionHelper.isSelected(index) }
             .filterIsInstance<AttemptCacheItem.SubmissionItem>()
+            .filter { it.submission.status == Submission.Status.LOCAL }
 
     private fun hasSelectableItems(): Boolean =
         attemptsAdapter.items
