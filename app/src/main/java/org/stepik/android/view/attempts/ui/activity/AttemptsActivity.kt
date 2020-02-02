@@ -17,6 +17,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.presentation.attempts.AttemptsPresenter
 import org.stepik.android.presentation.attempts.AttemptsView
 import org.stepik.android.view.attempts.model.AttemptCacheItem
@@ -58,9 +59,13 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         initCenteredToolbar(R.string.attempts_toolbar_title, showHomeButton = true)
         attemptsFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
 
-        attemptsAdapter += AttemptSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionClick)
-        attemptsAdapter += AttemptLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonClick)
-        attemptsAdapter += AttemptSubmissionAdapterDelegate(selectionHelper, onClick = ::handleSubmissionClick)
+        attemptsAdapter += AttemptSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionCheckboxClick)
+        attemptsAdapter += AttemptLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonCheckboxClick)
+        attemptsAdapter += AttemptSubmissionAdapterDelegate(
+            selectionHelper,
+            onCheckboxClick = ::handleSubmissionCheckBoxClick,
+            onItemClick = ::handleSubmissionItemClick
+        )
 
         with(attemptsRecycler) {
             itemAnimator = null
@@ -145,7 +150,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         return areAllSelectedInSection
     }
 
-    private fun handleSectionClick(attemptCacheSectionItem: AttemptCacheItem.SectionItem) {
+    private fun handleSectionCheckboxClick(attemptCacheSectionItem: AttemptCacheItem.SectionItem) {
         val itemIndex = attemptsAdapter.items.indexOf(attemptCacheSectionItem)
         val sectionId = attemptCacheSectionItem.section.id
         selectionHelper.toggle(itemIndex)
@@ -173,7 +178,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         }
     }
 
-    private fun handleLessonClick(attemptCacheLessonItem: AttemptCacheItem.LessonItem) {
+    private fun handleLessonCheckboxClick(attemptCacheLessonItem: AttemptCacheItem.LessonItem) {
         val itemIndex = attemptsAdapter.items.indexOf(attemptCacheLessonItem)
         val lessonId = attemptCacheLessonItem.lesson.id
         val sectionId = attemptCacheLessonItem.section.id
@@ -204,7 +209,17 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView {
         }
     }
 
-    private fun handleSubmissionClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
+    private fun handleSubmissionItemClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
+        val step = LastStep(
+            id = "",
+            unit = attemptCacheSubmissionItem.unit.id,
+            lesson = attemptCacheSubmissionItem.lesson.id,
+            step = attemptCacheSubmissionItem.step.id
+        )
+        screenManager.continueCourse(this, step)
+    }
+
+    private fun handleSubmissionCheckBoxClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
         selectionHelper.toggle(attemptsAdapter.items.indexOf(attemptCacheSubmissionItem))
         val lessonId = attemptCacheSubmissionItem.lesson.id
         val sectionId = attemptCacheSubmissionItem.section.id
