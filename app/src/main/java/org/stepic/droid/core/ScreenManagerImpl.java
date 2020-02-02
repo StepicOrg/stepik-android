@@ -717,8 +717,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCachedAttempts(@NotNull Context context, long courseId) {
-        Intent intent = AttemptsActivity.Companion.createIntent(context, courseId);
+    public void showCachedAttempts(@NotNull Context context) {
+        Intent intent = AttemptsActivity.Companion.createIntent(context);
         context.startActivity(intent);
     }
 }

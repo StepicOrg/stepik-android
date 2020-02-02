@@ -44,11 +44,8 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     companion object {
         private const val EVALUATION_FRAME_DURATION_MS = 250
 
-        private const val EXTRA_COURSE_ID = "course_id"
-
-        fun createIntent(context: Context, courseId: Long): Intent =
+        fun createIntent(context: Context): Intent =
             Intent(context, AttemptsActivity::class.java)
-                .putExtra(EXTRA_COURSE_ID, courseId)
     }
 
     @Inject
@@ -374,8 +371,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     private fun hasSelectableItems(): Boolean =
         attemptsAdapter.items
             .filterIsInstance<AttemptCacheItem.SubmissionItem>()
-            .filter { it.submission.status == Submission.Status.LOCAL }
-            .isNotEmpty()
+            .any { it.submission.status == Submission.Status.LOCAL }
 
     private fun showRemoveAttemptsDialog(attemptIds: List<Long>) {
         RemoveCachedAttemptsDialog

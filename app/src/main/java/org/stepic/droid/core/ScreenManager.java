@@ -158,5 +158,5 @@ public interface ScreenManager {
 
     void loginWithSocial(FragmentActivity activity, ISocialType type);
 
-    void showCachedAttempts(@NotNull Context context, long courseId);
+    void showCachedAttempts(@NotNull Context context);
 }
