@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    android:background="@color/lesson_color">
+    android:background="@drawable/bg_attempt_submission_item">
 
     <ImageView
         android:id="@+id/submissionQuizIcon"
