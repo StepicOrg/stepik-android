@@ -12,11 +12,11 @@ abstract class PresenterBase<V>(
 ) : PresenterContract<V>, ViewModel() {
     protected val compositeDisposable = CompositeDisposable()
 
-    var view: V? by viewContainer::view
-//        private set(value) {
-//            viewContainer.view = value
-//        }
-//        get() = viewContainer.view
+    protected var view: V?
+        private set(value) {
+            viewContainer.view = value
+        }
+        get() = viewContainer.view
 
     @CallSuper
     override fun attachView(view: V) {
