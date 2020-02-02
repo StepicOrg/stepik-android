@@ -76,13 +76,21 @@ constructor(
     }
 
     fun submitSolutions(submissions: List<Submission>) {
+        if (state !is AttemptsView.State.AttemptsLoaded) return
+
+        state = AttemptsView.State.AttemptsSending()
+
         compositeDisposable += attemptsInteractor
             .sendSubmissions(submissions)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = {
-                    // TODO Match the statuses with the current list
+                onNext = {
+                    view?.setState(AttemptsView.State.AttemptsSending(it))
+                    Timber.d("Next: $it")
+                },
+                onComplete = {
+                    view?.setState(AttemptsView.State.AttemptsSent)
                 },
                 onError = { it.printStackTrace(); Timber.d("Error: $it") }
             )

@@ -72,18 +72,18 @@ class AttemptSubmissionAdapterDelegate(
                     submissionRoot.setBackgroundResource(R.drawable.bg_step_quiz_feedback_correct)
                     submissionStatusIcon.setImageResource(R.drawable.ic_step_quiz_correct)
                     submissionStatusIcon.isVisible = true
-                    submissionCheckBox.isVisible = false
+                    submissionCheckBox.visibility = View.INVISIBLE
                 }
                 Submission.Status.WRONG -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_step_quiz_feedback_wrong)
                     submissionStatusIcon.setImageResource(R.drawable.ic_step_quiz_wrong)
                     submissionStatusIcon.isVisible = true
-                    submissionCheckBox.isVisible = false
+                    submissionCheckBox.visibility = View.INVISIBLE
                 }
                 else -> {
                     submissionRoot.setBackgroundResource(R.color.lesson_color)
                     submissionStatusIcon.isVisible = false
-                    submissionCheckBox.isVisible = true
+                    submissionCheckBox.visibility = View.VISIBLE
                 }
             }
         }

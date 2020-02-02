@@ -23,6 +23,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.mutate
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.presentation.attempts.AttemptsPresenter
 import org.stepik.android.presentation.attempts.AttemptsView
@@ -173,12 +174,40 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             attemptsSubmissionSeparator,
             attemptsSubmitButton
         )
+        viewStateDelegate.addState<AttemptsView.State.AttemptsSending>(
+            attemptsContainer,
+            attemptsFeedback,
+            attemptsFeedbackSeparator,
+            attemptsRecycler,
+            attemptsSubmissionSeparator,
+            attemptsSubmitFeedback,
+            attemptsSubmitButton
+        )
+        viewStateDelegate.addState<AttemptsView.State.AttemptsSent>(
+            attemptsContainer,
+            attemptsFeedback,
+            attemptsFeedbackSeparator,
+            attemptsRecycler,
+            attemptsSubmissionSeparator,
+            attemptsSubmitButton
+        )
     }
 
     override fun setState(state: AttemptsView.State) {
         viewStateDelegate.switchState(state)
         if (state is AttemptsView.State.AttemptsLoaded) {
             attemptsAdapter.items = state.attempts
+        }
+        if (state is AttemptsView.State.AttemptsSending && state.submission != null) {
+            val itemIndex = attemptsAdapter.items.indexOfFirst { it is AttemptCacheItem.SubmissionItem && it.submission.attempt == state.submission.attempt }
+            attemptsAdapter.items = attemptsAdapter.items.mutate {
+                val tmp = get(itemIndex) as AttemptCacheItem.SubmissionItem
+                removeAt(itemIndex)
+                add(itemIndex, tmp.copy(submission = state.submission))
+            }
+        }
+        if (state is AttemptsView.State.AttemptsSent) {
+            viewStateDelegate.switchState(AttemptsView.State.AttemptsLoaded(attempts = attemptsAdapter.items))
         }
     }
 

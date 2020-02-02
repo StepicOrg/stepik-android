@@ -35,7 +35,7 @@ constructor(
 
     private val attemptCacheItemMapper: AttemptCacheItemMapper
 ) {
-    fun sendSubmissions(submissions: List<Submission>): Single<List<Submission>> =
+    fun sendSubmissions(submissions: List<Submission>): Observable<Submission> =
         submissions.toObservable()
             .flatMapSingle { submission ->
                 submissionRepository
@@ -48,7 +48,6 @@ constructor(
                     }
                     .firstOrError()
             }
-            .reduce(emptyList<Submission>()) { a, b -> a + b }
 
     fun fetchAttemptCacheItems(): Single<List<AttemptCacheItem>> =
         getAttempts()
