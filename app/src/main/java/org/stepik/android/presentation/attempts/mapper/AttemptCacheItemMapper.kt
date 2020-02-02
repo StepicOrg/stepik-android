@@ -28,11 +28,11 @@ constructor() {
             val unit = units.find { it.lesson == lessonId }
             val section = sections.find { it.id == unit?.section }
             val step = steps.find { it.id == attempt?.step }
-            AttemptCacheItem.SubmissionItem(section = section!!, unit = unit!!, lesson = lesson!!, step = step!!, submission = submission, time = attempt?.time!!)
+            AttemptCacheItem.SubmissionItem(isEnabled = false, section = section!!, unit = unit!!, lesson = lesson!!, step = step!!, submission = submission, time = attempt?.time!!)
         }
 
-        val lessonItems = items.map { AttemptCacheItem.LessonItem(it.section, it.unit, it.lesson) }.distinct().sortedBy { it.lesson.id }
-        val sectionItems = lessonItems.map { AttemptCacheItem.SectionItem(it.section) }.distinct().sortedBy { it.section.id }
+        val lessonItems = items.map { AttemptCacheItem.LessonItem(false, it.section, it.unit, it.lesson) }.distinct().sortedBy { it.lesson.id }
+        val sectionItems = lessonItems.map { AttemptCacheItem.SectionItem(false, it.section) }.distinct().sortedBy { it.section.id }
 
         val attemptCacheItems = mutableListOf<AttemptCacheItem>()
 

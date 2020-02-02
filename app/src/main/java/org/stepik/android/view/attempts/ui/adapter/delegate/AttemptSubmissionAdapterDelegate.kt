@@ -51,6 +51,8 @@ class AttemptSubmissionAdapterDelegate(
                 submissionCheckBox.isChecked = isSelected
             }
 
+            submissionCheckBox.isEnabled = data.isEnabled
+
             val resourceId = when (data.step.block?.name) {
                 AppConstants.TYPE_CODE ->
                     R.drawable.ic_hard_quiz

@@ -34,6 +34,7 @@ class AttemptLessonAdapterDelegate(
                 itemView.isSelected = isSelected
                 lessonCheckBox.isChecked = isSelected
             }
+            lessonCheckBox.isEnabled = data.isEnabled
             lessonTitle.text = context.getString(
                 R.string.attempts_lesson_placeholder,
                 data.section.position,

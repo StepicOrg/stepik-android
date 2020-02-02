@@ -25,6 +25,7 @@ import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.mutate
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.model.Submission
 import org.stepik.android.presentation.attempts.AttemptsPresenter
 import org.stepik.android.presentation.attempts.AttemptsView
 import org.stepik.android.view.attempts.model.AttemptCacheItem
@@ -108,6 +109,8 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         }
         initViewStateDelegate()
         attemptsPresenter.fetchAttemptCacheItems()
+
+
     }
 
     private fun injectComponent() {
@@ -197,7 +200,9 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         viewStateDelegate.switchState(state)
         if (state is AttemptsView.State.AttemptsLoaded) {
             attemptsAdapter.items = state.attempts
+            setRecyclerItemsEnabled(isEnabled = hasSelectableItems())
         }
+
         if (state is AttemptsView.State.AttemptsSending && state.submission != null) {
             val itemIndex = attemptsAdapter.items.indexOfFirst { it is AttemptCacheItem.SubmissionItem && it.submission.attempt == state.submission.attempt }
             attemptsAdapter.items = attemptsAdapter.items.mutate {
@@ -206,6 +211,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
                 add(itemIndex, tmp.copy(submission = state.submission))
             }
         }
+
         if (state is AttemptsView.State.AttemptsSent) {
             viewStateDelegate.switchState(AttemptsView.State.AttemptsLoaded(attempts = attemptsAdapter.items))
         }
@@ -366,9 +372,29 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             .filterIndexed { index, _ -> selectionHelper.isSelected(index) }
             .filterIsInstance<AttemptCacheItem.SubmissionItem>()
 
+    private fun hasSelectableItems(): Boolean =
+        attemptsAdapter.items
+            .filterIsInstance<AttemptCacheItem.SubmissionItem>()
+            .filter { it.submission.status == Submission.Status.LOCAL }
+            .isNotEmpty()
+
     private fun showRemoveAttemptsDialog(attemptIds: List<Long>) {
         RemoveCachedAttemptsDialog
             .newInstance(attemptIds = attemptIds)
             .showIfNotExists(supportFragmentManager, RemoveCachedAttemptsDialog.TAG)
     }
+
+    private fun setRecyclerItemsEnabled(isEnabled: Boolean) {
+        attemptsAdapter.items = attemptsAdapter.items.map { attemptCacheItem ->
+            when (attemptCacheItem) {
+                is AttemptCacheItem.SectionItem ->
+                    attemptCacheItem.copy(isEnabled = isEnabled)
+                is AttemptCacheItem.LessonItem ->
+                    attemptCacheItem.copy(isEnabled = isEnabled)
+                is AttemptCacheItem.SubmissionItem ->
+                    attemptCacheItem.copy(isEnabled = isEnabled)
+            }
+        }
+    }
+
 }

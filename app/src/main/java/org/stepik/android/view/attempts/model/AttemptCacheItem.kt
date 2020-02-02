@@ -9,16 +9,19 @@ import java.util.Date
 
 sealed class AttemptCacheItem {
     data class SectionItem(
+        val isEnabled: Boolean,
         val section: Section
     ) : AttemptCacheItem()
 
     data class LessonItem(
+        val isEnabled: Boolean,
         val section: Section,
         val unit: Unit,
         val lesson: Lesson
     ) : AttemptCacheItem()
 
     data class SubmissionItem(
+        val isEnabled: Boolean,
         val section: Section,
         val unit: Unit,
         val lesson: Lesson,

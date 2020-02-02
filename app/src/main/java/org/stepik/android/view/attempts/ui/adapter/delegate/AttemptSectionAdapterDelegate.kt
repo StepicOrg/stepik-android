@@ -34,6 +34,7 @@ class AttemptSectionAdapterDelegate(
                 itemView.isSelected = isSelected
                 sectionCheckBox.isChecked = isSelected
             }
+            sectionCheckBox.isEnabled = data.isEnabled
             sectionTitle.text = context.resources.getString(
                 R.string.attempts_section_placeholder,
                 data.section.position,
