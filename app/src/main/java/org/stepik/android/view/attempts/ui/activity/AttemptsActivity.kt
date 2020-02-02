@@ -105,12 +105,11 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
 
         attemptsSubmitButton.setOnClickListener {
             val selectedSubmissions = fetchSelectedItems().map { it.submission }
+            setRecyclerItemsEnabled(isEnabled = false)
             attemptsPresenter.submitSolutions(selectedSubmissions)
         }
         initViewStateDelegate()
         attemptsPresenter.fetchAttemptCacheItems()
-
-
     }
 
     private fun injectComponent() {
@@ -396,5 +395,4 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             }
         }
     }
-
 }
