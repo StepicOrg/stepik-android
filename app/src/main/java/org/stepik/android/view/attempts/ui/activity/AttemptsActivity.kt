@@ -2,6 +2,7 @@ package org.stepik.android.view.attempts.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -33,12 +34,16 @@ import org.stepik.android.view.attempts.ui.dialog.RemoveCachedAttemptsDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
+import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttemptsDialog.Callback {
     companion object {
+        private const val EVALUATION_FRAME_DURATION_MS = 250
+
         private const val EXTRA_COURSE_ID = "course_id"
+
         fun createIntent(context: Context, courseId: Long): Intent =
             Intent(context, AttemptsActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
@@ -86,6 +91,15 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
                 ContextCompat.getDrawable(this@AttemptsActivity, R.drawable.list_divider_h)?.let(::setDrawable)
             })
         }
+
+        val evaluationDrawable = AnimationDrawable()
+        evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
+        evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
+        evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
+        evaluationDrawable.isOneShot = false
+
+        attemptsSubmitFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
+        evaluationDrawable.start()
 
         attemptsSubmitButton.setOnClickListener {
             val selectedSubmissions = fetchSelectedItems().map { it.submission }

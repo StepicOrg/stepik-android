@@ -855,4 +855,5 @@
     <string name="attempts_delete_dialog_description">This item will be deleted from your device</string>
     <string name="attempts_submission_step_position">Step %d – %s</string>
     <string name="attempts_submit_all">Submit all solutions</string>
+    <string name="attempts_submit_in_progress">Submit solutions in progress</string>
 </resources>

@@ -93,14 +93,12 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
 
-            android:text="@string/attempts_information_block"
+            android:text="@string/attempts_submit_in_progress"
             android:textColor="@color/violet1"
 
             android:layout_above="@id/attemptsSubmitButton"
 
-            android:visibility="gone"
-
-            tools:drawableStart="@drawable/ic_step_quiz_validation" />
+            android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/attemptsSubmitButton"

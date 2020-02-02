@@ -820,4 +820,5 @@
     <string name="attempts_delete_dialog_description">Это решение будет удалено с ващего устройства</string>
     <string name="attempts_submission_step_position">Шаг %d – %s</string>
     <string name="attempts_submit_all">Отправить все решения</string>
+    <string name="attempts_submit_in_progress">Идет отправка решений</string>
 </resources>

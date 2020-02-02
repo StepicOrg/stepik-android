@@ -6,10 +6,12 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_attempt_submission.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.model.Submission
 import org.stepik.android.view.attempts.model.AttemptCacheItem
 import org.stepik.android.view.base.ui.mapper.DateMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -29,10 +31,12 @@ class AttemptSubmissionAdapterDelegate(
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<AttemptCacheItem>(root) {
 
+        private val submissionRoot = root
         private val submissionQuizIcon = root.submissionQuizIcon
         private val submissionTitle = root.submissionTitle
         private val submissionStep = root.submissionStep
         private val submissionCheckBox = root.submissionCheckBox
+        private val submissionStatusIcon = root.submissionStatusIcon
 
         init {
             root.setOnClickListener { onItemClick(itemData as AttemptCacheItem.SubmissionItem) }
@@ -41,6 +45,7 @@ class AttemptSubmissionAdapterDelegate(
 
         override fun onBind(data: AttemptCacheItem) {
             data as AttemptCacheItem.SubmissionItem
+
             selectionHelper.isSelected(adapterPosition).let { isSelected ->
                 itemView.isSelected = isSelected
                 submissionCheckBox.isChecked = isSelected
@@ -52,15 +57,35 @@ class AttemptSubmissionAdapterDelegate(
                 else ->
                     R.drawable.ic_easy_quiz
             }
+
             val icon = AppCompatResources
                 .getDrawable(context, resourceId)
                 ?.mutate()
             icon?.setColorFilter(
                 ContextCompat.getColor(context, R.color.new_accent_color), PorterDuff.Mode.SRC_IN)
             submissionQuizIcon.setImageDrawable(icon)
-
             submissionTitle.text =  HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
             submissionStep.text = context.resources.getString(R.string.attempts_submission_step_position, data.step.position, DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.time.time))
+
+            when (data.submission.status) {
+                Submission.Status.CORRECT -> {
+                    submissionRoot.setBackgroundResource(R.drawable.bg_step_quiz_feedback_correct)
+                    submissionStatusIcon.setImageResource(R.drawable.ic_step_quiz_correct)
+                    submissionStatusIcon.isVisible = true
+                    submissionCheckBox.isVisible = false
+                }
+                Submission.Status.WRONG -> {
+                    submissionRoot.setBackgroundResource(R.drawable.bg_step_quiz_feedback_wrong)
+                    submissionStatusIcon.setImageResource(R.drawable.ic_step_quiz_wrong)
+                    submissionStatusIcon.isVisible = true
+                    submissionCheckBox.isVisible = false
+                }
+                else -> {
+                    submissionRoot.setBackgroundResource(R.color.lesson_color)
+                    submissionStatusIcon.isVisible = false
+                    submissionCheckBox.isVisible = true
+                }
+            }
         }
     }
 }
