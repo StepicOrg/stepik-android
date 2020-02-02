@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.attempts.model.AttemptCacheItem
 import org.stepik.android.view.injection.attempts.AttemptsBus
 import timber.log.Timber
 import javax.inject.Inject
@@ -42,7 +43,8 @@ constructor(
     }
 
     init {
-        subscribeForAttemptsUpdates()
+        // TODO Ask about bus
+        // subscribeForAttemptsUpdates()
     }
 
     fun fetchAttemptCacheItems(forceUpdate: Boolean = false) {
@@ -65,12 +67,18 @@ constructor(
         }
     }
 
+    fun setDataToPresenter(items: List<AttemptCacheItem>) {
+        state = AttemptsView.State.AttemptsLoaded(items)
+    }
+
     private fun subscribeForAttemptsUpdates() {
         compositeDisposable += attemptsObservable
             .subscribeOn(mainScheduler)
             .observeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = { fetchAttemptCacheItems(forceUpdate = true) },
+                onNext = {
+                    Timber.d("OnNext")
+                    fetchAttemptCacheItems(forceUpdate = true) },
                 onError = { it.printStackTrace() }
             )
     }

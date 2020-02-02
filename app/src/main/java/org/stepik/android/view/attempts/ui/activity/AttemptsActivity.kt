@@ -225,7 +225,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         }
 
         if (state is AttemptsView.State.AttemptsSent) {
-            viewStateDelegate.switchState(AttemptsView.State.AttemptsLoaded(attempts = attemptsAdapter.items))
+            attemptsPresenter.setDataToPresenter(attemptsAdapter.items)
         }
     }
 
@@ -239,6 +239,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
 
     override fun onAttemptRemoveConfirmed(attemptIds: List<Long>) {
         attemptsPresenter.removeAttempts(attemptIds)
+        checkedIndices.clear()
         selectionHelper.reset()
         invalidateOptionsMenu()
     }
