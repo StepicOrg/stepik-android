@@ -86,6 +86,8 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
                 ContextCompat.getDrawable(this@AttemptsActivity, R.drawable.list_divider_h)?.let(::setDrawable)
             })
         }
+
+        attemptsSubmitButton.setOnClickListener {  }
         initViewStateDelegate()
         attemptsPresenter.fetchAttemptCacheItems()
     }
@@ -115,10 +117,12 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val selectedCount = fetchSelectedCount()
         menu.findItem(R.id.attempts_menu_item_delete).isVisible = selectedCount != 0
-        centeredToolbarTitle.text = if (selectedCount == 0) {
-            getString(R.string.attempts_toolbar_title)
+        if (selectedCount == 0) {
+            centeredToolbarTitle.text = getString(R.string.attempts_toolbar_title)
+            attemptsSubmitButton.text = getString(R.string.attempts_submit_all)
         } else {
-            getString(R.string.attempts_selected, selectedCount)
+            centeredToolbarTitle.text = getString(R.string.attempts_selected, selectedCount)
+            attemptsSubmitButton.text = resources.getQuantityString(R.plurals.submit_solutions, selectedCount, selectedCount)
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -144,7 +148,14 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         viewStateDelegate.addState<AttemptsView.State.Loading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<AttemptsView.State.Empty>(report_empty)
         viewStateDelegate.addState<AttemptsView.State.Error>()
-        viewStateDelegate.addState<AttemptsView.State.AttemptsLoaded>(attemptsContainer, attemptsFeedback, attemptsFeedbackSeparator, attemptsRecycler)
+        viewStateDelegate.addState<AttemptsView.State.AttemptsLoaded>(
+            attemptsContainer,
+            attemptsFeedback,
+            attemptsFeedbackSeparator,
+            attemptsRecycler,
+            attemptsSubmissionSeparator,
+            attemptsSubmitButton
+        )
     }
 
     override fun setState(state: AttemptsView.State) {
