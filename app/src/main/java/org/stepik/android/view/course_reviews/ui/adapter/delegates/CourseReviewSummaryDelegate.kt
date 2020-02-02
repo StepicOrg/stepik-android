@@ -43,8 +43,7 @@ class CourseReviewSummaryDelegate : AdapterDelegate<CourseReviewItem, DelegateVi
 
                 distribution.forEachIndexed { index: Int, l: Long ->
                     val (progress, value) = summaryDistribution[index]
-                    progress.progress = l.toInt()
-                    progress.max = count.toInt()
+                    progress.progress = (l * 100 / count).toInt()
                     value.text = l.toString()
                 }
             }

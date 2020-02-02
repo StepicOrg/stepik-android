@@ -54,8 +54,6 @@ constructor() {
         }
 
     private fun mergeCourseUserReview(currentUserReview: List<CourseReviewItem>, reviews: PagedList<CourseReviewItem>): PagedList<CourseReviewItem> {
-        val summary = reviews.takeWhile { it is CourseReviewItem.Summary }
-
         val filteredReviews = reviews
             .dropWhile { courseReviewItem ->
                 courseReviewItem is CourseReviewItem.Summary ||
@@ -64,6 +62,6 @@ constructor() {
                 courseReviewItem is CourseReviewItem.Placeholder && courseReviewItem.isPlaceholderForCurrentUser
             }
 
-        return PagedList(summary + currentUserReview + filteredReviews, page = reviews.page, hasPrev = reviews.hasPrev, hasNext = reviews.hasNext)
+        return PagedList(currentUserReview + filteredReviews, page = reviews.page, hasPrev = reviews.hasPrev, hasNext = reviews.hasNext)
     }
 }

@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Maybes
 import io.reactivex.rxkotlin.Singles.zip
+import io.reactivex.rxkotlin.zipWith
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.base.DataSourceType
@@ -57,10 +58,7 @@ constructor(
 
                 val currentUserReviewSource =
                     if (page == 1) {
-                        zip(
-                            getCourseReviewSummary(courseReviews.isNotEmpty(), sourceType),
-                            resolveCurrentUserCourseReview(profileId, courseId, courseReviews.isNotEmpty(), sourceType)
-                        ) { a, b -> a + b }
+                        resolveCurrentUserCourseReview(profileId, courseId, courseReviews.isNotEmpty(), sourceType)
                             .onErrorReturnItem(emptyList())
                     } else {
                         Single.just(emptyList())
@@ -96,6 +94,7 @@ constructor(
                 listOf<CourseReviewItem>(CourseReviewItem.Data(review, user, isCurrentUserReview = true))
             }
             .switchIfEmpty(resolveCourseReviewBanner(hasReviews))
+            .zipWith(getCourseReviewSummary(hasReviews, sourceType)) { a, b -> b + a }
 
     private fun resolveCourseReviewBanner(hasReviews: Boolean): Single<List<CourseReviewItem>> =
         courseObservableSource
