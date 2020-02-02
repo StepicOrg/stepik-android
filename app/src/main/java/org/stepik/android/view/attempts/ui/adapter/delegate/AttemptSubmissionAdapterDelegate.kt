@@ -5,15 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import kotlinx.android.synthetic.main.item_attempt_submission.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.view.attempts.model.AttemptCacheItem
+import org.stepik.android.view.base.ui.mapper.DateMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.selection.SelectionHelper
-import timber.log.Timber
-import java.util.TimeZone
 
 class AttemptSubmissionAdapterDelegate(
     private val selectionHelper: SelectionHelper,
@@ -29,7 +30,7 @@ class AttemptSubmissionAdapterDelegate(
 
         private val submissionQuizIcon = root.submissionQuizIcon
         private val submissionTitle = root.submissionTitle
-        private val submissionTime = root.submissionTime
+        private val submissionStep = root.submissionStep
         private val submissionCheckBox = root.submissionCheckBox
 
         init {
@@ -40,19 +41,26 @@ class AttemptSubmissionAdapterDelegate(
         override fun onBind(data: AttemptCacheItem) {
             data as AttemptCacheItem.SubmissionItem
             selectionHelper.isSelected(adapterPosition).let { isSelected ->
-                Timber.d("Is selected: $isSelected")
                 itemView.isSelected = isSelected
                 submissionCheckBox.isChecked = isSelected
             }
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
+
+            val resourceId = when (data.step.block?.name) {
+                AppConstants.TYPE_CODE ->
+                    R.drawable.ic_hard_quiz
+                else ->
+                    R.drawable.ic_easy_quiz
+            }
             val icon = AppCompatResources
-                .getDrawable(context, R.drawable.ic_easy_quiz)
+                .getDrawable(context, resourceId)
                 ?.mutate()
             icon?.setColorFilter(
                 ContextCompat.getColor(context, R.color.new_accent_color), PorterDuff.Mode.SRC_IN)
             submissionQuizIcon.setImageDrawable(icon)
-            submissionTitle.text = "Quiz"
-            submissionTime.text = DateTimeHelper.getPrintableDate(data.time, DateTimeHelper.DISPLAY_DATETIME_PATTERN, TimeZone.getDefault())
+
+            submissionTitle.text =  HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+            submissionStep.text = context.resources.getString(R.string.attempts_submission_step_position, data.step.position, DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.time.time))
         }
     }
 }

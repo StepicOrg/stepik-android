@@ -27,7 +27,8 @@ constructor() {
 
             val unit = units.find { it.lesson == lessonId }
             val section = sections.find { it.id == unit?.section }
-            AttemptCacheItem.SubmissionItem(section = section!!, unit = unit!!, lesson = lesson!!, submission = submission, time = attempt?.time!!)
+            val step = steps.find { it.id == attempt?.step }
+            AttemptCacheItem.SubmissionItem(section = section!!, unit = unit!!, lesson = lesson!!, step = step!!, submission = submission, time = attempt?.time!!)
         }
 
         val lessonItems = items.map { AttemptCacheItem.LessonItem(it.section, it.unit, it.lesson) }.distinct().sortedBy { it.lesson.id }
