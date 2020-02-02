@@ -129,9 +129,8 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseReviewsView.State.Idle>(courseReviewsPlaceholder)
         viewStateDelegate.addState<CourseReviewsView.State.Loading>(courseReviewsPlaceholder)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsCache>(courseReviewsRecycler)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsRemote>(courseReviewsRecycler)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsRemoteLoading>(courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviews>(courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsLoading>(courseReviewsRecycler)
         viewStateDelegate.addState<CourseReviewsView.State.NetworkError>(reportProblem)
         viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(report_empty)
     }
@@ -154,13 +153,10 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     override fun setState(state: CourseReviewsView.State) {
         viewStateDelegate.switchState(state)
         when (state) {
-            is CourseReviewsView.State.CourseReviewsCache ->
+            is CourseReviewsView.State.CourseReviews ->
                 courseReviewsAdapter.items = state.courseReviewItems
 
-            is CourseReviewsView.State.CourseReviewsRemote ->
-                courseReviewsAdapter.items = state.courseReviewItems
-
-            is CourseReviewsView.State.CourseReviewsRemoteLoading ->
+            is CourseReviewsView.State.CourseReviewsLoading ->
                 courseReviewsAdapter.items = state.courseReviewItems + CourseReviewItem.Placeholder()
         }
     }
