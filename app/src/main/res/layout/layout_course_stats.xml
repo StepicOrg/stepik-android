@@ -7,7 +7,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    tools:background="@color/new_accent_color">
 
     <org.stepik.android.view.achievement.ui.view.VectorRatingBar
         android:id="@+id/courseRating"
@@ -19,7 +20,9 @@
         android:layout_height="11dp"
 
         android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"/>
+        android:layout_marginRight="6dp"
+
+        tools:layout_width="70dp" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/courseLearnersCount"
@@ -29,9 +32,9 @@
         android:layout_marginLeft="6dp"
         android:layout_marginRight="6dp"
 
-        android:drawablePadding="2dp"
+        android:drawablePadding="4dp"
 
-        app:drawableStartCompat="@drawable/ic_learners"
+        app:drawableStartCompat="@drawable/ic_course_info_learners_count"
         app:drawableTint="@color/white"
 
         android:textSize="12sp"
