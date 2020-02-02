@@ -10,7 +10,7 @@ data class CourseReviewSummary(
     @SerializedName("average")
     val average: Double,
     @SerializedName("count")
-    val count: Int,
+    val count: Long,
     @SerializedName("distribution")
     val distribution: List<Long>
 )

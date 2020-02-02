@@ -43,7 +43,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/summaryCount" />
 
-
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/summaryCount"
         android:layout_width="wrap_content"
@@ -61,5 +60,288 @@
         app:layout_constraintStart_toStartOf="@id/summaryRating"
         app:layout_constraintEnd_toEndOf="@id/summaryRating"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount5Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+        android:text="5"
+        tools:ignore="HardcodedText"
+
+        android:layout_marginTop="@dimen/course_review_item_margin"
+        android:layout_marginStart="@dimen/course_review_item_margin"
+        android:layout_marginLeft="@dimen/course_review_item_margin"
+
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/summaryCount4Title"
+        app:layout_constraintStart_toEndOf="@id/summaryRating" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount4Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+        android:text="4"
+        tools:ignore="HardcodedText"
+
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/course_review_item_margin"
+        android:layout_marginLeft="@dimen/course_review_item_margin"
+
+        app:layout_constraintTop_toBottomOf="@id/summaryCount5Title"
+        app:layout_constraintBottom_toTopOf="@id/summaryCount3Title"
+        app:layout_constraintStart_toEndOf="@id/summaryRating" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount3Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+        android:text="3"
+        tools:ignore="HardcodedText"
+
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/course_review_item_margin"
+        android:layout_marginLeft="@dimen/course_review_item_margin"
+
+        app:layout_constraintTop_toBottomOf="@id/summaryCount4Title"
+        app:layout_constraintBottom_toTopOf="@id/summaryCount2Title"
+        app:layout_constraintStart_toEndOf="@id/summaryRating" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount2Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+        android:text="2"
+        tools:ignore="HardcodedText"
+
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/course_review_item_margin"
+        android:layout_marginLeft="@dimen/course_review_item_margin"
+
+        app:layout_constraintTop_toBottomOf="@id/summaryCount3Title"
+        app:layout_constraintBottom_toTopOf="@id/summaryCount1Title"
+        app:layout_constraintStart_toEndOf="@id/summaryRating" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount1Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+        android:text="1"
+        tools:ignore="HardcodedText"
+
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="@dimen/course_review_item_margin"
+        android:layout_marginLeft="@dimen/course_review_item_margin"
+        android:layout_marginBottom="@dimen/course_review_item_margin"
+
+        app:layout_constraintStart_toEndOf="@id/summaryRating"
+        app:layout_constraintTop_toBottomOf="@id/summaryCount2Title"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount5Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+
+        android:layout_marginEnd="@dimen/course_review_item_margin"
+        android:layout_marginRight="@dimen/course_review_item_margin"
+
+        android:gravity="end"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/summaryCount5Title"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="1231" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount4Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+
+        android:layout_marginEnd="@dimen/course_review_item_margin"
+        android:layout_marginRight="@dimen/course_review_item_margin"
+
+        android:gravity="end"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/summaryCount4Title"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="1231" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount3Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+
+        android:layout_marginEnd="@dimen/course_review_item_margin"
+        android:layout_marginRight="@dimen/course_review_item_margin"
+
+        android:gravity="end"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/summaryCount3Title"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="1231" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount2Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+
+        android:layout_marginEnd="@dimen/course_review_item_margin"
+        android:layout_marginRight="@dimen/course_review_item_margin"
+
+        android:gravity="end"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/summaryCount2Title"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="1231" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/summaryCount1Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        style="@style/CourseReviewSummaryCountTitle"
+
+        android:layout_marginEnd="@dimen/course_review_item_margin"
+        android:layout_marginRight="@dimen/course_review_item_margin"
+
+        android:gravity="end"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/summaryCount1Title"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="31" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/summaryCountValues"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:constraint_referenced_ids="summaryCount1Value,summaryCount2Value,summaryCount3Value,summaryCount4Value,summaryCount5Value"
+        app:barrierDirection="start" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/summaryCountTitles"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:constraint_referenced_ids="summaryCount1Title,summaryCount2Title,summaryCount3Title,summaryCount4Title,summaryCount5Title"
+        app:barrierDirection="end" />
+
+    <ProgressBar
+        android:id="@+id/summaryCount5Progress"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/bg_course_review_summary_progress"
+
+        app:layout_constraintTop_toTopOf="@id/summaryCount5Title"
+        app:layout_constraintBottom_toBottomOf="@id/summaryCount5Title"
+        app:layout_constraintStart_toEndOf="@id/summaryCountTitles"
+        app:layout_constraintEnd_toStartOf="@id/summaryCountValues"
+
+        tools:progress="30"
+        android:max="100" />
+
+    <ProgressBar
+        android:id="@+id/summaryCount4Progress"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/bg_course_review_summary_progress"
+
+        app:layout_constraintTop_toTopOf="@id/summaryCount4Title"
+        app:layout_constraintBottom_toBottomOf="@id/summaryCount4Title"
+        app:layout_constraintStart_toEndOf="@id/summaryCountTitles"
+        app:layout_constraintEnd_toStartOf="@id/summaryCountValues"
+
+        tools:progress="30"
+        android:max="100" />
+
+    <ProgressBar
+        android:id="@+id/summaryCount3Progress"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/bg_course_review_summary_progress"
+
+        app:layout_constraintTop_toTopOf="@id/summaryCount3Title"
+        app:layout_constraintBottom_toBottomOf="@id/summaryCount3Title"
+        app:layout_constraintStart_toEndOf="@id/summaryCountTitles"
+        app:layout_constraintEnd_toStartOf="@id/summaryCountValues"
+
+        tools:progress="30"
+        android:max="100" />
+
+    <ProgressBar
+        android:id="@+id/summaryCount2Progress"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/bg_course_review_summary_progress"
+
+        app:layout_constraintTop_toTopOf="@id/summaryCount2Title"
+        app:layout_constraintBottom_toBottomOf="@id/summaryCount2Title"
+        app:layout_constraintStart_toEndOf="@id/summaryCountTitles"
+        app:layout_constraintEnd_toStartOf="@id/summaryCountValues"
+
+        tools:progress="30"
+        android:max="100" />
+
+    <ProgressBar
+        android:id="@+id/summaryCount1Progress"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+
+        style="?android:attr/progressBarStyleHorizontal"
+        android:progressDrawable="@drawable/bg_course_review_summary_progress"
+
+        app:layout_constraintTop_toTopOf="@id/summaryCount1Title"
+        app:layout_constraintBottom_toBottomOf="@id/summaryCount1Title"
+        app:layout_constraintStart_toEndOf="@id/summaryCountTitles"
+        app:layout_constraintEnd_toStartOf="@id/summaryCountValues"
+
+        tools:progress="1"
+        android:max="100" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

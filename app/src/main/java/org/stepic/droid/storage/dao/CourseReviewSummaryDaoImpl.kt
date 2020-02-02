@@ -5,7 +5,6 @@ import android.database.Cursor
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.getDouble
-import org.stepic.droid.util.getInt
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
 import org.stepik.android.cache.course.source.structure.DbStructureCourseReviewSummary
@@ -31,7 +30,7 @@ constructor(
             id = cursor.getLong(DbStructureCourseReviewSummary.Columns.SUMMARY_ID),
             course = cursor.getLong(DbStructureCourseReviewSummary.Columns.COURSE_ID),
             average = cursor.getDouble(DbStructureCourseReviewSummary.Columns.AVERAGE),
-            count = cursor.getInt(DbStructureCourseReviewSummary.Columns.COUNT),
+            count = cursor.getLong(DbStructureCourseReviewSummary.Columns.COUNT),
             distribution = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourseReviewSummary.Columns.DISTRIBUTION)) ?: emptyList()
         )
 

@@ -21,6 +21,14 @@ class CourseReviewSummaryDelegate : AdapterDelegate<CourseReviewItem, DelegateVi
         private val summaryRating = root.summaryRating
         private val summaryCount = root.summaryCount
 
+        private val summaryDistribution = listOf(
+            root.summaryCount1Progress to root.summaryCount1Value,
+            root.summaryCount2Progress to root.summaryCount2Value,
+            root.summaryCount3Progress to root.summaryCount3Value,
+            root.summaryCount4Progress to root.summaryCount4Value,
+            root.summaryCount5Progress to root.summaryCount5Value
+        )
+
         init {
             summaryRating.total = 5
         }
@@ -32,6 +40,13 @@ class CourseReviewSummaryDelegate : AdapterDelegate<CourseReviewItem, DelegateVi
                 summaryAverage.text = context.getString(R.string.course_rating_value, average)
                 summaryRating.progress = average.roundToInt()
                 summaryCount.text = count.toString()
+
+                distribution.forEachIndexed { index: Int, l: Long ->
+                    val (progress, value) = summaryDistribution[index]
+                    progress.progress = l.toInt()
+                    progress.max = count.toInt()
+                    value.text = l.toString()
+                }
             }
         }
     }
