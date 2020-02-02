@@ -104,10 +104,16 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         evaluationDrawable.start()
 
         attemptsSubmitButton.setOnClickListener {
+            if (fetchSelectedSubmissionsCount() == 0) {
+                for (index in attemptsAdapter.items.indices) {
+                    selectionHelper.select(index)
+                }
+            }
             val selectedSubmissions = fetchSelectedSubmissionItems().map { it.submission }
             setRecyclerItemsEnabled(isEnabled = false)
             attemptsPresenter.submitSolutions(selectedSubmissions)
         }
+
         initViewStateDelegate()
         attemptsPresenter.fetchAttemptCacheItems()
 
