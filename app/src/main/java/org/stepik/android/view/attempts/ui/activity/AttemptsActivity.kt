@@ -38,7 +38,6 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -105,7 +104,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         evaluationDrawable.start()
 
         attemptsSubmitButton.setOnClickListener {
-            if (fetchSelectedSubmissionsCount() == 0) {
+            if (fetchSelectedSubmissionItems().isEmpty()) {
                 for (index in attemptsAdapter.items.indices) {
                     selectionHelper.select(index)
                 }
@@ -152,7 +151,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     }
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
-        val selectedCount = fetchSelectedSubmissionsCount()
+        val selectedCount = fetchSelectedSubmissionItems().size
         menu.findItem(R.id.attempts_menu_item_delete).isVisible = selectedCount != 0
         if (selectedCount == 0) {
             centeredToolbarTitle.text = getString(R.string.attempts_toolbar_title)
@@ -257,6 +256,16 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         invalidateOptionsMenu()
     }
 
+    private fun showRemoveAttemptsDialog(attemptIds: List<Long>) {
+        RemoveCachedAttemptsDialog
+            .newInstance(attemptIds = attemptIds)
+            .showIfNotExists(supportFragmentManager, RemoveCachedAttemptsDialog.TAG)
+    }
+
+    /**
+     *  isSelected functions
+     */
+
     private fun isAllSubmissionsSelectedInLesson(lessonIndex: Int): Boolean {
         var areAllSelectedInLesson = true
         for (index in lessonIndex + 1 until attemptsAdapter.items.size) {
@@ -285,6 +294,10 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         return areAllSelectedInSection
     }
 
+    /**
+     *  Check box click functions
+     */
+
     private fun handleSectionCheckboxClick(attemptCacheSectionItem: AttemptCacheItem.SectionItem) {
         val itemIndex = attemptsAdapter.items.indexOf(attemptCacheSectionItem)
         val sectionId = attemptCacheSectionItem.section.id
@@ -295,21 +308,20 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             val itemSectionId = when (val item = attemptsAdapter.items[index]) {
                 is AttemptCacheItem.LessonItem ->
                     item.section.id
-                is AttemptCacheItem.SubmissionItem -> {
-                    if (item.submission.status == Submission.Status.LOCAL) {
-                        item.section.id
-                    } else {
-                        -1L
-                    }
-                }
+                is AttemptCacheItem.SubmissionItem ->
+                    item.section.id
                 else ->
                     -1L
             }
 
-            if (itemSectionId == sectionId && isSelected) {
-                selectionHelper.select(index)
+            if (itemSectionId == sectionId) {
+                if (isSelected) {
+                    selectionHelper.select(index)
+                } else {
+                    selectionHelper.deselect(index)
+                }
             } else {
-                selectionHelper.deselect(index)
+                break
             }
         }
         invalidateOptionsMenu()
@@ -324,15 +336,15 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
 
         for (index in itemIndex + 1 until attemptsAdapter.items.size) {
             val item = attemptsAdapter.items[index]
-            if (item is AttemptCacheItem.SubmissionItem &&
-                item.lesson.id == lessonId &&
-                item.submission.status == Submission.Status.LOCAL) {
+            if (item is AttemptCacheItem.SubmissionItem && item.lesson.id == lessonId) {
                     if (isSelected) {
                         selectionHelper.select(index)
                     } else {
                         selectionHelper.deselect(index)
                     }
-                }
+                } else {
+                break
+            }
         }
 
         val sectionIndex = attemptsAdapter.items.indexOfFirst { item ->
@@ -384,15 +396,9 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         invalidateOptionsMenu()
     }
 
-    private fun fetchSelectedSubmissionsCount(): Int {
-        var count = 0
-        attemptsAdapter.items.forEachIndexed { index, item ->
-            if (item is AttemptCacheItem.SubmissionItem && selectionHelper.isSelected(index)) {
-                count += 1
-            }
-        }
-        return count
-    }
+    /**
+     *  Selectable submissions functions
+     */
 
     private fun fetchSelectedSubmissionItems(): List<AttemptCacheItem.SubmissionItem> =
         attemptsAdapter.items
@@ -405,11 +411,9 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             .filterIsInstance<AttemptCacheItem.SubmissionItem>()
             .any { it.submission.status == Submission.Status.LOCAL }
 
-    private fun showRemoveAttemptsDialog(attemptIds: List<Long>) {
-        RemoveCachedAttemptsDialog
-            .newInstance(attemptIds = attemptIds)
-            .showIfNotExists(supportFragmentManager, RemoveCachedAttemptsDialog.TAG)
-    }
+    /**
+     *  isEnabled for AttemptCacheItem elements
+     */
 
     private fun setRecyclerItemsEnabled(isEnabled: Boolean) {
         attemptsAdapter.items = attemptsAdapter.items.map { attemptCacheItem ->
