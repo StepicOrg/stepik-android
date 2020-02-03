@@ -1,7 +1,6 @@
 package org.stepik.android.presentation.attempts
 
-import org.stepik.android.model.Submission
-import org.stepik.android.view.attempts.model.AttemptCacheItem
+import org.stepik.android.domain.attempts.model.AttemptCacheItem
 
 interface AttemptsView {
     sealed class State {
@@ -9,11 +8,10 @@ interface AttemptsView {
         object Loading : State()
         object Empty : State()
         object Error : State()
-        class AttemptsLoaded(val attempts: List<AttemptCacheItem>) : State()
-        class AttemptsSending(val submission: Submission? = null) : State()
-        object AttemptsSent : State()
+        data class AttemptsLoaded(val attempts: List<AttemptCacheItem>, val isSending: Boolean) : State()
     }
 
     fun setState(state: State)
     fun setBlockingLoading(isLoading: Boolean)
+    fun onFinishedSending()
 }

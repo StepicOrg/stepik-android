@@ -101,6 +101,7 @@ constructor(
     fun createLocalSubmission(submission: Submission): Single<Submission> =
         submissionRepository
             .createSubmission(submission, dataSourceType = DataSourceType.CACHE)
+            .doOnSuccess { attemptsPublisher.onNext(Unit) }
 
     fun getStepRestrictions(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizRestrictions> =
         getStepSubmissionCount(stepPersistentWrapper.step.id)

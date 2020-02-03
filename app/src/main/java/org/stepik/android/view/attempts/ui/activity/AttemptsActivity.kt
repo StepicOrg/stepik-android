@@ -23,12 +23,11 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.mutate
+import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.attempts.AttemptsPresenter
 import org.stepik.android.presentation.attempts.AttemptsView
-import org.stepik.android.view.attempts.model.AttemptCacheItem
 import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptLessonAdapterDelegate
 import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptSectionAdapterDelegate
 import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptSubmissionAdapterDelegate
@@ -38,6 +37,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -54,6 +54,8 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var attemptsPresenter: AttemptsPresenter
+
+    private var isDeleteMenuItemVisible = false
 
     private var attemptsAdapter: DefaultDelegateAdapter<AttemptCacheItem> = DefaultDelegateAdapter()
     private val selectionHelper = MultipleChoiceSelectionHelper(attemptsAdapter)
@@ -110,12 +112,11 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
                 }
             }
             val selectedSubmissions = fetchSelectedSubmissionItems().map { it.submission }
-            setRecyclerItemsEnabled(isEnabled = false)
             attemptsPresenter.submitSolutions(selectedSubmissions)
         }
 
         initViewStateDelegate()
-        attemptsPresenter.fetchAttemptCacheItems()
+        attemptsPresenter.fetchAttemptCacheItems(localOnly = false)
 
         if (savedInstanceState != null && savedInstanceState.containsKey(CHECKED_ITEMS_ARGUMENT)) {
             checkedIndices.addAll(savedInstanceState.getIntegerArrayList(CHECKED_ITEMS_ARGUMENT) as ArrayList<Int>)
@@ -152,7 +153,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val selectedCount = fetchSelectedSubmissionItems().size
-        menu.findItem(R.id.attempts_menu_item_delete).isVisible = selectedCount != 0
+        menu.findItem(R.id.attempts_menu_item_delete).isVisible = selectedCount != 0 && isDeleteMenuItemVisible
         if (selectedCount == 0) {
             centeredToolbarTitle.text = getString(R.string.attempts_toolbar_title)
             attemptsSubmitButton.text = getString(R.string.attempts_submit_all)
@@ -192,53 +193,25 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             attemptsSubmissionSeparator,
             attemptsSubmitButton
         )
-        viewStateDelegate.addState<AttemptsView.State.AttemptsSending>(
-            attemptsContainer,
-            attemptsFeedback,
-            attemptsFeedbackSeparator,
-            attemptsRecycler,
-            attemptsSubmissionSeparator,
-            attemptsSubmitFeedback,
-            attemptsSubmitButton
-        )
-        viewStateDelegate.addState<AttemptsView.State.AttemptsSent>(
-            attemptsContainer,
-            attemptsFeedback,
-            attemptsFeedbackSeparator,
-            attemptsRecycler,
-            attemptsSubmissionSeparator,
-            attemptsSubmitButton
-        )
     }
 
     override fun setState(state: AttemptsView.State) {
         viewStateDelegate.switchState(state)
+        isDeleteMenuItemVisible =
+            (state as? AttemptsView.State.AttemptsLoaded)?.isSending == true
         if (state is AttemptsView.State.AttemptsLoaded) {
+            state.attempts.forEach {
+                if (it is AttemptCacheItem.SubmissionItem) {
+                    Timber.d("Item: ${it.submission.status}")
+                }
+            }
             attemptsAdapter.items = state.attempts
-            setRecyclerItemsEnabled(isEnabled = hasSelectableItems())
             if (checkedIndices.isNotEmpty()) {
                 checkedIndices.forEach { selectionHelper.select(it) }
             }
         }
 
-        if (state is AttemptsView.State.AttemptsSending && state.submission != null) {
-            val itemIndex = attemptsAdapter.items.indexOfFirst { it is AttemptCacheItem.SubmissionItem && it.submission.attempt == state.submission.attempt }
-            attemptsAdapter.items = attemptsAdapter.items.mutate {
-                val tmp = get(itemIndex) as AttemptCacheItem.SubmissionItem
-                removeAt(itemIndex)
-                add(itemIndex, tmp.copy(submission = state.submission))
-            }
-        }
-
-        if (state is AttemptsView.State.AttemptsSent) {
-            attemptsAdapter.items.forEachIndexed { index, item ->
-                if (item is AttemptCacheItem.SubmissionItem && item.submission.status != Submission.Status.LOCAL) {
-                    selectionHelper.deselect(index)
-                }
-            }
-            invalidateOptionsMenu()
-            attemptsPresenter.setDataToPresenter(attemptsAdapter.items)
-        }
+        invalidateOptionsMenu()
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
@@ -252,6 +225,11 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     override fun onAttemptRemoveConfirmed(attemptIds: List<Long>) {
         attemptsPresenter.removeAttempts(attemptIds)
         checkedIndices.clear()
+        selectionHelper.reset()
+        invalidateOptionsMenu()
+    }
+
+    override fun onFinishedSending() {
         selectionHelper.reset()
         invalidateOptionsMenu()
     }
@@ -405,26 +383,4 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             .filterIndexed { index, _ -> selectionHelper.isSelected(index) }
             .filterIsInstance<AttemptCacheItem.SubmissionItem>()
             .filter { it.submission.status == Submission.Status.LOCAL }
-
-    private fun hasSelectableItems(): Boolean =
-        attemptsAdapter.items
-            .filterIsInstance<AttemptCacheItem.SubmissionItem>()
-            .any { it.submission.status == Submission.Status.LOCAL }
-
-    /**
-     *  isEnabled for AttemptCacheItem elements
-     */
-
-    private fun setRecyclerItemsEnabled(isEnabled: Boolean) {
-        attemptsAdapter.items = attemptsAdapter.items.map { attemptCacheItem ->
-            when (attemptCacheItem) {
-                is AttemptCacheItem.SectionItem ->
-                    attemptCacheItem.copy(isEnabled = isEnabled)
-                is AttemptCacheItem.LessonItem ->
-                    attemptCacheItem.copy(isEnabled = isEnabled)
-                is AttemptCacheItem.SubmissionItem ->
-                    attemptCacheItem.copy(isEnabled = isEnabled)
-            }
-        }
-    }
 }

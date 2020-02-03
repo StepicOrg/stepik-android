@@ -4,7 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_attempt_section.view.*
 import org.stepic.droid.R
-import org.stepik.android.view.attempts.model.AttemptCacheItem
+import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.selection.SelectionHelper

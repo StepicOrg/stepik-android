@@ -1,4 +1,4 @@
-package org.stepik.android.view.attempts.model
+package org.stepik.android.domain.attempts.model
 
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section

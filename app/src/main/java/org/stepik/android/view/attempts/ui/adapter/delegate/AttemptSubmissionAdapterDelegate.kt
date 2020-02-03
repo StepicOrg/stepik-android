@@ -12,7 +12,7 @@ import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.model.Submission
-import org.stepik.android.view.attempts.model.AttemptCacheItem
+import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.view.base.ui.mapper.DateMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder

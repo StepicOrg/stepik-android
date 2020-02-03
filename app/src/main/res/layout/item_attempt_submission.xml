@@ -66,13 +66,12 @@
          android:id="@+id/submissionStatusIconWrong"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_marginEnd="27dp"
-         android:layout_marginRight="27dp"
          android:gravity="center"
          app:srcCompat="@drawable/ic_step_quiz_wrong"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintRight_toRightOf="parent"
-         app:layout_constraintTop_toTopOf="parent"/>
+         app:layout_constraintBottom_toBottomOf="@id/submissionCheckBox"
+         app:layout_constraintLeft_toLeftOf="@id/submissionCheckBox"
+         app:layout_constraintRight_toRightOf="@id/submissionCheckBox"
+         app:layout_constraintTop_toTopOf="@id/submissionCheckBox"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/submissionStep"

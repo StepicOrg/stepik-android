@@ -1,12 +1,12 @@
-package org.stepik.android.presentation.attempts.mapper
+package org.stepik.android.domain.attempts.mapper
 
+import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
 import org.stepik.android.model.attempts.Attempt
-import org.stepik.android.view.attempts.model.AttemptCacheItem
 import javax.inject.Inject
 
 class AttemptCacheItemMapper

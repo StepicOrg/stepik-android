@@ -8,8 +8,8 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
 import org.stepik.android.model.Submission
+import org.stepik.android.presentation.attempts.mapper.AttemptsStateMapper
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.view.attempts.model.AttemptCacheItem
 import org.stepik.android.view.injection.attempts.AttemptsBus
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,7 +23,8 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler,
     @AttemptsBus
-    private val attemptsObservable: Observable<Unit>
+    private val attemptsObservable: Observable<Unit>,
+    private val attemptsStateMapper: AttemptsStateMapper
 ) : PresenterBase<AttemptsView>() {
     private var state: AttemptsView.State = AttemptsView.State.Idle
         set(value) {
@@ -43,15 +44,14 @@ constructor(
     }
 
     init {
-        // TODO Ask about bus
-        // subscribeForAttemptsUpdates()
+        subscribeForAttemptsUpdates()
     }
 
-    fun fetchAttemptCacheItems(forceUpdate: Boolean = false) {
-        if (state == AttemptsView.State.Idle || forceUpdate) {
+    fun fetchAttemptCacheItems(localOnly: Boolean = true) {
+        if (state == AttemptsView.State.Idle || state is AttemptsView.State.AttemptsLoaded) {
             state = AttemptsView.State.Loading
             compositeDisposable += attemptsInteractor
-                .fetchAttemptCacheItems()
+                .fetchAttemptCacheItems(localOnly)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
@@ -59,7 +59,7 @@ constructor(
                         state = if (attempts.isEmpty()) {
                             AttemptsView.State.Empty
                         } else {
-                            AttemptsView.State.AttemptsLoaded(attempts)
+                            AttemptsView.State.AttemptsLoaded(attempts, isSending = false)
                         }
                     },
                     onError = { state = AttemptsView.State.Error; it.printStackTrace() }
@@ -67,18 +67,14 @@ constructor(
         }
     }
 
-    fun setDataToPresenter(items: List<AttemptCacheItem>) {
-        state = AttemptsView.State.AttemptsLoaded(items)
-    }
-
     private fun subscribeForAttemptsUpdates() {
         compositeDisposable += attemptsObservable
-            .subscribeOn(mainScheduler)
-            .observeOn(backgroundScheduler)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = {
                     Timber.d("OnNext")
-                    fetchAttemptCacheItems(forceUpdate = true) },
+                    fetchAttemptCacheItems(localOnly = false) },
                 onError = { it.printStackTrace() }
             )
     }
@@ -86,7 +82,7 @@ constructor(
     fun submitSolutions(submissions: List<Submission>) {
         if (state !is AttemptsView.State.AttemptsLoaded) return
 
-        state = AttemptsView.State.AttemptsSending()
+        state = attemptsStateMapper.setItemsEnabled(state, isEnabled = false)
 
         compositeDisposable += attemptsInteractor
             .sendSubmissions(submissions)
@@ -94,11 +90,12 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = {
-                    view?.setState(AttemptsView.State.AttemptsSending(it))
                     Timber.d("Next: $it")
+                    state = attemptsStateMapper.mergeStateWithSubmission(state, it)
                 },
                 onComplete = {
-                    view?.setState(AttemptsView.State.AttemptsSent)
+                    state = attemptsStateMapper.setItemsEnabled(state, isEnabled = true)
+                    view?.onFinishedSending()
                 },
                 onError = { it.printStackTrace(); Timber.d("Error: $it") }
             )

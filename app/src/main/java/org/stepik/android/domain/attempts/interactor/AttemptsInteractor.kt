@@ -18,8 +18,8 @@ import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
 import org.stepik.android.model.attempts.Attempt
-import org.stepik.android.presentation.attempts.mapper.AttemptCacheItemMapper
-import org.stepik.android.view.attempts.model.AttemptCacheItem
+import org.stepik.android.domain.attempts.mapper.AttemptCacheItemMapper
+import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -37,7 +37,7 @@ constructor(
 ) {
     fun sendSubmissions(submissions: List<Submission>): Observable<Submission> =
         submissions.toObservable()
-            .flatMapSingle { submission ->
+            .concatMapEager { submission ->
                 submissionRepository
                     .createSubmission(submission)
                     .flatMapObservable {
@@ -46,13 +46,12 @@ constructor(
                             .flatMapMaybe { submissionRepository.getSubmissionsForAttempt(submission.attempt).maybeFirst() }
                             .skipWhile { it.status == Submission.Status.EVALUATION }
                     }
-                    .firstOrError()
             }
 
-    fun fetchAttemptCacheItems(): Single<List<AttemptCacheItem>> =
-        getAttempts()
+    fun fetchAttemptCacheItems(localOnly: Boolean): Single<List<AttemptCacheItem>> =
+        getAttempts(localOnly)
 
-    private fun getAttempts(): Single<List<AttemptCacheItem>> =
+    private fun getAttempts(localOnly: Boolean): Single<List<AttemptCacheItem>> =
         attemptRepository
             .getAttempts(dataSourceType = DataSourceType.CACHE)
             .flatMap { attempts ->  attempts
@@ -60,7 +59,12 @@ constructor(
                 .flatMapSingle { attempt -> submissionRepository.getSubmissionsForAttempt(attempt.id, dataSourceType = DataSourceType.CACHE) }
                 .reduce(emptyList<Submission>()) { a, b -> a + b }
                 .flatMap { submissions ->
-                    getSteps(attempts.mapToLongArray { it.step }, attempts, submissions.filter { it.status == Submission.Status.LOCAL }) }
+                    val submissionsParameter = if (localOnly) {
+                        submissions.filter { it.status == Submission.Status.LOCAL }
+                    } else {
+                        submissions
+                    }
+                    getSteps(attempts.mapToLongArray { it.step }, attempts, submissionsParameter) }
             }
 
     fun removeAttempts(attemptIds: List<Long>): Completable =
