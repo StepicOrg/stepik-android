@@ -7,9 +7,11 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.activity_comments.*
 import kotlinx.android.synthetic.main.empty_comments.*
@@ -162,6 +164,17 @@ class CommentsActivity :
             ))
 
             setOnPaginationListener(commentsPresenter::onLoadMore)
+
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0 && composeCommentButton.isVisible) {
+                        composeCommentButton.hide()
+                    } else if (dy < 0 && !composeCommentButton.isVisible) {
+                        composeCommentButton.show()
+                    }
+                }
+            })
 
             (itemAnimator as? SimpleItemAnimator)
                 ?.supportsChangeAnimations = false
