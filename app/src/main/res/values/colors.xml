@@ -129,7 +129,7 @@
     <color name="loading_view_deep_color">#DBDBDB</color>
 
     <color name="code_toolbar_background">#EEEEEE</color>
-    <color name="code_toolbar_autocomplete_prefix_background">#CCCCCC</color>
+    <color name="code_toolbar_autocomplete_prefix_background">@color/grey03</color>
     <color name="default_code_error_highlight_color">#AAFF0000</color>
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
     <color name="stepik_swipe_refresh">@color/new_accent_color</color>
@@ -183,7 +183,7 @@
     <color name="popup_background_color_dark">@color/new_accent_color</color>
 
     <!-- course -->
-    <color name="course_appbar_separator">#cccccc</color>
+    <color name="course_appbar_separator">@color/grey03</color>
     <color name="course_tabbar_color">#F6F6F6</color>
     <color name="course_info_organization_span">#4a90e2</color>
     <color name="course_content_section_background">#F6F6F6</color>
@@ -193,7 +193,7 @@
     <color name="color_body1">#222222</color>
     <color name="color_body2_note">#999999</color>
 
-    <color name="color_violet_1">#6C7BDF</color>
+    <color name="color_violet_1">@color/violet1</color>
     <color name="color_violet_1_12">#206C7BDF</color>
 
     <!-- Lesson -->
@@ -211,7 +211,7 @@
     <color name="step_quiz_feedback_wrong_background">#26ff7965</color>
 
     <!-- Choice quiz -->
-    <color name="step_quiz_choice_not_checked">#ffffff</color>
+    <color name="step_quiz_choice_not_checked">@color/white</color>
     <color name="step_quiz_choice_checked">#e8eafa</color>
     <color name="step_quiz_choice_correct">#e7f7e7</color>
     <color name="step_quiz_choice_wrong">#ffebe7</color>
