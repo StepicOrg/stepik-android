@@ -44,18 +44,30 @@
         android:layout_marginEnd="18dp"
         android:layout_marginRight="18dp"
         android:gravity="center"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:buttonTint="@color/submission_time"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/submissionStatusIconCorrect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        app:srcCompat="@drawable/ic_step_quiz_correct"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
      <ImageView
-         android:id="@+id/submissionStatusIcon"
+         android:id="@+id/submissionStatusIconWrong"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_marginEnd="18dp"
-         android:layout_marginRight="18dp"
+         android:layout_marginEnd="27dp"
+         android:layout_marginRight="27dp"
          android:gravity="center"
          app:srcCompat="@drawable/ic_step_quiz_wrong"
          app:layout_constraintBottom_toBottomOf="parent"

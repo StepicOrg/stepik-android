@@ -36,7 +36,8 @@ class AttemptSubmissionAdapterDelegate(
         private val submissionTitle = root.submissionTitle
         private val submissionStep = root.submissionStep
         private val submissionCheckBox = root.submissionCheckBox
-        private val submissionStatusIcon = root.submissionStatusIcon
+        private val submissionStatusIconWrong = root.submissionStatusIconWrong
+        private val submissionStatusIconCorrect = root.submissionStatusIconCorrect
 
         init {
             root.setOnClickListener { onItemClick(itemData as AttemptCacheItem.SubmissionItem) }
@@ -72,19 +73,20 @@ class AttemptSubmissionAdapterDelegate(
             when (data.submission.status) {
                 Submission.Status.CORRECT -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_correct_item)
-                    submissionStatusIcon.setImageResource(R.drawable.ic_step_quiz_correct)
-                    submissionStatusIcon.isVisible = true
+                    submissionStatusIconCorrect.isVisible = true
+                    submissionStatusIconWrong.isVisible = false
                     submissionCheckBox.visibility = View.INVISIBLE
                 }
                 Submission.Status.WRONG -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_incorrect_item)
-                    submissionStatusIcon.setImageResource(R.drawable.ic_step_quiz_wrong)
-                    submissionStatusIcon.isVisible = true
+                    submissionStatusIconCorrect.isVisible = false
+                    submissionStatusIconWrong.isVisible = true
                     submissionCheckBox.visibility = View.INVISIBLE
                 }
                 else -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_item)
-                    submissionStatusIcon.isVisible = false
+                    submissionStatusIconCorrect.isVisible = false
+                    submissionStatusIconWrong.isVisible = false
                     submissionCheckBox.visibility = View.VISIBLE
                 }
             }
