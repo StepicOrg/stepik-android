@@ -3,8 +3,10 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import org.stepic.droid.storage.operations.DatabaseOperations
+import org.stepic.droid.util.DbParseHelper
 import org.stepic.droid.util.getDouble
 import org.stepic.droid.util.getLong
+import org.stepic.droid.util.getString
 import org.stepik.android.cache.course.source.structure.DbStructureCourseReviewSummary
 import org.stepik.android.model.CourseReviewSummary
 import javax.inject.Inject
@@ -27,7 +29,9 @@ constructor(
         CourseReviewSummary(
             id = cursor.getLong(DbStructureCourseReviewSummary.Columns.SUMMARY_ID),
             course = cursor.getLong(DbStructureCourseReviewSummary.Columns.COURSE_ID),
-            average = cursor.getDouble(DbStructureCourseReviewSummary.Columns.AVERAGE)
+            average = cursor.getDouble(DbStructureCourseReviewSummary.Columns.AVERAGE),
+            count = cursor.getLong(DbStructureCourseReviewSummary.Columns.COUNT),
+            distribution = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourseReviewSummary.Columns.DISTRIBUTION)) ?: emptyList()
         )
 
     override fun getContentValues(persistentObject: CourseReviewSummary): ContentValues =
@@ -35,5 +39,7 @@ constructor(
             put(DbStructureCourseReviewSummary.Columns.SUMMARY_ID, persistentObject.id)
             put(DbStructureCourseReviewSummary.Columns.COURSE_ID, persistentObject.course)
             put(DbStructureCourseReviewSummary.Columns.AVERAGE, persistentObject.average)
+            put(DbStructureCourseReviewSummary.Columns.COUNT, persistentObject.count)
+            put(DbStructureCourseReviewSummary.Columns.DISTRIBUTION, DbParseHelper.parseLongListToString(persistentObject.distribution))
         }
 }

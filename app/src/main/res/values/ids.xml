@@ -31,4 +31,6 @@
     <item name="exo_position" type="id"/>
     <item name="exo_progress" type="id"/>
 
+    <item name="latex_webview" type="id" />
+    <item name="latex_textview" type="id" />
 </resources>

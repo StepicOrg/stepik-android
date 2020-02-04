@@ -63,10 +63,6 @@ class StepQuizFeedbackBlocksDelegate(
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
 
         stepQuizFeedbackValidation.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
-
-        stepQuizFeedbackHint.setTextSize(14f)
-        stepQuizFeedbackHint.setBackgroundResource(R.drawable.bg_step_quiz_hint)
-        stepQuizFeedbackHint.setTextIsSelectable(false)
     }
 
     fun setState(state: StepQuizFeedbackState) {
@@ -110,7 +106,7 @@ class StepQuizFeedbackBlocksDelegate(
     ) {
         if (hint != null) {
             targetView.setTextViewBackgroundWithoutResettingPadding(hintedBackgroundRes)
-            stepQuizFeedbackHint.setPlainOrLaTeXTextWithCustomFontColored(hint, R.font.pt_mono, R.color.new_accent_color, true)
+            stepQuizFeedbackHint.setText(hint)
             stepQuizFeedbackHint.visibility = View.VISIBLE
         } else {
             targetView.setTextViewBackgroundWithoutResettingPadding(backgroundRes)

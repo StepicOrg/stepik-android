@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_adaptive_rating.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.AdaptiveRatingPresenter
@@ -66,13 +65,6 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
         }
 
         tryAgain.setOnClickListener { adaptiveRatingPresenter.retry() }
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Adaptive.RATING_OPENED, mapOf(AmplitudeAnalytic.Adaptive.Params.COURSE to courseId.toString()))
-        }
     }
 
     override fun onLoading() {

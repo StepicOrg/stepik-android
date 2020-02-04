@@ -77,6 +77,8 @@ data class Course(
     val certificateLink: String? = null,
     @SerializedName("is_certificate_auto_issued")
     val isCertificateAutoIssued: Boolean = false,
+    @SerializedName("is_certificate_issued")
+    val isCertificateIssued: Boolean = false,
 
     @SerializedName("last_deadline")
     val lastDeadline: String? = null,
@@ -177,6 +179,7 @@ data class Course(
         parcel.writeLong(certificateRegularThreshold)
         parcel.writeString(certificateLink)
         parcel.writeBoolean(isCertificateAutoIssued)
+        parcel.writeBoolean(isCertificateIssued)
 
         parcel.writeString(lastDeadline)
         parcel.writeString(beginDate)
@@ -243,6 +246,7 @@ data class Course(
                 parcel.readLong(),
                 parcel.readLong(),
                 parcel.readString(),
+                parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readString(),
                 parcel.readString(),

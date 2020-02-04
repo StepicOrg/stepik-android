@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -53,8 +54,7 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
         inflater.inflate(R.layout.fragment_profile_detail, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        profileDetails.setTextSize(14f)
-        profileDetails.setLineHeight(resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
+        TextViewCompat.setLineHeight(profileDetails.textView, resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))
 
         profileDetailsTitleArrow.changeState()
         profileDetailsTitle.setOnClickListener {
@@ -92,7 +92,7 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
         if (details.isNullOrBlank()) {
             view?.isVisible = false
         } else {
-            profileDetails.setPlainOrLaTeXTextColored(details, R.color.new_accent_color)
+            profileDetails.setText(details)
             view?.isVisible = true
         }
     }

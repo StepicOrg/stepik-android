@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.empty_default.view.*
 import kotlinx.android.synthetic.main.error_no_connection.*
 import kotlinx.android.synthetic.main.fragment_course_reviews.*
 import org.stepic.droid.R
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -29,6 +28,7 @@ import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsView
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewDataDelegate
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewPlaceholderDelegate
+import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewSummaryDelegate
 import org.stepik.android.view.course_reviews.ui.adapter.delegates.CourseReviewsComposeBannerDelegate
 import org.stepik.android.view.course_reviews.ui.dialog.ComposeCourseReviewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -60,8 +60,6 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     private lateinit var courseReviewsPresenter: CourseReviewsPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<CourseReviewsView.State>
 
-    private var isVisibleToUser = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent(courseId)
@@ -76,10 +74,9 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
                 onRemoveReviewClicked = courseReviewsPresenter::removeCourseReview
             )
         courseReviewsAdapter += CourseReviewPlaceholderDelegate()
+        courseReviewsAdapter += CourseReviewSummaryDelegate()
         courseReviewsAdapter +=
             CourseReviewsComposeBannerDelegate { showCourseReviewEditDialog(null) }
-
-        reportIsVisibleToUser()
     }
 
     private fun injectComponent(courseId: Long) {
@@ -132,39 +129,20 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<CourseReviewsView.State.Idle>(courseReviewsPlaceholder)
         viewStateDelegate.addState<CourseReviewsView.State.Loading>(courseReviewsPlaceholder)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsCache>(courseReviewsRecycler)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsRemote>(courseReviewsRecycler)
-        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsRemoteLoading>(courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviews>(courseReviewsRecycler)
+        viewStateDelegate.addState<CourseReviewsView.State.CourseReviewsLoading>(courseReviewsRecycler)
         viewStateDelegate.addState<CourseReviewsView.State.NetworkError>(reportProblem)
         viewStateDelegate.addState<CourseReviewsView.State.EmptyContent>(report_empty)
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        this.isVisibleToUser = isVisibleToUser
-        reportIsVisibleToUser()
-        fetchNewReviews()
-    }
-
-    private fun reportIsVisibleToUser() {
-        if (isVisibleToUser && this::analytic.isInitialized) {
-            analytic
-                .reportAmplitudeEvent(
-                    AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
-                    mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
-                )
-        }
-    }
-
-    private fun fetchNewReviews() {
-        if (isVisibleToUser && this::courseReviewsPresenter.isInitialized) {
-            courseReviewsPresenter.fetchNextPageFromRemote()
-        }
     }
 
     override fun onStart() {
         super.onStart()
         courseReviewsPresenter.attachView(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        courseReviewsPresenter.fetchNextPageFromRemote(isFromOnResume = true)
     }
 
     override fun onStop() {
@@ -175,13 +153,10 @@ class CourseReviewsFragment : Fragment(), CourseReviewsView {
     override fun setState(state: CourseReviewsView.State) {
         viewStateDelegate.switchState(state)
         when (state) {
-            is CourseReviewsView.State.CourseReviewsCache ->
+            is CourseReviewsView.State.CourseReviews ->
                 courseReviewsAdapter.items = state.courseReviewItems
 
-            is CourseReviewsView.State.CourseReviewsRemote ->
-                courseReviewsAdapter.items = state.courseReviewItems
-
-            is CourseReviewsView.State.CourseReviewsRemoteLoading ->
+            is CourseReviewsView.State.CourseReviewsLoading ->
                 courseReviewsAdapter.items = state.courseReviewItems + CourseReviewItem.Placeholder()
         }
     }

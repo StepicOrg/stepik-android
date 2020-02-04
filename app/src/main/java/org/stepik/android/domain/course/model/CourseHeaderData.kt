@@ -10,11 +10,9 @@ data class CourseHeaderData(
     val course: Course,
     val title: String,
     val cover: String,
-    val learnersCount: Long,
 
-    val review: Double,
+    val stats: CourseStats,
     val progress: Progress?,
-    val readiness: Double,
     val enrollmentState: EnrollmentState
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -22,10 +20,8 @@ data class CourseHeaderData(
         parcel.writeParcelable(course, flags)
         parcel.writeString(title)
         parcel.writeString(cover)
-        parcel.writeLong(learnersCount)
-        parcel.writeDouble(review)
+        parcel.writeParcelable(stats, flags)
         parcel.writeParcelable(progress, flags)
-        parcel.writeDouble(readiness)
         parcel.writeSerializable(enrollmentState)
     }
 
@@ -38,10 +34,8 @@ data class CourseHeaderData(
                 parcel.readParcelable(Course::class.java.classLoader)!!,
                 parcel.readString()!!,
                 parcel.readString()!!,
-                parcel.readLong(),
-                parcel.readDouble(),
+                parcel.readParcelable(CourseStats::class.java.classLoader)!!,
                 parcel.readParcelable(Progress::class.java.classLoader),
-                parcel.readDouble(),
                 restoreEnrollmentState(parcel.readSerializable() as EnrollmentState)
             )
 

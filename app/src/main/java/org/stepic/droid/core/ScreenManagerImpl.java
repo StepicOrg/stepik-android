@@ -26,6 +26,7 @@ import org.stepic.droid.R;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveCourseActivity;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveOnboardingActivity;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveStatsActivity;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
@@ -302,6 +303,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showDownloads(Context context) {
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.SCREEN_OPENED);
         Intent intent = DownloadActivity.Companion.createIntent(context);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -444,8 +446,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Nullable
     @Override
     public Intent getProfileIntent(@NotNull Context context) {
-//        Intent intent = new Intent(context, ProfileActivity.class);
-        Intent intent = new Intent(context, org.stepik.android.view.profile.ui.activity.ProfileActivity.class);
+        Intent intent = new Intent(context, ProfileActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }

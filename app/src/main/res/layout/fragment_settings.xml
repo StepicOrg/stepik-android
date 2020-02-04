@@ -220,7 +220,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/manage_notification_settings"
+                        android:text="@string/notification_settings_title"
                         android:textSize="16sp"/>
                 </FrameLayout>
 

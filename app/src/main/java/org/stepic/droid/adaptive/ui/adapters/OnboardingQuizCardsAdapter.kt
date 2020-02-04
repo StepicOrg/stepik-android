@@ -7,7 +7,7 @@ class OnboardingQuizCardsAdapter(private val onCardPolled: (Int) -> Unit) : Quiz
     override fun onBindViewHolder(holder: QuizCardViewHolder, pos: Int) {
         super.onBindViewHolder(holder, pos)
         holder.quizViewContainer.visibility = View.GONE
-        holder.question.setOnWebViewClickListener(null)
+        holder.question.webView.onImageClickListener = null
 
         holder.separatorAnswers.visibility = View.GONE
 

@@ -40,7 +40,6 @@ import ru.nobird.android.view.base.ui.extension.hideKeyboard
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, ResetCodeDialogFragment.Callback {
     companion object {
         const val TAG = "CodeStepQuizFullScreenDialogFragment"
-        const val CODE_PLAYGROUND_REQUEST = 153
 
         private const val ARG_LANG = "LANG"
         private const val ARG_CODE = "CODE"
@@ -55,8 +54,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
                     this.lessonTitle = lessonTitle
                 }
     }
-
-    private lateinit var callback: Callback
 
     private lateinit var codeLayoutDelegate: CodeLayoutDelegate
 
@@ -100,8 +97,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        callback = targetFragment as Callback
-
         centeredToolbarTitle.text = lessonTitle
         centeredToolbar.inflateMenu(R.menu.code_playground_menu)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
@@ -127,11 +122,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
             ?.text
             ?.takeIf(String::isNotEmpty)
 
-        if (text != null) {
-            instructionsLayout.stepQuizCodeTextContent.setText(text)
-            instructionsLayout.stepQuizCodeTextContent.setTextSize(16f)
-            instructionsLayout.stepQuizCodeTextContent.setTextIsSelectable(true)
-        }
+        instructionsLayout.stepQuizCodeTextContent.setText(text)
 
         if (savedInstanceState != null) {
             lang = savedInstanceState.getString(ARG_LANG) ?: return
@@ -161,7 +152,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
         fullScreenCodeViewPager.setCurrentItem(1, false)
 
         codeSubmitButton.setOnClickListener {
-            callback.onSyncCodeStateWithParent(lang, codeLayout.text.toString(), onSubmitClicked = true)
+            (parentFragment as? Callback)
+                ?.onSyncCodeStateWithParent(lang, codeLayout.text.toString(), onSubmitClicked = true)
             dismiss()
         }
     }
@@ -230,7 +222,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     }
 
     override fun onPause() {
-        callback.onSyncCodeStateWithParent(lang, codeLayout.text.toString())
+        (parentFragment as? Callback)
+            ?.onSyncCodeStateWithParent(lang, codeLayout.text.toString())
         super.onPause()
     }
 

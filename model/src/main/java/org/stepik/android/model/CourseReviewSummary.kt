@@ -2,11 +2,15 @@ package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
 
-class CourseReviewSummary(
+data class CourseReviewSummary(
     @SerializedName("id")
     val id: Long,
     @SerializedName("course")
     val course: Long,
     @SerializedName("average")
-    val average: Double
+    val average: Double,
+    @SerializedName("count")
+    val count: Long,
+    @SerializedName("distribution")
+    val distribution: List<Long>
 )

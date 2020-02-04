@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,7 +8,7 @@
 
     <include layout="@layout/view_course_info_block" />
 
-    <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+    <org.stepik.android.view.latex.ui.widget.LatexView
         android:id="@+id/blockMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,11 +16,9 @@
         android:layout_marginTop="@dimen/course_info_block_margin"
         android:layout_marginStart="@dimen/course_info_block_text_margin"
         android:layout_marginLeft="@dimen/course_info_block_text_margin"
-        android:lineSpacingExtra="4sp"
         android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textSize="14sp"
 
-        app:fontFamily="@font/roboto_light"
-        tools:ignore="missingPrefix" />
+        android:fontFamily="@font/roboto_light" />
 
 </LinearLayout>

@@ -17,37 +17,45 @@
             android:id="@+id/courseCollapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:titleEnabled="false"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/courseCover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="@null"
+                android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.5" />
 
             <include layout="@layout/header_course" />
             <include layout="@layout/header_course_placeholder" />
 
+            <View
+                android:id="@+id/courseToolbarScrim"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0"
+                android:background="@color/course_appbar_scrim_color" />
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/courseToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-
-                android:contentInsetLeft="0dp"
-                android:contentInsetStart="0dp"
-                app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp"
-                android:contentInsetRight="0dp"
-                android:contentInsetEnd="0dp"
-                app:contentInsetRight="0dp"
-                app:contentInsetEnd="0dp">
-                <View
-                    android:id="@+id/courseToolbarConstraint"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                android:layout_gravity="top"
+                app:title="">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/courseToolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/course_title"
+                    android:textColor="@color/white"
+                    android:textAppearance="@style/StepikToolbarTextAppearance"/>
             </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
