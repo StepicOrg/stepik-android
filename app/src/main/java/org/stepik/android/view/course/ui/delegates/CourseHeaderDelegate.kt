@@ -136,7 +136,7 @@ class CourseHeaderDelegate(
 
             if (courseHeaderData.progress != null) {
                 courseProgressDelegate.setProgress(courseHeaderData.progress)
-                courseProgressDelegate.setSolutionsCount((0..1).random())
+                courseProgressDelegate.setSolutionsCount(0) // todo link with solutions count
             } else {
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
