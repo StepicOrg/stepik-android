@@ -539,4 +539,8 @@
         <item name="android:maxHeight">4dp</item>
     </style>
 
+    <style name="CourseReviewSummaryCountTitle">
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/roboto_light</item>
+    </style>
 </resources>

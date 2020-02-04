@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
@@ -61,11 +62,9 @@ constructor(
                     course = course,
                     title = course.title ?: "",
                     cover = course.cover ?: "",
-                    learnersCount = course.learnersCount,
 
-                    review = courseReview,
+                    stats = CourseStats(courseReview, course.learnersCount, course.readiness),
                     progress = (courseProgress as? Progress),
-                    readiness = course.readiness,
                     enrollmentState = enrollmentState
                 )
             }

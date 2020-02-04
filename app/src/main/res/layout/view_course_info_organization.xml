@@ -40,7 +40,6 @@
         android:id="@+id/courseInfoOrganizationSeparator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/course_appbar_separator"
-        android:alpha="0.5" />
+        android:background="@color/course_item_separator_light" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

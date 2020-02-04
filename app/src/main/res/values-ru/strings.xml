@@ -553,12 +553,16 @@
     <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения «%s», проверьте свой профиль.</string>
 
     <!-- Course -->
+    <string name="course_title">Курс</string>
     <string name="course_verified">Проверенный</string>
     <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
 
     <string name="course_tab_info">Инфо</string>
     <string name="course_tab_reviews">Отзывы</string>
     <string name="course_tab_modules">Модули</string>
+
+    <string name="course_progress_current">Текущий прогресс</string>
+    <string name="course_progress_solutions">Неотправленные решения</string>
 
     <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
@@ -569,6 +573,7 @@
     <string name="course_info_language">Язык</string>
     <string name="course_info_certificate">Сертификат</string>
     <string name="course_info_certificate_detail">Подробнее о сертификате</string>
+    <string name="course_info_learners_count">Число записавшихся на курс</string>
 
     <string name="course_info_certificate_regular">Условие получения сертификата: %s</string>
     <string name="course_info_certificate_distinction">С отличием: %s</string>

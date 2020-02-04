@@ -1,5 +1,6 @@
 package org.stepik.android.view.course_info.model
 
+import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.model.user.User
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 
@@ -41,4 +42,8 @@ sealed class CourseInfoItem(
             val instructors: List<User?>
         ) : WithTitle(CourseInfoType.INSTRUCTORS)
     }
+
+    class StatsBlock(
+        val courseStats: CourseStats
+    ) : CourseInfoItem(CourseInfoType.STATS)
 }
