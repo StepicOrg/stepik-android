@@ -35,10 +35,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/guideline_standard_padding"
         android:contentDescription="@string/comment_action_create"
         android:src="@drawable/ic_create_white_24dp"
+        app:useCompatPadding="true"
         app:backgroundTint="@color/green01"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         app:layout_anchorGravity="bottom|right|end" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
