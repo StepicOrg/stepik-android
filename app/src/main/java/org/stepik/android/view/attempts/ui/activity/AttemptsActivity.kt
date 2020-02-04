@@ -38,6 +38,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -207,6 +208,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             (state as? AttemptsView.State.AttemptsLoaded)?.isSending == true
 
         if (state is AttemptsView.State.AttemptsLoaded) {
+            Timber.d("Items: ${state.attempts}")
             attemptsAdapter.items = state.attempts
             attemptsSubmitButton.isEnabled = !state.isSending
             attemptsSubmitFeedback.isVisible = state.isSending
