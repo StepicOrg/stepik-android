@@ -43,7 +43,7 @@ constructor() {
                 time = attempt.time?.time ?: 0L,
                 isEnabled = true
             )
-        }.sortedBy { it.submission.time?.time }
+        }
 
         val lessonItems = items.map { AttemptCacheItem.LessonItem(it.section, it.unit, it.lesson, true) }.distinct().sortedBy { it.lesson.id }
         val sectionItems = lessonItems.map { AttemptCacheItem.SectionItem(it.section, true) }.distinct().sortedBy { it.section.id }
@@ -55,8 +55,8 @@ constructor() {
             val lessonsBySection = lessonItems.filter { it.section == sectionItem.section }
             lessonsBySection.forEach { lessonItem ->
                 attemptCacheItems.add(lessonItem)
-                val subs = items.filter { it.lesson == lessonItem.lesson }
-                attemptCacheItems += subs
+                val submissionItems = items.filter { it.lesson == lessonItem.lesson }.sortedBy { it.step.position }
+                attemptCacheItems += submissionItems
             }
         }
         return attemptCacheItems
