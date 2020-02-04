@@ -62,7 +62,11 @@ constructor(
                         state = if (attempts.isEmpty()) {
                             AttemptsView.State.Empty
                         } else {
-                            AttemptsView.State.AttemptsLoaded(attempts, isSending = false)
+                            if (state is AttemptsView.State.AttemptsLoaded) {
+                                attemptsStateMapper.mergeStateWithAttemptItems(state, attempts)
+                            } else {
+                                AttemptsView.State.AttemptsLoaded(attempts, isSending = false)
+                            }
                         }
                     },
                     onError = { state = AttemptsView.State.Error; it.printStackTrace() }

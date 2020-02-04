@@ -121,7 +121,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         }
 
         initViewStateDelegate()
-        attemptsPresenter.fetchAttemptCacheItems(localOnly = false)
+        attemptsPresenter.fetchAttemptCacheItems(localOnly = true)
 
         if (savedInstanceState != null && savedInstanceState.containsKey(CHECKED_ITEMS_ARGUMENT)) {
             checkedIndices.addAll(savedInstanceState.getIntegerArrayList(CHECKED_ITEMS_ARGUMENT) as ArrayList<Int>)

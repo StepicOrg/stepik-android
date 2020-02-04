@@ -36,4 +36,25 @@ constructor() {
         }
         return state.copy(attempts = stateItems)
     }
+
+    fun mergeStateWithAttemptItems(state: AttemptsView.State, attemptItems: List<AttemptCacheItem>): AttemptsView.State {
+        if (state !is AttemptsView.State.AttemptsLoaded) {
+            return state
+        }
+
+        val newItems = attemptItems
+            .asSequence()
+            .filterIsInstance<AttemptCacheItem.SubmissionItem>()
+            .associateBy { it.submission.attempt }
+
+        val mergedItems = state.attempts.map { item ->
+            if (item is AttemptCacheItem.SubmissionItem) {
+                newItems[item.submission.attempt] ?: item
+            } else {
+                item
+            }
+        }
+
+        return state.copy(attempts = mergedItems)
+    }
 }
