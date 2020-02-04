@@ -52,7 +52,11 @@ constructor(
 
     fun fetchAttemptCacheItems(localOnly: Boolean = true) {
         if (state == AttemptsView.State.Idle || state is AttemptsView.State.AttemptsLoaded) {
-            state = AttemptsView.State.Loading
+            state = if (state !is AttemptsView.State.AttemptsLoaded) {
+                AttemptsView.State.Loading
+            } else {
+                state
+            }
             compositeDisposable += attemptsInteractor
                 .fetchAttemptCacheItems(courseId, localOnly)
                 .subscribeOn(backgroundScheduler)

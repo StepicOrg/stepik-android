@@ -42,19 +42,81 @@ constructor() {
             return state
         }
 
-        val newItems = attemptItems
+        val sectionIds = attemptItems
             .asSequence()
-            .filterIsInstance<AttemptCacheItem.SubmissionItem>()
-            .associateBy { it.submission.attempt }
+            .mapNotNull { item ->
+                (item as? AttemptCacheItem.SubmissionItem)
+                    ?.takeIf { it.submission.status == Submission.Status.LOCAL }
+                    ?.section
+                    ?.id
+            }
+            .toSet()
 
-        val mergedItems = state.attempts.map { item ->
-            if (item is AttemptCacheItem.SubmissionItem) {
-                newItems[item.submission.attempt] ?: item
-            } else {
-                item
+        val lessonIds = attemptItems
+            .asSequence()
+            .mapNotNull { item ->
+                (item as? AttemptCacheItem.SubmissionItem)
+                    ?.takeIf { it.submission.status == Submission.Status.LOCAL }
+                    ?.lesson
+                    ?.id
+            }
+            .toSet()
+
+        var indexLeft = 0
+        var indexRight = 0
+
+        val result = ArrayList<AttemptCacheItem?>()
+
+        while (indexLeft <= state.attempts.size && indexRight <= attemptItems.size) {
+            when (compareAttemptCacheItems(state.attempts.getOrNull(indexLeft), attemptItems.getOrNull(indexRight))) {
+                -1 -> {
+                    result += state.attempts.getOrNull(indexLeft++)
+                }
+                0 -> {
+                    result += attemptItems.getOrNull(indexRight++)
+                    indexLeft++
+                }
+                1 -> {
+                    val shouldAddItem =
+                        when (val itemToAdd = attemptItems.getOrNull(indexRight)) {
+                            is AttemptCacheItem.SectionItem ->
+                                itemToAdd.section.id in sectionIds
+                            is AttemptCacheItem.LessonItem ->
+                                itemToAdd.lesson.id in lessonIds
+                            is AttemptCacheItem.SubmissionItem ->
+                                itemToAdd.submission.status == Submission.Status.LOCAL
+                            else ->
+                                false
+                        }
+
+                    if (shouldAddItem) {
+                        result += attemptItems.getOrNull(indexRight++)
+                    }
+                        indexRight++
+                }
             }
         }
-
-        return state.copy(attempts = mergedItems)
+        return state.copy(attempts = result.filterNotNull())
     }
+
+    private fun compareAttemptCacheItems(a: AttemptCacheItem?, b: AttemptCacheItem?): Int {
+        val (aSection, aUnit, aStep) = getAttemptCacheItemTriple(a)
+        val (bSection, bUnit, bStep) = getAttemptCacheItemTriple(b)
+
+        return (aSection?.position ?: -1).compareTo(bSection?.position ?: -1).takeIf { it != 0 }
+            ?: (aUnit?.position ?: -1).compareTo(bUnit?.position ?: -1).takeIf { it != 0 }
+            ?: (aStep?.position ?: -1).compareTo(bStep?.position ?: -1)
+    }
+
+    private fun getAttemptCacheItemTriple(item: AttemptCacheItem?) =
+        when (item) {
+            is AttemptCacheItem.SectionItem ->
+                Triple(item.section, null, null)
+            is AttemptCacheItem.LessonItem ->
+                Triple(item.section, item.unit, null)
+            is AttemptCacheItem.SubmissionItem ->
+                Triple(item.section, item.unit, item.step)
+            null ->
+                Triple(null, null, null)
+        }
 }
