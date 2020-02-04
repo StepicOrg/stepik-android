@@ -203,7 +203,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { updateCachedAttemptsCount() },
-                onError = { it.printStackTrace() }
+                onError = emptyOnErrorStub
             )
     }
 

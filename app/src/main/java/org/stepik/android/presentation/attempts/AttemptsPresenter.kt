@@ -8,6 +8,7 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.attempts.mapper.AttemptsStateMapper
@@ -88,7 +89,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { fetchAttemptCacheItems(localOnly = false) },
-                onError = { it.printStackTrace() }
+                onError = emptyOnErrorStub
             )
     }
 

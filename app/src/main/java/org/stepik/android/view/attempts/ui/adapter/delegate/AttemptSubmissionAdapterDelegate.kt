@@ -52,6 +52,7 @@ class AttemptSubmissionAdapterDelegate(
                 submissionCheckBox.isChecked = isSelected
             }
 
+            submissionRoot.isEnabled = data.isEnabled
             submissionCheckBox.isEnabled = data.isEnabled
 
             val resourceId = when (data.step.block?.name) {
