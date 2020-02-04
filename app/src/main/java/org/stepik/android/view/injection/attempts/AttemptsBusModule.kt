@@ -30,5 +30,24 @@ abstract class AttemptsBusModule {
             scheduler: Scheduler
         ): Observable<Unit> =
             attemptsPublisher.observeOn(scheduler)
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @AttemptsSentBus
+        internal fun provideAttemptsSentPublisher(): PublishSubject<Unit> =
+            PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @AttemptsSentBus
+        internal fun provideAttemptsSentObservable(
+            @AttemptsSentBus
+            attemptsSentPublisher: PublishSubject<Unit>,
+            @BackgroundScheduler
+            scheduler: Scheduler
+        ): Observable<Unit> =
+            attemptsSentPublisher.observeOn(scheduler)
     }
 }

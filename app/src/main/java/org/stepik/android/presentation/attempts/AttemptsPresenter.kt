@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -12,6 +13,7 @@ import org.stepik.android.model.Submission
 import org.stepik.android.presentation.attempts.mapper.AttemptsStateMapper
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.injection.attempts.AttemptsBus
+import org.stepik.android.view.injection.attempts.AttemptsSentBus
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -27,6 +29,8 @@ constructor(
     private val mainScheduler: Scheduler,
     @AttemptsBus
     private val attemptsObservable: Observable<Unit>,
+    @AttemptsSentBus
+    private val attemptsSentPublisher: PublishSubject<Unit>,
     private val attemptsStateMapper: AttemptsStateMapper
 ) : PresenterBase<AttemptsView>() {
     private var state: AttemptsView.State = AttemptsView.State.Idle
@@ -83,9 +87,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = {
-                    Timber.d("OnNext")
-                    fetchAttemptCacheItems(localOnly = false) },
+                onNext = { fetchAttemptCacheItems(localOnly = false) },
                 onError = { it.printStackTrace() }
             )
     }
@@ -100,12 +102,10 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = {
-                    Timber.d("Next: $it")
-                    state = attemptsStateMapper.mergeStateWithSubmission(state, it)
-                },
+                onNext = { state = attemptsStateMapper.mergeStateWithSubmission(state, it) },
                 onComplete = {
                     state = attemptsStateMapper.setItemsEnabled(state, isEnabled = true)
+                    attemptsSentPublisher.onNext(Unit)
                     view?.onFinishedSending()
                 },
                 onError = { it.printStackTrace(); Timber.d("Error: $it") }

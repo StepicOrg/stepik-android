@@ -11,6 +11,9 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.plus
+import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
+import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
@@ -22,6 +25,8 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.view.injection.attempts.AttemptsBus
+import org.stepik.android.view.injection.attempts.AttemptsSentBus
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import javax.inject.Inject
 
@@ -36,6 +41,7 @@ constructor(
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val continueLearningInteractor: ContinueLearningInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
+    private val attemptsInteractor: AttemptsInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
 
@@ -43,6 +49,12 @@ constructor(
 
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
+
+    @AttemptsBus
+    private val attemptsObservable: Observable<Unit>,
+
+    @AttemptsSentBus
+    private val attemptsSentObservable: Observable<Unit>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -60,6 +72,7 @@ constructor(
 
     init {
         subscriberForEnrollmentUpdates()
+        subscribeForCachedAttemptsUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -181,6 +194,36 @@ constructor(
             .subscribeBy(
                 onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning(); resolveCourseShareTooltip(it) },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
+            )
+    }
+
+    private fun subscribeForCachedAttemptsUpdates() {
+        compositeDisposable += (attemptsObservable + attemptsSentObservable)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { updateCachedAttemptsCount() },
+                onError = { it.printStackTrace() }
+            )
+    }
+
+    private fun updateCachedAttemptsCount() {
+        compositeDisposable += attemptsInteractor
+            .fetchAttemptCacheItems(courseId, localOnly = true)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { localSubmissions ->
+                    val oldState =
+                        (state as? CourseView.State.CourseLoaded)
+                        ?: return@subscribeBy
+
+                    val courseHeaderData = oldState
+                        .courseHeaderData
+                        .copy(localSubmissionsCount = localSubmissions.count { it is AttemptCacheItem.SubmissionItem })
+                    state = CourseView.State.CourseLoaded(courseHeaderData)
+                },
+                onError = { it.printStackTrace() }
             )
     }
 
