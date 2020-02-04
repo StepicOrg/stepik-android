@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
@@ -233,14 +234,12 @@ class FastContinueFragment : FragmentBase(),
         onShowCourse(joinedCourse)
     }
 
-    //TODO Remove this shortcut
     private fun handleContinueCourseClick(course: Course) {
-        /* analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
+        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
             AmplitudeAnalytic.Course.Params.COURSE to course.id,
             AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
         ))
-        continueCoursePresenter.continueCourse(course) */
-        screenManager.showCachedAttempts(requireContext(), course.id)
+        continueCoursePresenter.continueCourse(course)
     }
 }

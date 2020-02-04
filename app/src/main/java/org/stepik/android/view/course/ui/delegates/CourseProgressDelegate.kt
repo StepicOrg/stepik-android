@@ -7,7 +7,8 @@ import org.stepic.droid.R
 import org.stepik.android.model.Progress
 
 class CourseProgressDelegate(
-    view: View
+    view: View,
+    onSubmissionCountClicked: () -> Unit
 ) {
     private val context = view.context
 
@@ -18,7 +19,7 @@ class CourseProgressDelegate(
     private val courseSolutionsValue = view.courseSolutionsValue
 
     init {
-        courseSolutionsValue.setOnClickListener { /* todo */ }
+        courseSolutionsValue.setOnClickListener { onSubmissionCountClicked() }
     }
 
     fun setProgress(progress: Progress) {
