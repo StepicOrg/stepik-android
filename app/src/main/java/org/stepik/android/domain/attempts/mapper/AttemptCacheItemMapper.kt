@@ -13,6 +13,7 @@ class AttemptCacheItemMapper
 @Inject
 constructor() {
     fun mapAttemptCacheItems(
+        courseId: Long,
         attempts: List<Attempt>,
         submissions: List<Submission>,
         steps: List<Step>,
@@ -20,19 +21,32 @@ constructor() {
         units: List<Unit>,
         sections: List<Section>
     ): List<AttemptCacheItem> {
-        val items = submissions.map { submission ->
-            val attempt = attempts.find { it.id == submission.attempt }
-            val lessonId = steps.find { it.id == attempt?.step }?.lesson
-            val lesson = lessons.find { it.id == lessonId }
+        val sectionsMap = sections.asSequence().filter { it.course == courseId }.associateBy(Section::id)
+        val unitsMap = units.asSequence().filter { it.section in sectionsMap }.associateBy(Unit::lesson)
+        val lessonsMap = lessons.asSequence().filter { lesson -> unitsMap.any { it.value.lesson == lesson.id } }.associateBy(Lesson::id)
+        val stepsMap = steps.asSequence().filter { it.lesson in lessonsMap }.associateBy(Step::id)
+        val attemptsMap = attempts.asSequence().filter { it.step in stepsMap }.associateBy(Attempt::id)
 
-            val unit = units.find { it.lesson == lessonId }
-            val section = sections.find { it.id == unit?.section }
-            val step = steps.find { it.id == attempt?.step }
-            AttemptCacheItem.SubmissionItem(isEnabled = false, section = section!!, unit = unit!!, lesson = lesson!!, step = step!!, submission = submission, time = attempt?.time!!)
-        }
+        val items = submissions.mapNotNull { submission ->
+            val attempt = attemptsMap[submission.attempt] ?: return@mapNotNull null
+            val lessonId = stepsMap[attempt.step]?.lesson ?: return@mapNotNull null
+            val lesson = lessonsMap[lessonId] ?: return@mapNotNull null
+            val unit = unitsMap[lessonId] ?: return@mapNotNull null
+            val section = sectionsMap[unit.section] ?: return@mapNotNull null
+            val step = stepsMap[attempt.step] ?: return@mapNotNull null
+            AttemptCacheItem.SubmissionItem(
+                section = section,
+                unit = unit,
+                lesson = lesson,
+                step = step,
+                submission = submission,
+                time = attempt.time?.time ?: 0L,
+                isEnabled = true
+            )
+        }.sortedBy { it.submission.time?.time }
 
-        val lessonItems = items.map { AttemptCacheItem.LessonItem(false, it.section, it.unit, it.lesson) }.distinct().sortedBy { it.lesson.id }
-        val sectionItems = lessonItems.map { AttemptCacheItem.SectionItem(false, it.section) }.distinct().sortedBy { it.section.id }
+        val lessonItems = items.map { AttemptCacheItem.LessonItem(it.section, it.unit, it.lesson, true) }.distinct().sortedBy { it.lesson.id }
+        val sectionItems = lessonItems.map { AttemptCacheItem.SectionItem(it.section, true) }.distinct().sortedBy { it.section.id }
 
         val attemptCacheItems = mutableListOf<AttemptCacheItem>()
 

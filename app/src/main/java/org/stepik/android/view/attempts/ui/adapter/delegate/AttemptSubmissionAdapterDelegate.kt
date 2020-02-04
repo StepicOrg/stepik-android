@@ -11,8 +11,8 @@ import kotlinx.android.synthetic.main.item_attempt_submission.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepik.android.model.Submission
 import org.stepik.android.domain.attempts.model.AttemptCacheItem
+import org.stepik.android.model.Submission
 import org.stepik.android.view.base.ui.mapper.DateMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -68,7 +68,12 @@ class AttemptSubmissionAdapterDelegate(
                 ContextCompat.getColor(context, R.color.new_accent_color), PorterDuff.Mode.SRC_IN)
             submissionQuizIcon.setImageDrawable(icon)
             submissionTitle.text =  HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
-            submissionStep.text = context.resources.getString(R.string.attempts_submission_step_position, data.step.position, DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.time.time))
+            submissionStep.text =
+                context.resources.getString(
+                    R.string.attempts_submission_step_position,
+                    data.step.position,
+                    DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.submission.time?.time ?: data.time)
+                )
 
             when (data.submission.status) {
                 Submission.Status.CORRECT -> {

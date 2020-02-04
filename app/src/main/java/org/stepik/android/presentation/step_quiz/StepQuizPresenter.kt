@@ -18,6 +18,7 @@ import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
+import java.util.Calendar
 import javax.inject.Inject
 
 class StepQuizPresenter
@@ -155,7 +156,7 @@ constructor(
             ?.id
             ?: 0
 
-        val submission = Submission(id = submissionId, attempt = oldState.attempt.id, _reply = reply, status = Submission.Status.LOCAL)
+        val submission = Submission(id = submissionId, attempt = oldState.attempt.id, _reply = reply, status = Submission.Status.LOCAL, time = Calendar.getInstance().time)
         state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))
 
         compositeDisposable += stepQuizInteractor

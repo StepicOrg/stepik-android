@@ -5,28 +5,27 @@ import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
-import java.util.Date
 
 sealed class AttemptCacheItem {
     data class SectionItem(
-        val isEnabled: Boolean,
-        val section: Section
+        val section: Section,
+        val isEnabled: Boolean
     ) : AttemptCacheItem()
 
     data class LessonItem(
-        val isEnabled: Boolean,
         val section: Section,
         val unit: Unit,
-        val lesson: Lesson
+        val lesson: Lesson,
+        val isEnabled: Boolean
     ) : AttemptCacheItem()
 
     data class SubmissionItem(
-        val isEnabled: Boolean,
         val section: Section,
         val unit: Unit,
         val lesson: Lesson,
         val step: Step,
         val submission: Submission,
-        val time: Date
+        val time: Long,
+        val isEnabled: Boolean
     ) : AttemptCacheItem()
 }

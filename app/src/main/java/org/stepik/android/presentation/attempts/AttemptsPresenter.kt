@@ -5,6 +5,7 @@ import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
 import org.stepik.android.model.Submission
@@ -17,6 +18,8 @@ import javax.inject.Inject
 class AttemptsPresenter
 @Inject
 constructor(
+    @CourseId
+    private val courseId: Long,
     private val attemptsInteractor: AttemptsInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -51,7 +54,7 @@ constructor(
         if (state == AttemptsView.State.Idle || state is AttemptsView.State.AttemptsLoaded) {
             state = AttemptsView.State.Loading
             compositeDisposable += attemptsInteractor
-                .fetchAttemptCacheItems(localOnly)
+                .fetchAttemptCacheItems(courseId, localOnly)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(

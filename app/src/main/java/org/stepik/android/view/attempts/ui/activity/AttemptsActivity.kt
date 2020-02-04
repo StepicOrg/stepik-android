@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -37,7 +38,6 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -46,8 +46,11 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         private const val EVALUATION_FRAME_DURATION_MS = 250
         private const val CHECKED_ITEMS_ARGUMENT = "checked_items"
 
-        fun createIntent(context: Context): Intent =
+        private const val EXTRA_COURSE_ID = "course_id"
+
+        fun createIntent(context: Context, courseId: Long): Intent =
             Intent(context, AttemptsActivity::class.java)
+                .putExtra(EXTRA_COURSE_ID, courseId)
     }
 
     @Inject
@@ -71,7 +74,9 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_attempts)
 
-        injectComponent()
+        val courseId = intent.getLongExtra(EXTRA_COURSE_ID, -1)
+        injectComponent(courseId)
+
         attemptsPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(AttemptsPresenter::class.java)
@@ -123,9 +128,10 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         }
     }
 
-    private fun injectComponent() {
+    private fun injectComponent(courseId: Long) {
         App.component()
             .attemptsComponentBuilder()
+            .courseId(courseId)
             .build()
             .inject(this)
     }
@@ -199,13 +205,11 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         viewStateDelegate.switchState(state)
         isDeleteMenuItemVisible =
             (state as? AttemptsView.State.AttemptsLoaded)?.isSending == true
+
         if (state is AttemptsView.State.AttemptsLoaded) {
-            state.attempts.forEach {
-                if (it is AttemptCacheItem.SubmissionItem) {
-                    Timber.d("Item: ${it.submission.status}")
-                }
-            }
             attemptsAdapter.items = state.attempts
+            attemptsSubmitButton.isEnabled = !state.isSending
+            attemptsSubmitFeedback.isVisible = state.isSending
             if (checkedIndices.isNotEmpty()) {
                 checkedIndices.forEach { selectionHelper.select(it) }
             }
