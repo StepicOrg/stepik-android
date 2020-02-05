@@ -141,13 +141,13 @@ constructor(
 
             val params =
                 mutableMapOf(
-                    AmplitudeAnalytic.Steps.Params.STEP to step.id,
-                    AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType()
+                    AmplitudeAnalytic.LocalSubmissions.Params.STEP to step.id,
+                    AmplitudeAnalytic.LocalSubmissions.Params.TYPE to step.getStepType()
                 )
 
             submissionItem.submission.reply?.language
                 ?.let { lang ->
-                    params[AmplitudeAnalytic.Steps.Params.LANGUAGE] = lang
+                    params[AmplitudeAnalytic.LocalSubmissions.Params.LANGUAGE] = lang
                 }
             analytic.reportAmplitudeEvent(
                 AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSION_MADE,
