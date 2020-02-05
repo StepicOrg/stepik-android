@@ -4,7 +4,6 @@ import org.stepic.droid.util.mutate
 import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.attempts.AttemptsView
-import timber.log.Timber
 import javax.inject.Inject
 
 class AttemptsStateMapper
@@ -69,7 +68,7 @@ constructor() {
         // TODO This logs when you recreate a step
         attemptItems.forEach {
             if (it is AttemptCacheItem.SubmissionItem && it.step.id == 209070L) {
-                Timber.d("Fresh: $it")
+                // Timber.d("Fresh: $it")
             }
         }
 
@@ -106,7 +105,7 @@ constructor() {
         }
 
         val filtered = result.filterNotNull()
-        filtered.forEach { Timber.d("$it"); Timber.d("============================") }
+        // filtered.forEach { Timber.d("$it"); Timber.d("============================") }
 
         return state.copy(attempts = result.filterNotNull())
     }

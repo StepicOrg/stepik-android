@@ -91,7 +91,14 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { fetchAttemptCacheItems(localOnly = false) },
+                onNext = {
+                    if (state is AttemptsView.State.Empty) {
+                        state = AttemptsView.State.Idle
+                        fetchAttemptCacheItems(localOnly = true)
+                    } else {
+                        fetchAttemptCacheItems(localOnly = false)
+                    }
+                },
                 onError = emptyOnErrorStub
             )
     }
