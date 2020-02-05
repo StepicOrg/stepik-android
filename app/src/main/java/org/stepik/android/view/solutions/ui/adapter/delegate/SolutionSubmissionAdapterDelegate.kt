@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_attempt_submission.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
@@ -40,8 +39,10 @@ class SolutionSubmissionAdapterDelegate(
         private val submissionStatusIconCorrect = root.submissionStatusIconCorrect
 
         init {
-            root.setOnClickListener { onItemClick(itemData as SolutionItem.SubmissionItem) }
-            submissionCheckBox.setOnClickListener { onCheckboxClick(itemData as SolutionItem.SubmissionItem) }
+            root.setOnClickListener { (itemData as? SolutionItem.SubmissionItem)?.let(onItemClick) }
+            submissionCheckBox.setOnClickListener {
+                (itemData as? SolutionItem.SubmissionItem)?.let(onCheckboxClick)
+            }
         }
 
         override fun onBind(data: SolutionItem) {
@@ -79,20 +80,20 @@ class SolutionSubmissionAdapterDelegate(
             when (data.submission.status) {
                 Submission.Status.CORRECT -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_correct_item)
-                    submissionStatusIconCorrect.isVisible = true
-                    submissionStatusIconWrong.isVisible = false
+                    submissionStatusIconCorrect.visibility = View.VISIBLE
+                    submissionStatusIconWrong.visibility = View.GONE
                     submissionCheckBox.visibility = View.INVISIBLE
                 }
                 Submission.Status.WRONG -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_incorrect_item)
-                    submissionStatusIconCorrect.isVisible = false
-                    submissionStatusIconWrong.isVisible = true
+                    submissionStatusIconCorrect.visibility = View.GONE
+                    submissionStatusIconWrong.visibility = View.VISIBLE
                     submissionCheckBox.visibility = View.INVISIBLE
                 }
                 else -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_item)
-                    submissionStatusIconCorrect.isVisible = false
-                    submissionStatusIconWrong.isVisible = false
+                    submissionStatusIconCorrect.visibility = View.GONE
+                    submissionStatusIconWrong.visibility = View.GONE
                     submissionCheckBox.visibility = View.VISIBLE
                 }
             }

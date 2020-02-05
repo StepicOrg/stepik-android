@@ -8,6 +8,6 @@ import org.stepik.android.remote.base.model.MetaResponse
 class AttemptResponse(
     @SerializedName("meta")
     override val meta: Meta,
-    @SerializedName("solutions")
+    @SerializedName("attempts")
     val attempts: List<Attempt>
 ) : MetaResponse

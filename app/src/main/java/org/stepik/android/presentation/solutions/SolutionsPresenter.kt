@@ -53,13 +53,15 @@ constructor(
         super.attachView(view)
         view.setState(state)
     }
-
     init {
         subscribeForSolutionsUpdates()
     }
 
     fun fetchSolutionItems(localOnly: Boolean = true) {
-        if (state == SolutionsView.State.Idle || state is SolutionsView.State.AttemptsLoaded) {
+        if (state == SolutionsView.State.Idle ||
+            state is SolutionsView.State.AttemptsLoaded ||
+            state == SolutionsView.State.Error
+        ) {
             state = if (state !is SolutionsView.State.AttemptsLoaded) {
                 SolutionsView.State.Loading
             } else {
@@ -78,23 +80,9 @@ constructor(
                                 solutionsStateMapper.mapToSolutionsState(solutions)
                             }
                     },
-                    onError = { state = SolutionsView.State.Error; it.printStackTrace() }
+                    onError = { state = SolutionsView.State.Error }
                 )
         }
-    }
-
-    fun fetchSolutionItemsForceUpdate() {
-        if (state !is SolutionsView.State.Error) {
-            return
-        }
-        compositeDisposable += solutionsInteractor
-            .fetchAttemptCacheItems(courseId, false)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { attempts -> solutionsStateMapper.mapToSolutionsState(attempts) },
-                onError = { state = SolutionsView.State.Error; it.printStackTrace() }
-            )
     }
 
     private fun subscribeForSolutionsUpdates() {
@@ -158,7 +146,7 @@ constructor(
                     fetchSolutionItems(localOnly = false)
                     attemptsSentPublisher.onNext(Unit)
                 },
-                onError = { it.printStackTrace() }
+                onError = emptyOnErrorStub
             )
     }
 

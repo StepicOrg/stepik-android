@@ -25,7 +25,7 @@ class SolutionSectionAdapterDelegate(
         private val sectionCheckBox = root.sectionCheckBox
 
         init {
-            sectionCheckBox.setOnClickListener { onClick(itemData as SolutionItem.SectionItem) }
+            sectionCheckBox.setOnClickListener { (itemData as? SolutionItem.SectionItem)?.let(onClick) }
         }
 
         override fun onBind(data: SolutionItem) {

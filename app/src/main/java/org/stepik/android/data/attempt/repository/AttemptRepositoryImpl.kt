@@ -29,7 +29,7 @@ constructor(
     override fun getAttempts(vararg attemptIds: Long, dataSourceType: DataSourceType): Single<List<Attempt>> =
         when (dataSourceType) {
             DataSourceType.CACHE ->
-                attemptCacheDataSource.getAttempts()
+                attemptCacheDataSource.getAttempts(*attemptIds)
 
             DataSourceType.REMOTE ->
                 attemptRemoteDataSource

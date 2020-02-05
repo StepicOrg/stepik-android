@@ -27,7 +27,7 @@ constructor() {
         val stepsMap = steps.asSequence().filter { it.lesson in lessonsMap }.associateBy(Step::id)
         val attemptsMap = attempts.asSequence().filter { it.step in stepsMap }.associateBy(Attempt::id)
 
-        val items = submissions.mapNotNull { submission ->
+        val items = submissions.asSequence().mapNotNull { submission ->
             val attempt = attemptsMap[submission.attempt] ?: return@mapNotNull null
             val lessonId = stepsMap[attempt.step]?.lesson ?: return@mapNotNull null
             val lesson = lessonsMap[lessonId] ?: return@mapNotNull null

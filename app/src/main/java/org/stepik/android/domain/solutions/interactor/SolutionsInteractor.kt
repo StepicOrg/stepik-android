@@ -37,7 +37,7 @@ constructor(
 ) {
     fun sendSubmissions(submissions: List<Submission>): Observable<Submission> =
         submissions.toObservable()
-            .concatMapSingle { submission ->
+            .concatMapEager { submission ->
                 submissionRepository
                     .createSubmission(submission)
                     .flatMapObservable {
@@ -46,7 +46,7 @@ constructor(
                             .flatMapMaybe { submissionRepository.getSubmissionsForAttempt(submission.attempt).maybeFirst() }
                             .skipWhile { it.status == Submission.Status.EVALUATION }
                     }
-                    .firstOrError()
+                    .take(1)
             }
 
     fun fetchAttemptCacheItems(courseId: Long, localOnly: Boolean): Single<List<SolutionItem>> =

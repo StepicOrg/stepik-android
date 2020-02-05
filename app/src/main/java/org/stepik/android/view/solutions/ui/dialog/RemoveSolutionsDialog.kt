@@ -5,7 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import org.stepic.droid.R
-import java.util.ArrayList
+import ru.nobird.android.view.base.ui.extension.argument
 
 class RemoveSolutionsDialog : DialogFragment() {
     companion object {
@@ -16,14 +16,11 @@ class RemoveSolutionsDialog : DialogFragment() {
         fun newInstance(attemptIds: List<Long>): RemoveSolutionsDialog =
             RemoveSolutionsDialog()
                 .apply {
-                    arguments = Bundle(1)
-                        .also {
-                            it.putSerializable(ARG_ATTEMPT_IDS, ArrayList(attemptIds))
-                        }
+                    this.attemptIds = attemptIds
                 }
     }
 
-    private val attemptsIds: List<Long>? by lazy { arguments?.getSerializable(ARG_ATTEMPT_IDS) as? List<Long> }
+    private var attemptIds: List<Long> by argument()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog
@@ -33,7 +30,7 @@ class RemoveSolutionsDialog : DialogFragment() {
             .setPositiveButton(R.string.delete_label) { _, _ ->
                 val callback = activity as? Callback
                     ?: return@setPositiveButton
-                attemptsIds?.let(callback::onAttemptRemoveConfirmed)
+                callback.onAttemptRemoveConfirmed(attemptIds)
             }
             .setNegativeButton(R.string.cancel, null)
             .create()

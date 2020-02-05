@@ -72,7 +72,7 @@ constructor(
 
     init {
         subscriberForEnrollmentUpdates()
-        subscribeForCachedAttemptsUpdates()
+        subscribeForLocalSubmissionsUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -197,33 +197,34 @@ constructor(
             )
     }
 
-    private fun subscribeForCachedAttemptsUpdates() {
+    private fun subscribeForLocalSubmissionsUpdates() {
         compositeDisposable += (attemptsObservable + attemptsSentObservable)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { updateCachedAttemptsCount() },
+                onNext = { updateLocalSubmissionsCount() },
                 onError = emptyOnErrorStub
             )
     }
 
-    private fun updateCachedAttemptsCount() {
+    private fun updateLocalSubmissionsCount() {
         compositeDisposable += solutionsInteractor
             .fetchAttemptCacheItems(courseId, localOnly = true)
+            .map { localSubmissions -> localSubmissions.count { it is SolutionItem.SubmissionItem } }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { localSubmissions ->
+                onSuccess = { localSubmissionsCount ->
                     val oldState =
                         (state as? CourseView.State.CourseLoaded)
                         ?: return@subscribeBy
 
                     val courseHeaderData = oldState
                         .courseHeaderData
-                        .copy(localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem })
+                        .copy(localSubmissionsCount = localSubmissionsCount)
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                 },
-                onError = { it.printStackTrace() }
+                onError = emptyOnErrorStub
             )
     }
 

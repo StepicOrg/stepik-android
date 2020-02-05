@@ -125,7 +125,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
 
         initViewStateDelegate()
         solutionsPresenter.fetchSolutionItems(localOnly = true)
-        tryAgain.setOnClickListener { solutionsPresenter.fetchSolutionItemsForceUpdate() }
+        tryAgain.setOnClickListener { solutionsPresenter.fetchSolutionItems(localOnly = false) }
 
         if (savedInstanceState != null && savedInstanceState.containsKey(CHECKED_ITEMS_ARGUMENT)) {
             checkedIndices.addAll(savedInstanceState.getIntegerArrayList(CHECKED_ITEMS_ARGUMENT) as ArrayList<Int>)

@@ -25,7 +25,7 @@ class SolutionLessonAdapterDelegate(
         private val lessonCheckBox = root.lessonCheckBox
 
         init {
-            lessonCheckBox.setOnClickListener { onClick(itemData as SolutionItem.LessonItem) }
+            lessonCheckBox.setOnClickListener { (itemData as? SolutionItem.LessonItem)?.let(onClick) }
         }
 
         override fun onBind(data: SolutionItem) {
