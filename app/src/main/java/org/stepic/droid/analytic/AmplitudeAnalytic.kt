@@ -218,6 +218,7 @@ interface AmplitudeAnalytic {
         object Params {
             const val STATE = "state"
             const val TYPE = "type"
+            const val ID = "id"
         }
 
         object Values {
