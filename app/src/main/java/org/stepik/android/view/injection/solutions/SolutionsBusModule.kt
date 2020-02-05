@@ -1,4 +1,4 @@
-package org.stepik.android.view.injection.attempts
+package org.stepik.android.view.injection.solutions
 
 import dagger.Module
 import dagger.Provides
@@ -9,45 +9,45 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 
 @Module
-abstract class AttemptsBusModule {
+abstract class SolutionsBusModule {
     @Module
     companion object {
         @Provides
         @JvmStatic
         @AppSingleton
-        @AttemptsBus
-        internal fun provideAttemptsPublisher(): PublishSubject<Unit> =
+        @SolutionsBus
+        internal fun provideSolutionsPublisher(): PublishSubject<Unit> =
             PublishSubject.create()
 
         @Provides
         @JvmStatic
         @AppSingleton
-        @AttemptsBus
-        internal fun provideAttemptsObservable(
-            @AttemptsBus
-            attemptsPublisher: PublishSubject<Unit>,
+        @SolutionsBus
+        internal fun provideSolutionsObservable(
+            @SolutionsBus
+            solutionsPublisher: PublishSubject<Unit>,
             @BackgroundScheduler
             scheduler: Scheduler
         ): Observable<Unit> =
-            attemptsPublisher.observeOn(scheduler)
+            solutionsPublisher.observeOn(scheduler)
 
         @Provides
         @JvmStatic
         @AppSingleton
-        @AttemptsSentBus
-        internal fun provideAttemptsSentPublisher(): PublishSubject<Unit> =
+        @SolutionsSentBus
+        internal fun provideSolutionsSentPublisher(): PublishSubject<Unit> =
             PublishSubject.create()
 
         @Provides
         @JvmStatic
         @AppSingleton
-        @AttemptsSentBus
-        internal fun provideAttemptsSentObservable(
-            @AttemptsSentBus
-            attemptsSentPublisher: PublishSubject<Unit>,
+        @SolutionsSentBus
+        internal fun provideSolutionsSentObservable(
+            @SolutionsSentBus
+            solutionsSentPublisher: PublishSubject<Unit>,
             @BackgroundScheduler
             scheduler: Scheduler
         ): Observable<Unit> =
-            attemptsSentPublisher.observeOn(scheduler)
+            solutionsSentPublisher.observeOn(scheduler)
     }
 }

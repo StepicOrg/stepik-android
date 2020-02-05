@@ -4,8 +4,8 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
-import org.stepik.android.domain.attempts.model.AttemptCacheItem
+import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
+import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.CourseStats
@@ -30,7 +30,7 @@ constructor(
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository,
-    private val attemptsInteractor: AttemptsInteractor,
+    private val solutionsInteractor: SolutionsInteractor,
     private val coursePublishSubject: BehaviorSubject<Course>
 ) {
     companion object {
@@ -58,7 +58,7 @@ constructor(
             resolveCourseReview(course),
             resolveCourseProgress(course),
             resolveCourseEnrollmentState(course),
-            attemptsInteractor.fetchAttemptCacheItems(course.id, localOnly = true)
+            solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true)
         ) { courseReview, courseProgress, enrollmentState, localSubmissions ->
             CourseHeaderData(
                 courseId = course.id,
@@ -68,7 +68,7 @@ constructor(
 
                 stats = CourseStats(courseReview, course.learnersCount, course.readiness),
                 progress = (courseProgress as? Progress),
-                localSubmissionsCount = localSubmissions.count { it is AttemptCacheItem.SubmissionItem },
+                localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
                 enrollmentState = enrollmentState
             )
         }

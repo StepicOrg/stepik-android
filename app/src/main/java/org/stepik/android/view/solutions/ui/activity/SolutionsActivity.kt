@@ -1,4 +1,4 @@
-package org.stepik.android.view.attempts.ui.activity
+package org.stepik.android.view.solutions.ui.activity
 
 import android.content.Context
 import android.content.Intent
@@ -25,15 +25,15 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.attempts.AttemptsPresenter
-import org.stepik.android.presentation.attempts.AttemptsView
-import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptLessonAdapterDelegate
-import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptSectionAdapterDelegate
-import org.stepik.android.view.attempts.ui.adapter.delegate.AttemptSubmissionAdapterDelegate
-import org.stepik.android.view.attempts.ui.dialog.RemoveCachedAttemptsDialog
+import org.stepik.android.presentation.solutions.SolutionsPresenter
+import org.stepik.android.presentation.solutions.SolutionsView
+import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionLessonAdapterDelegate
+import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionSectionAdapterDelegate
+import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionSubmissionAdapterDelegate
+import org.stepik.android.view.solutions.ui.dialog.RemoveSolutionsDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
@@ -43,7 +43,7 @@ import ru.nobird.android.view.base.ui.extension.snackbar
 import java.util.ArrayList
 import javax.inject.Inject
 
-class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttemptsDialog.Callback {
+class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutionsDialog.Callback {
     companion object {
         private const val EVALUATION_FRAME_DURATION_MS = 250
         private const val CHECKED_ITEMS_ARGUMENT = "checked_items"
@@ -58,16 +58,16 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var attemptsPresenter: AttemptsPresenter
+    private lateinit var solutionsPresenter: SolutionsPresenter
 
     private var isDeleteMenuItemVisible = false
 
-    private var solutionsAdapter: DefaultDelegateAdapter<AttemptCacheItem> = DefaultDelegateAdapter()
+    private var solutionsAdapter: DefaultDelegateAdapter<SolutionItem> = DefaultDelegateAdapter()
     private val selectionHelper = MultipleChoiceSelectionHelper(solutionsAdapter)
     private val checkedIndices = ArrayList<Int>()
 
     private val viewStateDelegate =
-        ViewStateDelegate<AttemptsView.State>()
+        ViewStateDelegate<SolutionsView.State>()
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -79,15 +79,15 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
         val courseId = intent.getLongExtra(EXTRA_COURSE_ID, -1)
         injectComponent(courseId)
 
-        attemptsPresenter = ViewModelProviders
+        solutionsPresenter = ViewModelProviders
             .of(this, viewModelFactory)
-            .get(AttemptsPresenter::class.java)
+            .get(SolutionsPresenter::class.java)
         initCenteredToolbar(R.string.solutions_toolbar_title, showHomeButton = true)
         solutionsFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
 
-        solutionsAdapter += AttemptSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionCheckboxClick)
-        solutionsAdapter += AttemptLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonCheckboxClick)
-        solutionsAdapter += AttemptSubmissionAdapterDelegate(
+        solutionsAdapter += SolutionSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionCheckboxClick)
+        solutionsAdapter += SolutionLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonCheckboxClick)
+        solutionsAdapter += SolutionSubmissionAdapterDelegate(
             selectionHelper,
             onCheckboxClick = ::handleSubmissionCheckBoxClick,
             onItemClick = ::handleSubmissionItemClick
@@ -119,11 +119,11 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
                 }
             }
             val selectedSubmissionItems = fetchSelectedSubmissionItems()
-            attemptsPresenter.submitSolutions(selectedSubmissionItems)
+            solutionsPresenter.submitSolutions(selectedSubmissionItems)
         }
 
         initViewStateDelegate()
-        attemptsPresenter.fetchAttemptCacheItems(localOnly = true)
+        solutionsPresenter.fetchAttemptCacheItems(localOnly = true)
 
         if (savedInstanceState != null && savedInstanceState.containsKey(CHECKED_ITEMS_ARGUMENT)) {
             checkedIndices.addAll(savedInstanceState.getIntegerArrayList(CHECKED_ITEMS_ARGUMENT) as ArrayList<Int>)
@@ -132,7 +132,7 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
 
     private fun injectComponent(courseId: Long) {
         App.component()
-            .attemptsComponentBuilder()
+            .solutionsComponentBuilder()
             .courseId(courseId)
             .build()
             .inject(this)
@@ -140,7 +140,7 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
 
     override fun onStart() {
         super.onStart()
-        attemptsPresenter.attachView(this)
+        solutionsPresenter.attachView(this)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -150,7 +150,7 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
     }
 
     override fun onStop() {
-        attemptsPresenter.detachView(this)
+        solutionsPresenter.detachView(this)
         super.onStop()
     }
 
@@ -189,11 +189,11 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
         }
 
     private fun initViewStateDelegate() {
-        viewStateDelegate.addState<AttemptsView.State.Idle>()
-        viewStateDelegate.addState<AttemptsView.State.Loading>(loadProgressbarOnEmptyScreen)
-        viewStateDelegate.addState<AttemptsView.State.Empty>(report_empty)
-        viewStateDelegate.addState<AttemptsView.State.Error>()
-        viewStateDelegate.addState<AttemptsView.State.AttemptsLoaded>(
+        viewStateDelegate.addState<SolutionsView.State.Idle>()
+        viewStateDelegate.addState<SolutionsView.State.Loading>(loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<SolutionsView.State.Empty>(report_empty)
+        viewStateDelegate.addState<SolutionsView.State.Error>()
+        viewStateDelegate.addState<SolutionsView.State.AttemptsLoaded>(
             solutionsContainer,
             solutionsFeedback,
             solutionsFeedbackSeparator,
@@ -203,12 +203,12 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
         )
     }
 
-    override fun setState(state: AttemptsView.State) {
+    override fun setState(state: SolutionsView.State) {
         viewStateDelegate.switchState(state)
         isDeleteMenuItemVisible =
-            (state as? AttemptsView.State.AttemptsLoaded)?.isSending == false
+            (state as? SolutionsView.State.AttemptsLoaded)?.isSending == false
 
-        if (state is AttemptsView.State.AttemptsLoaded) {
+        if (state is SolutionsView.State.AttemptsLoaded) {
             solutionsAdapter.items = state.attempts
             solutionsSubmitButton.isEnabled = !state.isSending
             solutionsSubmitFeedback.isVisible = state.isSending
@@ -233,7 +233,7 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
     }
 
     override fun onAttemptRemoveConfirmed(attemptIds: List<Long>) {
-        attemptsPresenter.removeAttempts(attemptIds)
+        solutionsPresenter.removeSolutions(attemptIds)
         checkedIndices.clear()
         selectionHelper.reset()
         invalidateOptionsMenu()
@@ -245,9 +245,9 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
     }
 
     private fun showRemoveAttemptsDialog(attemptIds: List<Long>) {
-        RemoveCachedAttemptsDialog
+        RemoveSolutionsDialog
             .newInstance(attemptIds = attemptIds)
-            .showIfNotExists(supportFragmentManager, RemoveCachedAttemptsDialog.TAG)
+            .showIfNotExists(supportFragmentManager, RemoveSolutionsDialog.TAG)
     }
 
     /**
@@ -258,7 +258,7 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
         var areAllSelectedInLesson = true
         for (index in lessonIndex + 1 until solutionsAdapter.items.size) {
             val item = solutionsAdapter.items[index]
-            if (item is AttemptCacheItem.SubmissionItem) {
+            if (item is SolutionItem.SubmissionItem) {
                 areAllSelectedInLesson = areAllSelectedInLesson && selectionHelper.isSelected(index)
             } else {
                 break
@@ -271,7 +271,7 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
         var areAllSelectedInSection = true
         for (index in sectionIndex + 1 until solutionsAdapter.items.size) {
             val item = solutionsAdapter.items[index]
-            if (item is AttemptCacheItem.LessonItem) {
+            if (item is SolutionItem.LessonItem) {
                 if (item.section.id == sectionId) {
                     areAllSelectedInSection = areAllSelectedInSection && selectionHelper.isSelected(index)
                 } else {
@@ -286,17 +286,17 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
      *  Check box click functions
      */
 
-    private fun handleSectionCheckboxClick(attemptCacheSectionItem: AttemptCacheItem.SectionItem) {
-        val itemIndex = solutionsAdapter.items.indexOf(attemptCacheSectionItem)
-        val sectionId = attemptCacheSectionItem.section.id
+    private fun handleSectionCheckboxClick(solutionSectionItem: SolutionItem.SectionItem) {
+        val itemIndex = solutionsAdapter.items.indexOf(solutionSectionItem)
+        val sectionId = solutionSectionItem.section.id
         selectionHelper.toggle(itemIndex)
         val isSelected = selectionHelper.isSelected(itemIndex)
 
         for (index in itemIndex + 1 until solutionsAdapter.items.size) {
             val itemSectionId = when (val item = solutionsAdapter.items[index]) {
-                is AttemptCacheItem.LessonItem ->
+                is SolutionItem.LessonItem ->
                     item.section.id
-                is AttemptCacheItem.SubmissionItem ->
+                is SolutionItem.SubmissionItem ->
                     item.section.id
                 else ->
                     -1L
@@ -315,16 +315,16 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
         invalidateOptionsMenu()
     }
 
-    private fun handleLessonCheckboxClick(attemptCacheLessonItem: AttemptCacheItem.LessonItem) {
-        val itemIndex = solutionsAdapter.items.indexOf(attemptCacheLessonItem)
-        val lessonId = attemptCacheLessonItem.lesson.id
-        val sectionId = attemptCacheLessonItem.section.id
+    private fun handleLessonCheckboxClick(solutionLessonItem: SolutionItem.LessonItem) {
+        val itemIndex = solutionsAdapter.items.indexOf(solutionLessonItem)
+        val lessonId = solutionLessonItem.lesson.id
+        val sectionId = solutionLessonItem.section.id
         selectionHelper.toggle(itemIndex)
         val isSelected = selectionHelper.isSelected(itemIndex)
 
         for (index in itemIndex + 1 until solutionsAdapter.items.size) {
             val item = solutionsAdapter.items[index]
-            if (item is AttemptCacheItem.SubmissionItem && item.lesson.id == lessonId) {
+            if (item is SolutionItem.SubmissionItem && item.lesson.id == lessonId) {
                     if (isSelected) {
                         selectionHelper.select(index)
                     } else {
@@ -336,7 +336,7 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
         }
 
         val sectionIndex = solutionsAdapter.items.indexOfFirst { item ->
-            item is AttemptCacheItem.SectionItem && item.section.id == sectionId
+            item is SolutionItem.SectionItem && item.section.id == sectionId
         }
 
         if (isAllLessonsSelectedInSection(sectionIndex, sectionId)) {
@@ -347,32 +347,32 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
         invalidateOptionsMenu()
     }
 
-    private fun handleSubmissionItemClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
+    private fun handleSubmissionItemClick(solutionSubmissionItem: SolutionItem.SubmissionItem) {
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSION_ITEM_CLICKED, mapOf(
-                AmplitudeAnalytic.LocalSubmissions.Params.STEP_ID to attemptCacheSubmissionItem.step.id
+                AmplitudeAnalytic.LocalSubmissions.Params.STEP_ID to solutionSubmissionItem.step.id
             )
         )
         val step = LastStep(
             id = "",
-            unit = attemptCacheSubmissionItem.unit.id,
-            lesson = attemptCacheSubmissionItem.lesson.id,
-            step = attemptCacheSubmissionItem.step.id
+            unit = solutionSubmissionItem.unit.id,
+            lesson = solutionSubmissionItem.lesson.id,
+            step = solutionSubmissionItem.step.id
         )
         screenManager.continueCourse(this, step)
     }
 
-    private fun handleSubmissionCheckBoxClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
-        selectionHelper.toggle(solutionsAdapter.items.indexOf(attemptCacheSubmissionItem))
-        val lessonId = attemptCacheSubmissionItem.lesson.id
-        val sectionId = attemptCacheSubmissionItem.section.id
+    private fun handleSubmissionCheckBoxClick(solutionSubmissionItem: SolutionItem.SubmissionItem) {
+        selectionHelper.toggle(solutionsAdapter.items.indexOf(solutionSubmissionItem))
+        val lessonId = solutionSubmissionItem.lesson.id
+        val sectionId = solutionSubmissionItem.section.id
 
         val lessonIndex = solutionsAdapter.items.indexOfFirst { item ->
-            item is AttemptCacheItem.LessonItem && item.lesson.id == lessonId
+            item is SolutionItem.LessonItem && item.lesson.id == lessonId
         }
 
         val sectionIndex = solutionsAdapter.items.indexOfFirst { item ->
-            item is AttemptCacheItem.SectionItem && item.section.id == sectionId
+            item is SolutionItem.SectionItem && item.section.id == sectionId
         }
 
         if (isAllSubmissionsSelectedInLesson(lessonIndex)) {
@@ -393,9 +393,9 @@ class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAtte
      *  Selectable submissions functions
      */
 
-    private fun fetchSelectedSubmissionItems(): List<AttemptCacheItem.SubmissionItem> =
+    private fun fetchSelectedSubmissionItems(): List<SolutionItem.SubmissionItem> =
         solutionsAdapter.items
             .filterIndexed { index, _ -> selectionHelper.isSelected(index) }
-            .filterIsInstance<AttemptCacheItem.SubmissionItem>()
+            .filterIsInstance<SolutionItem.SubmissionItem>()
             .filter { it.submission.status == Submission.Status.LOCAL }
 }

@@ -56,8 +56,6 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
-import org.stepik.android.view.injection.attempts.AttemptsBusModule
-import org.stepik.android.view.injection.attempts.AttemptsComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
@@ -82,6 +80,8 @@ import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.search.SearchDataModule
 import org.stepik.android.view.injection.settings.SettingsComponent
 import org.stepik.android.view.injection.social_profile.SocialProfileComponent
+import org.stepik.android.view.injection.solutions.SolutionsBusModule
+import org.stepik.android.view.injection.solutions.SolutionsComponent
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
@@ -135,7 +135,7 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
         SearchDataModule::class,
         UserCoursesDataModule::class,
         CourseCollectionDataModule::class,
-        AttemptsBusModule::class
+        SolutionsBusModule::class
     ]
 )
 interface AppCoreComponent {
@@ -202,7 +202,7 @@ interface AppCoreComponent {
 
     fun socialProfileComponentBuilder(): SocialProfileComponent.Builder
 
-    fun attemptsComponentBuilder(): AttemptsComponent.Builder
+    fun solutionsComponentBuilder(): SolutionsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

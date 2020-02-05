@@ -20,7 +20,7 @@ import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
-import org.stepik.android.view.injection.attempts.AttemptsBus
+import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.step.StepDiscussionBus
 import org.stepik.android.view.injection.step_quiz.StepQuizBus
 import java.util.concurrent.TimeUnit
@@ -35,7 +35,7 @@ constructor(
     @StepDiscussionBus
     private val stepDiscussionSubject: PublishSubject<Long>,
 
-    @AttemptsBus
+    @SolutionsBus
     private val attemptsPublisher: PublishSubject<Unit>,
 
     private val attemptRepository: AttemptRepository,

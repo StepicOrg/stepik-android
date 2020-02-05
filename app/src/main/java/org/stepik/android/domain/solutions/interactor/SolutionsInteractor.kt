@@ -1,4 +1,4 @@
-package org.stepik.android.domain.attempts.interactor
+package org.stepik.android.domain.solutions.interactor
 
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -7,11 +7,11 @@ import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.attempt.repository.AttemptRepository
-import org.stepik.android.domain.attempts.mapper.AttemptCacheItemMapper
-import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.section.repository.SectionRepository
+import org.stepik.android.domain.solutions.mapper.SolutionItemMapper
+import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
@@ -23,7 +23,7 @@ import org.stepik.android.model.attempts.Attempt
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class AttemptsInteractor
+class SolutionsInteractor
 @Inject
 constructor(
     private val attemptRepository: AttemptRepository,
@@ -33,7 +33,7 @@ constructor(
     private val sectionRepository: SectionRepository,
     private val unitRepository: UnitRepository,
 
-    private val attemptCacheItemMapper: AttemptCacheItemMapper
+    private val solutionItemMapper: SolutionItemMapper
 ) {
     fun sendSubmissions(submissions: List<Submission>): Observable<Submission> =
         submissions.toObservable()
@@ -49,10 +49,10 @@ constructor(
                     .firstOrError()
             }
 
-    fun fetchAttemptCacheItems(courseId: Long, localOnly: Boolean): Single<List<AttemptCacheItem>> =
+    fun fetchAttemptCacheItems(courseId: Long, localOnly: Boolean): Single<List<SolutionItem>> =
         getAttempts(courseId, localOnly)
 
-    private fun getAttempts(courseId: Long, localOnly: Boolean): Single<List<AttemptCacheItem>> =
+    private fun getAttempts(courseId: Long, localOnly: Boolean): Single<List<SolutionItem>> =
         attemptRepository
             .getAttempts(dataSourceType = DataSourceType.CACHE)
             .flatMap { attempts ->  attempts
@@ -73,12 +73,12 @@ constructor(
             .toObservable()
             .flatMapCompletable { attemptId -> submissionRepository.removeSubmissionsForAttempt(attemptId) }
 
-    private fun getSteps(courseId: Long, ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>): Single<List<AttemptCacheItem>> =
+    private fun getSteps(courseId: Long, ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>): Single<List<SolutionItem>> =
         stepRepository
             .getSteps(*ids, primarySourceType = DataSourceType.CACHE)
             .flatMap { steps -> getLessons(courseId, steps.mapToLongArray { it.lesson }, attempts, submissions, steps) }
 
-    private fun getLessons(courseId: Long, ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>, steps: List<Step>): Single<List<AttemptCacheItem>> =
+    private fun getLessons(courseId: Long, ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>, steps: List<Step>): Single<List<SolutionItem>> =
         lessonRepository
             .getLessons(*ids, primarySourceType = DataSourceType.CACHE)
             .flatMap { lessons -> lessons
@@ -88,10 +88,10 @@ constructor(
                 .flatMap { units -> getSections(courseId, units.mapToLongArray { it.section }, attempts, submissions, steps, lessons, units) }
             }
 
-    private fun getSections(courseId: Long, ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>, steps: List<Step>, lessons: List<Lesson>, units: List<Unit>): Single<List<AttemptCacheItem>> =
+    private fun getSections(courseId: Long, ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>, steps: List<Step>, lessons: List<Lesson>, units: List<Unit>): Single<List<SolutionItem>> =
         sectionRepository
             .getSections(*ids, primarySourceType = DataSourceType.CACHE)
             .map { sections ->
-                attemptCacheItemMapper.mapAttemptCacheItems(courseId, attempts, submissions, steps, lessons, units, sections)
+                solutionItemMapper.mapAttemptCacheItems(courseId, attempts, submissions, steps, lessons, units, sections)
             }
 }

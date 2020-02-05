@@ -68,7 +68,7 @@ import org.stepik.android.model.Video;
 import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.remote.auth.model.TokenType;
-import org.stepik.android.view.attempts.ui.activity.SolutionsActivity;
+import org.stepik.android.view.solutions.ui.activity.SolutionsActivity;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;

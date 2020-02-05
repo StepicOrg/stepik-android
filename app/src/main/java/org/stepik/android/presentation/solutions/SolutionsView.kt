@@ -1,14 +1,14 @@
-package org.stepik.android.presentation.attempts
+package org.stepik.android.presentation.solutions
 
-import org.stepik.android.domain.attempts.model.AttemptCacheItem
+import org.stepik.android.domain.solutions.model.SolutionItem
 
-interface AttemptsView {
+interface SolutionsView {
     sealed class State {
         object Idle : State()
         object Loading : State()
         object Empty : State()
         object Error : State()
-        data class AttemptsLoaded(val attempts: List<AttemptCacheItem>, val isSending: Boolean) : State()
+        data class AttemptsLoaded(val attempts: List<SolutionItem>, val isSending: Boolean) : State()
     }
 
     fun setState(state: State)

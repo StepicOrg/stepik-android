@@ -1,4 +1,4 @@
-package org.stepik.android.presentation.attempts
+package org.stepik.android.presentation.solutions
 
 import io.reactivex.Observable
 import io.reactivex.Scheduler
@@ -12,32 +12,32 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
-import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
-import org.stepik.android.domain.attempts.model.AttemptCacheItem
-import org.stepik.android.presentation.attempts.mapper.AttemptsStateMapper
+import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
+import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.view.injection.attempts.AttemptsBus
-import org.stepik.android.view.injection.attempts.AttemptsSentBus
+import org.stepik.android.presentation.solutions.mapper.SolutionsStateMapper
+import org.stepik.android.view.injection.solutions.SolutionsBus
+import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import javax.inject.Inject
 
-class AttemptsPresenter
+class SolutionsPresenter
 @Inject
 constructor(
     @CourseId
     private val courseId: Long,
     private val analytic: Analytic,
-    private val attemptsInteractor: AttemptsInteractor,
+    private val solutionsInteractor: SolutionsInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    @AttemptsBus
+    @SolutionsBus
     private val attemptsObservable: Observable<Unit>,
-    @AttemptsSentBus
+    @SolutionsSentBus
     private val attemptsSentPublisher: PublishSubject<Unit>,
-    private val attemptsStateMapper: AttemptsStateMapper
-) : PresenterBase<AttemptsView>() {
-    private var state: AttemptsView.State = AttemptsView.State.Idle
+    private val solutionsStateMapper: SolutionsStateMapper
+) : PresenterBase<SolutionsView>() {
+    private var state: SolutionsView.State = SolutionsView.State.Idle
         set(value) {
             field = value
             view?.setState(state)
@@ -49,52 +49,52 @@ constructor(
             view?.setBlockingLoading(value)
         }
 
-    override fun attachView(view: AttemptsView) {
+    override fun attachView(view: SolutionsView) {
         super.attachView(view)
         view.setState(state)
     }
 
     init {
-        subscribeForAttemptsUpdates()
+        subscribeForSolutionsUpdates()
     }
 
     fun fetchAttemptCacheItems(localOnly: Boolean = true) {
-        if (state == AttemptsView.State.Idle || state is AttemptsView.State.AttemptsLoaded) {
-            state = if (state !is AttemptsView.State.AttemptsLoaded) {
-                AttemptsView.State.Loading
+        if (state == SolutionsView.State.Idle || state is SolutionsView.State.AttemptsLoaded) {
+            state = if (state !is SolutionsView.State.AttemptsLoaded) {
+                SolutionsView.State.Loading
             } else {
                 state
             }
-            compositeDisposable += attemptsInteractor
+            compositeDisposable += solutionsInteractor
                 .fetchAttemptCacheItems(courseId, localOnly)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = { attempts ->
                         state =
-                            if (state is AttemptsView.State.AttemptsLoaded) {
-                                attemptsStateMapper.mergeStateWithAttemptItems(state, attempts)
+                            if (state is SolutionsView.State.AttemptsLoaded) {
+                                solutionsStateMapper.mergeStateWithAttemptItems(state, attempts)
                             } else {
                                 if (attempts.isEmpty()) {
-                                    AttemptsView.State.Empty
+                                    SolutionsView.State.Empty
                                 } else {
-                                    AttemptsView.State.AttemptsLoaded(attempts, isSending = false)
+                                    SolutionsView.State.AttemptsLoaded(attempts, isSending = false)
                                 }
                             }
                     },
-                    onError = { state = AttemptsView.State.Error; it.printStackTrace() }
+                    onError = { state = SolutionsView.State.Error; it.printStackTrace() }
                 )
         }
     }
 
-    private fun subscribeForAttemptsUpdates() {
+    private fun subscribeForSolutionsUpdates() {
         compositeDisposable += attemptsObservable
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = {
-                    if (state is AttemptsView.State.Empty) {
-                        state = AttemptsView.State.Idle
+                    if (state is SolutionsView.State.Empty) {
+                        state = SolutionsView.State.Idle
                         fetchAttemptCacheItems(localOnly = true)
                     } else {
                         fetchAttemptCacheItems(localOnly = false)
@@ -104,29 +104,29 @@ constructor(
             )
     }
 
-    fun submitSolutions(submissionItems: List<AttemptCacheItem.SubmissionItem>) {
-        if (state !is AttemptsView.State.AttemptsLoaded) return
+    fun submitSolutions(submissionItems: List<SolutionItem.SubmissionItem>) {
+        if (state !is SolutionsView.State.AttemptsLoaded) return
 
-        state = attemptsStateMapper.setItemsEnabled(state, isEnabled = false)
+        state = solutionsStateMapper.setItemsEnabled(state, isEnabled = false)
 
         sendSubmissionEvents(submissionItems)
         val submissions = submissionItems.map { it.submission }
-        compositeDisposable += attemptsInteractor
+        compositeDisposable += solutionsInteractor
             .sendSubmissions(submissions)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { state = attemptsStateMapper.mergeStateWithSubmission(state, it) },
+                onNext = { state = solutionsStateMapper.mergeStateWithSubmission(state, it) },
                 onComplete = {
-                    state = attemptsStateMapper.setItemsEnabled(state, isEnabled = true)
+                    state = solutionsStateMapper.setItemsEnabled(state, isEnabled = true)
                     attemptsSentPublisher.onNext(Unit)
                     view?.onFinishedSending()
                 },
                 onError = {
                     val oldState =
-                        (state as? AttemptsView.State.AttemptsLoaded)
+                        (state as? SolutionsView.State.AttemptsLoaded)
                         ?: return@subscribeBy
-                    state = attemptsStateMapper.setItemsEnabled(
+                    state = solutionsStateMapper.setItemsEnabled(
                         oldState.copy(isSending = false),
                         isEnabled = true
                     )
@@ -135,16 +135,16 @@ constructor(
             )
     }
 
-    fun removeAttempts(attemptIds: List<Long>) {
+    fun removeSolutions(attemptIds: List<Long>) {
         isBlockingLoading = true
-        compositeDisposable += attemptsInteractor
+        compositeDisposable += solutionsInteractor
             .removeAttempts(attemptIds)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
                 onComplete = {
-                    state = AttemptsView.State.Idle
+                    state = SolutionsView.State.Idle
                     fetchAttemptCacheItems(localOnly = false)
                     attemptsSentPublisher.onNext(Unit)
                 },
@@ -152,7 +152,7 @@ constructor(
             )
     }
 
-    private fun sendSubmissionEvents(submissionItems: List<AttemptCacheItem.SubmissionItem>) {
+    private fun sendSubmissionEvents(submissionItems: List<SolutionItem.SubmissionItem>) {
         submissionItems.forEach { submissionItem ->
             val step = submissionItem.step
 

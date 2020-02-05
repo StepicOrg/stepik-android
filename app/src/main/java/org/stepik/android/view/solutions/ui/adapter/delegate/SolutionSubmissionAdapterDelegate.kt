@@ -1,4 +1,4 @@
-package org.stepik.android.view.attempts.ui.adapter.delegate
+package org.stepik.android.view.solutions.ui.adapter.delegate
 
 import android.graphics.PorterDuff
 import android.view.View
@@ -11,25 +11,25 @@ import kotlinx.android.synthetic.main.item_attempt_submission.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepik.android.domain.attempts.model.AttemptCacheItem
+import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Submission
 import org.stepik.android.view.base.ui.mapper.DateMapper
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import ru.nobird.android.ui.adapters.selection.SelectionHelper
 
-class AttemptSubmissionAdapterDelegate(
+class SolutionSubmissionAdapterDelegate(
     private val selectionHelper: SelectionHelper,
-    private val onCheckboxClick: (AttemptCacheItem.SubmissionItem) -> Unit,
-    private val onItemClick: (AttemptCacheItem.SubmissionItem) -> Unit
-) : AdapterDelegate<AttemptCacheItem, DelegateViewHolder<AttemptCacheItem>>() {
-    override fun isForViewType(position: Int, data: AttemptCacheItem): Boolean =
-        data is AttemptCacheItem.SubmissionItem
+    private val onCheckboxClick: (SolutionItem.SubmissionItem) -> Unit,
+    private val onItemClick: (SolutionItem.SubmissionItem) -> Unit
+) : AdapterDelegate<SolutionItem, DelegateViewHolder<SolutionItem>>() {
+    override fun isForViewType(position: Int, data: SolutionItem): Boolean =
+        data is SolutionItem.SubmissionItem
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<AttemptCacheItem> =
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SolutionItem> =
         ViewHolder(createView(parent, R.layout.item_attempt_submission))
 
-    private inner class ViewHolder(root: View) : DelegateViewHolder<AttemptCacheItem>(root) {
+    private inner class ViewHolder(root: View) : DelegateViewHolder<SolutionItem>(root) {
 
         private val submissionRoot = root
         private val submissionQuizIcon = root.submissionQuizIcon
@@ -40,12 +40,12 @@ class AttemptSubmissionAdapterDelegate(
         private val submissionStatusIconCorrect = root.submissionStatusIconCorrect
 
         init {
-            root.setOnClickListener { onItemClick(itemData as AttemptCacheItem.SubmissionItem) }
-            submissionCheckBox.setOnClickListener { onCheckboxClick(itemData as AttemptCacheItem.SubmissionItem) }
+            root.setOnClickListener { onItemClick(itemData as SolutionItem.SubmissionItem) }
+            submissionCheckBox.setOnClickListener { onCheckboxClick(itemData as SolutionItem.SubmissionItem) }
         }
 
-        override fun onBind(data: AttemptCacheItem) {
-            data as AttemptCacheItem.SubmissionItem
+        override fun onBind(data: SolutionItem) {
+            data as SolutionItem.SubmissionItem
 
             selectionHelper.isSelected(adapterPosition).let { isSelected ->
                 itemView.isSelected = isSelected

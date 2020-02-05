@@ -1,6 +1,6 @@
-package org.stepik.android.domain.attempts.mapper
+package org.stepik.android.domain.solutions.mapper
 
-import org.stepik.android.domain.attempts.model.AttemptCacheItem
+import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
@@ -9,7 +9,7 @@ import org.stepik.android.model.Unit
 import org.stepik.android.model.attempts.Attempt
 import javax.inject.Inject
 
-class AttemptCacheItemMapper
+class SolutionItemMapper
 @Inject
 constructor() {
     fun mapAttemptCacheItems(
@@ -20,7 +20,7 @@ constructor() {
         lessons: List<Lesson>,
         units: List<Unit>,
         sections: List<Section>
-    ): List<AttemptCacheItem> {
+    ): List<SolutionItem> {
         val sectionsMap = sections.asSequence().filter { it.course == courseId }.associateBy(Section::id)
         val unitsMap = units.asSequence().filter { it.section in sectionsMap }.associateBy(Unit::lesson)
         val lessonsMap = lessons.asSequence().filter { lesson -> unitsMap.any { it.value.lesson == lesson.id } }.associateBy(Lesson::id)
@@ -34,7 +34,7 @@ constructor() {
             val unit = unitsMap[lessonId] ?: return@mapNotNull null
             val section = sectionsMap[unit.section] ?: return@mapNotNull null
             val step = stepsMap[attempt.step] ?: return@mapNotNull null
-            AttemptCacheItem.SubmissionItem(
+            SolutionItem.SubmissionItem(
                 section = section,
                 unit = unit,
                 lesson = lesson,
@@ -45,10 +45,10 @@ constructor() {
             )
         }
 
-        val lessonItems = items.map { AttemptCacheItem.LessonItem(it.section, it.unit, it.lesson, true) }.distinct().sortedBy { it.lesson.id }
-        val sectionItems = lessonItems.map { AttemptCacheItem.SectionItem(it.section, true) }.distinct().sortedBy { it.section.id }
+        val lessonItems = items.map { SolutionItem.LessonItem(it.section, it.unit, it.lesson, true) }.distinct().sortedBy { it.lesson.id }
+        val sectionItems = lessonItems.map { SolutionItem.SectionItem(it.section, true) }.distinct().sortedBy { it.section.id }
 
-        val attemptCacheItems = mutableListOf<AttemptCacheItem>()
+        val attemptCacheItems = mutableListOf<SolutionItem>()
 
         sectionItems.forEach { sectionItem ->
             attemptCacheItems.add(sectionItem)
