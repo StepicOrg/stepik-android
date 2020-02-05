@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
-import kotlinx.android.synthetic.main.item_attempt_submission.view.*
+import kotlinx.android.synthetic.main.item_solution_submission.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
@@ -26,7 +26,7 @@ class SolutionSubmissionAdapterDelegate(
         data is SolutionItem.SubmissionItem
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SolutionItem> =
-        ViewHolder(createView(parent, R.layout.item_attempt_submission))
+        ViewHolder(createView(parent, R.layout.item_solution_submission))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<SolutionItem>(root) {
 

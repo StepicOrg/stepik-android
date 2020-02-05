@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/solutionsFeedback"
+    style="@style/StepQuizFeedback"
+    android:background="@drawable/bg_step_quiz_feedback_evaluation"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="48dp"
+    android:gravity="center_vertical"
+    android:fontFamily="@font/roboto_regular"
+    android:textSize="16sp"
+    android:drawablePadding="16dp"
+
+    android:layout_margin="16dp"
+
+    android:text="@string/solutions_information_block"
+    android:textColor="@color/violet1"
+
+    tools:drawableStart="@drawable/ic_step_quiz_validation" />

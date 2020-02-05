@@ -2,7 +2,7 @@ package org.stepik.android.view.solutions.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.item_attempt_lesson.view.*
+import kotlinx.android.synthetic.main.item_solution_lesson.view.*
 import org.stepic.droid.R
 import org.stepik.android.domain.solutions.model.SolutionItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -17,7 +17,7 @@ class SolutionLessonAdapterDelegate(
         data is SolutionItem.LessonItem
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<SolutionItem> =
-        ViewHolder(createView(parent, R.layout.item_attempt_lesson))
+        ViewHolder(createView(parent, R.layout.item_solution_lesson))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<SolutionItem>(root) {
 

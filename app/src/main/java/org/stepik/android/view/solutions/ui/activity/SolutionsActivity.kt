@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_attempts.*
+import kotlinx.android.synthetic.main.activity_solutions.*
 import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
@@ -24,13 +24,14 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.mutate
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.solutions.SolutionsPresenter
 import org.stepik.android.presentation.solutions.SolutionsView
+import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionDisclaimerDelegate
 import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionLessonAdapterDelegate
 import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionSectionAdapterDelegate
 import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionSubmissionAdapterDelegate
@@ -75,7 +76,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_attempts)
+        setContentView(R.layout.activity_solutions)
 
         val courseId = intent.getLongExtra(EXTRA_COURSE_ID, -1)
         injectComponent(courseId)
@@ -84,8 +85,8 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
             .of(this, viewModelFactory)
             .get(SolutionsPresenter::class.java)
         initCenteredToolbar(R.string.solutions_toolbar_title, showHomeButton = true)
-        solutionsFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
 
+        solutionsAdapter += SolutionDisclaimerDelegate()
         solutionsAdapter += SolutionSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionCheckboxClick)
         solutionsAdapter += SolutionLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonCheckboxClick)
         solutionsAdapter += SolutionSubmissionAdapterDelegate(
@@ -196,10 +197,6 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
         viewStateDelegate.addState<SolutionsView.State.Empty>(report_empty)
         viewStateDelegate.addState<SolutionsView.State.Error>(error)
         viewStateDelegate.addState<SolutionsView.State.SolutionsLoaded>(
-            solutionsScroll,
-            solutionsContainer,
-            solutionsFeedback,
-            solutionsFeedbackSeparator,
             solutionsRecycler,
             solutionsSubmissionSeparator,
             solutionsSubmitButton
@@ -212,7 +209,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
             (state as? SolutionsView.State.SolutionsLoaded)?.isSending == false
 
         if (state is SolutionsView.State.SolutionsLoaded) {
-            solutionsAdapter.items = state.solutions
+            solutionsAdapter.items = state.solutions.mutate { add(0, SolutionItem.Disclaimer) }
             solutionsSubmitButton.isEnabled = !state.isSending
             solutionsSubmitFeedback.isVisible = state.isSending
             if (checkedIndices.isNotEmpty()) {
@@ -262,7 +259,12 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
         for (index in lessonIndex + 1 until solutionsAdapter.items.size) {
             val item = solutionsAdapter.items[index]
             if (item is SolutionItem.SubmissionItem) {
-                areAllSelectedInLesson = areAllSelectedInLesson && selectionHelper.isSelected(index)
+                if (item.submission.status == Submission.Status.LOCAL) {
+                    areAllSelectedInLesson =
+                        areAllSelectedInLesson && selectionHelper.isSelected(index)
+                } else {
+                    continue
+                }
             } else {
                 break
             }

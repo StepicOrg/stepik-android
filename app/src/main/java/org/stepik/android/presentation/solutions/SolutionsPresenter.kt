@@ -146,7 +146,7 @@ constructor(
             .subscribeBy(
                 onComplete = {
                     state = SolutionsView.State.Idle
-                    fetchSolutionItems(localOnly = false)
+                    fetchSolutionItems(localOnly = true)
                     solutionsSent.onNext(Unit)
                 },
                 onError = emptyOnErrorStub

@@ -21,6 +21,8 @@ constructor() {
                     solutionItem.copy(isEnabled = isEnabled)
                 is SolutionItem.SubmissionItem ->
                     solutionItem.copy(isEnabled = isEnabled)
+                else ->
+                    solutionItem
             }
         }
         return SolutionsView.State.SolutionsLoaded(stateItems, !isEnabled)
@@ -127,7 +129,7 @@ constructor() {
                 Triple(item.section, item.unit, null)
             is SolutionItem.SubmissionItem ->
                 Triple(item.section, item.unit, item.step)
-            null ->
+            else ->
                 Triple(null, null, null)
         }
 }

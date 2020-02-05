@@ -24,54 +24,11 @@
 
         <include layout="@layout/error_no_connection_with_button"/>
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/solutionsScroll"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/solutionsRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/solutionsSubmissionSeparator"
-            android:fillViewport="true">
-            <RelativeLayout
-                android:id="@+id/solutionsContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/solutionsFeedback"
-                    style="@style/StepQuizFeedback"
-                    android:background="@drawable/bg_step_quiz_feedback_evaluation"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="48dp"
-                    android:gravity="center_vertical"
-                    android:fontFamily="@font/roboto_regular"
-                    android:textSize="16sp"
-                    android:drawablePadding="16dp"
-
-                    android:layout_margin="16dp"
-
-                    android:text="@string/solutions_information_block"
-                    android:textColor="@color/violet1"
-
-                    android:layout_alignParentTop="true"
-
-                    tools:drawableStart="@drawable/ic_step_quiz_validation" />
-
-                <View
-                    android:id="@+id/solutionsFeedbackSeparator"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/step_quiz_separator"
-                    android:layout_below="@id/solutionsFeedback"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/solutionsRecycler"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/solutionsFeedbackSeparator" />
-
-            </RelativeLayout>
-        </androidx.core.widget.NestedScrollView>
+            android:layout_above="@id/solutionsSubmissionSeparator"/>
 
         <View
             android:id="@+id/solutionsSubmissionSeparator"

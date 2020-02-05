@@ -7,6 +7,7 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
 
 sealed class SolutionItem {
+    object Disclaimer : SolutionItem()
     data class SectionItem(
         val section: Section,
         val isEnabled: Boolean
