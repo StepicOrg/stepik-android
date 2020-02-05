@@ -239,4 +239,13 @@ interface AmplitudeAnalytic {
     object Notifications {
         const val NOTIFICATION_SCREEN_OPENED = "Notifications screen opened"
     }
+
+    object LocalSubmissions {
+        const val LOCAL_SUBMISSIONS_SCREEN_OPENED = "Local submissions screen opened"
+        const val LOCAL_SUBMISSION_ITEM_CLICKED = "Local submission item clicked"
+
+        object Params {
+            const val STEP_ID = "step_id"
+        }
+    }
 }

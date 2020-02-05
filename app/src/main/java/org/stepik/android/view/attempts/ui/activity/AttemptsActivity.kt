@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -342,6 +343,11 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     }
 
     private fun handleSubmissionItemClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSION_ITEM_CLICKED, mapOf(
+                AmplitudeAnalytic.LocalSubmissions.Params.STEP_ID to attemptCacheSubmissionItem.step.id
+            )
+        )
         val step = LastStep(
             id = "",
             unit = attemptCacheSubmissionItem.unit.id,

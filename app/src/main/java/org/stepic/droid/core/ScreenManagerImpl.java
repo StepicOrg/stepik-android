@@ -719,6 +719,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCachedAttempts(@NotNull Context context, long courseId) {
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSIONS_SCREEN_OPENED);
         Intent intent = AttemptsActivity.Companion.createIntent(context, courseId);
         context.startActivity(intent);
     }

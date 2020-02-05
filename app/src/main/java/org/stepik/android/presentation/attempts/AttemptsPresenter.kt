@@ -5,6 +5,7 @@ import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -22,6 +23,7 @@ class AttemptsPresenter
 constructor(
     @CourseId
     private val courseId: Long,
+    private val analytic: Analytic,
     private val attemptsInteractor: AttemptsInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
