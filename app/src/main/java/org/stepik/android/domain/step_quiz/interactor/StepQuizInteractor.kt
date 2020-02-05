@@ -36,7 +36,7 @@ constructor(
     private val stepDiscussionSubject: PublishSubject<Long>,
 
     @SolutionsBus
-    private val attemptsPublisher: PublishSubject<Unit>,
+    private val solutionsPublisher: PublishSubject<Unit>,
 
     private val attemptRepository: AttemptRepository,
     private val submissionRepository: SubmissionRepository,
@@ -94,14 +94,14 @@ constructor(
                     stepQuizPublisher.onNext(stepId)
                 }
                 stepDiscussionSubject.onNext(stepId)
-                attemptsPublisher.onNext(Unit)
+                solutionsPublisher.onNext(Unit)
                 sharedPreferenceHelper.incrementSubmissionsCount()
             }
 
     fun createLocalSubmission(submission: Submission): Single<Submission> =
         submissionRepository
             .createSubmission(submission, dataSourceType = DataSourceType.CACHE)
-            .doOnSuccess { attemptsPublisher.onNext(Unit) }
+            .doOnSuccess { solutionsPublisher.onNext(Unit) }
 
     fun getStepRestrictions(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizRestrictions> =
         getStepSubmissionCount(stepPersistentWrapper.step.id)

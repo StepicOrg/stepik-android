@@ -75,6 +75,7 @@ interface AmplitudeAnalytic {
             const val LANGUAGE = "language"
             const val NUMBER = "number"
             const val STEP = "step"
+            const val LOCAL = "local"
         }
     }
 

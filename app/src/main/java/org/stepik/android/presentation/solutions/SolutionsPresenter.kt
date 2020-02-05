@@ -14,6 +14,8 @@ import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.solutions.mapper.SolutionsStateMapper
 import org.stepik.android.view.injection.solutions.SolutionsBus
@@ -32,9 +34,9 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler,
     @SolutionsBus
-    private val attemptsObservable: Observable<Unit>,
+    private val solutionsObservable: Observable<Unit>,
     @SolutionsSentBus
-    private val attemptsSentPublisher: PublishSubject<Unit>,
+    private val solutionsSent: PublishSubject<Unit>,
     private val solutionsStateMapper: SolutionsStateMapper
 ) : PresenterBase<SolutionsView>() {
     private var state: SolutionsView.State = SolutionsView.State.Idle
@@ -86,7 +88,7 @@ constructor(
     }
 
     private fun subscribeForSolutionsUpdates() {
-        compositeDisposable += attemptsObservable
+        compositeDisposable += solutionsObservable
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -107,17 +109,18 @@ constructor(
 
         state = solutionsStateMapper.setSolutionItemsEnabled(state, isEnabled = false)
 
-        sendSubmissionEvents(submissionItems)
-        val submissions = submissionItems.map { it.submission }
         compositeDisposable += solutionsInteractor
-            .sendSubmissions(submissions)
+            .sendSubmissions(submissionItems)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { state = solutionsStateMapper.mergeStateWithSubmission(state, it) },
+                onNext = { (step, submission) ->
+                    sendSubmissionEvent(step, submission)
+                    state = solutionsStateMapper.mergeStateWithSubmission(state, submission)
+                },
                 onComplete = {
                     state = solutionsStateMapper.setSolutionItemsEnabled(state, isEnabled = true)
-                    attemptsSentPublisher.onNext(Unit)
+                    solutionsSent.onNext(Unit)
                     view?.onFinishedSending()
                 },
                 onError = {
@@ -144,30 +147,27 @@ constructor(
                 onComplete = {
                     state = SolutionsView.State.Idle
                     fetchSolutionItems(localOnly = false)
-                    attemptsSentPublisher.onNext(Unit)
+                    solutionsSent.onNext(Unit)
                 },
                 onError = emptyOnErrorStub
             )
     }
 
-    private fun sendSubmissionEvents(submissionItems: List<SolutionItem.SubmissionItem>) {
-        submissionItems.forEach { submissionItem ->
-            val step = submissionItem.step
-
-            val params =
-                mutableMapOf(
-                    AmplitudeAnalytic.LocalSubmissions.Params.STEP to step.id,
-                    AmplitudeAnalytic.LocalSubmissions.Params.TYPE to step.getStepType()
-                )
-
-            submissionItem.submission.reply?.language
-                ?.let { lang ->
-                    params[AmplitudeAnalytic.LocalSubmissions.Params.LANGUAGE] = lang
-                }
-            analytic.reportAmplitudeEvent(
-                AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSION_MADE,
-                params
+    private fun sendSubmissionEvent(step: Step, submission: Submission) {
+        val params =
+            mutableMapOf(
+                AmplitudeAnalytic.Steps.Params.STEP to step.id,
+                AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
+                AmplitudeAnalytic.Steps.Params.LOCAL to true
             )
-        }
+
+        submission.reply?.language
+            ?.let { lang ->
+                params[AmplitudeAnalytic.Steps.Params.LANGUAGE] = lang
+            }
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.Steps.SUBMISSION_MADE,
+            params
+        )
     }
 }

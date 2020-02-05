@@ -134,7 +134,8 @@ constructor(
                     val params =
                         mutableMapOf(
                             AmplitudeAnalytic.Steps.Params.STEP to step.id,
-                            AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType()
+                            AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
+                            AmplitudeAnalytic.Steps.Params.LOCAL to false
                         )
                     newSubmission.reply?.language
                         ?.let { lang ->

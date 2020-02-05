@@ -35,9 +35,10 @@ constructor(
 
     private val solutionItemMapper: SolutionItemMapper
 ) {
-    fun sendSubmissions(submissions: List<Submission>): Observable<Submission> =
-        submissions.toObservable()
-            .concatMapEager { submission ->
+    fun sendSubmissions(submissionItems: List<SolutionItem.SubmissionItem>): Observable<Pair<Step, Submission>> =
+        submissionItems.map { it.step to it.submission }
+            .toObservable()
+            .concatMapEager { (step, submission) ->
                 submissionRepository
                     .createSubmission(submission)
                     .flatMapObservable {
@@ -47,6 +48,9 @@ constructor(
                             .skipWhile { it.status == Submission.Status.EVALUATION }
                     }
                     .take(1)
+                    .map { newSubmission ->
+                        step to newSubmission
+                    }
             }
 
     fun fetchAttemptCacheItems(courseId: Long, localOnly: Boolean): Single<List<SolutionItem>> =

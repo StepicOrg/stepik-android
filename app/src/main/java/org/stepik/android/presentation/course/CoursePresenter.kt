@@ -51,10 +51,10 @@ constructor(
     private val enrollmentUpdatesObservable: Observable<Course>,
 
     @SolutionsBus
-    private val attemptsObservable: Observable<Unit>,
+    private val solutionsObservable: Observable<Unit>,
 
     @SolutionsSentBus
-    private val attemptsSentObservable: Observable<Unit>,
+    private val solutionsSentObservable: Observable<Unit>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -198,7 +198,7 @@ constructor(
     }
 
     private fun subscribeForLocalSubmissionsUpdates() {
-        compositeDisposable += (attemptsObservable + attemptsSentObservable)
+        compositeDisposable += (solutionsObservable + solutionsSentObservable)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
