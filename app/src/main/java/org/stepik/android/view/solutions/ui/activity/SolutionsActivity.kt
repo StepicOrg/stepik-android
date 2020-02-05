@@ -25,13 +25,12 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.mutate
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.solutions.SolutionsPresenter
 import org.stepik.android.presentation.solutions.SolutionsView
-import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionDisclaimerDelegate
+import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionDisclaimerAdapterDelegate
 import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionLessonAdapterDelegate
 import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionSectionAdapterDelegate
 import org.stepik.android.view.solutions.ui.adapter.delegate.SolutionSubmissionAdapterDelegate
@@ -86,7 +85,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
             .get(SolutionsPresenter::class.java)
         initCenteredToolbar(R.string.solutions_toolbar_title, showHomeButton = true)
 
-        solutionsAdapter += SolutionDisclaimerDelegate()
+        solutionsAdapter += SolutionDisclaimerAdapterDelegate()
         solutionsAdapter += SolutionSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionCheckboxClick)
         solutionsAdapter += SolutionLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonCheckboxClick)
         solutionsAdapter += SolutionSubmissionAdapterDelegate(
@@ -209,7 +208,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
             (state as? SolutionsView.State.SolutionsLoaded)?.isSending == false
 
         if (state is SolutionsView.State.SolutionsLoaded) {
-            solutionsAdapter.items = state.solutions.mutate { add(0, SolutionItem.Disclaimer) }
+            solutionsAdapter.items = listOf(SolutionItem.Disclaimer) + state.solutions
             solutionsSubmitButton.isEnabled = !state.isSending
             solutionsSubmitFeedback.isVisible = state.isSending
             if (checkedIndices.isNotEmpty()) {

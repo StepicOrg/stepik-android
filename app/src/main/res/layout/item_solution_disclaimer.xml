@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.AppCompatTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/solutionsFeedback"
     style="@style/StepQuizFeedback"
     android:background="@drawable/bg_step_quiz_feedback_evaluation"
@@ -19,4 +19,4 @@
     android:text="@string/solutions_information_block"
     android:textColor="@color/violet1"
 
-    tools:drawableStart="@drawable/ic_step_quiz_validation" />
+    app:drawableStartCompat="@drawable/ic_step_quiz_validation" />
