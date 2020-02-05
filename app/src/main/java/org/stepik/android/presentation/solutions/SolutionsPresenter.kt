@@ -61,10 +61,10 @@ constructor(
 
     fun fetchSolutionItems(localOnly: Boolean = true) {
         if (state == SolutionsView.State.Idle ||
-            state is SolutionsView.State.AttemptsLoaded ||
+            state is SolutionsView.State.SolutionsLoaded ||
             state == SolutionsView.State.Error
         ) {
-            state = if (state !is SolutionsView.State.AttemptsLoaded) {
+            state = if (state !is SolutionsView.State.SolutionsLoaded) {
                 SolutionsView.State.Loading
             } else {
                 state
@@ -76,7 +76,7 @@ constructor(
                 .subscribeBy(
                     onSuccess = { solutions ->
                         state =
-                            if (state is SolutionsView.State.AttemptsLoaded) {
+                            if (state is SolutionsView.State.SolutionsLoaded) {
                                 solutionsStateMapper.mergeStateWithSolutionItems(state, solutions)
                             } else {
                                 solutionsStateMapper.mapToSolutionsState(solutions)
@@ -105,7 +105,7 @@ constructor(
     }
 
     fun submitSolutions(submissionItems: List<SolutionItem.SubmissionItem>) {
-        if (state !is SolutionsView.State.AttemptsLoaded) return
+        if (state !is SolutionsView.State.SolutionsLoaded) return
 
         state = solutionsStateMapper.setSolutionItemsEnabled(state, isEnabled = false)
 
@@ -125,7 +125,7 @@ constructor(
                 },
                 onError = {
                     val oldState =
-                        (state as? SolutionsView.State.AttemptsLoaded)
+                        (state as? SolutionsView.State.SolutionsLoaded)
                         ?: return@subscribeBy
                     state = solutionsStateMapper.setSolutionItemsEnabled(
                         oldState.copy(isSending = false),

@@ -8,7 +8,7 @@ interface SolutionsView {
         object Loading : State()
         object Empty : State()
         object Error : State()
-        data class AttemptsLoaded(val solutions: List<SolutionItem>, val isSending: Boolean) : State()
+        data class SolutionsLoaded(val solutions: List<SolutionItem>, val isSending: Boolean) : State()
     }
 
     fun setState(state: State)

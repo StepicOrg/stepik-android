@@ -195,7 +195,8 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
         viewStateDelegate.addState<SolutionsView.State.Loading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<SolutionsView.State.Empty>(report_empty)
         viewStateDelegate.addState<SolutionsView.State.Error>(error)
-        viewStateDelegate.addState<SolutionsView.State.AttemptsLoaded>(
+        viewStateDelegate.addState<SolutionsView.State.SolutionsLoaded>(
+            solutionsScroll,
             solutionsContainer,
             solutionsFeedback,
             solutionsFeedbackSeparator,
@@ -208,9 +209,9 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
     override fun setState(state: SolutionsView.State) {
         viewStateDelegate.switchState(state)
         isDeleteMenuItemVisible =
-            (state as? SolutionsView.State.AttemptsLoaded)?.isSending == false
+            (state as? SolutionsView.State.SolutionsLoaded)?.isSending == false
 
-        if (state is SolutionsView.State.AttemptsLoaded) {
+        if (state is SolutionsView.State.SolutionsLoaded) {
             solutionsAdapter.items = state.solutions
             solutionsSubmitButton.isEnabled = !state.isSending
             solutionsSubmitFeedback.isVisible = state.isSending

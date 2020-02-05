@@ -10,7 +10,7 @@ class SolutionsStateMapper
 @Inject
 constructor() {
     fun setSolutionItemsEnabled(state: SolutionsView.State, isEnabled: Boolean): SolutionsView.State {
-        if (state !is SolutionsView.State.AttemptsLoaded) {
+        if (state !is SolutionsView.State.SolutionsLoaded) {
             return state
         }
         val stateItems = state.solutions.map { solutionItem ->
@@ -23,11 +23,11 @@ constructor() {
                     solutionItem.copy(isEnabled = isEnabled)
             }
         }
-        return SolutionsView.State.AttemptsLoaded(stateItems, !isEnabled)
+        return SolutionsView.State.SolutionsLoaded(stateItems, !isEnabled)
     }
 
     fun mergeStateWithSubmission(state: SolutionsView.State, submission: Submission): SolutionsView.State {
-        if (state !is SolutionsView.State.AttemptsLoaded) {
+        if (state !is SolutionsView.State.SolutionsLoaded) {
             return state
         }
         val itemIndex = state.solutions.indexOfFirst { it is SolutionItem.SubmissionItem && it.submission.attempt == submission.attempt }
@@ -38,7 +38,7 @@ constructor() {
     }
 
     fun mergeStateWithSolutionItems(state: SolutionsView.State, solutionItems: List<SolutionItem>): SolutionsView.State {
-        if (state !is SolutionsView.State.AttemptsLoaded) {
+        if (state !is SolutionsView.State.SolutionsLoaded) {
             return state
         }
 
@@ -104,7 +104,7 @@ constructor() {
         if (solutions.isEmpty()) {
             SolutionsView.State.Empty
         } else {
-            SolutionsView.State.AttemptsLoaded(solutions, isSending = false)
+            SolutionsView.State.SolutionsLoaded(solutions, isSending = false)
         }
 
     private fun compareSolutionItems(a: SolutionItem?, b: SolutionItem?): Int {
