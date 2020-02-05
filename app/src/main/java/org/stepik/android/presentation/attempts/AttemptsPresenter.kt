@@ -15,7 +15,6 @@ import org.stepik.android.presentation.attempts.mapper.AttemptsStateMapper
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.injection.attempts.AttemptsBus
 import org.stepik.android.view.injection.attempts.AttemptsSentBus
-import timber.log.Timber
 import javax.inject.Inject
 
 class AttemptsPresenter
@@ -109,7 +108,7 @@ constructor(
                     attemptsSentPublisher.onNext(Unit)
                     view?.onFinishedSending()
                 },
-                onError = { it.printStackTrace(); Timber.d("Error: $it") }
+                onError = { it.printStackTrace(); }
             )
     }
 
@@ -121,7 +120,11 @@ constructor(
             .observeOn(mainScheduler)
             .doFinally { isBlockingLoading = false }
             .subscribeBy(
-                onComplete = { state = AttemptsView.State.Idle; fetchAttemptCacheItems() },
+                onComplete = {
+                    state = AttemptsView.State.Idle
+                    fetchAttemptCacheItems(localOnly = false)
+                    attemptsSentPublisher.onNext(Unit)
+                },
                 onError = { it.printStackTrace() }
             )
     }
