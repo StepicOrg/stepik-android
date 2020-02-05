@@ -33,7 +33,8 @@ class CourseHeaderDelegate(
     private val courseActivity: Activity,
     private val analytic: Analytic,
     private val coursePresenter: CoursePresenter,
-    onSubmissionCountClicked: () -> Unit
+    onSubmissionCountClicked: () -> Unit,
+    isLocalSubmissionsEnabled: Boolean
 ) {
     var courseHeaderData: CourseHeaderData? = null
         set(value) {
@@ -46,7 +47,7 @@ class CourseHeaderDelegate(
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
     private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
-    private val courseProgressDelegate = CourseProgressDelegate(courseActivity.courseProgress, onSubmissionCountClicked)
+    private val courseProgressDelegate = CourseProgressDelegate(courseActivity.courseProgress, onSubmissionCountClicked, isLocalSubmissionsEnabled)
 
     private val viewStateDelegate = ViewStateDelegate<EnrollmentState>()
 

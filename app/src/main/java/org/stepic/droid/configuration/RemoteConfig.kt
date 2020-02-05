@@ -6,4 +6,5 @@ object RemoteConfig {
     const val SHOW_NOTIFICATIONS_BADGES = "show_notifications_badges"
     const val ADAPTIVE_COURSES = "adaptive_courses_android"
     const val ADAPTIVE_BACKEND_URL = "adaptive_backend_url"
+    const val IS_LOCAL_SUBMISSIONS_ENABLED = "is_local_submissions_enabled"
 }

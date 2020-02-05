@@ -8,7 +8,8 @@ import org.stepik.android.model.Progress
 
 class CourseProgressDelegate(
     view: View,
-    onSubmissionCountClicked: () -> Unit
+    onSubmissionCountClicked: () -> Unit,
+    private val isLocalSubmissionsEnabled: Boolean
 ) {
     private val context = view.context
 
@@ -43,7 +44,7 @@ class CourseProgressDelegate(
     }
 
     fun setSolutionsCount(count: Int) {
-        val isNeedShowSolutions = count > 0
+        val isNeedShowSolutions = count > 0 && isLocalSubmissionsEnabled
         courseSolutionsTitle.isVisible = isNeedShowSolutions
         courseSolutionsValue.isVisible = isNeedShowSolutions
         courseSolutionsValue.text = count.toString()
