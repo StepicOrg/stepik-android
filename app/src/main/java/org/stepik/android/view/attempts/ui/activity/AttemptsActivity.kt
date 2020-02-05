@@ -117,8 +117,8 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
                     selectionHelper.select(index)
                 }
             }
-            val selectedSubmissions = fetchSelectedSubmissionItems().map { it.submission }
-            attemptsPresenter.submitSolutions(selectedSubmissions)
+            val selectedSubmissionItems = fetchSelectedSubmissionItems() // .map { it.submission }
+            attemptsPresenter.submitSolutions(selectedSubmissionItems)
         }
 
         initViewStateDelegate()

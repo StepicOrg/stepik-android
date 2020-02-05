@@ -243,9 +243,21 @@ interface AmplitudeAnalytic {
     object LocalSubmissions {
         const val LOCAL_SUBMISSIONS_SCREEN_OPENED = "Local submissions screen opened"
         const val LOCAL_SUBMISSION_ITEM_CLICKED = "Local submission item clicked"
+        const val LOCAL_SUBMISSION_MADE = "Local submission made"
 
         object Params {
+            /**
+             *  Submission item clicked
+             */
             const val STEP_ID = "step_id"
+
+            /**
+             *  Local submission made
+             */
+            const val TYPE = "type"
+            const val LANGUAGE = "language"
+            const val NUMBER = "number"
+            const val STEP = "step"
         }
     }
 }

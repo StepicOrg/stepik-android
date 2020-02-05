@@ -5,13 +5,15 @@ import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.attempts.interactor.AttemptsInteractor
-import org.stepik.android.model.Submission
+import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.presentation.attempts.mapper.AttemptsStateMapper
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.injection.attempts.AttemptsBus
@@ -94,11 +96,13 @@ constructor(
             )
     }
 
-    fun submitSolutions(submissions: List<Submission>) {
+    fun submitSolutions(submissionItems: List<AttemptCacheItem.SubmissionItem>) {
         if (state !is AttemptsView.State.AttemptsLoaded) return
 
         state = attemptsStateMapper.setItemsEnabled(state, isEnabled = false)
 
+        sendSubmissionEvents(submissionItems)
+        val submissions = submissionItems.map { it.submission }
         compositeDisposable += attemptsInteractor
             .sendSubmissions(submissions)
             .subscribeOn(backgroundScheduler)
@@ -129,5 +133,26 @@ constructor(
                 },
                 onError = { it.printStackTrace() }
             )
+    }
+
+    private fun sendSubmissionEvents(submissionItems: List<AttemptCacheItem.SubmissionItem>) {
+        submissionItems.forEach { submissionItem ->
+            val step = submissionItem.step
+
+            val params =
+                mutableMapOf(
+                    AmplitudeAnalytic.Steps.Params.STEP to step.id,
+                    AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType()
+                )
+
+            submissionItem.submission.reply?.language
+                ?.let { lang ->
+                    params[AmplitudeAnalytic.Steps.Params.LANGUAGE] = lang
+                }
+            analytic.reportAmplitudeEvent(
+                AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSION_MADE,
+                params
+            )
+        }
     }
 }
