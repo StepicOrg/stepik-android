@@ -71,15 +71,16 @@ constructor(
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = { attempts ->
-                        state = if (attempts.isEmpty()) {
-                            AttemptsView.State.Empty
-                        } else {
+                        state =
                             if (state is AttemptsView.State.AttemptsLoaded) {
                                 attemptsStateMapper.mergeStateWithAttemptItems(state, attempts)
                             } else {
-                                AttemptsView.State.AttemptsLoaded(attempts, isSending = false)
+                                if (attempts.isEmpty()) {
+                                    AttemptsView.State.Empty
+                                } else {
+                                    AttemptsView.State.AttemptsLoaded(attempts, isSending = false)
+                                }
                             }
-                        }
                     },
                     onError = { state = AttemptsView.State.Error; it.printStackTrace() }
                 )
