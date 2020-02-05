@@ -4,6 +4,7 @@ import org.stepic.droid.util.mutate
 import org.stepik.android.domain.attempts.model.AttemptCacheItem
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.attempts.AttemptsView
+import timber.log.Timber
 import javax.inject.Inject
 
 class AttemptsStateMapper
@@ -65,6 +66,13 @@ constructor() {
         var indexLeft = 0
         var indexRight = 0
 
+        // TODO This logs when you recreate a step
+        attemptItems.forEach {
+            if (it is AttemptCacheItem.SubmissionItem && it.step.id == 209070L) {
+                Timber.d("Fresh: $it")
+            }
+        }
+
         val result = ArrayList<AttemptCacheItem?>()
 
         while (indexLeft <= state.attempts.size && indexRight <= attemptItems.size) {
@@ -90,16 +98,24 @@ constructor() {
                         }
 
                     if (shouldAddItem) {
-                        result += attemptItems.getOrNull(indexRight++)
+                        result += attemptItems.getOrNull(indexRight)
                     }
-                        indexRight++
+                    indexRight++
                 }
             }
         }
+
+        val filtered = result.filterNotNull()
+        filtered.forEach { Timber.d("$it"); Timber.d("============================") }
+
         return state.copy(attempts = result.filterNotNull())
     }
 
     private fun compareAttemptCacheItems(a: AttemptCacheItem?, b: AttemptCacheItem?): Int {
+        // TODO Code cleaner
+        if (a == null) {
+            return 1
+        }
         val (aSection, aUnit, aStep) = getAttemptCacheItemTriple(a)
         val (bSection, bUnit, bStep) = getAttemptCacheItemTriple(b)
 
