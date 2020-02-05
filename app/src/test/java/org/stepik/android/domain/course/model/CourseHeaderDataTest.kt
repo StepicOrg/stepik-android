@@ -27,6 +27,7 @@ class CourseHeaderDataTest {
             cover = "cover",
             stats = CourseStats(review = 1.0, learnersCount = 100, readiness = 1.0),
             progress = Progress(),
+            localSubmissionsCount = 5,
             enrollmentState = EnrollmentState.NotEnrolledWeb
         )
 
