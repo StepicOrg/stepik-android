@@ -28,8 +28,8 @@ class RemoveCachedAttemptsDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
         AlertDialog
             .Builder(requireContext())
-            .setTitle(R.string.attempts_delete_dialog_title)
-            .setMessage(R.string.attempts_delete_dialog_description)
+            .setTitle(R.string.solutions_delete_dialog_title)
+            .setMessage(R.string.solutionss_delete_dialog_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->
                 val callback = activity as? Callback
                     ?: return@setPositiveButton

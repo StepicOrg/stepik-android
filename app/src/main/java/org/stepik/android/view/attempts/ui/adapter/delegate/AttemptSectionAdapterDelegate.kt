@@ -36,7 +36,7 @@ class AttemptSectionAdapterDelegate(
             }
             sectionCheckBox.isEnabled = data.isEnabled
             sectionTitle.text = context.resources.getString(
-                R.string.attempts_section_placeholder,
+                R.string.solutions_section_placeholder,
                 data.section.position,
                 data.section.title
             )

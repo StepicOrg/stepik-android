@@ -850,15 +850,15 @@
 
     <string name="profile_courses_title">Courses</string>
 
-    <!-- Cached attempts -->
-    <string name="attempts_toolbar_title">Offline attempts</string>
-    <string name="attempts_information_block">This is your offline attempts. Edit or submit to score the points</string>
-    <string name="attempts_section_placeholder" translatable="false">%d&#160;%s</string>
-    <string name="attempts_lesson_placeholder" translatable="false">%d&#46;%d&#160;%s</string>
-    <string name="attempts_selected">%d&#160;selected</string>
-    <string name="attempts_delete_dialog_title">Delete solution?</string>
-    <string name="attempts_delete_dialog_description">This item will be deleted from your device</string>
-    <string name="attempts_submission_step_position">Step %d – %s</string>
-    <string name="attempts_submit_all">Submit all solutions</string>
-    <string name="attempts_submit_in_progress">Submit solutions in progress</string>
+    <!-- Solutions -->
+    <string name="solutions_toolbar_title">Offline solutions</string>
+    <string name="solutions_information_block">This is your offline solutions. Edit or submit to score the points</string>
+    <string name="solutions_section_placeholder" translatable="false">%d&#160;%s</string>
+    <string name="solutions_lesson_placeholder" translatable="false">%d&#46;%d&#160;%s</string>
+    <string name="solutions_selected">%d&#160;selected</string>
+    <string name="solutions_delete_dialog_title">Delete solution?</string>
+    <string name="solutions_delete_dialog_description">This item will be deleted from your device</string>
+    <string name="solutions_submission_step_position">Step %d – %s</string>
+    <string name="solutions_submit_all">Submit all solutions</string>
+    <string name="solutions_submit_in_progress">Submit solutions in progress</string>
 </resources>

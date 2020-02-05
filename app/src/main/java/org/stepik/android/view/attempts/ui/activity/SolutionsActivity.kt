@@ -43,7 +43,7 @@ import ru.nobird.android.view.base.ui.extension.snackbar
 import java.util.ArrayList
 import javax.inject.Inject
 
-class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttemptsDialog.Callback {
+class SolutionsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttemptsDialog.Callback {
     companion object {
         private const val EVALUATION_FRAME_DURATION_MS = 250
         private const val CHECKED_ITEMS_ARGUMENT = "checked_items"
@@ -51,7 +51,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         private const val EXTRA_COURSE_ID = "course_id"
 
         fun createIntent(context: Context, courseId: Long): Intent =
-            Intent(context, AttemptsActivity::class.java)
+            Intent(context, SolutionsActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
     }
 
@@ -62,8 +62,8 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
 
     private var isDeleteMenuItemVisible = false
 
-    private var attemptsAdapter: DefaultDelegateAdapter<AttemptCacheItem> = DefaultDelegateAdapter()
-    private val selectionHelper = MultipleChoiceSelectionHelper(attemptsAdapter)
+    private var solutionsAdapter: DefaultDelegateAdapter<AttemptCacheItem> = DefaultDelegateAdapter()
+    private val selectionHelper = MultipleChoiceSelectionHelper(solutionsAdapter)
     private val checkedIndices = ArrayList<Int>()
 
     private val viewStateDelegate =
@@ -82,24 +82,24 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         attemptsPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(AttemptsPresenter::class.java)
-        initCenteredToolbar(R.string.attempts_toolbar_title, showHomeButton = true)
-        attemptsFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
+        initCenteredToolbar(R.string.solutions_toolbar_title, showHomeButton = true)
+        solutionsFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
 
-        attemptsAdapter += AttemptSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionCheckboxClick)
-        attemptsAdapter += AttemptLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonCheckboxClick)
-        attemptsAdapter += AttemptSubmissionAdapterDelegate(
+        solutionsAdapter += AttemptSectionAdapterDelegate(selectionHelper, onClick = ::handleSectionCheckboxClick)
+        solutionsAdapter += AttemptLessonAdapterDelegate(selectionHelper, onClick = ::handleLessonCheckboxClick)
+        solutionsAdapter += AttemptSubmissionAdapterDelegate(
             selectionHelper,
             onCheckboxClick = ::handleSubmissionCheckBoxClick,
             onItemClick = ::handleSubmissionItemClick
         )
 
-        with(attemptsRecycler) {
+        with(solutionsRecycler) {
             itemAnimator = null
-            adapter = attemptsAdapter
+            adapter = solutionsAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
-            addItemDecoration(DividerItemDecoration(this@AttemptsActivity, LinearLayoutManager.VERTICAL).apply {
-                ContextCompat.getDrawable(this@AttemptsActivity, R.drawable.list_divider_h)?.let(::setDrawable)
+            addItemDecoration(DividerItemDecoration(this@SolutionsActivity, LinearLayoutManager.VERTICAL).apply {
+                ContextCompat.getDrawable(this@SolutionsActivity, R.drawable.list_divider_h)?.let(::setDrawable)
             })
         }
 
@@ -109,12 +109,12 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         evaluationDrawable.addFrame(getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
         evaluationDrawable.isOneShot = false
 
-        attemptsSubmitFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
+        solutionsSubmitFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
         evaluationDrawable.start()
 
-        attemptsSubmitButton.setOnClickListener {
+        solutionsSubmitButton.setOnClickListener {
             if (fetchSelectedSubmissionItems().isEmpty()) {
-                for (index in attemptsAdapter.items.indices) {
+                for (index in solutionsAdapter.items.indices) {
                     selectionHelper.select(index)
                 }
             }
@@ -144,7 +144,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val items = attemptsAdapter.items.withIndex().filter { selectionHelper.isSelected(it.index) }.map { it.index }
+        val items = solutionsAdapter.items.withIndex().filter { selectionHelper.isSelected(it.index) }.map { it.index }
         outState.putIntegerArrayList(CHECKED_ITEMS_ARGUMENT, items as ArrayList<Int>)
         super.onSaveInstanceState(outState)
     }
@@ -163,11 +163,11 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         val selectedCount = fetchSelectedSubmissionItems().size
         menu.findItem(R.id.attempts_menu_item_delete).isVisible = selectedCount != 0 && isDeleteMenuItemVisible
         if (selectedCount == 0) {
-            centeredToolbarTitle.text = getString(R.string.attempts_toolbar_title)
-            attemptsSubmitButton.text = getString(R.string.attempts_submit_all)
+            centeredToolbarTitle.text = getString(R.string.solutions_toolbar_title)
+            solutionsSubmitButton.text = getString(R.string.solutions_submit_all)
         } else {
-            centeredToolbarTitle.text = getString(R.string.attempts_selected, selectedCount)
-            attemptsSubmitButton.text = resources.getQuantityString(R.plurals.submit_solutions, selectedCount, selectedCount)
+            centeredToolbarTitle.text = getString(R.string.solutions_selected, selectedCount)
+            solutionsSubmitButton.text = resources.getQuantityString(R.plurals.submit_solutions, selectedCount, selectedCount)
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -194,12 +194,12 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         viewStateDelegate.addState<AttemptsView.State.Empty>(report_empty)
         viewStateDelegate.addState<AttemptsView.State.Error>()
         viewStateDelegate.addState<AttemptsView.State.AttemptsLoaded>(
-            attemptsContainer,
-            attemptsFeedback,
-            attemptsFeedbackSeparator,
-            attemptsRecycler,
-            attemptsSubmissionSeparator,
-            attemptsSubmitButton
+            solutionsContainer,
+            solutionsFeedback,
+            solutionsFeedbackSeparator,
+            solutionsRecycler,
+            solutionsSubmissionSeparator,
+            solutionsSubmitButton
         )
     }
 
@@ -209,9 +209,9 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             (state as? AttemptsView.State.AttemptsLoaded)?.isSending == false
 
         if (state is AttemptsView.State.AttemptsLoaded) {
-            attemptsAdapter.items = state.attempts
-            attemptsSubmitButton.isEnabled = !state.isSending
-            attemptsSubmitFeedback.isVisible = state.isSending
+            solutionsAdapter.items = state.attempts
+            solutionsSubmitButton.isEnabled = !state.isSending
+            solutionsSubmitFeedback.isVisible = state.isSending
             if (checkedIndices.isNotEmpty()) {
                 checkedIndices.forEach { selectionHelper.select(it) }
             }
@@ -256,8 +256,8 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
 
     private fun isAllSubmissionsSelectedInLesson(lessonIndex: Int): Boolean {
         var areAllSelectedInLesson = true
-        for (index in lessonIndex + 1 until attemptsAdapter.items.size) {
-            val item = attemptsAdapter.items[index]
+        for (index in lessonIndex + 1 until solutionsAdapter.items.size) {
+            val item = solutionsAdapter.items[index]
             if (item is AttemptCacheItem.SubmissionItem) {
                 areAllSelectedInLesson = areAllSelectedInLesson && selectionHelper.isSelected(index)
             } else {
@@ -269,8 +269,8 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
 
     private fun isAllLessonsSelectedInSection(sectionIndex: Int, sectionId: Long): Boolean {
         var areAllSelectedInSection = true
-        for (index in sectionIndex + 1 until attemptsAdapter.items.size) {
-            val item = attemptsAdapter.items[index]
+        for (index in sectionIndex + 1 until solutionsAdapter.items.size) {
+            val item = solutionsAdapter.items[index]
             if (item is AttemptCacheItem.LessonItem) {
                 if (item.section.id == sectionId) {
                     areAllSelectedInSection = areAllSelectedInSection && selectionHelper.isSelected(index)
@@ -287,13 +287,13 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
      */
 
     private fun handleSectionCheckboxClick(attemptCacheSectionItem: AttemptCacheItem.SectionItem) {
-        val itemIndex = attemptsAdapter.items.indexOf(attemptCacheSectionItem)
+        val itemIndex = solutionsAdapter.items.indexOf(attemptCacheSectionItem)
         val sectionId = attemptCacheSectionItem.section.id
         selectionHelper.toggle(itemIndex)
         val isSelected = selectionHelper.isSelected(itemIndex)
 
-        for (index in itemIndex + 1 until attemptsAdapter.items.size) {
-            val itemSectionId = when (val item = attemptsAdapter.items[index]) {
+        for (index in itemIndex + 1 until solutionsAdapter.items.size) {
+            val itemSectionId = when (val item = solutionsAdapter.items[index]) {
                 is AttemptCacheItem.LessonItem ->
                     item.section.id
                 is AttemptCacheItem.SubmissionItem ->
@@ -316,14 +316,14 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     }
 
     private fun handleLessonCheckboxClick(attemptCacheLessonItem: AttemptCacheItem.LessonItem) {
-        val itemIndex = attemptsAdapter.items.indexOf(attemptCacheLessonItem)
+        val itemIndex = solutionsAdapter.items.indexOf(attemptCacheLessonItem)
         val lessonId = attemptCacheLessonItem.lesson.id
         val sectionId = attemptCacheLessonItem.section.id
         selectionHelper.toggle(itemIndex)
         val isSelected = selectionHelper.isSelected(itemIndex)
 
-        for (index in itemIndex + 1 until attemptsAdapter.items.size) {
-            val item = attemptsAdapter.items[index]
+        for (index in itemIndex + 1 until solutionsAdapter.items.size) {
+            val item = solutionsAdapter.items[index]
             if (item is AttemptCacheItem.SubmissionItem && item.lesson.id == lessonId) {
                     if (isSelected) {
                         selectionHelper.select(index)
@@ -335,7 +335,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
             }
         }
 
-        val sectionIndex = attemptsAdapter.items.indexOfFirst { item ->
+        val sectionIndex = solutionsAdapter.items.indexOfFirst { item ->
             item is AttemptCacheItem.SectionItem && item.section.id == sectionId
         }
 
@@ -363,15 +363,15 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
     }
 
     private fun handleSubmissionCheckBoxClick(attemptCacheSubmissionItem: AttemptCacheItem.SubmissionItem) {
-        selectionHelper.toggle(attemptsAdapter.items.indexOf(attemptCacheSubmissionItem))
+        selectionHelper.toggle(solutionsAdapter.items.indexOf(attemptCacheSubmissionItem))
         val lessonId = attemptCacheSubmissionItem.lesson.id
         val sectionId = attemptCacheSubmissionItem.section.id
 
-        val lessonIndex = attemptsAdapter.items.indexOfFirst { item ->
+        val lessonIndex = solutionsAdapter.items.indexOfFirst { item ->
             item is AttemptCacheItem.LessonItem && item.lesson.id == lessonId
         }
 
-        val sectionIndex = attemptsAdapter.items.indexOfFirst { item ->
+        val sectionIndex = solutionsAdapter.items.indexOfFirst { item ->
             item is AttemptCacheItem.SectionItem && item.section.id == sectionId
         }
 
@@ -394,7 +394,7 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
      */
 
     private fun fetchSelectedSubmissionItems(): List<AttemptCacheItem.SubmissionItem> =
-        attemptsAdapter.items
+        solutionsAdapter.items
             .filterIndexed { index, _ -> selectionHelper.isSelected(index) }
             .filterIsInstance<AttemptCacheItem.SubmissionItem>()
             .filter { it.submission.status == Submission.Status.LOCAL }

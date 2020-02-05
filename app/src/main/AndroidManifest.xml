@@ -342,7 +342,7 @@
         </activity>
 
         <activity
-            android:name="org.stepik.android.view.attempts.ui.activity.AttemptsActivity" />
+            android:name="org.stepik.android.view.attempts.ui.activity.SolutionsActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

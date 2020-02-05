@@ -71,7 +71,7 @@ class AttemptSubmissionAdapterDelegate(
             submissionTitle.text =  HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
             submissionStep.text =
                 context.resources.getString(
-                    R.string.attempts_submission_step_position,
+                    R.string.solutions_submission_step_position,
                     data.step.position,
                     DateMapper.mapToRelativeDate(context, DateTimeHelper.nowUtc(), data.submission.time?.time ?: data.time)
                 )

@@ -36,7 +36,7 @@ class AttemptLessonAdapterDelegate(
             }
             lessonCheckBox.isEnabled = data.isEnabled
             lessonTitle.text = context.getString(
-                R.string.attempts_lesson_placeholder,
+                R.string.solutions_lesson_placeholder,
                 data.section.position,
                 data.unit.position,
                 data.lesson.title
