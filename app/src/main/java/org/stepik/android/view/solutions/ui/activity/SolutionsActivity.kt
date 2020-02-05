@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_attempts.*
 import kotlinx.android.synthetic.main.empty_default.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -123,7 +124,8 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
         }
 
         initViewStateDelegate()
-        solutionsPresenter.fetchAttemptCacheItems(localOnly = true)
+        solutionsPresenter.fetchSolutionItems(localOnly = true)
+        tryAgain.setOnClickListener { solutionsPresenter.fetchSolutionItemsForceUpdate() }
 
         if (savedInstanceState != null && savedInstanceState.containsKey(CHECKED_ITEMS_ARGUMENT)) {
             checkedIndices.addAll(savedInstanceState.getIntegerArrayList(CHECKED_ITEMS_ARGUMENT) as ArrayList<Int>)
@@ -192,7 +194,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
         viewStateDelegate.addState<SolutionsView.State.Idle>()
         viewStateDelegate.addState<SolutionsView.State.Loading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<SolutionsView.State.Empty>(report_empty)
-        viewStateDelegate.addState<SolutionsView.State.Error>()
+        viewStateDelegate.addState<SolutionsView.State.Error>(error)
         viewStateDelegate.addState<SolutionsView.State.AttemptsLoaded>(
             solutionsContainer,
             solutionsFeedback,
@@ -209,7 +211,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
             (state as? SolutionsView.State.AttemptsLoaded)?.isSending == false
 
         if (state is SolutionsView.State.AttemptsLoaded) {
-            solutionsAdapter.items = state.attempts
+            solutionsAdapter.items = state.solutions
             solutionsSubmitButton.isEnabled = !state.isSending
             solutionsSubmitFeedback.isVisible = state.isSending
             if (checkedIndices.isNotEmpty()) {

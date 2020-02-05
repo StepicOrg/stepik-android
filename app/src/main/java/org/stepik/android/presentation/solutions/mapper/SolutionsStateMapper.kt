@@ -9,11 +9,11 @@ import javax.inject.Inject
 class SolutionsStateMapper
 @Inject
 constructor() {
-    fun setItemsEnabled(state: SolutionsView.State, isEnabled: Boolean): SolutionsView.State {
+    fun setSolutionItemsEnabled(state: SolutionsView.State, isEnabled: Boolean): SolutionsView.State {
         if (state !is SolutionsView.State.AttemptsLoaded) {
             return state
         }
-        val stateItems = state.attempts.map { solutionItem ->
+        val stateItems = state.solutions.map { solutionItem ->
             when (solutionItem) {
                 is SolutionItem.SectionItem ->
                     solutionItem.copy(isEnabled = isEnabled)
@@ -30,19 +30,19 @@ constructor() {
         if (state !is SolutionsView.State.AttemptsLoaded) {
             return state
         }
-        val itemIndex = state.attempts.indexOfFirst { it is SolutionItem.SubmissionItem && it.submission.attempt == submission.attempt }
-        val stateItems = state.attempts.mutate {
+        val itemIndex = state.solutions.indexOfFirst { it is SolutionItem.SubmissionItem && it.submission.attempt == submission.attempt }
+        val stateItems = state.solutions.mutate {
             set(itemIndex, (get(itemIndex) as? SolutionItem.SubmissionItem)?.copy(submission = submission) ?: return@mutate)
         }
-        return state.copy(attempts = stateItems)
+        return state.copy(solutions = stateItems)
     }
 
-    fun mergeStateWithAttemptItems(state: SolutionsView.State, attemptItems: List<SolutionItem>): SolutionsView.State {
+    fun mergeStateWithSolutionItems(state: SolutionsView.State, solutionItems: List<SolutionItem>): SolutionsView.State {
         if (state !is SolutionsView.State.AttemptsLoaded) {
             return state
         }
 
-        val sectionIds = attemptItems
+        val sectionIds = solutionItems
             .asSequence()
             .mapNotNull { item ->
                 (item as? SolutionItem.SubmissionItem)
@@ -52,7 +52,7 @@ constructor() {
             }
             .toSet()
 
-        val lessonIds = attemptItems
+        val lessonIds = solutionItems
             .asSequence()
             .mapNotNull { item ->
                 (item as? SolutionItem.SubmissionItem)
@@ -67,18 +67,18 @@ constructor() {
 
         val result = ArrayList<SolutionItem?>()
 
-        while (indexLeft <= state.attempts.size && indexRight <= attemptItems.size) {
-            when (compareAttemptCacheItems(state.attempts.getOrNull(indexLeft), attemptItems.getOrNull(indexRight))) {
+        while (indexLeft <= state.solutions.size && indexRight <= solutionItems.size) {
+            when (compareSolutionItems(state.solutions.getOrNull(indexLeft), solutionItems.getOrNull(indexRight))) {
                 -1 -> {
-                    result += state.attempts.getOrNull(indexLeft++)
+                    result += state.solutions.getOrNull(indexLeft++)
                 }
                 0 -> {
-                    result += attemptItems.getOrNull(indexRight++)
+                    result += solutionItems.getOrNull(indexRight++)
                     indexLeft++
                 }
                 1 -> {
                     val shouldAddItem =
-                        when (val itemToAdd = attemptItems.getOrNull(indexRight)) {
+                        when (val itemToAdd = solutionItems.getOrNull(indexRight)) {
                             is SolutionItem.SectionItem ->
                                 itemToAdd.section.id in sectionIds
                             is SolutionItem.LessonItem ->
@@ -90,29 +90,36 @@ constructor() {
                         }
 
                     if (shouldAddItem) {
-                        result += attemptItems.getOrNull(indexRight)
+                        result += solutionItems.getOrNull(indexRight)
                     }
                     indexRight++
                 }
             }
         }
 
-        return state.copy(attempts = result.filterNotNull())
+        return state.copy(solutions = result.filterNotNull())
     }
 
-    private fun compareAttemptCacheItems(a: SolutionItem?, b: SolutionItem?): Int {
+    fun mapToSolutionsState(solutions: List<SolutionItem>): SolutionsView.State =
+        if (solutions.isEmpty()) {
+            SolutionsView.State.Empty
+        } else {
+            SolutionsView.State.AttemptsLoaded(solutions, isSending = false)
+        }
+
+    private fun compareSolutionItems(a: SolutionItem?, b: SolutionItem?): Int {
         if (a == null) {
             return 1
         }
-        val (aSection, aUnit, aStep) = getAttemptCacheItemTriple(a)
-        val (bSection, bUnit, bStep) = getAttemptCacheItemTriple(b)
+        val (aSection, aUnit, aStep) = getSolutionItemTriple(a)
+        val (bSection, bUnit, bStep) = getSolutionItemTriple(b)
 
         return (aSection?.position ?: -1).compareTo(bSection?.position ?: -1).takeIf { it != 0 }
             ?: (aUnit?.position ?: -1).compareTo(bUnit?.position ?: -1).takeIf { it != 0 }
             ?: (aStep?.position ?: -1).compareTo(bStep?.position ?: -1)
     }
 
-    private fun getAttemptCacheItemTriple(item: SolutionItem?) =
+    private fun getSolutionItemTriple(item: SolutionItem?) =
         when (item) {
             is SolutionItem.SectionItem ->
                 Triple(item.section, null, null)

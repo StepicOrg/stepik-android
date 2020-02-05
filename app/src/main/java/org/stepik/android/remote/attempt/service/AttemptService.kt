@@ -9,12 +9,12 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface AttemptService {
-    @POST("api/attempts")
+    @POST("api/solutions")
     fun createNewAttempt(@Body attemptRequest: AttemptRequest): Single<AttemptResponse>
 
-    @GET("api/attempts")
+    @GET("api/solutions")
     fun getAttemptsForStep(@Query("step") stepId: Long, @Query("user") userId: Long): Single<AttemptResponse>
 
-    @GET("api/attempts")
+    @GET("api/solutions")
     fun getAttemptsForStep(@Query("ids[]") ids: LongArray): Single<AttemptResponse>
 }

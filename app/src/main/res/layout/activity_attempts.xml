@@ -22,6 +22,8 @@
 
         <include layout="@layout/empty_default"/>
 
+        <include layout="@layout/error_no_connection_with_button"/>
+
         <androidx.core.widget.NestedScrollView
             android:id="@+id/solutionsScroll"
             android:layout_width="match_parent"

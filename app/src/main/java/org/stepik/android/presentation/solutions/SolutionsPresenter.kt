@@ -58,7 +58,7 @@ constructor(
         subscribeForSolutionsUpdates()
     }
 
-    fun fetchAttemptCacheItems(localOnly: Boolean = true) {
+    fun fetchSolutionItems(localOnly: Boolean = true) {
         if (state == SolutionsView.State.Idle || state is SolutionsView.State.AttemptsLoaded) {
             state = if (state !is SolutionsView.State.AttemptsLoaded) {
                 SolutionsView.State.Loading
@@ -70,21 +70,31 @@ constructor(
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { attempts ->
+                    onSuccess = { solutions ->
                         state =
                             if (state is SolutionsView.State.AttemptsLoaded) {
-                                solutionsStateMapper.mergeStateWithAttemptItems(state, attempts)
+                                solutionsStateMapper.mergeStateWithSolutionItems(state, solutions)
                             } else {
-                                if (attempts.isEmpty()) {
-                                    SolutionsView.State.Empty
-                                } else {
-                                    SolutionsView.State.AttemptsLoaded(attempts, isSending = false)
-                                }
+                                solutionsStateMapper.mapToSolutionsState(solutions)
                             }
                     },
                     onError = { state = SolutionsView.State.Error; it.printStackTrace() }
                 )
         }
+    }
+
+    fun fetchSolutionItemsForceUpdate() {
+        if (state !is SolutionsView.State.Error) {
+            return
+        }
+        compositeDisposable += solutionsInteractor
+            .fetchAttemptCacheItems(courseId, false)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { attempts -> solutionsStateMapper.mapToSolutionsState(attempts) },
+                onError = { state = SolutionsView.State.Error; it.printStackTrace() }
+            )
     }
 
     private fun subscribeForSolutionsUpdates() {
@@ -95,9 +105,9 @@ constructor(
                 onNext = {
                     if (state is SolutionsView.State.Empty) {
                         state = SolutionsView.State.Idle
-                        fetchAttemptCacheItems(localOnly = true)
+                        fetchSolutionItems(localOnly = true)
                     } else {
-                        fetchAttemptCacheItems(localOnly = false)
+                        fetchSolutionItems(localOnly = false)
                     }
                 },
                 onError = emptyOnErrorStub
@@ -107,7 +117,7 @@ constructor(
     fun submitSolutions(submissionItems: List<SolutionItem.SubmissionItem>) {
         if (state !is SolutionsView.State.AttemptsLoaded) return
 
-        state = solutionsStateMapper.setItemsEnabled(state, isEnabled = false)
+        state = solutionsStateMapper.setSolutionItemsEnabled(state, isEnabled = false)
 
         sendSubmissionEvents(submissionItems)
         val submissions = submissionItems.map { it.submission }
@@ -118,7 +128,7 @@ constructor(
             .subscribeBy(
                 onNext = { state = solutionsStateMapper.mergeStateWithSubmission(state, it) },
                 onComplete = {
-                    state = solutionsStateMapper.setItemsEnabled(state, isEnabled = true)
+                    state = solutionsStateMapper.setSolutionItemsEnabled(state, isEnabled = true)
                     attemptsSentPublisher.onNext(Unit)
                     view?.onFinishedSending()
                 },
@@ -126,7 +136,7 @@ constructor(
                     val oldState =
                         (state as? SolutionsView.State.AttemptsLoaded)
                         ?: return@subscribeBy
-                    state = solutionsStateMapper.setItemsEnabled(
+                    state = solutionsStateMapper.setSolutionItemsEnabled(
                         oldState.copy(isSending = false),
                         isEnabled = true
                     )
@@ -145,7 +155,7 @@ constructor(
             .subscribeBy(
                 onComplete = {
                     state = SolutionsView.State.Idle
-                    fetchAttemptCacheItems(localOnly = false)
+                    fetchSolutionItems(localOnly = false)
                     attemptsSentPublisher.onNext(Unit)
                 },
                 onError = { it.printStackTrace() }
