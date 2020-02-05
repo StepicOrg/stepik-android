@@ -65,13 +65,6 @@ constructor() {
         var indexLeft = 0
         var indexRight = 0
 
-        // TODO This logs when you recreate a step
-        attemptItems.forEach {
-            if (it is AttemptCacheItem.SubmissionItem && it.step.id == 209070L) {
-                // Timber.d("Fresh: $it")
-            }
-        }
-
         val result = ArrayList<AttemptCacheItem?>()
 
         while (indexLeft <= state.attempts.size && indexRight <= attemptItems.size) {
@@ -104,14 +97,10 @@ constructor() {
             }
         }
 
-        val filtered = result.filterNotNull()
-        // filtered.forEach { Timber.d("$it"); Timber.d("============================") }
-
         return state.copy(attempts = result.filterNotNull())
     }
 
     private fun compareAttemptCacheItems(a: AttemptCacheItem?, b: AttemptCacheItem?): Int {
-        // TODO Code cleaner
         if (a == null) {
             return 1
         }
