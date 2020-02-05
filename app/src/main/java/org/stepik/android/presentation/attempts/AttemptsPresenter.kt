@@ -121,7 +121,16 @@ constructor(
                     attemptsSentPublisher.onNext(Unit)
                     view?.onFinishedSending()
                 },
-                onError = { it.printStackTrace(); }
+                onError = {
+                    val oldState =
+                        (state as? AttemptsView.State.AttemptsLoaded)
+                        ?: return@subscribeBy
+                    state = attemptsStateMapper.setItemsEnabled(
+                        oldState.copy(isSending = false),
+                        isEnabled = true
+                    )
+                    view?.showNetworkError()
+                }
             )
     }
 

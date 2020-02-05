@@ -39,6 +39,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.selection.MultipleChoiceSelectionHelper
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import ru.nobird.android.view.base.ui.extension.snackbar
 import java.util.ArrayList
 import javax.inject.Inject
 
@@ -217,6 +218,10 @@ class AttemptsActivity : FragmentActivityBase(), AttemptsView, RemoveCachedAttem
         }
 
         invalidateOptionsMenu()
+    }
+
+    override fun showNetworkError() {
+        root.snackbar(messageRes = R.string.no_connection)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
