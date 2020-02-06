@@ -11,6 +11,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.plus
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
@@ -18,11 +19,15 @@ import org.stepik.android.domain.course.interactor.CourseInteractor
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
+import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
+import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import org.stepik.android.view.injection.solutions.SolutionsBus
+import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import javax.inject.Inject
 
 class CoursePresenter
@@ -36,6 +41,7 @@ constructor(
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val continueLearningInteractor: ContinueLearningInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
+    private val solutionsInteractor: SolutionsInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
 
@@ -43,6 +49,12 @@ constructor(
 
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
+
+    @SolutionsBus
+    private val solutionsObservable: Observable<Unit>,
+
+    @SolutionsSentBus
+    private val solutionsSentObservable: Observable<Unit>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -60,6 +72,7 @@ constructor(
 
     init {
         subscriberForEnrollmentUpdates()
+        subscribeForLocalSubmissionsUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -181,6 +194,37 @@ constructor(
             .subscribeBy(
                 onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning(); resolveCourseShareTooltip(it) },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
+            )
+    }
+
+    private fun subscribeForLocalSubmissionsUpdates() {
+        compositeDisposable += (solutionsObservable + solutionsSentObservable)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { updateLocalSubmissionsCount() },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun updateLocalSubmissionsCount() {
+        compositeDisposable += solutionsInteractor
+            .fetchAttemptCacheItems(courseId, localOnly = true)
+            .map { localSubmissions -> localSubmissions.count { it is SolutionItem.SubmissionItem } }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { localSubmissionsCount ->
+                    val oldState =
+                        (state as? CourseView.State.CourseLoaded)
+                        ?: return@subscribeBy
+
+                    val courseHeaderData = oldState
+                        .courseHeaderData
+                        .copy(localSubmissionsCount = localSubmissionsCount)
+                    state = CourseView.State.CourseLoaded(courseHeaderData)
+                },
+                onError = emptyOnErrorStub
             )
     }
 

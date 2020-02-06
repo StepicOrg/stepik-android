@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.json.JSONObject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.GoogleApiChecker
 import org.stepic.droid.core.StepikDevicePoster
 import org.stepic.droid.core.presenters.contracts.SplashView
@@ -124,6 +125,12 @@ constructor(
                 } else {
                     analytic.reportEvent(Analytic.RemoteConfig.FETCHED_UNSUCCESSFUL)
                 }
+
+                analytic
+                    .setUserProperty(
+                        RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED,
+                        firebaseRemoteConfig.getBoolean(RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED).toString()
+                    )
             }
         }
     }
