@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@drawable/bg_attempt_submission_item">
+
+    <ImageView
+        android:id="@+id/submissionQuizIcon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/submissionTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:ellipsize="end"
+        android:letterSpacing="0.02"
+        android:maxLines="1"
+        android:minLines="1"
+        android:paddingTop="12dp"
+        android:textColor="@color/new_accent_color"
+        android:textSize="16sp"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/submissionQuizIcon"
+        app:layout_constraintRight_toLeftOf="@id/submissionCheckBox"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1. Lesson Nameаавпавпв" />
+
+    <CheckBox
+        android:id="@+id/submissionCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
+        android:gravity="center"
+        android:visibility="visible"
+        app:buttonTint="@color/submission_time"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/submissionStatusIconCorrect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center"
+        app:srcCompat="@drawable/ic_step_quiz_correct"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+     <ImageView
+         android:id="@+id/submissionStatusIconWrong"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:gravity="center"
+         app:srcCompat="@drawable/ic_step_quiz_wrong"
+         app:layout_constraintBottom_toBottomOf="@id/submissionCheckBox"
+         app:layout_constraintLeft_toLeftOf="@id/submissionCheckBox"
+         app:layout_constraintRight_toRightOf="@id/submissionCheckBox"
+         app:layout_constraintTop_toTopOf="@id/submissionCheckBox"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/submissionStep"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:textColor="@color/submission_time"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="@id/submissionTitle"
+        tools:text="Step 3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

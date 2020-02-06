@@ -236,4 +236,9 @@
     <color name="certificate_regular">@color/green01</color>
 
     <color name="custom_grey">#AAAAAA</color>
+
+    <!-- Attempt screen -->
+    <color name="section_color">@color/new_primary_color</color>
+    <color name="lesson_color">#fdfefe</color>
+    <color name="submission_time">#999999</color>
 </resources>

@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -24,6 +25,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
@@ -103,6 +105,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
+
 //    @Inject
 //    internal lateinit var billing: Billing
 
@@ -141,7 +146,14 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
-        courseHeaderDelegate = CourseHeaderDelegate(this, analytic, coursePresenter)
+        courseHeaderDelegate =
+            CourseHeaderDelegate(
+                this, analytic, coursePresenter,
+                onSubmissionCountClicked = {
+                    screenManager.showCachedAttempts(this, courseId)
+                },
+                isLocalSubmissionsEnabled = firebaseRemoteConfig.getBoolean(RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED)
+            )
 
 //        uiCheckout = Checkout.forActivity(this, billing)
         initViewPager(courseId)

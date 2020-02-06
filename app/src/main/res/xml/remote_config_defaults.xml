@@ -24,4 +24,8 @@
         <key>adaptive_backend_url</key>
         <value>http://52.174.33.220</value>
     </entry>
+    <entry>
+        <key>is_local_submissions_enabled</key>
+        <value>false</value>
+    </entry>
 </defaultsMap>

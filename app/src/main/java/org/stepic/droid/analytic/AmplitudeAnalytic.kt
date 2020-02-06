@@ -75,6 +75,7 @@ interface AmplitudeAnalytic {
             const val LANGUAGE = "language"
             const val NUMBER = "number"
             const val STEP = "step"
+            const val LOCAL = "local"
         }
     }
 
@@ -218,6 +219,7 @@ interface AmplitudeAnalytic {
         object Params {
             const val STATE = "state"
             const val TYPE = "type"
+            const val ID = "id"
         }
 
         object Values {
@@ -237,5 +239,26 @@ interface AmplitudeAnalytic {
 
     object Notifications {
         const val NOTIFICATION_SCREEN_OPENED = "Notifications screen opened"
+    }
+
+    object LocalSubmissions {
+        const val LOCAL_SUBMISSIONS_SCREEN_OPENED = "Local submissions screen opened"
+        const val LOCAL_SUBMISSION_ITEM_CLICKED = "Local submission item clicked"
+        const val LOCAL_SUBMISSION_MADE = "Local submission made"
+
+        object Params {
+            /**
+             *  Submission item clicked
+             */
+            const val STEP_ID = "step_id"
+
+            /**
+             *  Local submission made
+             */
+            const val TYPE = "type"
+            const val LANGUAGE = "language"
+            const val NUMBER = "number"
+            const val STEP = "step"
+        }
     }
 }
