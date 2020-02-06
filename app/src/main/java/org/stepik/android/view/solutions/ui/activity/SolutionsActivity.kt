@@ -209,7 +209,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
 
         if (state is SolutionsView.State.SolutionsLoaded) {
             solutionsAdapter.items = listOf(SolutionItem.Disclaimer) + state.solutions
-            solutionsSubmitButton.isEnabled = !state.isSending
+            solutionsSubmitButton.isEnabled = !state.isSending && hasSubmissionItemsToSend()
             solutionsSubmitFeedback.isVisible = state.isSending
             if (checkedIndices.isNotEmpty()) {
                 checkedIndices.forEach { selectionHelper.select(it) }
@@ -396,6 +396,11 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
     /**
      *  Selectable submissions functions
      */
+
+    private fun hasSubmissionItemsToSend(): Boolean =
+        solutionsAdapter.items
+            .filterIsInstance<SolutionItem.SubmissionItem>()
+            .any { it.submission.status == Submission.Status.LOCAL }
 
     private fun fetchSelectedSubmissionItems(): List<SolutionItem.SubmissionItem> =
         solutionsAdapter.items
