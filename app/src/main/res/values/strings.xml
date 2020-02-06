@@ -851,8 +851,8 @@
     <string name="profile_courses_title">Courses</string>
 
     <!-- Solutions -->
-    <string name="solutions_toolbar_title">Offline solutions</string>
-    <string name="solutions_information_block">This is your offline solutions. Edit or submit to score the points</string>
+    <string name="solutions_toolbar_title">Solutions to submit</string>
+    <string name="solutions_information_block">You can edit your solutions before submit</string>
     <string name="solutions_section_placeholder" translatable="false">%d&#160;%s</string>
     <string name="solutions_lesson_placeholder" translatable="false">%d&#46;%d&#160;%s</string>
     <string name="solutions_selected">%d&#160;selected</string>
