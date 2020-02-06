@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.Button
 import androidx.annotation.StringRes
+import androidx.core.widget.doOnTextChanged
 import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
@@ -66,6 +67,9 @@ class QuizCardViewHolder(
             override fun onPageFinished(view: WebView?, url: String?) {
                 onCardLoaded()
             }
+        }
+        question.textView.doOnTextChanged { _, _, _, _ ->
+            onCardLoaded()
         }
         question.webView.setLayerType(View.LAYER_TYPE_NONE, null)
 
