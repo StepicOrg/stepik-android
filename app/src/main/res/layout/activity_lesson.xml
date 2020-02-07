@@ -63,5 +63,9 @@
             android:id="@+id/lessonNotFound"
             layout="@layout/error_lesson_not_found"/>
 
+        <include
+            android:id="@+id/lessonIsExam"
+            layout="@layout/error_lesson_is_exam" />
+
     </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

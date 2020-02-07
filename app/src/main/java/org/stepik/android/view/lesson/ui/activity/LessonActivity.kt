@@ -20,6 +20,7 @@ import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
+import kotlinx.android.synthetic.main.error_lesson_is_exam.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -135,6 +136,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
         viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(emptyLesson)
         viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonNotFound)
+        viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonIsExam)
         viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager, lessonTab)
 
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
@@ -238,6 +240,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                         intent.removeExtra(EXTRA_AUTOPLAY)
                     }
                 } else {
+                    if (state.stepsState is LessonView.StepsState.Exam) {
+                        errorLessonIsExamAction.setOnClickListener { screenManager.openSyllabusInWeb(this, state.stepsState.courseId) }
+                    }
                     stepsAdapter.items = emptyList()
                 }
 
