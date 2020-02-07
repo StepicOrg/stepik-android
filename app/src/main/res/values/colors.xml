@@ -237,8 +237,10 @@
 
     <color name="custom_grey">#AAAAAA</color>
 
-    <!-- Attempt screen -->
+    <!-- Solutions screen -->
     <color name="section_color">@color/new_primary_color</color>
     <color name="lesson_color">#fdfefe</color>
     <color name="submission_time">#999999</color>
+    <color name="submission_correct">#D064CC64</color>
+    <color name="submission_incorrect">#D0FF7965</color>
 </resources>

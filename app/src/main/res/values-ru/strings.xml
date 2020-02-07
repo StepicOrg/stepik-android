@@ -826,4 +826,6 @@
     <string name="solutions_submission_step_position">Шаг %d – %s</string>
     <string name="solutions_submit_all">Отправить все решения</string>
     <string name="solutions_submit_in_progress">Идет отправка решений</string>
+    <string name="solutions_submission_correctly">Задача решена верно</string>
+    <string name="solutions_submission_incorrectly">Задача решена неверно</string>
 </resources>
