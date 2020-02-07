@@ -676,6 +676,9 @@
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
 
+    <string name="lesson_error_exam_description">Этот урок - часть экзаменационного модуля, который доступен только в веб версии.</string>
+    <string name="lesson_error_exam_action">Открыть в веб версии</string>
+
     <!-- Step -->
     <string name="step_amount_passed">Решило:&#160;</string>
     <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>

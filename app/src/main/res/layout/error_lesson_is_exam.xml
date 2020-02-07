@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_empty"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/lesson_not_found_or_not_access"
+        android:contentDescription="@string/lesson_error_exam_description"
         app:layout_constraintBottom_toTopOf="@+id/placeholderMessage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/padding_placeholders"
-        android:text="@string/lesson_not_found_or_not_access"
+        android:text="@string/lesson_error_exam_description"
         app:layout_constraintBottom_toTopOf="@+id/errorLessonIsExamAction"
         app:layout_constraintTop_toBottomOf="@+id/placeholderIcon" />
 
@@ -37,7 +37,7 @@
         android:id="@+id/errorLessonIsExamAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/placeholder_go_to_catalog"
+        android:text="@string/lesson_error_exam_action"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
