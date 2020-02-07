@@ -136,7 +136,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
         viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(emptyLesson)
         viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonNotFound)
-        viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonIsExam)
+        viewStepStateDelegate.addState<LessonView.StepsState.Exam>(lessonIsExam)
         viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager, lessonTab)
 
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
