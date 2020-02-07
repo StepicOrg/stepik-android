@@ -80,6 +80,8 @@ import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.search.SearchDataModule
 import org.stepik.android.view.injection.settings.SettingsComponent
 import org.stepik.android.view.injection.social_profile.SocialProfileComponent
+import org.stepik.android.view.injection.solutions.SolutionsBusModule
+import org.stepik.android.view.injection.solutions.SolutionsComponent
 import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.injection.step.StepDiscussionBusModule
 import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
@@ -132,7 +134,8 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
         EmailAddressDataModule::class,
         SearchDataModule::class,
         UserCoursesDataModule::class,
-        CourseCollectionDataModule::class
+        CourseCollectionDataModule::class,
+        SolutionsBusModule::class
     ]
 )
 interface AppCoreComponent {
@@ -198,6 +201,8 @@ interface AppCoreComponent {
     fun settingsComponentBuilder(): SettingsComponent.Builder
 
     fun socialProfileComponentBuilder(): SocialProfileComponent.Builder
+
+    fun solutionsComponentBuilder(): SolutionsComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

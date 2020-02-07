@@ -155,7 +155,8 @@ class CardPresenter(
 
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.SUBMISSION_MADE, mapOf(
                         AmplitudeAnalytic.Steps.Params.TYPE to card.step.getStepType(),
-                        AmplitudeAnalytic.Steps.Params.STEP to (card.step?.id?.toString() ?: "0")
+                        AmplitudeAnalytic.Steps.Params.STEP to (card.step?.id?.toString() ?: "0"),
+                        AmplitudeAnalytic.Steps.Params.LOCAL to false
                 ))
 
                 view?.setSubmission(it, true)

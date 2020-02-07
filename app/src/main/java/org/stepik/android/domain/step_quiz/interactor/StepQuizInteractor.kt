@@ -20,6 +20,7 @@ import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.step.StepDiscussionBus
 import org.stepik.android.view.injection.step_quiz.StepQuizBus
 import java.util.concurrent.TimeUnit
@@ -33,6 +34,9 @@ constructor(
 
     @StepDiscussionBus
     private val stepDiscussionSubject: PublishSubject<Long>,
+
+    @SolutionsBus
+    private val solutionsPublisher: PublishSubject<Unit>,
 
     private val attemptRepository: AttemptRepository,
     private val submissionRepository: SubmissionRepository,
@@ -90,12 +94,14 @@ constructor(
                     stepQuizPublisher.onNext(stepId)
                 }
                 stepDiscussionSubject.onNext(stepId)
+                solutionsPublisher.onNext(Unit)
                 sharedPreferenceHelper.incrementSubmissionsCount()
             }
 
     fun createLocalSubmission(submission: Submission): Single<Submission> =
         submissionRepository
             .createSubmission(submission, dataSourceType = DataSourceType.CACHE)
+            .doOnSuccess { solutionsPublisher.onNext(Unit) }
 
     fun getStepRestrictions(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizRestrictions> =
         getStepSubmissionCount(stepPersistentWrapper.step.id)

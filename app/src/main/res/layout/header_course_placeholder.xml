@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="8dp"
 
     android:background="@color/fast_continue_learning_opacity"
     android:gravity="center_horizontal"
@@ -26,48 +27,10 @@
         android:layout_height="8dp"
         android:alpha="@dimen/loading_view_dark_alpha"
         android:layerType="software"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="28dp"
         android:layout_marginStart="?actionBarSize"
         android:layout_marginEnd="?actionBarSize"
         android:layout_gravity="center_horizontal" />
-
-    <LinearLayout
-        android:id="@+id/courseInfoPlaceholder"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/course_info_height_expanded"
-        android:alpha="@dimen/loading_view_dark_alpha"
-        android:layerType="software"
-        android:orientation="horizontal"
-        android:layout_marginLeft="?actionBarSize"
-        android:layout_marginRight="?actionBarSize"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="@dimen/course_info_margin_expanded"
-        android:gravity="center">
-
-        <org.stepic.droid.ui.custom.LoadingView
-            android:layout_width="36dp"
-            android:layout_height="36dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp">
-
-
-            <org.stepic.droid.ui.custom.LoadingView
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
-
-            <org.stepic.droid.ui.custom.LoadingView
-                android:layout_width="match_parent"
-                android:layout_height="8dp"
-                android:layout_marginTop="8dp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
 
 </LinearLayout>

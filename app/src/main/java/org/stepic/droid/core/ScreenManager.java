@@ -157,4 +157,6 @@ public interface ScreenManager {
     void openSocialMediaLink(Context context, SocialMedia socialLink);
 
     void loginWithSocial(FragmentActivity activity, ISocialType type);
+
+    void showCachedAttempts(@NotNull Context context, long courseId);
 }

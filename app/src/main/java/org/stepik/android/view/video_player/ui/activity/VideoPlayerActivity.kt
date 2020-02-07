@@ -195,13 +195,13 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             .inject(this)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         videoPlayerPresenter.attachView(this)
         bindService(VideoPlayerForegroundService.createBindingIntent(this), videoServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
-    override fun onPause() {
+    override fun onStop() {
         playerInBackroundPopup?.dismiss()
         exoPlayer?.let { player ->
             videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
@@ -218,7 +218,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             stopService(VideoPlayerForegroundService.createBindingIntent(this))
         }
 
-        super.onPause()
+        super.onStop()
     }
 
     override fun setState(state: VideoPlayerView.State) {

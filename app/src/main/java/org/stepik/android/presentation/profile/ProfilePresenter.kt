@@ -72,7 +72,7 @@ constructor(
                         state = ProfileView.State.Empty
                     } else {
                         subscribeForProfileUpdates(oldState.profileData.user.id)
-                        sendScreenOpenEvent(oldState.profileData.isCurrentUser)
+                        sendScreenOpenEvent(oldState.profileData.user.id, oldState.profileData.isCurrentUser)
                     }
                 },
                 onError = {
@@ -92,7 +92,7 @@ constructor(
         view?.shareUser(user)
     }
 
-    private fun sendScreenOpenEvent(isCurrentUser: Boolean) {
+    private fun sendScreenOpenEvent(userId: Long, isCurrentUser: Boolean) {
         val state = if (isCurrentUser) {
             AmplitudeAnalytic.Profile.Values.SELF
         } else {
@@ -101,7 +101,8 @@ constructor(
 
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Profile.PROFILE_SCREEN_OPENED, mapOf(
-                AmplitudeAnalytic.Profile.Params.STATE to state
+                AmplitudeAnalytic.Profile.Params.STATE to state,
+                AmplitudeAnalytic.Profile.Params.ID to userId
             ))
         analytic.reportEvent(Analytic.Profile.PROFILE_SCREEN_OPENED, Bundle().apply {
             putString(Analytic.Profile.Params.STATE, state)
