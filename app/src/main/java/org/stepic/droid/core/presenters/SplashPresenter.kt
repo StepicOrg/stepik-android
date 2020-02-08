@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.json.JSONObject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.core.GoogleApiChecker
 import org.stepic.droid.core.StepikDevicePoster
@@ -42,6 +43,8 @@ constructor(
     private val databaseFacade: DatabaseFacade,
     private val remindRegistrationNotificationDelegate: RemindRegistrationNotificationDelegate,
     private val retentionNotificationDelegate: RetentionNotificationDelegate,
+
+    private val deferredAuthSplitTest: DeferredAuthSplitTest,
 
     private val branchDeepLinkParsers: Set<@JvmSuppressWildcards BranchDeepLinkParser>
 ) : PresenterBase<SplashView>() {
@@ -88,9 +91,10 @@ constructor(
             .onErrorReturn {
                 val isLogged = sharedPreferenceHelper.authResponseFromStore != null
                 val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
+                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth
                 when {
                     isOnboardingNotPassedYet -> SplashRoute.Onboarding
-                    isLogged -> SplashRoute.Home
+                    isLogged || isDeferredAuth -> SplashRoute.Home
                     else -> SplashRoute.Launch
                 }
             }

@@ -29,6 +29,7 @@ import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
+import org.stepic.droid.ui.activities.AnimatedOnboardingActivity
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
@@ -291,4 +292,6 @@ interface AppCoreComponent {
     fun inject(bootCompleteService: BootCompleteService)
 
     fun inject(removeCachedContentDialog: RemoveCachedContentDialog)
+
+    fun inject(onboardingActivity: AnimatedOnboardingActivity)
 }
