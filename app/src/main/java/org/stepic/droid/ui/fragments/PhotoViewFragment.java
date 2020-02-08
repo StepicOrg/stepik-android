@@ -1,12 +1,12 @@
 package org.stepic.droid.ui.fragments;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -16,13 +16,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.R;
+import org.stepic.droid.adaptive.math.LinearRegression;
+import org.stepic.droid.adaptive.ui.animations.CardAnimations;
 import org.stepic.droid.base.FragmentBase;
+import org.stepik.android.view.ui.layout.VerticalDragLayout;
 
 import butterknife.BindView;
-import uk.co.senab.photoview.PhotoViewAttacher;
+import kotlin.Unit;
 
 public class PhotoViewFragment extends FragmentBase {
 
@@ -36,8 +41,13 @@ public class PhotoViewFragment extends FragmentBase {
         return fragment;
     }
 
+    private int screenHeight;
+
+    @BindView(R.id.dragLayout)
+    VerticalDragLayout verticalDragLayout;
+
     @BindView(R.id.zoomable_image)
-    ImageView zoomableImageView;
+    PhotoView zoomableImageView;
 
     @BindView(R.id.toolbar)
     androidx.appcompat.widget.Toolbar toolbar;
@@ -48,7 +58,8 @@ public class PhotoViewFragment extends FragmentBase {
     @BindView(R.id.internet_problem_root)
     View internetProblemRootView;
 
-    PhotoViewAttacher photoViewAttacher;
+    private PhotoViewAttacher photoViewAttacher;
+    private int dismissPathLength;
 
     private Target<Bitmap> target = new CustomTarget<Bitmap>() {
         @Override
@@ -91,14 +102,44 @@ public class PhotoViewFragment extends FragmentBase {
         super.onViewCreated(view, savedInstanceState);
         setUpToolbar();
         photoViewAttacher = new PhotoViewAttacher(zoomableImageView);
-        retryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                internetProblemRootView.setVisibility(View.GONE);
-                loadImage();
+        screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
+        dismissPathLength = getResources().getDimensionPixelSize(R.dimen.dismiss_path_length);
+
+        verticalDragLayout.setOnDragListener(dy -> {
+            if (photoViewAttacher.getScale() > 1f) return Unit.INSTANCE;
+            zoomableImageView.setTranslationY(-dy);
+            return Unit.INSTANCE;
+        });
+
+        verticalDragLayout.setOnReleaseDragListener(dy -> {
+            if (photoViewAttacher.getScale() > 1f) return Unit.INSTANCE;
+            if (Math.abs(dy) > dismissPathLength) {
+                CardAnimations
+                        .createTransitionAnimation(zoomableImageView, 0, -Math.signum(dy) * screenHeight)
+                        .rotation(0)
+                        .withEndAction(() -> {
+                            zoomableImageView.setVisibility(View.GONE);
+                            final AppCompatActivity appCompatActivity = ((AppCompatActivity) getActivity());
+                            if (appCompatActivity != null) {
+                                appCompatActivity.finish();
+                            }
+                        }).start();
+            } else {
+                zoomableImageView.setTranslationY(0f);
             }
+            return Unit.INSTANCE;
+        });
+
+        retryButton.setOnClickListener(v -> {
+            internetProblemRootView.setVisibility(View.GONE);
+            loadImage();
         });
         loadImage();
+    }
+
+    private float getTargetY(final float targetX) {
+        final LinearRegression regression = new LinearRegression(new double[]{0, zoomableImageView.getTranslationX()}, new double[]{0, zoomableImageView.getTranslationY()});
+        return (float) regression.predict(targetX);
     }
 
     private void loadImage() {

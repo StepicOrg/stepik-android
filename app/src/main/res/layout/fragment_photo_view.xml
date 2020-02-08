@@ -4,11 +4,17 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-
-    <ImageView
-        android:id="@+id/zoomable_image"
+    <org.stepik.android.view.ui.layout.VerticalDragLayout
+        android:id="@+id/dragLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/zoomable_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </org.stepik.android.view.ui.layout.VerticalDragLayout>
 
 
     <LinearLayout
