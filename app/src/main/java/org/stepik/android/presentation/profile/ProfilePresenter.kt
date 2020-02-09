@@ -62,14 +62,17 @@ constructor(
                         if (profileData.isCurrentUser && profileData.user.isGuest) {
                             ProfileView.State.EmptyLogin
                         } else {
-
                             ProfileView.State.Content(profileData)
                         }
                 },
                 onComplete = {
                     val oldState = state
                     if (oldState !is ProfileView.State.Content) {
-                        state = ProfileView.State.Empty
+                        state = if (oldState is ProfileView.State.EmptyLogin) {
+                            ProfileView.State.EmptyLogin
+                        } else {
+                            ProfileView.State.Empty
+                        }
                     } else {
                         subscribeForProfileUpdates(oldState.profileData.user.id)
                         sendScreenOpenEvent(oldState.profileData.user.id, oldState.profileData.isCurrentUser)
