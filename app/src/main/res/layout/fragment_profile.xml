@@ -30,16 +30,25 @@
 
     <include
         android:id="@+id/profileEmpty"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_marginTop="?actionBarSize"
         layout="@layout/error_user_not_found"
         tools:visibility="gone" />
 
     <include
         android:id="@+id/profileNetworkError"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_marginTop="?actionBarSize"
         layout="@layout/error_no_connection_with_button"
         tools:visibility="gone" />
 
     <include
         android:id="@+id/profileEmptyLogin"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_marginTop="?actionBarSize"
         layout="@layout/empty_login"
         tools:visibility="gone" />
 
