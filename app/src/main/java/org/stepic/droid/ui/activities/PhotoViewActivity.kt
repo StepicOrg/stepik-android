@@ -2,7 +2,6 @@ package org.stepic.droid.ui.activities
 
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
-import org.stepic.droid.R
 import org.stepic.droid.base.SingleFragmentActivity
 import org.stepic.droid.ui.fragments.PhotoViewFragment
 
@@ -18,7 +17,7 @@ class PhotoViewActivity : SingleFragmentActivity() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
+        overridePendingTransition(0,0)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
