@@ -73,6 +73,7 @@ public class NotificationsFragment extends FragmentBase {
         if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
             authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity()));
 //            toolbar.setVisibility(View.GONE); // FIXME: 15.08.17 hide, when it is needed
+            initToolbar();
             tabLayout.setVisibility(View.GONE);
             needAuthRootView.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.GONE);
@@ -104,6 +105,7 @@ public class NotificationsFragment extends FragmentBase {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.notification_center_menu, menu);
+        menu.findItem(R.id.action_settings).setVisible(getSharedPreferenceHelper().getAuthResponseFromStore() != null);
     }
 
     @Override
