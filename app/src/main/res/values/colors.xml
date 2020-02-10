@@ -150,14 +150,28 @@
     <color name="light_rounded_pressed_color">#E8E8E8</color>
 
     <!-- Design system -->
+    <color name="grey01">#5E5E5E</color>
+    <color name="grey02">#999999</color>
     <color name="grey04">#EAECF0</color>
     <color name="grey03">#CCCCCC</color>
+    <color name="grey05">#F3F4F6</color>
     <color name="green01">#66CC66</color>
     <color name="green03">#54AD54</color>
     <color name="green04">#ACD1AC</color>
     <color name="violet1">#6C7BDF</color>
     <color name="violet2">#E9EBFA</color>
     <color name="yellow1">#FFA961</color>
+    <color name="black2">#222222</color>
+    <color name="blue01">#003E86</color>
+    <color name="blue02">#1466C6</color>
+    <color name="blue03">#56A4FF</color>
+    <color name="green02">#E9F9E9</color>
+    <color name="green05">#85D685</color>
+    <color name="green06">#E5EFE5</color>
+    <color name="red01">#D41F1F</color>
+    <color name="red02">#FF7965</color>
+    <color name="red03">#FFEBE8</color>
+    <color name="design_system_new_accent_color">#535366</color>
 
     <!--adaptive-->
     <color name="adaptive_color_easy">#227300</color>
