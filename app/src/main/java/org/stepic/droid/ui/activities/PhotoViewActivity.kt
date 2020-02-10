@@ -81,7 +81,7 @@ class PhotoViewActivity : FragmentActivityBase() {
 
     override fun finish() {
         super.finish()
-        overridePendingTransition(0,0)
+        overridePendingTransition(R.anim.no_transition, R.anim.no_transition)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =
