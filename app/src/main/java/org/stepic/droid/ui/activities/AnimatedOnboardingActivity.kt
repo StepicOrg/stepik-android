@@ -103,8 +103,8 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
 
     private fun openLaunchScreen() {
         sharedPreferenceHelper.afterOnboardingPassed()
-        if (deferredAuthSplitsTest.currentGroup.isDeferredAuth) {
-            screenManager.showMainFeedFromSplash(this)
+        if (deferredAuthSplitsTest.currentGroup.isDeferredAuth && !deferredAuthSplitsTest.currentGroup.isCanDismissLaunch) {
+            screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
         } else {
             screenManager.showLaunchFromSplash(this)
         }

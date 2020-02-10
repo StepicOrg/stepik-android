@@ -13,6 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/dismissButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="14dp"
+            android:padding="2dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_close_dark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
         <ImageView
             android:id="@+id/stepikLogo"
             android:layout_width="32dp"
