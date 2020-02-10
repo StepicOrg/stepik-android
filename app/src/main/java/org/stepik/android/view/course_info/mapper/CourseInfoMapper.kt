@@ -57,6 +57,10 @@ fun CourseInfoData.toSortedItems(context: Context): List<CourseInfoItem> {
         items.addTextItem(CourseInfoType.CERTIFICATE, context.getString(R.string.certificate_not_issuing))
     }
 
+    if (learnersCount > 0) {
+        items.addTextItem(CourseInfoType.LEARNERS_COUNT, learnersCount.toString())
+    }
+
     return items
 }
 

@@ -2,17 +2,11 @@ package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.PorterDuff
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.core.view.doOnPreDraw
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -22,87 +16,57 @@ import com.google.android.material.appbar.AppBarLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.header_course.*
-import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.PopupHelper
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import kotlin.math.abs
-import kotlin.math.roundToInt
 
 class CourseHeaderDelegate(
     private val courseActivity: Activity,
     private val analytic: Analytic,
-    private val coursePresenter: CoursePresenter
+    private val coursePresenter: CoursePresenter,
+    onSubmissionCountClicked: () -> Unit,
+    isLocalSubmissionsEnabled: Boolean
 ) {
-    companion object {
-        private const val MIN_FEATURED_READINESS = 0.9
-    }
-
     var courseHeaderData: CourseHeaderData? = null
         set(value) {
             field = value
             value?.let(::setCourseData)
         }
 
-    private val courseCoverSmallTarget by lazy {
-        RoundedBitmapImageViewTarget(courseActivity.resources.getDimension(R.dimen.course_image_radius), courseActivity.courseCoverSmall)
-    }
-
-    private val courseCoverSmallPlaceHolder by lazy {
-        val resources = courseActivity.resources
-        val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
-        val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(resources, coursePlaceholderBitmap)
-        circularBitmapDrawable.cornerRadius = resources.getDimension(R.dimen.course_image_radius)
-        circularBitmapDrawable
-    }
-
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
+    private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
+    private val courseProgressDelegate = CourseProgressDelegate(courseActivity.courseProgress, onSubmissionCountClicked, isLocalSubmissionsEnabled)
+
+    private val viewStateDelegate = ViewStateDelegate<EnrollmentState>()
+
     init {
         initCollapsingAnimation()
-        initCompoundDrawables()
         initActions()
+        initViewStateDelegate()
     }
 
-    private fun initCollapsingAnimation() =
+    private fun initCollapsingAnimation() {
         with(courseActivity) {
-            val courseInfoHeightExpanded = resources.getDimension(R.dimen.course_info_height_expanded)
-            val courseInfoMarginExpanded = resources.getDimension(R.dimen.course_info_margin_expanded)
-
             courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                 val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
-                val targetTranslation = courseInfoMarginExpanded - (courseToolbar.height - courseInfoHeightExpanded) / 2
-
-                courseCover.alpha = 1f - ratio
-                courseInfo.translationY = ratio * targetTranslation
-                courseInfoPlaceholder.translationY = ratio * targetTranslation
+                courseToolbarScrim.alpha = ratio * 1.5f
             })
         }
+    }
 
-    private fun initCompoundDrawables() =
-        with(courseActivity) {
-            courseFeatured.setCompoundDrawables(start = R.drawable.ic_verified)
-
-            val learnersCountDrawable = AppCompatResources
-                .getDrawable(this, R.drawable.ic_learners)
-                ?.let(DrawableCompat::wrap)
-                ?: return@with
-            DrawableCompat.setTint(learnersCountDrawable, ContextCompat.getColor(this,  android.R.color.white))
-            courseLearnersCount.setCompoundDrawablesWithIntrinsicBounds(learnersCountDrawable, null, null, null)
-        }
-
-    private fun initActions() =
+    private fun initActions() {
         with(courseActivity) {
             courseEnrollAction.setOnClickListener {
                 coursePresenter.enrollCourse()
@@ -140,6 +104,17 @@ class CourseHeaderDelegate(
 //                coursePresenter.purchaseCourse()
 //            }
         }
+    }
+
+    private fun initViewStateDelegate() {
+        with(courseActivity) {
+            viewStateDelegate.addState<EnrollmentState.Enrolled>(courseContinueAction)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledFree>(courseEnrollAction)
+            viewStateDelegate.addState<EnrollmentState.Pending>(courseEnrollmentProgress)
+            viewStateDelegate.addState<EnrollmentState.NotEnrolledWeb>(courseBuyInWebAction)
+            // viewStateDelegate.addState<EnrollmentState.NotEnrolledInApp>(courseBuyInAppAction)
+        }
+    }
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
         with(courseActivity) {
@@ -147,54 +122,30 @@ class CourseHeaderDelegate(
                 BlurTransformation(),
                 CenterCrop()
             )
-            Glide.with(this)
-                    .load(courseHeaderData.cover)
-                    .placeholder(R.drawable.general_placeholder)
-                    .apply(RequestOptions.bitmapTransform(multi))
-                    .into(courseCover)
+            Glide
+                .with(this)
+                .load(courseHeaderData.cover)
+                .placeholder(R.drawable.general_placeholder)
+                .apply(RequestOptions.bitmapTransform(multi))
+                .into(courseCover)
 
-            Glide.with(this)
-                    .asBitmap()
-                    .load(courseHeaderData.cover)
-                    .placeholder(courseCoverSmallPlaceHolder)
-                    .centerCrop()
-                    .into(courseCoverSmallTarget)
+            courseToolbarTitle.text = courseHeaderData.title
 
-            courseTitle.text = courseHeaderData.title
-
-            courseRating.total = 5
-            courseRating.progress = courseHeaderData.review.roundToInt()
-            courseRating.isVisible = courseHeaderData.review > 0
-
-            val isNeedShowProgress = courseHeaderData.progress != null && courseHeaderData.progress.cost > 0
+            val isNeedShowProgress = courseHeaderData.progress != null
             courseProgress.isVisible = isNeedShowProgress
-            courseProgressText.isVisible = isNeedShowProgress
+            courseProgressSeparator.isVisible = isNeedShowProgress
+            courseStats.isVisible = !isNeedShowProgress
 
-            if (isNeedShowProgress) {
-                val score = courseHeaderData
-                    .progress
-                    ?.score
-                    ?.toFloatOrNull()
-                    ?.toLong()
-                    ?: 0L
-
-                val cost = courseHeaderData
-                    .progress
-                    ?.cost
-                    ?: 0L
-
-                courseProgress.progress = (score * 100 / cost) / 100f
-                courseProgressText.text = getString(R.string.course_content_text_progress, score, cost)
+            if (courseHeaderData.progress != null) {
+                courseProgressDelegate.setProgress(courseHeaderData.progress)
+                courseProgressDelegate.setSolutionsCount(courseHeaderData.localSubmissionsCount)
+            } else {
+                courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
-            courseLearnersCount.text = courseHeaderData.learnersCount.toString()
-            courseFeatured.isVisible = courseHeaderData.readiness > MIN_FEATURED_READINESS
-
             with(courseHeaderData.enrollmentState) {
-                courseEnrollAction.isVisible = this is EnrollmentState.NotEnrolledFree
-                courseEnrollmentProgress.isVisible = this is EnrollmentState.Pending
-                courseContinueAction.isVisible = this is EnrollmentState.Enrolled
-                courseBuyInWebAction.isVisible = this is EnrollmentState.NotEnrolledWeb
+                viewStateDelegate.switchState(this)
+
                 courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
 
 //                if (this is EnrollmentState.NotEnrolledInApp) {
@@ -206,21 +157,6 @@ class CourseHeaderDelegate(
             }
 
             shareCourseMenuItem?.isVisible = true
-
-            courseToolbarConstraint.doOnPreDraw {
-                val offset = maxOf(courseToolbar.height, courseToolbar.width - courseToolbarConstraint.right)
-                courseInfo.layoutParams = (courseInfo.layoutParams as LinearLayout.LayoutParams)
-                    .apply {
-                        leftMargin = offset
-                        rightMargin = offset
-                    }
-
-                courseInfoPlaceholder.layoutParams = (courseInfoPlaceholder.layoutParams as LinearLayout.LayoutParams)
-                    .apply {
-                        leftMargin = offset
-                        rightMargin = offset
-                    }
-            }
         }
 
     fun showCourseShareTooltip() {

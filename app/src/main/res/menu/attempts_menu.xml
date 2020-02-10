@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:visible="false"
+        android:id="@+id/attempts_menu_item_delete"
+        android:icon="@drawable/ic_delete_vector"
+        android:title="@string/delete_label"
+        app:showAsAction="ifRoom"/>
+</menu>

@@ -3,6 +3,7 @@ package org.stepic.droid.code.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import org.stepic.droid.R
 import org.stepic.droid.code.highlight.themes.CodeTheme
@@ -68,5 +69,17 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun setEnabled(enabled: Boolean) {
         super.setEnabled(enabled)
         codeEditor.isEnabled = enabled
+    }
+
+    /**
+     * In case when [NestedScrollView] is inside another [NestedScrollView]
+     * startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH) is being called at start of fling
+     * but stopNestedScroll(ViewCompat.TYPE_NON_TOUCH) wasn't.
+     *
+     * That behaviour leads to scroll issues when nested one was scrolled.
+     */
+    override fun fling(velocityY: Int) {
+        super.fling(velocityY)
+        stopNestedScroll(ViewCompat.TYPE_NON_TOUCH)
     }
 }

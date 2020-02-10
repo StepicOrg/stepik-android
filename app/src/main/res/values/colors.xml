@@ -229,6 +229,7 @@
 
     <!-- course -->
     <color name="course_appbar_separator">@color/grey03</color>
+    <color name="course_appbar_scrim_color">#6B6B7B</color>
     <color name="course_tabbar_color">@color/new_primary_color</color>
     <color name="course_info_organization_span">#4a90e2</color>
     <color name="course_content_section_background">@color/new_primary_color</color>
@@ -280,4 +281,11 @@
     <color name="certificate_regular">@color/green01</color>
 
     <color name="custom_grey">#AAAAAA</color>
+
+    <!-- Solutions screen -->
+    <color name="section_color">@color/new_primary_color</color>
+    <color name="lesson_color">#fdfefe</color>
+    <color name="submission_time">#999999</color>
+    <color name="submission_correct">#D064CC64</color>
+    <color name="submission_incorrect">#D0FF7965</color>
 </resources>

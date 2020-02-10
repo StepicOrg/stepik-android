@@ -9,12 +9,13 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/learnersCountImage"
         style="@style/CourseWidgetPropertyImageView"
-        android:layout_alignBaseline="@+id/learnersCountText"
+        android:layout_height="11dp"
+        android:layout_width="15dp"
+        android:layout_marginTop="6dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:baselineAlignBottom="true"
         android:contentDescription="@string/learners_count"
-        android:src="@drawable/ic_learners"/>
+        app:srcCompat="@drawable/ic_course_info_learners_count"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/learnersCountText"

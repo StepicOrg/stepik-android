@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/view_centered_appbar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_centerInParent="true"
+            layout="@layout/progress_bar_on_empty_screen" />
+
+        <include layout="@layout/empty_default"/>
+
+        <include layout="@layout/error_no_connection_with_button"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/solutionsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/solutionsSubmissionSeparator"/>
+
+        <View
+            android:id="@+id/solutionsSubmissionSeparator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/step_quiz_separator"
+            android:layout_above="@id/solutionsSubmitFeedback"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/solutionsSubmitFeedback"
+            style="@style/StepQuizFeedback"
+            android:background="@drawable/bg_step_quiz_feedback_evaluation"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:gravity="center_vertical"
+            android:fontFamily="@font/roboto_regular"
+            android:textSize="16sp"
+            android:drawablePadding="16dp"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+
+            android:text="@string/solutions_submit_in_progress"
+            android:textColor="@color/violet1"
+
+            android:layout_above="@id/solutionsSubmitButton"
+
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/solutionsSubmitButton"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/step_submit_button_height"
+            android:background="@drawable/bg_step_submit_button"
+
+            android:drawablePadding="-36dp"
+            android:padding="12dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+
+            android:text="@string/solutions_submit_all"
+            android:textSize="16sp"
+            android:textColor="@color/color_step_submit_button_text"
+            android:layout_alignParentBottom="true"
+            android:gravity="center" />
+
+    </RelativeLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

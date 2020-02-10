@@ -106,4 +106,11 @@
         <item quantity="many">%d курсов опубликовано</item>
         <item quantity="other">%d курсов опубликовано</item>
     </plurals>
+
+    <plurals name="submit_solutions">
+        <item quantity="one">Отправить %d решение</item>
+        <item quantity="few">Отправить %d решения</item>
+        <item quantity="many">Отправить %d решений</item>
+        <item quantity="other">Отправить %d решений</item>
+    </plurals>
 </resources>

@@ -27,7 +27,7 @@ class CommentResponse(
     @SerializedName("votes")
     val votes: List<Vote>?,
 
-    @SerializedName("attempts")
+    @SerializedName("solutions")
     val attempts: List<Attempt>?,
 
     @SerializedName("submissions")

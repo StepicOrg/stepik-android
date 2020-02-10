@@ -177,7 +177,7 @@
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
 
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
 
     <string name="last_discussion">Last discussion</string>
     <string name="most_liked_discussion">Most liked</string>
@@ -573,12 +573,16 @@
     <string name="achievement_notification_message">Congratulations! Obtained a new level of achievement «%s», check your profile.</string>
 
     <!-- Course -->
+    <string name="course_title">Course</string>
     <string name="course_verified">Verified</string>
     <string name="course_share_description">Share link with your friends to take this course together!</string>
 
     <string name="course_tab_info">Info</string>
     <string name="course_tab_reviews">Reviews</string>
     <string name="course_tab_modules">Modules</string>
+
+    <string name="course_progress_current">Current progress</string>
+    <string name="course_progress_solutions">Solution to submit</string>
 
     <string name="course_info_organization_prefix">by %s</string>
     <string name="course_info_about">About</string>
@@ -589,6 +593,7 @@
     <string name="course_info_language">Language</string>
     <string name="course_info_certificate">Certificate</string>
     <string name="course_info_certificate_detail">Certificate details</string>
+    <string name="course_info_learners_count">Learners count</string>
 
     <string name="course_info_certificate_regular">Certificate condition: %s</string>
     <string name="course_info_certificate_distinction">With distinction: %s</string>
@@ -845,5 +850,17 @@
 
     <string name="profile_courses_title">Courses</string>
 
-
+    <!-- Solutions -->
+    <string name="solutions_toolbar_title">Solutions to submit</string>
+    <string name="solutions_information_block">You can edit your solutions before submission</string>
+    <string name="solutions_section_placeholder" translatable="false">%d&#160;%s</string>
+    <string name="solutions_lesson_placeholder" translatable="false">%d&#46;%d&#160;%s</string>
+    <string name="solutions_selected">%d&#160;selected</string>
+    <string name="solutions_delete_dialog_title">Delete solution?</string>
+    <string name="solutions_delete_dialog_description">This item will be deleted from your device</string>
+    <string name="solutions_submission_step_position">Step %d – %s</string>
+    <string name="solutions_submit_all">Submit all solutions</string>
+    <string name="solutions_submit_in_progress">Submission in progress</string>
+    <string name="solutions_submission_correctly">Problem solved correctly</string>
+    <string name="solutions_submission_incorrectly">Problem solved incorrectly</string>
 </resources>

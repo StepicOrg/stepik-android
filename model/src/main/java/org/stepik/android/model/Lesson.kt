@@ -7,8 +7,7 @@ import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.readDate
 import org.stepik.android.model.util.writeBoolean
 import org.stepik.android.model.util.writeDate
-
-import java.util.*
+import java.util.Date
 
 class Lesson(
     @SerializedName("id")

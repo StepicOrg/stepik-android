@@ -4,8 +4,11 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
+import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
+import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
+import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
@@ -27,6 +30,7 @@ constructor(
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository,
+    private val solutionsInteractor: SolutionsInteractor,
     private val coursePublishSubject: BehaviorSubject<Course>
 ) {
     companion object {
@@ -53,22 +57,21 @@ constructor(
         zip(
             resolveCourseReview(course),
             resolveCourseProgress(course),
-            resolveCourseEnrollmentState(course)
-        )
-            .map { (courseReview, courseProgress, enrollmentState) ->
-                CourseHeaderData(
-                    courseId = course.id,
-                    course = course,
-                    title = course.title ?: "",
-                    cover = course.cover ?: "",
-                    learnersCount = course.learnersCount,
+            resolveCourseEnrollmentState(course),
+            solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true)
+        ) { courseReview, courseProgress, enrollmentState, localSubmissions ->
+            CourseHeaderData(
+                courseId = course.id,
+                course = course,
+                title = course.title ?: "",
+                cover = course.cover ?: "",
 
-                    review = courseReview,
-                    progress = (courseProgress as? Progress),
-                    readiness = course.readiness,
-                    enrollmentState = enrollmentState
-                )
-            }
+                stats = CourseStats(courseReview, course.learnersCount, course.readiness),
+                progress = (courseProgress as? Progress),
+                localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
+                enrollmentState = enrollmentState
+            )
+        }
             .toMaybe()
 
     private fun resolveCourseReview(course: Course): Single<Double> =

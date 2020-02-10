@@ -56,7 +56,6 @@ class TextStepContentFragment :
 
     private lateinit var presenter: TextStepContentPresenter
 
-    private var latexView: LatexView? = null
     private var latexWebView: LatexWebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,11 +93,7 @@ class TextStepContentFragment :
             }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (latexView == null) {
-            latexView = view as LatexView
-
-            invalidateText()
-        }
+        invalidateText()
     }
 
     private fun invalidateText() {
@@ -108,7 +103,7 @@ class TextStepContentFragment :
             ?.text
             ?.takeIf(String::isNotEmpty)
 
-        val view = latexView ?: return
+        val view = (view as? LatexView) ?: return
 
         view.isVisible = text != null
         view.setText(text)
@@ -172,7 +167,7 @@ class TextStepContentFragment :
     }
 
     override fun setTextContentFontSize(fontSize: FontSize) {
-        val latexView = latexView ?: return
+        val latexView = view as? LatexView ?: return
         latexView.attributes = latexView.attributes.copy(textSize = fontSize.size)
     }
 
