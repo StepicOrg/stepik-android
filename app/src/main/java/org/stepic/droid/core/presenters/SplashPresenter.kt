@@ -52,6 +52,7 @@ constructor(
         object Onboarding : SplashRoute()
         object Launch : SplashRoute()
         object Home : SplashRoute()
+        object Catalog : SplashRoute()
         class DeepLink(val route: BranchRoute) : SplashRoute()
     }
 
@@ -78,6 +79,7 @@ constructor(
                         SplashRoute.Onboarding  -> view?.onShowOnboarding()
                         SplashRoute.Launch      -> view?.onShowLaunch()
                         SplashRoute.Home        -> view?.onShowHome()
+                        SplashRoute.Catalog     -> view?.onShowCatalog()
                         is SplashRoute.DeepLink -> view?.onDeepLinkRoute(it.route)
                         else -> throw IllegalStateException("It is not reachable")
                     }
@@ -91,10 +93,11 @@ constructor(
             .onErrorReturn {
                 val isLogged = sharedPreferenceHelper.authResponseFromStore != null
                 val isOnboardingNotPassedYet = sharedPreferenceHelper.isOnboardingNotPassedYet
-                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth
+                val isDeferredAuth = deferredAuthSplitTest.currentGroup.isDeferredAuth && !deferredAuthSplitTest.currentGroup.isCanDismissLaunch
                 when {
                     isOnboardingNotPassedYet -> SplashRoute.Onboarding
-                    isLogged || isDeferredAuth -> SplashRoute.Home
+                    isLogged -> SplashRoute.Home
+                    isDeferredAuth -> SplashRoute.Catalog
                     else -> SplashRoute.Launch
                 }
             }

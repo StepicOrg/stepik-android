@@ -8,6 +8,7 @@ import android.text.SpannableString
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.activity_launch.*
 import okhttp3.ResponseBody
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.core.ProgressHandler
@@ -60,11 +62,20 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
     @Inject
     lateinit var loginPresenter: LoginPresenter
 
+    @Inject
+    lateinit var deferredAuthSplitTest: DeferredAuthSplitTest
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launch)
         App.componentManager().loginComponent(TAG).inject(this)
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
+
+        dismissButton.setOnClickListener {
+            onBackPressed()
+        }
+
+        dismissButton.isVisible = deferredAuthSplitTest.currentGroup.isCanDismissLaunch
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
@@ -301,10 +312,11 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         val fromMainFeed = intent?.extras?.getBoolean(AppConstants.FROM_MAIN_FEED_FLAG) ?: false
         val index = intent?.extras?.getInt(MainFeedActivity.CURRENT_INDEX_KEY) ?: MainFeedActivity.defaultIndex
 
-        if (fromMainFeed) {
-            screenManager.showMainFeed(this, index)
-        } else {
-            super.onBackPressed()
+        when {
+            fromMainFeed -> screenManager.showMainFeed(this, index)
+            intent.hasExtra(AppConstants.KEY_COURSE_BUNDLE) -> super.onBackPressed()
+            deferredAuthSplitTest.currentGroup.isDeferredAuth -> screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+            else -> super.onBackPressed()
         }
     }
 
