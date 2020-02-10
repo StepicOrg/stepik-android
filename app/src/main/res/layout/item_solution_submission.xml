@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_attempt_submission_item">
 
     <ImageView
@@ -20,13 +20,13 @@
         android:id="@+id/submissionTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
         android:ellipsize="end"
         android:letterSpacing="0.02"
         android:maxLines="1"
         android:minLines="1"
-        android:paddingTop="12dp"
+        android:layout_marginTop="12dp"
         android:textColor="@color/new_accent_color"
         android:textSize="16sp"
         app:layout_constraintHorizontal_bias="0"
@@ -77,11 +77,25 @@
         android:id="@+id/submissionStep"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:paddingBottom="12dp"
         android:textColor="@color/submission_time"
         android:textSize="12sp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintTop_toBottomOf="@id/submissionTitle"
+        app:layout_constraintBottom_toTopOf="@id/submissionStatusText"
+        app:layout_constraintLeft_toLeftOf="@id/submissionTitle"
+        app:layout_goneMarginBottom="12dp"
+        tools:text="Step 3" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/submissionStatusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/submissionStep"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="@id/submissionTitle"
-        tools:text="Step 3" />
+        android:layout_marginBottom="12dp"
+        android:textSize="12sp"
+        android:visibility="visible"
+        tools:text="Solved correctly"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

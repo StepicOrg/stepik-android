@@ -37,6 +37,7 @@ class SolutionSubmissionAdapterDelegate(
         private val submissionCheckBox = root.submissionCheckBox
         private val submissionStatusIconWrong = root.submissionStatusIconWrong
         private val submissionStatusIconCorrect = root.submissionStatusIconCorrect
+        private val submissionStatusText = root.submissionStatusText
 
         init {
             root.setOnClickListener { (itemData as? SolutionItem.SubmissionItem)?.let(onItemClick) }
@@ -80,18 +81,25 @@ class SolutionSubmissionAdapterDelegate(
             when (data.submission.status) {
                 Submission.Status.CORRECT -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_correct_item)
+                    submissionStatusText.text = context.getString(R.string.solutions_submission_correctly)
+                    submissionStatusText.setTextColor(ContextCompat.getColor(context, R.color.submission_correct))
+                    submissionStatusText.visibility = View.VISIBLE
                     submissionStatusIconCorrect.visibility = View.VISIBLE
                     submissionStatusIconWrong.visibility = View.GONE
                     submissionCheckBox.visibility = View.INVISIBLE
                 }
                 Submission.Status.WRONG -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_incorrect_item)
+                    submissionStatusText.text = context.getString(R.string.solutions_submission_incorrectly)
+                    submissionStatusText.setTextColor(ContextCompat.getColor(context, R.color.submission_incorrect))
+                    submissionStatusText.visibility = View.VISIBLE
                     submissionStatusIconCorrect.visibility = View.GONE
                     submissionStatusIconWrong.visibility = View.VISIBLE
                     submissionCheckBox.visibility = View.INVISIBLE
                 }
                 else -> {
                     submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_item)
+                    submissionStatusText.visibility = View.GONE
                     submissionStatusIconCorrect.visibility = View.GONE
                     submissionStatusIconWrong.visibility = View.GONE
                     submissionCheckBox.visibility = View.VISIBLE
