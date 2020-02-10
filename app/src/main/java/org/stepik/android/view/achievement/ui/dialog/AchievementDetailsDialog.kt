@@ -12,9 +12,9 @@ import com.afollestad.materialdialogs.Theme
 import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
-import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.ui.util.wrapWithGlide
+import org.stepik.android.domain.achievement.model.AchievementItem
+import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -81,7 +81,7 @@ class AchievementDetailsDialog : DialogFragment() {
             builder
                 .positiveText(R.string.share_title)
                 .negativeText(R.string.close_screen)
-                .negativeColorRes(R.color.new_accent_color_opacity_50)
+                .negativeColorRes(R.color.new_accent_color_alpha_50)
                 .onPositive { _, _ -> shareAchievement() }
         }
 

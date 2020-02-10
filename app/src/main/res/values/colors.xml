@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-
-    <color name="white">#FFFFFF</color>
     <color name="pressed_white">#e6e6e6</color>
 
     <color name="grey_act_background">#E2E3E5</color>
 
-    <color name="transparent">#00FFFFFF</color>
+    <color name="transparent">@color/white_color_alpha_0</color>
     <color name="stepic_regular_text">@color/grey01</color>
     <color name="stepic_weak_text">#A5A5A5</color>
-    <color name="black">#000000</color>
+    <color name="black">@color/black1</color>
     <color name="drawer_item_highlighting_pressed">#EDEDED</color>
 
     <!-- stepic brand book-->
@@ -19,7 +17,6 @@
     <color name="stepic_orange_carrot">#FF9933</color>
     <color name="stepic_blue_ribbon">#2669E1</color>
     <color name="silver">#e6e6e6</color>
-    <color name="white70percent">#B3FFFFFF</color>
     <color name="old_cover">#EEEEEE</color>
     <color name="warning_light_yellow">#FFFAE9</color>
     <color name="warning_comment_highlight_yellow">#FFF4B3</color>
@@ -33,13 +30,13 @@
     </color><!-- it is just green correct color, not the stepic primary -->
 
 
-    <color name="transparent_black_30">#4D000000</color>
+    <color name="transparent_black_30">@color/black1_alpha_30</color>
 
     <color name="overscroll_color">#19A5A5A5</color>
     <color name="material_grey">#ff757575</color>
     <color name="snack_action_color">#EAA833</color>
     <color name="launchTextColor">#757575</color>
-    <color name="black_alpha_40">#66000000</color>
+    <color name="black_alpha_40">@color/black1_alpha_40</color>
     <color name="sorting_chooser">#EEEEEE</color>
     <color name="background_time_thumbnail">#B20F1015</color>
     <color name="text_color_time_thumbnail">#C8C8C9</color>
@@ -47,18 +44,13 @@
 
     <color name="exo_edit_mode_background_color">#FFF4F3F0</color>
 
-    <color name="login_launch_registration_background">#FFFFFF</color>
+    <color name="login_launch_registration_background">@color/white</color>
 
     <color name="rate_dialog_store">#73BC72</color>
     <color name="rate_dialog_support">#C72F4F</color>
 
     <!--Redesigned colors-->
-    <color name="new_primary_color">#F6F6F6</color>
-    <color name="new_accent_color">#535366</color>
-    <color name="new_accent_color_alpha_60">#9a535366</color>
-    <color name="new_accent_color_alpha_40">#66535366</color>
-    <color name="new_accent_color_alpha_30">#4D535366</color>
-    <color name="new_accent_color_alpha_5">#0D535366</color>
+
     <color name="new_red_color">#C82850</color>
 
     <color name="text_color">@color/new_accent_color</color>
@@ -66,11 +58,11 @@
     <color name="new_border_color">@color/new_primary_color</color>>
     <color name="new_logout_color">@color/new_red_color</color>>
     <color name="arrow_color">@color/new_accent_color</color>>
-    <color name="new_background_white">#FFFFFF</color>
+    <color name="new_background_white">@color/white</color>
 
     <!--Tab text color, based on accent color-->
-    <color name="tab_text_color">#535366</color>
-    <color name="tab_text_color_70percent">#B3535366</color>
+    <color name="tab_text_color">@color/new_primary_color</color>
+    <color name="tab_text_color_70percent">@color/new_accent_color_alpha_70</color>
 
     <color name="unviewed_step">@color/new_accent_color</color>
     <color name="viewed_step">@color/new_accent_color_alpha_40</color>
@@ -78,20 +70,16 @@
     <color name="new_cover">@color/white</color>
 
     <color name="dots_color">#F82401</color>
-    <color name="new_accent_color_opacity_50">#80535366</color>
-    <color name="white_opacity_20">#33FFFFFF</color>
-    <color name="white_opacity_30">#4DFFFFFF</color>
-    <color name="white_opacity_60">#99FFFFFF</color>
 
     <color name="join_text_color">@color/green01</color>
-    <color name="continue_button_color">#0D535366</color>
+    <color name="continue_button_color">@color/new_accent_color_alpha_5</color>
     <color name="continue_button_pressed_color">#E8E8E8</color>
-    <color name="continue_button_color_dark">#0DFFFFFF</color>
+    <color name="continue_button_color_dark">@color/white_color_alpha_5</color>
     <color name="continue_button_pressed_color_dark">#555766</color>
-    <color name="join_button_color">#1A66CC66</color>
-    <color name="join_button_pressed_color">#6666CC66</color>
+    <color name="join_button_color">@color/green01_alpha_10</color>  <!-- Original was #1A66CC66. RGBA is similar to green01_alpha_10-->
+    <color name="join_button_pressed_color">@color/green01_alpha_40</color>
 
-    <color name="fast_continue_learning_opacity">#DA535366</color>
+    <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
     <color name="fast_continue_learning_opacity_pressed">#DA4A4A5B</color>
     <color name="home_streak_view_color">#1445b0ff</color>
     <color name="view_all_course_list_color">#CCCCD1</color>
@@ -102,11 +90,11 @@
     <color name="login_edit_text_block_background_color_wrong">#0CC82850</color>
 
 
-    <color name="login_button_color">#1966CC66</color>
-    <color name="login_button_color_pressed">#6666CC66</color>
-    <color name="login_button_color_disabled">#0C66CC66</color>
+    <color name="login_button_color">@color/green01_alpha_10</color>
+    <color name="login_button_color_pressed">@color/green01_alpha_40</color>
+    <color name="login_button_color_disabled">@color/green01_alpha_5</color>
     <color name="login_button_text_color_enabled">@color/stepic_brand_primary</color>
-    <color name="login_button_text_color_disabled">#6666CC66</color>
+    <color name="login_button_text_color_disabled">@color/green01_alpha_40</color>
 
     <color name="login_error_color">@color/new_red_color</color>
 
@@ -140,27 +128,48 @@
     <color name="element_gray_pressed">#E8E8E8</color>
     <color name="language_text_color_checked">@color/white</color>
     <color name="language_text_color_unchecked">@color/new_accent_color</color>
-    <color name="search_view_suggestions_prefix_color">#44000000</color>
+    <color name="search_view_suggestions_prefix_color">@color/black1_alpha_27</color>
 
-    <color name="onboarding_action_pressed">@color/white_opacity_30</color>
-    <color name="onboarding_action">@color/white_opacity_20</color>
+    <color name="onboarding_action_pressed">@color/white_color_alpha_30</color>
+    <color name="onboarding_action">@color/white_color_alpha_20</color>
     <color name="launcher_background">@color/black</color>
 
-    <color name="light_rounded_button_color">#0D535366</color>
+    <color name="light_rounded_button_color">@color/new_accent_color_alpha_5</color>
     <color name="light_rounded_pressed_color">#E8E8E8</color>
 
     <!-- Design system -->
     <color name="grey01">#5E5E5E</color>
+
     <color name="grey02">#999999</color>
+    <color name="grey02_alpha_19">#30999999</color>
+
     <color name="grey03">#CCCCCC</color>
+    <color name="grey03_alpha_50">#80CCCCCC</color>
+
     <color name="grey04">#EAECF0</color>
     <color name="grey05">#F3F4F6</color>
+
     <color name="green01">#66CC66</color>
+    <color name="green01_alpha_5">#0C66CC66</color>
+    <color name="green01_alpha_10">#1966CC66</color>
+    <color name="green01_alpha_13">#2066CC66</color>
+    <color name="green01_alpha_40">#6666CC66</color>
+
     <color name="green03">#54AD54</color>
     <color name="green04">#ACD1AC</color>
+
     <color name="violet1">#6C7BDF</color>
+    <color name="violet1_alpha_13">#206C7BDF</color>
+    <color name="violet1_alpha_50">#806C7BDF</color>
+
     <color name="violet2">#E9EBFA</color>
     <color name="yellow1">#FFA961</color>
+
+    <color name="black1">#000000</color>
+    <color name="black1_alpha_27">#44000000</color>
+    <color name="black1_alpha_30">#4D000000</color>
+    <color name="black1_alpha_40">#66000000</color>
+
     <color name="black2">#222222</color>
     <color name="blue01">#003E86</color>
     <color name="blue02">#1466C6</color>
@@ -169,9 +178,31 @@
     <color name="green05">#85D685</color>
     <color name="green06">#E5EFE5</color>
     <color name="red01">#D41F1F</color>
+
     <color name="red02">#FF7965</color>
+    <color name="red02_color_alpha_15">#26FF7965</color>
+    <color name="red02_color_alpha_50">#80FF7965</color>
     <color name="red03">#FFEBE8</color>
-    <color name="design_system_new_accent_color">#535366</color>
+
+    <color name="white">#FFFFFF</color>
+    <color name="white_color_alpha_0">#00FFFFFF</color>
+    <color name="white_color_alpha_5">#0DFFFFFF</color>
+    <color name="white_color_alpha_20">#33FFFFFF</color>
+    <color name="white_color_alpha_30">#4DFFFFFF</color>
+    <color name="white_color_alpha_60">#99FFFFFF</color>
+    <color name="white_color_alpha_70">#B3FFFFFF</color>
+
+    <color name="new_primary_color">#F6F6F6</color>
+    <color name="new_accent_color">#535366</color>
+    <color name="new_accent_color_alpha_85">#DA535366</color>
+    <color name="new_accent_color_alpha_70">#B3535366</color>
+    <color name="new_accent_color_alpha_60">#9a535366</color>
+    <color name="new_accent_color_alpha_50">#80535366</color>
+    <color name="new_accent_color_alpha_40">#66535366</color>
+    <color name="new_accent_color_alpha_30">#4D535366</color>
+    <color name="new_accent_color_alpha_5">#0D535366</color>
+
+    <!-- Design system finished -->
 
     <!--adaptive-->
     <color name="adaptive_color_easy">#227300</color>
@@ -198,9 +229,9 @@
 
     <!-- course -->
     <color name="course_appbar_separator">@color/grey03</color>
-    <color name="course_tabbar_color">#F6F6F6</color>
+    <color name="course_tabbar_color">@color/new_primary_color</color>
     <color name="course_info_organization_span">#4a90e2</color>
-    <color name="course_content_section_background">#F6F6F6</color>
+    <color name="course_content_section_background">@color/new_primary_color</color>
     <color name="course_content_section_date_disabled">#B4B4B4</color>
 
     <!-- Text styles colors -->
@@ -208,7 +239,7 @@
     <color name="color_body2_note">@color/grey02</color>
 
     <color name="color_violet_1">@color/violet1</color>
-    <color name="color_violet_1_12">#206C7BDF</color>
+    <color name="color_violet_1_12">@color/violet1_alpha_13</color>
 
     <!-- Lesson -->
     <color name="lesson_tabbar_separator">@color/grey04</color>
@@ -216,13 +247,13 @@
 
     <!-- Step -->
     <color name="step_navigation_button">@color/stepic_brand_primary</color>
-    <color name="step_navigation_button_ripple">#2066CC66</color>
+    <color name="step_navigation_button_ripple">@color/green01_alpha_13</color>
 
     <color name="step_discussion_button">@color/new_primary_color</color>
     <color name="step_quiz_separator">@color/grey04</color>
 
     <color name="step_quiz_feedback_wrong_text">@color/red02</color>
-    <color name="step_quiz_feedback_wrong_background">#26ff7965</color>
+    <color name="step_quiz_feedback_wrong_background">@color/red02_color_alpha_15</color>
 
     <!-- Choice quiz -->
     <color name="step_quiz_choice_not_checked">@color/white</color>
@@ -231,18 +262,18 @@
     <color name="step_quiz_choice_wrong">#ffebe7</color>
 
     <color name="step_quiz_choice_not_checked_border">@color/grey03</color>
-    <color name="step_quiz_choice_checked_border">#806C7BDF</color>
+    <color name="step_quiz_choice_checked_border">@color/violet1_alpha_50</color>
     <color name="step_quiz_choice_correct_border">#8064cc64</color>
-    <color name="step_quiz_choice_wrong_border">#80ff7965</color>
+    <color name="step_quiz_choice_wrong_border">@color/red02_color_alpha_50</color>
 
     <!-- Sorting quiz -->
     <color name="step_quiz_sorting_background">@color/white</color>
     <color name="step_quiz_sorting_stroke">@color/grey03</color>
-    <color name="step_quiz_sorting_stroke_disabled">#80CCCCCC</color>
+    <color name="step_quiz_sorting_stroke_disabled">@color/grey03_alpha_50</color>
 
     <!-- Course item -->
     <color name="course_item_separator_light">@color/grey04</color>
-    <color name="course_item_separator_dark">#30999999</color>
+    <color name="course_item_separator_dark">@color/grey02_alpha_19</color>
 
     <!-- Certificate icon color -->
     <color name="certificate_distinction">@color/yellow1</color>
