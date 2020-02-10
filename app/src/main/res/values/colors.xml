@@ -8,13 +8,13 @@
     <color name="grey_act_background">#E2E3E5</color>
 
     <color name="transparent">#00FFFFFF</color>
-    <color name="stepic_regular_text">#5E5E5E</color>
+    <color name="stepic_regular_text">@color/grey01</color>
     <color name="stepic_weak_text">#A5A5A5</color>
     <color name="black">#000000</color>
     <color name="drawer_item_highlighting_pressed">#EDEDED</color>
 
     <!-- stepic brand book-->
-    <color name="stepic_brand_primary">#66CC66</color>
+    <color name="stepic_brand_primary">@color/green01</color>
     <color name="stepic_brand_primary_dark">#329932</color>
     <color name="stepic_orange_carrot">#FF9933</color>
     <color name="stepic_blue_ribbon">#2669E1</color>
@@ -26,10 +26,10 @@
 
     <color name="default_color_of_link">#0077CC</color>
     <color name="windowBackground">#eeeeee</color>
-    <color name="correct_answer_background">#E9F9E9</color>
+    <color name="correct_answer_background">@color/green02</color>
     <color name="disabled_button_color">#D3D7D7</color>
     <color name="feedback_bad_color">#D64338</color>
-    <color name="feedback_good_color">#66CC66
+    <color name="feedback_good_color">@color/green01
     </color><!-- it is just green correct color, not the stepic primary -->
 
 
@@ -43,7 +43,7 @@
     <color name="sorting_chooser">#EEEEEE</color>
     <color name="background_time_thumbnail">#B20F1015</color>
     <color name="text_color_time_thumbnail">#C8C8C9</color>
-    <color name="stepik_dark_web">#222222</color>
+    <color name="stepik_dark_web">@color/black2</color>
 
     <color name="exo_edit_mode_background_color">#FFF4F3F0</color>
 
@@ -83,7 +83,7 @@
     <color name="white_opacity_30">#4DFFFFFF</color>
     <color name="white_opacity_60">#99FFFFFF</color>
 
-    <color name="join_text_color">#66CC66</color>
+    <color name="join_text_color">@color/green01</color>
     <color name="continue_button_color">#0D535366</color>
     <color name="continue_button_pressed_color">#E8E8E8</color>
     <color name="continue_button_color_dark">#0DFFFFFF</color>
@@ -152,8 +152,8 @@
     <!-- Design system -->
     <color name="grey01">#5E5E5E</color>
     <color name="grey02">#999999</color>
-    <color name="grey04">#EAECF0</color>
     <color name="grey03">#CCCCCC</color>
+    <color name="grey04">#EAECF0</color>
     <color name="grey05">#F3F4F6</color>
     <color name="green01">#66CC66</color>
     <color name="green03">#54AD54</color>
@@ -204,8 +204,8 @@
     <color name="course_content_section_date_disabled">#B4B4B4</color>
 
     <!-- Text styles colors -->
-    <color name="color_body1">#222222</color>
-    <color name="color_body2_note">#999999</color>
+    <color name="color_body1">@color/black2</color>
+    <color name="color_body2_note">@color/grey02</color>
 
     <color name="color_violet_1">@color/violet1</color>
     <color name="color_violet_1_12">#206C7BDF</color>
@@ -221,7 +221,7 @@
     <color name="step_discussion_button">@color/new_primary_color</color>
     <color name="step_quiz_separator">@color/grey04</color>
 
-    <color name="step_quiz_feedback_wrong_text">#ff7965</color>
+    <color name="step_quiz_feedback_wrong_text">@color/red02</color>
     <color name="step_quiz_feedback_wrong_background">#26ff7965</color>
 
     <!-- Choice quiz -->
