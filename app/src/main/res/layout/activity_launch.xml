@@ -14,6 +14,15 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/dismissButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:src="@drawable/ic_close_dark"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <ImageView
             android:id="@+id/stepikLogo"
             android:layout_width="32dp"
             android:layout_height="32dp"
