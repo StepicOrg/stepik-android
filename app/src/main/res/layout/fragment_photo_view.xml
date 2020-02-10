@@ -4,15 +4,27 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-
-    <ImageView
-        android:id="@+id/zoomable_image"
+    <View
+        android:id="@+id/backgroundColorView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#000" />
+
+    <org.stepik.android.view.ui.layout.VerticalDragLayout
+        android:id="@+id/verticalDragLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/zoomableImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </org.stepik.android.view.ui.layout.VerticalDragLayout>
 
 
     <LinearLayout
-        android:id="@+id/internet_problem_root"
+        android:id="@+id/internetProblemRootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/transparent_black_30"
@@ -29,7 +41,7 @@
             android:textColor="@color/white"/>
 
         <Button
-            android:id="@+id/retry_button"
+            android:id="@+id/retryButton"
             style="@style/StepicSmallMaterialButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
