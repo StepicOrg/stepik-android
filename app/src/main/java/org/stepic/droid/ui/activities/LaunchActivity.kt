@@ -72,11 +72,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 
         dismissButton.setOnClickListener {
-            if (intent.hasExtra(AppConstants.FROM_MAIN_FEED_FLAG) || intent.hasExtra(AppConstants.KEY_COURSE_BUNDLE)) {
-                onBackPressed()
-            } else {
-                screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
-            }
+            onBackPressed()
         }
 
         dismissButton.isVisible = deferredAuthSplitTest.currentGroup.isCanDismissLaunch
@@ -316,10 +312,11 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         val fromMainFeed = intent?.extras?.getBoolean(AppConstants.FROM_MAIN_FEED_FLAG) ?: false
         val index = intent?.extras?.getInt(MainFeedActivity.CURRENT_INDEX_KEY) ?: MainFeedActivity.defaultIndex
 
-        if (fromMainFeed) {
-            screenManager.showMainFeed(this, index)
-        } else {
-            super.onBackPressed()
+        when {
+            fromMainFeed -> screenManager.showMainFeed(this, index)
+            intent.hasExtra(AppConstants.KEY_COURSE_BUNDLE) -> super.onBackPressed()
+            deferredAuthSplitTest.currentGroup.isDeferredAuth -> screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+            else -> super.onBackPressed()
         }
     }
 
