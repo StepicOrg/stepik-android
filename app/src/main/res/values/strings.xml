@@ -708,6 +708,9 @@
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
 
+    <string name="lesson_error_exam_description">This lesson is a part of an exam module, you can only solve it in the web version.</string>
+    <string name="lesson_error_exam_action">Open the web version</string>
+
     <!-- Step -->
     <string name="step_amount_passed">Passed:&#160;</string>
     <string name="step_correct_submissions_percentage">Correct submissions:&#160;</string>

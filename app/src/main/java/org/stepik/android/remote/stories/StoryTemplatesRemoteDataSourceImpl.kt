@@ -17,7 +17,7 @@ constructor(
         getStoryTemplatesByPage(lang)
 
     private fun getStoryTemplatesByPage(lang: String): Single<List<StoryTemplate>> =
-        Observable.range(0, Integer.MAX_VALUE)
+        Observable.range(1, Integer.MAX_VALUE)
             .concatMapSingle { storyService.getStoryTemplate(it, true, lang) }
             .takeUntil { !it.meta.hasNext }
             .map(StoryTemplatesResponse::storyTemplates)

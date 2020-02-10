@@ -137,31 +137,37 @@ constructor(
         val stepIds = oldState.lessonData.lesson.steps
         val unit = oldState.lessonData.unit
 
-        if (stepIds.isEmpty()) {
-            state = oldState.copy(stepsState = LessonView.StepsState.EmptySteps)
-        } else {
-            state = oldState.copy(stepsState = LessonView.StepsState.Loading)
+        when {
+            oldState.lessonData.section?.isExam == true ->
+                state = oldState.copy(stepsState = LessonView.StepsState.Exam(oldState.lessonData.section.course))
 
-            compositeDisposable += lessonContentInteractor
-                .getStepItems(unit, *stepIds)
-                .observeOn(mainScheduler)
-                .subscribeOn(backgroundScheduler)
-                .subscribeBy(
-                    onSuccess = { stepItems ->
-                        val stepsState =
-                            if (stepItems.isEmpty() && stepIds.isNotEmpty()) {
-                                LessonView.StepsState.AccessDenied
-                            } else {
-                                LessonView.StepsState.Loaded(stepItems)
-                            }
-                        state = oldState.copy(stepsState = stepsState)
-                        view?.showStepAtPosition(oldState.lessonData.stepPosition)
-                        handleDiscussionId()
-                    },
-                    onError = {
-                        state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
-                    }
-                )
+            stepIds.isEmpty() ->
+                state = oldState.copy(stepsState = LessonView.StepsState.EmptySteps)
+
+            else -> {
+                state = oldState.copy(stepsState = LessonView.StepsState.Loading)
+
+                compositeDisposable += lessonContentInteractor
+                    .getStepItems(unit, *stepIds)
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+                    .subscribeBy(
+                        onSuccess = { stepItems ->
+                            val stepsState =
+                                if (stepItems.isEmpty() && stepIds.isNotEmpty()) {
+                                    LessonView.StepsState.AccessDenied
+                                } else {
+                                    LessonView.StepsState.Loaded(stepItems)
+                                }
+                            state = oldState.copy(stepsState = stepsState)
+                            view?.showStepAtPosition(oldState.lessonData.stepPosition)
+                            handleDiscussionId()
+                        },
+                        onError = {
+                            state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
+                        }
+                    )
+            }
         }
     }
 

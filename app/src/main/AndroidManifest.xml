@@ -154,7 +154,8 @@
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
-            android:theme="@style/AppTheme.PhotoView" />
+            android:theme="@style/StoryActivityTheme"
+             />
 
         <activity
             android:name="org.stepik.android.view.settings.ui.activity.SettingsActivity" />
