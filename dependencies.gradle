@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2078,
-        name                 : '1.111',
+        code                 : 2079,
+        name                 : '1.112',
 
         minSdk               : 16,
         targetSdk            : 28,
@@ -71,7 +71,7 @@ ext.versions = [
         materialDialogCore   : '0.9.6.0',
         numberPicker         : '1.2.1',
         datePicker           : '3.1.0',
-        photoView            : '1.3.1',
+        photoView            : '2.3.0',
         recyclerAnimators    : '2.1.0',
         materialProgress     : '1.4.2',
         circleImageView      : '2.1.0',
