@@ -75,7 +75,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
             onBackPressed()
         }
 
-        dismissButton.isVisible = deferredAuthSplitTest.currentGroup.isCanDismissLaunch
+        dismissButton.isVisible = deferredAuthSplitTest.currentGroup.isDeferredAuth
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
