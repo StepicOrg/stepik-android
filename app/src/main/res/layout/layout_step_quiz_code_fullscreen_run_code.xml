@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:id="@+id/dataScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/runCodeActionSeparator"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/inputDataTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+
+                android:text="@string/step_quiz_code_input_data"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/color_body1"
+
+                android:layout_alignParentTop="true"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/inputDataSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+
+                app:backgroundTint="@color/color_violet_1"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/inputDataSample"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="8dp"
+
+                android:textSize="14sp"
+                android:textColor="@color/new_accent_color"
+                app:fontFamily="@font/pt_mono"
+
+                android:layout_below="@id/inputDataTitle"
+
+                tools:text="77 1010" />
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/outputDataTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:paddingTop="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="8dp"
+                android:background="#f3f4f6"
+
+                android:text="@string/step_quiz_code_output_data"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/color_body1"
+
+                android:layout_below="@id/inputDataSample" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/outputDataSample"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingBottom="16dp"
+                android:background="#f3f4f6"
+
+                android:textSize="14sp"
+                android:textColor="@color/new_accent_color"
+                app:fontFamily="@font/pt_mono"
+
+                android:layout_below="@id/outputDataTitle"
+
+                tools:text="77 1010" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <View
+        android:id="@+id/runCodeActionSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/step_quiz_separator"
+        android:layout_marginBottom="16dp"
+        android:layout_above="@id/runCodeFeedback"/>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/runCodeFeedback"
+        style="@style/StepQuizFeedback"
+        android:background="@drawable/bg_step_quiz_feedback_evaluation"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="48dp"
+        android:gravity="center_vertical"
+        android:fontFamily="@font/roboto_regular"
+        android:textSize="16sp"
+        android:drawablePadding="16dp"
+
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+
+        android:text="@string/step_quiz_feedback_evaluation"
+        android:textColor="@color/violet1"
+
+        android:visibility="gone"
+
+        android:layout_above="@id/runCodeAction"/>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/runCodeAction"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+
+        android:background="@drawable/bg_step_run_code_button"
+        android:text="@string/step_quiz_code_run_code_action"
+        android:textColor="@color/color_step_submit_button_text"
+        android:textSize="16sp"
+        android:gravity="center"
+
+        tools:drawableStart="@drawable/ic_step_run_code"
+        tools:drawableLeft="@drawable/ic_step_run_code"
+
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:drawablePadding="-18dp"
+
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

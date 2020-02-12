@@ -772,6 +772,12 @@
 
     <string name="step_quiz_code_full_screen_instruction_tab">Instruction</string>
     <string name="step_quiz_code_full_screen_code_tab">Code</string>
+    <string name="step_quiz_code_full_screen_run_code_tab">Run</string>
+
+    <string name="step_quiz_code_input_data">Input data</string>
+    <string name="step_quiz_code_output_data">Output data</string>
+    <string name="step_quiz_code_samples">Samples</string>
+    <string name="step_quiz_code_run_code_action">Run code</string>
 
     <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 

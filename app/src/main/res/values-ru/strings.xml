@@ -740,6 +740,12 @@
 
     <string name="step_quiz_code_full_screen_instruction_tab">Условия</string>
     <string name="step_quiz_code_full_screen_code_tab">Код</string>
+    <string name="step_quiz_code_full_screen_run_code_tab">Запуск</string>
+
+    <string name="step_quiz_code_input_data">Входные данные</string>
+    <string name="step_quiz_code_output_data">Выходные данные</string>
+    <string name="step_quiz_code_samples">Примеры</string>
+    <string name="step_quiz_code_run_code_action">Запуск кода</string>
 
     <string name="step_quiz_pycharm_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
