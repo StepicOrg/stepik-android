@@ -212,6 +212,10 @@ dependencies {
     debugImplementation libraries.flipperCore
     debugImplementation libraries.flipperNetwork
     debugImplementation libraries.toolargetool
+    oldReleaseImplementation libraries.soloader
+    oldReleaseImplementation libraries.flipperCore
+    oldReleaseImplementation libraries.flipperNetwork
+    oldReleaseImplementation libraries.toolargetool
 
     releaseImplementation libraries.flipperNoop
 }

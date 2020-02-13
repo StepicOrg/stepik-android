@@ -271,4 +271,6 @@
 
     <dimen name="profile_block_margin">24dp</dimen>
     <dimen name="profile_block_vertical_margin">16dp</dimen>
+
+    <dimen name="dismiss_path_length">36dp</dimen>
 </resources>

@@ -137,7 +137,6 @@ public class ScreenManagerImpl implements ScreenManager {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
         Intent launchIntent = new Intent(activity, LaunchActivity.class);
         launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(launchIntent);
     }
 
@@ -145,7 +144,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openImage(Context context, String path) {
         analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
         Intent intent = new Intent(context, PhotoViewActivity.class);
-        intent.putExtra(PhotoViewActivity.pathKey, path);
+        intent.putExtra(PhotoViewActivity.EXTRA_PATH, path);
         context.startActivity(intent);
     }
 

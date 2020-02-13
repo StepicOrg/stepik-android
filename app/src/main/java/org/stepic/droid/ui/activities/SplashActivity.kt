@@ -109,6 +109,10 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
         finish()
     }
 
+    override fun onShowCatalog() {
+        screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+    }
+
     override fun onShowOnboarding() {
         screenManager.showOnboarding(this)
         finish()

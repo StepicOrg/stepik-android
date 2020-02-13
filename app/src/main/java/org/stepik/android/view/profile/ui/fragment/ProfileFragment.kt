@@ -30,6 +30,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.ShareHelper
+import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.commitNow
@@ -42,8 +43,8 @@ import org.stepik.android.view.profile.ui.animation.ProfileHeaderAnimationDelega
 import org.stepik.android.view.profile.ui.delegate.ProfileStatsDelegate
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_activities.ui.fragment.ProfileActivitiesFragment
-import org.stepik.android.view.profile_courses.ui.fragment.ProfileCoursesFragment
 import org.stepik.android.view.profile_certificates.ui.fragment.ProfileCertificatesFragment
+import org.stepik.android.view.profile_courses.ui.fragment.ProfileCoursesFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.profile_id.ui.fragment.ProfileIdFragment
 import org.stepik.android.view.profile_links.ui.fragment.ProfileLinksFragment
@@ -179,7 +180,7 @@ class ProfileFragment : Fragment(), ProfileView {
         view.doOnNextLayout { headerAnimationDelegate.onScroll(scrollContainer.scrollY) }
 
         tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
-        authAction.setOnClickListener { screenManager.showLaunchScreen(context) }
+        authAction.setOnClickListener { screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX) }
 
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {

@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.multibindings.IntoSet
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.AnalyticImpl
-import org.stepic.droid.analytic.experiments.SolutionStatsSplitTest
+import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.analytic.experiments.SplitTest
 import org.stepic.droid.di.AppSingleton
 
@@ -19,6 +19,6 @@ abstract class AnalyticModule {
     @AppSingleton
     @Binds
     @IntoSet
-    internal abstract fun bindSolutionStatsSplitTest(solutionStatsSplitTest: SolutionStatsSplitTest): SplitTest<*>
+    internal abstract fun bindDeferredAuthSplitTest(deferredAuthSplitTest: DeferredAuthSplitTest): SplitTest<*>
 
 }
