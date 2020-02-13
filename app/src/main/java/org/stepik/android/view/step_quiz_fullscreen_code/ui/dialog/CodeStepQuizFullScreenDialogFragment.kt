@@ -7,22 +7,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
+import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_keyboard_extension.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.view.*
 import org.stepic.droid.R
+import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -31,13 +37,22 @@ import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
+import org.stepik.android.model.code.UserCodeRun
+import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
+import org.stepik.android.presentation.step_quiz_code.StepQuizRunCode
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import timber.log.Timber
+import javax.inject.Inject
 
-class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguageDialog.Callback, ProgrammingLanguageChooserDialogFragment.Callback, ResetCodeDialogFragment.Callback {
+class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
+    ChangeCodeLanguageDialog.Callback,
+    ProgrammingLanguageChooserDialogFragment.Callback,
+    ResetCodeDialogFragment.Callback,
+    StepQuizRunCode {
     companion object {
         const val TAG = "CodeStepQuizFullScreenDialogFragment"
 
@@ -59,6 +74,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
     private lateinit var instructionsLayout: View
     private lateinit var playgroundLayout: View
+    private lateinit var runCodeLayout: View
 
     private lateinit var codeLayout: CodeEditorLayout
     private lateinit var submitButtonSeparator: View
@@ -76,6 +92,18 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     private var lessonTitle: String by argument()
     private var stepWrapper: StepPersistentWrapper by argument()
 
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var codeRunPresenter: StepQuizCodeRunPresenter
+
+    private fun injectComponent() {
+        App.component()
+            .userCodeRunComponentBuilder()
+            .build()
+            .inject(this)
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
 
@@ -89,6 +117,11 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+
+        injectComponent()
+        codeRunPresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(StepQuizCodeRunPresenter::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -156,6 +189,39 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
                 ?.onSyncCodeStateWithParent(lang, codeLayout.text.toString(), onSubmitClicked = true)
             dismiss()
         }
+
+
+        val inputSamples = stepWrapper
+            .step
+            .block
+            ?.options
+            ?.samples
+            ?.map { samples -> samples.first() } ?: emptyList()
+
+        runCodeLayout.inputDataSpinner.adapter =
+            ArrayAdapter<String>(
+                requireContext(),
+                R.layout.run_code_spinner_item,
+                inputSamples)
+
+        runCodeLayout.inputDataSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                runCodeLayout.inputDataSample.text = runCodeLayout.inputDataSpinner.adapter.getItem(position).toString()
+            }
+        }
+
+        Timber.d("Input samples: $inputSamples")
+        // TODO Run code presenter
+        codeRunPresenter.createUserCodeRun()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -208,6 +274,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
 
         instructionsLayout = pagerAdapter.getViewAt(0)
         playgroundLayout = pagerAdapter.getViewAt(1)
+        runCodeLayout = pagerAdapter.getViewAt(2)
     }
 
     override fun onStart() {
@@ -297,6 +364,18 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(), ChangeCodeLanguag
                 }
             }
         )
+    }
+
+    override fun setState(state: StepQuizRunCode.State) {
+        if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
+            if (state.userCodeRun.status == null || state.userCodeRun.status == UserCodeRun.Status.EVALUATION) {
+                runCodeLayout.runCodeFeedback.isVisible = true
+            }
+        }
+    }
+
+    override fun showNetworkError() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     /**

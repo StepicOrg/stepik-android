@@ -36,12 +36,10 @@
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/inputDataSpinner"
-                android:layout_width="wrap_content"
+                android:layout_width="156dp"
                 android:layout_height="wrap_content"
-
-                android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
+                android:dropDownWidth="156dp"
 
                 app:backgroundTint="@color/color_violet_1"
                 android:layout_alignParentTop="true"

@@ -29,9 +29,9 @@ data class UserCodeRun(
     @SerializedName("stderr")
     val stderr: String? = null,
     @SerializedName("time_limit_exceeded")
-    val timeLimitExceeded: Boolean,
+    val timeLimitExceeded: Boolean = false,
     @SerializedName("memory_limit_exceeded")
-    val memoryLimitExceeded: Boolean,
+    val memoryLimitExceeded: Boolean = false,
     @SerializedName("create_date")
     val createDate: Date? = null,
     @SerializedName("update_date")
