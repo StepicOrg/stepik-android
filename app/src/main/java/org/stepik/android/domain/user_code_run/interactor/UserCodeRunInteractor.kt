@@ -14,21 +14,27 @@ constructor(
     private val userProfileRepository: UserProfileRepository,
     private val userCodeRunRepository: UserCodeRunRepository
 ) {
-    fun createUserCodeRun(userCodeRun: UserCodeRun): Single<UserCodeRun> =
+    fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long): Single<UserCodeRun> =
         userProfileRepository
             .getUserProfile()
             .flatMap { userProfile ->
                 val userId = userProfile.first?.id ?: 0
-                // TODO Use user id
                 userCodeRunRepository
-                    .createUserCodeRun(userCodeRun)
+                    .createUserCodeRun(
+                        UserCodeRun(
+                            code = code,
+                            language = language,
+                            stdin = stdin,
+                            step = stepId,
+                            user = userId
+                        )
+                    )
                     .flatMapObservable { createdUserCodeRun ->
                         Observable
                             .interval(1, TimeUnit.SECONDS)
                             .flatMapSingle { userCodeRunRepository.getUserCodeRun(createdUserCodeRun.id) }
-                            .skipWhile { userCodeRun.status == UserCodeRun.Status.EVALUATION}
+                            .skipWhile { it.status == UserCodeRun.Status.EVALUATION }
                     }
                     .firstOrError()
             }
-
 }

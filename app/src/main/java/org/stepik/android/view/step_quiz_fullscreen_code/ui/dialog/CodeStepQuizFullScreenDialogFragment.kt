@@ -10,7 +10,10 @@ import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
+import android.widget.ScrollView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatSpinner
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -23,6 +26,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
+import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_keyboard_extension.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -76,6 +80,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     private lateinit var playgroundLayout: View
     private lateinit var runCodeLayout: View
 
+    /**
+     *  Code play ground views
+     */
     private lateinit var codeLayout: CodeEditorLayout
     private lateinit var submitButtonSeparator: View
     private lateinit var codeSubmitButton: View
@@ -85,6 +92,20 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
     // Flag is necessary, because keyboard listener is constantly invoked (probably global layout listener reacts to view changes)
     private var keyboardShown: Boolean = false
+
+    /**
+     * Run code views
+     */
+    private lateinit var runCodeScrollView: ScrollView
+    private lateinit var runCodeInputDataSpinner: AppCompatSpinner
+    private lateinit var runCodeInputDataSample: AppCompatTextView
+    private lateinit var outputDataTitle: AppCompatTextView
+    private lateinit var outputDataSample: AppCompatTextView
+    private lateinit var runCodeActionSeparator: View
+    private lateinit var runCodeFeedback: AppCompatTextView
+    private lateinit var runCodeAction: AppCompatTextView
+
+
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -162,10 +183,27 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             code = savedInstanceState.getString(ARG_CODE) ?: return
         }
 
+        /**
+         *  Code play ground view binding
+         */
         submitButtonSeparator = playgroundLayout.submitButtonSeparator
         codeSubmitButton = playgroundLayout.codeSubmitButton
         retryButton = playgroundLayout.stepQuizRetry
         codeLayout = playgroundLayout.codeStepLayout
+
+        /**
+         *  Run code view binding
+         */
+
+        runCodeScrollView = runCodeLayout.dataScrollView
+        runCodeInputDataSpinner = runCodeLayout.inputDataSpinner
+        runCodeInputDataSample = runCodeLayout.inputDataSample
+        outputDataTitle = runCodeLayout.outputDataTitle
+        outputDataSample = runCodeLayout.outputDataSample
+        runCodeActionSeparator = runCodeLayout.runCodeActionSeparator
+        runCodeFeedback = runCodeLayout.runCodeFeedback
+        runCodeAction = runCodeLayout.runCodeAction
+
 
         retryButton.isVisible = false
         setupCodeToolAdapter()
@@ -220,8 +258,15 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         }
 
         Timber.d("Input samples: $inputSamples")
-        // TODO Run code presenter
-        codeRunPresenter.createUserCodeRun()
+        runCodeAction.setOnClickListener {
+            codeRunPresenter.createUserCodeRun(
+                code = codeLayout.text.toString(),
+                language = lang,
+                stdin = inputDataSample.text.toString(),
+                stepId = stepWrapper.step.id
+            )
+        }
+
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

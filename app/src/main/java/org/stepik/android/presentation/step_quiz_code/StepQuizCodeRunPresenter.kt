@@ -6,7 +6,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.user_code_run.interactor.UserCodeRunInteractor
-import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.base.PresenterBase
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,17 +30,9 @@ constructor(
         view.setState(state)
     }
 
-    fun createUserCodeRun() {
-        // TODO Add parameters and construct UserCodeRun model in interactor
+    fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
         compositeDisposable += userCodeRunInteractor
-            .createUserCodeRun(
-                UserCodeRun(code = "# put your python code here print(\"a\" ",
-                    language = "python3",
-                    stdin = "3 Зенит;3;Спартак;1 Спартак;1;ЦСКА;1 ЦСКА;0;Зенит;2",
-                    step = 13548,
-                    user = 157897387
-                )
-            )
+            .createUserCodeRun(code, language, stdin, stepId)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
