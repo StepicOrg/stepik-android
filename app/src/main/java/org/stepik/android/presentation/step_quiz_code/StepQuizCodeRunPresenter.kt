@@ -31,13 +31,19 @@ constructor(
     }
 
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
+        state = StepQuizRunCode.State.Loading
         compositeDisposable += userCodeRunInteractor
             .createUserCodeRun(code, language, stdin, stepId)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { Timber.d("Success: $it") },
-                onError = { Timber.d("Error: $it")}
+                onSuccess = {
+                    state = StepQuizRunCode.State.UserCodeRunLoaded(it)
+                    Timber.d("Success: $it") },
+                onError = {
+                    view?.showNetworkError()
+                    Timber.d("Error: $it")
+                }
             )
     }
 }

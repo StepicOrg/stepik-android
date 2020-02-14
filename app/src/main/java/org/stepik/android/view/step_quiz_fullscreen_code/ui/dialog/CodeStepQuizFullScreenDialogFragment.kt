@@ -41,6 +41,7 @@ import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
+import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCode
@@ -331,12 +332,18 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
             }
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+        codeRunPresenter.attachView(this)
     }
 
     override fun onPause() {
         (parentFragment as? Callback)
             ?.onSyncCodeStateWithParent(lang, codeLayout.text.toString())
         super.onPause()
+    }
+
+    override fun onStop() {
+        codeRunPresenter.detachView(this)
+        super.onStop()
     }
 
     override fun onChangeLanguage() {
@@ -412,15 +419,42 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     override fun setState(state: StepQuizRunCode.State) {
+        Timber.d("State: $state")
+        runCodeAction.isEnabled = state is StepQuizRunCode.State.Idle ||
+                (state is StepQuizRunCode.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
+        if (state is StepQuizRunCode.State.Loading) {
+            runCodeFeedback.isVisible = true
+        }
         if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
-            if (state.userCodeRun.status == null || state.userCodeRun.status == UserCodeRun.Status.EVALUATION) {
-                runCodeLayout.runCodeFeedback.isVisible = true
+            when (state.userCodeRun.status) {
+                UserCodeRun.Status.EVALUATION -> {
+                    runCodeFeedback.isVisible = true
+                }
+                UserCodeRun.Status.SUCCESS -> {
+                    runCodeFeedback.isVisible = false
+                    outputDataTitle.isVisible = true
+                    outputDataSample.isVisible = true
+                    setOutputText(state.userCodeRun.stdout)
+                }
+                UserCodeRun.Status.FAILURE -> {
+                    runCodeFeedback.isVisible = false
+                    outputDataTitle.isVisible = true
+                    outputDataSample.isVisible = true
+                    outputDataSample.text = state.userCodeRun.stderr
+                }
             }
+        }
+    }
+    private fun setOutputText(text: String?) {
+        if (text.isNullOrEmpty()) {
+            outputDataSample.text = "Empty output"
+        } else {
+            outputDataSample.text = text
         }
     }
 
     override fun showNetworkError() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        view?.snackbar(messageRes = R.string.connectionProblems)
     }
 
     /**
