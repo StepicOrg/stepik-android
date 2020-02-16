@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
+import kotlinx.android.synthetic.main.empty_input_samples.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.*
@@ -50,7 +51,6 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDel
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
@@ -97,16 +97,15 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     /**
      * Run code views
      */
+    private lateinit var runCodeEmptyInput: View
     private lateinit var runCodeScrollView: ScrollView
     private lateinit var runCodeInputDataSpinner: AppCompatSpinner
     private lateinit var runCodeInputDataSample: AppCompatTextView
-    private lateinit var outputDataTitle: AppCompatTextView
-    private lateinit var outputDataSample: AppCompatTextView
+    private lateinit var runCodeOutputDataTitle: AppCompatTextView
+    private lateinit var runCodeOutputDataSample: AppCompatTextView
     private lateinit var runCodeActionSeparator: View
     private lateinit var runCodeFeedback: AppCompatTextView
     private lateinit var runCodeAction: AppCompatTextView
-
-
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -196,15 +195,15 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
          *  Run code view binding
          */
 
+        runCodeEmptyInput = runCodeLayout.empty_input_samples
         runCodeScrollView = runCodeLayout.dataScrollView
         runCodeInputDataSpinner = runCodeLayout.inputDataSpinner
         runCodeInputDataSample = runCodeLayout.inputDataSample
-        outputDataTitle = runCodeLayout.outputDataTitle
-        outputDataSample = runCodeLayout.outputDataSample
+        runCodeOutputDataTitle = runCodeLayout.outputDataTitle
+        runCodeOutputDataSample = runCodeLayout.outputDataSample
         runCodeActionSeparator = runCodeLayout.runCodeActionSeparator
         runCodeFeedback = runCodeLayout.runCodeFeedback
         runCodeAction = runCodeLayout.runCodeAction
-
 
         retryButton.isVisible = false
         setupCodeToolAdapter()
@@ -229,36 +228,35 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             dismiss()
         }
 
-
         val inputSamples = stepWrapper
             .step
             .block
             ?.options
             ?.samples
-            ?.map { samples -> samples.first() } ?: emptyList()
+            ?.mapIndexed { index, samples -> getString(R.string.step_quiz_code_spinner_item, index + 1, samples.first()) }
+            ?: emptyList()
 
         runCodeLayout.inputDataSpinner.adapter =
             ArrayAdapter<String>(
                 requireContext(),
                 R.layout.run_code_spinner_item,
-                inputSamples)
+                inputSamples
+            )
 
         runCodeLayout.inputDataSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
 
-            }
-
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                runCodeLayout.inputDataSample.text = runCodeLayout.inputDataSpinner.adapter.getItem(position).toString()
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                runCodeInputDataSample.text = runCodeLayout
+                    .inputDataSpinner
+                    .adapter.getItem(position)
+                    .toString()
+                    .split(":")
+                    .last()
+                    .trim()
+                runCodeOutputDataSample.text = ""
             }
         }
-
-        Timber.d("Input samples: $inputSamples")
         runCodeAction.setOnClickListener {
             codeRunPresenter.createUserCodeRun(
                 code = codeLayout.text.toString(),
@@ -267,7 +265,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 stepId = stepWrapper.step.id
             )
         }
-
+        codeRunPresenter.setDataToPresenter(hasSamples = inputSamples.isNotEmpty())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -419,37 +417,56 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     override fun setState(state: StepQuizRunCode.State) {
-        Timber.d("State: $state")
+        setStateVisibility(state)
         runCodeAction.isEnabled = state is StepQuizRunCode.State.Idle ||
                 (state is StepQuizRunCode.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
-        if (state is StepQuizRunCode.State.Loading) {
-            runCodeFeedback.isVisible = true
-        }
+
         if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
             when (state.userCodeRun.status) {
-                UserCodeRun.Status.EVALUATION -> {
-                    runCodeFeedback.isVisible = true
-                }
+                UserCodeRun.Status.SUCCESS ->
+                    setOutputText(state.userCodeRun.stdout)
+                UserCodeRun.Status.FAILURE ->
+                    setOutputText(state.userCodeRun.stderr)
+                else ->
+                    Unit
+            }
+        }
+    }
+
+    private fun setStateVisibility(state: StepQuizRunCode.State) {
+        if (state is StepQuizRunCode.State.Empty) {
+            runCodeEmptyInput.isVisible = true
+            runCodeScrollView.isVisible = false
+            runCodeActionSeparator.isVisible = false
+            runCodeAction.isVisible = false
+        }
+
+        runCodeFeedback.isVisible = state is StepQuizRunCode.State.Loading
+
+        if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
+            when (state.userCodeRun.status) {
                 UserCodeRun.Status.SUCCESS -> {
                     runCodeFeedback.isVisible = false
-                    outputDataTitle.isVisible = true
-                    outputDataSample.isVisible = true
-                    setOutputText(state.userCodeRun.stdout)
+                    runCodeOutputDataTitle.isVisible = true
+                    runCodeOutputDataSample.isVisible = true
                 }
                 UserCodeRun.Status.FAILURE -> {
                     runCodeFeedback.isVisible = false
-                    outputDataTitle.isVisible = true
-                    outputDataSample.isVisible = true
-                    outputDataSample.text = state.userCodeRun.stderr
+                    runCodeOutputDataTitle.isVisible = true
+                    runCodeOutputDataSample.isVisible = true
+                }
+                UserCodeRun.Status.EVALUATION -> {
+                    runCodeFeedback.isVisible = true
                 }
             }
         }
     }
+
     private fun setOutputText(text: String?) {
         if (text.isNullOrEmpty()) {
-            outputDataSample.text = "Empty output"
+            runCodeOutputDataSample.text = getString(R.string.step_quiz_code_empty_output)
         } else {
-            outputDataSample.text = text
+            runCodeOutputDataSample.text = text
         }
     }
 

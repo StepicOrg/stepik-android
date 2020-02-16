@@ -747,6 +747,8 @@
     <string name="step_quiz_code_samples">Примеры</string>
     <string name="step_quiz_code_run_code_action">Запуск кода</string>
     <string name="step_quiz_code_empty_output">Пустой вывод</string>
+    <string name="step_quiz_code_no_input_data">У задачи отсутствуют входные данные</string>
+    <string name="step_quiz_code_spinner_item">Пример %d: %s</string>
 
     <string name="step_quiz_pycharm_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 

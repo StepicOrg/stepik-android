@@ -7,7 +7,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.user_code_run.interactor.UserCodeRunInteractor
 import org.stepik.android.presentation.base.PresenterBase
-import timber.log.Timber
 import javax.inject.Inject
 
 class StepQuizCodeRunPresenter
@@ -30,6 +29,14 @@ constructor(
         view.setState(state)
     }
 
+    fun setDataToPresenter(hasSamples: Boolean) {
+        state = if (hasSamples) {
+            StepQuizRunCode.State.Idle
+        } else {
+            StepQuizRunCode.State.Empty
+        }
+    }
+
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
         state = StepQuizRunCode.State.Loading
         compositeDisposable += userCodeRunInteractor
@@ -39,10 +46,10 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = StepQuizRunCode.State.UserCodeRunLoaded(it)
-                    Timber.d("Success: $it") },
+                },
                 onError = {
                     view?.showNetworkError()
-                    Timber.d("Error: $it")
+                    state = StepQuizRunCode.State.Idle
                 }
             )
     }
