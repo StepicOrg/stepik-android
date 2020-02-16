@@ -236,14 +236,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.mapIndexed { index, samples -> getString(R.string.step_quiz_code_spinner_item, index + 1, samples.first()) }
             ?: emptyList()
 
-        runCodeLayout.inputDataSpinner.adapter =
+        runCodeInputDataSpinner.adapter =
             ArrayAdapter<String>(
                 requireContext(),
                 R.layout.run_code_spinner_item,
                 inputSamples
             )
 
-        runCodeLayout.inputDataSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        runCodeInputDataSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -418,8 +418,11 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
     override fun setState(state: StepQuizRunCode.State) {
         setStateVisibility(state)
-        runCodeAction.isEnabled = state is StepQuizRunCode.State.Idle ||
+        val isEnabled = state is StepQuizRunCode.State.Idle ||
                 (state is StepQuizRunCode.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
+
+        runCodeAction.isEnabled = isEnabled
+        runCodeInputDataSpinner.isEnabled = isEnabled
 
         if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
             when (state.userCodeRun.status) {
