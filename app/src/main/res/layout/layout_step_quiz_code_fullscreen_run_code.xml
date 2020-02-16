@@ -7,8 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/empty_input_samples" />
-
     <ScrollView
         android:id="@+id/dataScrollView"
         android:layout_width="match_parent"
@@ -34,20 +32,29 @@
                 android:textStyle="bold"
                 android:textColor="@color/color_body1"
 
+                app:fontFamily="@font/roboto_medium"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/inputDataSample" />
+                app:layout_constraintLeft_toLeftOf="parent" />
 
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/inputDataSpinner"
-                android:layout_width="156dp"
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/inputDataSamplePicker"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:dropDownWidth="156dp"
+                android:layout_margin="8dp"
+                android:padding="8dp"
 
-                app:backgroundTint="@color/color_violet_1"
+                android:background="?selectableItemBackgroundBorderless"
+                android:text="samples"
+                android:textColor="@color/violet1"
+                android:drawablePadding="12dp"
+
+                android:textSize="16sp"
+                app:fontFamily="@font/roboto_regular"
+                app:drawableRightCompat="@drawable/ic_arrow_bottom"
+                app:drawableEndCompat="@drawable/ic_arrow_bottom"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/inputDataSample"
@@ -55,13 +62,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="8dp"
 
                 android:textSize="14sp"
                 android:textColor="@color/new_accent_color"
                 app:fontFamily="@font/pt_mono"
 
-                app:layout_constraintTop_toBottomOf="@id/inputDataTitle"
+                app:layout_constraintTop_toBottomOf="@id/inputDataSamplePicker"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
 
@@ -163,8 +169,8 @@
         android:textSize="16sp"
         android:gravity="center"
 
-        tools:drawableStart="@drawable/ic_step_run_code"
-        tools:drawableLeft="@drawable/ic_step_run_code"
+        app:drawableLeftCompat="@drawable/ic_step_run_code"
+        app:drawableStartCompat="@drawable/ic_step_run_code"
 
         android:paddingLeft="18dp"
         android:paddingRight="18dp"

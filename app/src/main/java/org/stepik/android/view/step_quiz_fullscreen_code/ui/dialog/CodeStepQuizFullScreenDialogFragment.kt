@@ -1,19 +1,19 @@
 package org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog
 
 import android.app.Dialog
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -27,7 +27,6 @@ import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.empty_input_samples.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
-import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_keyboard_extension.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -99,7 +98,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      */
     private lateinit var runCodeEmptyInput: View
     private lateinit var runCodeScrollView: ScrollView
-    private lateinit var runCodeInputDataSpinner: AppCompatSpinner
+    private lateinit var runCodeInputSamplePicker: AppCompatTextView
     private lateinit var runCodeInputDataSample: AppCompatTextView
     private lateinit var runCodeOutputDataTitle: AppCompatTextView
     private lateinit var runCodeOutputDataSample: AppCompatTextView
@@ -194,10 +193,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         /**
          *  Run code view binding
          */
-
         runCodeEmptyInput = runCodeLayout.empty_input_samples
         runCodeScrollView = runCodeLayout.dataScrollView
-        runCodeInputDataSpinner = runCodeLayout.inputDataSpinner
+        runCodeInputSamplePicker = runCodeLayout.inputDataSamplePicker
         runCodeInputDataSample = runCodeLayout.inputDataSample
         runCodeOutputDataTitle = runCodeLayout.outputDataTitle
         runCodeOutputDataSample = runCodeLayout.outputDataSample
@@ -236,32 +234,36 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.mapIndexed { index, samples -> getString(R.string.step_quiz_code_spinner_item, index + 1, samples.first()) }
             ?: emptyList()
 
-        runCodeInputDataSpinner.adapter =
+        val popupWindow = ListPopupWindow(requireContext())
+
+        popupWindow.setAdapter(
             ArrayAdapter<String>(
                 requireContext(),
                 R.layout.run_code_spinner_item,
                 inputSamples
             )
+        )
 
-        runCodeInputDataSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                runCodeInputDataSample.text = runCodeLayout
-                    .inputDataSpinner
-                    .adapter.getItem(position)
-                    .toString()
-                    .split(":")
-                    .last()
-                    .trim()
-                runCodeOutputDataSample.text = ""
-            }
+        popupWindow.setOnItemClickListener { _, _, position, _ ->
+            runCodeInputDataSample.text = inputSamples[position]
+                .split(":")
+                .last()
+                .trim()
+            popupWindow.dismiss()
         }
+
+        popupWindow.anchorView = runCodeInputSamplePicker
+        popupWindow.width = resources.getDimensionPixelSize(R.dimen.step_quiz_full_screen_code_layout_drop_down_width)
+        popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
+
+        runCodeInputSamplePicker.setOnClickListener { popupWindow.show() }
+        runCodeInputSamplePicker.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.violet1))
+
         runCodeAction.setOnClickListener {
             codeRunPresenter.createUserCodeRun(
                 code = codeLayout.text.toString(),
                 language = lang,
-                stdin = inputDataSample.text.toString(),
+                stdin = runCodeInputDataSample.text.toString(),
                 stepId = stepWrapper.step.id
             )
         }
@@ -422,7 +424,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 (state is StepQuizRunCode.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
 
         runCodeAction.isEnabled = isEnabled
-        runCodeInputDataSpinner.isEnabled = isEnabled
+        runCodeInputSamplePicker.isEnabled = isEnabled
 
         if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
             when (state.userCodeRun.status) {
