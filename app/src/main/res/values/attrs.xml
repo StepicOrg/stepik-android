@@ -1,17 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ProgressWheel">
-        <attr name="barColor" format="color"/>
-        <attr name="rimColor" format="color"/>
-        <attr name="rimWidth" format="dimension"/>
-        <attr name="barWidth" format="dimension"/>
-        <attr name="contourColorOuter" format="color"/>
-        <attr name="contourSize" format="dimension"/>
-        <attr name="squareSize" format="dimension"/>
-        <attr name="squareColor" format="color"/>
-    </declare-styleable>
-
-
     <attr name="progressBackgroundColor" format="color"/>
     <attr name="progressForegroundColor" format="color"/>
 

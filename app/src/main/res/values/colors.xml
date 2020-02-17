@@ -14,8 +14,6 @@
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
     <color name="stepic_brand_primary_dark">#329932</color>
-    <color name="stepic_orange_carrot">#FF9933</color>
-    <color name="stepic_blue_ribbon">#2669E1</color>
     <color name="silver">#e6e6e6</color>
     <color name="old_cover">#EEEEEE</color>
     <color name="warning_light_yellow">#FFFAE9</color>

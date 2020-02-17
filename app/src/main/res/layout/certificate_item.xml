@@ -77,7 +77,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:text="@string/share_title"
-            android:textColor="@color/stepic_blue_ribbon"/>
+            android:textColor="@color/violet1"/>
 
         <TextView
             android:id="@+id/certificate_grade"

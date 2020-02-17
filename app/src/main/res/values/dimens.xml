@@ -56,13 +56,6 @@
     <dimen name="login_button_radius">32dp</dimen>
     <dimen name="launch_button_text_size">18sp</dimen>
     <dimen name="onePx">1px</dimen>
-    <dimen name="loading_size">56dp</dimen>
-    <dimen name="loading_padding">16dp</dimen>
-    <dimen name="progress_contour_size">1dp</dimen>
-    <dimen name="progress_rim_size">2dp</dimen>
-    <dimen name="progress_bar_size">3dp</dimen>
-    <dimen name="progress_square_size">7dp</dimen>
-    <dimen name="progress_clickable_size">56dp</dimen>
     <dimen name="table_cell_fixed_height">96dp</dimen>
 
     <dimen name="rewind_size">48dp</dimen>

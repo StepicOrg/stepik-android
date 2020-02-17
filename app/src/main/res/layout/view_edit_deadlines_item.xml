@@ -23,7 +23,7 @@
     <TextView
         android:id="@+id/deadline"
         android:textSize="12sp"
-        android:textColor="@color/stepic_blue_ribbon"
+        android:textColor="@color/violet1"
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
