@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog
 
 import android.app.Dialog
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +50,7 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
@@ -62,6 +64,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
         private const val ARG_LANG = "LANG"
         private const val ARG_CODE = "CODE"
+
+        private const val EVALUATION_FRAME_DURATION_MS = 250
 
         private const val INSTRUCTION_TAB = 0
         private const val CODE_TAB = 1
@@ -290,6 +294,15 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 stepId = stepWrapper.step.id
             )
         }
+
+        val evaluationDrawable = AnimationDrawable()
+        evaluationDrawable.addFrame(requireContext().getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
+        evaluationDrawable.addFrame(requireContext().getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
+        evaluationDrawable.addFrame(requireContext().getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
+        evaluationDrawable.isOneShot = false
+
+        runCodeFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
+        evaluationDrawable.start()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
