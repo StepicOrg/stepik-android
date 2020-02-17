@@ -6,7 +6,7 @@ interface StepQuizRunCodeView {
     sealed class State {
         object Idle : State()
         object Loading : State()
-        object ConsequentLoading : State()
+        data class ConsequentLoading(val userCodeRun: UserCodeRun) : State()
         data class UserCodeRunLoaded(val userCodeRun: UserCodeRun) : State()
     }
 

@@ -40,7 +40,8 @@ constructor(
         state = if (state == StepQuizRunCodeView.State.Idle) {
             StepQuizRunCodeView.State.Loading
         } else {
-            StepQuizRunCodeView.State.ConsequentLoading
+            val userCodeRun = (state as StepQuizRunCodeView.State.UserCodeRunLoaded).userCodeRun
+            StepQuizRunCodeView.State.ConsequentLoading(userCodeRun)
         }
         compositeDisposable += userCodeRunInteractor
             .createUserCodeRun(code, language, stdin, stepId)

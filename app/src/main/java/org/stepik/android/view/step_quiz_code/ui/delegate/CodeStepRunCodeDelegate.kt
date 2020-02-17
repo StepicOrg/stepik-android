@@ -158,16 +158,13 @@ class CodeStepRunCodeDelegate(
         runCodeInputSamplePicker.isEnabled = isEnabled
         runCodeInputDataSample.isEnabled = isEnabled
 
+        if (state is StepQuizRunCodeView.State.ConsequentLoading) {
+            resolveOutputText(state.userCodeRun)
+        }
+
         if (state is StepQuizRunCodeView.State.UserCodeRunLoaded) {
             shiftSampleWeights()
-            when (state.userCodeRun.status) {
-                UserCodeRun.Status.SUCCESS ->
-                    setOutputText(state.userCodeRun.stdout)
-                UserCodeRun.Status.FAILURE ->
-                    setOutputText(state.userCodeRun.stderr)
-                else ->
-                    Unit
-            }
+            resolveOutputText(state.userCodeRun)
         }
     }
 
@@ -183,6 +180,17 @@ class CodeStepRunCodeDelegate(
             cancelableOnTouchOutside = true,
             withArrow = true
         )
+    }
+
+    private fun resolveOutputText(userCodeRun: UserCodeRun) {
+        when (userCodeRun.status) {
+            UserCodeRun.Status.SUCCESS ->
+                setOutputText(userCodeRun.stdout)
+            UserCodeRun.Status.FAILURE ->
+                setOutputText(userCodeRun.stderr)
+            else ->
+                Unit
+        }
     }
 
     private fun setOutputText(text: String?) {
