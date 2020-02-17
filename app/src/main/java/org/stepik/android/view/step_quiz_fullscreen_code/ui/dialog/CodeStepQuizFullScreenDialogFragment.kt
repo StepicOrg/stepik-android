@@ -246,6 +246,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                     .last()
                     .trim()
             )
+        } else {
+            runCodeInputSamplePicker.visibility = View.INVISIBLE
         }
 
         val popupWindow = ListPopupWindow(requireContext())
