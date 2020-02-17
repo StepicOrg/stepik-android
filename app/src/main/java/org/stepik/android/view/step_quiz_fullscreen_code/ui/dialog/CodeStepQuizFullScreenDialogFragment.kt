@@ -1,7 +1,6 @@
 package org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog
 
 import android.app.Dialog
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -273,7 +272,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
 
         runCodeInputSamplePicker.setOnClickListener { popupWindow.show() }
-        runCodeInputSamplePicker.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.violet1))
+        runCodeInputSamplePicker.supportCompoundDrawablesTintList =
+            ContextCompat.getColorStateList(requireContext(), R.color.color_step_quiz_code_samples)
 
         runCodeAction.setOnClickListener {
             codeRunPresenter.createUserCodeRun(

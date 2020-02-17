@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
-            <solid android:color="@color/color_violet_1_12" />
+            <solid android:color="@color/violet2" />
             <corners android:radius="@dimen/step_submit_button_radius" />
         </shape>
     </item>
@@ -10,11 +10,11 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/violet1" />
                     <corners android:radius="@dimen/step_submit_button_radius" />
+                    <solid android:color="@color/violet1" />
                 </shape>
             </item>
-            <item android:drawable="@drawable/bg_step_run_code_button_ripple" />
+            <item android:drawable="@drawable/bg_rounded_selectable_item" />
         </layer-list>
     </item>
 </selector>

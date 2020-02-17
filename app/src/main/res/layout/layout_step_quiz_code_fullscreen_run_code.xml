@@ -48,9 +48,8 @@
 
                 android:background="?selectableItemBackgroundBorderless"
                 android:text="@string/step_quiz_code_samples"
-                android:textColor="@color/violet1"
+                android:textColor="@color/color_step_quiz_code_samples"
                 android:drawablePadding="12dp"
-
                 android:textSize="16sp"
                 app:fontFamily="@font/roboto_regular"
                 app:drawableRightCompat="@drawable/ic_arrow_bottom"
