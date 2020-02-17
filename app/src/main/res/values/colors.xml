@@ -64,7 +64,6 @@
     <color name="dots_color">#F82401</color>
 
     <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
-    <color name="fast_continue_learning_opacity_pressed">#DA4A4A5B</color>
     <color name="home_streak_view_color">#1445b0ff</color>
     <color name="view_all_course_list_color">#CCCCD1</color>
     <color name="view_all_course_list_color_dark">#868694</color>
@@ -82,7 +81,7 @@
 
     <color name="login_error_color">@color/new_red_color</color>
 
-    <color name="remind_password_button_text_color">#4990e2</color>
+    <color name="remind_password_button_text_color">@color/blue03</color>
 
     <color name="start_gradient_placeholder">#8E8EB5</color>
     <color name="end_gradient_placeholder">#6969A0</color>
@@ -97,12 +96,12 @@
     <color name="end_gradient_fire">#F5DEDD</color>
     <color name="text_color_gradient_fire">#18073D</color>
 
-    <color name="loading_view_base_color">#F6F7F9</color>
+    <color name="loading_view_base_color">@color/grey05</color>
     <color name="loading_view_deep_color">#DBDBDB</color>
 
     <color name="code_toolbar_background">#EEEEEE</color>
     <color name="code_toolbar_autocomplete_prefix_background">@color/grey03</color>
-    <color name="default_code_error_highlight_color">#AAFF0000</color>
+    <color name="default_code_error_highlight_color">@color/red02</color>
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
     <color name="stepik_swipe_refresh">@color/new_accent_color</color>
 
