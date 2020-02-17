@@ -450,6 +450,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
         runCodeAction.isEnabled = isEnabled
         runCodeInputSamplePicker.isEnabled = isEnabled
+        runCodeInputDataSample.isEnabled = isEnabled
 
         if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
             when (state.userCodeRun.status) {
