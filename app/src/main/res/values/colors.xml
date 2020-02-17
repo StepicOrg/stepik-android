@@ -7,19 +7,16 @@
 
     <color name="transparent">@color/white_color_alpha_0</color>
     <color name="stepic_regular_text">@color/grey01</color>
-    <color name="stepic_weak_text">#A5A5A5</color>
+    <color name="stepic_weak_text">@color/grey02</color>
     <color name="black">@color/black1</color>
-    <color name="drawer_item_highlighting_pressed">#EDEDED</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
-    <color name="stepic_brand_primary_dark">#329932</color>
+    <color name="stepic_brand_primary_dark">@color/green03</color>
     <color name="silver">#e6e6e6</color>
     <color name="old_cover">#EEEEEE</color>
-    <color name="warning_light_yellow">#FFFAE9</color>
-    <color name="warning_comment_highlight_yellow">#FFF4B3</color>
 
-    <color name="default_color_of_link">#0077CC</color>
+    <color name="default_color_of_link">@color/blue02</color>
     <color name="windowBackground">#eeeeee</color>
     <color name="correct_answer_background">@color/green02</color>
     <color name="disabled_button_color">#D3D7D7</color>
@@ -31,16 +28,13 @@
     <color name="transparent_black_30">@color/black1_alpha_30</color>
 
     <color name="overscroll_color">#19A5A5A5</color>
-    <color name="material_grey">#ff757575</color>
-    <color name="snack_action_color">#EAA833</color>
-    <color name="launchTextColor">#757575</color>
+    <color name="snack_action_color">@color/violet1</color>
     <color name="black_alpha_40">@color/black1_alpha_40</color>
-    <color name="sorting_chooser">#EEEEEE</color>
-    <color name="background_time_thumbnail">#B20F1015</color>
-    <color name="text_color_time_thumbnail">#C8C8C9</color>
+    <color name="background_time_thumbnail">@color/black1_alpha_40</color>
+    <color name="text_color_time_thumbnail">@color/grey03</color>
     <color name="stepik_dark_web">@color/black2</color>
 
-    <color name="exo_edit_mode_background_color">#FFF4F3F0</color>
+    <color name="exo_edit_mode_background_color">@color/grey04</color>
 
     <color name="login_launch_registration_background">@color/white</color>
 
@@ -68,14 +62,6 @@
     <color name="new_cover">@color/white</color>
 
     <color name="dots_color">#F82401</color>
-
-    <color name="join_text_color">@color/green01</color>
-    <color name="continue_button_color">@color/new_accent_color_alpha_5</color>
-    <color name="continue_button_pressed_color">#E8E8E8</color>
-    <color name="continue_button_color_dark">@color/white_color_alpha_5</color>
-    <color name="continue_button_pressed_color_dark">#555766</color>
-    <color name="join_button_color">@color/green01_alpha_10</color>  <!-- Original was #1A66CC66. RGBA is similar to green01_alpha_10-->
-    <color name="join_button_pressed_color">@color/green01_alpha_40</color>
 
     <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
     <color name="fast_continue_learning_opacity_pressed">#DA4A4A5B</color>

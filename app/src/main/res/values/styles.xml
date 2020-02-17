@@ -121,7 +121,7 @@
         <item name="colorControlActivated">@color/new_accent_color</item>
         <item name="android:colorControlActivated" tools:targetApi="lollipop">@color/new_accent_color</item>
         <item name="alertDialogTheme">@style/StepikTheme.LoginDialog</item>
-        <item name="android:textColorHighlight">@color/drawer_item_highlighting_pressed</item>
+        <item name="android:textColorHighlight">@color/grey03</item>
     </style>
 
     <style name="StepikTheme.LoginDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
@@ -282,10 +282,6 @@
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>
-    </style>
-
-    <style name="TryAgainButton" parent="Base.Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">@color/launchTextColor</item>
     </style>
 
     <style name="CourseWidgetView" parent="android:Widget.Holo.Light.TextView">
