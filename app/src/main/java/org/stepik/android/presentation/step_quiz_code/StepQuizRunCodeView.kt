@@ -2,7 +2,7 @@ package org.stepik.android.presentation.step_quiz_code
 
 import org.stepik.android.model.code.UserCodeRun
 
-interface StepQuizRunCode {
+interface StepQuizRunCodeView {
     sealed class State {
         object Idle : State()
         object Loading : State()

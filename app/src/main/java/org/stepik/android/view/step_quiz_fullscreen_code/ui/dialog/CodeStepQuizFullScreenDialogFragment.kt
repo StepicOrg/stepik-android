@@ -45,7 +45,7 @@ import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
-import org.stepik.android.presentation.step_quiz_code.StepQuizRunCode
+import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
@@ -58,7 +58,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     ChangeCodeLanguageDialog.Callback,
     ProgrammingLanguageChooserDialogFragment.Callback,
     ResetCodeDialogFragment.Callback,
-    StepQuizRunCode {
+    StepQuizRunCodeView {
     companion object {
         const val TAG = "CodeStepQuizFullScreenDialogFragment"
 
@@ -461,16 +461,16 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         )
     }
 
-    override fun setState(state: StepQuizRunCode.State) {
+    override fun setState(state: StepQuizRunCodeView.State) {
         setStateVisibility(state)
-        val isEnabled = state is StepQuizRunCode.State.Idle ||
-                (state is StepQuizRunCode.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
+        val isEnabled = state is StepQuizRunCodeView.State.Idle ||
+                (state is StepQuizRunCodeView.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
 
         runCodeAction.isEnabled = isEnabled
         runCodeInputSamplePicker.isEnabled = isEnabled
         runCodeInputDataSample.isEnabled = isEnabled
 
-        if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
+        if (state is StepQuizRunCodeView.State.UserCodeRunLoaded) {
             when (state.userCodeRun.status) {
                 UserCodeRun.Status.SUCCESS ->
                     setOutputText(state.userCodeRun.stdout)
@@ -492,10 +492,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         )
     }
 
-    private fun setStateVisibility(state: StepQuizRunCode.State) {
-        runCodeFeedback.isVisible = state is StepQuizRunCode.State.Loading
+    private fun setStateVisibility(state: StepQuizRunCodeView.State) {
+        runCodeFeedback.isVisible = state is StepQuizRunCodeView.State.Loading
 
-        if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
+        if (state is StepQuizRunCodeView.State.UserCodeRunLoaded) {
             when (state.userCodeRun.status) {
                 UserCodeRun.Status.SUCCESS -> {
                     runCodeFeedback.isVisible = false

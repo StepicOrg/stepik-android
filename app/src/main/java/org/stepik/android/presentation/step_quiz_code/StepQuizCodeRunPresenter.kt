@@ -21,20 +21,20 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : PresenterBase<StepQuizRunCode>() {
-    private var state: StepQuizRunCode.State = StepQuizRunCode.State.Idle
+) : PresenterBase<StepQuizRunCodeView>() {
+    private var state: StepQuizRunCodeView.State = StepQuizRunCodeView.State.Idle
         set(value) {
             field = value
             view?.setState(value)
         }
 
-    override fun attachView(view: StepQuizRunCode) {
+    override fun attachView(view: StepQuizRunCodeView) {
         super.attachView(view)
         view.setState(state)
     }
 
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
-        state = StepQuizRunCode.State.Loading
+        state = StepQuizRunCodeView.State.Loading
         compositeDisposable += userCodeRunInteractor
             .createUserCodeRun(code, language, stdin, stepId)
             .observeOn(mainScheduler)
@@ -42,11 +42,11 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.RunCode.RUN_CODE_LAUNCHED, mapOf(AmplitudeAnalytic.RunCode.Params.STEP_ID to it.step))
-                    state = StepQuizRunCode.State.UserCodeRunLoaded(it)
+                    state = StepQuizRunCodeView.State.UserCodeRunLoaded(it)
                 },
                 onError = {
                     view?.showNetworkError()
-                    state = StepQuizRunCode.State.Idle
+                    state = StepQuizRunCodeView.State.Idle
                 }
             )
     }
