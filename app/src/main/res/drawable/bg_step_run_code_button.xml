@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_enabled="false">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/violet2" />
             <corners android:radius="@dimen/step_submit_button_radius" />
+            <solid android:color="@color/violet1" />
         </shape>
     </item>
-    <item android:state_enabled="true">
-        <layer-list>
-            <item>
-                <shape android:shape="rectangle">
-                    <corners android:radius="@dimen/step_submit_button_radius" />
-                    <solid android:color="@color/violet1" />
-                </shape>
-            </item>
-            <item android:drawable="@drawable/bg_rounded_selectable_item" />
-        </layer-list>
-    </item>
-</selector>
+    <item android:drawable="@drawable/bg_rounded_selectable_item" />
+</layer-list>

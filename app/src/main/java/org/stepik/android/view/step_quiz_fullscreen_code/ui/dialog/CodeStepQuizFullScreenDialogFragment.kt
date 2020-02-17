@@ -279,6 +279,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         runCodeInputSamplePicker.supportCompoundDrawablesTintList =
             ContextCompat.getColorStateList(requireContext(), R.color.color_step_quiz_code_samples)
 
+        runCodeAction.supportCompoundDrawablesTintList =
+            ContextCompat.getColorStateList(requireContext(), R.color.color_step_submit_button_text)
+
         runCodeAction.setOnClickListener {
             codeRunPresenter.createUserCodeRun(
                 code = codeLayout.text.toString(),
