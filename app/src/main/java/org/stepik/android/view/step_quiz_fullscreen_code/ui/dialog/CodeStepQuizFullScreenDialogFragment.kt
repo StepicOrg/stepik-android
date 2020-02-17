@@ -1,19 +1,15 @@
 package org.stepik.android.view.step_quiz_fullscreen_code.ui.dialog
 
 import android.app.Dialog
-import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
@@ -23,7 +19,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
@@ -40,25 +35,20 @@ import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
-import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
-import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
+import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepRunCodeDelegate
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import ru.nobird.android.view.base.ui.extension.argument
-import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     ChangeCodeLanguageDialog.Callback,
     ProgrammingLanguageChooserDialogFragment.Callback,
-    ResetCodeDialogFragment.Callback,
-    StepQuizRunCodeView {
+    ResetCodeDialogFragment.Callback {
     companion object {
         const val TAG = "CodeStepQuizFullScreenDialogFragment"
 
@@ -83,6 +73,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     private lateinit var codeLayoutDelegate: CodeLayoutDelegate
+    private lateinit var runCodeDelegate: CodeStepRunCodeDelegate
 
     private lateinit var instructionsLayout: View
     private lateinit var playgroundLayout: View
@@ -104,16 +95,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     /**
      * Run code views
      */
-    private lateinit var runCodeScrollView: ScrollView
-    private lateinit var runCodeInputSamplePicker: AppCompatTextView
-    private lateinit var runCodeInputDataSample: TextInputEditText
-    private lateinit var runCodeOutputDataSeparator: View
-    private lateinit var runCodeOutputDataTitle: AppCompatTextView
-    private lateinit var runCodeOutputDataSample: AppCompatTextView
     private lateinit var runCodeActionSeparator: View
-    private lateinit var runCodeFeedback: AppCompatTextView
     private lateinit var runCodeAction: AppCompatTextView
-    private lateinit var runCodeSpaceOutputDataFillSpace: View
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -199,19 +182,22 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         retryButton = playgroundLayout.stepQuizRetry
         codeLayout = playgroundLayout.codeStepLayout
 
+        runCodeDelegate = CodeStepRunCodeDelegate(
+            runCodeLayout = runCodeLayout,
+            codeRunPresenter = codeRunPresenter,
+            fullScreenCodeTabs = fullScreenCodeTabs,
+            codeLayout = codeLayout,
+            context = requireContext(),
+            stepWrapper = stepWrapper
+        )
+
+        runCodeDelegate.lang = lang
+
         /**
          *  Run code view binding
          */
-        runCodeScrollView = runCodeLayout.dataScrollView
-        runCodeInputSamplePicker = runCodeLayout.inputDataSamplePicker
-        runCodeInputDataSample = runCodeLayout.inputDataSample
-        runCodeOutputDataSeparator = runCodeLayout.outputSeparator
-        runCodeOutputDataTitle = runCodeLayout.outputDataTitle
-        runCodeOutputDataSample = runCodeLayout.outputDataSample
         runCodeActionSeparator = runCodeLayout.runCodeActionSeparator
-        runCodeFeedback = runCodeLayout.runCodeFeedback
         runCodeAction = runCodeLayout.runCodeAction
-        runCodeSpaceOutputDataFillSpace = runCodeLayout.outputDataFillSpace
 
         retryButton.isVisible = false
         setupCodeToolAdapter()
@@ -235,74 +221,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 ?.onSyncCodeStateWithParent(lang, codeLayout.text.toString(), onSubmitClicked = true)
             dismiss()
         }
-
-        val inputSamples = stepWrapper
-            .step
-            .block
-            ?.options
-            ?.samples
-            ?.mapIndexed { index, samples -> getString(R.string.step_quiz_code_spinner_item, index + 1, samples.first()) }
-            ?: emptyList()
-
-        if (inputSamples.isNotEmpty()) {
-            runCodeInputDataSample.setText(
-                inputSamples
-                    .first()
-                    .split(":")
-                    .last()
-                    .trim()
-            )
-        } else {
-            runCodeInputSamplePicker.visibility = View.INVISIBLE
-        }
-
-        val popupWindow = ListPopupWindow(requireContext())
-
-        popupWindow.setAdapter(
-            ArrayAdapter<String>(
-                requireContext(),
-                R.layout.run_code_spinner_item,
-                inputSamples
-            )
-        )
-
-        popupWindow.setOnItemClickListener { _, _, position, _ ->
-            val sampleInput = inputSamples[position]
-                .split(":")
-                .last()
-                .trim()
-            runCodeInputDataSample.setText(sampleInput)
-            popupWindow.dismiss()
-        }
-
-        popupWindow.anchorView = runCodeInputSamplePicker
-        popupWindow.width = resources.getDimensionPixelSize(R.dimen.step_quiz_full_screen_code_layout_drop_down_width)
-        popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
-
-        runCodeInputSamplePicker.setOnClickListener { popupWindow.show() }
-        runCodeInputSamplePicker.supportCompoundDrawablesTintList =
-            ContextCompat.getColorStateList(requireContext(), R.color.color_step_quiz_code_samples)
-
-        runCodeAction.supportCompoundDrawablesTintList =
-            ContextCompat.getColorStateList(requireContext(), R.color.color_step_submit_button_text)
-
-        runCodeAction.setOnClickListener {
-            codeRunPresenter.createUserCodeRun(
-                code = codeLayout.text.toString(),
-                language = lang,
-                stdin = runCodeInputDataSample.text.toString(),
-                stepId = stepWrapper.step.id
-            )
-        }
-
-        val evaluationDrawable = AnimationDrawable()
-        evaluationDrawable.addFrame(requireContext().getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
-        evaluationDrawable.addFrame(requireContext().getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
-        evaluationDrawable.addFrame(requireContext().getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
-        evaluationDrawable.isOneShot = false
-
-        runCodeFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
-        evaluationDrawable.start()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -365,7 +283,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
             }
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        codeRunPresenter.attachView(this)
+        codeRunPresenter.attachView(runCodeDelegate)
     }
 
     override fun onPause() {
@@ -375,7 +293,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     override fun onStop() {
-        codeRunPresenter.detachView(this)
+        codeRunPresenter.detachView(runCodeDelegate)
         super.onStop()
     }
 
@@ -390,6 +308,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
     override fun onLanguageChosen(programmingLanguage: String) {
         lang = programmingLanguage
+        runCodeDelegate.lang = lang
         codeLayoutDelegate.setLanguage(programmingLanguage)
         codeLayoutDelegate.setDetailsContentData(programmingLanguage)
     }
@@ -459,75 +378,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 }
             }
         )
-    }
-
-    override fun setState(state: StepQuizRunCodeView.State) {
-        setStateVisibility(state)
-        val isEnabled = state is StepQuizRunCodeView.State.Idle ||
-                (state is StepQuizRunCodeView.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
-
-        runCodeAction.isEnabled = isEnabled
-        runCodeInputSamplePicker.isEnabled = isEnabled
-        runCodeInputDataSample.isEnabled = isEnabled
-
-        if (state is StepQuizRunCodeView.State.UserCodeRunLoaded) {
-            when (state.userCodeRun.status) {
-                UserCodeRun.Status.SUCCESS ->
-                    setOutputText(state.userCodeRun.stdout)
-                UserCodeRun.Status.FAILURE ->
-                    setOutputText(state.userCodeRun.stderr)
-                else ->
-                    Unit
-            }
-        }
-    }
-
-    override fun showRunCodePopup() {
-        PopupHelper.showPopupAnchoredToView(
-            requireContext(),
-            fullScreenCodeTabs.getTabAt(RUN_CODE_TAB)?.customView,
-            getString(R.string.step_quiz_code_run_code_tooltip),
-            cancelableOnTouchOutside = true,
-            withArrow = true
-        )
-    }
-
-    private fun setStateVisibility(state: StepQuizRunCodeView.State) {
-        runCodeFeedback.isVisible = state is StepQuizRunCodeView.State.Loading
-
-        if (state is StepQuizRunCodeView.State.UserCodeRunLoaded) {
-            when (state.userCodeRun.status) {
-                UserCodeRun.Status.SUCCESS -> {
-                    runCodeFeedback.isVisible = false
-                    runCodeOutputDataSeparator.isVisible = true
-                    runCodeOutputDataTitle.isVisible = true
-                    runCodeOutputDataSample.isVisible = true
-                    runCodeSpaceOutputDataFillSpace.isVisible = true
-                }
-                UserCodeRun.Status.FAILURE -> {
-                    runCodeFeedback.isVisible = false
-                    runCodeOutputDataSeparator.isVisible = true
-                    runCodeOutputDataTitle.isVisible = true
-                    runCodeOutputDataSample.isVisible = true
-                    runCodeSpaceOutputDataFillSpace.isVisible = true
-                }
-                UserCodeRun.Status.EVALUATION -> {
-                    runCodeFeedback.isVisible = true
-                }
-            }
-        }
-    }
-
-    private fun setOutputText(text: String?) {
-        if (text.isNullOrEmpty()) {
-            runCodeOutputDataSample.text = getString(R.string.step_quiz_code_empty_output)
-        } else {
-            runCodeOutputDataSample.text = text
-        }
-    }
-
-    override fun showNetworkError() {
-        view?.snackbar(messageRes = R.string.connectionProblems)
     }
 
     /**
