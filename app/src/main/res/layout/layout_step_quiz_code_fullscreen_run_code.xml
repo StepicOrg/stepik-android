@@ -46,7 +46,7 @@
                 android:layout_marginRight="8dp"
                 android:padding="8dp"
 
-                android:background="?selectableItemBackgroundBorderless"
+                android:background="@drawable/selectable_item_rounded_background"
                 android:text="@string/step_quiz_code_samples"
                 android:textColor="@color/color_step_quiz_code_samples"
                 android:drawablePadding="12dp"
@@ -64,7 +64,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:paddingBottom="16dp"
                 android:hint="@string/step_quiz_code_input_data_hint"
 
                 android:textSize="14sp"
@@ -101,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:paddingTop="8dp"
+                android:paddingTop="16dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="8dp"
@@ -148,7 +148,7 @@
                 android:layout_height="0dp"
                 android:background="#f3f4f6"
                 android:visibility="gone"
-                android:paddingBottom="8dp"
+                android:paddingBottom="16dp"
                 app:layout_constraintTop_toBottomOf="@id/outputDataSample"
                 app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
