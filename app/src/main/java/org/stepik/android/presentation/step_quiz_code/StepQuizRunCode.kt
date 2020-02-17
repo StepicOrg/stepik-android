@@ -11,4 +11,5 @@ interface StepQuizRunCode {
 
     fun setState(state: State)
     fun showNetworkError()
+    fun showRunCodePopup()
 }

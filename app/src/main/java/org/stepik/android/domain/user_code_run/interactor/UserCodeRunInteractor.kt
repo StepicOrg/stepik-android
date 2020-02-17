@@ -2,6 +2,7 @@ package org.stepik.android.domain.user_code_run.interactor
 
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.user_code_run.repository.UserCodeRunRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.code.UserCodeRun
@@ -11,6 +12,7 @@ import javax.inject.Inject
 class UserCodeRunInteractor
 @Inject
 constructor(
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val userProfileRepository: UserProfileRepository,
     private val userCodeRunRepository: UserCodeRunRepository
 ) {
@@ -37,4 +39,12 @@ constructor(
                     }
                     .firstOrError()
             }
+
+    fun isRunCodePopupShown(): Single<Boolean> =
+        Single.fromCallable {
+            val isRunCodePopupShown = sharedPreferenceHelper.isRunCodePopupShown
+            sharedPreferenceHelper.afterRunCodePopupShown()
+
+            isRunCodePopupShown
+        }
 }

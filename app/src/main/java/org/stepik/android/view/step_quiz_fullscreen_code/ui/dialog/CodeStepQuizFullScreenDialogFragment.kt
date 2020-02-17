@@ -40,6 +40,7 @@ import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
+import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.model.code.UserCodeRun
@@ -400,6 +401,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             coordinator,
             onKeyboardHidden = {
                 if (keyboardShown) {
+                    if (fullScreenCodeViewPager.currentItem == CODE_TAB) {
+                        codeRunPresenter.resolveRunCodePopup()
+                    }
                     stepQuizCodeKeyboardExtension.visibility = View.GONE
                     codeLayout.isNestedScrollingEnabled = true
                     codeLayout.layoutParams =
@@ -455,6 +459,16 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                     Unit
             }
         }
+    }
+
+    override fun showRunCodePopup() {
+        PopupHelper.showPopupAnchoredToView(
+            requireContext(),
+            fullScreenCodeTabs.getTabAt(RUN_CODE_TAB)?.customView,
+            getString(R.string.step_quiz_code_run_code_tooltip),
+            cancelableOnTouchOutside = true,
+            withArrow = true
+        )
     }
 
     private fun setStateVisibility(state: StepQuizRunCode.State) {

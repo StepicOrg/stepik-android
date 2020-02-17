@@ -5,6 +5,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.user_code_run.interactor.UserCodeRunInteractor
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
@@ -43,6 +44,21 @@ constructor(
                     view?.showNetworkError()
                     state = StepQuizRunCode.State.Idle
                 }
+            )
+    }
+
+    fun resolveRunCodePopup() {
+        compositeDisposable += userCodeRunInteractor
+            .isRunCodePopupShown()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { isRunCodePopupShown ->
+                    if (!isRunCodePopupShown) {
+                        view?.showRunCodePopup()
+                    }
+                },
+                onError = emptyOnErrorStub
             )
     }
 }

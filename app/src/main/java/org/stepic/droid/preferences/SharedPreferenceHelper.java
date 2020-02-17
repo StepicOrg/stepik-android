@@ -99,6 +99,7 @@ public class SharedPreferenceHelper {
     private final String RATE_TIMES_SHOWN = "rate_times_shown";
     private final String RATE_WAS_HANDLED = "rate_was_handled";
     private final String STEP_CONTENT_FONT_SIZE = "step_content_font_size";
+    private final String IS_RUN_CODE_POPUP_SHOWN = "is_run_code_popup_shown";
 
     private final static String LAST_SESSION_TIMESTAMP = "last_session_timestamp";
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
@@ -817,6 +818,14 @@ public class SharedPreferenceHelper {
     public FontSize getStepContentFontSize() {
         int ordinal = getInt(PreferenceType.STEP_CONTENT, STEP_CONTENT_FONT_SIZE, 1);
         return FontSize.values()[ordinal];
+    }
+
+    public boolean isRunCodePopupShown() {
+        return getBoolean(PreferenceType.DEVICE_SPECIFIC, IS_RUN_CODE_POPUP_SHOWN);
+    }
+
+    public void afterRunCodePopupShown() {
+        put(PreferenceType.DEVICE_SPECIFIC, IS_RUN_CODE_POPUP_SHOWN, true);
     }
 
     private void put(PreferenceType type, String key, String value) {
