@@ -29,14 +29,6 @@ constructor(
         view.setState(state)
     }
 
-    fun setDataToPresenter(hasSamples: Boolean) {
-        state = if (hasSamples) {
-            StepQuizRunCode.State.Idle
-        } else {
-            StepQuizRunCode.State.Empty
-        }
-    }
-
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
         state = StepQuizRunCode.State.Loading
         compositeDisposable += userCodeRunInteractor

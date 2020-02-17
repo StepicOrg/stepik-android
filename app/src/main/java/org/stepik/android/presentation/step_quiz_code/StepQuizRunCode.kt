@@ -6,7 +6,6 @@ interface StepQuizRunCode {
     sealed class State {
         object Idle : State()
         object Loading : State()
-        object Empty : State()
         data class UserCodeRunLoaded(val userCodeRun: UserCodeRun) : State()
     }
 

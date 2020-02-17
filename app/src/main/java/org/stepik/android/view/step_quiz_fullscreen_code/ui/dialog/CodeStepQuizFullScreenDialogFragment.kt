@@ -23,8 +23,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
-import kotlinx.android.synthetic.main.empty_input_samples.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
@@ -50,6 +50,7 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDel
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
@@ -96,15 +97,15 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     /**
      * Run code views
      */
-    private lateinit var runCodeEmptyInput: View
     private lateinit var runCodeScrollView: ScrollView
     private lateinit var runCodeInputSamplePicker: AppCompatTextView
-    private lateinit var runCodeInputDataSample: AppCompatTextView
+    private lateinit var runCodeInputDataSample: TextInputEditText
     private lateinit var runCodeOutputDataTitle: AppCompatTextView
     private lateinit var runCodeOutputDataSample: AppCompatTextView
     private lateinit var runCodeActionSeparator: View
     private lateinit var runCodeFeedback: AppCompatTextView
     private lateinit var runCodeAction: AppCompatTextView
+    private lateinit var runCodeSpaceOutputDataFillSpace: View
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -193,7 +194,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         /**
          *  Run code view binding
          */
-        runCodeEmptyInput = runCodeLayout.empty_input_samples
         runCodeScrollView = runCodeLayout.dataScrollView
         runCodeInputSamplePicker = runCodeLayout.inputDataSamplePicker
         runCodeInputDataSample = runCodeLayout.inputDataSample
@@ -202,6 +202,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         runCodeActionSeparator = runCodeLayout.runCodeActionSeparator
         runCodeFeedback = runCodeLayout.runCodeFeedback
         runCodeAction = runCodeLayout.runCodeAction
+        runCodeSpaceOutputDataFillSpace = runCodeLayout.outputDataFillSpace
 
         retryButton.isVisible = false
         setupCodeToolAdapter()
@@ -234,6 +235,16 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.mapIndexed { index, samples -> getString(R.string.step_quiz_code_spinner_item, index + 1, samples.first()) }
             ?: emptyList()
 
+        if (inputSamples.isNotEmpty()) {
+            runCodeInputDataSample.setText(
+                inputSamples
+                    .first()
+                    .split(":")
+                    .last()
+                    .trim()
+            )
+        }
+
         val popupWindow = ListPopupWindow(requireContext())
 
         popupWindow.setAdapter(
@@ -245,10 +256,11 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         )
 
         popupWindow.setOnItemClickListener { _, _, position, _ ->
-            runCodeInputDataSample.text = inputSamples[position]
+            val sampleInput = inputSamples[position]
                 .split(":")
                 .last()
                 .trim()
+            runCodeInputDataSample.setText(sampleInput)
             popupWindow.dismiss()
         }
 
@@ -267,7 +279,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 stepId = stepWrapper.step.id
             )
         }
-        codeRunPresenter.setDataToPresenter(hasSamples = inputSamples.isNotEmpty())
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -387,21 +398,35 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         setOnKeyboardOpenListener(
             coordinator,
             onKeyboardHidden = {
+                if (fullScreenCodeViewPager.currentItem == 2) {
+                    return@setOnKeyboardOpenListener
+                }
                 if (keyboardShown) {
-                    stepQuizCodeKeyboardExtension.visibility = View.GONE
-                    codeLayout.isNestedScrollingEnabled = true
-                    codeLayout.layoutParams =
-                        (codeLayout.layoutParams as RelativeLayout.LayoutParams)
-                            .apply {
-                                bottomMargin = 0
-                            }
-                    codeLayout.setPadding(0, 0, 0, requireContext().resources.getDimensionPixelSize(
-                        R.dimen.step_quiz_fullscreen_code_layout_bottom_padding))
-                    setViewsVisibility(needShow = true)
+                            stepQuizCodeKeyboardExtension.visibility = View.GONE
+                            codeLayout.isNestedScrollingEnabled = true
+                            codeLayout.layoutParams =
+                                (codeLayout.layoutParams as RelativeLayout.LayoutParams)
+                                    .apply {
+                                        bottomMargin = 0
+                                    }
+                            codeLayout.setPadding(
+                                0, 0, 0, requireContext().resources.getDimensionPixelSize(
+                                    R.dimen.step_quiz_fullscreen_code_layout_bottom_padding
+                                )
+                            )
+                            setViewsVisibility(needShow = true)
                     keyboardShown = false
                 }
             },
             onKeyboardShown = {
+                if (fullScreenCodeViewPager.currentItem == 2) {
+                    return@setOnKeyboardOpenListener
+                }
+
+                Timber.d("Codelayout hast focus2: ${codeLayout.hasFocus()}")
+//                if (!codeLayout.hasFocus()) {
+//                    return@setOnKeyboardOpenListener
+//                }
                 if (!keyboardShown) {
                     stepQuizCodeKeyboardExtension.visibility = View.VISIBLE
                     codeLayout.isNestedScrollingEnabled = false
@@ -439,13 +464,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     private fun setStateVisibility(state: StepQuizRunCode.State) {
-        if (state is StepQuizRunCode.State.Empty) {
-            runCodeEmptyInput.isVisible = true
-            runCodeScrollView.isVisible = false
-            runCodeActionSeparator.isVisible = false
-            runCodeAction.isVisible = false
-        }
-
         runCodeFeedback.isVisible = state is StepQuizRunCode.State.Loading
 
         if (state is StepQuizRunCode.State.UserCodeRunLoaded) {
@@ -454,11 +472,13 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                     runCodeFeedback.isVisible = false
                     runCodeOutputDataTitle.isVisible = true
                     runCodeOutputDataSample.isVisible = true
+                    runCodeSpaceOutputDataFillSpace.isVisible = true
                 }
                 UserCodeRun.Status.FAILURE -> {
                     runCodeFeedback.isVisible = false
                     runCodeOutputDataTitle.isVisible = true
                     runCodeOutputDataSample.isVisible = true
+                    runCodeSpaceOutputDataFillSpace.isVisible = true
                 }
                 UserCodeRun.Status.EVALUATION -> {
                     runCodeFeedback.isVisible = true
@@ -488,6 +508,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         centeredToolbar.isVisible = needShow
         fullScreenCodeTabs.isVisible = needShow
         fullScreenCodeSeparator.isVisible = needShow
+
+        runCodeActionSeparator.isVisible = needShow
+        runCodeAction.isVisible = needShow
     }
 
     private fun onChangeLanguageClicked() {
