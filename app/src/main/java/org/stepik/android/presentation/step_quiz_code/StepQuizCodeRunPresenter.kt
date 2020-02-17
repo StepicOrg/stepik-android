@@ -54,7 +54,12 @@ constructor(
                 },
                 onError = {
                     view?.showNetworkError()
-                    state = StepQuizRunCodeView.State.Idle
+                    state = if (state is StepQuizRunCodeView.State.ConsequentLoading) {
+                        val userCodeRun = (state as StepQuizRunCodeView.State.ConsequentLoading).userCodeRun
+                        StepQuizRunCodeView.State.UserCodeRunLoaded(userCodeRun)
+                    } else {
+                        StepQuizRunCodeView.State.Idle
+                    }
                 }
             )
     }
