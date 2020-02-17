@@ -244,4 +244,7 @@
     <color name="submission_time">#999999</color>
     <color name="submission_correct">#D064CC64</color>
     <color name="submission_incorrect">#D0FF7965</color>
+
+    <!-- Run code -->
+    <color name="run_code_output_background">#f3f4f6</color>
 </resources>
