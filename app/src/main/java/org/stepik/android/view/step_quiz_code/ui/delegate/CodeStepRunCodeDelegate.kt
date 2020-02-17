@@ -53,18 +53,15 @@ class CodeStepRunCodeDelegate(
     init {
         viewStateDelegate.addState<StepQuizRunCodeView.State.Idle>(
             runCodeInputDataTitle,
-            runCodeInputSamplePicker,
             runCodeInputDataSample
         )
         viewStateDelegate.addState<StepQuizRunCodeView.State.Loading>(
             runCodeInputDataTitle,
-            runCodeInputSamplePicker,
             runCodeInputDataSample,
             runCodeFeedback
         )
         viewStateDelegate.addState<StepQuizRunCodeView.State.ConsequentLoading>(
             runCodeInputDataTitle,
-            runCodeInputSamplePicker,
             runCodeInputDataSample,
             runCodeFeedback,
             runCodeOutputDataSeparator,
@@ -73,7 +70,6 @@ class CodeStepRunCodeDelegate(
         )
         viewStateDelegate.addState<StepQuizRunCodeView.State.UserCodeRunLoaded>(
             runCodeInputDataTitle,
-            runCodeInputSamplePicker,
             runCodeInputDataSample,
             runCodeOutputDataSeparator,
             runCodeOutputDataTitle,
@@ -97,7 +93,7 @@ class CodeStepRunCodeDelegate(
                     .trim()
             )
         } else {
-            runCodeInputSamplePicker.visibility = View.INVISIBLE
+            runCodeInputSamplePicker.visibility = View.GONE
         }
 
         val popupWindow = ListPopupWindow(context)
