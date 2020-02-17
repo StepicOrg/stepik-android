@@ -84,6 +84,17 @@
 
                 tools:text="77 1010\ndfdsfdsfdsfds\ndsfsdfdsfs" />
 
+            <View
+                android:id="@+id/outputSeparator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/step_quiz_separator"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="@id/outputDataTitle"
+                app:layout_constraintBottom_toTopOf="@id/outputDataTitle"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"/>
+
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/outputDataTitle"

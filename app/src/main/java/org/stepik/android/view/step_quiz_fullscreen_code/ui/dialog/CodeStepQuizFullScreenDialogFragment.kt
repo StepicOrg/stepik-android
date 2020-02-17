@@ -103,6 +103,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     private lateinit var runCodeScrollView: ScrollView
     private lateinit var runCodeInputSamplePicker: AppCompatTextView
     private lateinit var runCodeInputDataSample: TextInputEditText
+    private lateinit var runCodeOutputDataSeparator: View
     private lateinit var runCodeOutputDataTitle: AppCompatTextView
     private lateinit var runCodeOutputDataSample: AppCompatTextView
     private lateinit var runCodeActionSeparator: View
@@ -200,6 +201,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         runCodeScrollView = runCodeLayout.dataScrollView
         runCodeInputSamplePicker = runCodeLayout.inputDataSamplePicker
         runCodeInputDataSample = runCodeLayout.inputDataSample
+        runCodeOutputDataSeparator = runCodeLayout.outputSeparator
         runCodeOutputDataTitle = runCodeLayout.outputDataTitle
         runCodeOutputDataSample = runCodeLayout.outputDataSample
         runCodeActionSeparator = runCodeLayout.runCodeActionSeparator
@@ -481,12 +483,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             when (state.userCodeRun.status) {
                 UserCodeRun.Status.SUCCESS -> {
                     runCodeFeedback.isVisible = false
+                    runCodeOutputDataSeparator.isVisible = true
                     runCodeOutputDataTitle.isVisible = true
                     runCodeOutputDataSample.isVisible = true
                     runCodeSpaceOutputDataFillSpace.isVisible = true
                 }
                 UserCodeRun.Status.FAILURE -> {
                     runCodeFeedback.isVisible = false
+                    runCodeOutputDataSeparator.isVisible = true
                     runCodeOutputDataTitle.isVisible = true
                     runCodeOutputDataSample.isVisible = true
                     runCodeSpaceOutputDataFillSpace.isVisible = true
