@@ -34,7 +34,14 @@ constructor(
     }
 
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
-        state = StepQuizRunCodeView.State.Loading
+        if (!(state == StepQuizRunCodeView.State.Idle || state is StepQuizRunCodeView.State.UserCodeRunLoaded)) {
+            return
+        }
+        state = if (state == StepQuizRunCodeView.State.Idle) {
+            StepQuizRunCodeView.State.Loading
+        } else {
+            StepQuizRunCodeView.State.ConsequentLoading
+        }
         compositeDisposable += userCodeRunInteractor
             .createUserCodeRun(code, language, stdin, stepId)
             .observeOn(mainScheduler)

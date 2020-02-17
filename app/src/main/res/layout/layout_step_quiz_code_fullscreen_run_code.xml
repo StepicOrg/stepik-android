@@ -15,6 +15,7 @@
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dataContainer"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -112,7 +113,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/color_body1"
 
-                android:visibility="gone"
+                android:visibility="visible"
 
                 app:layout_constraintTop_toBottomOf="@id/inputDataSample"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -131,7 +132,7 @@
                 android:textColor="@color/new_accent_color"
                 app:fontFamily="@font/pt_mono"
 
-                android:visibility="gone"
+                android:visibility="visible"
 
                 app:layout_constraintVertical_bias="0"
 
@@ -147,7 +148,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@color/run_code_output_background"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:paddingBottom="16dp"
                 app:layout_constraintTop_toBottomOf="@id/outputDataSample"
                 app:layout_constraintBottom_toBottomOf="parent"/>

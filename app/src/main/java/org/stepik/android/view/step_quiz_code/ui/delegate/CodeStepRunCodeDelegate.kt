@@ -7,7 +7,6 @@ import android.view.WindowManager
 import android.widget.ArrayAdapter
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
 import org.stepic.droid.R
@@ -17,6 +16,7 @@ import org.stepic.droid.ui.util.PopupHelper
 import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.snackbar
 
@@ -35,6 +35,7 @@ class CodeStepRunCodeDelegate(
     }
 
     private val runCodeScrollView = runCodeLayout.dataScrollView
+    private val runCodeInputDataTitle = runCodeLayout.inputDataTitle
     private val runCodeInputSamplePicker = runCodeLayout.inputDataSamplePicker
     private val runCodeInputDataSample = runCodeLayout.inputDataSample
     private val runCodeOutputDataSeparator = runCodeLayout.outputSeparator
@@ -46,7 +47,40 @@ class CodeStepRunCodeDelegate(
 
     var lang: String  = ""
 
+    private var viewStateDelegate: ViewStateDelegate<StepQuizRunCodeView.State> = ViewStateDelegate()
+
     init {
+        viewStateDelegate.addState<StepQuizRunCodeView.State.Idle>(
+            runCodeInputDataTitle,
+            runCodeInputSamplePicker,
+            runCodeInputDataSample
+        )
+        viewStateDelegate.addState<StepQuizRunCodeView.State.Loading>(
+            runCodeInputDataTitle,
+            runCodeInputSamplePicker,
+            runCodeInputDataSample,
+            runCodeFeedback
+        )
+        viewStateDelegate.addState<StepQuizRunCodeView.State.ConsequentLoading>(
+            runCodeInputDataTitle,
+            runCodeInputSamplePicker,
+            runCodeInputDataSample,
+            runCodeFeedback,
+            runCodeOutputDataSeparator,
+            runCodeOutputDataTitle,
+            runCodeOutputDataSample,
+            runCodeSpaceOutputDataFillSpace
+        )
+        viewStateDelegate.addState<StepQuizRunCodeView.State.UserCodeRunLoaded>(
+            runCodeInputDataTitle,
+            runCodeInputSamplePicker,
+            runCodeInputDataSample,
+            runCodeOutputDataSeparator,
+            runCodeOutputDataTitle,
+            runCodeOutputDataSample,
+            runCodeSpaceOutputDataFillSpace
+        )
+
         val inputSamples = stepWrapper
             .step
             .block
@@ -117,7 +151,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun setState(state: StepQuizRunCodeView.State) {
-        setStateVisibility(state)
+        viewStateDelegate.switchState(state)
         val isEnabled = state is StepQuizRunCodeView.State.Idle ||
                 (state is StepQuizRunCodeView.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
 
@@ -156,32 +190,6 @@ class CodeStepRunCodeDelegate(
             runCodeOutputDataSample.text = context.getString(R.string.step_quiz_code_empty_output)
         } else {
             runCodeOutputDataSample.text = text
-        }
-    }
-
-    private fun setStateVisibility(state: StepQuizRunCodeView.State) {
-        runCodeFeedback.isVisible = state is StepQuizRunCodeView.State.Loading
-
-        if (state is StepQuizRunCodeView.State.UserCodeRunLoaded) {
-            when (state.userCodeRun.status) {
-                UserCodeRun.Status.SUCCESS -> {
-                    runCodeFeedback.isVisible = false
-                    runCodeOutputDataSeparator.isVisible = true
-                    runCodeOutputDataTitle.isVisible = true
-                    runCodeOutputDataSample.isVisible = true
-                    runCodeSpaceOutputDataFillSpace.isVisible = true
-                }
-                UserCodeRun.Status.FAILURE -> {
-                    runCodeFeedback.isVisible = false
-                    runCodeOutputDataSeparator.isVisible = true
-                    runCodeOutputDataTitle.isVisible = true
-                    runCodeOutputDataSample.isVisible = true
-                    runCodeSpaceOutputDataFillSpace.isVisible = true
-                }
-                UserCodeRun.Status.EVALUATION -> {
-                    runCodeFeedback.isVisible = true
-                }
-            }
         }
     }
 }
