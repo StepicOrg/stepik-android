@@ -50,7 +50,6 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDel
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
@@ -63,6 +62,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
         private const val ARG_LANG = "LANG"
         private const val ARG_CODE = "CODE"
+
+        private const val INSTRUCTION_TAB = 0
+        private const val CODE_TAB = 1
+        private const val RUN_CODE_TAB = 2
 
         fun newInstance(lang: String, code: String, codeTemplates: Map<String, String>, stepPersistentWrapper: StepPersistentWrapper, lessonTitle: String): DialogFragment =
             CodeStepQuizFullScreenDialogFragment()
@@ -219,7 +222,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
         codeLayoutDelegate.setLanguage(lang, code)
         codeLayoutDelegate.setDetailsContentData(lang)
-        fullScreenCodeViewPager.setCurrentItem(1, false)
+        fullScreenCodeViewPager.setCurrentItem(CODE_TAB, false)
 
         codeSubmitButton.setOnClickListener {
             (parentFragment as? Callback)
@@ -302,9 +305,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             override fun onPageScrollStateChanged(p0: Int) {}
             override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
             override fun onPageSelected(p0: Int) {
-                if (p0 == 0) {
-                    playgroundLayout.hideKeyboard()
-                }
+                view?.hideKeyboard()
             }
         })
         fullScreenCodeTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -398,37 +399,30 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         setOnKeyboardOpenListener(
             coordinator,
             onKeyboardHidden = {
-                if (fullScreenCodeViewPager.currentItem == 2) {
-                    return@setOnKeyboardOpenListener
-                }
                 if (keyboardShown) {
-                            stepQuizCodeKeyboardExtension.visibility = View.GONE
-                            codeLayout.isNestedScrollingEnabled = true
-                            codeLayout.layoutParams =
-                                (codeLayout.layoutParams as RelativeLayout.LayoutParams)
-                                    .apply {
-                                        bottomMargin = 0
-                                    }
-                            codeLayout.setPadding(
-                                0, 0, 0, requireContext().resources.getDimensionPixelSize(
-                                    R.dimen.step_quiz_fullscreen_code_layout_bottom_padding
-                                )
-                            )
-                            setViewsVisibility(needShow = true)
+                    stepQuizCodeKeyboardExtension.visibility = View.GONE
+                    codeLayout.isNestedScrollingEnabled = true
+                    codeLayout.layoutParams =
+                        (codeLayout.layoutParams as RelativeLayout.LayoutParams)
+                            .apply {
+                                bottomMargin = 0
+                            }
+                    codeLayout.setPadding(
+                        0,
+                        0,
+                        0,
+                        requireContext().resources.getDimensionPixelSize(R.dimen.step_quiz_fullscreen_code_layout_bottom_padding)
+                    )
+                    setViewsVisibility(needShow = true)
                     keyboardShown = false
                 }
             },
             onKeyboardShown = {
-                if (fullScreenCodeViewPager.currentItem == 2) {
-                    return@setOnKeyboardOpenListener
-                }
-
-                Timber.d("Codelayout hast focus2: ${codeLayout.hasFocus()}")
-//                if (!codeLayout.hasFocus()) {
-//                    return@setOnKeyboardOpenListener
-//                }
                 if (!keyboardShown) {
-                    stepQuizCodeKeyboardExtension.visibility = View.VISIBLE
+                    // We show the keyboard extension only when "Code" tab is opened
+                    if (fullScreenCodeViewPager.currentItem == CODE_TAB) {
+                        stepQuizCodeKeyboardExtension.visibility = View.VISIBLE
+                    }
                     codeLayout.isNestedScrollingEnabled = false
                     codeLayout.layoutParams =
                         (codeLayout.layoutParams as RelativeLayout.LayoutParams)
@@ -508,7 +502,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         centeredToolbar.isVisible = needShow
         fullScreenCodeTabs.isVisible = needShow
         fullScreenCodeSeparator.isVisible = needShow
-
         runCodeActionSeparator.isVisible = needShow
         runCodeAction.isVisible = needShow
     }
