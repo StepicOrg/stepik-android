@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
 import com.google.android.material.tabs.TabLayout
@@ -43,7 +44,7 @@ class CodeStepRunCodeDelegate(
     private val runCodeOutputDataSample = runCodeLayout.outputDataSample
     private val runCodeFeedback = runCodeLayout.runCodeFeedback
     private val runCodeAction = runCodeLayout.runCodeAction
-    private val runCodeSpaceOutputDataFillSpace = runCodeLayout.outputDataFillSpace
+//    private val runCodeSpaceOutputDataFillSpace = runCodeLayout.outputDataFillSpace
 
     var lang: String  = ""
 
@@ -68,8 +69,7 @@ class CodeStepRunCodeDelegate(
             runCodeFeedback,
             runCodeOutputDataSeparator,
             runCodeOutputDataTitle,
-            runCodeOutputDataSample,
-            runCodeSpaceOutputDataFillSpace
+            runCodeOutputDataSample
         )
         viewStateDelegate.addState<StepQuizRunCodeView.State.UserCodeRunLoaded>(
             runCodeInputDataTitle,
@@ -77,8 +77,7 @@ class CodeStepRunCodeDelegate(
             runCodeInputDataSample,
             runCodeOutputDataSeparator,
             runCodeOutputDataTitle,
-            runCodeOutputDataSample,
-            runCodeSpaceOutputDataFillSpace
+            runCodeOutputDataSample
         )
 
         val inputSamples = stepWrapper
@@ -160,6 +159,7 @@ class CodeStepRunCodeDelegate(
         runCodeInputDataSample.isEnabled = isEnabled
 
         if (state is StepQuizRunCodeView.State.UserCodeRunLoaded) {
+            shiftSampleWeights()
             when (state.userCodeRun.status) {
                 UserCodeRun.Status.SUCCESS ->
                     setOutputText(state.userCodeRun.stdout)
@@ -191,5 +191,19 @@ class CodeStepRunCodeDelegate(
         } else {
             runCodeOutputDataSample.text = text
         }
+    }
+
+    private fun shiftSampleWeights() {
+        val inputDataSampleParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT)
+        inputDataSampleParams.weight = 0f
+        runCodeInputDataSample.layoutParams = inputDataSampleParams
+
+        val outputDataSampleParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            0)
+        outputDataSampleParams.weight = 1f
+        runCodeOutputDataSample.layoutParams = outputDataSampleParams
     }
 }

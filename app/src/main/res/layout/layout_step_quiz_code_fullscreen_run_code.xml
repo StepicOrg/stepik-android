@@ -14,54 +14,59 @@
         android:layout_above="@id/runCodeActionSeparator"
         android:fillViewport="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/dataContainer"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/inputDataTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/inputDataTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
 
-                android:text="@string/step_quiz_code_input_data"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/color_body1"
+                    android:text="@string/step_quiz_code_input_data"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_body1"
 
-                app:fontFamily="@font/roboto_medium"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                    app:fontFamily="@font/roboto_medium"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/inputDataSamplePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:padding="8dp"
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/inputDataSamplePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:padding="8dp"
 
-                android:background="@drawable/selectable_item_rounded_background"
-                android:text="@string/step_quiz_code_samples"
-                android:textColor="@color/color_step_quiz_code_samples"
-                android:drawablePadding="12dp"
-                android:textSize="16sp"
-                app:fontFamily="@font/roboto_regular"
-                app:drawableRightCompat="@drawable/ic_arrow_bottom"
-                app:drawableEndCompat="@drawable/ic_arrow_bottom"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintRight_toRightOf="parent"/>
+                    android:background="@drawable/selectable_item_rounded_background"
+                    android:text="@string/step_quiz_code_samples"
+                    android:textColor="@color/color_step_quiz_code_samples"
+                    android:drawablePadding="12dp"
+                    android:textSize="16sp"
+                    android:layout_gravity="end"
+                    app:fontFamily="@font/roboto_regular"
+                    app:drawableRightCompat="@drawable/ic_arrow_bottom"
+                    app:drawableEndCompat="@drawable/ic_arrow_bottom"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"/>
+            </FrameLayout>
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputDataSample"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingTop="8dp"
@@ -75,6 +80,8 @@
                 android:inputType="textMultiLine"
                 android:imeOptions="flagNoFullscreen"
                 android:background="@android:color/transparent"
+
+                android:layout_weight="1"
 
                 app:layout_constraintTop_toBottomOf="@id/inputDataSamplePicker"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -125,6 +132,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
+                android:paddingBottom="16dp"
 
                 android:background="@color/run_code_output_background"
 
@@ -133,26 +141,8 @@
                 app:fontFamily="@font/pt_mono"
 
                 android:visibility="visible"
-
-                app:layout_constraintVertical_bias="0"
-
-                app:layout_constraintTop_toBottomOf="@id/outputDataTitle"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/outputDataFillSpace"
-
                 tools:text="77 1010" />
-
-            <View
-                android:id="@+id/outputDataFillSpace"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@color/run_code_output_background"
-                android:visibility="visible"
-                android:paddingBottom="16dp"
-                app:layout_constraintTop_toBottomOf="@id/outputDataSample"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
     </ScrollView>
 
     <View
