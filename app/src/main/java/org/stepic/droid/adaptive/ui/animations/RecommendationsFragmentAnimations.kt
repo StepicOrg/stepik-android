@@ -28,7 +28,7 @@ constructor(
 
     private val confettiColors: IntArray = intArrayOf(
             Color.BLACK,
-            ContextCompat.getColor(context, R.color.pressed_white),
+            ContextCompat.getColor(context, R.color.black1_alpha_19),
             ContextCompat.getColor(context, R.color.adaptive_color_correct)
     )
 

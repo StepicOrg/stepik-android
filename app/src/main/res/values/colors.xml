@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <color name="pressed_white">#e6e6e6</color>
-
     <color name="grey_act_background">#E2E3E5</color>
 
     <color name="transparent">@color/white_color_alpha_0</color>
@@ -149,6 +147,7 @@
     <color name="yellow1">#FFA961</color>
 
     <color name="black1">#000000</color>
+    <color name="black1_alpha_19">#30000000</color> <!-- Ripple color -->
     <color name="black1_alpha_27">#44000000</color>
     <color name="black1_alpha_30">#4D000000</color>
     <color name="black1_alpha_40">#66000000</color>

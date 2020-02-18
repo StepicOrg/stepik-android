@@ -61,7 +61,7 @@ class AdaptiveLevelDialog : DialogFragment() {
                 .observeOn(mainScheduler).subscribe {
             CommonConfetti.rainingConfetti(expLevelDialogConfetti, intArrayOf(
                     Color.BLACK,
-                    ContextCompat.getColor(context, R.color.pressed_white),
+                    ContextCompat.getColor(context, R.color.black1_alpha_19),
                     ContextCompat.getColor(context, R.color.adaptive_color_correct)
             )).infinite().setVelocityY(100f, 30f).setVelocityX(0f, 60f).setEmissionRate(15f)
         }
