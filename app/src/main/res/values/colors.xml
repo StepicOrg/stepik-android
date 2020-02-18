@@ -60,13 +60,13 @@
     <color name="dots_color">@color/red01</color>
 
     <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
-    <color name="home_streak_view_color">#1445b0ff</color>
-    <color name="view_all_course_list_color">#CCCCD1</color>
-    <color name="view_all_course_list_color_dark">#868694</color>
+    <color name="home_streak_view_color">@color/blue03_alpha_8</color>
+    <color name="view_all_course_list_color">@color/grey03</color>
+    <color name="view_all_course_list_color_dark">@color/grey03_alpha_50</color>
 
     <color name="login_edit_text_block_stroke_color">@color/grey02</color>
     <color name="login_edit_text_block_background_color">@color/transparent</color>
-    <color name="login_edit_text_block_background_color_wrong">#0CC82850</color>
+    <color name="login_edit_text_block_background_color_wrong">@color/red02_color_alpha_5</color>
 
 
     <color name="login_button_color">@color/green01_alpha_10</color>
@@ -94,7 +94,7 @@
     <color name="text_color_gradient_fire">#18073D</color>
 
     <color name="loading_view_base_color">@color/grey05</color>
-    <color name="loading_view_deep_color">#DBDBDB</color>
+    <color name="loading_view_deep_color">@color/grey05_alpha_85</color>
     <!-- Gradient colors end-->
 
     <color name="code_toolbar_background">@color/grey04</color>
@@ -124,14 +124,14 @@
     <color name="grey02">#999999</color>
     <color name="grey02_alpha_19">#30999999</color>
     <color name="grey02_alpha_50">#80999999</color>
-
+<!--@color/grey03_alpha_50-->
     <color name="grey03">#CCCCCC</color>
     <color name="grey03_alpha_50">#80CCCCCC</color>
     <color name="grey03_alpha_80">#CCCCCCCC</color>
-
     <color name="grey04">#EAECF0</color>
     <color name="grey04_alpha_70">#B3EAECF0</color>
     <color name="grey05">#F3F4F6</color>
+    <color name="grey05_alpha_95">#F2F3F4F6</color>
     <color name="grey05_alpha_85">#D9F3F4F6</color>
 
 
@@ -161,10 +161,13 @@
     <color name="black1_alpha_40">#66000000</color>
 
     <color name="black2">#222222</color>
+
+    <color name="black2_1">#1A222222</color>
     <color name="blue01">#003E86</color>
     <color name="blue02">#1466C6</color>
 
     <color name="blue03">#56A4FF</color>
+    <color name="blue03_alpha_8">#1456A4FF</color>
     <color name="blue03_alpha_80">#CC56A4FF</color>
     <color name="green02">#E9F9E9</color>
     <color name="green05">#85D685</color>
@@ -172,12 +175,13 @@
     <color name="red01">#D41F1F</color>
 
     <color name="red02">#FF7965</color>
+    <color name="red02_color_alpha_5">#0DFF7965</color>
     <color name="red02_color_alpha_15">#26FF7965</color>
     <color name="red02_color_alpha_50">#80FF7965</color>
     <color name="red02_color_alpha_82">#D0FF7965</color>
 
     <color name="red03">#FFEBE8</color>
-
+<!---->
     <color name="white">#FFFFFF</color>
     <color name="white_color_alpha_0">#00FFFFFF</color>
     <color name="white_color_alpha_5">#0DFFFFFF</color>
@@ -186,7 +190,7 @@
     <color name="white_color_alpha_60">#99FFFFFF</color>
     <color name="white_color_alpha_70">#B3FFFFFF</color>
     <color name="white_color_alpha_80">#CCFFFFFF</color>
-
+<!--@color/-->
 
     <color name="new_primary_color">#F6F6F6</color>
     <color name="new_accent_color">#535366</color>
@@ -197,7 +201,6 @@
     <color name="new_accent_color_alpha_40">#66535366</color>
     <color name="new_accent_color_alpha_30">#4D535366</color>
     <color name="new_accent_color_alpha_5">#0D535366</color>
-
     <!-- Design system finished -->
 
     <!--adaptive-->
@@ -207,19 +210,18 @@
     <color name="adaptive_color_wrong">@color/adaptive_color_hard</color>
     <color name="adaptive_color_correct">@color/green01_alpha_85</color>
 
-    <color name="adaptive_color_title">#333</color>
+    <color name="adaptive_color_title">@color/new_accent_color_alpha_5</color>
     <color name="adaptive_color_yellow">@color/yellow1</color>
     <color name="adaptive_rank_separator">@color/new_accent_color</color>
 
-    <color name="adaptive_course_marker">#EBF2FF</color>
+    <color name="adaptive_course_marker">@color/violet2</color>
+    <color name="color_stroke">@color/grey04</color>
+    <color name="highlighted_elements_background">@color/grey05_alpha_95</color>
 
-    <color name="color_stroke">#E4E4E4</color>
-    <color name="highlighted_elements_background">#F1F1F1</color>
-
-    <color name="colorRadioButtonDefault">#CCCED1</color>
+    <color name="colorRadioButtonDefault">@color/grey03</color>
 
     <color name="placeholder_button_pressed_color">@color/light_rounded_pressed_color</color>
-    <color name="placeholder_button_stroke_color">#CDCDCD</color>
+    <color name="placeholder_button_stroke_color">@color/grey03</color>
 
 
     <color name="popup_background_color_light">@color/blue03</color>
