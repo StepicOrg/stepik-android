@@ -149,14 +149,6 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
-    <style name="StepicSmallMaterialButton" parent="Theme.AppCompat.Light">
-        <item name="android:minHeight">@dimen/height_of_small_button</item>
-        <item name="android:maxHeight">@dimen/height_of_small_button</item>
-        <item name="android:textSize">@dimen/stepik_text_size_in_button</item>
-        <item name="android:background">@drawable/new_button_selector</item>
-        <item name="android:textAllCaps">true</item>
-    </style>
-
     <style name="BottomSheetShareItem">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
