@@ -14,7 +14,6 @@
     <color name="silver">@color/step_quiz_separator</color>
 
     <color name="default_color_of_link">@color/blue02</color>
-    <color name="windowBackground">#eeeeee</color>
     <color name="correct_answer_background">@color/green02</color>
     <color name="disabled_button_color">#D3D7D7</color>
     <color name="feedback_bad_color">#D64338</color>
