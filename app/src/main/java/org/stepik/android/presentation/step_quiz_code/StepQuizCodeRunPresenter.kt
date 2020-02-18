@@ -28,9 +28,14 @@ constructor(
             view?.setState(value)
         }
 
+    private var inputData: String = ""
+
     override fun attachView(view: StepQuizRunCodeView) {
         super.attachView(view)
         view.setState(state)
+        if (inputData.isNotEmpty()) {
+            view.setInputData(inputData)
+        }
     }
 
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
@@ -77,5 +82,9 @@ constructor(
                 },
                 onError = emptyOnErrorStub
             )
+    }
+
+    fun saveInputData(savedData: String) {
+        inputData = savedData
     }
 }

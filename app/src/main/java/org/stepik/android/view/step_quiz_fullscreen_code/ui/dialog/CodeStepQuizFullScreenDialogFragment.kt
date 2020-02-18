@@ -293,6 +293,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     override fun onStop() {
+        runCodeDelegate.onDetach()
         codeRunPresenter.detachView(runCodeDelegate)
         super.onStop()
     }

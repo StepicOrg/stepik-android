@@ -84,7 +84,7 @@ class CodeStepRunCodeDelegate(
             ?.mapIndexed { index, samples -> context.getString(R.string.step_quiz_code_spinner_item, index + 1, samples.first()) }
             ?: emptyList()
 
-        if (inputSamples.isNotEmpty()) {
+        if (inputSamples.isNotEmpty() && runCodeInputDataSample.text.isNullOrEmpty()) {
             runCodeInputDataSample.setText(
                 inputSamples
                     .first()
@@ -176,6 +176,14 @@ class CodeStepRunCodeDelegate(
             cancelableOnTouchOutside = true,
             withArrow = true
         )
+    }
+
+    override fun setInputData(inputData: String) {
+        runCodeInputDataSample.setText(inputData)
+    }
+
+    fun onDetach() {
+        codeRunPresenter.saveInputData(runCodeInputDataSample.text.toString())
     }
 
     private fun resolveOutputText(userCodeRun: UserCodeRun) {
