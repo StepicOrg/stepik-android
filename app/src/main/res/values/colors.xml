@@ -17,14 +17,13 @@
     <color name="correct_answer_background">@color/green02</color>
 
     <color name="disabled_button_color">@color/white_color_alpha_80</color>
-    <color name="feedback_bad_color">#D64338</color>
-    <color name="feedback_good_color">@color/green01
-    </color><!-- it is just green correct color, not the stepic primary -->
+    <color name="feedback_bad_color">@color/red01</color>
+    <color name="feedback_good_color">@color/green01</color>
 
 
     <color name="transparent_black_30">@color/black1_alpha_30</color>
 
-    <color name="overscroll_color">#19A5A5A5</color>
+    <color name="overscroll_color">@color/new_accent_color_alpha_30</color>
     <color name="snack_action_color">@color/violet1</color>
     <color name="black_alpha_40">@color/black1_alpha_40</color>
     <color name="background_time_thumbnail">@color/black1_alpha_40</color>
@@ -35,12 +34,12 @@
 
     <color name="login_launch_registration_background">@color/white</color>
 
-    <color name="rate_dialog_store">#73BC72</color>
-    <color name="rate_dialog_support">#C72F4F</color>
+    <color name="rate_dialog_store">@color/green01</color>
+    <color name="rate_dialog_support">@color/red01</color>
 
     <!--Redesigned colors-->
 
-    <color name="new_red_color">#C82850</color>
+    <color name="new_red_color">@color/red01</color>
 
     <color name="text_color">@color/new_accent_color</color>
     <color name="text_color_highlight">@color/grey04_alpha_70</color>
@@ -58,7 +57,7 @@
 
     <color name="new_cover">@color/white</color>
 
-    <color name="dots_color">#F82401</color>
+    <color name="dots_color">@color/red01</color>
 
     <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
     <color name="home_streak_view_color">#1445b0ff</color>
@@ -139,6 +138,7 @@
     <color name="green01_alpha_13">#2066CC66</color>
     <color name="green01_alpha_40">#6666CC66</color>
     <color name="green01_alpha_50">#8066CC66</color>
+    <color name="green01_alpha_85">#D966CC66</color>
 
     <color name="green03">#54AD54</color>
     <color name="green04">#ACD1AC</color>
@@ -184,6 +184,7 @@
     <color name="white_color_alpha_70">#B3FFFFFF</color>
     <color name="white_color_alpha_80">#CCFFFFFF</color>
 
+
     <color name="new_primary_color">#F6F6F6</color>
     <color name="new_accent_color">#535366</color>
     <color name="new_accent_color_alpha_85">#DA535366</color>
@@ -197,10 +198,11 @@
     <!-- Design system finished -->
 
     <!--adaptive-->
-    <color name="adaptive_color_easy">#227300</color>
+
+    <color name="adaptive_color_easy">@color/green01_alpha_40</color>
     <color name="adaptive_color_hard">@color/new_red_color</color>
     <color name="adaptive_color_wrong">@color/adaptive_color_hard</color>
-    <color name="adaptive_color_correct">#75B875</color>
+    <color name="adaptive_color_correct">@color/green01_alpha_85</color>
 
     <color name="adaptive_color_title">#333</color>
     <color name="adaptive_color_yellow">@color/yellow1</color>
@@ -279,7 +281,7 @@
     <color name="section_color">@color/new_primary_color</color>
     <color name="lesson_color">#fdfefe</color>
     <color name="submission_time">@color/grey02</color>
-    <color name="submission_correct">#D064CC64</color>
+    <color name="submission_correct">@color/green01_alpha_85</color>
     <color name="submission_incorrect">@color/red02_color_alpha_82</color>
 
     <!-- Run code -->
