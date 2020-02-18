@@ -123,6 +123,7 @@
 
     <color name="grey02">#999999</color>
     <color name="grey02_alpha_19">#30999999</color>
+    <color name="grey02_alpha_50">#80999999</color>
 
     <color name="grey03">#CCCCCC</color>
     <color name="grey03_alpha_50">#80CCCCCC</color>
@@ -131,6 +132,8 @@
     <color name="grey04">#EAECF0</color>
     <color name="grey04_alpha_70">#B3EAECF0</color>
     <color name="grey05">#F3F4F6</color>
+    <color name="grey05_alpha_85">#D9F3F4F6</color>
+
 
     <color name="green01">#66CC66</color>
     <color name="green01_alpha_5">#0C66CC66</color>
@@ -224,11 +227,11 @@
 
     <!-- course -->
     <color name="course_appbar_separator">@color/grey03</color>
-    <color name="course_appbar_scrim_color">#6B6B7B</color>
+    <color name="course_appbar_scrim_color">@color/grey02_alpha_50</color>
     <color name="course_tabbar_color">@color/new_primary_color</color>
     <color name="course_info_organization_span">@color/blue03_alpha_80</color>
     <color name="course_content_section_background">@color/new_primary_color</color>
-    <color name="course_content_section_date_disabled">#B4B4B4</color>
+    <color name="course_content_section_date_disabled">@color/grey03_alpha_80</color>
 
     <!-- Text styles colors -->
     <color name="color_body1">@color/black2</color>
@@ -239,7 +242,7 @@
 
     <!-- Lesson -->
     <color name="lesson_tabbar_separator">@color/grey04</color>
-    <color name="lesson_toolbar_separator">#DCDCDC</color>
+    <color name="lesson_toolbar_separator">@color/grey05_alpha_85</color>
 
     <!-- Step -->
     <color name="step_navigation_button">@color/stepic_brand_primary</color>
@@ -253,9 +256,9 @@
 
     <!-- Choice quiz -->
     <color name="step_quiz_choice_not_checked">@color/white</color>
-    <color name="step_quiz_choice_checked">#e8eafa</color>
-    <color name="step_quiz_choice_correct">#e7f7e7</color>
-    <color name="step_quiz_choice_wrong">#ffebe7</color>
+    <color name="step_quiz_choice_checked">@color/violet2</color>
+    <color name="step_quiz_choice_correct">@color/green06</color>
+    <color name="step_quiz_choice_wrong">@color/red03</color>
 
     <color name="step_quiz_choice_not_checked_border">@color/grey03</color>
     <color name="step_quiz_choice_checked_border">@color/violet1_alpha_50</color>
@@ -279,11 +282,11 @@
 
     <!-- Solutions screen -->
     <color name="section_color">@color/new_primary_color</color>
-    <color name="lesson_color">#fdfefe</color>
+    <color name="lesson_color">@color/grey05</color>
     <color name="submission_time">@color/grey02</color>
     <color name="submission_correct">@color/green01_alpha_85</color>
     <color name="submission_incorrect">@color/red02_color_alpha_82</color>
 
     <!-- Run code -->
-    <color name="run_code_output_background">#f3f4f6</color>
+    <color name="run_code_output_background">@color/grey05</color>
 </resources>
