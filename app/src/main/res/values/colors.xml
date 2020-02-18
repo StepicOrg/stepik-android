@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <color name="grey_act_background">#E2E3E5</color>
+    <color name="grey_act_background">@color/black1_alpha_19</color>
 
     <color name="transparent">@color/white_color_alpha_0</color>
     <color name="stepic_regular_text">@color/grey01</color>
@@ -11,7 +11,7 @@
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
     <color name="stepic_brand_primary_dark">@color/green03</color>
-    <color name="silver">#e6e6e6</color>
+    <color name="silver">@color/step_quiz_separator</color>
     <color name="old_cover">#EEEEEE</color>
 
     <color name="default_color_of_link">@color/blue02</color>
