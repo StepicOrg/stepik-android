@@ -236,7 +236,8 @@
     <dimen name="step_quiz_matching_item_margin">64dp</dimen>
 
     <!-- Code quiz -->
-    <dimen name="step_quiz_fullscreen_code_layout_bottom_padding">80dp</dimen>]
+    <dimen name="step_quiz_fullscreen_code_layout_bottom_padding">80dp</dimen>
+    <dimen name="step_quiz_full_screen_code_layout_drop_down_width">156dp</dimen>
 
     <!-- Comments -->
     <dimen name="comment_user_image_size">36dp</dimen>

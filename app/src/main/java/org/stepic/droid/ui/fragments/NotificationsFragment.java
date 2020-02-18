@@ -25,6 +25,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.NotificationCategory;
+import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 import butterknife.BindView;
@@ -71,8 +72,10 @@ public class NotificationsFragment extends FragmentBase {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
-            authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity()));
+//            authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity()));
+            authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity(), true, MainFeedActivity.NOTIFICATIONS_INDEX));
 //            toolbar.setVisibility(View.GONE); // FIXME: 15.08.17 hide, when it is needed
+            initToolbar();
             tabLayout.setVisibility(View.GONE);
             needAuthRootView.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.GONE);
@@ -104,6 +107,7 @@ public class NotificationsFragment extends FragmentBase {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.notification_center_menu, menu);
+        menu.findItem(R.id.action_settings).setVisible(getSharedPreferenceHelper().getAuthResponseFromStore() != null);
     }
 
     @Override

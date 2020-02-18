@@ -8,6 +8,8 @@ interface SplashView {
 
     fun onShowHome()
 
+    fun onShowCatalog()
+
     fun onShowOnboarding()
 
     fun onDeepLinkRoute(route: BranchRoute)

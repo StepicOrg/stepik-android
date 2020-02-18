@@ -29,6 +29,7 @@ import org.stepic.droid.persistence.service.DownloadCompleteService
 import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
+import org.stepic.droid.ui.activities.AnimatedOnboardingActivity
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
@@ -88,6 +89,7 @@ import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.story.StoryDataModule
 import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
+import org.stepik.android.view.injection.user_code_run.UserCodeRunComponent
 import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
@@ -204,6 +206,8 @@ interface AppCoreComponent {
 
     fun solutionsComponentBuilder(): SolutionsComponent.Builder
 
+    fun userCodeRunComponentBuilder(): UserCodeRunComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)
@@ -291,4 +295,6 @@ interface AppCoreComponent {
     fun inject(bootCompleteService: BootCompleteService)
 
     fun inject(removeCachedContentDialog: RemoveCachedContentDialog)
+
+    fun inject(onboardingActivity: AnimatedOnboardingActivity)
 }

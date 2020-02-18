@@ -140,6 +140,7 @@
     <color name="green04">#ACD1AC</color>
 
     <color name="violet1">#6C7BDF</color>
+    <color name="violet1_alpha_40">#666C7BDF</color>
     <color name="violet1_alpha_13">#206C7BDF</color>
     <color name="violet1_alpha_50">#806C7BDF</color>
 
@@ -272,4 +273,7 @@
     <color name="submission_time">@color/grey02</color>
     <color name="submission_correct">#D064CC64</color>
     <color name="submission_incorrect">@color/red02_color_alpha_82</color>
+
+    <!-- Run code -->
+    <color name="run_code_output_background">#f3f4f6</color>
 </resources>
