@@ -55,8 +55,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         private const val ARG_LANG = "LANG"
         private const val ARG_CODE = "CODE"
 
-        private const val EVALUATION_FRAME_DURATION_MS = 250
-
         private const val INSTRUCTION_TAB = 0
         private const val CODE_TAB = 1
         private const val RUN_CODE_TAB = 2

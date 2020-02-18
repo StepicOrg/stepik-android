@@ -39,15 +39,18 @@ constructor(
     }
 
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
-        if (!(state == StepQuizRunCodeView.State.Idle || state is StepQuizRunCodeView.State.UserCodeRunLoaded)) {
-            return
-        }
-        state = if (state == StepQuizRunCodeView.State.Idle) {
-            StepQuizRunCodeView.State.Loading
-        } else {
-            val userCodeRun = (state as StepQuizRunCodeView.State.UserCodeRunLoaded).userCodeRun
-            StepQuizRunCodeView.State.ConsequentLoading(userCodeRun)
-        }
+        state =
+            when (val oldState = state) {
+                is StepQuizRunCodeView.State.Idle ->
+                    StepQuizRunCodeView.State.Loading
+
+                is StepQuizRunCodeView.State.UserCodeRunLoaded ->
+                    StepQuizRunCodeView.State.ConsequentLoading(oldState.userCodeRun)
+
+                else ->
+                    return
+            }
+
         compositeDisposable += userCodeRunInteractor
             .createUserCodeRun(code, language, stdin, stepId)
             .observeOn(mainScheduler)
@@ -59,12 +62,14 @@ constructor(
                 },
                 onError = {
                     view?.showNetworkError()
-                    state = if (state is StepQuizRunCodeView.State.ConsequentLoading) {
-                        val userCodeRun = (state as StepQuizRunCodeView.State.ConsequentLoading).userCodeRun
-                        StepQuizRunCodeView.State.UserCodeRunLoaded(userCodeRun)
-                    } else {
-                        StepQuizRunCodeView.State.Idle
-                    }
+
+                    val oldState = state
+                    state =
+                        if (oldState is StepQuizRunCodeView.State.ConsequentLoading) {
+                            StepQuizRunCodeView.State.UserCodeRunLoaded(oldState.userCodeRun)
+                        } else {
+                            StepQuizRunCodeView.State.Idle
+                        }
                 }
             )
     }
