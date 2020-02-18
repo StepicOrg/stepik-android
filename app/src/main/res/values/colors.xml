@@ -16,7 +16,7 @@
     <color name="default_color_of_link">@color/blue02</color>
     <color name="correct_answer_background">@color/green02</color>
 
-    <color name="disabled_button_color">@color/white_color_alpha_80</color>
+    <color name="disabled_button_color">@color/new_accent_color_alpha_40</color>
     <color name="feedback_bad_color">@color/red01</color>
     <color name="feedback_good_color">@color/green01</color>
 
@@ -209,7 +209,7 @@
     <color name="adaptive_color_wrong">@color/adaptive_color_hard</color>
     <color name="adaptive_color_correct">@color/green01_alpha_85</color>
 
-    <color name="adaptive_color_title">@color/new_accent_color_alpha_5</color>
+    <color name="adaptive_color_title">@color/black2</color>
     <color name="adaptive_color_yellow">@color/yellow1</color>
     <color name="adaptive_rank_separator">@color/new_accent_color</color>
 
