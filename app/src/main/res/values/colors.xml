@@ -65,7 +65,7 @@
     <color name="view_all_course_list_color">#CCCCD1</color>
     <color name="view_all_course_list_color_dark">#868694</color>
 
-    <color name="login_edit_text_block_stroke_color">#979797</color>
+    <color name="login_edit_text_block_stroke_color">@color/grey02</color>
     <color name="login_edit_text_block_background_color">@color/transparent</color>
     <color name="login_edit_text_block_background_color_wrong">#0CC82850</color>
 
@@ -115,7 +115,7 @@
     <color name="launcher_background">@color/black</color>
 
     <color name="light_rounded_button_color">@color/new_accent_color_alpha_5</color>
-    <color name="light_rounded_pressed_color">#E8E8E8</color>
+    <color name="light_rounded_pressed_color">@color/black1_alpha_19</color>
 
     <!-- Design system -->
     <color name="grey01">#5E5E5E</color>
