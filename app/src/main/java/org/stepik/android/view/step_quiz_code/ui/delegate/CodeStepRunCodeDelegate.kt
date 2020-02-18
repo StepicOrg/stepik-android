@@ -191,11 +191,9 @@ class CodeStepRunCodeDelegate(
     }
 
     private fun setOutputText(text: String?) {
-        if (text.isNullOrEmpty()) {
-            runCodeOutputDataSample.text = context.getString(R.string.step_quiz_code_empty_output)
-        } else {
-            runCodeOutputDataSample.text = text
-        }
+        runCodeOutputDataSample.text =
+            text?.takeIf(String::isNotEmpty)
+                ?: context.getString(R.string.step_quiz_code_empty_output)
     }
 
     private fun shiftSampleWeights(state: StepQuizRunCodeView.State) {
