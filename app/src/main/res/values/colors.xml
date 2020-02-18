@@ -124,7 +124,6 @@
     <color name="grey02">#999999</color>
     <color name="grey02_alpha_19">#30999999</color>
     <color name="grey02_alpha_50">#80999999</color>
-<!--@color/grey03_alpha_50-->
     <color name="grey03">#CCCCCC</color>
     <color name="grey03_alpha_50">#80CCCCCC</color>
     <color name="grey03_alpha_80">#CCCCCCCC</color>
@@ -229,7 +228,7 @@
 
     <!-- course -->
     <color name="course_appbar_separator">@color/grey03</color>
-    <color name="course_appbar_scrim_color">@color/grey02_alpha_50</color>
+    <color name="course_appbar_scrim_color">#6B6B7B</color>
     <color name="course_tabbar_color">@color/new_primary_color</color>
     <color name="course_info_organization_span">@color/blue03_alpha_80</color>
     <color name="course_content_section_background">@color/new_primary_color</color>
