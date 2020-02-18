@@ -48,7 +48,6 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        nullifyActivityBackground()
         initClearCacheFeature()
         hideAllStorageInfo()
     }

@@ -9,7 +9,6 @@
     <include layout="@layout/view_centered_appbar"/>
 
     <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/certificateRootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,12 +21,10 @@
 
         <include layout="@layout/empty_certificates"/>
 
-        <!--Remove this old cover, when redesign will be finished-->
         <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
             android:id="@+id/certificateSwipeRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/old_cover">
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/certificateRecyclerView"

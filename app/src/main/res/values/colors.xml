@@ -12,7 +12,6 @@
     <color name="stepic_brand_primary">@color/green01</color>
     <color name="stepic_brand_primary_dark">@color/green03</color>
     <color name="silver">@color/step_quiz_separator</color>
-    <color name="old_cover">#EEEEEE</color>
 
     <color name="default_color_of_link">@color/blue02</color>
     <color name="windowBackground">#eeeeee</color>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
     android:id="@+id/notification_swipe_refresh"
-    android:background="@color/old_cover"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">

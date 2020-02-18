@@ -60,8 +60,6 @@ class SettingsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        nullifyActivityBackground()
-
         notificationActionButton.setOnClickListener {
             screenManager.showNotificationSettings(activity)
         }
