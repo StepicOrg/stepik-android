@@ -80,6 +80,7 @@
 
     <color name="remind_password_button_text_color">@color/blue03</color>
 
+    <!-- Gradient colors -->
     <color name="start_gradient_placeholder">#8E8EB5</color>
     <color name="end_gradient_placeholder">#6969A0</color>
     <color name="placeholder_text_color">@color/white</color>
@@ -95,17 +96,18 @@
 
     <color name="loading_view_base_color">@color/grey05</color>
     <color name="loading_view_deep_color">#DBDBDB</color>
+    <!-- Gradient colors end-->
 
-    <color name="code_toolbar_background">#EEEEEE</color>
+    <color name="code_toolbar_background">@color/grey04</color>
     <color name="code_toolbar_autocomplete_prefix_background">@color/grey03</color>
     <color name="default_code_error_highlight_color">@color/red02</color>
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
     <color name="stepik_swipe_refresh">@color/new_accent_color</color>
 
     <color name="language_checked">@color/new_accent_color</color>
-    <color name="language_checked_pressed">#555766</color>
+    <color name="language_checked_pressed">@color/new_accent_color_alpha_85</color>
     <color name="element_gray">@color/new_accent_color_alpha_5</color>
-    <color name="element_gray_pressed">#E8E8E8</color>
+    <color name="element_gray_pressed">@color/grey04</color>
     <color name="language_text_color_checked">@color/white</color>
     <color name="language_text_color_unchecked">@color/new_accent_color</color>
     <color name="search_view_suggestions_prefix_color">@color/black1_alpha_27</color>
@@ -125,6 +127,7 @@
 
     <color name="grey03">#CCCCCC</color>
     <color name="grey03_alpha_50">#80CCCCCC</color>
+
 
     <color name="grey04">#EAECF0</color>
     <color name="grey05">#F3F4F6</color>
