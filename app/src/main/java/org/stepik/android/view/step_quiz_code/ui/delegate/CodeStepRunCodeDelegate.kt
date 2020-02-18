@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
 import org.stepic.droid.R
@@ -44,11 +45,10 @@ class CodeStepRunCodeDelegate(
     private val runCodeOutputDataSample = runCodeLayout.outputDataSample
     private val runCodeFeedback = runCodeLayout.runCodeFeedback
     private val runCodeAction = runCodeLayout.runCodeAction
-//    private val runCodeSpaceOutputDataFillSpace = runCodeLayout.outputDataFillSpace
 
     var lang: String  = ""
 
-    private var viewStateDelegate: ViewStateDelegate<StepQuizRunCodeView.State> = ViewStateDelegate()
+    private val viewStateDelegate = ViewStateDelegate<StepQuizRunCodeView.State>()
 
     init {
         viewStateDelegate.addState<StepQuizRunCodeView.State.Idle>(
@@ -76,24 +76,21 @@ class CodeStepRunCodeDelegate(
             runCodeOutputDataSample
         )
 
-        val inputSamples = stepWrapper
+        val samples = stepWrapper
             .step
             .block
             ?.options
             ?.samples
-            ?.mapIndexed { index, samples -> context.getString(R.string.step_quiz_code_spinner_item, index + 1, samples.first()) }
             ?: emptyList()
 
-        if (inputSamples.isNotEmpty() && runCodeInputDataSample.text.isNullOrEmpty()) {
-            runCodeInputDataSample.setText(
-                inputSamples
-                    .first()
-                    .split(":")
-                    .last()
-                    .trim()
-            )
+        val inputSamples = samples
+            .mapIndexed { index, sample -> context.getString(R.string.step_quiz_code_spinner_item, index + 1, sample.first()) }
+
+        if (samples.isNotEmpty() && runCodeInputDataSample.text.isNullOrEmpty()) {
+            runCodeInputDataSample
+                .setText(samples.first().first())
         } else {
-            runCodeInputSamplePicker.visibility = View.GONE
+            runCodeInputSamplePicker.isGone = true
         }
 
         val popupWindow = ListPopupWindow(context)
@@ -107,10 +104,7 @@ class CodeStepRunCodeDelegate(
         )
 
         popupWindow.setOnItemClickListener { _, _, position, _ ->
-            val sampleInput = inputSamples[position]
-                .split(":")
-                .last()
-                .trim()
+            val sampleInput = samples[position].first()
             runCodeInputDataSample.setText(sampleInput)
             popupWindow.dismiss()
         }
