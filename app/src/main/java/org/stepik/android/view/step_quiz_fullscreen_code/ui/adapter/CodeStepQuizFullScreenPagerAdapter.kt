@@ -14,7 +14,8 @@ class CodeStepQuizFullScreenPagerAdapter(
 
     private val layouts = listOf(
         inflateLayout(R.layout.layout_step_quiz_code_fullscreen_instruction,  R.string.step_quiz_code_full_screen_instruction_tab),
-        inflateLayout(R.layout.layout_step_quiz_code_fullscreen_playground, R.string.step_quiz_code_full_screen_code_tab)
+        inflateLayout(R.layout.layout_step_quiz_code_fullscreen_playground, R.string.step_quiz_code_full_screen_code_tab),
+        inflateLayout(R.layout.layout_step_quiz_code_fullscreen_run_code, R.string.step_quiz_code_full_screen_run_code_tab)
     )
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
