@@ -747,7 +747,6 @@
     <string name="step_quiz_code_samples">примеры</string>
     <string name="step_quiz_code_run_code_action">Запустить код</string>
     <string name="step_quiz_code_empty_output">Пустой вывод</string>
-    <string name="step_quiz_code_no_input_data">У задачи отсутствуют входные данные</string>
     <string name="step_quiz_code_spinner_item">Пример %d: %s</string>
     <string name="step_quiz_code_input_data_hint">Введите входные данные…</string>
     <string name="step_quiz_code_run_code_tooltip">Перед отправкой решения, вы можете запустить ваш код с тестовыми вводными данными!</string>
