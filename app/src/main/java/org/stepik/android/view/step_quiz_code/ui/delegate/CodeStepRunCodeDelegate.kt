@@ -147,14 +147,13 @@ class CodeStepRunCodeDelegate(
         runCodeAction.isEnabled = isEnabled
         runCodeInputSamplePicker.isEnabled = isEnabled
         runCodeInputDataSample.isEnabled = isEnabled
+        shiftSampleWeights(state)
 
-        if (state is StepQuizRunCodeView.State.ConsequentLoading) {
-            resolveOutputText(state.userCodeRun)
-        }
-
-        if (state is StepQuizRunCodeView.State.UserCodeRunLoaded) {
-            shiftSampleWeights()
-            resolveOutputText(state.userCodeRun)
+        when (state) {
+            is StepQuizRunCodeView.State.ConsequentLoading ->
+                resolveOutputText(state.userCodeRun)
+            is StepQuizRunCodeView.State.UserCodeRunLoaded ->
+                resolveOutputText(state.userCodeRun)
         }
     }
 
@@ -199,17 +198,19 @@ class CodeStepRunCodeDelegate(
         }
     }
 
-    private fun shiftSampleWeights() {
-        val inputDataSampleParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT)
-        inputDataSampleParams.weight = 0f
-        runCodeInputDataSample.layoutParams = inputDataSampleParams
+    private fun shiftSampleWeights(state: StepQuizRunCodeView.State) {
+        val (inputDataSampleParams, outputDataSampleParams) =  when (state) {
+            is StepQuizRunCodeView.State.Idle, is StepQuizRunCodeView.State.Loading -> {
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0).apply { weight = 1f } to
+                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { weight = 0f }
+            }
+            is StepQuizRunCodeView.State.ConsequentLoading, is StepQuizRunCodeView.State.UserCodeRunLoaded -> {
+                LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { weight = 0f } to
+                        LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0).apply { weight = 1f }
+            }
+        }
 
-        val outputDataSampleParams = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            0)
-        outputDataSampleParams.weight = 1f
+        runCodeInputDataSample.layoutParams = inputDataSampleParams
         runCodeOutputDataSample.layoutParams = outputDataSampleParams
     }
 }
