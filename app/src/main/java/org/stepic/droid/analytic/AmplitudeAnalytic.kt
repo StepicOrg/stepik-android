@@ -261,4 +261,12 @@ interface AmplitudeAnalytic {
             const val STEP = "step"
         }
     }
+
+    object RunCode {
+        const val RUN_CODE_LAUNCHED = "Run code launched"
+
+        object Params {
+            const val STEP_ID = "step_id"
+        }
+    }
 }
