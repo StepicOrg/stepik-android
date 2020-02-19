@@ -43,7 +43,6 @@ import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepRunCodeDelegat
 import org.stepik.android.view.step_quiz_fullscreen_code.ui.adapter.CodeStepQuizFullScreenPagerAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
@@ -158,7 +157,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             }
         }
 
-        Timber.d("Code options: ${stepWrapper.step.block?.options}")
         initViewPager(isRunCodeEnabled = stepWrapper.step.block?.options?.isRunUserCodeAllowed ?: false)
 
         val text = stepWrapper
