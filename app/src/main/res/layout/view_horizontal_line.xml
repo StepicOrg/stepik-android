@@ -3,4 +3,4 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="@color/new_accent_color_alpha_30"/>
+    android:background="@color/step_quiz_separator"/>
