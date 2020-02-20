@@ -89,6 +89,7 @@ import org.stepik.android.view.injection.step_quiz.StepQuizBusModule
 import org.stepik.android.view.injection.story.StoryDataModule
 import org.stepik.android.view.injection.submission.SubmissionComponent
 import org.stepik.android.view.injection.user_activity.UserActivityDataModule
+import org.stepik.android.view.injection.user_code_run.UserCodeRunComponent
 import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
@@ -204,6 +205,8 @@ interface AppCoreComponent {
     fun socialProfileComponentBuilder(): SocialProfileComponent.Builder
 
     fun solutionsComponentBuilder(): SolutionsComponent.Builder
+
+    fun userCodeRunComponentBuilder(): UserCodeRunComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
