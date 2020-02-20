@@ -158,7 +158,8 @@
              />
 
         <activity
-            android:name="org.stepik.android.view.settings.ui.activity.SettingsActivity" />
+            android:name="org.stepik.android.view.settings.ui.activity.SettingsActivity"
+            android:theme="@style/Settings"/>
 
         <activity
             android:name=".ui.activities.NotificationSettingsActivity"
@@ -192,6 +193,7 @@
 
         <activity
             android:name=".ui.activities.StoreManagementActivity"
+            android:theme="@style/Settings"
             android:launchMode="singleTop"
             android:parentActivityName="org.stepik.android.view.settings.ui.activity.SettingsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->

@@ -519,4 +519,8 @@
         <item name="android:textSize">12sp</item>
         <item name="fontFamily">@font/roboto_light</item>
     </style>
+
+    <style name="Settings" parent="@style/StepikTheme">
+        <item name="android:windowBackground">@color/grey04</item>
+    </style>
 </resources>
