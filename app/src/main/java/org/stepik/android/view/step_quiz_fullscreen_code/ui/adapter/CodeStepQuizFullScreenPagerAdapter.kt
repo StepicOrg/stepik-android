@@ -10,7 +10,7 @@ import org.stepic.droid.R
 
 class CodeStepQuizFullScreenPagerAdapter(
     private val context: Context,
-    isRunCodeEnabled: Boolean
+    isShowRunCode: Boolean
 ) : PagerAdapter() {
 
     private val layouts: List<Pair<View, String>>
@@ -20,7 +20,7 @@ class CodeStepQuizFullScreenPagerAdapter(
             inflateLayout(R.layout.layout_step_quiz_code_fullscreen_playground, R.string.step_quiz_code_full_screen_code_tab)
         )
 
-        layouts = if (isRunCodeEnabled) {
+        layouts = if (isShowRunCode) {
             result + listOf(inflateLayout(R.layout.layout_step_quiz_code_fullscreen_run_code, R.string.step_quiz_code_full_screen_run_code_tab))
         } else {
             result

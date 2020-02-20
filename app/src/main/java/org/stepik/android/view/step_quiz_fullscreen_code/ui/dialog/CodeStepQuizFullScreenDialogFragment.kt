@@ -157,7 +157,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             }
         }
 
-        initViewPager(isRunCodeEnabled = stepWrapper.step.block?.options?.isRunUserCodeAllowed ?: false)
+        initViewPager(
+            isRunCodeEnabled = stepWrapper.step.block?.options?.isRunUserCodeAllowed ?: false,
+            hasSamples = stepWrapper.step.block?.options?.samples?.isNotEmpty() ?: false
+        )
 
         val text = stepWrapper
             .step
@@ -229,14 +232,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         outState.putString(ARG_CODE, codeLayout.text.toString())
     }
 
-    private fun initViewPager(isRunCodeEnabled: Boolean) {
+    private fun initViewPager(isRunCodeEnabled: Boolean, hasSamples: Boolean) {
         val activity = activity
             ?: return
 
         val lightFont = ResourcesCompat.getFont(activity, R.font.roboto_light)
         val regularFont = ResourcesCompat.getFont(activity, R.font.roboto_regular)
 
-        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity, isRunCodeEnabled = isRunCodeEnabled)
+        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity, isShowRunCode = isRunCodeEnabled && hasSamples)
 
         fullScreenCodeViewPager.adapter = pagerAdapter
         fullScreenCodeTabs.setupWithViewPager(fullScreenCodeViewPager)
@@ -272,7 +275,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         instructionsLayout = pagerAdapter.getViewAt(0)
         playgroundLayout = pagerAdapter.getViewAt(1)
 
-        runCodeLayout = if (isRunCodeEnabled) {
+        runCodeLayout = if (isRunCodeEnabled && hasSamples) {
             pagerAdapter.getViewAt(2)
         } else {
             null

@@ -13,7 +13,6 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
 import org.stepic.droid.R
 import org.stepic.droid.code.ui.CodeEditorLayout
-import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepik.android.model.code.UserCodeRun
@@ -94,10 +93,6 @@ class CodeStepRunCodeDelegate(
             runCodeInputSamplePicker.isGone = true
         }
 
-        if (lang == ProgrammingLanguage.SQL.serverPrintableName) {
-            runCodeInputDataSample.setHint(R.string.step_quiz_code_input_not_supported)
-        }
-
         val popupWindow = ListPopupWindow(context)
 
         popupWindow.setAdapter(
@@ -151,7 +146,7 @@ class CodeStepRunCodeDelegate(
 
         runCodeAction.isEnabled = isEnabled
         runCodeInputSamplePicker.isEnabled = isEnabled
-        runCodeInputDataSample.isEnabled = isEnabled && lang != ProgrammingLanguage.SQL.serverPrintableName
+        runCodeInputDataSample.isEnabled = isEnabled
         shiftSampleWeights(state)
 
         when (state) {
