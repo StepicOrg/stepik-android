@@ -9,7 +9,7 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.view.injection.achievement.AchievementDataModule
-import org.stepik.android.view.injection.auth.AuthModule
+import org.stepik.android.view.injection.auth.AuthDataModule
 import org.stepik.android.view.injection.base.Authorized
 import org.stepik.android.view.injection.qualifiers.DebugInterceptors
 import org.stepik.android.view.injection.serialization.SerializationModule
@@ -18,7 +18,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import java.util.concurrent.TimeUnit
 
-@Module(includes = [AuthModule::class, SerializationModule::class, AchievementDataModule::class])
+@Module(includes = [AuthDataModule::class, SerializationModule::class, AchievementDataModule::class])
 abstract class NetworkModule {
 
     @Module
