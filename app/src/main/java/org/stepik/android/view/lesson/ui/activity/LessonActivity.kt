@@ -13,6 +13,7 @@ import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
@@ -239,6 +240,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                         R.string.lesson_step_counter, state.lessonData.stepPosition + 1,
                         state.lessonData.lesson.steps.size
                     )
+                    centeredToolbarSubtitle.isVisible = true
                 }
 
                 stepsAdapter.lessonData = state.lessonData

@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/centeredToolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:layout_gravity="center"
-    app:contentInsetStart="0dp"
     app:titleTextAppearance="@style/StepikToolbarTextAppearance">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/centeredToolbarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerHorizontal="true"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle" />
+            android:layout_gravity="start"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+            tools:text="Урок1"/>
 
         <TextView
             android:id="@+id/centeredToolbarSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/centeredToolbarTitle"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_centerHorizontal="true"
-            android:textSize="12sp" />
-    </RelativeLayout>
+            android:ellipsize="end"
+            android:layout_gravity="start"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="Step 1 out of 12"/>
+    </LinearLayout>
 
 </androidx.appcompat.widget.Toolbar>
