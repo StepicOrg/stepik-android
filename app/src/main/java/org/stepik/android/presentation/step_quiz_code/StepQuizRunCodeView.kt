@@ -14,4 +14,5 @@ interface StepQuizRunCodeView {
     fun showNetworkError()
     fun showRunCodePopup()
     fun setInputData(inputData: String)
+    fun showEmptyCodeError()
 }

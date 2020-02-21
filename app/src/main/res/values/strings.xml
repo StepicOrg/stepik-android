@@ -784,6 +784,8 @@
     <string name="step_quiz_code_spinner_item">Sample %d: %s</string>
     <string name="step_quiz_code_input_data_hint">Enter input data…</string>
     <string name="step_quiz_code_run_code_tooltip">Before sending your solution, you can run your code with test input data!</string>
+    <string name="step_quiz_code_empty_code">Code field cannot be empty</string>
+    <string name="step_quiz_code_input_not_supported">Current quiz type does not support input data</string>
 
     <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
