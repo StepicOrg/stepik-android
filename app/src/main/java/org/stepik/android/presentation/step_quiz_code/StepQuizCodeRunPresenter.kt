@@ -39,6 +39,10 @@ constructor(
     }
 
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long) {
+        if (code.isEmpty()) {
+            view?.showEmptyCodeError()
+            return
+        }
         state =
             when (val oldState = state) {
                 is StepQuizRunCodeView.State.Idle ->

@@ -750,6 +750,8 @@
     <string name="step_quiz_code_spinner_item">Пример %d: %s</string>
     <string name="step_quiz_code_input_data_hint">Введите входные данные…</string>
     <string name="step_quiz_code_run_code_tooltip">Перед отправкой решения, вы можете запустить ваш код с тестовыми вводными данными!</string>
+    <string name="step_quiz_code_empty_code">Поле с кодом не может быть пустым</string>
+    <string name="step_quiz_code_input_not_supported">Данный тип заданий не поддерживает ввод данных</string>
 
     <string name="step_quiz_pycharm_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
