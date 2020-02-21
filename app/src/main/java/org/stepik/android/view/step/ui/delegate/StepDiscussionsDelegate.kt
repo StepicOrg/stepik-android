@@ -42,32 +42,49 @@ class StepDiscussionsDelegate(
             val discussionProxy = discussionThread?.discussionProxy
             val discussionsCount = discussionThread?.discussionsCount ?: 0
 
-            if (discussionThread?.thread == DiscussionThread.THREAD_DEFAULT) {
-                stepDiscussions.text =
-                    when {
-                        discussionProxy == null ->
-                            containerView.context.getString(R.string.comment_disabled)
+            when {
+                discussionThread?.thread == DiscussionThread.THREAD_DEFAULT -> {
+                    stepDiscussions.text =
+                        when {
+                            discussionProxy == null ->
+                                containerView.context.getString(R.string.comment_disabled)
 
-                        discussionsCount > 0 ->
-                            containerView.context.getString(R.string.step_discussion_show, discussionsCount)
+                            discussionsCount > 0 ->
+                                containerView.context.getString(R.string.step_discussion_show, discussionsCount)
 
-                        else ->
-                            containerView.context.getString(R.string.step_discussion_write_first)
-                    }
+                            else ->
+                                containerView.context.getString(R.string.step_discussion_write_first)
+                        }
 
-                stepDiscussions
-                    .setCompoundDrawables(start = if (discussionProxy != null) R.drawable.ic_step_discussion else -1)
+                    stepDiscussions
+                        .setCompoundDrawables(start = if (discussionProxy != null) R.drawable.ic_step_discussion else -1)
 
-                containerView.isEnabled = discussionProxy != null
-                containerView.isVisible = true
-            } else {
-                if (discussionThread != null && discussionsCount > 0) {
-                    stepDiscussions.text = containerView.context.getString(R.string.step_solutions_show, discussionsCount)
-                    stepDiscussions.setCompoundDrawables(start = R.drawable.ic_step_solutions)
+                    containerView.isEnabled = discussionProxy != null
                     containerView.isVisible = true
-                } else {
-                    containerView.isVisible = false
                 }
+
+                discussionThread?.thread == DiscussionThread.THREAD_SOLUTIONS -> {
+                    stepDiscussions.text =
+                        when {
+                            discussionProxy == null ->
+                                containerView.context.getString(R.string.solution_disabled)
+
+                            discussionsCount > 0 ->
+                                containerView.context.getString(R.string.step_solutions_show, discussionsCount)
+
+                            else ->
+                                containerView.context.getString(R.string.step_solutions_write_first)
+                        }
+
+                    stepDiscussions
+                        .setCompoundDrawables(start = if (discussionProxy != null) R.drawable.ic_step_solutions else -1)
+
+                    containerView.isEnabled = discussionProxy != null
+                    containerView.isVisible = true
+                }
+
+                else ->
+                    containerView.isVisible = false
             }
         }
     }
