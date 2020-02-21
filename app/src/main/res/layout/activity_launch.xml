@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     android:overScrollMode="never"
-    tools:context=".ui.activities.LaunchActivity">
+    tools:context="org.stepik.android.view.auth.ui.activity.LaunchActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_view"

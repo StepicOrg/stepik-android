@@ -33,7 +33,8 @@ import javax.inject.Inject
 
 @LoginScope
 class LoginPresenter
-@Inject constructor(
+@Inject
+constructor(
     private val analytic: Analytic,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val userProfileRepository: UserProfileRepository,

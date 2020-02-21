@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.activities
+package org.stepik.android.view.auth.ui.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -37,6 +37,8 @@ import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.social.ISocialType
 import org.stepic.droid.social.SocialManager
+import org.stepic.droid.ui.activities.MainFeedActivity
+import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.util.AppConstants
@@ -315,7 +317,9 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         when {
             fromMainFeed -> screenManager.showMainFeed(this, index)
             intent.hasExtra(AppConstants.KEY_COURSE_BUNDLE) -> super.onBackPressed()
-            deferredAuthSplitTest.currentGroup.isDeferredAuth -> screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+            deferredAuthSplitTest.currentGroup.isDeferredAuth -> screenManager.showMainFeed(this,
+                MainFeedActivity.CATALOG_INDEX
+            )
             else -> super.onBackPressed()
         }
     }
@@ -342,7 +346,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
     }
 
     private fun deleteCredential(credential: Credential) {
-        if (googleApiClient?.isConnected ?: false) {
+        if (googleApiClient?.isConnected == true) {
             Auth.CredentialsApi.delete(googleApiClient, credential).setResultCallback { status ->
                 if (status.isSuccess) {
                     analytic.reportEvent(Analytic.SmartLock.CREDENTIAL_DELETED_SUCCESSFUL)

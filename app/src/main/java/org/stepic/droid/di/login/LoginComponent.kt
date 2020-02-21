@@ -1,7 +1,7 @@
 package org.stepic.droid.di.login
 
 import dagger.Subcomponent
-import org.stepic.droid.ui.activities.LaunchActivity
+import org.stepik.android.view.auth.ui.activity.LaunchActivity
 import org.stepic.droid.ui.activities.LoginActivity
 import org.stepic.droid.ui.activities.RegisterActivity
 import org.stepik.android.view.injection.user.UserDataModule

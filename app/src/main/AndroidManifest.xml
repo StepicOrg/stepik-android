@@ -69,7 +69,7 @@
             android:theme="@style/StepikTheme.Onboarding" />
 
         <activity
-            android:name="org.stepic.droid.ui.activities.LaunchActivity"
+            android:name="org.stepic.droid.org.stepik.android.view.auth.ui.activity.LaunchActivity"
             android:launchMode="singleTask"
             android:theme="@style/StepikTheme.LoginLaunchRegistration">
             <intent-filter>
