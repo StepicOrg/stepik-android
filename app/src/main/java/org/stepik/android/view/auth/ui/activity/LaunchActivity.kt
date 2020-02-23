@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.view.View
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -16,7 +18,6 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.credentials.Credential
 import com.google.android.gms.common.api.GoogleApiClient
 import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
@@ -25,51 +26,59 @@ import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
 import kotlinx.android.synthetic.main.activity_launch.*
-import okhttp3.ResponseBody
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.LoginFailType
-import org.stepic.droid.core.ProgressHandler
-import org.stepic.droid.core.presenters.LoginPresenter
-import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.social.ISocialType
 import org.stepic.droid.social.SocialManager
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
+import org.stepik.android.presentation.auth.SocialAuthPresenter
+import org.stepik.android.presentation.auth.SocialAuthView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
-import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
-class LaunchActivity : SmartLockActivityBase(), LoginView {
+class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
     companion object {
-        private const val TAG = "LaunchActivity"
         const val WAS_LOGOUT_KEY = "wasLogoutKey"
-        private const val SOCIAL_ADAPTER_STATE_KEY = "socialAdapterStateKey"
+
+        private const val KEY_SOCIAL_ADAPTER_STATE = "social_adapter_state_key"
+        private const val KEY_SELECTED_SOCIAL_TYPE = "selected_social_type"
     }
-
-
-    private var progressLogin: LoadingProgressDialog? = null
-    private lateinit var progressHandler: ProgressHandler
-    private lateinit var callbackManager: CallbackManager
-
-    @Inject
-    lateinit var loginPresenter: LoginPresenter
 
     @Inject
     lateinit var deferredAuthSplitTest: DeferredAuthSplitTest
 
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var socialAuthPresenter: SocialAuthPresenter
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
+
+    private lateinit var callbackManager: CallbackManager
+
+    private var selectedSocialType: ISocialType? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launch)
-        App.componentManager().loginComponent(TAG).inject(this)
+
+        injectComponent()
+        socialAuthPresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(SocialAuthPresenter::class.java)
+
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 
         dismissButton.setOnClickListener {
@@ -89,15 +98,17 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         }
 
         initGoogleApiClient(true, GoogleApiClient.OnConnectionFailedListener {
-            Toast.makeText(this@LaunchActivity, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
+            showNetworkError()
         })
 
-        val recyclerState = savedInstanceState?.getSerializable(SOCIAL_ADAPTER_STATE_KEY)
+        val recyclerState = savedInstanceState?.getSerializable(KEY_SOCIAL_ADAPTER_STATE)
         if (recyclerState is SocialAuthAdapter.State) {
             initSocialRecycler(recyclerState)
         } else {
             initSocialRecycler()
         }
+
+        selectedSocialType = savedInstanceState?.getSerializable(KEY_SELECTED_SOCIAL_TYPE) as? SocialManager.SocialType
 
         val signInString = getString(R.string.sign_in)
         val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
@@ -109,38 +120,20 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
 
         signInText.text = spannableSignIn
 
-        progressHandler = object : ProgressHandler {
-            override fun activate() {
-                currentFocus?.hideKeyboard()
-                ProgressHelper.activate(progressLogin)
-            }
-
-            override fun dismiss() {
-                ProgressHelper.dismiss(progressLogin)
-            }
-        }
-
         callbackManager = CallbackManager.Factory.create()
         LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-
             override fun onSuccess(loginResult: LoginResult) {
-                loginPresenter.loginWithNativeProviderCode(loginResult.accessToken.token,
-                        SocialManager.SocialType.facebook)
+                socialAuthPresenter
+                    .authWithNativeCode(loginResult.accessToken.token, SocialManager.SocialType.facebook)
             }
 
-            override fun onCancel() {
-
-            }
+            override fun onCancel() {}
 
             override fun onError(exception: FacebookException) {
                 analytic.reportError(Analytic.Login.FACEBOOK_ERROR, exception)
-                onInternetProblems()
+                showNetworkError()
             }
         })
-
-        progressLogin = LoadingProgressDialog(this)
-
-        loginPresenter.attachView(this)
 
         if (checkPlayServices()) {
             googleApiClient?.registerConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
@@ -153,19 +146,28 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
                     requestCredentials()
                 }
 
-                override fun onConnectionSuspended(cause: Int) {
-                }
+                override fun onConnectionSuspended(cause: Int) {}
             })
         }
 
         onNewIntent(intent)
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        if (intent?.data != null) {
-            redirectFromSocial(intent)
-        }
+    private fun injectComponent() {
+        App.component()
+            .authComponentBuilder()
+            .build()
+            .inject(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        socialAuthPresenter.attachView(this)
+    }
+
+    override fun onStop() {
+        socialAuthPresenter.detachView(this)
+        super.onStop()
     }
 
     private fun initSocialRecycler(state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {
@@ -209,7 +211,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
             SocialManager.SocialType.google -> {
                 if (googleApiClient == null) {
                     analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED)
-                    Toast.makeText(this, R.string.google_services_late, Toast.LENGTH_SHORT).show()
+                    root_view.snackbar(messageRes = R.string.google_services_late)
                 } else {
                     val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
                     startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN)
@@ -223,32 +225,41 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
                 VKSdk.login(this, VKScope.EMAIL)
 
             else -> {
-                loginPresenter.onClickAuthWithSocialProviderWithoutSDK(type)
+                selectedSocialType = type
                 screenManager.loginWithSocial(this, type)
             }
         }
     }
 
-    override fun onDestroy() {
-        loginPresenter.detachView(this)
-        signInWithEmail.setOnClickListener(null)
-        launchSignUpButton.setOnClickListener(null)
-        showMore.setOnClickListener(null)
-        showLess.setOnClickListener(null)
-        if (isFinishing) {
-            App.componentManager().releaseLoginComponent(TAG)
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.data != null) {
+            redirectFromSocial(intent)
         }
-        super.onDestroy()
     }
 
     private fun redirectFromSocial(intent: Intent) {
-        try {
-            val code = intent.data?.getQueryParameter("code") ?: ""
-            loginPresenter.loginWithCode(code)
-        } catch (t: Throwable) {
-            analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, t)
-        }
+        val code = intent.data?.getQueryParameter("code") ?: return
+        val socialType = selectedSocialType ?: return
+        socialAuthPresenter.authWithCode(code, socialType)
+    }
 
+    override fun onCredentialsRetrieved(credentials: Credentials) {
+        screenManager.showLogin(this, credentials.login, credentials.password, true, courseFromExtra)
+    }
+
+    override fun onBackPressed() {
+        val fromMainFeed = intent?.extras?.getBoolean(AppConstants.FROM_MAIN_FEED_FLAG) ?: false
+        val index = intent?.extras?.getInt(MainFeedActivity.CURRENT_INDEX_KEY) ?: MainFeedActivity.defaultIndex
+
+        when {
+            fromMainFeed -> screenManager.showMainFeed(this, index)
+            intent.hasExtra(AppConstants.KEY_COURSE_BUNDLE) -> super.onBackPressed()
+            deferredAuthSplitTest.currentGroup.isDeferredAuth -> screenManager.showMainFeed(this,
+                MainFeedActivity.CATALOG_INDEX
+            )
+            else -> super.onBackPressed()
+        }
     }
 
     override fun finish() {
@@ -256,23 +267,16 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
     }
 
-    override fun onCredentialsRetrieved(credentials: Credentials) {
-//        val accountType = credential.accountType // todo
-//        if (accountType == null) {
-            // Sign the user in with information from the Credential.
-//            loginPresenter.login(credential.id, credential.password ?: "", credential)
-//        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
             override fun onResult(result: VKAccessToken) {
-                loginPresenter.loginWithNativeProviderCode(result.accessToken, SocialManager.SocialType.vk, result.email)
+                socialAuthPresenter
+                    .authWithNativeCode(result.accessToken, SocialManager.SocialType.vk, result.email)
             }
 
             override fun onError(error: VKError?) {
                 if (error?.errorCode == VKError.VK_REQUEST_HTTP_FAILED) {
-                    onInternetProblems()
+                    showNetworkError()
                 }
             }
         })) {
@@ -291,81 +295,60 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
                 val authCode = result.signInAccount?.serverAuthCode
                 if (authCode == null) {
                     analytic.reportEvent(Analytic.Login.GOOGLE_AUTH_CODE_NULL)
-                    onInternetProblems()
+                    showNetworkError()
                     return
                 }
 
-                loginPresenter.loginWithNativeProviderCode(authCode, SocialManager.SocialType.google)
+                socialAuthPresenter
+                    .authWithNativeCode(authCode, SocialManager.SocialType.google)
             } else {
                 // check statusCode here https://developers.google.com/android/reference/com/google/android/gms/common/api/CommonStatusCodes
                 val statusCode = result?.status?.statusCode?.toString() ?: "was null"
                 analytic.reportEvent(Analytic.Login.GOOGLE_FAILED_STATUS, statusCode)
-                onInternetProblems()
+                showNetworkError()
             }
         }
     }
 
-    private fun onInternetProblems() {
-        Toast.makeText(applicationContext, R.string.connectionProblems, Toast.LENGTH_SHORT).show()
-    }
+    override fun setState(state: SocialAuthView.State) {
+        if (state is SocialAuthView.State.Loading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
 
-    override fun onBackPressed() {
-        val fromMainFeed = intent?.extras?.getBoolean(AppConstants.FROM_MAIN_FEED_FLAG) ?: false
-        val index = intent?.extras?.getInt(MainFeedActivity.CURRENT_INDEX_KEY) ?: MainFeedActivity.defaultIndex
-
-        when {
-            fromMainFeed -> screenManager.showMainFeed(this, index)
-            intent.hasExtra(AppConstants.KEY_COURSE_BUNDLE) -> super.onBackPressed()
-            deferredAuthSplitTest.currentGroup.isDeferredAuth -> screenManager.showMainFeed(this,
-                MainFeedActivity.CATALOG_INDEX
-            )
-            else -> super.onBackPressed()
+        when (state) {
+            is SocialAuthView.State.Success ->
+                screenManager.showMainFeedAfterLogin(this, courseFromExtra)
         }
     }
 
-    override fun onLoadingWhileLogin() {
-        progressHandler.activate()
-    }
-
-    override fun onFailLogin(type: LoginFailType, credential: Credential?) {
-        progressHandler.dismiss()
-        Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
+    override fun showAuthError(failType: LoginFailType) {
+        root_view.snackbar(message = getMessageFor(failType))
 
         // logout from socials
         VKSdk.logout()
-        if (googleApiClient?.isConnected ?: false) {
+        if (googleApiClient?.isConnected == true) {
             Auth.GoogleSignInApi.signOut(googleApiClient)
         }
         //fb:
         LoginManager.getInstance().logOut()
-
-        if (credential != null && type == LoginFailType.EMAIL_PASSWORD_INVALID) {
-//            requestToDeleteCredentials(credential) todo
-        }
     }
 
-    override fun onSuccessLogin(credentials: Credentials?) {
-        progressHandler.dismiss()
-        openMainFeed()
+    override fun showNetworkError() {
+        root_view.snackbar(messageRes = R.string.connectionProblems)
     }
 
     override fun onSocialLoginWithExistingEmail(email: String) {
         screenManager.showLogin(this, email, null, false, courseFromExtra)
     }
 
-    private fun openMainFeed() {
-        screenManager.showMainFeedAfterLogin(this, courseFromExtra)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         val adapter = socialListRecyclerView.adapter
         if (adapter is SocialAuthAdapter) {
-            outState.putSerializable(SOCIAL_ADAPTER_STATE_KEY, adapter.state)
+            outState.putSerializable(KEY_SOCIAL_ADAPTER_STATE, adapter.state)
         }
+        selectedSocialType?.let { outState.putSerializable(KEY_SELECTED_SOCIAL_TYPE, it) }
         super.onSaveInstanceState(outState)
-    }
-
-    override fun onRegistrationFailed(responseBody: ResponseBody?) {
-        // no op
     }
 }

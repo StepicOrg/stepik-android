@@ -20,6 +20,4 @@ interface LoginComponent {
         fun build(): LoginComponent
     }
 
-    fun inject(launchActivity: LaunchActivity)
-
 }

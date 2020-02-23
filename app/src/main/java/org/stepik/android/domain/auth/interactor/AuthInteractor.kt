@@ -5,6 +5,7 @@ import io.reactivex.Single
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.model.Credentials
+import org.stepic.droid.social.ISocialType
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.auth.model.AuthData
@@ -30,6 +31,20 @@ constructor(
             .authWithLoginPassword(credentials.login, credentials.password)
             .flatMapCompletable { reportAuthAnalytics(AuthData.Credentials(credentials.login, credentials.password, isRegistration = false)) }
             .toSingleDefault(credentials)
+
+    fun authWithNativeCode(code: String, type: ISocialType, email: String? = null): Completable =
+        authRepository
+            .authWithNativeCode(code, type, email)
+            .flatMapCompletable {
+                reportAuthAnalytics(AuthData.Social(type))
+            }
+
+    fun authWithCode(code: String, type: ISocialType): Completable =
+        authRepository
+            .authWithCode(code)
+            .flatMapCompletable {
+                reportAuthAnalytics(AuthData.Social(type))
+            }
 
     fun createAccount(credentials: RegistrationCredentials): Single<Credentials> =
         authRepository

@@ -25,7 +25,6 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.toObject
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
-import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.model.SocialAuthError
 import retrofit2.HttpException
@@ -58,19 +57,6 @@ constructor(
         authSocialType = type
     }
 
-    fun login(rawLogin: String, rawPassword: String, credential: Credential? = null, isAfterRegistration: Boolean = false) {
-        val login = rawLogin.trim()
-        doRequest(
-            authRepository.authWithLoginPassword(login, rawPassword),
-            AuthInfo(
-                type = Type.LOGIN_PASSWORD,
-                credentials = Credentials(login, rawPassword),
-                credential = credential,
-                isAfterRegistration = isAfterRegistration
-            )
-        )
-    }
-
     fun loginWithCode(rawCode: String) {
         val code = rawCode.trim()
         doRequest(
@@ -87,23 +73,6 @@ constructor(
         )
     }
 
-    fun signUp(firstName: String, lastName: String, email: String, password: String) {
-        compositeDisposable += authRepository.createAccount(RegistrationCredentials(firstName, lastName, email, password))
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = { login(email, password, isAfterRegistration = true) },
-                onError = {
-                    val responseBody = if (it is HttpException) {
-                        it.response()?.errorBody()
-                    } else {
-                        null
-                    }
-                    view?.onRegistrationFailed(responseBody)
-                }
-            )
-    }
-
     @MainThread
     private fun doRequest(source: Single<OAuthResponse>, authInfo: AuthInfo) {
         fun onFail(loginFailType: LoginFailType) {
@@ -115,7 +84,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { authResponse ->
+                onSuccess = {
                     analytic.reportEvent(Analytic.Interaction.SUCCESS_LOGIN)
                     sharedPreferenceHelper.onSessionAfterLogin()
 
