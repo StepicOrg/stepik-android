@@ -85,7 +85,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     private lateinit var callbackManager: CallbackManager
 
     private var selectedSocialType: SocialNetwork? = null
-    
+
     private val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
