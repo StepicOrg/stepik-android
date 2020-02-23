@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.auth
 
-import org.stepic.droid.core.LoginFailType
+import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.model.Credentials
 
 interface CredentialAuthView {

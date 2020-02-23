@@ -20,13 +20,13 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
-import org.stepic.droid.core.LoginFailType
+import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.getMessageFor
+import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepic.droid.util.toBundle
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.CredentialAuthPresenter

@@ -30,7 +30,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.base.App
-import org.stepic.droid.core.LoginFailType
+import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.SmartLockActivityBase
@@ -38,7 +38,7 @@ import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.getMessageFor
+import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.SocialAuthPresenter
 import org.stepik.android.presentation.auth.SocialAuthView
@@ -262,12 +262,17 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
         val index = intent?.extras?.getInt(EXTRA_MAIN_CURRENT_INDEX) ?: MainFeedActivity.defaultIndex
 
         when {
-            fromMainFeed -> screenManager.showMainFeed(this, index)
-            intent.hasExtra(EXTRA_COURSE) -> super.onBackPressed()
-            deferredAuthSplitTest.currentGroup.isDeferredAuth -> screenManager.showMainFeed(this,
-                MainFeedActivity.CATALOG_INDEX
-            )
-            else -> super.onBackPressed()
+            fromMainFeed ->
+                screenManager.showMainFeed(this, index)
+
+            intent.hasExtra(EXTRA_COURSE) ->
+                super.onBackPressed()
+
+            deferredAuthSplitTest.currentGroup.isDeferredAuth ->
+                screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+
+            else ->
+                super.onBackPressed()
         }
     }
 

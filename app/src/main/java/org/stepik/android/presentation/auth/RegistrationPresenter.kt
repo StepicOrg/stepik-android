@@ -39,7 +39,10 @@ constructor(
     }
 
     fun submit(registrationCredentials: RegistrationCredentials) {
-        if (state != RegistrationView.State.Idle) return
+        if (state == RegistrationView.State.Loading ||
+            state is RegistrationView.State.Success) {
+            return
+        }
 
         state = RegistrationView.State.Loading
         compositeDisposable += authInteractor
