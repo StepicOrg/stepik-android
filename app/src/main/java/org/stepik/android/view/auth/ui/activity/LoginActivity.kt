@@ -30,6 +30,7 @@ import org.stepic.droid.util.toBundle
 import org.stepik.android.presentation.auth.CredentialAuthPresenter
 import org.stepik.android.presentation.auth.CredentialAuthView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
 class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
@@ -128,11 +129,11 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
         }
 
         setOnKeyboardOpenListener(root_view, {
-            stepikLogo.visibility = View.GONE
-            signInText.visibility = View.GONE
+            stepikLogo.isVisible = false
+            signInText.isVisible = false
         }, {
-            stepikLogo.visibility = View.VISIBLE
-            signInText.visibility = View.VISIBLE
+            stepikLogo.isVisible = true
+            signInText.isVisible = true
         })
     }
 
@@ -166,6 +167,8 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
     }
 
     private fun submit() {
+        currentFocus?.hideKeyboard()
+
         val login = loginField.text.toString()
         val password = passwordField.text.toString()
 
