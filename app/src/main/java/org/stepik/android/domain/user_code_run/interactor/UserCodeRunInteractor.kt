@@ -3,8 +3,8 @@ package org.stepik.android.domain.user_code_run.interactor
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user_code_run.repository.UserCodeRunRepository
-import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.code.UserCodeRun
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -13,14 +13,13 @@ class UserCodeRunInteractor
 @Inject
 constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val userProfileRepository: UserProfileRepository,
+    private val profileRepository: ProfileRepository,
     private val userCodeRunRepository: UserCodeRunRepository
 ) {
     fun createUserCodeRun(code: String, language: String, stdin: String, stepId: Long): Single<UserCodeRun> =
-        userProfileRepository
-            .getUserProfile()
-            .flatMap { userProfile ->
-                val userId = userProfile.first?.id ?: 0
+        profileRepository
+            .getProfile()
+            .flatMap { profile ->
                 userCodeRunRepository
                     .createUserCodeRun(
                         UserCodeRun(
@@ -28,7 +27,7 @@ constructor(
                             language = language,
                             stdin = stdin,
                             step = stepId,
-                            user = userId
+                            user = profile.id
                         )
                     )
                     .flatMapObservable { createdUserCodeRun ->
