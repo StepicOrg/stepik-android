@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
-import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -198,27 +197,19 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 
         val adapter = SocialAuthAdapter(this::onSocialItemClicked, state)
         showMore.setOnClickListener {
-            showMore.visibility = View.GONE
-            showLess.visibility = View.VISIBLE
+            showMore.isVisible = false
+            showLess.isVisible = true
             adapter.showMore()
         }
 
         showLess.setOnClickListener {
-            showLess.visibility = View.GONE
-            showMore.visibility = View.VISIBLE
+            showLess.isVisible = false
+            showMore.isVisible = true
             adapter.showLess()
         }
 
-        when (state) {
-            SocialAuthAdapter.State.EXPANDED -> {
-                showLess.visibility = View.VISIBLE
-                showMore.visibility = View.GONE
-            }
-            SocialAuthAdapter.State.NORMAL -> {
-                showMore.visibility = View.VISIBLE
-                showLess.visibility = View.GONE
-            }
-        }
+        showLess.isVisible = state == SocialAuthAdapter.State.EXPANDED
+        showMore.isVisible = state == SocialAuthAdapter.State.NORMAL
 
         socialListRecyclerView.adapter = adapter
     }
