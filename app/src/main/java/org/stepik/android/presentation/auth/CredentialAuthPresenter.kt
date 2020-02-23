@@ -42,7 +42,7 @@ constructor(
 
         state = CredentialAuthView.State.Loading
         compositeDisposable += authInteractor
-            .authWithCredentials(credentials)
+            .authWithCredentials(credentials, isRegistration = false) // todo
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

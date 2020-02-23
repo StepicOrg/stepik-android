@@ -8,7 +8,6 @@ import org.stepic.droid.model.Credentials
 import org.stepic.droid.social.ISocialType
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepik.android.domain.auth.model.AuthData
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.RegistrationCredentials
@@ -26,57 +25,51 @@ constructor(
         private const val MINUTES_TO_CONSIDER_REGISTRATION = 5
     }
 
-    fun authWithCredentials(credentials: Credentials): Single<Credentials> =
+    fun createAccount(credentials: RegistrationCredentials): Single<Credentials> =
+        authRepository
+            .createAccount(credentials)
+            .toSingleDefault(Credentials(credentials.email, credentials.password))
+
+    fun authWithCredentials(credentials: Credentials, isRegistration: Boolean): Single<Credentials> =
         authRepository
             .authWithLoginPassword(credentials.login, credentials.password)
-            .flatMapCompletable { reportAuthAnalytics(AuthData.Credentials(credentials.login, credentials.password, isRegistration = false)) }
-            .toSingleDefault(credentials)
+            .map { credentials }
+            .doOnSuccess {
+                val event = if(isRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
+                analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
+            }
 
     fun authWithNativeCode(code: String, type: ISocialType, email: String? = null): Completable =
         authRepository
             .authWithNativeCode(code, type, email)
             .flatMapCompletable {
-                reportAuthAnalytics(AuthData.Social(type))
+                reportSocialAuthAnalytics(type)
             }
 
     fun authWithCode(code: String, type: ISocialType): Completable =
         authRepository
             .authWithCode(code)
             .flatMapCompletable {
-                reportAuthAnalytics(AuthData.Social(type))
+                reportSocialAuthAnalytics(type)
             }
 
-    fun createAccount(credentials: RegistrationCredentials): Single<Credentials> =
-        authRepository
-            .createAccount(credentials)
-            .toSingleDefault(Credentials(credentials.email, credentials.password))
-
-    private fun reportAuthAnalytics(authData: AuthData): Completable =
-        when (authData) {
-            is AuthData.Credentials -> {
-                val event = if(authData.isRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
-                analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
-                Completable.complete()
+    private fun reportSocialAuthAnalytics(type: ISocialType): Completable =
+        userProfileRepository
+            .getUserProfile()
+            .map { (user, _) ->
+                user?.joinDate
+                    ?.let {
+                        if (DateTimeHelper.nowUtc() - it.time < MINUTES_TO_CONSIDER_REGISTRATION * AppConstants.MILLIS_IN_1MINUTE) {
+                            AmplitudeAnalytic.Auth.REGISTERED
+                        } else {
+                            AmplitudeAnalytic.Auth.LOGGED_ID
+                        }
+                    }
+                    ?: AmplitudeAnalytic.Auth.LOGGED_ID
             }
-
-            is AuthData.Social ->
-                userProfileRepository
-                    .getUserProfile()
-                    .map { (user, _) ->
-                        user?.joinDate
-                            ?.let {
-                                if (DateTimeHelper.nowUtc() - it.time < MINUTES_TO_CONSIDER_REGISTRATION * AppConstants.MILLIS_IN_1MINUTE) {
-                                    AmplitudeAnalytic.Auth.REGISTERED
-                                } else {
-                                    AmplitudeAnalytic.Auth.LOGGED_ID
-                                }
-                            }
-                            ?: AmplitudeAnalytic.Auth.LOGGED_ID
-                    }
-                    .onErrorReturnItem(AmplitudeAnalytic.Auth.LOGGED_ID)
-                    .doOnSuccess { event ->
-                        analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to authData.type.identifier))
-                    }
-                    .ignoreElement()
-        }
+            .onErrorReturnItem(AmplitudeAnalytic.Auth.LOGGED_ID)
+            .doOnSuccess { event ->
+                analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to type.identifier))
+            }
+            .ignoreElement()
 }

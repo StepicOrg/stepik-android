@@ -15,7 +15,6 @@ import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.home.HomeComponent
-import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.splash.SplashComponent
@@ -156,8 +155,6 @@ interface AppCoreComponent {
     fun splashComponent(): SplashComponent.Builder
 
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
-
-    fun loginComponentBuilder(): LoginComponent.Builder
 
     fun authComponentBuilder(): AuthComponent.Builder
 

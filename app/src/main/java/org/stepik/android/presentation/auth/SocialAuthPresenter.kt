@@ -3,10 +3,17 @@ package org.stepik.android.presentation.auth
 import io.reactivex.Completable
 import org.stepik.android.domain.auth.interactor.AuthInteractor
 import io.reactivex.Scheduler
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.social.ISocialType
+import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.toObject
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.domain.auth.model.SocialAuthError
+import retrofit2.HttpException
 import javax.inject.Inject
 
 class SocialAuthPresenter
@@ -43,5 +50,40 @@ constructor(
 
         state = SocialAuthView.State.Loading
 
+        compositeDisposable += authSource
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { state = SocialAuthView.State.Success },
+                onError = { throwable ->
+                    val failType =
+                        when ((throwable as? HttpException)?.code()) {
+                            429 -> LoginFailType.TOO_MANY_ATTEMPTS
+                            401 -> {
+                                val rawErrorMessage = throwable.response()?.errorBody()?.string()
+                                val socialAuthError = rawErrorMessage?.toObject<SocialAuthError>()
+
+                                when(socialAuthError?.error) {
+                                    AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL -> {
+                                        view?.onSocialLoginWithExistingEmail(socialAuthError.email ?: "")
+                                        LoginFailType.EMAIL_ALREADY_USED
+                                    }
+
+                                    AppConstants.ERROR_SOCIAL_AUTH_WITHOUT_EMAIL ->
+                                        LoginFailType.EMAIL_NOT_PROVIDED_BY_SOCIAL
+
+                                    else ->
+                                        LoginFailType.UNKNOWN_ERROR
+                                }
+                            }
+                            else ->
+                                LoginFailType.CONNECTION_PROBLEM
+                        }
+
+                    view?.showAuthError(failType)
+
+                    state = SocialAuthView.State.Idle
+                }
+            )
     }
 }
