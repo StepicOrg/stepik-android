@@ -31,6 +31,7 @@ import org.stepic.droid.util.toBundle
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.CredentialAuthPresenter
 import org.stepik.android.presentation.auth.CredentialAuthView
+import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
@@ -39,7 +40,7 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
     companion object {
         private const val EXTRA_EMAIL = "extra_email"
         private const val EXTRA_PASSWORD = "extra_password"
-        private const val EXTRA_AUTO_LOGIN = "extra_auto_login"
+        private const val EXTRA_AUTO_AUTH = "extra_auto_auth"
 
         private const val EXTRA_COURSE = "extra_course"
 
@@ -51,14 +52,14 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
             context: Context,
             email: String? = null,
             password: String? = null,
-            isAutoLogin: Boolean = false,
+            autoAuth: AutoAuth = AutoAuth.NONE,
 
             course: Course? = null
         ): Intent =
             Intent(context, CredentialAuthActivity::class.java)
                 .putExtra(EXTRA_EMAIL, email)
                 .putExtra(EXTRA_PASSWORD, password)
-                .putExtra(EXTRA_AUTO_LOGIN, isAutoLogin)
+                .putExtra(EXTRA_AUTO_AUTH, autoAuth)
                 .putExtra(EXTRA_COURSE, course)
     }
 
@@ -69,6 +70,11 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
+
+    private val autoAuth =
+        intent
+            .getSerializableExtra(EXTRA_AUTO_AUTH) as? AutoAuth
+            ?: AutoAuth.NONE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,7 +172,7 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
                 passwordField.requestFocus()
             }
 
-            if (intent.getBooleanExtra(EXTRA_AUTO_LOGIN, false)) {
+            if (autoAuth != AutoAuth.NONE) {
                 submit()
             }
         }
@@ -207,7 +213,7 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
         val login = loginField.text.toString()
         val password = passwordField.text.toString()
 
-        credentialAuthPresenter.submit(Credentials(login, password))
+        credentialAuthPresenter.submit(Credentials(login, password), isRegistration = autoAuth == AutoAuth.REGISTRATION)
     }
 
     override fun applyTransitionPrev() {} // we need default system animation

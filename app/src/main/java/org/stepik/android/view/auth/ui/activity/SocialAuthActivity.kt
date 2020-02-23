@@ -42,6 +42,7 @@ import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.SocialAuthPresenter
 import org.stepik.android.presentation.auth.SocialAuthView
+import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.auth.model.SocialNetwork
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import javax.inject.Inject
@@ -111,7 +112,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 
         signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
-            screenManager.showLogin(this@SocialAuthActivity, null, null, false, course)
+            screenManager.showLogin(this@SocialAuthActivity, null, null, AutoAuth.NONE, course)
         }
 
         initGoogleApiClient(true, GoogleApiClient.OnConnectionFailedListener {
@@ -254,7 +255,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     }
 
     override fun onCredentialsRetrieved(credentials: Credentials) {
-        screenManager.showLogin(this, credentials.login, credentials.password, true, course)
+        screenManager.showLogin(this, credentials.login, credentials.password, AutoAuth.SMART_LOCK, course)
     }
 
     override fun onBackPressed() {
@@ -354,7 +355,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     }
 
     override fun onSocialLoginWithExistingEmail(email: String) {
-        screenManager.showLogin(this, email, null, false, course)
+        screenManager.showLogin(this, email, null, AutoAuth.NONE, course)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

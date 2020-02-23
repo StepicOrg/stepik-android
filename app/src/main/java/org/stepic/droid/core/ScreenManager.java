@@ -26,6 +26,7 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.Unit;
 import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
+import org.stepik.android.view.auth.model.AutoAuth;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
@@ -45,7 +46,7 @@ public interface ScreenManager {
 
     void showRegistration(Activity sourceActivity, @Nullable Course course);
 
-    void showLogin(Activity sourceActivity, @Nullable String email, @Nullable String password, boolean isAutoLogin, @Nullable Course course);
+    void showLogin(Activity sourceActivity, @Nullable String email, @Nullable String password, AutoAuth autoAuth, @Nullable Course course);
 
     void showMainFeedAfterLogin(Activity sourceActivity, @Nullable Course course);
 

@@ -33,6 +33,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.presentation.auth.RegistrationPresenter
 import org.stepik.android.presentation.auth.RegistrationView
+import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
@@ -238,7 +239,7 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
                         this,
                         state.credentials.login,
                         state.credentials.password,
-                        true,
+                        AutoAuth.REGISTRATION,
                         intent.getParcelableExtra(EXTRA_COURSE)
                     )
             }

@@ -37,7 +37,7 @@ constructor(
         state = CredentialAuthView.State.Idle
     }
 
-    fun submit(credentials: Credentials) {
+    fun submit(credentials: Credentials, isRegistration: Boolean = false) {
         if (state == CredentialAuthView.State.Loading ||
             state is CredentialAuthView.State.Success) {
             return
@@ -45,7 +45,7 @@ constructor(
 
         state = CredentialAuthView.State.Loading
         compositeDisposable += authInteractor
-            .authWithCredentials(credentials, isRegistration = false) // todo
+            .authWithCredentials(credentials, isRegistration)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
