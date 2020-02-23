@@ -32,8 +32,6 @@ import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.model.Credentials
-import org.stepic.droid.social.ISocialType
-import org.stepic.droid.social.SocialManager
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
@@ -44,6 +42,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepik.android.presentation.auth.SocialAuthPresenter
 import org.stepik.android.presentation.auth.SocialAuthView
+import org.stepik.android.view.auth.model.SocialNetwork
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import javax.inject.Inject
 
@@ -68,7 +67,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
 
     private lateinit var callbackManager: CallbackManager
 
-    private var selectedSocialType: ISocialType? = null
+    private var selectedSocialType: SocialNetwork? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +107,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
             initSocialRecycler()
         }
 
-        selectedSocialType = savedInstanceState?.getSerializable(KEY_SELECTED_SOCIAL_TYPE) as? SocialManager.SocialType
+        selectedSocialType = savedInstanceState?.getSerializable(KEY_SELECTED_SOCIAL_TYPE) as? SocialNetwork
 
         val signInString = getString(R.string.sign_in)
         val signInWithSocial = getString(R.string.sign_in_with_social_suffix)
@@ -124,7 +123,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
         LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onSuccess(loginResult: LoginResult) {
                 socialAuthPresenter
-                    .authWithNativeCode(loginResult.accessToken.token, SocialManager.SocialType.facebook)
+                    .authWithNativeCode(loginResult.accessToken.token, SocialNetwork.FACEBOOK)
             }
 
             override fun onCancel() {}
@@ -205,10 +204,10 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
         socialListRecyclerView.adapter = adapter
     }
 
-    private fun onSocialItemClicked(type: ISocialType) {
+    private fun onSocialItemClicked(type: SocialNetwork) {
         analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.identifier)
         when (type) {
-            SocialManager.SocialType.google -> {
+            SocialNetwork.GOOGLE -> {
                 if (googleApiClient == null) {
                     analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED)
                     root_view.snackbar(messageRes = R.string.google_services_late)
@@ -218,10 +217,10 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
                 }
             }
 
-            SocialManager.SocialType.facebook ->
+            SocialNetwork.FACEBOOK ->
                 LoginManager.getInstance().logInWithReadPermissions(this, listOf("email"))
 
-            SocialManager.SocialType.vk ->
+            SocialNetwork.VK ->
                 VKSdk.login(this, VKScope.EMAIL)
 
             else -> {
@@ -271,7 +270,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
         if (VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
             override fun onResult(result: VKAccessToken) {
                 socialAuthPresenter
-                    .authWithNativeCode(result.accessToken, SocialManager.SocialType.vk, result.email)
+                    .authWithNativeCode(result.accessToken, SocialNetwork.VK, result.email)
             }
 
             override fun onError(error: VKError?) {
@@ -300,7 +299,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
                 }
 
                 socialAuthPresenter
-                    .authWithNativeCode(authCode, SocialManager.SocialType.google)
+                    .authWithNativeCode(authCode, SocialNetwork.GOOGLE)
             } else {
                 // check statusCode here https://developers.google.com/android/reference/com/google/android/gms/common/api/CommonStatusCodes
                 val statusCode = result?.status?.statusCode?.toString() ?: "was null"

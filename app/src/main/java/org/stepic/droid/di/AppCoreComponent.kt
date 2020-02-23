@@ -226,8 +226,6 @@ interface AppCoreComponent {
 
     fun inject(internetConnectionEnabledReceiver: InternetConnectionEnabledReceiver)
 
-    fun inject(socialAuthAdapter: SocialAuthAdapter)
-
     fun inject(clearVideosDialog: ClearVideosDialog)
 
     fun inject(remindPasswordDialogFragment: RemindPasswordDialogFragment)

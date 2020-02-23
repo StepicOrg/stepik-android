@@ -5,9 +5,9 @@ import io.reactivex.Single
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.model.Credentials
-import org.stepic.droid.social.ISocialType
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.auth.model.SocialAuthType
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.RegistrationCredentials
@@ -39,21 +39,21 @@ constructor(
                 analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
             }
 
-    fun authWithNativeCode(code: String, type: ISocialType, email: String? = null): Completable =
+    fun authWithNativeCode(code: String, type: SocialAuthType, email: String? = null): Completable =
         authRepository
             .authWithNativeCode(code, type, email)
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
 
-    fun authWithCode(code: String, type: ISocialType): Completable =
+    fun authWithCode(code: String, type: SocialAuthType): Completable =
         authRepository
             .authWithCode(code)
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
 
-    private fun reportSocialAuthAnalytics(type: ISocialType): Completable =
+    private fun reportSocialAuthAnalytics(type: SocialAuthType): Completable =
         userProfileRepository
             .getUserProfile()
             .map { (user, _) ->

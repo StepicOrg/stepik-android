@@ -31,13 +31,13 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
+import org.stepik.android.domain.auth.model.SocialAuthType;
 import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
-import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
@@ -702,7 +702,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void loginWithSocial(FragmentActivity activity, ISocialType type) {
+    public void loginWithSocial(FragmentActivity activity, SocialAuthType type) {
         String socialIdentifier = type.getIdentifier();
         String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.SOCIAL) + "&response_type=code");
         Uri uri = Uri.parse(url);

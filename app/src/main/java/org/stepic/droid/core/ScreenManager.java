@@ -14,8 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.model.CoursesCarouselInfo;
-import org.stepic.droid.social.ISocialType;
 import org.stepic.droid.social.SocialMedia;
+import org.stepik.android.domain.auth.model.SocialAuthType;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
@@ -156,7 +156,7 @@ public interface ScreenManager {
     void openSocialMediaLink(Context context, String link);
     void openSocialMediaLink(Context context, SocialMedia socialLink);
 
-    void loginWithSocial(FragmentActivity activity, ISocialType type);
+    void loginWithSocial(FragmentActivity activity, SocialAuthType type);
 
     void showCachedAttempts(@NotNull Context context, long courseId);
 }

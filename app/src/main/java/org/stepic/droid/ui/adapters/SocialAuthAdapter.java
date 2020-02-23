@@ -9,14 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.stepic.droid.R;
-import org.stepic.droid.base.App;
-import org.stepic.droid.social.ISocialType;
-import org.stepic.droid.social.SocialManager;
 import org.stepic.droid.ui.listeners.OnItemClickListener;
-
-import java.util.List;
-
-import javax.inject.Inject;
+import org.stepik.android.view.auth.model.SocialNetwork;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,11 +18,8 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
 public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.SocialViewHolder> implements OnItemClickListener {
-    @Inject
-    SocialManager socialManager;
-
-    private List<? extends ISocialType> socialList;
-    private Function1<ISocialType, Unit> onSocialItemClick;
+    private SocialNetwork[] socialList;
+    private Function1<SocialNetwork, Unit> onSocialItemClick;
 
     private State state;
 
@@ -41,10 +32,9 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         }
     }
 
-    public SocialAuthAdapter(Function1<ISocialType, Unit> onSocialItemClick, State state) {
+    public SocialAuthAdapter(Function1<SocialNetwork, Unit> onSocialItemClick, State state) {
         this.onSocialItemClick = onSocialItemClick;
-        App.Companion.component().inject(this);
-        socialList = socialManager.getAllSocial();
+        socialList = SocialNetwork.values();
         if (state == null) {
             this.state = State.NORMAL;
         } else {
@@ -62,18 +52,18 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
 
     @Override
     public void onBindViewHolder(SocialViewHolder holder, int position) {
-        ISocialType socialType = socialList.get(position);
-        holder.imageView.setImageDrawable(socialType.getIcon());
+        SocialNetwork socialType = socialList[position];
+        holder.imageView.setImageResource(socialType.getDrawableRes());
     }
 
     @Override
     public int getItemCount() {
-        return socialList.size() / state.multiplier + (socialList.size() % state.multiplier == 0 ? 0 : 1);
+        return socialList.length / state.multiplier + (socialList.length % state.multiplier == 0 ? 0 : 1);
     }
 
     @Override
     public void onItemClick(int position) {
-        onSocialItemClick.invoke(socialList.get(position));
+        onSocialItemClick.invoke(socialList[position]);
     }
 
     public void showMore() {
@@ -94,14 +84,14 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
         return state;
     }
 
-    public static class SocialViewHolder extends RecyclerView.ViewHolder {
+    static class SocialViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.root_view)
         View rootView;
 
         @BindView(R.id.social_item)
         ImageView imageView;
 
-        public SocialViewHolder(View itemView, final OnItemClickListener clickItemListener) {
+        private SocialViewHolder(View itemView, final OnItemClickListener clickItemListener) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 

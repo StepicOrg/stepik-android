@@ -6,10 +6,10 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.social.ISocialType
 import org.stepic.droid.util.addUserAgent
 import org.stepic.droid.util.setTimeoutsInSeconds
 import org.stepik.android.data.auth.source.AuthRemoteDataSource
+import org.stepik.android.domain.auth.model.SocialAuthType
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.model.TokenType
@@ -66,14 +66,14 @@ constructor(
             .authWithLoginPassword(config.getGrantType(TokenType.LOGIN_PASSWORD), URLEncoder.encode(login), URLEncoder.encode(password))
             .doOnSuccess { saveResponse(it, isSocial = false) }
 
-    override fun authWithNativeCode(code: String, type: ISocialType, email: String?): Single<OAuthResponse> =
+    override fun authWithNativeCode(code: String, type: SocialAuthType, email: String?): Single<OAuthResponse> =
         socialAuthService
             .getTokenByNativeCode(
                 type.identifier,
                 code,
                 config.getGrantType(TokenType.SOCIAL),
                 config.redirectUri,
-                if (type.needUseAccessTokenInsteadOfCode()) ACCESS_TOKEN else null,
+                if (type.isNeedUseAccessTokenInsteadOfCode) ACCESS_TOKEN else null,
                 email
             )
             .doOnSuccess { saveResponse(it, isSocial = true) }

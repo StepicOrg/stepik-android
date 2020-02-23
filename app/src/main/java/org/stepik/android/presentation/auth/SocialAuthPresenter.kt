@@ -8,11 +8,11 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.social.ISocialType
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.toObject
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.domain.auth.model.SocialAuthError
+import org.stepik.android.domain.auth.model.SocialAuthType
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -37,11 +37,11 @@ constructor(
         view.setState(state)
     }
 
-    fun authWithNativeCode(code: String, type: ISocialType, email: String? = null) {
+    fun authWithNativeCode(code: String, type: SocialAuthType, email: String? = null) {
         auth(authInteractor.authWithNativeCode(code, type, email))
     }
 
-    fun authWithCode(code: String, type: ISocialType) {
+    fun authWithCode(code: String, type: SocialAuthType) {
         auth(authInteractor.authWithCode(code, type))
     }
 
