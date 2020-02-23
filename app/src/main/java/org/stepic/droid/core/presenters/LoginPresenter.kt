@@ -92,7 +92,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = { login(email, password, isAfterRegistration = true)},
+                onComplete = { login(email, password, isAfterRegistration = true) },
                 onError = {
                     val responseBody = if (it is HttpException) {
                         it.response()?.errorBody()

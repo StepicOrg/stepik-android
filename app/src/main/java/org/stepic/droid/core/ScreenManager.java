@@ -45,7 +45,7 @@ public interface ScreenManager {
 
     void showRegistration(Activity sourceActivity, @Nullable Course course);
 
-    void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email);
+    void showLogin(Activity sourceActivity, @Nullable String email, @Nullable String password, boolean isAutoLogin, @Nullable Course course);
 
     void showMainFeedAfterLogin(Activity sourceActivity, @Nullable Course course);
 

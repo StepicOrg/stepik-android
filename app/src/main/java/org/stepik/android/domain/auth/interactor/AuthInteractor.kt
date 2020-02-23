@@ -10,6 +10,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.auth.model.AuthData
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
+import org.stepik.android.model.user.RegistrationCredentials
 import javax.inject.Inject
 
 class AuthInteractor
@@ -29,6 +30,11 @@ constructor(
             .authWithLoginPassword(credentials.login, credentials.password)
             .flatMapCompletable { reportAuthAnalytics(AuthData.Credentials(credentials.login, credentials.password, isRegistration = false)) }
             .toSingleDefault(credentials)
+
+    fun createAccount(credentials: RegistrationCredentials): Single<Credentials> =
+        authRepository
+            .createAccount(credentials)
+            .toSingleDefault(Credentials(credentials.email, credentials.password))
 
     private fun reportAuthAnalytics(authData: AuthData): Completable =
         when (authData) {

@@ -1,5 +1,7 @@
 package org.stepik.android.view.auth.ui.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -23,10 +25,10 @@ import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
-import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.toBundle
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.CredentialAuthPresenter
 import org.stepik.android.presentation.auth.CredentialAuthView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
@@ -35,18 +37,38 @@ import javax.inject.Inject
 
 class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
     companion object {
+        private const val EXTRA_EMAIL = "extra_email"
+        private const val EXTRA_PASSWORD = "extra_password"
+        private const val EXTRA_AUTO_LOGIN = "extra_auto_login"
+
+        private const val EXTRA_COURSE = "extra_course"
+
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
-    }
 
-    private val progressDialogFragment: DialogFragment =
-        LoadingProgressDialogFragment.newInstance()
+        fun createIntent(
+            context: Context,
+            email: String? = null,
+            password: String? = null,
+            isAutoLogin: Boolean = false,
+
+            course: Course? = null
+        ): Intent =
+            Intent(context, LoginActivity::class.java)
+                .putExtra(EXTRA_EMAIL, email)
+                .putExtra(EXTRA_PASSWORD, password)
+                .putExtra(EXTRA_AUTO_LOGIN, isAutoLogin)
+                .putExtra(EXTRA_COURSE, course)
+    }
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var credentialAuthPresenter: CredentialAuthPresenter
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,15 +140,9 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
             analytic.reportEvent(Analytic.Login.REQUEST_LOGIN_WITH_INTERACTION_TYPE, LoginInteractionType.button.toBundle())
             submit()
         }
-
         loginRootView.requestFocus()
 
         initGoogleApiClient()
-
-        if (savedInstanceState == null && intent.hasExtra(AppConstants.KEY_EMAIL_BUNDLE)) {
-            loginField.setText(intent.getStringExtra(AppConstants.KEY_EMAIL_BUNDLE))
-            passwordField.requestFocus()
-        }
 
         setOnKeyboardOpenListener(root_view, {
             stepikLogo.isVisible = false
@@ -135,6 +151,22 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
             stepikLogo.isVisible = true
             signInText.isVisible = true
         })
+
+
+        if (savedInstanceState == null) {
+            loginField.setText(intent.getStringExtra(EXTRA_EMAIL))
+
+            val password = intent.getStringExtra(EXTRA_PASSWORD)
+            if (password != null) {
+                passwordField.setText(password)
+            } else {
+                passwordField.requestFocus()
+            }
+
+            if (intent.getBooleanExtra(EXTRA_AUTO_LOGIN, false)) {
+                submit()
+            }
+        }
     }
 
     private fun injectComponent() {
@@ -216,6 +248,6 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
     }
 
     private fun openMainFeed() {
-        screenManager.showMainFeedAfterLogin(this, courseFromExtra)
+        screenManager.showMainFeedAfterLogin(this, intent.getParcelableExtra(EXTRA_COURSE))
     }
 }

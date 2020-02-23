@@ -48,7 +48,7 @@ import org.stepik.android.view.auth.ui.activity.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
-import org.stepic.droid.ui.activities.RegisterActivity;
+import org.stepik.android.view.auth.ui.activity.RegisterActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
@@ -198,15 +198,9 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email) {
+    public void showLogin(Activity sourceActivity, @Nullable String email, @Nullable String password, boolean isAutoLogin, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
-        Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
-        if (course != null) {
-            loginIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
-        }
-        if (email != null) {
-            loginIntent.putExtra(AppConstants.KEY_EMAIL_BUNDLE, email);
-        }
+        Intent loginIntent = LoginActivity.Companion.createIntent(sourceActivity, email, password, isAutoLogin, course);
         sourceActivity.startActivity(loginIntent);
     }
 

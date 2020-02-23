@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.activities
+package org.stepik.android.view.auth.ui.activity
 
 import android.os.Bundle
 import android.text.Editable
@@ -8,34 +8,33 @@ import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
-import com.google.android.gms.auth.api.credentials.Credential
+import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_register.*
-import okhttp3.ResponseBody
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
-import org.stepic.droid.core.LoginFailType
-import org.stepic.droid.core.presenters.LoginPresenter
-import org.stepic.droid.core.presenters.contracts.LoginView
-import org.stepic.droid.model.Credentials
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog
+import org.stepic.droid.ui.activities.SmartLockActivityBase
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
+import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
-import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.stripUnderlinesFromLinks
 import org.stepic.droid.util.toBundle
-import org.stepik.android.remote.auth.model.RegistrationResponse
+import org.stepik.android.model.user.RegistrationCredentials
+import org.stepik.android.presentation.auth.RegistrationPresenter
+import org.stepik.android.presentation.auth.RegistrationView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
-import retrofit2.Retrofit
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
-class RegisterActivity : SmartLockActivityBase(), LoginView {
+class RegisterActivity : SmartLockActivityBase(), RegistrationView {
     companion object {
         const val ERROR_DELIMITER = " "
         const val TAG = "RegisterActivity"
@@ -45,6 +44,11 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         }
     }
 
+    @Inject
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var registrationPresenter: RegistrationPresenter
+
     private val passwordTooShortMessage by lazy {
         resources.getString(R.string.password_too_short)
     }
@@ -52,18 +56,17 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         resources.getString(R.string.terms_message_register)
     }
 
-    private lateinit var progressBar: LoadingProgressDialog
-
-    @Inject
-    lateinit var loginPresenter: LoginPresenter
-
-    @Inject
-    internal lateinit var retrofit: Retrofit
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        App.componentManager().loginComponent(TAG).inject(this)
+
+        injectComponent()
+        registrationPresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(RegistrationPresenter::class.java)
 
         initTitle()
 
@@ -71,15 +74,13 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         termsPrivacyRegisterTextView.text = textResolver.fromHtml(termsMessageHtml)
         stripUnderlinesFromLinks(termsPrivacyRegisterTextView)
 
-        signUpButton.setOnClickListener { createAccount(LoginInteractionType.button) }
-
-        progressBar = LoadingProgressDialog(this)
+        signUpButton.setOnClickListener { submit(LoginInteractionType.button) }
 
         passwordField.setOnEditorActionListener { _, actionId, _ ->
             var handled = false
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 analytic.reportEvent(Analytic.Registration.CLICK_SEND_IME)
-                createAccount(LoginInteractionType.ime)
+                submit(LoginInteractionType.ime)
                 handled = true
             }
             handled
@@ -95,7 +96,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
             }
 
             override fun afterTextChanged(s: Editable?) {
-                onClearError()
+                registrationPresenter.onFormChanged()
                 setSignUpButtonState()
             }
         }
@@ -105,7 +106,9 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
 
         val onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-            reportTap(hasFocus)
+            if (hasFocus) {
+                analytic.reportEvent(Analytic.Registration.TAP_ON_FIELDS)
+            }
         }
         firstNameField.onFocusChangeListener = onFocusChangeListener
         emailField.onFocusChangeListener = onFocusChangeListener
@@ -136,14 +139,30 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         setSignUpButtonState()
 
         setOnKeyboardOpenListener(root_view, {
-            stepikLogo.visibility = View.GONE
-            signUpText.visibility = View.GONE
+            stepikLogo.isVisible = false
+            signUpText.isVisible = false
         }, {
-            stepikLogo.visibility = View.VISIBLE
-            signUpText.visibility = View.VISIBLE
+            stepikLogo.isVisible = true
+            signUpText.isVisible = true
         })
 
-        loginPresenter.attachView(this)
+    }
+
+    private fun injectComponent() {
+        App.component()
+            .authComponentBuilder()
+            .build()
+            .inject(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        registrationPresenter.attachView(this)
+    }
+
+    override fun onStop() {
+        registrationPresenter.detachView(this)
+        super.onStop()
     }
 
     private fun setSignUpButtonState() {
@@ -162,14 +181,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         signUpText.text = spannableSignIn
     }
 
-    private fun reportTap(hasFocus: Boolean) {
-        if (hasFocus) {
-            analytic.reportEvent(Analytic.Registration.TAP_ON_FIELDS)
-        }
-    }
-
-
-    private fun createAccount(interactionType: LoginInteractionType) {
+    private fun submit(interactionType: LoginInteractionType) {
         analytic.reportEvent(Analytic.Registration.CLICK_WITH_INTERACTION_TYPE, interactionType.toBundle())
         currentFocus?.hideKeyboard()
 
@@ -183,42 +195,44 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         var isOk = true
 
         if (!ValidatorUtil.isPasswordValid(password)) {
-            showError(passwordTooShortMessage)
+            showError(passwordTooShortMessage) // todo
             isOk = false
         }
 
         if (isOk) {
-            onLoadingWhileLogin()
-            loginPresenter.signUp(firstName, lastName, email, password)
+            registrationPresenter.submit(RegistrationCredentials(firstName, lastName, email, password))
         }
     }
 
-    override fun onRegistrationFailed(responseBody: ResponseBody?) {
-        ProgressHelper.dismiss(progressBar)
-        val errorConverter = retrofit.responseBodyConverter<RegistrationResponse>(
-            RegistrationResponse::class.java, arrayOfNulls<Annotation>(0))
-        var error: RegistrationResponse? = null
-        try {
-            error = errorConverter.convert(responseBody!!)
-        } catch (e: Exception) {
-            analytic.reportError(Analytic.Error.REGISTRATION_IMPORTANT_ERROR, e) //it is unknown response Expected BEGIN_OBJECT but was STRING at line 1 column 1 path
+    override fun setState(state: RegistrationView.State) {
+        if (state is RegistrationView.State.Loading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
         }
-        handleErrorRegistrationResponse(error)
+
+        when (state) {
+            is RegistrationView.State.Idle -> {
+                signUpButton.isEnabled = true
+                registerForm.isEnabled = true
+                registerErrorMessage.isVisible = false
+            }
+
+            is RegistrationView.State.Error -> {
+                showError(getErrorString(state.data.email))
+                showError(getErrorString(state.data.firstName))
+                showError(getErrorString(state.data.lastName))
+                showError(getErrorString(state.data.password))
+            }
+
+            is RegistrationView.State.Success -> {
+                screenManager.showLogin(this, state.credentials.login, state.credentials.password, true, courseFromExtra)
+            }
+        }
     }
 
-    private fun onClearError() {
-        signUpButton.isEnabled = true
-        registerForm.isEnabled = true
-        registerErrorMessage.visibility = View.GONE
-    }
-
-    override fun onDestroy() {
-        loginPresenter.detachView(this)
-        passwordField.setOnEditorActionListener(null)
-        if (isFinishing) {
-            App.componentManager().releaseLoginComponent(TAG)
-        }
-        super.onDestroy()
+    override fun showNetworkError() {
+        registerRootView.snackbar(messageRes = R.string.connectionProblems)
     }
 
     override fun applyTransitionPrev() {} // we need default system animation
@@ -230,50 +244,13 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
                 signUpButton.isEnabled = false
                 registerForm.isEnabled = false
                 registerErrorMessage.text = it
-                registerErrorMessage.visibility = View.VISIBLE
+                registerErrorMessage.isVisible = true
             }
         }
     }
 
-    private fun handleErrorRegistrationResponse(registrationResponse: RegistrationResponse?) {
-        if (registrationResponse == null) return
-        showError(getErrorString(registrationResponse.email))
-        showError(getErrorString(registrationResponse.first_name))
-        showError(getErrorString(registrationResponse.last_name))
-        showError(getErrorString(registrationResponse.password))
-    }
-
-    private fun getErrorString(values: Array<String?>?): String? =
+    private fun getErrorString(values: List<String?>?): String? =
         values
             ?.takeIf { it.isNotEmpty() }
             ?.joinToString(separator = ERROR_DELIMITER)
-
-    override fun onFailLogin(type: LoginFailType, credential: Credential?) {
-        ProgressHelper.dismiss(progressBar)
-        Toast.makeText(this, getMessageFor(type), Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onSuccessLogin(credentials: Credentials?) {
-        ProgressHelper.dismiss(progressBar)
-        if (credentials == null || !checkPlayServices() || googleApiClient?.isConnected != true) {
-            openMainFeed()
-        } else {
-            //only if we have not null data (we can apply smart lock && google api client is connected and available
-            requestToSaveCredentials(credentials)
-        }
-    }
-
-    override fun onCredentialsSaved() = openMainFeed()
-
-    private fun openMainFeed() {
-        screenManager.showMainFeedAfterLogin(this, courseFromExtra)
-    }
-
-    override fun onLoadingWhileLogin() {
-        currentFocus?.hideKeyboard()
-        ProgressHelper.activate(progressBar)
-    }
-
-    override fun onSocialLoginWithExistingEmail(email: String) {}
-
 }

@@ -85,7 +85,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
 
         signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
-            screenManager.showLogin(this@LaunchActivity, courseFromExtra, null)
+            screenManager.showLogin(this@LaunchActivity, null, null, false, courseFromExtra)
         }
 
         initGoogleApiClient(true, GoogleApiClient.OnConnectionFailedListener {
@@ -350,7 +350,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
     }
 
     override fun onSocialLoginWithExistingEmail(email: String) {
-        screenManager.showLogin(this, courseFromExtra, email)
+        screenManager.showLogin(this, email, null, false, courseFromExtra)
     }
 
     private fun openMainFeed() {
