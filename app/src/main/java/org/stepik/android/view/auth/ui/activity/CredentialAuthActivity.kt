@@ -15,7 +15,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_auth_credential.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
@@ -35,7 +35,7 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
-class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
+class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
     companion object {
         private const val EXTRA_EMAIL = "extra_email"
         private const val EXTRA_PASSWORD = "extra_password"
@@ -55,7 +55,7 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
 
             course: Course? = null
         ): Intent =
-            Intent(context, LoginActivity::class.java)
+            Intent(context, CredentialAuthActivity::class.java)
                 .putExtra(EXTRA_EMAIL, email)
                 .putExtra(EXTRA_PASSWORD, password)
                 .putExtra(EXTRA_AUTO_LOGIN, isAutoLogin)
@@ -72,7 +72,7 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_auth_credential)
 
         injectComponent()
         credentialAuthPresenter = ViewModelProviders
@@ -82,7 +82,7 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
         initTitle()
 
         forgotPasswordView.setOnClickListener {
-            screenManager.openRemindPassword(this@LoginActivity)
+            screenManager.openRemindPassword(this@CredentialAuthActivity)
         }
 
         loginField.setOnEditorActionListener { _, actionId, _ ->
@@ -133,7 +133,7 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
             screenManager
                 .showRegistration(
-                    this@LoginActivity,
+                    this@CredentialAuthActivity,
                     intent.getParcelableExtra(EXTRA_COURSE)
                 )
         }

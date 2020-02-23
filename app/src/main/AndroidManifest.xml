@@ -69,7 +69,7 @@
             android:theme="@style/StepikTheme.Onboarding" />
 
         <activity
-            android:name="org.stepik.android.view.auth.ui.activity.LaunchActivity"
+            android:name="org.stepik.android.view.auth.ui.activity.SocialAuthActivity"
             android:launchMode="singleTask"
             android:theme="@style/StepikTheme.LoginLaunchRegistration">
             <intent-filter>
@@ -92,7 +92,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name="org.stepik.android.view.auth.ui.activity.LoginActivity"
+            android:name="org.stepik.android.view.auth.ui.activity.CredentialAuthActivity"
             android:launchMode="singleTop"
             android:theme="@style/StepikTheme.LoginLaunchRegistration"
             android:windowSoftInputMode="adjustResize" />

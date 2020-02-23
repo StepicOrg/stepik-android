@@ -1,8 +1,8 @@
 package org.stepik.android.view.injection.auth
 
 import dagger.Subcomponent
-import org.stepik.android.view.auth.ui.activity.LaunchActivity
-import org.stepik.android.view.auth.ui.activity.LoginActivity
+import org.stepik.android.view.auth.ui.activity.SocialAuthActivity
+import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity
 import org.stepik.android.view.auth.ui.activity.RegistrationActivity
 import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.user.UserDataModule
@@ -22,7 +22,7 @@ interface AuthComponent {
         fun build(): AuthComponent
     }
 
-    fun inject(loginActivity: LoginActivity)
-    fun inject(registerActivity: LaunchActivity)
+    fun inject(credentialAuthActivity: CredentialAuthActivity)
+    fun inject(registerActivity: SocialAuthActivity)
     fun inject(registrationActivity: RegistrationActivity)
 }

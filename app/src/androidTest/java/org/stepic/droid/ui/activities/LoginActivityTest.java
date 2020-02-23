@@ -16,7 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.stepic.droid.R;
-import org.stepik.android.view.auth.ui.activity.LaunchActivity;
+import org.stepik.android.view.auth.ui.activity.SocialAuthActivity;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -35,7 +35,7 @@ import static org.hamcrest.Matchers.allOf;
 public class LoginActivityTest {
 
     @Rule
-    public ActivityTestRule<LaunchActivity> mActivityTestRule = new ActivityTestRule<>(LaunchActivity.class);
+    public ActivityTestRule<SocialAuthActivity> mActivityTestRule = new ActivityTestRule<>(SocialAuthActivity.class);
 
     @Test
     public void loginActivityTest() {

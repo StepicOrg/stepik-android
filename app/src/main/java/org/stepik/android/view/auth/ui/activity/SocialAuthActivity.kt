@@ -26,7 +26,7 @@ import com.vk.sdk.VKScope
 import com.vk.sdk.VKSdk
 import com.vk.sdk.api.VKError
 import jp.wasabeef.recyclerview.animators.FadeInDownAnimator
-import kotlinx.android.synthetic.main.activity_launch.*
+import kotlinx.android.synthetic.main.activity_auth_social.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
@@ -47,7 +47,7 @@ import org.stepik.android.view.auth.model.SocialNetwork
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import javax.inject.Inject
 
-class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
+class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     companion object {
         private const val REQUEST_CODE_GOOGLE_SIGN_IN = 7007
 
@@ -61,12 +61,12 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
         private const val EXTRA_MAIN_CURRENT_INDEX = "main_current_index"
 
         fun createIntent(context: Context, course: Course? = null, wasLogout: Boolean = false): Intent =
-            Intent(context, LaunchActivity::class.java)
+            Intent(context, SocialAuthActivity::class.java)
                 .putExtra(EXTRA_COURSE, course)
                 .putExtra(EXTRA_WAS_LOGOUT_KEY, wasLogout)
 
         fun createIntent(context: Context, isFromMainFeed: Boolean, mainCurrentIndex: Int): Intent =
-            Intent(context, LaunchActivity::class.java)
+            Intent(context, SocialAuthActivity::class.java)
                 .putExtra(EXTRA_IS_FROM_MAIN_FEED, isFromMainFeed)
                 .putExtra(EXTRA_MAIN_CURRENT_INDEX, mainCurrentIndex)
     }
@@ -90,7 +90,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launch)
+        setContentView(R.layout.activity_auth_social)
 
         injectComponent()
         socialAuthPresenter = ViewModelProviders
@@ -107,12 +107,12 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
-            screenManager.showRegistration(this@LaunchActivity, course)
+            screenManager.showRegistration(this@SocialAuthActivity, course)
         }
 
         signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
-            screenManager.showLogin(this@LaunchActivity, null, null, false, course)
+            screenManager.showLogin(this@SocialAuthActivity, null, null, false, course)
         }
 
         initGoogleApiClient(true, GoogleApiClient.OnConnectionFailedListener {

@@ -43,8 +43,8 @@ import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
-import org.stepik.android.view.auth.ui.activity.LaunchActivity;
-import org.stepik.android.view.auth.ui.activity.LoginActivity;
+import org.stepik.android.view.auth.ui.activity.SocialAuthActivity;
+import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
@@ -114,7 +114,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchFromSplash(Activity activity) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = LaunchActivity.Companion.createIntent(activity, null, false);
+        Intent launchIntent = SocialAuthActivity.Companion.createIntent(activity, null, false);
         activity.startActivity(launchIntent);
     }
 
@@ -126,7 +126,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreenAfterLogout(Context context) {
         analytic.reportEvent(Analytic.Interaction.SHOW_LAUNCH_SCREEN_AFTER_LOGOUT);
-        Intent launchIntent = LaunchActivity.Companion.createIntent(context, null, true);
+        Intent launchIntent = SocialAuthActivity.Companion.createIntent(context, null, true);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
     }
@@ -134,7 +134,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreen(FragmentActivity activity, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = LaunchActivity.Companion.createIntent(activity, course, false);
+        Intent launchIntent = SocialAuthActivity.Companion.createIntent(activity, course, false);
         activity.startActivity(launchIntent);
     }
 
@@ -175,7 +175,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreen(Context context, boolean fromMainFeed, int index) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = LaunchActivity.Companion.createIntent(context, fromMainFeed, index);
+        Intent launchIntent = SocialAuthActivity.Companion.createIntent(context, fromMainFeed, index);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
     }
@@ -190,7 +190,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLogin(Activity sourceActivity, @Nullable String email, @Nullable String password, boolean isAutoLogin, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
-        Intent loginIntent = LoginActivity.Companion.createIntent(sourceActivity, email, password, isAutoLogin, course);
+        Intent loginIntent = CredentialAuthActivity.Companion.createIntent(sourceActivity, email, password, isAutoLogin, course);
         sourceActivity.startActivity(loginIntent);
     }
 
