@@ -14,7 +14,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.activity_registration.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
@@ -34,7 +34,7 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
-class RegisterActivity : SmartLockActivityBase(), RegistrationView {
+class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     companion object {
         const val ERROR_DELIMITER = " "
         const val TAG = "RegisterActivity"
@@ -61,7 +61,7 @@ class RegisterActivity : SmartLockActivityBase(), RegistrationView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        setContentView(R.layout.activity_registration)
 
         injectComponent()
         registrationPresenter = ViewModelProviders

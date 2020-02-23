@@ -48,7 +48,7 @@ import org.stepik.android.view.auth.ui.activity.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
-import org.stepik.android.view.auth.ui.activity.RegisterActivity;
+import org.stepik.android.view.auth.ui.activity.RegistrationActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.activities.TagActivity;
@@ -190,7 +190,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showRegistration(Activity sourceActivity, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_REGISTRATION);
-        Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
+        Intent launchIntent = new Intent(sourceActivity, RegistrationActivity.class);
         if (course != null) {
             launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
         }

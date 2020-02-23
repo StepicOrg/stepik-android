@@ -87,7 +87,7 @@
         </activity>
 
         <activity
-            android:name="org.stepik.android.view.auth.ui.activity.RegisterActivity"
+            android:name="org.stepik.android.view.auth.ui.activity.RegistrationActivity"
             android:theme="@style/StepikTheme.LoginLaunchRegistration"
             android:windowSoftInputMode="adjustResize" />
 
