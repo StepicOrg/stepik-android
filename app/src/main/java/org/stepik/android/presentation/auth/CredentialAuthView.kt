@@ -3,7 +3,6 @@ package org.stepik.android.presentation.auth
 import org.stepic.droid.core.LoginFailType
 import org.stepic.droid.model.Credentials
 
-
 interface CredentialAuthView {
     sealed class State {
         object Idle : State()

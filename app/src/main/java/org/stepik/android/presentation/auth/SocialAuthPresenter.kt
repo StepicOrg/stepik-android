@@ -63,7 +63,7 @@ constructor(
                                 val rawErrorMessage = throwable.response()?.errorBody()?.string()
                                 val socialAuthError = rawErrorMessage?.toObject<SocialAuthError>()
 
-                                when(socialAuthError?.error) {
+                                when (socialAuthError?.error) {
                                     AppConstants.ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL -> {
                                         view?.onSocialLoginWithExistingEmail(socialAuthError.email ?: "")
                                         LoginFailType.EMAIL_ALREADY_USED

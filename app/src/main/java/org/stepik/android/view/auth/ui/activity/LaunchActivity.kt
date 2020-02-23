@@ -207,7 +207,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
 
     private fun onSocialItemClicked(type: ISocialType) {
         analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_SOCIAL, type.identifier)
-        when(type) {
+        when (type) {
             SocialManager.SocialType.google -> {
                 if (googleApiClient == null) {
                     analytic.reportEvent(Analytic.Interaction.GOOGLE_SOCIAL_IS_NOT_ENABLED)
@@ -280,7 +280,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
                 }
             }
         })) {
-            //vk will handle at callback
+            // vk will handle at callback
             return
         }
 
@@ -331,7 +331,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
         if (googleApiClient?.isConnected == true) {
             Auth.GoogleSignInApi.signOut(googleApiClient)
         }
-        //fb:
+        // fb:
         LoginManager.getInstance().logOut()
     }
 

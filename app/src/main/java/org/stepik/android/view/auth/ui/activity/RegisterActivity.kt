@@ -145,7 +145,6 @@ class RegisterActivity : SmartLockActivityBase(), RegistrationView {
             stepikLogo.isVisible = true
             signUpText.isVisible = true
         })
-
     }
 
     private fun injectComponent() {

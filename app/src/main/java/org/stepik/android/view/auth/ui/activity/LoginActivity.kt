@@ -152,7 +152,6 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
             signInText.isVisible = true
         })
 
-
         if (savedInstanceState == null) {
             loginField.setText(intent.getStringExtra(EXTRA_EMAIL))
 

@@ -35,7 +35,7 @@ constructor(
             .authWithLoginPassword(credentials.login, credentials.password)
             .map { credentials }
             .doOnSuccess {
-                val event = if(isRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
+                val event = if (isRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
                 analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
             }
 
