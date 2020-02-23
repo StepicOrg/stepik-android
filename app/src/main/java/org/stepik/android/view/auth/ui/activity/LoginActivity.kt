@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.activities
+package org.stepik.android.view.auth.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -22,6 +22,7 @@ import org.stepic.droid.core.ProgressHandler
 import org.stepic.droid.core.presenters.LoginPresenter
 import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.model.Credentials
+import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialog
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.AppConstants

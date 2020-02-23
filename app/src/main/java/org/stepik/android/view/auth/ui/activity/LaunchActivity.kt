@@ -48,7 +48,6 @@ import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
-
 class LaunchActivity : SmartLockActivityBase(), LoginView {
     companion object {
         private const val TAG = "LaunchActivity"

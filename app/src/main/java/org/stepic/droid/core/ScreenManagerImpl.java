@@ -44,7 +44,7 @@ import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
 import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepik.android.view.auth.ui.activity.LaunchActivity;
-import org.stepic.droid.ui.activities.LoginActivity;
+import org.stepik.android.view.auth.ui.activity.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;

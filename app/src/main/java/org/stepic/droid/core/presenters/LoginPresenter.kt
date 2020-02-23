@@ -203,10 +203,10 @@ constructor(
     }
 
     private class AuthInfo(
-            val isAfterRegistration: Boolean = false,
-            val type: Type,
-            val socialType: ISocialType? = null,
-            val credentials: Credentials? = null,
-            val credential: Credential? = null
+        val isAfterRegistration: Boolean = false,
+        val type: Type,
+        val socialType: ISocialType? = null,
+        val credentials: Credentials? = null,
+        val credential: Credential? = null
     )
 }
