@@ -175,6 +175,10 @@ class CodeStepRunCodeDelegate(
         runCodeInputDataSample.setText(inputData)
     }
 
+    override fun showEmptyCodeError() {
+        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code)
+    }
+
     fun onDetach() {
         codeRunPresenter.saveInputData(runCodeInputDataSample.text.toString())
     }
