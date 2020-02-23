@@ -131,7 +131,11 @@ class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
-            screenManager.showRegistration(this@LoginActivity, courseFromExtra)
+            screenManager
+                .showRegistration(
+                    this@LoginActivity,
+                    intent.getParcelableExtra(EXTRA_COURSE)
+                )
         }
 
         signInWithSocial.setOnClickListener { finish() }

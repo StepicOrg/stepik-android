@@ -1,6 +1,7 @@
 package org.stepik.android.view.auth.ui.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
@@ -37,9 +38,9 @@ import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.snackbar
-import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.SocialAuthPresenter
 import org.stepik.android.presentation.auth.SocialAuthView
 import org.stepik.android.view.auth.model.SocialNetwork
@@ -48,10 +49,26 @@ import javax.inject.Inject
 
 class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
     companion object {
-        const val WAS_LOGOUT_KEY = "wasLogoutKey"
+        private const val REQUEST_CODE_GOOGLE_SIGN_IN = 7007
 
         private const val KEY_SOCIAL_ADAPTER_STATE = "social_adapter_state_key"
         private const val KEY_SELECTED_SOCIAL_TYPE = "selected_social_type"
+
+        private const val EXTRA_WAS_LOGOUT_KEY = "wasLogoutKey"
+        private const val EXTRA_COURSE = "course"
+
+        private const val EXTRA_IS_FROM_MAIN_FEED = "is_from_main_feed"
+        private const val EXTRA_MAIN_CURRENT_INDEX = "main_current_index"
+
+        fun createIntent(context: Context, course: Course? = null, wasLogout: Boolean = false): Intent =
+            Intent(context, LaunchActivity::class.java)
+                .putExtra(EXTRA_COURSE, course)
+                .putExtra(EXTRA_WAS_LOGOUT_KEY, wasLogout)
+
+        fun createIntent(context: Context, isFromMainFeed: Boolean, mainCurrentIndex: Int): Intent =
+            Intent(context, LaunchActivity::class.java)
+                .putExtra(EXTRA_IS_FROM_MAIN_FEED, isFromMainFeed)
+                .putExtra(EXTRA_MAIN_CURRENT_INDEX, mainCurrentIndex)
     }
 
     @Inject
@@ -68,6 +85,8 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
     private lateinit var callbackManager: CallbackManager
 
     private var selectedSocialType: SocialNetwork? = null
+    
+    private val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,12 +107,12 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
-            screenManager.showRegistration(this@LaunchActivity, courseFromExtra)
+            screenManager.showRegistration(this@LaunchActivity, course)
         }
 
         signInWithEmail.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN)
-            screenManager.showLogin(this@LaunchActivity, null, null, false, courseFromExtra)
+            screenManager.showLogin(this@LaunchActivity, null, null, false, course)
         }
 
         initGoogleApiClient(true, GoogleApiClient.OnConnectionFailedListener {
@@ -137,7 +156,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
         if (checkPlayServices()) {
             googleApiClient?.registerConnectionCallbacks(object : GoogleApiClient.ConnectionCallbacks {
                 override fun onConnected(bundle: Bundle?) {
-                    val wasLogout = intent?.getBooleanExtra(WAS_LOGOUT_KEY, false) ?: false
+                    val wasLogout = intent?.getBooleanExtra(EXTRA_WAS_LOGOUT_KEY, false) ?: false
                     if (wasLogout) {
                         Auth.CredentialsApi.disableAutoSignIn(googleApiClient)
                     }
@@ -213,7 +232,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
                     root_view.snackbar(messageRes = R.string.google_services_late)
                 } else {
                     val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
-                    startActivityForResult(signInIntent, AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN)
+                    startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE_SIGN_IN)
                 }
             }
 
@@ -244,16 +263,16 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
     }
 
     override fun onCredentialsRetrieved(credentials: Credentials) {
-        screenManager.showLogin(this, credentials.login, credentials.password, true, courseFromExtra)
+        screenManager.showLogin(this, credentials.login, credentials.password, true, course)
     }
 
     override fun onBackPressed() {
-        val fromMainFeed = intent?.extras?.getBoolean(AppConstants.FROM_MAIN_FEED_FLAG) ?: false
-        val index = intent?.extras?.getInt(MainFeedActivity.CURRENT_INDEX_KEY) ?: MainFeedActivity.defaultIndex
+        val fromMainFeed = intent?.extras?.getBoolean(EXTRA_IS_FROM_MAIN_FEED) ?: false
+        val index = intent?.extras?.getInt(EXTRA_MAIN_CURRENT_INDEX) ?: MainFeedActivity.defaultIndex
 
         when {
             fromMainFeed -> screenManager.showMainFeed(this, index)
-            intent.hasExtra(AppConstants.KEY_COURSE_BUNDLE) -> super.onBackPressed()
+            intent.hasExtra(EXTRA_COURSE) -> super.onBackPressed()
             deferredAuthSplitTest.currentGroup.isDeferredAuth -> screenManager.showMainFeed(this,
                 MainFeedActivity.CATALOG_INDEX
             )
@@ -287,7 +306,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
 
         callbackManager.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == AppConstants.REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
+        if (requestCode == REQUEST_CODE_GOOGLE_SIGN_IN && resultCode == Activity.RESULT_OK) {
             val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
             // here is not only fail due to Internet, fix it. see: https://developers.google.com/android/reference/com/google/android/gms/auth/api/signin/GoogleSignInResult
             if (result.isSuccess) {
@@ -318,7 +337,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
 
         when (state) {
             is SocialAuthView.State.Success ->
-                screenManager.showMainFeedAfterLogin(this, courseFromExtra)
+                screenManager.showMainFeedAfterLogin(this, course)
         }
     }
 
@@ -339,7 +358,7 @@ class LaunchActivity : SmartLockActivityBase(), SocialAuthView {
     }
 
     override fun onSocialLoginWithExistingEmail(email: String) {
-        screenManager.showLogin(this, email, null, false, courseFromExtra)
+        screenManager.showLogin(this, email, null, false, course)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

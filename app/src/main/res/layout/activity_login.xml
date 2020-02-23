@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:overScrollMode="never"
     android:id="@+id/loginRootView"
-    tools:context="org.stepik.android.view.auth.ui.activity.LaunchActivity">
+    tools:context="org.stepik.android.view.auth.ui.activity.LoginActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/root_view"

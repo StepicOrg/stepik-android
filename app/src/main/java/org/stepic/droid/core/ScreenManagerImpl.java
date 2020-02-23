@@ -114,7 +114,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchFromSplash(Activity activity) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        Intent launchIntent = LaunchActivity.Companion.createIntent(activity, null, false);
         activity.startActivity(launchIntent);
     }
 
@@ -126,8 +126,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreenAfterLogout(Context context) {
         analytic.reportEvent(Analytic.Interaction.SHOW_LAUNCH_SCREEN_AFTER_LOGOUT);
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.putExtra(LaunchActivity.WAS_LOGOUT_KEY, true);
+        Intent launchIntent = LaunchActivity.Companion.createIntent(context, null, true);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
     }
@@ -135,8 +134,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreen(FragmentActivity activity, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(activity, LaunchActivity.class);
-        launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
+        Intent launchIntent = LaunchActivity.Companion.createIntent(activity, course, false);
         activity.startActivity(launchIntent);
     }
 
@@ -177,23 +175,15 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreen(Context context, boolean fromMainFeed, int index) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
-        if (fromMainFeed) {
-            launchIntent.putExtra(AppConstants.FROM_MAIN_FEED_FLAG, true);
-            launchIntent.putExtra(MainFeedActivity.CURRENT_INDEX_KEY, index);
-        }
+        Intent launchIntent = LaunchActivity.Companion.createIntent(context, fromMainFeed, index);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
     }
 
-
     @Override
     public void showRegistration(Activity sourceActivity, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_REGISTRATION);
-        Intent launchIntent = new Intent(sourceActivity, RegistrationActivity.class);
-        if (course != null) {
-            launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
-        }
+        Intent launchIntent = RegistrationActivity.Companion.createIntent(sourceActivity, course);
         sourceActivity.startActivity(launchIntent);
     }
 

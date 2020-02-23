@@ -1,5 +1,7 @@
 package org.stepik.android.view.auth.ui.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -27,6 +29,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.ValidatorUtil
 import org.stepic.droid.util.stripUnderlinesFromLinks
 import org.stepic.droid.util.toBundle
+import org.stepik.android.model.Course
 import org.stepik.android.model.user.RegistrationCredentials
 import org.stepik.android.presentation.auth.RegistrationPresenter
 import org.stepik.android.presentation.auth.RegistrationView
@@ -36,12 +39,17 @@ import javax.inject.Inject
 
 class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     companion object {
-        const val ERROR_DELIMITER = " "
-        const val TAG = "RegisterActivity"
+        private const val ERROR_DELIMITER = " "
+
+        private const val EXTRA_COURSE = "course"
 
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
+
+        fun createIntent(context: Context, course: Course? = null): Intent =
+            Intent(context, RegistrationActivity::class.java)
+                .putExtra(EXTRA_COURSE, course)
     }
 
     @Inject
@@ -225,7 +233,14 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
             }
 
             is RegistrationView.State.Success -> {
-                screenManager.showLogin(this, state.credentials.login, state.credentials.password, true, courseFromExtra)
+                screenManager
+                    .showLogin(
+                        this,
+                        state.credentials.login,
+                        state.credentials.password,
+                        true,
+                        intent.getParcelableExtra(EXTRA_COURSE)
+                    )
             }
         }
     }
