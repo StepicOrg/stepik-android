@@ -1,6 +1,5 @@
 package org.stepik.android.view.auth.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.Spannable
@@ -10,61 +9,52 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
-import com.google.android.gms.auth.api.credentials.Credential
+import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_login.*
-import okhttp3.ResponseBody
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
 import org.stepic.droid.core.LoginFailType
-import org.stepic.droid.core.ProgressHandler
-import org.stepic.droid.core.presenters.LoginPresenter
-import org.stepic.droid.core.presenters.contracts.LoginView
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.SmartLockActivityBase
-import org.stepic.droid.ui.dialogs.LoadingProgressDialog
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.getMessageFor
 import org.stepic.droid.util.toBundle
+import org.stepik.android.presentation.auth.CredentialAuthPresenter
+import org.stepik.android.presentation.auth.CredentialAuthView
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
-import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
-class LoginActivity : SmartLockActivityBase(), LoginView {
-
+class LoginActivity : SmartLockActivityBase(), CredentialAuthView {
     companion object {
-        private const val TAG = "LoginActivity"
         init {
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
         }
     }
 
-    private var progressLogin: LoadingProgressDialog? = null
-
-    private lateinit var progressHandler: ProgressHandler
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     @Inject
-    lateinit var loginPresenter: LoginPresenter
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var credentialAuthPresenter: CredentialAuthPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        App.componentManager().loginComponent(TAG).inject(this)
 
-        progressLogin = LoadingProgressDialog(this)
-        progressHandler = object : ProgressHandler {
-            override fun activate() {
-                currentFocus?.hideKeyboard()
-                ProgressHelper.activate(progressLogin)
-            }
-
-            override fun dismiss() {
-                ProgressHelper.dismiss(progressLogin)
-            }
-        }
+        injectComponent()
+        credentialAuthPresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(CredentialAuthPresenter::class.java)
 
         initTitle()
 
@@ -86,7 +76,7 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_NEXT_ON_SIGN_IN_SCREEN)
                 analytic.reportEvent(Analytic.Login.REQUEST_LOGIN_WITH_INTERACTION_TYPE, LoginInteractionType.ime.toBundle())
-                tryLogin()
+                submit()
                 handled = true
             }
             handled
@@ -108,15 +98,13 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                onClearLoginError()
+                credentialAuthPresenter.onFormChanged()
             }
 
-            override fun afterTextChanged(s: Editable?) {
-            }
+            override fun afterTextChanged(s: Editable?) {}
         }
         loginField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
         passwordField.addTextChangedListener(reportAnalyticWhenTextBecomeNotBlank)
-
 
         launchSignUpButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_UP)
@@ -127,14 +115,12 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         loginButton.setOnClickListener {
             analytic.reportEvent(Analytic.Interaction.CLICK_SIGN_IN_ON_SIGN_IN_SCREEN)
             analytic.reportEvent(Analytic.Login.REQUEST_LOGIN_WITH_INTERACTION_TYPE, LoginInteractionType.button.toBundle())
-            tryLogin()
+            submit()
         }
 
         loginRootView.requestFocus()
 
         initGoogleApiClient()
-
-        onNewIntent(intent)
 
         if (savedInstanceState == null && intent.hasExtra(AppConstants.KEY_EMAIL_BUNDLE)) {
             loginField.setText(intent.getStringExtra(AppConstants.KEY_EMAIL_BUNDLE))
@@ -150,6 +136,23 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         })
     }
 
+    private fun injectComponent() {
+        App.component()
+            .authComponentBuilder()
+            .build()
+            .inject(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        credentialAuthPresenter.attachView(this)
+    }
+
+    override fun onStop() {
+        credentialAuthPresenter.detachView(this)
+        super.onStop()
+    }
+
     private fun initTitle() {
         val signInString = getString(R.string.sign_in)
         val signInWithPasswordSuffix = getString(R.string.sign_in_with_password_suffix)
@@ -162,93 +165,54 @@ class LoginActivity : SmartLockActivityBase(), LoginView {
         signInText.text = spannableSignIn
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        //if we redirect from SOCIAL:
-        intent?.data?.let {
-            redirectFromSocial(intent)
-        }
-    }
-
-    private fun redirectFromSocial(intent: Intent) {
-        try {
-            val code = intent?.data.getQueryParameter("code")
-            loginPresenter.loginWithCode(code)
-        } catch (throwable: Throwable) {
-            analytic.reportError(Analytic.Error.CALLBACK_SOCIAL, throwable)
-        }
-    }
-
-    private fun tryLogin() {
+    private fun submit() {
         val login = loginField.text.toString()
         val password = passwordField.text.toString()
 
-        loginPresenter.login(login, password)
+        credentialAuthPresenter.submit(Credentials(login, password))
     }
 
     override fun applyTransitionPrev() {} // we need default system animation
 
-    override fun onDestroy() {
-        signInWithSocial.setOnClickListener(null)
-        loginButton.setOnClickListener(null)
-        launchSignUpButton.setOnClickListener(null)
-        if (isFinishing) {
-            App.componentManager().releaseLoginComponent(TAG)
-        }
-        super.onDestroy()
-    }
-
-    private fun onClearLoginError() {
-        loginButton.isEnabled = true
-        loginForm.isEnabled = true
-        loginErrorMessage.visibility = View.GONE
-    }
-
-    override fun onFailLogin(type: LoginFailType, credential: Credential?) {
-        loginErrorMessage.text = getMessageFor(type)
-        loginErrorMessage.visibility = View.VISIBLE
-
-        if (type == LoginFailType.EMAIL_ALREADY_USED || type == LoginFailType.EMAIL_PASSWORD_INVALID) {
-            loginForm.isEnabled = false
-            loginButton.isEnabled = false
-        }
-
-        progressHandler.dismiss()
-    }
-
-    override fun onSuccessLogin(credentials: Credentials?) {
-        progressHandler.dismiss()
-        if (credentials == null || !checkPlayServices() || googleApiClient?.isConnected != true) {
-            openMainFeed()
+    override fun setState(state: CredentialAuthView.State) {
+        if (state is CredentialAuthView.State.Loading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
         } else {
-            //only if we have not null data (we can apply smart lock && google api client is connected and available
-            requestToSaveCredentials(credentials)
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
+
+        when (state) {
+            is CredentialAuthView.State.Idle -> {
+                loginButton.isEnabled = true
+                loginForm.isEnabled = true
+                loginErrorMessage.isVisible = false
+            }
+
+            is CredentialAuthView.State.Error -> {
+                loginErrorMessage.text = getMessageFor(state.failType)
+                loginErrorMessage.isVisible = true
+
+                if (state.failType == LoginFailType.EMAIL_ALREADY_USED ||
+                    state.failType == LoginFailType.EMAIL_PASSWORD_INVALID) {
+                    loginForm.isEnabled = false
+                    loginButton.isEnabled = false
+                }
+            }
+
+            is CredentialAuthView.State.Success ->
+                if (state.credentials != null && checkPlayServices() && googleApiClient?.isConnected == true) {
+                    requestToSaveCredentials(state.credentials)
+                } else {
+                    openMainFeed()
+                }
         }
     }
 
-    override fun onCredentialSaved() = openMainFeed()
+    override fun onCredentialsSaved() {
+        openMainFeed()
+    }
 
     private fun openMainFeed() {
         screenManager.showMainFeedAfterLogin(this, courseFromExtra)
-    }
-
-    override fun onLoadingWhileLogin() {
-        progressHandler.activate()
-    }
-
-    override fun onSocialLoginWithExistingEmail(email: String) {}
-
-    override fun onResume() {
-        super.onResume()
-        loginPresenter.attachView(this)
-    }
-
-    override fun onPause() {
-        loginPresenter.detachView(this)
-        super.onPause()
-    }
-
-    override fun onRegistrationFailed(responseBody: ResponseBody?) {
-        // no op
     }
 }

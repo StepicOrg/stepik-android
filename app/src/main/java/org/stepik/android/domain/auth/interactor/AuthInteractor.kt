@@ -1,8 +1,10 @@
 package org.stepik.android.domain.auth.interactor
 
 import io.reactivex.Completable
+import io.reactivex.Single
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.model.Credentials
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.auth.model.AuthData
@@ -21,6 +23,12 @@ constructor(
     companion object {
         private const val MINUTES_TO_CONSIDER_REGISTRATION = 5
     }
+
+    fun authWithCredentials(credentials: Credentials): Single<Credentials> =
+        authRepository
+            .authWithLoginPassword(credentials.login, credentials.password)
+            .flatMapCompletable { reportAuthAnalytics(AuthData.Credentials(credentials.login, credentials.password, isRegistration = false)) }
+            .toSingleDefault(credentials)
 
     private fun reportAuthAnalytics(authData: AuthData): Completable =
         when (authData) {

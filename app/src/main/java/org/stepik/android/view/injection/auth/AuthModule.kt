@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import org.stepik.android.presentation.auth.LaunchPresenter
+import org.stepik.android.presentation.auth.CredentialAuthPresenter
 import org.stepik.android.presentation.base.injection.ViewModelKey
 
 @Module
@@ -15,6 +15,6 @@ internal abstract class AuthModule {
      */
     @Binds
     @IntoMap
-    @ViewModelKey(LaunchPresenter::class)
-    internal abstract fun bindLaunchPresenter(launchPresenter: LaunchPresenter): ViewModel
+    @ViewModelKey(CredentialAuthPresenter::class)
+    internal abstract fun bindCredentialAuthPresenter(credentialAuthPresenter: CredentialAuthPresenter): ViewModel
 }

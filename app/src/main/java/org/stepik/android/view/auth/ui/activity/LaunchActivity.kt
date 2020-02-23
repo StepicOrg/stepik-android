@@ -256,12 +256,12 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
     }
 
-    override fun onCredentialRetrieved(credential: Credential) {
-        val accountType = credential.accountType
-        if (accountType == null) {
+    override fun onCredentialsRetrieved(credentials: Credentials) {
+//        val accountType = credential.accountType // todo
+//        if (accountType == null) {
             // Sign the user in with information from the Credential.
-            loginPresenter.login(credential.id, credential.password ?: "", credential)
-        }
+//            loginPresenter.login(credential.id, credential.password ?: "", credential)
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -340,20 +340,7 @@ class LaunchActivity : SmartLockActivityBase(), LoginView {
         LoginManager.getInstance().logOut()
 
         if (credential != null && type == LoginFailType.EMAIL_PASSWORD_INVALID) {
-            deleteCredential(credential)
-        }
-    }
-
-    private fun deleteCredential(credential: Credential) {
-        if (googleApiClient?.isConnected == true) {
-            Auth.CredentialsApi.delete(googleApiClient, credential).setResultCallback { status ->
-                if (status.isSuccess) {
-                    analytic.reportEvent(Analytic.SmartLock.CREDENTIAL_DELETED_SUCCESSFUL)
-                    //do not show some message because E-mail is not correct was already shown
-                } else {
-                    analytic.reportEventWithName(Analytic.SmartLock.CREDENTIAL_DELETED_FAIL, status.statusMessage)
-                }
-            }
+//            requestToDeleteCredentials(credential) todo
         }
     }
 

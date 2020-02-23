@@ -263,7 +263,7 @@ class RegisterActivity : SmartLockActivityBase(), LoginView {
         }
     }
 
-    override fun onCredentialSaved() = openMainFeed()
+    override fun onCredentialsSaved() = openMainFeed()
 
     private fun openMainFeed() {
         screenManager.showMainFeedAfterLogin(this, courseFromExtra)

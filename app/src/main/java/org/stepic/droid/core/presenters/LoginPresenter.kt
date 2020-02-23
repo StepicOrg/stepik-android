@@ -116,7 +116,6 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { authResponse ->
-                    sharedPreferenceHelper.storeAuthInfo(authResponse)
                     analytic.reportEvent(Analytic.Interaction.SUCCESS_LOGIN)
                     sharedPreferenceHelper.onSessionAfterLogin()
 
