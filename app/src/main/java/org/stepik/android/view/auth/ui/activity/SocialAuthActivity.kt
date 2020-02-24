@@ -268,7 +268,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
             fromMainFeed ->
                 screenManager.showMainFeed(this, index)
 
-            intent.hasExtra(EXTRA_COURSE) ->
+            course != null ->
                 super.onBackPressed()
 
             deferredAuthSplitTest.currentGroup.isDeferredAuth ->
