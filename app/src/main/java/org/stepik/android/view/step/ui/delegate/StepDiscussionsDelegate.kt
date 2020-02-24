@@ -1,6 +1,7 @@
 package org.stepik.android.view.step.ui.delegate
 
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_step.view.*
 import kotlinx.android.synthetic.main.view_step_discussion.view.*
@@ -42,9 +43,9 @@ class StepDiscussionsDelegate(
             val discussionProxy = discussionThread?.discussionProxy
             val discussionsCount = discussionThread?.discussionsCount ?: 0
 
-            when {
-                discussionThread?.thread == DiscussionThread.THREAD_DEFAULT -> {
-                    stepDiscussions.text =
+            when (discussionThread?.thread) {
+                DiscussionThread.THREAD_DEFAULT -> {
+                    val containerText =
                         when {
                             discussionProxy == null ->
                                 containerView.context.getString(R.string.comment_disabled)
@@ -55,16 +56,10 @@ class StepDiscussionsDelegate(
                             else ->
                                 containerView.context.getString(R.string.step_discussion_write_first)
                         }
-
-                    stepDiscussions
-                        .setCompoundDrawables(start = if (discussionProxy != null) R.drawable.ic_step_discussion else -1)
-
-                    containerView.isEnabled = discussionProxy != null
-                    containerView.isVisible = true
+                    setDiscussionThreadData(containerText, R.drawable.ic_step_discussion, discussionProxy != null)
                 }
-
-                discussionThread?.thread == DiscussionThread.THREAD_SOLUTIONS -> {
-                    stepDiscussions.text =
+                DiscussionThread.THREAD_SOLUTIONS -> {
+                    val containerText =
                         when {
                             discussionProxy == null ->
                                 containerView.context.getString(R.string.solution_disabled)
@@ -75,17 +70,18 @@ class StepDiscussionsDelegate(
                             else ->
                                 containerView.context.getString(R.string.step_solutions_write_first)
                         }
-
-                    stepDiscussions
-                        .setCompoundDrawables(start = if (discussionProxy != null) R.drawable.ic_step_solutions else -1)
-
-                    containerView.isEnabled = discussionProxy != null
-                    containerView.isVisible = true
+                    setDiscussionThreadData(containerText, R.drawable.ic_step_solutions, discussionProxy != null)
                 }
-
                 else ->
                     containerView.isVisible = false
             }
+        }
+
+        private fun setDiscussionThreadData(containerText: String, @DrawableRes containerDrawableId: Int, isContainerEnabled: Boolean) {
+            stepDiscussions.text = containerText
+            stepDiscussions.setCompoundDrawables(start = if (isContainerEnabled) containerDrawableId else -1)
+            containerView.isEnabled = isContainerEnabled
+            containerView.isVisible = true
         }
     }
 }
