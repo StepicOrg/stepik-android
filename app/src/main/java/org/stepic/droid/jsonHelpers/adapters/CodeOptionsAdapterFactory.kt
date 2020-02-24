@@ -20,8 +20,15 @@ class CodeOptionsAdapterFactory : TypeAdapterFactory {
                 val readResult = delegate.read(input)
                 val codeOptions = readResult as? CodeOptions
                 return if (codeOptions?.executionTimeLimit == 0 && codeOptions.executionMemoryLimit == 0) {
-                    //it is empty object from server
-                    null
+                    // Handling SQL quiz
+                    CodeOptions(
+                        limits = emptyMap(),
+                        executionMemoryLimit = 0,
+                        codeTemplates = emptyMap(),
+                        executionTimeLimit = 0,
+                        samples = emptyList(),
+                        isRunUserCodeAllowed = codeOptions.isRunUserCodeAllowed
+                    ) as? T
                 } else {
                     readResult
                 }
