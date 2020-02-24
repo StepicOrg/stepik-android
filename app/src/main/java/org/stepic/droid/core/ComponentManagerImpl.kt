@@ -3,7 +3,6 @@ package org.stepic.droid.core
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
-import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -102,21 +101,6 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
 
     override fun stepComponent(stepId: Long): StepComponent =
         _stepComponentMap[stepId]?.get() ?: throw IllegalStateException("StepComponent with id=$stepId not initialized")
-
-    // Login
-
-    private val loginComponentMap = HashMap<String, LoginComponent>()
-
-    override fun releaseLoginComponent(tag: String) {
-        loginComponentMap.remove(tag)
-    }
-
-    override fun loginComponent(tag: String) =
-            loginComponentMap.getOrPut(tag) {
-                appCoreComponent
-                        .loginComponentBuilder()
-                        .build()
-            }
 
     // Main Screen
 

@@ -10,13 +10,12 @@
     android:layout_margin="12dp">
 
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/social_item"
         android:layout_width="@dimen/height_of_social"
         android:layout_height="@dimen/height_of_social"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
         android:background="?selectableItemBackgroundBorderless" />
-
 
 </androidx.cardview.widget.CardView>

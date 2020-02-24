@@ -3,12 +3,10 @@ package org.stepic.droid.core
 import androidx.annotation.MainThread
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.course_general.CourseGeneralComponent
-import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.step.StepComponent
@@ -18,10 +16,6 @@ interface ComponentManager {
     fun mainFeedComponent(): MainScreenComponent
 
     fun releaseMainFeedComponent()
-
-    fun loginComponent(tag: String): LoginComponent
-
-    fun releaseLoginComponent(tag: String)
 
     @MainThread
     fun splashComponent(): SplashComponent
