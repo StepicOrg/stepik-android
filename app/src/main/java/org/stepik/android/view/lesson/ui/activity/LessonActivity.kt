@@ -13,6 +13,7 @@ import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
@@ -23,7 +24,7 @@ import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_is_exam.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -152,6 +153,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             override fun onPageSelected(position: Int) {
                 currentFocus?.hideKeyboard()
                 lessonPresenter.onStepOpened(position)
+                centeredToolbarSubtitle.text = getString(
+                    R.string.lesson_step_counter, position + 1,
+                    stepsAdapter.items.size
+                )
                 invalidateOptionsMenu()
             }
         })
@@ -230,6 +235,13 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             is LessonView.State.LessonLoaded -> {
                 viewStepStateDelegate.switchState(state.stepsState)
                 centeredToolbarTitle.text = state.lessonData.lesson.title
+                if (centeredToolbarSubtitle.text.isEmpty()) {
+                    centeredToolbarSubtitle.text = getString(
+                        R.string.lesson_step_counter, state.lessonData.stepPosition + 1,
+                        state.lessonData.lesson.steps.size
+                    )
+                    centeredToolbarSubtitle.isVisible = true
+                }
 
                 stepsAdapter.lessonData = state.lessonData
                 if (state.stepsState is LessonView.StepsState.Loaded) {

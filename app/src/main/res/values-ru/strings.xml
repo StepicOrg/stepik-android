@@ -679,6 +679,8 @@
     <string name="lesson_error_exam_description">Этот урок - часть экзаменационного модуля, который доступен только в веб версии.</string>
     <string name="lesson_error_exam_action">Открыть в веб версии</string>
 
+    <string name="lesson_step_counter">Шаг %d из %d</string>
+
     <!-- Step -->
     <string name="step_amount_passed">Решило:&#160;</string>
     <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>
