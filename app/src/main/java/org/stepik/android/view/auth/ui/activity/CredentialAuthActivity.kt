@@ -20,17 +20,17 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.LoginInteractionType
 import org.stepic.droid.base.App
-import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.SmartLockActivityBase
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepic.droid.util.toBundle
+import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.CredentialAuthPresenter
 import org.stepik.android.presentation.auth.CredentialAuthView
+import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
@@ -71,14 +71,16 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
-    private val autoAuth =
-        intent
-            .getSerializableExtra(EXTRA_AUTO_AUTH) as? AutoAuth
-            ?: AutoAuth.NONE
+    private lateinit var autoAuth: AutoAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth_credential)
+
+        autoAuth =
+            intent
+                .getSerializableExtra(EXTRA_AUTO_AUTH) as? AutoAuth
+                ?: AutoAuth.NONE
 
         injectComponent()
         credentialAuthPresenter = ViewModelProviders

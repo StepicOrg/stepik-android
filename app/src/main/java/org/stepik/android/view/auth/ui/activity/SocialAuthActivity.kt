@@ -30,7 +30,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.base.App
-import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.SmartLockActivityBase
@@ -38,10 +37,11 @@ import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.view.auth.extension.getMessageFor
+import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.auth.SocialAuthPresenter
 import org.stepik.android.presentation.auth.SocialAuthView
+import org.stepik.android.view.auth.extension.getMessageFor
 import org.stepik.android.view.auth.model.AutoAuth
 import org.stepik.android.view.auth.model.SocialNetwork
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
@@ -86,11 +86,13 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
 
     private var selectedSocialType: SocialNetwork? = null
 
-    private val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
+    private var course: Course? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth_social)
+
+        course = intent.getParcelableExtra(EXTRA_COURSE)
 
         injectComponent()
         socialAuthPresenter = ViewModelProviders
