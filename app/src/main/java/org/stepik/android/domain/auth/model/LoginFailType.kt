@@ -1,4 +1,4 @@
-package org.stepic.droid.core
+package org.stepik.android.domain.auth.model
 
 enum class LoginFailType {
     CONNECTION_PROBLEM,
