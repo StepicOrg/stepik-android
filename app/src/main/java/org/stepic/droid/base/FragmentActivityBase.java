@@ -109,6 +109,7 @@ public abstract class FragmentActivityBase extends AppCompatActivity {
     }
 
 
+    @Deprecated
     @Nullable
     protected Course getCourseFromExtra() {
         return getIntent().getParcelableExtra(AppConstants.KEY_COURSE_BUNDLE);

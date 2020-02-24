@@ -11,7 +11,6 @@ public class AppConstants {
     public static final String ERROR_SOCIAL_AUTH_WITH_EXISTING_EMAIL = "social_signup_with_existing_email";
     public static final String ERROR_SOCIAL_AUTH_WITHOUT_EMAIL = "social_signup_without_email";
 
-    public static final String KEY_EMAIL_BUNDLE = "email";
     public static final String KEY_COURSE_BUNDLE = "course";
     public static final String KEY_COURSE_LONG_ID = "course_id_key";
     public static final String DEFAULT_QUALITY = "360";
@@ -46,7 +45,6 @@ public class AppConstants {
 
     public static final String TYPE_NULL = "null_type";
 
-    public static final int REQUEST_EXTERNAL_STORAGE = 13;
     public static final String COURSE_ID_KEY = "course_id";
 
     public static final String NOTIFICATION_CANCELED = "notification_canceled";
@@ -69,7 +67,6 @@ public class AppConstants {
     public static final String LINKEDIN_ADD_URL = "https://www.linkedin.com/profile/add?";
     public static final String LINKEDIN_ED_ID = "0_uInsUtRlLF5qiDUg80Aftvf5K-uMiiQPc0IVksZ_0oh1hhPRasb5cWi8eD5WXfgDaSgvthvZk7wTBMS3S-m0L6A6mLjErM6PJiwMkk6nYZylU7__75hCVwJdOTZCAkdv";//// TODO: 02.08.16 add to configs?
 
-    public static final int REQUEST_CODE_GOOGLE_SIGN_IN = 7007;
 
     public static final int LAUNCHES_FOR_EXPERT_USER = 20;
     public static final long MILLIS_IN_SEVEN_DAYS = 604800000L;
@@ -90,6 +87,5 @@ public class AppConstants {
     public static final String refererHeaderName = "Referer";
     public static final String csrfTokenHeaderName = "X-CSRFToken";
 
-    public final static String FROM_MAIN_FEED_FLAG = "from_main_feed";
     public static final String csrfTokenCookieName = "csrftoken";
 }

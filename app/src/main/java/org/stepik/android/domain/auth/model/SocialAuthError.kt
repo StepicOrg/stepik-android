@@ -1,4 +1,4 @@
-package org.stepik.android.remote.auth.model
+package org.stepik.android.domain.auth.model
 
 import com.google.gson.annotations.SerializedName
 

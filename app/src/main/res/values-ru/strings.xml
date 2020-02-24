@@ -691,6 +691,7 @@
 
     <string name="step_solutions_show">Форум решений (%d)</string>
     <string name="step_solutions_empty">Решений пока нет</string>
+    <string name="step_solutions_write_first">Поделиться решением</string>
 
     <string name="step_action_edit_content">Изменить текст шага</string>
     <string name="step_action_edit_hint">Текст шага</string>
@@ -772,6 +773,7 @@
     <string name="comment_solution_pattern">Решение %d</string>
 
     <string name="comment_disabled">Комментарии отключены</string>
+    <string name="solution_disabled">Решения отключены</string>
 
     <string name="comments_title">Комментарии</string>
     <string name="solutions_title">Решения</string>

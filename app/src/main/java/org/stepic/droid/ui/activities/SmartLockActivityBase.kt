@@ -22,29 +22,38 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
         private const val RESOLVING_ACCOUNT_KEY = "RESOLVING_ACCOUNT_KEY"
         private const val REQUEST_FROM_SMART_LOCK_CODE = 314
         private const val REQUEST_SAVE_TO_SMART_LOCK_CODE = 356
+
+        private fun Credential.toCredentials(): Credentials =
+            Credentials(id, password ?: "")
+
+        private fun Credentials.toCredential(): Credential =
+            Credential
+                .Builder(login)
+                .setPassword(password)
+                .build()
     }
 
     private var resolvingWasShown = false
+
+    protected var googleApiClient: GoogleApiClient? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         resolvingWasShown = savedInstanceState?.getBoolean(RESOLVING_ACCOUNT_KEY) ?: false
     }
 
-    protected var googleApiClient: GoogleApiClient? = null
-
     protected fun initGoogleApiClient(withAuth: Boolean = false, autoManage: OnConnectionFailedListener? = null) {
         if (checkPlayServices()) {
             val builder = GoogleApiClient.Builder(this)
-                    .enableAutoManage(this, autoManage)
-                    .addApi(Auth.CREDENTIALS_API)
+                .enableAutoManage(this, autoManage)
+                .addApi(Auth.CREDENTIALS_API)
 
             if (withAuth) {
                 val serverClientId = config.googleServerClientId
                 val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
-                        .requestServerAuthCode(serverClientId)
-                        .build()
+                    .requestScopes(Scope(Scopes.EMAIL), Scope(Scopes.PROFILE))
+                    .requestServerAuthCode(serverClientId)
+                    .build()
                 builder.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
             }
 
@@ -54,8 +63,8 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
 
     protected fun requestCredentials() {
         val credentialRequest = CredentialRequest.Builder()
-                .setPasswordLoginSupported(true)
-                .build()
+            .setPasswordLoginSupported(true)
+            .build()
 
         Auth.CredentialsApi.request(googleApiClient, credentialRequest).setResultCallback { credentialRequestResult ->
             if (credentialRequestResult.status.isSuccess) {
@@ -63,7 +72,7 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
                 // means there was only a single credential and the user has auto
                 // sign-in enabled.
                 analytic.reportEvent(Analytic.SmartLock.READ_CREDENTIAL_WITHOUT_INTERACTION)
-                onCredentialRetrieved(credentialRequestResult.credential)
+                onCredentialsRetrieved(credentialRequestResult.credential.toCredentials())
             } else {
                 if (credentialRequestResult.status.statusCode == CommonStatusCodes.RESOLUTION_REQUIRED) {
                     // Prompt the user to choose a saved credential; do not show the hint
@@ -87,21 +96,29 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
     }
 
     protected fun requestToSaveCredentials(credentials: Credentials) {
-        val credential = Credential
-                .Builder(credentials.login)
-                .setPassword(credentials.password)
-                .build()
-
-        Auth.CredentialsApi.save(googleApiClient, credential)
-                .setResultCallback { status ->
-                    if (!status.isSuccess && status.hasResolution()) {
-                        analytic.reportEvent(Analytic.SmartLock.SHOW_SAVE_LOGIN)
-                        status.startResolutionForResult(this, REQUEST_SAVE_TO_SMART_LOCK_CODE)
-                    } else {
-                        analytic.reportEventWithName(Analytic.SmartLock.DISABLED_LOGIN, status.statusMessage)
-                        onCredentialSaved()
-                    }
+        Auth.CredentialsApi.save(googleApiClient, credentials.toCredential())
+            .setResultCallback { status ->
+                if (!status.isSuccess && status.hasResolution()) {
+                    analytic.reportEvent(Analytic.SmartLock.SHOW_SAVE_LOGIN)
+                    status.startResolutionForResult(this, REQUEST_SAVE_TO_SMART_LOCK_CODE)
+                } else {
+                    analytic.reportEventWithName(Analytic.SmartLock.DISABLED_LOGIN, status.statusMessage)
+                    onCredentialsSaved()
                 }
+            }
+    }
+
+    protected fun requestToDeleteCredentials(credentials: Credentials) {
+        if (googleApiClient?.isConnected == true) {
+            Auth.CredentialsApi.delete(googleApiClient, credentials.toCredential()).setResultCallback { status ->
+                if (status.isSuccess) {
+                    analytic.reportEvent(Analytic.SmartLock.CREDENTIAL_DELETED_SUCCESSFUL)
+                    //do not show some message because E-mail is not correct was already shown
+                } else {
+                    analytic.reportEventWithName(Analytic.SmartLock.CREDENTIAL_DELETED_FAIL, status.statusMessage)
+                }
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -110,7 +127,7 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
                 if (resultCode == RESULT_OK && data != null) {
                     analytic.reportEvent(Analytic.SmartLock.PROMPT_CREDENTIAL_RETRIEVED)
                     val credential = data.getParcelableExtra<Credential>(Credential.EXTRA_KEY)
-                    onCredentialRetrieved(credential)
+                    onCredentialsRetrieved(credential.toCredentials())
                 }
             }
 
@@ -118,7 +135,7 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
                 if (resultCode == RESULT_OK) {
                     analytic.reportEvent(Analytic.SmartLock.LOGIN_SAVED)
                 }
-                onCredentialSaved()
+                onCredentialsSaved()
             }
         }
 
@@ -136,6 +153,6 @@ abstract class SmartLockActivityBase : FragmentActivityBase() {
         }
     }
 
-    protected open fun onCredentialRetrieved(credential: Credential) {}
-    protected open fun onCredentialSaved() {}
+    protected open fun onCredentialsRetrieved(credentials: Credentials) {}
+    protected open fun onCredentialsSaved() {}
 }
