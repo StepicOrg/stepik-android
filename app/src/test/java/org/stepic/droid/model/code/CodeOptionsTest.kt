@@ -16,6 +16,6 @@ class CodeOptionsTest {
         val optionsJson = "{}"
         val options = gson.fromJson(optionsJson, CodeOptions::class.java)
 
-        Assert.assertNull(options)
+        Assert.assertNotNull(options)
     }
 }
