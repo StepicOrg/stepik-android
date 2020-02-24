@@ -48,7 +48,6 @@ import org.stepic.droid.notifications.NotificationTimeChecker
 import org.stepic.droid.notifications.NotificationTimeCheckerImpl
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl
 import org.stepic.droid.util.resolvers.text.TextResolver
@@ -152,13 +151,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideSystemAlarmManager(context: Context): AlarmManager {
             return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        }
-
-        @AppSingleton
-        @Provides
-        @JvmStatic
-        internal fun provideSocialManager(): SocialManager {
-            return SocialManager()
         }
 
         //it is good for many short lived, which should do async

@@ -15,7 +15,6 @@ import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.home.HomeComponent
-import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
 import org.stepic.droid.di.splash.SplashComponent
@@ -57,6 +56,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
+import org.stepik.android.view.injection.auth.AuthComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
@@ -156,7 +156,7 @@ interface AppCoreComponent {
 
     fun feedbackComponentBuilder(): FeedbackComponent.Builder
 
-    fun loginComponentBuilder(): LoginComponent.Builder
+    fun authComponentBuilder(): AuthComponent.Builder
 
     fun homeComponentBuilder(): HomeComponent.Builder
 
@@ -225,8 +225,6 @@ interface AppCoreComponent {
     fun inject(fragment: StoreManagementFragment)
 
     fun inject(internetConnectionEnabledReceiver: InternetConnectionEnabledReceiver)
-
-    fun inject(socialAuthAdapter: SocialAuthAdapter)
 
     fun inject(clearVideosDialog: ClearVideosDialog)
 
