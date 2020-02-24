@@ -19,6 +19,7 @@ import org.stepic.droid.ui.util.PopupHelper
 import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
+import org.stepik.android.view.step_quiz_code.model.CodeOutputColors
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
 import ru.nobird.android.view.base.ui.extension.snackbar
@@ -193,9 +194,12 @@ class CodeStepRunCodeDelegate(
 
     private fun resolveOutputText(userCodeRun: UserCodeRun) {
         when (userCodeRun.status) {
-            UserCodeRun.Status.SUCCESS ->
+            UserCodeRun.Status.SUCCESS -> {
+                setOutputTextColor(CodeOutputColors.STANDARD)
                 setOutputText(userCodeRun.stdout)
+            }
             UserCodeRun.Status.FAILURE -> {
+                setOutputTextColor(CodeOutputColors.ERROR)
                 if (lang == ProgrammingLanguage.SQL.serverPrintableName) {
                     setOutputText(userCodeRun.stdout)
                 } else {
@@ -203,8 +207,15 @@ class CodeStepRunCodeDelegate(
                 }
             }
             else ->
-                Unit
+                return
         }
+    }
+
+    private fun setOutputTextColor(codeOutputColors: CodeOutputColors) {
+        runCodeOutputDataTitle.setTextColor(ContextCompat.getColor(context, codeOutputColors.titleColor))
+        runCodeOutputDataSample.setTextColor(ContextCompat.getColor(context, codeOutputColors.bodyColor))
+        runCodeOutputDataTitle.setBackgroundColor(ContextCompat.getColor(context, codeOutputColors.backgroundColor))
+        runCodeOutputDataSample.setBackgroundColor(ContextCompat.getColor(context, codeOutputColors.backgroundColor))
     }
 
     private fun setOutputText(text: String?) {
