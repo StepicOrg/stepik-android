@@ -21,6 +21,7 @@ import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
+import ru.nobird.android.view.base.ui.extension.setTextColorRes
 import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CodeStepRunCodeDelegate(
@@ -166,7 +167,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun showNetworkError() {
-        runCodeScrollView.snackbar(messageRes = R.string.connectionProblems)
+        runCodeScrollView.snackbar(messageRes = R.string.connectionProblems) { setTextColorRes(R.color.white) }
     }
 
     override fun showRunCodePopup() {
@@ -184,7 +185,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun showEmptyCodeError() {
-        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code)
+        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code) { setTextColorRes(R.color.white) }
     }
 
     fun onDetach() {
