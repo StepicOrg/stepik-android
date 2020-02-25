@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
 import org.stepic.droid.R
 import org.stepic.droid.code.ui.CodeEditorLayout
+import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepik.android.model.code.UserCodeRun
@@ -20,6 +21,7 @@ import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
+import ru.nobird.android.view.base.ui.extension.setTextColorRes
 import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CodeStepRunCodeDelegate(
@@ -47,6 +49,12 @@ class CodeStepRunCodeDelegate(
     private val runCodeAction = runCodeLayout.runCodeAction
 
     var lang: String  = ""
+        set(value) {
+            field = value
+            if (lang == ProgrammingLanguage.SQL.serverPrintableName) {
+                runCodeInputDataSample.setHint(R.string.step_quiz_code_input_not_supported)
+            }
+        }
 
     private val viewStateDelegate = ViewStateDelegate<StepQuizRunCodeView.State>()
 
@@ -146,7 +154,8 @@ class CodeStepRunCodeDelegate(
 
         runCodeAction.isEnabled = isEnabled
         runCodeInputSamplePicker.isEnabled = isEnabled
-        runCodeInputDataSample.isEnabled = isEnabled
+        runCodeInputDataSample.isEnabled = isEnabled && !(lang == ProgrammingLanguage.SQL.serverPrintableName)
+
         shiftSampleWeights(state)
 
         when (state) {
@@ -158,7 +167,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun showNetworkError() {
-        runCodeScrollView.snackbar(messageRes = R.string.connectionProblems)
+        runCodeScrollView.snackbar(messageRes = R.string.connectionProblems) { setTextColorRes(R.color.white) }
     }
 
     override fun showRunCodePopup() {
@@ -176,7 +185,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun showEmptyCodeError() {
-        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code)
+        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code) { setTextColorRes(R.color.white) }
     }
 
     fun onDetach() {
@@ -187,8 +196,13 @@ class CodeStepRunCodeDelegate(
         when (userCodeRun.status) {
             UserCodeRun.Status.SUCCESS ->
                 setOutputText(userCodeRun.stdout)
-            UserCodeRun.Status.FAILURE ->
-                setOutputText(userCodeRun.stderr)
+            UserCodeRun.Status.FAILURE -> {
+                if (lang == ProgrammingLanguage.SQL.serverPrintableName) {
+                    setOutputText(userCodeRun.stdout)
+                } else {
+                    setOutputText(userCodeRun.stderr)
+                }
+            }
             else ->
                 Unit
         }

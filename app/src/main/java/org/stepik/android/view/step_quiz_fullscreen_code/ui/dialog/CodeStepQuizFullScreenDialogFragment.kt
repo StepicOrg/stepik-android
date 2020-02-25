@@ -30,6 +30,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
+import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
@@ -157,10 +158,17 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             }
         }
 
-        initViewPager(
+        if (savedInstanceState != null) {
+            lang = savedInstanceState.getString(ARG_LANG) ?: return
+            code = savedInstanceState.getString(ARG_CODE) ?: return
+        }
+
+        val isShowRunCode = resolveIsShowRunCode(
             isRunCodeEnabled = stepWrapper.step.block?.options?.isRunUserCodeAllowed ?: false,
             hasSamples = stepWrapper.step.block?.options?.samples?.isNotEmpty() ?: false
         )
+
+        initViewPager(isShowRunCode = isShowRunCode)
 
         val text = stepWrapper
             .step
@@ -169,11 +177,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.takeIf(String::isNotEmpty)
 
         instructionsLayout.stepQuizCodeTextContent.setText(text)
-
-        if (savedInstanceState != null) {
-            lang = savedInstanceState.getString(ARG_LANG) ?: return
-            code = savedInstanceState.getString(ARG_CODE) ?: return
-        }
 
         /**
          *  Code play ground view binding
@@ -232,14 +235,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         outState.putString(ARG_CODE, codeLayout.text.toString())
     }
 
-    private fun initViewPager(isRunCodeEnabled: Boolean, hasSamples: Boolean) {
+    private fun initViewPager(isShowRunCode: Boolean) {
         val activity = activity
             ?: return
 
         val lightFont = ResourcesCompat.getFont(activity, R.font.roboto_light)
         val regularFont = ResourcesCompat.getFont(activity, R.font.roboto_regular)
 
-        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity, isShowRunCode = isRunCodeEnabled && hasSamples)
+        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity, isShowRunCode = isShowRunCode)
 
         fullScreenCodeViewPager.adapter = pagerAdapter
         fullScreenCodeTabs.setupWithViewPager(fullScreenCodeViewPager)
@@ -275,7 +278,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         instructionsLayout = pagerAdapter.getViewAt(0)
         playgroundLayout = pagerAdapter.getViewAt(1)
 
-        runCodeLayout = if (isRunCodeEnabled && hasSamples) {
+        runCodeLayout = if (isShowRunCode) {
             pagerAdapter.getViewAt(2)
         } else {
             null
@@ -412,6 +415,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             dialog.show(childFragmentManager, null)
         }
     }
+
+    private fun resolveIsShowRunCode(isRunCodeEnabled: Boolean, hasSamples: Boolean): Boolean =
+        (lang == ProgrammingLanguage.SQL.serverPrintableName && isRunCodeEnabled) ||
+        (isRunCodeEnabled && hasSamples)
 
     interface Callback {
         fun onSyncCodeStateWithParent(lang: String, code: String, onSubmitClicked: Boolean = false)
