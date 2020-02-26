@@ -50,21 +50,21 @@ class CoursePropertiesDelegate(
     }
 
     private fun setProgress(course: Course) {
-        val progress = course.progressObject
-        val needShow = if (progress != null && progress.cost > 0) {
-            val score = progress
-                .score
-                ?.toFloatOrNull()
-                ?.toLong()
-                ?: 0L
-
-            prepareViewForProgress(score, progress.cost)
-            true
-        } else {
-            false
-        }
-        courseItemProgress.isVisible = needShow
-        courseItemProgressTitle.isVisible = needShow
+//        val progress = course.progressObject
+//        val needShow = if (progress != null && progress.cost > 0) {
+//            val score = progress
+//                .score
+//                ?.toFloatOrNull()
+//                ?.toLong()
+//                ?: 0L
+//
+//            prepareViewForProgress(score, progress.cost)
+//            true
+//        } else {
+//            false
+//        }
+//        courseItemProgress.isVisible = needShow
+//        courseItemProgressTitle.isVisible = needShow
     }
 
     private fun prepareViewForProgress(score: Long, cost: Long) {
@@ -75,11 +75,11 @@ class CoursePropertiesDelegate(
     }
 
     private fun setRating(course: Course) {
-        val needShow = course.rating > 0
-        if (needShow) {
-            courseRatingText.text = String.format(Locale.ROOT, view.resources.getString(R.string.course_rating_value), course.rating)
-        }
-        courseRatingImage.isVisible = needShow
-        courseRatingText.isVisible = needShow
+//        val needShow = course.rating > 0
+//        if (needShow) {
+//            courseRatingText.text = String.format(Locale.ROOT, view.resources.getString(R.string.course_rating_value), course.rating)
+//        }
+//        courseRatingImage.isVisible = needShow
+//        courseRatingText.isVisible = needShow
     }
 }

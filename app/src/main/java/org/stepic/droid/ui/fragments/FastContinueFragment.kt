@@ -159,22 +159,22 @@ class FastContinueFragment : FragmentBase(),
 
         fastContinueCourseName.text = course.title
 
-        val progress = course.progressObject
-        val needShow = if (progress != null && progress.cost > 0) {
-            val score = progress
-                .score
-                ?.toFloatOrNull()
-                ?.toLong()
-                ?: 0L
-
-            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score, progress.cost)
-            fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
-            true
-        } else {
-            fastContinueCourseProgress.progress = 0
-            false
-        }
-        fastContinueCourseProgressText.isVisible = needShow
+//        val progress = course.progressObject
+//        val needShow = if (progress != null && progress.cost > 0) {
+//            val score = progress
+//                .score
+//                ?.toFloatOrNull()
+//                ?.toLong()
+//                ?: 0L
+//
+//            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score, progress.cost)
+//            fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
+//            true
+//        } else {
+//            fastContinueCourseProgress.progress = 0
+//            false
+//        }
+//        fastContinueCourseProgressText.isVisible = needShow
     }
 
     //ContinueCourseView

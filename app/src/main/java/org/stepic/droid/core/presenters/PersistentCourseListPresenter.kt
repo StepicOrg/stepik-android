@@ -14,14 +14,12 @@ import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.RWLocks
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
-import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -254,7 +252,6 @@ constructor(
             when (courseType) {
                 CourseListType.ENROLLED -> {
                     val progressMap = getProgressesFromDb(courses)
-                    CourseUtil.applyProgressesToCourses(progressMap, courses)
                     postLastActive(courses.firstOrNull(), progressMap)
                     courses
                 }
@@ -303,7 +300,6 @@ constructor(
             //ok show without new ratings
             null
         }
-        CourseUtil.applyReviewsToCourses(reviews, courses)
     }
 
 
