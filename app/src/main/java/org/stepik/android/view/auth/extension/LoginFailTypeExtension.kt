@@ -1,8 +1,8 @@
-package org.stepic.droid.util
+package org.stepik.android.view.auth.extension
 
 import android.content.Context
 import org.stepic.droid.R
-import org.stepic.droid.core.LoginFailType
+import org.stepik.android.domain.auth.model.LoginFailType
 
 fun Context.getMessageFor(type: LoginFailType): String {
     with(resources) {

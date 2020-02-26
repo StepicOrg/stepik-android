@@ -711,6 +711,8 @@
     <string name="lesson_error_exam_description">This lesson is a part of an exam module, you can only solve it in the web version.</string>
     <string name="lesson_error_exam_action">Open the web version</string>
 
+    <string name="lesson_step_counter">Step %d out of %d</string>
+
     <!-- Step -->
     <string name="step_amount_passed">Passed:&#160;</string>
     <string name="step_correct_submissions_percentage">Correct submissions:&#160;</string>
@@ -721,6 +723,7 @@
 
     <string name="step_solutions_show">Show solutions (%d)</string>
     <string name="step_solutions_empty">No solutions</string>
+    <string name="step_solutions_write_first">Leave a solution</string>
 
     <string name="step_action_edit_content">Edit content</string>
     <string name="step_action_edit_hint">Step text</string>
@@ -802,6 +805,7 @@
     <string name="comment_solution_pattern">Solution %d</string>
 
     <string name="comment_disabled">Comments disabled</string>
+    <string name="solution_disabled">Solutions disabled</string>
 
     <string name="comments_title">Comments</string>
     <string name="solutions_title">Solutions</string>

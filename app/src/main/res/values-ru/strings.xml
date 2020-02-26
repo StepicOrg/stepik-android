@@ -679,6 +679,8 @@
     <string name="lesson_error_exam_description">Этот урок - часть экзаменационного модуля, который доступен только в веб версии.</string>
     <string name="lesson_error_exam_action">Открыть в веб версии</string>
 
+    <string name="lesson_step_counter">Шаг %d из %d</string>
+
     <!-- Step -->
     <string name="step_amount_passed">Решило:&#160;</string>
     <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>
@@ -689,6 +691,7 @@
 
     <string name="step_solutions_show">Форум решений (%d)</string>
     <string name="step_solutions_empty">Решений пока нет</string>
+    <string name="step_solutions_write_first">Поделиться решением</string>
 
     <string name="step_action_edit_content">Изменить текст шага</string>
     <string name="step_action_edit_hint">Текст шага</string>
@@ -770,6 +773,7 @@
     <string name="comment_solution_pattern">Решение %d</string>
 
     <string name="comment_disabled">Комментарии отключены</string>
+    <string name="solution_disabled">Решения отключены</string>
 
     <string name="comments_title">Комментарии</string>
     <string name="solutions_title">Решения</string>
