@@ -1,16 +1,15 @@
 package org.stepik.android.domain.course_list.interactor
 
-import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.course_list.repository.CourseListRepository
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import javax.inject.Inject
 
 class RemindAppNotificationInteractor
 @Inject
 constructor(
-    private val courseListRepository: CourseListRepository,
-    private val sharedPreferenceHelper: SharedPreferenceHelper
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    private val userCoursesRepository: UserCoursesRepository
 ) {
     fun isNotificationShown(): Boolean {
         val isFirstDayNotificationShown = sharedPreferenceHelper.isNotificationWasShown(SharedPreferenceHelper.NotificationDay.DAY_ONE)
@@ -27,8 +26,8 @@ constructor(
         sharedPreferenceHelper.anyStepIsSolved()
 
     private fun hasEnrolledCourses(): Boolean =
-        courseListRepository
-            .getCourseList(CourseListType.ENROLLED, 1, sharedPreferenceHelper.languageForFeatured, sourceType = DataSourceType.CACHE)
+        userCoursesRepository
+            .getUserCourses(sourceType = DataSourceType.CACHE)
             .blockingGet()
-            .isNotEmpty()
+            .isEmpty()
 }
