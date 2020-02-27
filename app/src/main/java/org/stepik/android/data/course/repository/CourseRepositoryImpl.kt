@@ -10,6 +10,7 @@ import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.model.Course
 import javax.inject.Inject
 
@@ -58,4 +59,9 @@ constructor(
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
         }.map { courses -> PagedList(courses.sortedBy { courseIds.indexOf(it.id) }) }
     }
+
+    override fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
+        courseRemoteDataSource
+            .getCourses(courseListQuery)
+            .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
 }

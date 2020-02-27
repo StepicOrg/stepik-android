@@ -29,6 +29,7 @@ import org.stepik.android.view.injection.user.UserDataModule
     UserDataModule::class,
     StepDataModule::class,
 
+    CourseDataModule::class,
     CoursePaymentsDataModule::class,
     CourseReviewsDataModule::class,
     PersonalDeadlinesDataModule::class,

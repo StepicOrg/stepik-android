@@ -4,16 +4,12 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.stepik.android.cache.course.source.CourseCacheDataSourceImpl
-import org.stepik.android.cache.course.source.CourseListCacheDataSourceImpl
 import org.stepik.android.cache.course.source.CourseReviewSummaryCacheDataSourceImpl
 import org.stepik.android.cache.course.source.EnrollmentCacheDataSourceImpl
-import org.stepik.android.data.course.repository.CourseListRepositoryImpl
 import org.stepik.android.data.course.repository.CourseRepositoryImpl
 import org.stepik.android.data.course.repository.CourseReviewSummaryRepositoryImpl
 import org.stepik.android.data.course.repository.EnrollmentRepositoryImpl
 import org.stepik.android.data.course.source.CourseCacheDataSource
-import org.stepik.android.data.course.source.CourseListCacheDataSource
-import org.stepik.android.data.course.source.CourseListRemoteDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.data.course.source.CourseReviewSummaryCacheDataSource
 import org.stepik.android.data.course.source.CourseReviewSummaryRemoteDataSource
@@ -22,12 +18,9 @@ import org.stepik.android.data.course.source.EnrollmentRemoteDataSource
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
-import org.stepik.android.domain.course_list.repository.CourseListRepository
-import org.stepik.android.remote.course.service.CourseListService
 import org.stepik.android.remote.course.service.CourseReviewSummaryService
 import org.stepik.android.remote.course.service.CourseService
 import org.stepik.android.remote.course.service.EnrollmentService
-import org.stepik.android.remote.course.source.CourseListRemoteDataSourceImpl
 import org.stepik.android.remote.course.source.CourseRemoteDataSourceImpl
 import org.stepik.android.remote.course.source.CourseReviewSummaryRemoteDataSourceImpl
 import org.stepik.android.remote.course.source.EnrollmentRemoteDataSourceImpl
@@ -81,21 +74,6 @@ abstract class CourseDataModule {
         courseReviewSummaryCacheDataSourceImpl: CourseReviewSummaryCacheDataSourceImpl
     ): CourseReviewSummaryCacheDataSource
 
-    @Binds
-    internal abstract fun bindCourseListRepository(
-        courseListRepositoryImpl: CourseListRepositoryImpl
-    ): CourseListRepository
-
-    @Binds
-    internal abstract fun bindCourseListCacheDataSource(
-        courseListCacheDataSourceImpl: CourseListCacheDataSourceImpl
-    ): CourseListCacheDataSource
-
-    @Binds
-    internal abstract fun bindCourseListRemoteDataSource(
-        courseListRemoteDataSourceImpl: CourseListRemoteDataSourceImpl
-    ): CourseListRemoteDataSource
-
     @Module
     companion object {
         @Provides
@@ -112,10 +90,5 @@ abstract class CourseDataModule {
         @JvmStatic
         internal fun provideCourseReviewSummaryService(@Authorized retrofit: Retrofit): CourseReviewSummaryService =
             retrofit.create(CourseReviewSummaryService::class.java)
-
-        @Provides
-        @JvmStatic
-        internal fun provideCourseListService(@Authorized retrofit: Retrofit): CourseListService =
-            retrofit.create(CourseListService::class.java)
     }
 }

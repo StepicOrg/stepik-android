@@ -35,7 +35,6 @@ data class CourseHeaderData(
                 parcel.readInt()
             )
 
-
         override fun newArray(size: Int): Array<CourseHeaderData?> =
             arrayOfNulls(size)
     }

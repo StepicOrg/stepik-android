@@ -7,7 +7,7 @@ import ru.nobird.android.core.model.Identifiable
 data class CourseListItem(
     val course: Course,
     val courseStats: CourseStats
-): Identifiable<Long> {
+) : Identifiable<Long> {
     override val id: Long
         get() = course.id
 }

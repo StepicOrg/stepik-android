@@ -31,7 +31,6 @@ data class CourseStats(
                 restoreEnrollmentState(parcel.readSerializable() as EnrollmentState)
             )
 
-
         /**
          * Reason is that deserialized [enrollmentState] object has different reference from one in [EnrollmentState]
          */
