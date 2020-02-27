@@ -135,7 +135,8 @@
                 android:paddingEnd="16dp"
 
                 android:drawablePadding="12dp"
-                tools:drawableStart="@drawable/ic_step_navigation_next"
+                app:drawableLeftCompat="@drawable/ic_step_navigation_next"
+                app:drawableStartCompat="@drawable/ic_step_navigation_next"
 
                 app:layout_constraintTop_toBottomOf="@id/courseButtonSeparator"
                 app:layout_constraintBottom_toBottomOf="parent"
