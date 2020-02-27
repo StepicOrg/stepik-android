@@ -10,7 +10,7 @@ import android.view.View
 import androidx.annotation.ColorInt
 import org.stepic.droid.R
 import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.DpPixelsHelper
+import org.stepic.droid.util.toPx
 
 /**
  * this view has different implementation of onDraw, based on stroke of circle
@@ -31,7 +31,7 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
             invalidate()
         }
 
-    private val strokeBound = DpPixelsHelper.convertDpToPixel(5f) //if < 5dp -> onDraw with space, >= 5dp -> without spaces
+    private val strokeBound = 5f.toPx() // if < 5dp -> onDraw with space, >= 5dp -> without spaces
 
     //Rectangles
     private val oval = RectF()
@@ -52,9 +52,9 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
     private var foregroundPaintColor = ColorUtil.getColorArgb(R.color.stepic_brand_primary, context)
 
     private var isStrokeSmall: Boolean = true
-    private var strokeWidth = DpPixelsHelper.convertDpToPixel(DEFAULT_STROKE_WIDTH_DP)
+    private var strokeWidth = DEFAULT_STROKE_WIDTH_DP.toPx()
         set(value) {
-            isStrokeSmall = DpPixelsHelper.convertPixelsToDp(value, context) < strokeBound
+            isStrokeSmall = value < strokeBound
             field = value
         }
 
