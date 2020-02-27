@@ -1,4 +1,4 @@
-package org.stepik.android.remote.course_list.service
+package org.stepik.android.remote.course.service
 
 import io.reactivex.Single
 import org.stepik.android.remote.course.model.CourseResponse

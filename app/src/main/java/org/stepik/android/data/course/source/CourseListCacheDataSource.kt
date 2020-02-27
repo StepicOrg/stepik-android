@@ -1,4 +1,4 @@
-package org.stepik.android.data.course_list.source
+package org.stepik.android.data.course.source
 
 import io.reactivex.Completable
 import io.reactivex.Single

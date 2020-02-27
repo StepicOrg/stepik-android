@@ -1,4 +1,4 @@
-package org.stepik.android.remote.course_list.mapper
+package org.stepik.android.remote.course.mapper
 
 import org.stepic.droid.util.putNullable
 import org.stepik.android.domain.course_list.model.CourseListQuery

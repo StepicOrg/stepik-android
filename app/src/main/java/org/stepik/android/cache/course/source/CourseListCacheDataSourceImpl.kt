@@ -1,11 +1,11 @@
-package org.stepik.android.cache.course_list
+package org.stepik.android.cache.course.source
 
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.PagedList
-import org.stepik.android.data.course_list.source.CourseListCacheDataSource
+import org.stepik.android.data.course.source.CourseListCacheDataSource
 import org.stepik.android.model.Course
 import javax.inject.Inject
 

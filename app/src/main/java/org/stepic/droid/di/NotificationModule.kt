@@ -4,7 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoSet
 import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate
-import org.stepik.android.view.injection.course_list.CourseListDataModule
+import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.notification.FcmNotificationHandler
 import org.stepik.android.view.notification.FcmNotificationHandlerImpl
 import org.stepik.android.view.notification.NotificationDelegate
@@ -19,7 +19,7 @@ import org.stepik.android.view.splash.notification.RemindRegistrationNotificatio
 import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
 import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 
-@Module(includes = [CourseListDataModule::class])
+@Module(includes = [CourseDataModule::class])
 interface NotificationModule {
     @Binds
     fun bindNotificationPublisher(notificationPublisherImpl: NotificationPublisherImpl): NotificationPublisher

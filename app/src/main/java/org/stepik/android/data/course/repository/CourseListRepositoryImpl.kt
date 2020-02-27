@@ -1,4 +1,4 @@
-package org.stepik.android.data.course_list.repository
+package org.stepik.android.data.course.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -6,8 +6,8 @@ import org.stepic.droid.model.CourseListType
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.course.source.CourseCacheDataSource
-import org.stepik.android.data.course_list.source.CourseListCacheDataSource
-import org.stepik.android.data.course_list.source.CourseListRemoteDataSource
+import org.stepik.android.data.course.source.CourseListCacheDataSource
+import org.stepik.android.data.course.source.CourseListRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.course_list.repository.CourseListRepository
