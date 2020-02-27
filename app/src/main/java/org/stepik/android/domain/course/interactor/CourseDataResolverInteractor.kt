@@ -14,6 +14,7 @@ import javax.inject.Inject
 class CourseDataResolverInteractor
 @Inject
 constructor(
+    //    private val billingRepository: BillingRepository,
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository

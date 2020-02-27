@@ -17,7 +17,6 @@ import javax.inject.Inject
 class CourseInteractor
 @Inject
 constructor(
-//    private val billingRepository: BillingRepository,
     private val courseRepository: CourseRepository,
     private val solutionsInteractor: SolutionsInteractor,
     private val coursePublishSubject: BehaviorSubject<Course>,
