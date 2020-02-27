@@ -26,7 +26,7 @@ constructor(
             .takeUntil { !it.hasNext }
             .reduce(PagedList(emptyList())) { a, b -> a + b }
 
-    fun getCourseList(courseIds: LongArray): Single<List<Course>> =
+    fun getCourseList(courseIds: LongArray): Single<PagedList<Course>> =
         courseRepository
             .getCourses(*courseIds, primarySourceType = DataSourceType.CACHE)
 }

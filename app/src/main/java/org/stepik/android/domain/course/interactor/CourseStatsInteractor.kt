@@ -1,7 +1,9 @@
 package org.stepik.android.domain.course.interactor
 
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles.zip
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
@@ -9,9 +11,10 @@ import org.stepik.android.domain.course_payments.repository.CoursePaymentsReposi
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
+import org.stepik.android.model.Progress
 import javax.inject.Inject
 
-class CourseDataResolverInteractor
+class CourseStatsInteractor
 @Inject
 constructor(
     //    private val billingRepository: BillingRepository,
@@ -20,20 +23,35 @@ constructor(
     private val progressRepository: ProgressRepository
 ) {
 
-    fun resolveCourseReview(course: Course): Single<Double> =
+    fun getCourseStats(course: Course): Single<CourseStats> =
+        zip(
+            resolveCourseReview(course),
+            resolveCourseProgress(course),
+            resolveCourseEnrollmentState(course)
+        ) { courseReview, courseProgress, enrollmentState ->
+            CourseStats(
+                review = courseReview,
+                learnersCount = course.learnersCount,
+                readiness = course.readiness,
+                progress = (courseProgress as? Progress),
+                enrollmentState = enrollmentState
+            )
+        }
+
+    private fun resolveCourseReview(course: Course): Single<Double> =
         courseReviewRepository
             .getCourseReviewSummary(course.reviewSummary, sourceType = DataSourceType.REMOTE)
             .map(CourseReviewSummary::average)
             .toSingle()
             .onErrorReturnItem(0.0)
 
-    fun resolveCourseProgress(course: Course): Single<*> =
+    private fun resolveCourseProgress(course: Course): Single<*> =
         course
             .progress
             ?.let(progressRepository::getProgress)
             ?: Single.just(Unit)
 
-    fun resolveCourseEnrollmentState(course: Course): Single<EnrollmentState> =
+    private fun resolveCourseEnrollmentState(course: Course): Single<EnrollmentState> =
         when {
             course.enrollment > 0 ->
                 Single.just(EnrollmentState.Enrolled)

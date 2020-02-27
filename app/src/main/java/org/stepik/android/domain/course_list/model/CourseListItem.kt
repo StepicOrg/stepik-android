@@ -1,13 +1,13 @@
 package org.stepik.android.domain.course_list.model
 
-import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.model.Course
-import org.stepik.android.model.Progress
+import ru.nobird.android.core.model.Identifiable
 
 data class CourseListItem(
-    val courseId: Long,
     val course: Course,
-    val progress: Progress?,
-    val rating: Double,
-    val enrollmentState: EnrollmentState
-)
+    val courseStats: CourseStats
+): Identifiable<Long> {
+    override val id: Long
+        get() = course.id
+}

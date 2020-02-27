@@ -4,12 +4,10 @@ import io.reactivex.Maybe
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.domain.course.model.CourseHeaderData
-import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
-import org.stepik.android.model.Progress
 import org.stepik.android.view.injection.course.CourseScope
 import javax.inject.Inject
 
@@ -20,7 +18,7 @@ constructor(
     private val courseRepository: CourseRepository,
     private val solutionsInteractor: SolutionsInteractor,
     private val coursePublishSubject: BehaviorSubject<Course>,
-    private val courseDataResolverInteractor: CourseDataResolverInteractor
+    private val courseStatsInteractor: CourseStatsInteractor
 ) {
     companion object {
         private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -44,21 +42,17 @@ constructor(
 
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
         zip(
-            courseDataResolverInteractor.resolveCourseReview(course),
-            courseDataResolverInteractor.resolveCourseProgress(course),
-            courseDataResolverInteractor.resolveCourseEnrollmentState(course),
+            courseStatsInteractor.getCourseStats(course),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true)
-        ) { courseReview, courseProgress, enrollmentState, localSubmissions ->
+        ) { courseStats, localSubmissions ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
                 title = course.title ?: "",
                 cover = course.cover ?: "",
 
-                stats = CourseStats(courseReview, course.learnersCount, course.readiness),
-                progress = (courseProgress as? Progress),
-                localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem },
-                enrollmentState = enrollmentState
+                stats = courseStats,
+                localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem }
             )
         }
             .toMaybe()

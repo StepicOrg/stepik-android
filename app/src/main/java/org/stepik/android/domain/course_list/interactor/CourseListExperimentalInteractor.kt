@@ -2,17 +2,14 @@ package org.stepik.android.domain.course_list.interactor
 
 import io.reactivex.Maybe
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.plus
-import org.stepik.android.domain.course.interactor.CourseDataResolverInteractor
+import org.stepik.android.domain.course.interactor.CourseStatsInteractor
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.model.Course
-import org.stepik.android.model.Progress
 import javax.inject.Inject
 
 class CourseListExperimentalInteractor
@@ -20,41 +17,30 @@ class CourseListExperimentalInteractor
 constructor(
     private val courseRepository: CourseRepository,
     private val courseListRepository: CourseListRepository,
-    private val courseDataResolverInteractor: CourseDataResolverInteractor
+    private val courseStatsInteractor: CourseStatsInteractor
 ) {
 
-    fun getCourseListItems(vararg courseId: Long): Single<List<CourseListItem>> =
-        courseRepository
-            .getCourses(*courseId)
-            .flatMap { courses ->
-                courses
-                    .toObservable()
-                    .flatMapSingle { course -> obtainCourseListItem(course = course).toSingle() }
-                    .reduce(emptyList<CourseListItem>()) { a, b -> a + b }
-            }
+    fun getCourseListItems(vararg courseId: Long): Single<PagedList<CourseListItem>> =
+        getCourseListItems(coursesSource = courseRepository.getCourses(*courseId))
 
-    fun getCourseListItems(courseListQuery: CourseListQuery, page: Int = 1): Single<PagedList<CourseListItem>> =
-        courseListRepository
-            .getCourseList(courseListQuery.copy(page = page))
+    fun getCourseListItems(courseListQuery: CourseListQuery): Single<PagedList<CourseListItem>> =
+        getCourseListItems(coursesSource = courseListRepository.getCourseList(courseListQuery))
+
+    private fun getCourseListItems(coursesSource: Single<PagedList<Course>>): Single<PagedList<CourseListItem>> =
+        coursesSource
             .flatMap { courses ->
                 courses
                     .toObservable()
-                    .flatMapSingle { course -> obtainCourseListItem(course = course).toSingle() }
-                    .reduce(PagedList<CourseListItem>(emptyList())) { a, b -> a + b }
+                    .flatMapMaybe(::obtainCourseListItem)
+                    .toList()
+                    .map { PagedList(it, courses.page, courses.hasNext, courses.hasPrev) }
             }
 
     private fun obtainCourseListItem(course: Course): Maybe<CourseListItem> =
-        Singles.zip(
-            courseDataResolverInteractor.resolveCourseReview(course),
-            courseDataResolverInteractor.resolveCourseProgress(course),
-            courseDataResolverInteractor.resolveCourseEnrollmentState(course)
-        ) { courseReview, courseProgress, enrollmentState ->
+        courseStatsInteractor.getCourseStats(course).map { courseStats ->
             CourseListItem(
-                courseId = course.id,
                 course = course,
-                progress = (courseProgress as? Progress),
-                rating = courseReview,
-                enrollmentState = enrollmentState
+                courseStats = courseStats
             )
         }
             .toMaybe()
