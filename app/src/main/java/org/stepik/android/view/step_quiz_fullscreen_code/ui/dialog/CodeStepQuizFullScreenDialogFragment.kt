@@ -30,6 +30,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.code.util.CodeToolbarUtil
+import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
@@ -71,11 +72,11 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     private lateinit var codeLayoutDelegate: CodeLayoutDelegate
-    private lateinit var runCodeDelegate: CodeStepRunCodeDelegate
+    private var runCodeDelegate: CodeStepRunCodeDelegate? = null
 
     private lateinit var instructionsLayout: View
     private lateinit var playgroundLayout: View
-    private lateinit var runCodeLayout: View
+    private var runCodeLayout: View? = null
 
     /**
      *  Code play ground views
@@ -93,8 +94,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     /**
      * Run code views
      */
-    private lateinit var runCodeActionSeparator: View
-    private lateinit var runCodeAction: AppCompatTextView
+    private var runCodeActionSeparator: View? = null
+    private var runCodeAction: AppCompatTextView? = null
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -157,7 +158,17 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             }
         }
 
-        initViewPager()
+        if (savedInstanceState != null) {
+            lang = savedInstanceState.getString(ARG_LANG) ?: return
+            code = savedInstanceState.getString(ARG_CODE) ?: return
+        }
+
+        val isShowRunCode = resolveIsShowRunCode(
+            isRunCodeEnabled = stepWrapper.step.block?.options?.isRunUserCodeAllowed ?: false,
+            hasSamples = stepWrapper.step.block?.options?.samples?.isNotEmpty() ?: false
+        )
+
+        initViewPager(isShowRunCode = isShowRunCode)
 
         val text = stepWrapper
             .step
@@ -167,11 +178,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
         instructionsLayout.stepQuizCodeTextContent.setText(text)
 
-        if (savedInstanceState != null) {
-            lang = savedInstanceState.getString(ARG_LANG) ?: return
-            code = savedInstanceState.getString(ARG_CODE) ?: return
-        }
-
         /**
          *  Code play ground view binding
          */
@@ -180,22 +186,24 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         retryButton = playgroundLayout.stepQuizRetry
         codeLayout = playgroundLayout.codeStepLayout
 
-        runCodeDelegate = CodeStepRunCodeDelegate(
-            runCodeLayout = runCodeLayout,
-            codeRunPresenter = codeRunPresenter,
-            fullScreenCodeTabs = fullScreenCodeTabs,
-            codeLayout = codeLayout,
-            context = requireContext(),
-            stepWrapper = stepWrapper
-        )
+        runCodeDelegate = runCodeLayout?.let { layout ->
+            CodeStepRunCodeDelegate(
+                runCodeLayout = layout,
+                codeRunPresenter = codeRunPresenter,
+                fullScreenCodeTabs = fullScreenCodeTabs,
+                codeLayout = codeLayout,
+                context = requireContext(),
+                stepWrapper = stepWrapper
+            )
+        }
 
-        runCodeDelegate.lang = lang
+        runCodeDelegate?.lang = lang
 
         /**
          *  Run code view binding
          */
-        runCodeActionSeparator = runCodeLayout.runCodeActionSeparator
-        runCodeAction = runCodeLayout.runCodeAction
+        runCodeActionSeparator = runCodeLayout?.runCodeActionSeparator
+        runCodeAction = runCodeLayout?.runCodeAction
 
         retryButton.isVisible = false
         setupCodeToolAdapter()
@@ -227,14 +235,14 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         outState.putString(ARG_CODE, codeLayout.text.toString())
     }
 
-    private fun initViewPager() {
+    private fun initViewPager(isShowRunCode: Boolean) {
         val activity = activity
             ?: return
 
         val lightFont = ResourcesCompat.getFont(activity, R.font.roboto_light)
         val regularFont = ResourcesCompat.getFont(activity, R.font.roboto_regular)
 
-        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity)
+        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity, isShowRunCode = isShowRunCode)
 
         fullScreenCodeViewPager.adapter = pagerAdapter
         fullScreenCodeTabs.setupWithViewPager(fullScreenCodeViewPager)
@@ -269,7 +277,12 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
         instructionsLayout = pagerAdapter.getViewAt(0)
         playgroundLayout = pagerAdapter.getViewAt(1)
-        runCodeLayout = pagerAdapter.getViewAt(2)
+
+        runCodeLayout = if (isShowRunCode) {
+            pagerAdapter.getViewAt(2)
+        } else {
+            null
+        }
     }
 
     override fun onStart() {
@@ -281,7 +294,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
             }
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        codeRunPresenter.attachView(runCodeDelegate)
+        runCodeDelegate?.let {
+            codeRunPresenter.attachView(it)
+        }
     }
 
     override fun onPause() {
@@ -291,8 +306,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     override fun onStop() {
-        runCodeDelegate.onDetach()
-        codeRunPresenter.detachView(runCodeDelegate)
+        runCodeDelegate?.let {
+            it.onDetach()
+            codeRunPresenter.detachView(it)
+        }
         super.onStop()
     }
 
@@ -307,7 +324,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
     override fun onLanguageChosen(programmingLanguage: String) {
         lang = programmingLanguage
-        runCodeDelegate.lang = lang
+        runCodeDelegate?.lang = lang
         codeLayoutDelegate.setLanguage(programmingLanguage)
         codeLayoutDelegate.setDetailsContentData(programmingLanguage)
     }
@@ -339,7 +356,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             coordinator,
             onKeyboardHidden = {
                 if (keyboardShown) {
-                    if (fullScreenCodeViewPager.currentItem == CODE_TAB) {
+                    if (fullScreenCodeViewPager.currentItem == CODE_TAB && runCodeDelegate != null) {
                         codeRunPresenter.resolveRunCodePopup()
                     }
                     stepQuizCodeKeyboardExtension.visibility = View.GONE
@@ -388,8 +405,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         centeredToolbar.isVisible = needShow
         fullScreenCodeTabs.isVisible = needShow
         fullScreenCodeSeparator.isVisible = needShow
-        runCodeActionSeparator.isVisible = needShow
-        runCodeAction.isVisible = needShow
+        runCodeActionSeparator?.isVisible = needShow
+        runCodeAction?.isVisible = needShow
     }
 
     private fun onChangeLanguageClicked() {
@@ -398,6 +415,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             dialog.show(childFragmentManager, null)
         }
     }
+
+    private fun resolveIsShowRunCode(isRunCodeEnabled: Boolean, hasSamples: Boolean): Boolean =
+        (lang == ProgrammingLanguage.SQL.serverPrintableName && isRunCodeEnabled) ||
+        (isRunCodeEnabled && hasSamples)
 
     interface Callback {
         fun onSyncCodeStateWithParent(lang: String, code: String, onSubmitClicked: Boolean = false)

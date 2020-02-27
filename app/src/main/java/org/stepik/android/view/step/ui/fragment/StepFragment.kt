@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.SolutionStatsSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -76,9 +75,6 @@ class StepFragment : Fragment(), StepView,
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var solutionStatsSplitTest: SolutionStatsSplitTest
-
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonData: LessonData by argument()
 
@@ -116,7 +112,7 @@ class StepFragment : Fragment(), StepView,
         stepSolutionStatsDelegate = StepSolutionStatsDelegate(
             stepSolutionStats,
             stepWrapper.step,
-            solutionStatsSplitTest.currentGroup.isStatsVisible && stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+            stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
         )
 
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }

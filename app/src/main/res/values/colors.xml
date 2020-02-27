@@ -152,6 +152,11 @@
 
     <color name="violet2">#E9EBFA</color>
     <color name="yellow1">#FFA961</color>
+    <color name="red01">#D41F1F</color>
+    <color name="red02">#FF7965</color>
+    <color name="red03">#FFEBE8</color>
+
+    <color name="step_quiz_code_output_title">#f04a42</color> <!-- Generated from red01 -->
 
     <color name="black1">#000000</color>
     <color name="black1_alpha_19">#30000000</color> <!-- Ripple color -->

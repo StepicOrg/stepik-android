@@ -1,11 +1,13 @@
 package org.stepic.droid.jsonHelpers.adapters
 
 import com.google.gson.Gson
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Test
+import org.stepic.droid.testUtils.TestingGsonProvider
 import org.stepik.android.model.Block
 import org.stepik.android.model.code.CodeOptions
-import org.stepic.droid.testUtils.TestingGsonProvider
 
 class CodeOptionsAdapterFactoryTest {
 
@@ -17,7 +19,13 @@ class CodeOptionsAdapterFactoryTest {
 
         val codeOptions = gson.fromJson(json, CodeOptions::class.java)
 
-        assertNull(codeOptions)
+        assertNotNull(codeOptions)
+        assertEquals(true, codeOptions.limits.isEmpty())
+        assertEquals(true, codeOptions.codeTemplates.isEmpty())
+        assertEquals(true, codeOptions.samples.isEmpty())
+        assertEquals(0, codeOptions.executionTimeLimit)
+        assertEquals(0, codeOptions.executionMemoryLimit)
+        assertEquals(false, codeOptions.isRunUserCodeAllowed)
     }
 
     @Test
@@ -42,7 +50,14 @@ class CodeOptionsAdapterFactoryTest {
 
         assertNotNull(block)
         assertNotNull(block.name)
-        assertNull(block.options)
+
+        assertNotNull(block.options)
+        assertEquals(true, block.options?.limits?.isEmpty())
+        assertEquals(true, block.options?.codeTemplates?.isEmpty())
+        assertEquals(true, block.options?.samples?.isEmpty())
+        assertEquals(0, block.options?.executionTimeLimit)
+        assertEquals(0, block.options?.executionMemoryLimit)
+        assertEquals(false, block.options?.isRunUserCodeAllowed)
     }
 
     @Test

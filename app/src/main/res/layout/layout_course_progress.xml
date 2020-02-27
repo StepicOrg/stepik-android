@@ -93,6 +93,7 @@
         android:gravity="center_vertical"
 
         app:drawableStartCompat="@drawable/ic_course_solutions"
+        app:drawableLeftCompat="@drawable/ic_course_solutions"
         android:drawablePadding="8dp"
 
         app:layout_constraintBaseline_toBaselineOf="@id/courseSolutionsTitle"
