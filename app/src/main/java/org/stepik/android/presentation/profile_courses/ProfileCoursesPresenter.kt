@@ -6,9 +6,7 @@ import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.core.presenters.PresenterContract
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
@@ -20,6 +18,7 @@ import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import timber.log.Timber
 import javax.inject.Inject
 
 class ProfileCoursesPresenter
@@ -34,6 +33,8 @@ constructor(
 
     private val stateContainer: DefaultStateContainer<ProfileCoursesView.State, ProfileCoursesView>,
 
+    private val continueCourseAction: ContinueCourseAction,
+
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
 
@@ -41,7 +42,7 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : PresenterBase<ProfileCoursesView>(stateContainer), ContinueCourseAction by ContinueCourseActionImpl(stateContainer) {
+) : PresenterBase<ProfileCoursesView>(stateContainer), ContinueCourseAction by continueCourseAction {
     companion object {
         private const val KEY_COURSES = "courses"
     }
@@ -55,6 +56,7 @@ constructor(
         }
 
     init {
+        Timber.d(stateContainer.toString())
         subscriberForEnrollmentUpdates()
     }
 

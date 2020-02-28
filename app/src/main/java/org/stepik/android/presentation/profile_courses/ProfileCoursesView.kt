@@ -4,6 +4,8 @@ import org.stepic.droid.core.presenters.PresenterContract
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterBase
+import timber.log.Timber
+import javax.inject.Inject
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -30,9 +32,15 @@ interface ContinueCourseAction {
     fun continueCourse(course: Course)
 }
 
-class ContinueCourseActionImpl(
+class ContinueCourseActionImpl
+@Inject
+constructor(
     private val viewContainer: ViewContainer<out CourseShowable>
 ) : ContinueCourseAction {
+    init {
+        Timber.d(viewContainer.toString())
+    }
+
     override fun continueCourse(course: Course) {
         viewContainer.view?.showCourse(course, isAdaptive = false)
     }

@@ -22,6 +22,7 @@ import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificat
 @ProfileScope
 @Subcomponent(modules = [
     ProfileModule::class,
+    ProfileCoursesModule::class,
 
     CourseListDataModule::class,
     LastStepDataModule::class,

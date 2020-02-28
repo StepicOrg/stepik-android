@@ -16,6 +16,10 @@ import org.stepik.android.presentation.profile_achievements.ProfileAchievementsP
 import org.stepik.android.presentation.profile_activities.ProfileActivitiesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesPresenter
+import org.stepik.android.presentation.profile_courses.CourseShowable
+import org.stepik.android.presentation.profile_courses.DefaultStateContainer
+import org.stepik.android.presentation.profile_courses.ProfileCoursesView
+import org.stepik.android.presentation.profile_courses.ViewContainer
 import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
 import org.stepik.android.presentation.profile_id.ProfileIdPresenter
 import org.stepik.android.presentation.profile_links.ProfileLinksPresenter
@@ -71,6 +75,9 @@ abstract class ProfileModule {
     @ViewModelKey(ProfileCertificatesPresenter::class)
     internal abstract fun bindProfileCertificatePresenter(profileCertificatesPresenter: ProfileCertificatesPresenter): ViewModel
 
+    @Binds
+    internal abstract fun bindCourseShowableContainer(@ProfileScope stateContainer: DefaultStateContainer<ProfileCoursesView.State, ProfileCoursesView>): ViewContainer<out CourseShowable>
+
     @Module
     companion object {
         @Provides
@@ -84,5 +91,11 @@ abstract class ProfileModule {
         @ProfileScope
         fun providesUserObservable(subject: BehaviorSubject<ProfileData>, @BackgroundScheduler scheduler: Scheduler): Observable<ProfileData> =
             subject.observeOn(scheduler)
+
+        @Provides
+        @JvmStatic
+        @ProfileScope
+        fun provideStateContainer(): DefaultStateContainer<ProfileCoursesView.State, ProfileCoursesView> =
+            DefaultStateContainer(ProfileCoursesView.State.Idle)
     }
 }

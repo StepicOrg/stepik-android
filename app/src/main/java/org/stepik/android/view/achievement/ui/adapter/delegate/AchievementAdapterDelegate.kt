@@ -3,6 +3,7 @@ package org.stepik.android.view.achievement.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.view_achievement_item.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
@@ -21,14 +22,14 @@ class AchievementAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<AchievementItem> =
         ViewHolder(createView(parent, R.layout.view_achievement_item))
 
-    private inner class ViewHolder(root: View) : DelegateViewHolder<AchievementItem>(root) {
-        private val achievementTitle: TextView = root.achievementTitle
-        private val achievementDescription: TextView = root.achievementDescription
+    private inner class ViewHolder(override val containerView: View) : DelegateViewHolder<AchievementItem>(containerView), LayoutContainer {
+        private val achievementTitle: TextView = containerView.achievementTitle
+        private val achievementDescription: TextView = containerView.achievementDescription
 
-        private val achievementTileDelegate = AchievementTileDelegate(root.achievementTile, achievementResourceResolver)
+        private val achievementTileDelegate = AchievementTileDelegate(containerView.achievementTile, achievementResourceResolver)
 
         init {
-            root.setOnClickListener { itemData?.let(onItemClicked) }
+            containerView.setOnClickListener { itemData?.let(onItemClicked) }
         }
 
         override fun onBind(data: AchievementItem) {
