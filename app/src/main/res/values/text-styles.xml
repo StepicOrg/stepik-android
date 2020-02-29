@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="bold_text">
-        <item name="android:fontFamily">@font/roboto_bold</item>
-    </style>
-
-    <style name="regular_text">
-        <item name="android:fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="cv_text_title" parent="regular_text">
-        <item name="android:textSize">@dimen/text_size_title</item>
-    </style>
-
     <style name="FilterItem">
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_light</item>
