@@ -63,11 +63,6 @@
     <color name="login_edit_text_block_background_color">@color/transparent</color>
     <color name="login_edit_text_block_background_color_wrong">@color/red02_color_alpha_5</color>
 
-
-    <color name="login_button_color">@color/green01_alpha_10</color>
-    <color name="login_button_color_pressed">@color/green01_alpha_40</color>
-    <color name="login_button_color_disabled">@color/green01_alpha_5</color>
-
     <color name="login_error_color">@color/new_red_color</color>
 
     <color name="remind_password_button_text_color">@color/blue03</color>

@@ -52,8 +52,6 @@
     <dimen name="card_bottom_margin">10dp</dimen>
     <dimen name="stepik_text_size_in_button">14sp</dimen>
     <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
-    <dimen name="login_button_radius">8dp</dimen>
-    <dimen name="launch_button_text_size">18sp</dimen>
     <dimen name="onePx">1px</dimen>
     <dimen name="table_cell_fixed_height">96dp</dimen>
 
@@ -121,8 +119,6 @@
     <dimen name="home_right_recycler_padding">46dp</dimen>
     <!-- 'home_right_recycler_padding' minus 'course_list_side_right_padding'-->
     <dimen name="home_right_recycler_padding_without_extra">34dp</dimen>
-
-    <dimen name="borderless_text_button_text_size">16sp</dimen>
 
     <dimen name="placeholder_text_size">16sp</dimen>
     <dimen name="placeholder_side_padding">28dp</dimen>
