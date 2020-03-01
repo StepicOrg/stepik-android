@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="?buttonCornerRadius" />
-            <solid android:color="?colorSecondary" />
+            <solid android:color="@color/color_button_background_tint" />
         </shape>
     </item>
     <item android:drawable="?selectableItemBackgroundRounded" />
