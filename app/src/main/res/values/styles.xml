@@ -14,6 +14,8 @@
         <item name="android:colorBackground">@color/new_cover</item>
 
         <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorSecondary">@color/grey02</item>
+
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionMenuTextColor">@color/white</item>
@@ -170,7 +172,7 @@
         <item name="android:padding">@dimen/padding_placeholders</item>
         <item name="android:lineSpacingMultiplier">1.15</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/stepic_weak_text</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
     </style>
     
     <style name="PlaceholderButton">

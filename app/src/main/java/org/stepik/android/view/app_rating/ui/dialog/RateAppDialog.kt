@@ -105,7 +105,6 @@ class RateAppDialog : DialogFragment() {
                 rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.color.rate_dialog_store)
             }
 
-            rateDialogLater.setTextAndColor(R.string.rate_dialog_later, R.color.stepic_weak_text)
             rateDialogButtonsContainer.visibility = View.VISIBLE
         }
     }

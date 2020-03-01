@@ -2,7 +2,6 @@
 
 <resources>
     <color name="transparent">@color/white_color_alpha_0</color>
-    <color name="stepic_weak_text">@color/grey02</color>
     <color name="black">@color/black1</color>
 
     <!-- stepic brand book-->

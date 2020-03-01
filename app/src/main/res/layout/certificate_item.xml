@@ -48,7 +48,7 @@
                 android:layout_toStartOf="@+id/certificate_icon"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:textColor="@color/stepic_weak_text"
+                android:textColor="?android:textColorSecondary"
                 android:textSize="14sp"
                 tools:text="Сертификат с отличием за курс Безопасность в интернете"/>
 
