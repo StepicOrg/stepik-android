@@ -108,7 +108,7 @@
             <include
                 android:id="@+id/courseButtonSeparator"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="?dividerVerticalSize"
 
                 layout="@layout/view_divider_vertical"
 

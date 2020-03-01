@@ -95,7 +95,7 @@
             <include
                 android:id="@+id/outputSeparator"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="?dividerVerticalSize"
                 layout="@layout/view_divider_vertical"
                 android:visibility="gone"
                 app:layout_constraintTop_toTopOf="@id/outputDataTitle"
@@ -148,7 +148,7 @@
     <include
         android:id="@+id/runCodeActionSeparator"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="?dividerVerticalSize"
         layout="@layout/view_divider_vertical"
         android:layout_marginBottom="16dp"
         android:layout_above="@id/runCodeFeedback"/>
