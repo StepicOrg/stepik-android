@@ -124,7 +124,7 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginLeft="0dp"
                 android:max="100"
-                app:mpb_progressTint="@color/stepic_brand_primary"
+                app:mpb_progressTint="?colorSecondary"
                 app:mpb_progressStyle="horizontal"
                 app:mpb_useIntrinsicPadding="false"
                 app:mpb_showProgressBackground="false"

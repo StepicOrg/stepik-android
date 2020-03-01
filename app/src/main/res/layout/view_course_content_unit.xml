@@ -167,7 +167,7 @@
         android:layout_width="3dp"
         android:layout_height="0dp"
         app:progressBackgroundColor="@android:color/transparent"
-        app:progressForegroundColor="@color/stepic_brand_primary"
+        app:progressForegroundColor="?colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

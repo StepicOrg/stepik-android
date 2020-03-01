@@ -17,9 +17,9 @@
             android:layout_height="@dimen/achievement_tile_width"
             android:layout_gravity="center"
             app:strokeWidth="1.5dp"
-            app:progressColor="@color/stepic_brand_primary"/>
+            app:progressColor="?colorSecondary" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/achievementIcon"
             android:layout_width="@dimen/achievement_tile_width"
             android:layout_height="@dimen/achievement_tile_width" />

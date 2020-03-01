@@ -2,6 +2,9 @@
     <item name="match_parent" type="dimen">-1px</item>
     <item name="wrap_content" type="dimen">-2px</item>
 
+    <!-- Theme -->
+    <dimen name="button_corner_radius">8dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="play_pause_button_size">72dp</dimen>
     <dimen name="custom_peek_height">500dp</dimen>

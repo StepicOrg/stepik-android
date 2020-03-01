@@ -67,8 +67,6 @@
     <color name="login_button_color">@color/green01_alpha_10</color>
     <color name="login_button_color_pressed">@color/green01_alpha_40</color>
     <color name="login_button_color_disabled">@color/green01_alpha_5</color>
-    <color name="login_button_text_color_enabled">@color/stepic_brand_primary</color>
-    <color name="login_button_text_color_disabled">@color/green01_alpha_40</color>
 
     <color name="login_error_color">@color/new_red_color</color>
 
@@ -146,6 +144,7 @@
     <color name="violet1_alpha_50">#806C7BDF</color>
 
     <color name="violet2">#E9EBFA</color>
+    <color name="violet3">#3E50CB</color>
     <color name="yellow1">#FFA961</color>
 
     <color name="step_quiz_code_output_title">#f04a42</color> <!-- Generated from red01 -->

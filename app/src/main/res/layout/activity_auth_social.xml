@@ -65,7 +65,8 @@
                 android:text="@string/sign_in_with_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/BorderLessTextButton"
+                android:theme="@style/AppTheme.Brown"
+                style="@style/Button.Borderless"
                 android:layout_gravity="start|center_vertical" />
 
             <Button
@@ -74,7 +75,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                style="@style/BorderLessTextButton" />
+                android:theme="@style/AppTheme.Brown"
+                style="@style/Button.Borderless" />
 
         </FrameLayout>
 
@@ -115,23 +117,22 @@
             <Button
                 android:id="@+id/showMore"
                 android:text="@string/social_recycler_show_more"
-                style="@style/BorderLessTextButton"
+                style="@style/Button.Borderless"
+                android:theme="@style/AppTheme.Green"
                 android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/stepic_brand_primary"
-                android:visibility="visible"
-                tools:text="More" />
+                android:visibility="visible" />
 
             <Button
                 android:id="@+id/showLess"
                 android:text="@string/social_recycler_show_less"
-                style="@style/BorderLessTextButton"
-                android:textColor="@color/stepic_brand_primary"
+                style="@style/Button.Borderless"
+                android:textColor="?colorSecondary"
+                android:theme="@style/AppTheme.Green"
                 android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                tools:text="Less"
                 android:visibility="gone" />
 
         </LinearLayout>

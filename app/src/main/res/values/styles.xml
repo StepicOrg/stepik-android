@@ -6,6 +6,8 @@
         <item name="colorPrimary">@color/new_primary_color</item>
         <item name="colorPrimaryDark">@color/new_accent_color</item>
         <item name="colorAccent">@color/new_accent_color</item>
+        <item name="colorSecondary">@color/green01</item>
+        <item name="colorSecondaryDark">@color/green03</item>
 
         <!--this change the background of main window (activity)-->
         <item name="android:windowBackground">@color/white</item>
@@ -13,7 +15,7 @@
         <!--this change the background of main window (activity and) AND all the components (dialogs) -->
         <item name="android:colorBackground">@color/new_cover</item>
 
-        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorPrimary">@color/text_color</item>
         <item name="android:textColorSecondary">@color/grey02</item>
 
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
@@ -21,7 +23,6 @@
         <item name="android:actionMenuTextColor">@color/white</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="buttonStyle">@style/NewStepikButton</item>
         <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
         <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
         <item name="dialogTheme">@style/AppTheme.Dialog</item>
@@ -47,6 +48,13 @@
         <item name="dividerVerticalSize">1dp</item>
         <item name="dividerVerticalColor">@color/grey04</item>
         <item name="colorOnSecondary">@color/white</item>
+
+        <item name="buttonCornerRadius">@dimen/button_corner_radius</item>
+        <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
+
+        <item name="buttonStyle">@style/Button</item>
+        <item name="textAppearanceButton">@style/ButtonTextAppearance</item>
+        <item name="android:textColorLink">?colorAccent</item>
     </style>
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -56,11 +64,11 @@
     <style name="AppTheme" parent="AppTheme.15" />
 
     <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/stepic_brand_primary</item>
+        <item name="colorPrimary">@color/green01</item>
         <item name="colorPrimaryDark">@color/black</item>
         <item name="colorAccent">@color/new_accent_color</item>
 
-        <item name="android:textColor">@color/new_accent_color</item>
+        <item name="android:textColorPrimary">@color/new_accent_color</item>
         <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionMenuTextColor">@color/white</item>
@@ -75,6 +83,9 @@
 
         <item name="colorSwitchThumbNormal">#D8D8D8</item>
         <item name="android:colorForeground">#c7c7c7</item>
+
+        <item name="buttonStyle">@style/Button</item>
+        <item name="textAppearanceButton">@style/ButtonTextAppearance</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
@@ -114,10 +125,20 @@
     </style>
 
     <style name="StepikTheme.LoginLaunchRegistration" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
+        <item name="buttonCornerRadius">@dimen/button_corner_radius</item>
+        <item name="colorSecondary">@color/green01</item>
+        <item name="colorSecondaryDark">@color/green03</item>
+        <item name="colorOnSecondary">@color/white</item>
+
+        <item name="buttonStyle">@style/Button</item>
+        <item name="textAppearanceButton">@style/ButtonTextAppearance</item>
+
+        <item name="colorAccent">@color/green01</item>
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
         <item name="android:windowBackground">@color/login_launch_registration_background</item>
         <item name="android:colorBackground">@color/login_launch_registration_background</item>
-        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorPrimary">@color/text_color</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/new_accent_color</item>
         <item name="colorControlActivated">@color/new_accent_color</item>
         <item name="android:colorControlActivated" tools:targetApi="lollipop">@color/new_accent_color</item>
@@ -133,7 +154,7 @@
 
     <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
         <item name="colorAccent">@color/white</item>
-        <item name="colorPrimary">@color/stepic_brand_primary</item>
+        <item name="colorPrimary">@color/green01</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
@@ -242,6 +263,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
         <item name="android:background">@drawable/login_button_background</item>
+        <item name="backgroundTint">@color/login_button_background_color</item>
+        <item name="backgroundTintMode">src_in</item>
+        <item name="android:foreground">@color/red01</item>
         <item name="android:textColor">@color/login_button_text_color</item>
         <item name="android:textAllCaps">false</item>
     </style>
@@ -265,7 +289,7 @@
 
     <style name="BorderLessTextButton">
         <item name="android:textSize">@dimen/borderless_text_button_text_size</item>
-        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:background">?selectableItemBackgroundRounded</item>
         <item name="android:padding">12dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textAllCaps">false</item>
@@ -527,5 +551,32 @@
 
     <style name="Settings" parent="@style/StepikTheme">
         <item name="android:windowBackground">@color/grey04</item>
+    </style>
+
+    <style name="Button" parent="@style/Widget.AppCompat.Button">
+        <item name="android:textAppearance">?textAppearanceButton</item>
+        <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>
+        <item name="drawableTint">@color/color_button_text</item>
+        <item name="drawableTintMode">src_in</item>
+
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+
+        <item name="android:background">@drawable/bg_button</item>
+        <item name="backgroundTint">@color/color_button_background_tint</item>
+        <item name="backgroundTintMode">src_in</item>
+    </style>
+
+    <style name="Button.Borderless">
+        <item name="android:background">?selectableItemBackgroundRounded</item>
+    </style>
+
+    <style name="Button.Stroke">
+        <item name="android:background">@drawable/bg_button_stroke</item>
+        <item name="backgroundTint">?colorSecondary</item>
+    </style>
+
+    <style name="ButtonTextAppearance" parent="body1">
+        <item name="android:textColor">@color/color_button_text</item>
     </style>
 </resources>

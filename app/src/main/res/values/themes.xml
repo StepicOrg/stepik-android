@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme.Brown">
+        <item name="colorOnSecondary">@color/new_accent_color</item>
+        <item name="colorSecondary">@color/new_accent_color</item>
+        <item name="colorSecondaryDark">@color/black2</item>
+    </style>
+
+    <style name="AppTheme.Green">
+        <item name="colorOnSecondary">@color/green01</item>
+        <item name="colorSecondary">@color/green01</item>
+        <item name="colorSecondaryDark">@color/green03</item>
+    </style>
+
+    <style name="AppTheme.Violet">
+        <item name="colorOnSecondary">@color/violet1</item>
+        <item name="colorSecondary">@color/violet1</item>
+        <item name="colorSecondaryDark">@color/violet3</item>
+    </style>
+</resources>

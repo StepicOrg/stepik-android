@@ -19,7 +19,7 @@
             android:layout_height="164dp"
             android:layout_gravity="center"
             app:strokeWidth="1.5dp"
-            app:progressColor="@color/stepic_brand_primary"/>
+            app:progressColor="?colorSecondary"/>
 
         <ImageView
             android:id="@+id/achievementIcon"

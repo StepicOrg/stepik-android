@@ -52,7 +52,7 @@
             android:gravity="center"
 
             android:textSize="16sp"
-            android:textColorLink="@color/stepic_brand_primary" />
+            android:textColorLink="?android:textColorLink" />
 
 
         <LinearLayout
@@ -146,15 +146,14 @@
                 app:fontFamily="@font/roboto_light"
                 tools:text="Whoops! The email address and/or password you specified are not correct." />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/signUpButton"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/auth_elements_width"
                 android:layout_marginTop="20dp"
-                android:textSize="16sp"
                 android:text="@string/sign_up"
                 android:layout_marginLeft="@dimen/padding_registration_left_right"
-                android:layout_marginRight="@dimen/padding_registration_left_right"
-
-                style="@style/LoginButtons" />
+                android:layout_marginRight="@dimen/padding_registration_left_right" />
 
         </LinearLayout>
 
