@@ -136,7 +136,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
             }
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
+                ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
             })
         }
 

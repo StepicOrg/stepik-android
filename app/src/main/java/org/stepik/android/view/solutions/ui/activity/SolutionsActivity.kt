@@ -100,7 +100,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
             addItemDecoration(DividerItemDecoration(this@SolutionsActivity, LinearLayoutManager.VERTICAL).apply {
-                ContextCompat.getDrawable(this@SolutionsActivity, R.drawable.list_divider_h)?.let(::setDrawable)
+                ContextCompat.getDrawable(this@SolutionsActivity, R.drawable.bg_divider_vertical)?.let(::setDrawable)
             })
         }
 

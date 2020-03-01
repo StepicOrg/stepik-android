@@ -81,7 +81,7 @@ class EditDeadlinesDialog : DialogFragment() {
         recyclerView.adapter = adapter
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
         recyclerView.addItemDecoration(divider)
 
         return MaterialDialog.Builder(context)

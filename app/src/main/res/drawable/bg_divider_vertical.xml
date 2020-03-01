@@ -3,4 +3,5 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <solid android:color="?dividerVerticalColor" />
+    <size android:height="?dividerVerticalSize" />
 </shape>

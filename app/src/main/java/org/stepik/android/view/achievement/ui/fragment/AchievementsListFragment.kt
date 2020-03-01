@@ -91,7 +91,7 @@ class AchievementsListFragment : Fragment(), AchievementsView {
         recycler.adapter = achievementsAdapter
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
         recycler.addItemDecoration(divider)
 
         achievementsPresenter.attachView(this)
@@ -107,7 +107,7 @@ class AchievementsListFragment : Fragment(), AchievementsView {
         for (i in 0..(screenHeight / itemHeight).toInt()) {
             progress.addView(layoutInflater.inflate(R.layout.view_achievement_item_placeholder, progress, false))
             val stroke = layoutInflater.inflate(R.layout.view_stroke, progress, false)
-            stroke.setBackgroundResource(R.drawable.list_divider_h)
+            stroke.setBackgroundResource(R.drawable.bg_divider_vertical)
             stroke.setHeight(1)
             progress.addView(stroke)
         }

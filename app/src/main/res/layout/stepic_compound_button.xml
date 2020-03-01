@@ -44,12 +44,11 @@
 
     </RelativeLayout>
 
-    <View
+    <include
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="?dividerVerticalSize"
         android:layout_gravity="bottom"
-        android:background="?dividerVertical" />
-
+        layout="@layout/view_divider_vertical" />
 
     <FrameLayout
         android:id="@+id/rippleFrameLayoutInOption"

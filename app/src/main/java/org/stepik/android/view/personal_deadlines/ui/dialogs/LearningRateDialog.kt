@@ -51,7 +51,7 @@ class LearningRateDialog : DialogFragment() {
                 .build()
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
         dialog.recyclerView.addItemDecoration(divider)
         return dialog
     }

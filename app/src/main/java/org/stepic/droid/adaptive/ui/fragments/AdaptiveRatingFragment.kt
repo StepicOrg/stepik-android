@@ -49,7 +49,7 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
         recycler.layoutManager = LinearLayoutManager(context)
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
         recycler.addItemDecoration(divider)
 
         val spinnerAdapter = ArrayAdapter<CharSequence>(context, R.layout.adaptive_item_rating_period, context.resources.getStringArray(R.array.adaptive_rating_periods))

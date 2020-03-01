@@ -75,7 +75,7 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
         navigationRecycler.adapter = profileEditAdapter
 
         navigationRecycler.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL).apply {
-            ContextCompat.getDrawable(this@ProfileEditActivity, R.drawable.list_divider_h)?.let(::setDrawable)
+            ContextCompat.getDrawable(this@ProfileEditActivity, R.drawable.bg_divider_vertical)?.let(::setDrawable)
         })
 
         viewStateDelegate.addState<ProfileEditView.State.Idle>()

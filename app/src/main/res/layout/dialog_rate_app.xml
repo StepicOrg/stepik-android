@@ -55,10 +55,10 @@
             style="@style/RateItemTextView"
             tools:text="Later"/>
 
-        <View
-            android:layout_width="2dp"
+        <include
+            android:layout_width="?dividerVerticalSize"
             android:layout_height="match_parent"
-            android:background="?dividerVertical"/>
+            layout="@layout/view_divider_vertical" />
 
         <TextView
             android:id="@+id/rateDialogPositive"

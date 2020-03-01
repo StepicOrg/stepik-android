@@ -16,7 +16,7 @@ public class GridDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable verticalDivider;
 
     public GridDividerItemDecoration(Context context) {
-        horizontalDivider = ContextCompat.getDrawable(context, R.drawable.list_divider_h);
+        horizontalDivider = ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical);
         verticalDivider = ContextCompat.getDrawable(context, R.drawable.list_divider_w);
     }
 

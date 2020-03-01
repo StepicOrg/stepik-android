@@ -108,9 +108,7 @@
         </FrameLayout>
     </RelativeLayout>
 
-    <View
+    <include
         android:id="@+id/grey_bar"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?dividerVertical"/>
+        layout="@layout/view_divider_vertical"/>
 </LinearLayout>
