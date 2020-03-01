@@ -6,7 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@color/code_toolbar_background"
     android:clipToPadding="false"
-    android:divider="@color/transparent"
     android:scrollbarStyle="outsideOverlay"
     android:splitMotionEvents="false"
     android:visibility="gone"/>

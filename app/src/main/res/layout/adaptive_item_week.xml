@@ -15,7 +15,6 @@
             android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/stepic_regular_text"
             app:fontFamily="@font/roboto_light"
             tools:ignore="MissingPrefix"
             android:layout_gravity="start"
@@ -25,7 +24,6 @@
             android:text="@string/adaptive_stats_exp_for_a_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/stepic_regular_text"
             android:layout_gravity="start"
             android:textSize="12sp"/>
     </LinearLayout>
@@ -46,14 +44,12 @@
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/stepic_regular_text" />
+                android:textSize="12sp" />
             <TextView
                 android:id="@+id/end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/stepic_regular_text" />
+                android:textSize="12sp" />
         </LinearLayout>
         <View
             android:layout_marginTop="7dp"

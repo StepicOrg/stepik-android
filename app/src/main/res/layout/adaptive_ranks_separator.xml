@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.AppCompatImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/highlighted_elements_background">
-
-    <ImageView
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:tint="@color/adaptive_rank_separator"
-        app:srcCompat="@drawable/ic_dots" />
-
-</LinearLayout>
+    android:layout_height="24dp"
+    android:layout_gravity="center"
+    android:background="@color/highlighted_elements_background"
+    android:tint="?accentColor"
+    app:srcCompat="@drawable/ic_dots" />

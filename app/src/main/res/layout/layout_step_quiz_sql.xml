@@ -19,10 +19,7 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator" />
+    <include layout="@layout/view_divider_vertical" />
 
     <FrameLayout
         android:id="@+id/stepQuizActions"
@@ -55,10 +52,10 @@
 
             tools:text="python3 dasjdlkas dadlj aldj akjsdlakj lkjasdkl jkdas" />
 
-        <View
+        <include
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/step_quiz_separator"
+            layout="@layout/view_divider_vertical"
             android:layout_gravity="bottom" />
     </FrameLayout>
 
@@ -68,9 +65,6 @@
         android:layout_height="@dimen/embedded_code_editor_height"
         android:fillViewport="true" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

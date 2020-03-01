@@ -42,9 +42,6 @@
 
         style="@style/ProfileItemText" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey04" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

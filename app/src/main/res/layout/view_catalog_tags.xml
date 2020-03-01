@@ -16,7 +16,6 @@
         android:layout_below="@id/tagsTitle"
         android:layout_marginBottom="@dimen/catalog_header_bottom_margin"
         android:clipToPadding="false"
-        android:divider="@color/transparent"
         android:paddingEnd="0dp"
         android:paddingLeft="@dimen/course_list_side_padding"
         android:paddingRight="0dp"

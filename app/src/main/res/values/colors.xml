@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <color name="grey_act_background">@color/black1_alpha_19</color>
-
     <color name="transparent">@color/white_color_alpha_0</color>
-    <color name="stepic_regular_text">@color/grey01</color>
     <color name="stepic_weak_text">@color/grey02</color>
     <color name="black">@color/black1</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
     <color name="stepic_brand_primary_dark">@color/green03</color>
-    <color name="silver">@color/step_quiz_separator</color>
 
     <color name="default_color_of_link">@color/blue02</color>
     <color name="correct_answer_background">@color/green02</color>
@@ -152,9 +148,6 @@
 
     <color name="violet2">#E9EBFA</color>
     <color name="yellow1">#FFA961</color>
-    <color name="red01">#D41F1F</color>
-    <color name="red02">#FF7965</color>
-    <color name="red03">#FFEBE8</color>
 
     <color name="step_quiz_code_output_title">#f04a42</color> <!-- Generated from red01 -->
 

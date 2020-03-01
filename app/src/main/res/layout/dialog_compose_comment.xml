@@ -38,11 +38,9 @@
 
                 tools:text="Решение 31293193128392" />
 
-            <View
+            <include
                 android:id="@+id/commentSolutionSeparator"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/grey04" />
+                layout="@layout/view_divider_vertical" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/commentEditText"

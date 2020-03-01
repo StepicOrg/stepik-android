@@ -29,14 +29,12 @@
                 android:id="@+id/level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/stepic_regular_text"
                 app:fontFamily="@font/roboto_light"
                 tools:ignore="MissingPrefix"
                 android:textSize="64sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/stepic_regular_text"
                 android:text="@string/adaptive_stats_level"/>
         </LinearLayout>
 
@@ -57,13 +55,11 @@
                     android:id="@+id/expThisWeek"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/stepic_regular_text"
                     android:textSize="20sp"
                     android:gravity="center" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/stepic_regular_text"
                     android:gravity="center"
                     android:text="@string/adaptive_stats_last_7_days"/>
             </LinearLayout>
@@ -78,13 +74,11 @@
                     android:id="@+id/expTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/stepic_regular_text"
                     android:textSize="20sp"
                     android:gravity="center" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/stepic_regular_text"
                     android:gravity="center"
                     android:text="@string/adaptive_stats_total_exp"/>
             </LinearLayout>

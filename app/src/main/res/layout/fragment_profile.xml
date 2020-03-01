@@ -79,12 +79,12 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <View
+    <include
         android:id="@+id/toolbarSeparator"
+        layout="@layout/view_divider_vertical"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="?actionBarSize"
-        android:background="@color/grey04"
         android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

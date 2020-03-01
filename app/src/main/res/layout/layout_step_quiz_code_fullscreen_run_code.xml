@@ -92,11 +92,11 @@
 
                 tools:text="77 1010\ndfdsfdsfdsfds\ndsfsdfdsfs" />
 
-            <View
+            <include
                 android:id="@+id/outputSeparator"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/step_quiz_separator"
+                layout="@layout/view_divider_vertical"
                 android:visibility="gone"
                 app:layout_constraintTop_toTopOf="@id/outputDataTitle"
                 app:layout_constraintBottom_toTopOf="@id/outputDataTitle"
@@ -145,11 +145,11 @@
         </LinearLayout>
     </ScrollView>
 
-    <View
+    <include
         android:id="@+id/runCodeActionSeparator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/step_quiz_separator"
+        layout="@layout/view_divider_vertical"
         android:layout_marginBottom="16dp"
         android:layout_above="@id/runCodeFeedback"/>
 

@@ -105,12 +105,12 @@
 
                 tools:text="Основы программирования на C++ на примере множества несложных практических задач…" />
 
-            <View
+            <include
                 android:id="@+id/courseButtonSeparator"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
 
-                android:background="@color/grey04"
+                layout="@layout/view_divider_vertical"
 
                 android:layout_marginTop="@dimen/course_item_space_between_items"
                 app:layout_constraintTop_toBottomOf="@id/courseItemImage" />

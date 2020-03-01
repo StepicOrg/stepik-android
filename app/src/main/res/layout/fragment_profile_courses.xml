@@ -94,9 +94,6 @@
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         layout="@layout/error_no_connection_with_button_small" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey04" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
