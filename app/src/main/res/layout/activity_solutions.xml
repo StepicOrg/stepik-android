@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -30,12 +30,12 @@
             android:layout_height="match_parent"
             android:layout_above="@id/solutionsSubmissionSeparator"/>
 
-        <View
+        <include
             android:id="@+id/solutionsSubmissionSeparator"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="?dividerVerticalSize"
+            layout="@layout/view_divider_vertical"
             android:layout_marginBottom="16dp"
-            android:background="@color/step_quiz_separator"
             android:layout_above="@id/solutionsSubmitFeedback"/>
 
         <androidx.appcompat.widget.AppCompatTextView

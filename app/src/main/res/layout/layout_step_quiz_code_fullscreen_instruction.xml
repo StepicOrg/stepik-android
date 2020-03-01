@@ -46,10 +46,7 @@
                 android:layout_marginRight="48dp" />
         </FrameLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/step_quiz_separator" />
+        <include layout="@layout/view_divider_vertical" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/stepQuizCodeDetailsContent"

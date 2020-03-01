@@ -24,10 +24,7 @@
                 android:textSize="12sp"
                 android:textColor="@color/grey03" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/step_quiz_separator" />
+            <include layout="@layout/view_divider_vertical" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/stepContentEditText"

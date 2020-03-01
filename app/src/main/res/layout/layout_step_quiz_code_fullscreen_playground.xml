@@ -33,10 +33,10 @@
 
             tools:text="python3 dasjdlkas dadlj aldj akjsdlakj lkjasdkl jkdas" />
 
-        <View
+        <include
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/step_quiz_separator"
+            android:layout_height="?dividerVerticalSize"
+            layout="@layout/view_divider_vertical"
             android:layout_gravity="bottom" />
     </FrameLayout>
 
@@ -56,12 +56,12 @@
         android:layout_margin="16dp"
         android:layout_alignParentBottom="true"/>
 
-    <View
+    <include
         android:id="@+id/submitButtonSeparator"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="?dividerVerticalSize"
         android:layout_above="@id/codeSubmitButton"
-        android:background="@color/step_quiz_separator" />
+        layout="@layout/view_divider_vertical" />
 
 
 </RelativeLayout>

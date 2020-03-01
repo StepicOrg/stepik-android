@@ -25,9 +25,9 @@
 
 
     <include
-        layout="@layout/view_horizontal_line"
+        layout="@layout/view_divider_vertical"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="?dividerVerticalSize"
         android:layout_below="@id/tagsRecycler"/>
 
 </RelativeLayout>

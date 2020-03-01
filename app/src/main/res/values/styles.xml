@@ -42,6 +42,8 @@
         <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
 
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>
+        <item name="dividerVerticalSize">1dp</item>
+        <item name="dividerVerticalColor">@color/grey04</item>
         <item name="colorOnSecondary">@color/white</item>
     </style>
 

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="colorOnSecondary" format="color|reference" />
+    <attr name="dividerVerticalColor" format="color|reference" />
+    <attr name="dividerVerticalSize" format="dimension|reference" />
 
     <attr name="progressBackgroundColor" format="color"/>
     <attr name="progressForegroundColor" format="color"/>

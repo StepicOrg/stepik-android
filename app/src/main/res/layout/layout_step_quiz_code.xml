@@ -55,10 +55,7 @@
             android:layout_marginRight="16dp"/>
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator" />
+    <include layout="@layout/view_divider_vertical" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stepQuizCodeDetailsContent"
@@ -125,10 +122,10 @@
 
             tools:text="python3 dasjdlkas dadlj aldj akjsdlakj lkjasdkl jkdas" />
 
-        <View
+        <include
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/step_quiz_separator"
+            android:layout_height="?dividerVerticalSize"
+            layout="@layout/view_divider_vertical"
             android:layout_gravity="bottom" />
     </FrameLayout>
 
@@ -139,10 +136,6 @@
         android:layout_height="@dimen/embedded_code_editor_height"
         android:fillViewport="true" />
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
