@@ -71,16 +71,9 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
-    private lateinit var autoAuth: AutoAuth
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth_credential)
-
-        autoAuth =
-            intent
-                .getSerializableExtra(EXTRA_AUTO_AUTH) as? AutoAuth
-                ?: AutoAuth.NONE
 
         injectComponent()
         credentialAuthPresenter = ViewModelProviders
@@ -165,18 +158,7 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
         })
 
         if (savedInstanceState == null) {
-            loginField.setText(intent.getStringExtra(EXTRA_EMAIL))
-
-            val password = intent.getStringExtra(EXTRA_PASSWORD)
-            if (password != null) {
-                passwordField.setText(password)
-            } else {
-                passwordField.requestFocus()
-            }
-
-            if (autoAuth != AutoAuth.NONE) {
-                submit()
-            }
+            setData(intent)
         }
     }
 
@@ -209,7 +191,31 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
         signInText.text = spannableSignIn
     }
 
-    private fun submit() {
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setData(intent)
+    }
+
+    private fun setData(intent: Intent) {
+        val autoAuth = intent
+            .getSerializableExtra(EXTRA_AUTO_AUTH) as? AutoAuth
+            ?: AutoAuth.NONE
+
+        loginField.setText(intent.getStringExtra(EXTRA_EMAIL))
+
+        val password = intent.getStringExtra(EXTRA_PASSWORD)
+        if (password != null) {
+            passwordField.setText(password)
+        } else {
+            passwordField.requestFocus()
+        }
+
+        if (autoAuth != AutoAuth.NONE) {
+            submit(autoAuth)
+        }
+    }
+
+    private fun submit(autoAuth: AutoAuth = AutoAuth.NONE) {
         currentFocus?.hideKeyboard()
 
         val login = loginField.text.toString()
