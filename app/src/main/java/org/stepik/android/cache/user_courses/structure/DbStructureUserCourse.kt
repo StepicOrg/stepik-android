@@ -15,12 +15,13 @@ object DbStructureUserCourse {
 
     const val TABLE_SCHEMA =
         "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
-            "${Columns.ID} LONG PRIMARY KEY," +
+            "${Columns.ID} LONG," +
             "${Columns.USER} LONG," +
             "${Columns.COURSE} LONG," +
             "${Columns.IS_FAVORITE} INTEGER," +
             "${Columns.IS_PINNED} INTEGER," +
             "${Columns.IS_ARCHIVED} INTEGER," +
-            "${Columns.LAST_VIEWED} LONG" +
+            "${Columns.LAST_VIEWED} LONG," +
+            "PRIMARY KEY (${Columns.USER}, ${Columns.COURSE})" +
         ")"
 }
