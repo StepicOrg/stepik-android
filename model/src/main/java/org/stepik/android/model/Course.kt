@@ -119,10 +119,7 @@ class Course(
     @SerializedName("display_price")
     val displayPrice: String? = null,
     @SerializedName("price_tier")
-    val priceTier: String? = null,
-
-    var progressObject: Progress? = null,
-    var rating: Double = 0.0
+    val priceTier: String? = null
 ): Progressable, Parcelable {
     override fun equals(other: Any?): Boolean { // todo use data class
         if (this === other) return true
@@ -202,9 +199,6 @@ class Course(
         parcel.writeString(currencyCode)
         parcel.writeString(displayPrice)
         parcel.writeString(priceTier)
-
-        parcel.writeParcelable(progressObject, flags)
-        parcel.writeDouble(rating)
     }
 
     override fun describeContents(): Int = 0
@@ -264,10 +258,7 @@ class Course(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readString(),
-
-                parcel.readParcelable(Progress::class.java.classLoader),
-                parcel.readDouble()
+                parcel.readString()
             )
 
         override fun newArray(size: Int): Array<Course?> = arrayOfNulls(size)

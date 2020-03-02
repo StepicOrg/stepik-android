@@ -8,7 +8,7 @@ import org.stepic.droid.ui.fragments.CourseCollectionFragment
 import org.stepic.droid.ui.fragments.CourseListFragmentBase
 import org.stepic.droid.ui.fragments.CourseSearchFragment
 import org.stepic.droid.ui.fragments.FastContinueFragment
-import org.stepik.android.view.injection.course_list.CourseListDataModule
+import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.personal_deadlines.PersonalDeadlinesDataModule
@@ -27,7 +27,7 @@ import org.stepik.android.view.injection.unit.UnitDataModule
     LastStepDataModule::class,
     ProgressDataModule::class,
 
-    CourseListDataModule::class,
+    CourseDataModule::class,
     PersonalDeadlinesDataModule::class
 ])
 interface CourseListComponent {

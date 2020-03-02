@@ -9,7 +9,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.course.repository.CourseRepository
-import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
@@ -27,7 +26,6 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
 
     private val courseRepository: CourseRepository,
-    private val courseListRepository: CourseListRepository,
     private val joiningPoster: JoiningPoster,
 
     @EnrollmentCourseUpdates

@@ -14,7 +14,6 @@ import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.util.CourseUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.RWLocks
@@ -22,7 +21,6 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_list.model.CourseListQuery
-import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
@@ -44,7 +42,6 @@ constructor(
     private val singleThreadExecutor: SingleThreadExecutor,
     private val mainHandler: MainHandler,
     private val courseRepository: CourseRepository,
-    private val courseListRepository: CourseListRepository,
     private val userCoursesRepository: UserCoursesRepository,
 
     private val progressRepository: ProgressRepository,
@@ -123,12 +120,16 @@ constructor(
         while (hasNextPage.get()) {
             val coursesFromInternet: List<Course>? = try {
                 if (courseType == CourseListType.FEATURED) {
-                    val response = courseListRepository
-                        .getCourseList(
-                            CourseListType.FEATURED,
-                            currentPage.get(),
-                            sharedPreferenceHelper.languageForFeatured,
-                            sourceType = DataSourceType.REMOTE
+                    val response = courseRepository
+                        .getCourses(
+                            // This combo of query params == FEATURED
+                            CourseListQuery(
+                                page = currentPage.toInt(),
+                                order = CourseListQuery.ORDER_ACTIVITY_DESC,
+                                isExcludeEnded = true,
+                                isPublic = true
+
+                            )
                         )
                         .blockingGet()
                     handleMeta(response)
@@ -137,7 +138,7 @@ constructor(
                     val allMyCourses = arrayListOf<Course>()
                     while (hasNextPage.get()) {
                         val page = currentPage.get()
-                        val userCourses = userCoursesRepository.getUserCourses(page).blockingGet()
+                        val userCourses = userCoursesRepository.getUserCourses(page = page, sourceType = DataSourceType.REMOTE).blockingGet()
                         handleMeta(userCourses)
 
                         val coursesOrder = userCourses.map(UserCourse::course)
@@ -254,7 +255,6 @@ constructor(
             when (courseType) {
                 CourseListType.ENROLLED -> {
                     val progressMap = getProgressesFromDb(courses)
-                    CourseUtil.applyProgressesToCourses(progressMap, courses)
                     postLastActive(courses.firstOrNull(), progressMap)
                     courses
                 }
@@ -303,7 +303,6 @@ constructor(
             //ok show without new ratings
             null
         }
-        CourseUtil.applyReviewsToCourses(reviews, courses)
     }
 
 

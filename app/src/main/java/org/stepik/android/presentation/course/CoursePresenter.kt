@@ -137,6 +137,7 @@ constructor(
     fun autoEnroll() {
         val enrollmentState = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
+            ?.stats
             ?.enrollmentState
             ?: return
 
@@ -163,10 +164,16 @@ constructor(
     private inline fun toggleEnrollment(enrollmentAction: CourseEnrollmentInteractor.(Long) -> Single<Course>) {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.takeIf { it.enrollmentState != EnrollmentState.Pending }
+            ?.takeIf { it.stats.enrollmentState != EnrollmentState.Pending }
             ?: return
 
-        state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.Pending))
+        state = CourseView.State.BlockingLoading(
+            headerData.copy(
+                stats = headerData.stats.copy(
+                    enrollmentState = EnrollmentState.Pending
+                )
+            )
+        )
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -229,7 +236,7 @@ constructor(
     }
 
     private fun resolveCourseShareTooltip(courseHeaderData: CourseHeaderData) {
-        if (courseHeaderData.enrollmentState == EnrollmentState.Enrolled) {
+        if (courseHeaderData.stats.enrollmentState == EnrollmentState.Enrolled) {
             view?.showCourseShareTooltip()
         }
     }
@@ -312,7 +319,7 @@ constructor(
     fun continueLearning() {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.takeIf { it.enrollmentState == EnrollmentState.Enrolled }
+            ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
             ?: return
 
         val course = headerData.course
@@ -320,7 +327,13 @@ constructor(
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {
             view?.continueAdaptiveCourse(course)
         } else {
-            state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.Pending))
+            state = CourseView.State.BlockingLoading(
+                headerData.copy(
+                    stats = headerData.stats.copy(
+                        enrollmentState = EnrollmentState.Pending
+                    )
+                )
+            )
             compositeDisposable += continueLearningInteractor
                 .getLastStepForCourse(course)
                 .subscribeOn(backgroundScheduler)

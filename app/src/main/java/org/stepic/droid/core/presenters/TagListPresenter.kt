@@ -88,7 +88,7 @@ constructor(
         currentPage.set(meta.page + 1)
     }
 
-    private fun zipIdsAndCourses(it: LongArray): Single<Pair<LongArray, List<Course>>> =
+    private fun zipIdsAndCourses(it: LongArray): Single<Pair<LongArray, PagedList<Course>>> =
         Singles.zip(
             Single.just(it),
             courseRepository.getCourses(*it, primarySourceType = DataSourceType.REMOTE)

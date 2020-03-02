@@ -32,7 +32,6 @@ import org.stepic.droid.ui.activities.AnimatedOnboardingActivity
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
-import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.AutoCompleteSearchView

@@ -10,7 +10,6 @@ import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.di.course_list.CourseListScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.CourseUtil
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
@@ -44,8 +43,6 @@ constructor(
                 val reviewIds = it.map(Course::reviewSummary).toLongArray()
 
                 zip(Single.just(it), getProgressesSingle(progressIds), getReviewsSingle(reviewIds)) { courses, progressMap, reviews ->
-                    CourseUtil.applyProgressesToCourses(progressMap, courses)
-                    CourseUtil.applyReviewsToCourses(reviews, courses)
                     courses
                 }
             }

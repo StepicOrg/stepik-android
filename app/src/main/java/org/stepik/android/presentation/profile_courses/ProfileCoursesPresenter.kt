@@ -71,7 +71,7 @@ constructor(
             if (state == ProfileCoursesView.State.Idle) {
                 state = ProfileCoursesView.State.SilentLoading
                 compositeDisposable += courseListInteractor
-                    .getCourseList(courseIds)
+                    .getSavedCourses(courseIds)
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
@@ -88,8 +88,9 @@ constructor(
             compositeDisposable += profileDataObservable
                 .firstElement()
                 .flatMapSingleElement { profileData ->
+                    // TODO Pagination
                     courseListInteractor
-                        .getCourseList(
+                        .getCourses(
                             CourseListQuery(
                                 teacher = profileData.user.id,
                                 order = CourseListQuery.ORDER_POPULARITY_DESC
