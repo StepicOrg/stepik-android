@@ -80,7 +80,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         progressLogin = new LoadingProgressDialog(getContext());
 
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), R.style.StepikTheme_LoginDialog);
         builder.setTitle(R.string.remind_password)
                 .setView(v)
                 .setPositiveButton(R.string.send, (dialog, which) -> {})

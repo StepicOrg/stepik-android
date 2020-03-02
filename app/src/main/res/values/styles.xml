@@ -147,7 +147,10 @@
     </style>
 
     <style name="StepikTheme.LoginDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textColor">@color/restore_password_dialog_button_color</item>
+        <item name="colorPrimary">@color/new_accent_color</item>
+        <item name="colorOnSecondary">@color/violet1</item>
+        <item name="dialogCornerRadius">@dimen/button_corner_radius</item>
+        <item name="buttonBarButtonStyle">@style/Button.Borderless</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
@@ -531,8 +534,8 @@
         <item name="drawableTint">@color/color_button_text</item>
         <item name="drawableTintMode">src_in</item>
 
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
 
         <item name="android:background">@drawable/bg_button</item>
         <item name="backgroundTint">@color/color_button_background_tint</item>
