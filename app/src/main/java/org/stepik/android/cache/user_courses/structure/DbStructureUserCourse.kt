@@ -10,7 +10,7 @@ object DbStructureUserCourse {
         const val IS_FAVORITE = "is_favorite"
         const val IS_PINNED = "is_pinned"
         const val IS_ARCHIVED = "is_archived"
-        const val LAST_VIEW = "last_viewed"
+        const val LAST_VIEWED = "last_viewed"
     }
 
     const val TABLE_SCHEMA =
@@ -21,6 +21,6 @@ object DbStructureUserCourse {
             "${Columns.IS_FAVORITE} INTEGER," +
             "${Columns.IS_PINNED} INTEGER," +
             "${Columns.IS_ARCHIVED} INTEGER," +
-            "${Columns.LAST_VIEW} TEXT" +
+            "${Columns.LAST_VIEWED} LONG" +
         ")"
 }

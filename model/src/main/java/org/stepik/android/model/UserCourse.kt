@@ -1,6 +1,7 @@
 package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
+import java.util.Date
 
 class UserCourse(
     @SerializedName("id")
@@ -16,5 +17,5 @@ class UserCourse(
     @SerializedName("is_archived")
     val isArchived: Boolean,
     @SerializedName("last_viewed")
-    val lastViewed: String
+    val lastViewed: Date?
 )
