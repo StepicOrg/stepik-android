@@ -19,10 +19,12 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor
 ) {
 
+    // TODO Remove this method
     fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
         courseRepository
             .getCourses(courseListQuery)
 
+    // TODO Remove this method
     fun getSavedCourses(courseIds: LongArray): Single<PagedList<Course>> =
         courseRepository
             .getCourses(*courseIds, primarySourceType = DataSourceType.CACHE)
@@ -44,11 +46,13 @@ constructor(
             }
 
     private fun obtainCourseListItem(course: Course): Maybe<CourseListItem> =
-        courseStatsInteractor.getCourseStats(course).map { courseStats ->
-            CourseListItem(
-                course = course,
-                courseStats = courseStats
-            )
-        }
+        courseStatsInteractor
+            .getCourseStats(course)
+            .map { courseStats ->
+                CourseListItem(
+                    course = course,
+                    courseStats = courseStats
+                )
+            }
             .toMaybe()
 }

@@ -29,5 +29,5 @@ constructor(
         userCoursesRepository
             .getUserCourses(sourceType = DataSourceType.CACHE)
             .blockingGet()
-            .isEmpty()
+            .isNotEmpty()
 }

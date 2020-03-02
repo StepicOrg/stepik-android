@@ -34,5 +34,5 @@ constructor(
         userCoursesCacheDataSource.saveUserCourses(listOf(userCourse))
 
     override fun removeUserCourse(courseId: Long): Completable =
-        userCoursesCacheDataSource.removeCourse(courseId)
+        userCoursesCacheDataSource.removeUserCourse(courseId)
 }

@@ -20,10 +20,10 @@ constructor(
         DbStructureUserCourse.TABLE_NAME
 
     override fun getDefaultPrimaryColumn(): String =
-        DbStructureUserCourse.Columns.ID
+        DbStructureUserCourse.Columns.COURSE
 
     override fun getDefaultPrimaryValue(persistentObject: UserCourse): String =
-        persistentObject.id.toString()
+        persistentObject.course.toString()
 
     override fun getContentValues(userCourse: UserCourse): ContentValues {
         val values = ContentValues()
