@@ -23,7 +23,7 @@ constructor(
             userCourseDao.insertOrReplaceAll(userCourses)
         }
 
-    override fun removeCourse(courseId: Long): Completable =
+    override fun removeUserCourse(courseId: Long): Completable =
         Completable.fromAction {
             userCourseDao.remove(DbStructureUserCourse.Columns.ID, courseId.toString())
         }
