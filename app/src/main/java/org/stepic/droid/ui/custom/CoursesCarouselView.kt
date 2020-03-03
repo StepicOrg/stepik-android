@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.view_courses_carousel.view.*
@@ -65,8 +66,6 @@ constructor(
     companion object {
         private const val DEFAULT_SCROLL_POSITION = -1
         private const val ROW_COUNT = 2
-
-        private const val continueLoadingTag = "continueLoadingTag"
     }
 
     @Inject
@@ -110,6 +109,9 @@ constructor(
     private val fragmentManager = activity.supportFragmentManager
 
     private var state: CoursesCarouselViewState? = null
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     fun setCourseCarouselInfo(outerInfo: CoursesCarouselInfo) {
         _info = outerInfo
@@ -171,7 +173,7 @@ constructor(
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
 
-        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
+        ProgressHelper.dismiss(activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
     }
 
     private fun initCourseCarousel() {
@@ -213,26 +215,24 @@ constructor(
         }
     }
 
-    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
-        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.continueCourse(activity, courseId, lastStep)
-    }
-
-    override fun onOpenAdaptiveCourse(course: Course) {
-        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.continueAdaptiveCourse(activity, course)
-    }
-
-    override fun onAnyProblemWhileContinue(course: Course) {
-        ProgressHelper.dismiss(fragmentManager, continueLoadingTag)
-        screenManager.showCourseModules(activity, course)
-    }
-
-    override fun onShowContinueCourseLoadingDialog() {
-        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
-        if (!loadingProgressDialogFragment.isAdded) {
-            loadingProgressDialogFragment.show(fragmentManager, continueLoadingTag)
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
         }
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        if (isAdaptive) {
+            screenManager.continueAdaptiveCourse(activity, course)
+        } else {
+            screenManager.showCourseModules(activity, course)
+        }
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        screenManager.continueCourse(activity, course.id, lastStep)
     }
 
     override fun showLoading() {

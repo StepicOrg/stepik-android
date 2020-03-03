@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
@@ -61,6 +62,9 @@ class FastContinueFragment : FragmentBase(),
     lateinit var fastContinuePresenter: FastContinuePresenter
 
     private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     private val coursePlaceholderDrawable by lazy {
         val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
@@ -178,35 +182,35 @@ class FastContinueFragment : FragmentBase(),
     }
 
     //ContinueCourseView
-    override fun onShowContinueCourseLoadingDialog() {
-        fastContinueOverlay.isEnabled = false
-        fastContinueAction.isEnabled = false
-        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
-        if (!loadingProgressDialogFragment.isAdded) {
-            loadingProgressDialogFragment.show(requireFragmentManager(), CONTINUE_LOADING_TAG)
-        }
-    }
-
-    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
-        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-        fastContinueOverlay.isEnabled = true
-        fastContinueAction.isEnabled = true
-        screenManager.continueCourse(activity, courseId, lastStep)
-    }
-
-    override fun onOpenAdaptiveCourse(course: Course) {
-        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-        fastContinueOverlay.isEnabled = true
-        fastContinueAction.isEnabled = true
-        screenManager.continueAdaptiveCourse(activity, course)
-    }
-
-    override fun onAnyProblemWhileContinue(course: Course) {
-        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-        fastContinueOverlay.isEnabled = true
-        fastContinueAction.isEnabled = true
-        screenManager.showCourseModules(activity, course)
-    }
+//    override fun onShowContinueCourseLoadingDialog() {
+//        fastContinueOverlay.isEnabled = false
+//        fastContinueAction.isEnabled = false
+//        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
+//        if (!loadingProgressDialogFragment.isAdded) {
+//            loadingProgressDialogFragment.show(requireFragmentManager(), CONTINUE_LOADING_TAG)
+//        }
+//    }
+//
+//    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
+//        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+//        fastContinueOverlay.isEnabled = true
+//        fastContinueAction.isEnabled = true
+//        screenManager.continueCourse(activity, courseId, lastStep)
+//    }
+//
+//    override fun onOpenAdaptiveCourse(course: Course) {
+//        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+//        fastContinueOverlay.isEnabled = true
+//        fastContinueAction.isEnabled = true
+//        screenManager.continueAdaptiveCourse(activity, course)
+//    }
+//
+//    override fun onAnyProblemWhileContinue(course: Course) {
+//        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+//        fastContinueOverlay.isEnabled = true
+//        fastContinueAction.isEnabled = true
+//        screenManager.showCourseModules(activity, course)
+//    }
 
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
@@ -241,5 +245,27 @@ class FastContinueFragment : FragmentBase(),
             AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
         ))
         continueCoursePresenter.continueCourse(course)
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        if (isAdaptive) {
+            screenManager.continueAdaptiveCourse(activity, course)
+        } else {
+            screenManager.showCourseModules(activity, course)
+        }
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        screenManager.continueCourse(activity, course.id, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        fastContinueOverlay.isEnabled = !isLoading
+        fastContinueAction.isEnabled = !isLoading
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
     }
 }
