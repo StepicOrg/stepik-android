@@ -36,7 +36,7 @@ ext.versions = [
         multidex             : '2.0.1',
         adapterDelegates     : '1.0.1',
         adapters             : '1.0.1',
-        presentationBase     : '1.1.0',
+        presentationBase     : '1.1.1',
         viewKit              : '1.0.1',
 
         retrofit             : '2.6.1',
