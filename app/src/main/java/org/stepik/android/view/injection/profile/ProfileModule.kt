@@ -11,7 +11,7 @@ import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.base.injection.ViewModelKey
-import org.stepik.android.presentation.course_continue.ContinueCourseView
+import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
 import org.stepik.android.presentation.profile_activities.ProfileActivitiesPresenter
@@ -77,7 +77,7 @@ abstract class ProfileModule {
     internal abstract fun bindProfileCertificatePresenter(profileCertificatesPresenter: ProfileCertificatesPresenter): ViewModel
 
     @Binds
-    internal abstract fun bindCourseShowableContainer(@ProfileScope viewContainer: PresenterViewContainer<ProfileCoursesView>): ViewContainer<out ContinueCourseView>
+    internal abstract fun bindCourseContinueViewContainer(@ProfileScope viewContainer: PresenterViewContainer<ProfileCoursesView>): ViewContainer<out CourseContinueView>
 
     @Module
     companion object {

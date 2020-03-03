@@ -13,7 +13,7 @@ import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.course_continue.delegate.ContinueCoursePresenterDelegate
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
@@ -30,13 +30,13 @@ constructor(
 
     viewContainer: PresenterViewContainer<ProfileCoursesView>,
 
-    private val continueCoursePresenterDelegate: ContinueCoursePresenterDelegate,
+    private val continueCoursePresenterDelegate: CourseContinuePresenterDelegate,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : PresenterBase<ProfileCoursesView>(viewContainer), ContinueCoursePresenterDelegate by continueCoursePresenterDelegate {
+) : PresenterBase<ProfileCoursesView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
     companion object {
         private const val KEY_COURSES = "courses"
     }

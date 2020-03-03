@@ -5,6 +5,7 @@ import dagger.Subcomponent
 import org.stepik.android.view.achievement.ui.fragment.AchievementsListFragment
 import org.stepik.android.view.injection.certificate.CertificateDataModule
 import org.stepik.android.view.injection.course.CourseDataModule
+import org.stepik.android.view.injection.course_continue.CourseContinueModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.social_profile.SocialProfileDataModule
@@ -28,7 +29,7 @@ import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificat
     CoursePaymentsDataModule::class,
     LastStepDataModule::class,
     ProfileDataModule::class,
-    ProfileCoursesModule::class,
+    CourseContinueModule::class,
     UserDataModule::class,
     UserActivityDataModule::class,
     SocialProfileDataModule::class,

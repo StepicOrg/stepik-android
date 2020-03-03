@@ -1,3 +1,5 @@
 package org.stepic.droid.core.presenters.contracts
 
-interface ContinueCourseView : org.stepik.android.presentation.course_continue.ContinueCourseView
+import org.stepik.android.presentation.course_continue.CourseContinueView
+
+interface ContinueCourseView : CourseContinueView

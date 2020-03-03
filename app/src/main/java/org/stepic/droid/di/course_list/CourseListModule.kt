@@ -7,6 +7,7 @@ import org.stepic.droid.concurrency.SingleThreadExecutor
 import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.util.resolvers.SearchResolverImpl
+import org.stepik.android.presentation.course_continue.CourseContinueView
 import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.ViewContainer
@@ -20,9 +21,9 @@ abstract class CourseListModule {
     abstract fun provideSearchResolver(searchResolver: SearchResolverImpl): SearchResolver
 
     @Binds
-    internal abstract fun bindCourseShowableContainer(
+    internal abstract fun bindCourseContinueViewContainer(
         @CourseListScope viewContainer: PresenterViewContainer<ContinueCourseView>
-    ): ViewContainer<out org.stepik.android.presentation.course_continue.ContinueCourseView>
+    ): ViewContainer<out CourseContinueView>
 
     @Module
     companion object {

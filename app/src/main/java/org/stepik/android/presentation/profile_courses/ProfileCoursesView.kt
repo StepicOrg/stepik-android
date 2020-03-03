@@ -1,10 +1,9 @@
 package org.stepik.android.presentation.profile_courses
 
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.course_continue.ContinueCourseView
+import org.stepik.android.presentation.course_continue.CourseContinueView
 
-interface ProfileCoursesView :
-    ContinueCourseView {
+interface ProfileCoursesView : CourseContinueView {
     sealed class State {
         object Idle : State()
         object SilentLoading : State()
