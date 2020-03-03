@@ -6,6 +6,7 @@ import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 
 @Subcomponent(modules = [
+    CourseListPlaygroundModule::class,
     CourseListModule::class,
     CourseDataModule::class,
     CoursePaymentsDataModule::class

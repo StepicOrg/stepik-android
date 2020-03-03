@@ -6,27 +6,30 @@ import androidx.lifecycle.ViewModelProviders
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepik.android.presentation.course_list.CourseListPresenter
+import org.stepik.android.presentation.course_list.CourseListPlaygroundPresenter
+import org.stepik.android.presentation.course_list.CourseListPlaygroundView
 import org.stepik.android.presentation.course_list.CourseListView
+import timber.log.Timber
 import javax.inject.Inject
 
-class CourseListPlaygroundActivity : FragmentActivityBase(), CourseListView {
+class CourseListPlaygroundActivity : FragmentActivityBase(), CourseListPlaygroundView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var courseListPresenter: CourseListPresenter
+    private lateinit var courseListPlaygroundPresenter: CourseListPlaygroundPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
         injectComponent()
 
-        courseListPresenter = ViewModelProviders
+        courseListPlaygroundPresenter = ViewModelProviders
             .of(this, viewModelFactory)
-            .get(CourseListPresenter::class.java)
+            .get(CourseListPlaygroundPresenter::class.java)
 
-        courseListPresenter.getCourseListItems(4261L, 2L, 79L, 2852L, 15001L)
+        courseListPlaygroundPresenter.fetchCourses(4261L, 2L, 79L, 2852L, 15001L)
+        // courseListPlaygroundPresenter.onCourseIds(4261L, 2L, 79L, 2852L, 15001L)
     }
 
     private fun injectComponent() {
@@ -38,15 +41,15 @@ class CourseListPlaygroundActivity : FragmentActivityBase(), CourseListView {
 
     override fun onStart() {
         super.onStart()
-        courseListPresenter.attachView(this)
+        courseListPlaygroundPresenter.attachView(this)
     }
 
     override fun onStop() {
-        courseListPresenter.detachView(this)
+        courseListPlaygroundPresenter.detachView(this)
         super.onStop()
     }
 
     override fun setState(state: CourseListView.State) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Timber.d("State: $state")
     }
 }
