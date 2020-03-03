@@ -2,6 +2,7 @@ package org.stepik.android.data.course.repository
 
 import io.reactivex.Maybe
 import io.reactivex.Single
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepic.droid.util.maybeFirst
 import org.stepic.droid.util.requireSize
@@ -9,6 +10,7 @@ import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.model.Course
 import javax.inject.Inject
 
@@ -32,7 +34,7 @@ constructor(
         }
     }
 
-    override fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType): Single<List<Course>> {
+    override fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType): Single<PagedList<Course>> {
         val remoteSource = courseRemoteDataSource
             .getCourses(*courseIds)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
@@ -55,6 +57,11 @@ constructor(
 
             else ->
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }.map { courses -> courses.sortedBy { courseIds.indexOf(it.id) } }
+        }.map { courses -> PagedList(courses.sortedBy { courseIds.indexOf(it.id) }) }
     }
+
+    override fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
+        courseRemoteDataSource
+            .getCourses(courseListQuery)
+            .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
 }

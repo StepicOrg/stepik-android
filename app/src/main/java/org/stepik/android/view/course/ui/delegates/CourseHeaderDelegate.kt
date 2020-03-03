@@ -131,19 +131,19 @@ class CourseHeaderDelegate(
 
             courseToolbarTitle.text = courseHeaderData.title
 
-            val isNeedShowProgress = courseHeaderData.progress != null
+            val isNeedShowProgress = courseHeaderData.stats.progress != null
             courseProgress.isVisible = isNeedShowProgress
             courseProgressSeparator.isVisible = isNeedShowProgress
             courseStats.isVisible = !isNeedShowProgress
 
-            if (courseHeaderData.progress != null) {
-                courseProgressDelegate.setProgress(courseHeaderData.progress)
+            if (courseHeaderData.stats.progress != null) {
+                courseProgressDelegate.setProgress(courseHeaderData.stats.progress)
                 courseProgressDelegate.setSolutionsCount(courseHeaderData.localSubmissionsCount)
             } else {
                 courseStatsDelegate.setStats(courseHeaderData.stats)
             }
 
-            with(courseHeaderData.enrollmentState) {
+            with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
 
                 courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
@@ -178,7 +178,7 @@ class CourseHeaderDelegate(
 
     fun onOptionsMenuCreated(menu: Menu) {
         dropCourseMenuItem = menu.findItem(R.id.drop_course)
-        dropCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState == EnrollmentState.Enrolled
+        dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState == EnrollmentState.Enrolled
 
         shareCourseMenuItem = menu.findItem(R.id.share_course)
         shareCourseMenuItem?.let { menuItem ->

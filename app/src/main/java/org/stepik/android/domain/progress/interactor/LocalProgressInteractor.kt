@@ -5,6 +5,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.distinct
 import org.stepic.droid.util.flatten
 import org.stepic.droid.util.mapToLongArray
@@ -85,7 +86,7 @@ constructor(
         sectionRepository
             .getSections(*units.mapToLongArray(Unit::section).distinct())
 
-    private fun getCourses(sections: List<Section>): Single<List<Course>> =
+    private fun getCourses(sections: List<Section>): Single<PagedList<Course>> =
         courseRepository
             .getCourses(*sections.mapToLongArray(Section::course).distinct())
 }

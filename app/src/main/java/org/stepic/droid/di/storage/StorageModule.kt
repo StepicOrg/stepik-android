@@ -55,6 +55,7 @@ import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDaoImpl
 import org.stepik.android.cache.social_profile.dao.SocialProfileDaoImpl
 import org.stepik.android.cache.submission.dao.SubmissionDaoImpl
 import org.stepik.android.cache.user.dao.UserDaoImpl
+import org.stepik.android.cache.user_courses.dao.UserCourseDaoImpl
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.cache.video.dao.VideoDaoImpl
 import org.stepik.android.cache.video.dao.VideoEntityDaoImpl
@@ -76,6 +77,7 @@ import org.stepik.android.model.SocialProfile
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
+import org.stepik.android.model.UserCourse
 import org.stepik.android.model.ViewAssignment
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
@@ -225,6 +227,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindSocialProfileDao(socialProfileDaoImpl: SocialProfileDaoImpl): IDao<SocialProfile>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindUserCourseDao(userCourseDao: UserCourseDaoImpl): IDao<UserCourse>
 
     @Module
     companion object {
