@@ -62,6 +62,7 @@ import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_collection.CourseCollectionDataModule
+import org.stepik.android.view.injection.course_list.CourseListExperimentalComponent
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
@@ -206,6 +207,8 @@ interface AppCoreComponent {
     fun solutionsComponentBuilder(): SolutionsComponent.Builder
 
     fun userCodeRunComponentBuilder(): UserCodeRunComponent.Builder
+
+    fun courseListExperimentalComponentBuilder(): CourseListExperimentalComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

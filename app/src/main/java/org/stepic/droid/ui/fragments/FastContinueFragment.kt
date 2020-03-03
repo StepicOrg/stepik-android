@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +14,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
@@ -32,6 +32,7 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.view.course_list.activity.CourseListPlaygroundActivity
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
@@ -239,12 +240,14 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun handleContinueCourseClick(course: Course) {
-        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-            AmplitudeAnalytic.Course.Params.COURSE to course.id,
-            AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
-        ))
-        continueCoursePresenter.continueCourse(course)
+        val intent = Intent(requireContext(), CourseListPlaygroundActivity::class.java)
+        requireContext().startActivity(intent)
+//        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
+//        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
+//            AmplitudeAnalytic.Course.Params.COURSE to course.id,
+//            AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
+//        ))
+//        continueCoursePresenter.continueCourse(course)
     }
 
     override fun showCourse(course: Course, isAdaptive: Boolean) {
