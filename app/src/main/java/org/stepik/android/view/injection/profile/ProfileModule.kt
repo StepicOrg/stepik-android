@@ -11,15 +11,20 @@ import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.presentation.base.injection.ViewModelKey
+import org.stepik.android.presentation.course_continue.ContinueCourseView
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
 import org.stepik.android.presentation.profile_activities.ProfileActivitiesPresenter
-import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesPresenter
+import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
+import org.stepik.android.presentation.profile_courses.ProfileCoursesView
 import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
 import org.stepik.android.presentation.profile_id.ProfileIdPresenter
 import org.stepik.android.presentation.profile_links.ProfileLinksPresenter
 import org.stepik.android.presentation.profile_notification.ProfileNotificationPresenter
+import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
+import ru.nobird.android.presentation.base.PresenterViewContainer
+import ru.nobird.android.presentation.base.ViewContainer
 
 @Module
 abstract class ProfileModule {
@@ -71,6 +76,9 @@ abstract class ProfileModule {
     @ViewModelKey(ProfileCertificatesPresenter::class)
     internal abstract fun bindProfileCertificatePresenter(profileCertificatesPresenter: ProfileCertificatesPresenter): ViewModel
 
+    @Binds
+    internal abstract fun bindCourseShowableContainer(@ProfileScope viewContainer: PresenterViewContainer<ProfileCoursesView>): ViewContainer<out ContinueCourseView>
+
     @Module
     companion object {
         @Provides
@@ -84,5 +92,11 @@ abstract class ProfileModule {
         @ProfileScope
         fun providesUserObservable(subject: BehaviorSubject<ProfileData>, @BackgroundScheduler scheduler: Scheduler): Observable<ProfileData> =
             subject.observeOn(scheduler)
+
+        @Provides
+        @JvmStatic
+        @ProfileScope
+        fun provideViewContainer(): PresenterViewContainer<ProfileCoursesView> =
+            DefaultPresenterViewContainer()
     }
 }

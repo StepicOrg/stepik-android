@@ -28,6 +28,7 @@ import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificat
     CoursePaymentsDataModule::class,
     LastStepDataModule::class,
     ProfileDataModule::class,
+    ProfileCoursesModule::class,
     UserDataModule::class,
     UserActivityDataModule::class,
     SocialProfileDataModule::class,

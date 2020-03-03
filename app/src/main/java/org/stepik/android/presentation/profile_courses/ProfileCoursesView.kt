@@ -1,9 +1,10 @@
 package org.stepik.android.presentation.profile_courses
 
-import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_continue.ContinueCourseView
 
-interface ProfileCoursesView {
+interface ProfileCoursesView :
+    ContinueCourseView {
     sealed class State {
         object Idle : State()
         object SilentLoading : State()
@@ -14,9 +15,4 @@ interface ProfileCoursesView {
     }
 
     fun setState(state: State)
-
-    fun setBlockingLoading(isLoading: Boolean)
-
-    fun showCourse(course: Course, isAdaptive: Boolean)
-    fun showSteps(course: Course, lastStep: LastStep)
 }
