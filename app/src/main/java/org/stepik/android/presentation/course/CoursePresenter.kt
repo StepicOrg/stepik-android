@@ -6,13 +6,11 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.plus
-import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
@@ -22,12 +20,17 @@ import org.stepik.android.domain.notification.interactor.CourseNotificationInter
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
+import org.stepik.android.presentation.course_continue.model.InteractionSource
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
+import ru.nobird.android.presentation.base.PresenterBase
+import ru.nobird.android.presentation.base.PresenterViewContainer
+import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
 
 class CoursePresenter
@@ -36,16 +39,17 @@ constructor(
     @CourseId
     private val courseId: Long,
 
+    viewContainer: PresenterViewContainer<CourseView>,
+
+    private val continueCourseContinuePresenterDelegateImpl: CourseContinuePresenterDelegateImpl,
+
     private val courseInteractor: CourseInteractor,
 //    private val courseBillingInteractor: CourseBillingInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
-    private val continueLearningInteractor: ContinueLearningInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
     private val solutionsInteractor: SolutionsInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
-
-    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
 
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
@@ -60,7 +64,7 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : PresenterBase<CourseView>() {
+) : PresenterBase<CourseView>(viewContainer), CourseContinuePresenterDelegate by continueCourseContinuePresenterDelegateImpl {
     private var state: CourseView.State = CourseView.State.Idle
         set(value) {
             field = value
@@ -69,6 +73,9 @@ constructor(
         }
 
 //    private var uiCheckout: UiCheckout? = null
+
+    override val delegates: List<PresenterDelegate<in CourseView>> =
+        listOf(continueCourseContinuePresenterDelegateImpl)
 
     init {
         subscriberForEnrollmentUpdates()
@@ -167,13 +174,7 @@ constructor(
             ?.takeIf { it.stats.enrollmentState != EnrollmentState.Pending }
             ?: return
 
-        state = CourseView.State.BlockingLoading(
-            headerData.copy(
-                stats = headerData.stats.copy(
-                    enrollmentState = EnrollmentState.Pending
-                )
-            )
-        )
+        view?.setBlockingLoading(isLoading = true)
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -322,33 +323,7 @@ constructor(
             ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
             ?: return
 
-        val course = headerData.course
-
-        if (adaptiveCoursesResolver.isAdaptive(course.id)) {
-            view?.continueAdaptiveCourse(course)
-        } else {
-            state = CourseView.State.BlockingLoading(
-                headerData.copy(
-                    stats = headerData.stats.copy(
-                        enrollmentState = EnrollmentState.Pending
-                    )
-                )
-            )
-            compositeDisposable += continueLearningInteractor
-                .getLastStepForCourse(course)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = {
-                        state = CourseView.State.CourseLoaded(headerData)
-                        view?.continueCourse(it)
-                    },
-                    onError = {
-                        state = CourseView.State.CourseLoaded(headerData)
-                        view?.showContinueLearningError()
-                    }
-                )
-        }
+        continueCourseContinuePresenterDelegateImpl.continueCourse(headerData.course, InteractionSource.COURSE_SCREEN)
     }
 
     /**
@@ -376,5 +351,19 @@ constructor(
             ?: return
 
         view?.shareCourse(course)
+    }
+
+    fun setEnrollmentState(enrollmentState: EnrollmentState) {
+        val headerData = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?: return
+
+        state = CourseView.State.CourseLoaded(
+            headerData.copy(
+                stats = headerData.stats.copy(
+                    enrollmentState = enrollmentState
+                )
+            )
+        )
     }
 }

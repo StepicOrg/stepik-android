@@ -277,7 +277,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
         viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
         viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
-        viewStateDelegate.addState<CourseView.State.BlockingLoading>(courseHeader, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
     }
@@ -324,13 +323,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                         AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.WIDGET
                     ))
                 }
-
-                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
-            }
-
-            is CourseView.State.BlockingLoading -> {
-                courseHeaderDelegate.courseHeaderData = state.courseHeaderData
-                ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
             }
         }
         viewStateDelegate.switchState(state)
@@ -378,18 +370,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePager.snackbar(messageRes = errorMessage)
     }
 
-    override fun showContinueLearningError() {
-        coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
-    }
-
-    override fun continueCourse(lastStep: LastStep) {
-        screenManager.continueCourse(this, lastStep)
-    }
-
-    override fun continueAdaptiveCourse(course: Course) {
-        screenManager.continueAdaptiveCourse(this, course)
-    }
-
     override fun shareCourse(course: Course) {
         startActivity(shareHelper.getIntentForCourseSharing(course))
     }
@@ -417,5 +397,25 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     override fun onDestroy() {
         releaseComponent(courseId)
         super.onDestroy()
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        if (isAdaptive) {
+            screenManager.continueAdaptiveCourse(this, course)
+        } else {
+            screenManager.showCourseModules(this, course)
+        }
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        screenManager.continueCourse(this, course.id, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
     }
 }
