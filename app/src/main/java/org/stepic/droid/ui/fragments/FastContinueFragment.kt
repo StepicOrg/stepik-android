@@ -181,37 +181,6 @@ class FastContinueFragment : FragmentBase(),
 //        fastContinueCourseProgressText.isVisible = needShow
     }
 
-    //ContinueCourseView
-//    override fun onShowContinueCourseLoadingDialog() {
-//        fastContinueOverlay.isEnabled = false
-//        fastContinueAction.isEnabled = false
-//        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
-//        if (!loadingProgressDialogFragment.isAdded) {
-//            loadingProgressDialogFragment.show(requireFragmentManager(), CONTINUE_LOADING_TAG)
-//        }
-//    }
-//
-//    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
-//        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-//        fastContinueOverlay.isEnabled = true
-//        fastContinueAction.isEnabled = true
-//        screenManager.continueCourse(activity, courseId, lastStep)
-//    }
-//
-//    override fun onOpenAdaptiveCourse(course: Course) {
-//        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-//        fastContinueOverlay.isEnabled = true
-//        fastContinueAction.isEnabled = true
-//        screenManager.continueAdaptiveCourse(activity, course)
-//    }
-//
-//    override fun onAnyProblemWhileContinue(course: Course) {
-//        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-//        fastContinueOverlay.isEnabled = true
-//        fastContinueAction.isEnabled = true
-//        screenManager.showCourseModules(activity, course)
-//    }
-
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
@@ -263,9 +232,9 @@ class FastContinueFragment : FragmentBase(),
         fastContinueOverlay.isEnabled = !isLoading
         fastContinueAction.isEnabled = !isLoading
         if (isLoading) {
-            ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            ProgressHelper.activate(progressDialogFragment, fragmentManager, LoadingProgressDialogFragment.TAG)
         } else {
-            ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            ProgressHelper.dismiss(fragmentManager, LoadingProgressDialogFragment.TAG)
         }
     }
 }

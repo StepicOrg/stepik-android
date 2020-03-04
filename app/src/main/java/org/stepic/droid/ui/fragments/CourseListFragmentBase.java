@@ -318,16 +318,16 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void setBlockingLoading(boolean isLoading) {
         if (isLoading) {
-            ProgressHelper.activate(progressDialogFragment, getActivity().getSupportFragmentManager(), LoadingProgressDialogFragment.TAG);
+            ProgressHelper.activate(progressDialogFragment, getFragmentManager(), LoadingProgressDialogFragment.TAG);
         } else {
-            ProgressHelper.dismiss(getActivity().getSupportFragmentManager(), LoadingProgressDialogFragment.TAG);
+            ProgressHelper.dismiss(getFragmentManager(), LoadingProgressDialogFragment.TAG);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ProgressHelper.dismiss(getActivity().getSupportFragmentManager(), LoadingProgressDialogFragment.TAG);
+        ProgressHelper.dismiss(getFragmentManager(), LoadingProgressDialogFragment.TAG);
     }
 
     @Override

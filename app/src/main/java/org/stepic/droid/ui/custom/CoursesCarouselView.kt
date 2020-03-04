@@ -217,9 +217,9 @@ constructor(
 
     override fun setBlockingLoading(isLoading: Boolean) {
         if (isLoading) {
-            ProgressHelper.activate(progressDialogFragment, activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            ProgressHelper.activate(progressDialogFragment, fragmentManager, LoadingProgressDialogFragment.TAG)
         } else {
-            ProgressHelper.dismiss(activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            ProgressHelper.dismiss(fragmentManager, LoadingProgressDialogFragment.TAG)
         }
     }
 
