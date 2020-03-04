@@ -14,9 +14,11 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
+import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
 
 class ProfileCoursesPresenter
@@ -30,7 +32,7 @@ constructor(
 
     viewContainer: PresenterViewContainer<ProfileCoursesView>,
 
-    private val continueCoursePresenterDelegate: CourseContinuePresenterDelegate,
+    private val continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -40,6 +42,9 @@ constructor(
     companion object {
         private const val KEY_COURSES = "courses"
     }
+
+    override val delegates: List<PresenterDelegate<in ProfileCoursesView>> =
+        listOf(continueCoursePresenterDelegate)
 
     private var state: ProfileCoursesView.State = ProfileCoursesView.State.Idle
         set(value) {
