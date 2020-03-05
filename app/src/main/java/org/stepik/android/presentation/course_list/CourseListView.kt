@@ -1,33 +1,20 @@
 package org.stepik.android.presentation.course_list
 
+import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.course_list.model.CourseListQuery
 
 interface CourseListView {
     sealed class State {
         object Idle : State()
+        object Loading : State()
         object Empty : State()
-        object Error : State()
+        object NetworkError : State()
 
-        data class Content(val courses: List<CourseListItem>) : State()
+        data class Content(val courseListQuery: CourseListQuery, val courseListItems: PagedList<CourseListItem>) : State()
+        class ContentLoading(val courseListItems: PagedList<CourseListItem>) : State()
     }
 
     fun setState(state: State)
+    fun showNetworkError()
 }
-/*
-interface StateContainer<T> : ReadWriteProperty<Any, T> {
-    var state: T
-
-    override fun getValue(thisRef: Any, property: KProperty<*>): T =
-        state
-
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
-        state = value
-    }
-}
-
-class DefaultStateContainer<T>(
-    initialState: T
-): StateContainer<T> {
-    override var state: T = initialState
-}
-*/
