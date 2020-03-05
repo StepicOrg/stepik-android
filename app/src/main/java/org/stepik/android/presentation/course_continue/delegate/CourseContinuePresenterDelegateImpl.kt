@@ -35,6 +35,11 @@ constructor(
             viewContainer.view?.setBlockingLoading(value)
         }
 
+    override fun attachView(view: CourseContinueView) {
+        super.attachView(view)
+        view.setBlockingLoading(isBlockingLoading)
+    }
+
     override fun continueCourse(course: Course, interactionSource: CourseContinueInteractionSource) {
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.reportAmplitudeEvent(
