@@ -413,7 +413,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         if (isAdaptive) {
             screenManager.continueAdaptiveCourse(this, course)
         } else {
-            screenManager.showCourseModules(this, course)
+            coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
         }
     }
 
