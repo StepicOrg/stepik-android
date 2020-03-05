@@ -6,30 +6,26 @@ import androidx.lifecycle.ViewModelProviders
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepik.android.presentation.course_list.CourseListPlaygroundPresenter
-import org.stepik.android.presentation.course_list.CourseListPlaygroundView
+import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import timber.log.Timber
 import javax.inject.Inject
 
-class CourseListPlaygroundActivity : FragmentActivityBase(), CourseListPlaygroundView {
+class CourseListActivity : FragmentActivityBase(), CourseListView {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var courseListPlaygroundPresenter: CourseListPlaygroundPresenter
+    private lateinit var courseListPresenter: CourseListPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_download)
         injectComponent()
 
-        courseListPlaygroundPresenter = ViewModelProviders
+        courseListPresenter = ViewModelProviders
             .of(this, viewModelFactory)
-            .get(CourseListPlaygroundPresenter::class.java)
-
-        courseListPlaygroundPresenter.fetchCourses(4261L, 2L, 79L, 2852L, 15001L)
-        // courseListPlaygroundPresenter.onCourseIds(4261L, 2L, 79L, 2852L, 15001L)
+            .get(CourseListPresenter::class.java)
     }
 
     private fun injectComponent() {
@@ -41,11 +37,11 @@ class CourseListPlaygroundActivity : FragmentActivityBase(), CourseListPlaygroun
 
     override fun onStart() {
         super.onStart()
-        courseListPlaygroundPresenter.attachView(this)
+        courseListPresenter.attachView(this)
     }
 
     override fun onStop() {
-        courseListPlaygroundPresenter.detachView(this)
+        courseListPresenter.detachView(this)
         super.onStop()
     }
 

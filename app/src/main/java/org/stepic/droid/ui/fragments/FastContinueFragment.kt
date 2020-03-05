@@ -32,7 +32,7 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.view.course_list.activity.CourseListPlaygroundActivity
+import org.stepik.android.view.course_list.activity.CourseListActivity
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
@@ -240,7 +240,7 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun handleContinueCourseClick(course: Course) {
-        val intent = Intent(requireContext(), CourseListPlaygroundActivity::class.java)
+        val intent = Intent(requireContext(), CourseListActivity::class.java)
         requireContext().startActivity(intent)
 //        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
 //        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
