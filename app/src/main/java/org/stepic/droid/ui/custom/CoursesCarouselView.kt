@@ -173,7 +173,7 @@ constructor(
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
 
-        ProgressHelper.dismiss(activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        ProgressHelper.dismiss(fragmentManager, LoadingProgressDialogFragment.TAG)
     }
 
     private fun initCourseCarousel() {

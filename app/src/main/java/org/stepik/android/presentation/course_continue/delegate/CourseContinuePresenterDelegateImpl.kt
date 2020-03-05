@@ -11,7 +11,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.CourseContinueView
-import org.stepik.android.presentation.course_continue.model.InteractionSource
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import ru.nobird.android.presentation.base.ViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
@@ -29,7 +29,7 @@ constructor(
     private val mainScheduler: Scheduler
 ) : PresenterDelegate<CourseContinueView>(), CourseContinuePresenterDelegate {
 
-    override fun continueCourse(course: Course, interactionSource: InteractionSource) {
+    override fun continueCourse(course: Course, interactionSource: CourseContinueInteractionSource) {
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(

@@ -25,7 +25,7 @@ import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.SuppressFBWarnings
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.course_continue.model.InteractionSource
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import javax.inject.Inject
 
@@ -113,7 +113,7 @@ class CourseItemViewHolder(
 
     private fun onClickContinueLearning(course: Course) {
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
-        continueCoursePresenter.continueCourse(course, InteractionSource.COURSE_WIDGET) //provide position?
+        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.COURSE_WIDGET) //provide position?
     }
 
     fun setDataOnView(course: Course) {

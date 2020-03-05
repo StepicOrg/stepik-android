@@ -24,7 +24,7 @@ import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
-import org.stepik.android.presentation.course_continue.model.InteractionSource
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
@@ -323,7 +323,7 @@ constructor(
             ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
             ?: return
 
-        continueCourseContinuePresenterDelegateImpl.continueCourse(headerData.course, InteractionSource.COURSE_SCREEN)
+        continueCourseContinuePresenterDelegateImpl.continueCourse(headerData.course, CourseContinueInteractionSource.COURSE_SCREEN)
     }
 
     /**
@@ -351,19 +351,5 @@ constructor(
             ?: return
 
         view?.shareCourse(course)
-    }
-
-    fun setEnrollmentState(enrollmentState: EnrollmentState) {
-        val headerData = (state as? CourseView.State.CourseLoaded)
-            ?.courseHeaderData
-            ?: return
-
-        state = CourseView.State.CourseLoaded(
-            headerData.copy(
-                stats = headerData.stats.copy(
-                    enrollmentState = enrollmentState
-                )
-            )
-        )
     }
 }
