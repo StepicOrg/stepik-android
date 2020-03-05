@@ -418,7 +418,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     override fun showSteps(course: Course, lastStep: LastStep) {
-        screenManager.continueCourse(this, course.id, lastStep)
+        screenManager.continueCourse(this, lastStep)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
