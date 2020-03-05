@@ -43,6 +43,7 @@ import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
@@ -115,6 +116,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.d("AAAA")
         setContentView(R.layout.activity_course)
 
         setSupportActionBar(courseToolbar)
@@ -183,6 +185,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private fun injectComponent(courseId: Long) {
         App.componentManager()
             .courseComponent(courseId)
+            .coursePresentationComponentBuilder()
+            .build()
             .inject(this)
     }
 

@@ -11,25 +11,15 @@ import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.ViewModelKey
-import org.stepik.android.presentation.course.CoursePresenter
-import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course_content.CourseContentPresenter
-import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
-import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
-import ru.nobird.android.presentation.base.PresenterViewContainer
-import ru.nobird.android.presentation.base.ViewContainer
 
 @Module
 abstract class CourseModule {
     /**
      * PRESENTATION LAYER
      */
-    @Binds
-    @IntoMap
-    @ViewModelKey(CoursePresenter::class)
-    internal abstract fun bindCoursePresenter(coursePresenter: CoursePresenter): ViewModel
 
     @Binds
     @IntoMap
@@ -46,9 +36,6 @@ abstract class CourseModule {
     @ViewModelKey(CourseContentPresenter::class)
     internal abstract fun bindCourseContentPrsenter(courseContentPresenter: CourseContentPresenter): ViewModel
 
-    @Binds
-    internal abstract fun bindCourseContinueViewContainer(@CourseScope viewContainer: PresenterViewContainer<CourseView>): ViewContainer<out CourseContinueView>
-
     @Module
     companion object {
         @Provides
@@ -62,11 +49,5 @@ abstract class CourseModule {
         @CourseScope
         internal fun provideCourseObservableSource(courseSubject: BehaviorSubject<Course>, @BackgroundScheduler scheduler: Scheduler): Observable<Course> =
             courseSubject.observeOn(scheduler)
-
-        @Provides
-        @JvmStatic
-        @CourseScope
-        fun provideViewContainer(): PresenterViewContainer<CourseView> =
-            DefaultPresenterViewContainer()
     }
 }
