@@ -21,7 +21,7 @@ abstract class CoursePresentationModule {
     internal abstract fun bindCoursePresenter(coursePresenter: CoursePresenter): ViewModel
 
     @Binds
-    internal abstract fun bindCourseContinueViewContainer(@CourseScope viewContainer: PresenterViewContainer<CourseView>): ViewContainer<out CourseContinueView>
+    internal abstract fun bindCourseContinueViewContainer(@CoursePresentationScope viewContainer: PresenterViewContainer<CourseView>): ViewContainer<out CourseContinueView>
 
     @Module
     companion object {

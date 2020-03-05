@@ -96,6 +96,8 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     private fun injectComponent() {
         App.componentManager()
             .profileComponent(userId)
+            .profileCoursesPresentationComponentBuilder()
+            .build()
             .inject(this)
     }
 
