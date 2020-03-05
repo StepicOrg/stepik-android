@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DiffUtil
@@ -24,6 +23,7 @@ import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesView
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseAdapterDelegate
@@ -31,6 +31,7 @@ import org.stepik.android.view.profile_courses.ui.adapter.diffutil.CourseDiffUti
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.ui.adapters.diff.DiffCallbackFactory
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -86,13 +87,17 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         coursesAdapter += CourseAdapterDelegate(
             adaptiveCoursesResolver,
             onItemClicked = ::onCourseClicked,
-            onContinueCourseClicked = profileCoursesPresenter::continueCourse
+            onContinueCourseClicked = { course ->
+                profileCoursesPresenter.continueCourse(course = course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+            }
         )
     }
 
     private fun injectComponent() {
         App.componentManager()
             .profileComponent(userId)
+            .profileCoursesPresentationComponentBuilder()
+            .build()
             .inject(this)
     }
 

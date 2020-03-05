@@ -14,7 +14,6 @@ import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_activities.ui.fragment.ProfileActivitiesFragment
 import org.stepik.android.view.profile_certificates.ui.fragment.ProfileCertificatesFragment
-import org.stepik.android.view.profile_courses.ui.fragment.ProfileCoursesFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.profile_id.ui.fragment.ProfileIdFragment
 import org.stepik.android.view.profile_links.ui.fragment.ProfileLinksFragment
@@ -42,6 +41,8 @@ interface ProfileComponent {
         fun userId(@UserId userId: Long): Builder
     }
 
+    fun profileCoursesPresentationComponentBuilder(): ProfileCoursesComponent.Builder
+
     fun inject(profileFragment: ProfileFragment)
     fun inject(achievementsListFragment: AchievementsListFragment)
     fun inject(profileAchievementsFragment: ProfileAchievementsFragment)
@@ -50,6 +51,5 @@ interface ProfileComponent {
     fun inject(profileLinksFragment: ProfileLinksFragment)
     fun inject(profileNotificationFragment: ProfileNotificationFragment)
     fun inject(profileIdFragment: ProfileIdFragment)
-    fun inject(profileCoursesFragment: ProfileCoursesFragment)
     fun inject(profileCertificatesFragment: ProfileCertificatesFragment)
 }

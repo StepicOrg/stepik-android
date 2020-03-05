@@ -24,7 +24,6 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.joining.contract.JoiningListener;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.CourseListType;
 import org.stepic.droid.model.CoursesCarouselColorType;
@@ -39,6 +38,7 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
+import org.stepik.android.presentation.course_continue.CourseContinueView;
 import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate;
 
 import java.util.ArrayList;
@@ -51,10 +51,8 @@ import butterknife.BindView;
 public abstract class CourseListFragmentBase extends FragmentBase
         implements SwipeRefreshLayout.OnRefreshListener,
         CoursesView,
-        ContinueCourseView,
+        CourseContinueView,
         JoiningListener {
-
-    private static final String continueLoadingTag = "continueLoadingTag";
 
     @BindView(R.id.swipe_refresh_layout_mycourses)
     protected StepikSwipeRefreshLayout swipeRefreshLayout;
@@ -103,6 +101,9 @@ public abstract class CourseListFragmentBase extends FragmentBase
 
     @Inject
     protected RemindAppNotificationDelegate remindAppNotificationDelegate;
+
+    private DialogFragment progressDialogFragment =
+            LoadingProgressDialogFragment.Companion.newInstance();
 
     @Override
     protected void injectComponent() {
@@ -301,35 +302,32 @@ public abstract class CourseListFragmentBase extends FragmentBase
     protected abstract void showEmptyScreen(boolean isShown);
 
     @Override
-    public void onShowContinueCourseLoadingDialog() {
-        DialogFragment loadingProgressDialogFragment = LoadingProgressDialogFragment.Companion.newInstance();
-        if (!loadingProgressDialogFragment.isAdded()) {
-            loadingProgressDialogFragment.show(getFragmentManager(), continueLoadingTag);
+    public void showCourse(@NotNull Course course, boolean isAdaptive) {
+        if (isAdaptive) {
+            screenManager.continueAdaptiveCourse(getActivity(), course);
+        } else {
+            screenManager.showCourseModules(getActivity(), course);
         }
     }
 
     @Override
-    public void onOpenStep(long courseId, @NotNull LastStep lastStep) {
-        ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().continueCourse(getActivity(), courseId, lastStep);
+    public void showSteps(@NotNull Course course, @NotNull LastStep lastStep) {
+        screenManager.continueCourse(getActivity(), course.getId(), lastStep);
     }
 
     @Override
-    public void onOpenAdaptiveCourse(@NotNull Course course) {
-        ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().continueAdaptiveCourse(getActivity(), course);
-    }
-
-    @Override
-    public void onAnyProblemWhileContinue(@NotNull Course course) {
-        ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
-        getScreenManager().showCourseModules(getActivity(), course);
+    public void setBlockingLoading(boolean isLoading) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, getFragmentManager(), LoadingProgressDialogFragment.TAG);
+        } else {
+            ProgressHelper.dismiss(getFragmentManager(), LoadingProgressDialogFragment.TAG);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ProgressHelper.dismiss(getFragmentManager(), continueLoadingTag);
+        ProgressHelper.dismiss(getFragmentManager(), LoadingProgressDialogFragment.TAG);
     }
 
     @Override

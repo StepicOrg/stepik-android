@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
@@ -22,7 +22,6 @@ import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.FastContinuePresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
-import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.FastContinueView
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -31,10 +30,12 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_continue.CourseContinueView
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
-        ContinueCourseView,
+        CourseContinueView,
         DroppingListener,
         JoiningListener,
         FastContinueView {
@@ -61,6 +62,9 @@ class FastContinueFragment : FragmentBase(),
     lateinit var fastContinuePresenter: FastContinuePresenter
 
     private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     private val coursePlaceholderDrawable by lazy {
         val coursePlaceholderBitmap = BitmapFactory.decodeResource(resources, R.drawable.general_placeholder)
@@ -177,37 +181,6 @@ class FastContinueFragment : FragmentBase(),
 //        fastContinueCourseProgressText.isVisible = needShow
     }
 
-    //ContinueCourseView
-    override fun onShowContinueCourseLoadingDialog() {
-        fastContinueOverlay.isEnabled = false
-        fastContinueAction.isEnabled = false
-        val loadingProgressDialogFragment = LoadingProgressDialogFragment.newInstance()
-        if (!loadingProgressDialogFragment.isAdded) {
-            loadingProgressDialogFragment.show(requireFragmentManager(), CONTINUE_LOADING_TAG)
-        }
-    }
-
-    override fun onOpenStep(courseId: Long, lastStep: LastStep) {
-        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-        fastContinueOverlay.isEnabled = true
-        fastContinueAction.isEnabled = true
-        screenManager.continueCourse(activity, courseId, lastStep)
-    }
-
-    override fun onOpenAdaptiveCourse(course: Course) {
-        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-        fastContinueOverlay.isEnabled = true
-        fastContinueAction.isEnabled = true
-        screenManager.continueAdaptiveCourse(activity, course)
-    }
-
-    override fun onAnyProblemWhileContinue(course: Course) {
-        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
-        fastContinueOverlay.isEnabled = true
-        fastContinueAction.isEnabled = true
-        screenManager.showCourseModules(activity, course)
-    }
-
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
@@ -236,10 +209,28 @@ class FastContinueFragment : FragmentBase(),
 
     private fun handleContinueCourseClick(course: Course) {
         analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-            AmplitudeAnalytic.Course.Params.COURSE to course.id,
-            AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.HOME_WIDGET
-        ))
-        continueCoursePresenter.continueCourse(course)
+        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        if (isAdaptive) {
+            screenManager.continueAdaptiveCourse(activity, course)
+        } else {
+            screenManager.showCourseModules(activity, course)
+        }
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        screenManager.continueCourse(activity, course.id, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        fastContinueOverlay.isEnabled = !isLoading
+        fastContinueAction.isEnabled = !isLoading
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, fragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(fragmentManager, LoadingProgressDialogFragment.TAG)
+        }
     }
 }
