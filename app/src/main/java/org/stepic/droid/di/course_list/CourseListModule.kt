@@ -4,7 +4,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.stepic.droid.concurrency.SingleThreadExecutor
-import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepic.droid.util.resolvers.SearchResolverImpl
 import org.stepik.android.presentation.course_continue.CourseContinueView
@@ -22,7 +21,7 @@ abstract class CourseListModule {
 
     @Binds
     internal abstract fun bindCourseContinueViewContainer(
-        @CourseListScope viewContainer: PresenterViewContainer<ContinueCourseView>
+        @CourseListScope viewContainer: PresenterViewContainer<CourseContinueView>
     ): ViewContainer<out CourseContinueView>
 
     @Module
@@ -36,7 +35,7 @@ abstract class CourseListModule {
         @Provides
         @JvmStatic
         @CourseListScope
-        fun provideViewContainer(): PresenterViewContainer<ContinueCourseView> =
+        fun provideViewContainer(): PresenterViewContainer<CourseContinueView> =
             DefaultPresenterViewContainer()
     }
 }
