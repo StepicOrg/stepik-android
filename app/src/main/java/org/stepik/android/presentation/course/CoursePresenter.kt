@@ -41,7 +41,7 @@ constructor(
 
     viewContainer: PresenterViewContainer<CourseView>,
 
-    private val continueCourseContinuePresenterDelegateImpl: CourseContinuePresenterDelegateImpl,
+    private val courseContinuePresenterDelegateImpl: CourseContinuePresenterDelegateImpl,
 
     private val courseInteractor: CourseInteractor,
 //    private val courseBillingInteractor: CourseBillingInteractor,
@@ -64,7 +64,7 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : PresenterBase<CourseView>(viewContainer), CourseContinuePresenterDelegate by continueCourseContinuePresenterDelegateImpl {
+) : PresenterBase<CourseView>(viewContainer), CourseContinuePresenterDelegate by courseContinuePresenterDelegateImpl {
     private var state: CourseView.State = CourseView.State.Idle
         set(value) {
             field = value
@@ -75,7 +75,7 @@ constructor(
 //    private var uiCheckout: UiCheckout? = null
 
     override val delegates: List<PresenterDelegate<in CourseView>> =
-        listOf(continueCourseContinuePresenterDelegateImpl)
+        listOf(courseContinuePresenterDelegateImpl)
 
     init {
         subscriberForEnrollmentUpdates()
@@ -174,7 +174,13 @@ constructor(
             ?.takeIf { it.stats.enrollmentState != EnrollmentState.Pending }
             ?: return
 
-        view?.setBlockingLoading(isLoading = true)
+        state = CourseView.State.BlockingLoading(
+            headerData.copy(
+                stats = headerData.stats.copy(
+                    enrollmentState = EnrollmentState.Pending
+                )
+            )
+        )
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -323,7 +329,7 @@ constructor(
             ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
             ?: return
 
-        continueCourseContinuePresenterDelegateImpl.continueCourse(headerData.course, CourseContinueInteractionSource.COURSE_SCREEN)
+        courseContinuePresenterDelegateImpl.continueCourse(headerData.course, CourseContinueInteractionSource.COURSE_SCREEN)
     }
 
     /**

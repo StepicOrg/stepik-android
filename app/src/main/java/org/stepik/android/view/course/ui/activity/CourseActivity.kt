@@ -43,7 +43,6 @@ import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
@@ -116,7 +115,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.d("AAAA")
         setContentView(R.layout.activity_course)
 
         setSupportActionBar(courseToolbar)
@@ -281,6 +279,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         viewStateDelegate.addState<CourseView.State.EmptyCourse>(courseEmpty)
         viewStateDelegate.addState<CourseView.State.NetworkError>(errorNoConnection)
         viewStateDelegate.addState<CourseView.State.CourseLoaded>(courseHeader, courseTabs, coursePager)
+        viewStateDelegate.addState<CourseView.State.BlockingLoading>(courseHeader, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Loading>(courseHeaderPlaceholder, courseTabs, coursePager)
         viewStateDelegate.addState<CourseView.State.Idle>(courseHeaderPlaceholder, courseTabs, coursePager)
     }
@@ -327,6 +326,13 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                         AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.WIDGET
                     ))
                 }
+
+                ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            }
+
+            is CourseView.State.BlockingLoading -> {
+                courseHeaderDelegate.courseHeaderData = state.courseHeaderData
+                ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
             }
         }
         viewStateDelegate.switchState(state)
