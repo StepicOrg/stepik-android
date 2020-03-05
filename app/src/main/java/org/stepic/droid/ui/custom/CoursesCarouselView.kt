@@ -29,7 +29,6 @@ import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.CourseCollectionPresenter
 import org.stepic.droid.core.presenters.PersistentCourseListPresenter
-import org.stepic.droid.core.presenters.contracts.ContinueCourseView
 import org.stepic.droid.core.presenters.contracts.CoursesView
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.model.CourseListType
@@ -45,6 +44,7 @@ import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_continue.CourseContinueView
 import java.util.ArrayList
 import java.util.EnumSet
 import javax.inject.Inject
@@ -57,7 +57,7 @@ constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : FrameLayout(context, attrs, defStyleAttr),
-    ContinueCourseView,
+    CourseContinueView,
     CoursesView,
     JoiningListener,
     DroppingListener,
@@ -173,7 +173,7 @@ constructor(
         continueCoursePresenter.detachView(this)
         courseListPresenter.detachView(this)
 
-        ProgressHelper.dismiss(activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        ProgressHelper.dismiss(fragmentManager, LoadingProgressDialogFragment.TAG)
     }
 
     private fun initCourseCarousel() {
@@ -217,9 +217,9 @@ constructor(
 
     override fun setBlockingLoading(isLoading: Boolean) {
         if (isLoading) {
-            ProgressHelper.activate(progressDialogFragment, activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            ProgressHelper.activate(progressDialogFragment, fragmentManager, LoadingProgressDialogFragment.TAG)
         } else {
-            ProgressHelper.dismiss(activity.supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            ProgressHelper.dismiss(fragmentManager, LoadingProgressDialogFragment.TAG)
         }
     }
 

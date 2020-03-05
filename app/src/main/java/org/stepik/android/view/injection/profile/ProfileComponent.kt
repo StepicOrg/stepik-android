@@ -5,7 +5,6 @@ import dagger.Subcomponent
 import org.stepik.android.view.achievement.ui.fragment.AchievementsListFragment
 import org.stepik.android.view.injection.certificate.CertificateDataModule
 import org.stepik.android.view.injection.course.CourseDataModule
-import org.stepik.android.view.injection.course_continue.CourseContinueModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.social_profile.SocialProfileDataModule
@@ -15,7 +14,6 @@ import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.profile_achievements.ui.fragment.ProfileAchievementsFragment
 import org.stepik.android.view.profile_activities.ui.fragment.ProfileActivitiesFragment
 import org.stepik.android.view.profile_certificates.ui.fragment.ProfileCertificatesFragment
-import org.stepik.android.view.profile_courses.ui.fragment.ProfileCoursesFragment
 import org.stepik.android.view.profile_detail.ui.fragment.ProfileDetailFragment
 import org.stepik.android.view.profile_id.ui.fragment.ProfileIdFragment
 import org.stepik.android.view.profile_links.ui.fragment.ProfileLinksFragment
@@ -29,7 +27,6 @@ import org.stepik.android.view.profile_notification.ui.fragment.ProfileNotificat
     CoursePaymentsDataModule::class,
     LastStepDataModule::class,
     ProfileDataModule::class,
-    CourseContinueModule::class,
     UserDataModule::class,
     UserActivityDataModule::class,
     SocialProfileDataModule::class,
@@ -44,6 +41,8 @@ interface ProfileComponent {
         fun userId(@UserId userId: Long): Builder
     }
 
+    fun profileCoursesPresentationComponentBuilder(): ProfileCoursesComponent.Builder
+
     fun inject(profileFragment: ProfileFragment)
     fun inject(achievementsListFragment: AchievementsListFragment)
     fun inject(profileAchievementsFragment: ProfileAchievementsFragment)
@@ -52,6 +51,5 @@ interface ProfileComponent {
     fun inject(profileLinksFragment: ProfileLinksFragment)
     fun inject(profileNotificationFragment: ProfileNotificationFragment)
     fun inject(profileIdFragment: ProfileIdFragment)
-    fun inject(profileCoursesFragment: ProfileCoursesFragment)
     fun inject(profileCertificatesFragment: ProfileCertificatesFragment)
 }

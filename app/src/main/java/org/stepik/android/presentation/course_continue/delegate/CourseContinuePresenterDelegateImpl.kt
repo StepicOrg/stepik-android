@@ -11,6 +11,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.CourseContinueView
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import ru.nobird.android.presentation.base.ViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
@@ -28,23 +29,34 @@ constructor(
     private val mainScheduler: Scheduler
 ) : PresenterDelegate<CourseContinueView>(), CourseContinuePresenterDelegate {
 
-    override fun continueCourse(course: Course) {
+    private var isBlockingLoading: Boolean = false
+        set(value) {
+            field = value
+            viewContainer.view?.setBlockingLoading(value)
+        }
+
+    override fun attachView(view: CourseContinueView) {
+        super.attachView(view)
+        view.setBlockingLoading(isBlockingLoading)
+    }
+
+    override fun continueCourse(course: Course, interactionSource: CourseContinueInteractionSource) {
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
                 AmplitudeAnalytic.Course.Params.COURSE to course.id,
-                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
+                AmplitudeAnalytic.Course.Params.SOURCE to interactionSource
             ))
 
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {
             viewContainer.view?.showCourse(course, isAdaptive = true)
         } else {
-            viewContainer.view?.setBlockingLoading(isLoading = true)
+            isBlockingLoading = true
             compositeDisposable += continueLearningInteractor
                 .getLastStepForCourse(course)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
-                .doFinally { viewContainer.view?.setBlockingLoading(isLoading = false) }
+                .doFinally { isBlockingLoading = false }
                 .subscribeBy(
                     onSuccess = { viewContainer.view?.showSteps(course, it) },
                     onError = { viewContainer.view?.showCourse(course, isAdaptive = false) }

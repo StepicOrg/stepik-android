@@ -24,7 +24,6 @@ import org.stepic.droid.base.Client;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.core.joining.contract.JoiningListener;
 import org.stepic.droid.core.presenters.ContinueCoursePresenter;
-import org.stepic.droid.core.presenters.contracts.ContinueCourseView;
 import org.stepic.droid.core.presenters.contracts.CoursesView;
 import org.stepic.droid.model.CourseListType;
 import org.stepic.droid.model.CoursesCarouselColorType;
@@ -39,6 +38,7 @@ import org.stepic.droid.util.ProgressHelper;
 import org.stepic.droid.util.StepikUtil;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
+import org.stepik.android.presentation.course_continue.CourseContinueView;
 import org.stepik.android.view.course_list.notification.RemindAppNotificationDelegate;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ import butterknife.BindView;
 public abstract class CourseListFragmentBase extends FragmentBase
         implements SwipeRefreshLayout.OnRefreshListener,
         CoursesView,
-        ContinueCourseView,
+        CourseContinueView,
         JoiningListener {
 
     @BindView(R.id.swipe_refresh_layout_mycourses)
@@ -318,16 +318,16 @@ public abstract class CourseListFragmentBase extends FragmentBase
     @Override
     public void setBlockingLoading(boolean isLoading) {
         if (isLoading) {
-            ProgressHelper.activate(progressDialogFragment, getActivity().getSupportFragmentManager(), LoadingProgressDialogFragment.TAG);
+            ProgressHelper.activate(progressDialogFragment, getFragmentManager(), LoadingProgressDialogFragment.TAG);
         } else {
-            ProgressHelper.dismiss(getActivity().getSupportFragmentManager(), LoadingProgressDialogFragment.TAG);
+            ProgressHelper.dismiss(getFragmentManager(), LoadingProgressDialogFragment.TAG);
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ProgressHelper.dismiss(getActivity().getSupportFragmentManager(), LoadingProgressDialogFragment.TAG);
+        ProgressHelper.dismiss(getFragmentManager(), LoadingProgressDialogFragment.TAG);
     }
 
     @Override
