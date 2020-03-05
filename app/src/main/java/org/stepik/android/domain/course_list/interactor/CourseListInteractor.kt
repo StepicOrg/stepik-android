@@ -29,13 +29,13 @@ constructor(
         courseRepository
             .getCourses(*courseIds, primarySourceType = DataSourceType.CACHE)
 
-    fun getCourseListItems(vararg courseId: Long): Single<PagedList<CourseListItem>> =
+    fun getCourseListItems(vararg courseId: Long): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(coursesSource = courseRepository.getCourses(*courseId))
 
-    fun getCourseListItems(courseListQuery: CourseListQuery): Single<PagedList<CourseListItem>> =
+    fun getCourseListItems(courseListQuery: CourseListQuery): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(coursesSource = courseRepository.getCourses(courseListQuery))
 
-    private fun getCourseListItems(coursesSource: Single<PagedList<Course>>): Single<PagedList<CourseListItem>> =
+    private fun getCourseListItems(coursesSource: Single<PagedList<Course>>): Single<PagedList<CourseListItem.Data>> =
         coursesSource
             .flatMap { courses ->
                 courses
@@ -45,11 +45,11 @@ constructor(
                     .map { PagedList(it, courses.page, courses.hasNext, courses.hasPrev) }
             }
 
-    private fun obtainCourseListItem(course: Course): Maybe<CourseListItem> =
+    private fun obtainCourseListItem(course: Course): Maybe<CourseListItem.Data> =
         courseStatsInteractor
             .getCourseStats(course)
             .map { courseStats ->
-                CourseListItem(
+                CourseListItem.Data(
                     course = course,
                     courseStats = courseStats
                 )

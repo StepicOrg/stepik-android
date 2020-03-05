@@ -9,7 +9,6 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.presentation.course_list.CourseListView
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListActivity : FragmentActivityBase(), CourseListView {
@@ -18,6 +17,8 @@ class CourseListActivity : FragmentActivityBase(), CourseListView {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var courseListPresenter: CourseListPresenter
+
+    var flag = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +50,6 @@ class CourseListActivity : FragmentActivityBase(), CourseListView {
     }
 
     override fun setState(state: CourseListView.State) {
-        if (state is CourseListView.State.Content) {
-            Timber.d("Page: ${state.courseListItems.page} Items: ${state.courseListItems.toList()}")
-        }
     }
 
     override fun showNetworkError() {
