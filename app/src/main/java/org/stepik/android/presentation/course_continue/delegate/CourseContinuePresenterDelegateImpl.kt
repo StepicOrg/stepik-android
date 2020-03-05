@@ -29,6 +29,12 @@ constructor(
     private val mainScheduler: Scheduler
 ) : PresenterDelegate<CourseContinueView>(), CourseContinuePresenterDelegate {
 
+    private var isBlockingLoading: Boolean = false
+        set(value) {
+            field = value
+            viewContainer.view?.setBlockingLoading(value)
+        }
+
     override fun continueCourse(course: Course, interactionSource: CourseContinueInteractionSource) {
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.reportAmplitudeEvent(
@@ -40,12 +46,12 @@ constructor(
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {
             viewContainer.view?.showCourse(course, isAdaptive = true)
         } else {
-            viewContainer.view?.setBlockingLoading(isLoading = true)
+            isBlockingLoading = true
             compositeDisposable += continueLearningInteractor
                 .getLastStepForCourse(course)
                 .subscribeOn(backgroundScheduler)
                 .observeOn(mainScheduler)
-                .doFinally { viewContainer.view?.setBlockingLoading(isLoading = false) }
+                .doFinally { isBlockingLoading = false }
                 .subscribeBy(
                     onSuccess = { viewContainer.view?.showSteps(course, it) },
                     onError = { viewContainer.view?.showCourse(course, isAdaptive = false) }

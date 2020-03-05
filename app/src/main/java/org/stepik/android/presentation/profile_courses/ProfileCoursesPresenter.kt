@@ -32,7 +32,7 @@ constructor(
 
     viewContainer: PresenterViewContainer<ProfileCoursesView>,
 
-    private val continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl,
+    continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
