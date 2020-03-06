@@ -11,7 +11,11 @@ interface CourseListView {
         object Empty : State()
         object NetworkError : State()
 
-        data class Content(val courseListQuery: CourseListQuery, val courseListItems: PagedList<CourseListItem>) : State()
+        data class Content(
+            val courseListQuery: CourseListQuery,
+            val courseListDataItems: PagedList<CourseListItem.Data>,
+            val courseListItems: List<CourseListItem>
+        ) : State()
     }
 
     fun setState(state: State)

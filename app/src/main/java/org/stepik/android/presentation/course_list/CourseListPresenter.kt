@@ -6,9 +6,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
-import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import ru.nobird.android.presentation.base.PresenterBase
@@ -52,14 +50,14 @@ constructor(
                     state = if (it.isNotEmpty()) {
                         CourseListView.State.Content(
                             courseListQuery = courseListQuery,
-                            courseListItems = it as PagedList<CourseListItem>
+                            courseListDataItems = it,
+                            courseListItems = it
                         )
                     } else {
                         CourseListView.State.Empty
                     }
                 },
                 onError = {
-                    it.printStackTrace()
                     state = CourseListView.State.NetworkError
                 }
             )
@@ -69,12 +67,7 @@ constructor(
         val oldState = state as? CourseListView.State.Content
             ?: return
 
-        val currentItems = oldState.courseListItems
-
-        val nextPage = (currentItems as? PagedList<CourseListItem>)
-            ?.page
-            ?.plus(1)
-            ?: 1
+        val nextPage = oldState.courseListDataItems.page + 1
 
         val courseListQuery = oldState.courseListQuery.copy(page = nextPage)
 
