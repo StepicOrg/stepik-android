@@ -746,7 +746,7 @@
     <string name="step_quiz_code_full_screen_run_code_tab">Запуск</string>
 
     <string name="step_quiz_code_input_data">Входные данные</string>
-    <string name="step_quiz_code_output_data">Выходные данные</string>
+    <string name="step_quiz_code_output_data">Результат выполнения</string>
     <string name="step_quiz_code_samples">примеры</string>
     <string name="step_quiz_code_run_code_action">Запустить код</string>
     <string name="step_quiz_code_empty_output">Пустой вывод</string>
