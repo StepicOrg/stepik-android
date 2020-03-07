@@ -19,11 +19,12 @@ import org.stepik.android.view.injection.view_assignment.ViewAssignmentDataModul
 @AdaptiveCourseScope
 @Subcomponent(modules = [
     AdaptiveCourseModule::class,
+
+    RecommendationModule::class,
+    AttemptDataModule::class,
     LastStepDataModule::class,
     ViewAssignmentDataModule::class,
     SubmissionDataModule::class,
-    AttemptDataModule::class,
-    RecommendationModule::class,
     UserDataModule::class,
     RatingDataModule::class
 ])

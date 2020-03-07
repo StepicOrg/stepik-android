@@ -28,8 +28,10 @@ ext.versions = [
         ktx                  : '1.1.0',
         recyclerview         : '1.0.0',
         viewPager            : '1.0.0',
+        viewPager2           : '1.0.0',
         cardView             : '1.0.0',
         constraintLayout     : '1.1.3',
+        material             : '1.1.0-rc02',
 
         archComponents       : '2.1.0',
         media                : '1.1.0',
@@ -135,8 +137,10 @@ ext.libraries = [
         ktx                  : "androidx.core:core-ktx:$versions.ktx",
         recyclerview         : "androidx.recyclerview:recyclerview:$versions.recyclerview",
         viewPager            : "androidx.viewpager:viewpager:$versions.viewPager",
+        viewPager2           : "androidx.viewpager2:viewpager2:$versions.viewPager2",
         cardView             : "androidx.cardview:cardview:$versions.cardView",
         constraintLayout     : "androidx.constraintlayout:constraintlayout:$versions.constraintLayout",
+        material             : "com.google.android.material:material:$versions.material",
 
         archExtensions       : "androidx.lifecycle:lifecycle-extensions:$versions.archComponents",
         archViewModel        : "androidx.lifecycle:lifecycle-viewmodel:$versions.archComponents",

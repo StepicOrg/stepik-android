@@ -123,8 +123,10 @@ dependencies {
     implementation libraries.ktx
     implementation libraries.recyclerview
     implementation libraries.viewPager
+    implementation libraries.viewPager2
     implementation libraries.cardView
     implementation libraries.constraintLayout
+    implementation libraries.material
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel
