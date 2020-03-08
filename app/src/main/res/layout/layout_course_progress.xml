@@ -21,10 +21,9 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
 
-        android:textSize="14sp"
+        android:textAppearance="@style/TextAppearance.Subtitle2"
+
         android:textColor="@color/white"
-        app:fontFamily="@font/roboto_medium"
-        android:letterSpacing="0.03"
         android:text="@string/course_progress_current" />
 
     <org.stepic.droid.ui.custom.CircleProgressView
@@ -46,10 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:textSize="14sp"
         android:textColor="@color/white"
-        app:fontFamily="@font/roboto_medium"
-        android:letterSpacing="0.03"
+        android:textAppearance="@style/TextAppearance.Subtitle2"
 
         app:layout_constraintBaseline_toBaselineOf="@id/courseProgressTitle"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,10 +59,8 @@
         android:layout_height="wrap_content"
 
         android:text="@string/course_progress_solutions"
-        android:textSize="14sp"
         android:textColor="@color/white"
-        app:fontFamily="@font/roboto_medium"
-        android:letterSpacing="0.03"
+        android:textAppearance="@style/TextAppearance.Subtitle2"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/courseProgressTitle"
@@ -86,10 +81,8 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
 
-        android:textSize="14sp"
         android:textColor="@color/white"
-        app:fontFamily="@font/roboto_medium"
-        android:letterSpacing="0.03"
+        android:textAppearance="@style/TextAppearance.Subtitle2"
         android:gravity="center_vertical"
 
         app:drawableStartCompat="@drawable/ic_course_solutions"

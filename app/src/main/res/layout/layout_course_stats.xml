@@ -37,9 +37,8 @@
         app:drawableStartCompat="@drawable/ic_course_info_learners_count"
         app:drawableTint="@color/white"
 
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
         android:textColor="@color/white"
-        app:fontFamily="@font/roboto_light"
         tools:text="999K"
         tools:ignore="MissingPrefix" />
 
@@ -55,9 +54,8 @@
         app:drawableStartCompat="@drawable/ic_verified"
 
         android:text="@string/course_verified"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
         android:textColor="@color/white"
-        app:fontFamily="@font/roboto_light"
         tools:ignore="MissingPrefix" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
