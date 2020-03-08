@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/rateDialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:padding="@dimen/guideline_standard_padding"
         android:text="@string/rate_dialog_title"
-        android:textSize="20sp"/>
+        android:textAppearance="?textAppearanceHeadline6" />
 
     <RatingBar
         android:id="@+id/rateDialogRatingBar"
@@ -25,19 +25,17 @@
         android:stepSize="1"
         tools:rating="3"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/rateDialogHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/rateDialogRatingBar"
         android:gravity="center"
         android:padding="@dimen/half_padding"
-        android:textSize="@dimen/rate_dialog_button_text_size"
+        android:textAppearance="?textAppearanceBody1"
         android:visibility="gone"
         tools:text="ПожалуйстаПожалуйстаПожалуйста, оставьте отзыв в Google Play"
-        tools:visibility="visible"
-        />
-
+        tools:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/rateDialogButtonsContainer"
@@ -50,10 +48,13 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/rateDialogLater"
-            style="@style/RateItemTextView"
-            android:textColor="?android:textColorSecondary"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/Button.Borderless"
+            android:theme="@style/AppTheme.Brown"
             android:text="@string/rate_dialog_later" />
 
         <include
@@ -61,9 +62,13 @@
             android:layout_height="match_parent"
             layout="@layout/view_divider_vertical" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/rateDialogPositive"
-            style="@style/RateItemTextView"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            style="@style/Button.Borderless"
+            android:theme="@style/AppTheme.Brown"
             tools:text="Google Play"/>
     </LinearLayout>
 
