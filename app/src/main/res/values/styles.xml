@@ -233,9 +233,11 @@
     <style name="SettingHeaderTextView">
         <item name="android:textAppearance">?textAppearanceSubtitle2</item>
         <item name="android:textColor">@color/violet1</item>
-        <item name="android:paddingTop">24dp</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:layout_marginTop">@dimen/settings_offset_vertical</item>
+        <item name="android:paddingTop">@dimen/settings_offset_vertical</item>
+        <item name="android:paddingBottom">@dimen/settings_offset_vertical</item>
+        <item name="android:paddingLeft">@dimen/settings_offset_horizontal</item>
+        <item name="android:paddingRight">@dimen/settings_offset_horizontal</item>
     </style>
 
     <style name="SettingCompoundButton">
@@ -252,9 +254,12 @@
         <item name="android:foreground">?selectableItemBackground</item>
         <item name="switchTextAppearance">?textAppearanceBody1</item>
         <item name="android:switchTextAppearance">?textAppearanceBody1</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
 
-        <item name="android:paddingHorizontal">24dp</item>
-        <item name="android:paddingVertical">12dp</item>
+        <item name="android:paddingLeft">@dimen/settings_offset_horizontal</item>
+        <item name="android:paddingRight">@dimen/settings_offset_horizontal</item>
+        <item name="android:paddingTop">@dimen/settings_offset_vertical</item>
+        <item name="android:paddingBottom">@dimen/settings_offset_vertical</item>
     </style>
 
     <style name="LoginEditFields">

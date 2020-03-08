@@ -227,4 +227,8 @@
     <dimen name="profile_block_vertical_margin">16dp</dimen>
 
     <dimen name="dismiss_path_length">36dp</dimen>
+
+    <!-- Settings -->
+    <dimen name="settings_offset_horizontal">24dp</dimen>
+    <dimen name="settings_offset_vertical">12dp</dimen>
 </resources>

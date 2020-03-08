@@ -46,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/video_quality_playing"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
         <include layout="@layout/view_divider_vertical" />
 
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             style="@style/SettingSwitch"
             android:text="@string/language_of_courses"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
         <include layout="@layout/view_divider_vertical" />
 
@@ -109,7 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/adaptive_mode_settings"
-            android:text="@string/adaptive_mode_settings"/>
+            android:text="@string/adaptive_mode_settings"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
         <include layout="@layout/view_divider_vertical" />
 
@@ -125,7 +126,8 @@
             style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/notification_settings_title" />
+            android:text="@string/notification_settings_title"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
         <include layout="@layout/view_divider_vertical" />
 
@@ -142,7 +144,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/calendar_setting_description"
-            android:text="@string/calendar_setting_description"/>
+            android:text="@string/calendar_setting_description"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
         <include layout="@layout/view_divider_vertical" />
 
@@ -164,7 +167,8 @@
             style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/space_management_title" />
+            android:text="@string/space_management_title"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
         <include layout="@layout/view_divider_vertical" />
 
@@ -194,6 +198,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/logout_title"
-            android:textColor="?colorError" />
+            android:textColor="?colorError"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
     </LinearLayout>
 </ScrollView>
