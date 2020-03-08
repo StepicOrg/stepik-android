@@ -3,7 +3,12 @@
     <item name="wrap_content" type="dimen">-2px</item>
 
     <!-- Theme -->
-    <dimen name="button_corner_radius">8dp</dimen>
+    <dimen name="corner_radius">8dp</dimen>
+    <dimen name="button_corner_radius">@dimen/corner_radius</dimen>
+
+    <dimen name="material_emphasis_high_type">0.87</dimen>
+    <dimen name="material_emphasis_medium">0.6</dimen>
+    <dimen name="material_emphasis_disabled">0.38</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="custom_peek_height">500dp</dimen>

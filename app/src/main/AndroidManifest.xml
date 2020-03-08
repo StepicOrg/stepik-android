@@ -28,7 +28,7 @@
         android:manageSpaceActivity=".ui.activities.StoreManagementActivity"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/StepikTheme"
+        android:theme="@style/AppTheme"
         tools:replace="allowBackup, supportsRtl">
 
         <activity
@@ -66,12 +66,11 @@
 
         <activity
             android:name=".ui.activities.AnimatedOnboardingActivity"
-            android:theme="@style/StepikTheme.Onboarding" />
+            android:theme="@style/AppTheme.Onboarding" />
 
         <activity
             android:name="org.stepik.android.view.auth.ui.activity.SocialAuthActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -88,13 +87,11 @@
 
         <activity
             android:name="org.stepik.android.view.auth.ui.activity.RegistrationActivity"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name="org.stepik.android.view.auth.ui.activity.CredentialAuthActivity"
             android:launchMode="singleTop"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -202,16 +199,13 @@
         <activity android:name=".ui.activities.TagActivity" />
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveCourseActivity"
-            android:theme="@style/Adaptive" />
+            android:name=".adaptive.ui.activities.AdaptiveCourseActivity" />
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveOnboardingActivity"
-            android:theme="@style/Adaptive" />
+            android:name=".adaptive.ui.activities.AdaptiveOnboardingActivity" />
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveStatsActivity"
-            android:theme="@style/Adaptive.White" />
+            android:name=".adaptive.ui.activities.AdaptiveStatsActivity" />
 
         <activity
             android:name="org.stepik.android.view.achievement.ui.activity.AchievementsListActivity" />

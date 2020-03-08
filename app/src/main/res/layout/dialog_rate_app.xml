@@ -53,8 +53,8 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            style="@style/Button.Borderless"
-            android:theme="@style/AppTheme.Brown"
+            style="@style/Widget.AppTheme.Button.TextButton"
+            android:theme="@style/ThemeOverlay.Brown"
             android:text="@string/rate_dialog_later" />
 
         <include
@@ -67,8 +67,8 @@
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
-            style="@style/Button.Borderless"
-            android:theme="@style/AppTheme.Brown"
+            style="@style/Widget.AppTheme.Button.TextButton"
+            android:theme="@style/ThemeOverlay.Brown"
             tools:text="Google Play"/>
     </LinearLayout>
 

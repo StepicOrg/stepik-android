@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:text="@string/clear_cache_title"
-                android:theme="@style/AppTheme.Brown"
+                android:theme="@style/ThemeOverlay.Brown"
                 android:textAppearance="?textAppearanceButton" />
 
             <androidx.appcompat.widget.AppCompatTextView

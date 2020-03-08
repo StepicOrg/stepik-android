@@ -98,8 +98,9 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="4dp"
 
-                android:textSize="14sp"
-                android:textColor="@color/grey03"
+                android:textAppearance="?textAppearanceBody2"
+                android:alpha="?alphaEmphasisMedium"
+
                 android:lineSpacingExtra="1sp"
                 android:ellipsize="end"
 

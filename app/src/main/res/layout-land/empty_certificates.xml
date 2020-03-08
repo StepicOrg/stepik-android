@@ -41,10 +41,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/goToCatalog"
-        style="@style/Button.Outlined"
-        android:theme="@style/AppTheme.Violet"
+        style="?materialButtonOutlinedStyle"
+        android:theme="@style/ThemeOverlay.Violet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/half_padding"

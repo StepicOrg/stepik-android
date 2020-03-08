@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="FilterItem">
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_light</item>
@@ -25,10 +25,9 @@
     </style>
 
     <style name="CatalogItemTitle">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textAppearance">?textAppearanceSubtitle1</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text_color</item>
         <item name="android:layout_marginTop">@dimen/guideline_standard_padding</item>
         <item name="android:layout_marginLeft">@dimen/course_list_side_padding</item>
         <item name="android:layout_marginBottom">20dp</item>
@@ -65,51 +64,5 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:background">@drawable/onboarding_action_background</item>
         <item name="android:layout_marginBottom">@dimen/onboarding_bottom_margin</item>
-    </style>
-
-    <style name="TextAppearance" />
-
-    <style name="TextAppearance.Body1">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:letterSpacing" tools:targetApi="lollipop">0.01</item>
-        <item name="android:lineSpacingExtra">7sp</item>
-    </style>
-
-    <style name="TextAppearance.Body2" parent="TextAppearance.Body1">
-        <item name="android:textSize">14sp</item>
-    </style>
-    
-    <style name="TextAppearance.Body2Note" parent="TextAppearance.Body2">
-        <item name="android:textColor">?android:textColorSecondary</item>
-        <item name="android:lineSpacingExtra">6sp</item>
-    </style>
-
-    <style name="TextAppearance.Caption" parent="TextAppearance.Body1">
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="TextAppearance.Subtitle1" parent="TextAppearance.Body1">
-        <item name="fontFamily">@font/roboto_medium</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-    </style>
-
-    <style name="TextAppearance.Subtitle2" parent="TextAppearance.Body2">
-        <item name="fontFamily">@font/roboto_medium</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-    </style>
-
-    <style name="TextAppearance.Headline5" parent="TextAppearance.Body1">
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="TextAppearance.Headline6" parent="TextAppearance.Body1">
-        <item name="android:textSize">20sp</item>
-        <item name="fontFamily">@font/roboto_medium</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-    </style>
-
-    <style name="TextAppearance.Button" parent="TextAppearance.Body1">
-        <item name="android:textColor">@color/color_button_text</item>
     </style>
 </resources>

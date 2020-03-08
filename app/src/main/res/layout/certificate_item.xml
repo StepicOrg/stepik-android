@@ -48,7 +48,8 @@
                 android:layout_toStartOf="@+id/certificate_icon"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:textAppearance="@style/TextAppearance.Body2Note"
+                android:textAppearance="?textAppearanceBody1"
+                android:alpha="?alphaEmphasisMedium"
                 tools:text="Сертификат с отличием за курс Безопасность в интернете"/>
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -62,7 +63,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/certificate_share_button"
-            style="@style/Button.Borderless"
+            style="@style/Widget.AppTheme.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -72,7 +73,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
             android:text="@string/share_title"
-            android:theme="@style/AppTheme.Violet" />
+            android:theme="@style/ThemeOverlay.Violet" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/certificate_grade"
@@ -84,7 +85,8 @@
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/certificate_share_button"
             android:layout_toStartOf="@+id/certificate_share_button"
-            android:textAppearance="@style/TextAppearance.Body2Note"
+            android:textAppearance="?textAppearanceBody1"
+            android:alpha="?alphaEmphasisMedium"
             android:paddingLeft="@dimen/certificate_item_padding"
             android:paddingRight="@dimen/certificate_item_padding"
             tools:text="Результат: 100%"/>

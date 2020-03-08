@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="alphaEmphasisHigh" format="float"/>
+    <attr name="alphaEmphasisMedium" format="float"/>
+    <attr name="alphaEmphasisDisabled" format="float"/>
+
+
     <attr name="colorSecondaryDark" format="color|reference" />
-    <attr name="colorOnSecondary" format="color|reference" />
 
     <attr name="dividerVerticalColor" format="color|reference" />
     <attr name="dividerVerticalSize" format="dimension|reference" />

@@ -65,8 +65,8 @@
                 android:text="@string/sign_in_with_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.Brown"
-                style="@style/Button.Borderless"
+                android:theme="@style/ThemeOverlay.Brown"
+                style="@style/Widget.AppTheme.Button.TextButton"
                 android:layout_gravity="start|center_vertical" />
 
             <Button
@@ -75,8 +75,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
-                android:theme="@style/AppTheme.Brown"
-                style="@style/Button.Borderless" />
+                android:theme="@style/ThemeOverlay.Brown"
+                style="@style/Widget.AppTheme.Button.TextButton" />
 
         </FrameLayout>
 
@@ -112,13 +112,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                tools:listitem="@layout/item_social"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                tools:itemCount="3" />
 
             <Button
                 android:id="@+id/showMore"
                 android:text="@string/social_recycler_show_more"
-                style="@style/Button.Borderless"
-                android:theme="@style/AppTheme.Green"
+                style="@style/Widget.AppTheme.Button.TextButton"
+                android:theme="@style/ThemeOverlay.Green"
                 android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -127,9 +130,8 @@
             <Button
                 android:id="@+id/showLess"
                 android:text="@string/social_recycler_show_less"
-                style="@style/Button.Borderless"
-                android:textColor="?colorSecondary"
-                android:theme="@style/AppTheme.Green"
+                style="@style/Widget.AppTheme.Button.TextButton"
+                android:theme="@style/ThemeOverlay.Green"
                 android:layout_width="@dimen/auth_elements_width"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"

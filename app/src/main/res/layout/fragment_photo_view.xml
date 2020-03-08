@@ -42,11 +42,10 @@
 
         <Button
             android:id="@+id/retryButton"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            style="?materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/retry"
-            />
+            android:text="@string/retry" />
 
     </LinearLayout>
 

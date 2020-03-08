@@ -8,7 +8,7 @@
     android:paddingHorizontal="24dp"
     android:paddingVertical="8dp"
     android:textAppearance="?textAppearanceSubtitle2"
-    android:theme="@style/AppTheme.Violet"
+    android:theme="@style/ThemeOverlay.Violet"
     android:textColor="?colorSecondary"
     android:background="?selectableItemBackground"
     tools:drawableStart="@drawable/ic_profile_web"

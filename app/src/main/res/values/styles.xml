@@ -1,101 +1,102 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="StepikTheme" parent="StepikTheme.15" />
+    <style name="StepikTheme" />
+<!--        parent="StepikTheme.15"-->
 
-    <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/new_primary_color</item>
-        <item name="colorPrimaryDark">@color/new_accent_color</item>
-        <item name="colorAccent">@color/new_accent_color</item>
-        <item name="colorSecondary">@color/green01</item>
-        <item name="colorSecondaryDark">@color/green03</item>
+<!--    <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light.NoActionBar">-->
+<!--        <item name="colorPrimary">@color/new_primary_color</item>-->
+<!--        <item name="colorPrimaryDark">@color/new_accent_color</item>-->
+<!--        <item name="colorAccent">@color/new_accent_color</item>-->
+<!--        <item name="colorSecondary">@color/green01</item>-->
+<!--        <item name="colorSecondaryDark">@color/green03</item>-->
 
-        <!--this change the background of main window (activity)-->
-        <item name="android:windowBackground">@color/white</item>
+<!--        &lt;!&ndash;this change the background of main window (activity)&ndash;&gt;-->
+<!--        <item name="android:windowBackground">@color/white</item>-->
 
-        <!--this change the background of main window (activity and) AND all the components (dialogs) -->
-        <item name="android:colorBackground">@color/new_cover</item>
+<!--        &lt;!&ndash;this change the background of main window (activity and) AND all the components (dialogs) &ndash;&gt;-->
+<!--        <item name="android:colorBackground">@color/new_cover</item>-->
 
-        <item name="android:textColorPrimary">@color/text_color</item>
-        <item name="android:textColorSecondary">@color/grey02</item>
+<!--        <item name="android:textColorPrimary">@color/text_color</item>-->
+<!--        <item name="android:textColorSecondary">@color/grey02</item>-->
 
-        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:textAppearance">?textAppearanceBody1</item>
-        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
-        <item name="dialogTheme">@style/AppTheme.Dialog</item>
-        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+<!--        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:actionMenuTextColor">@color/white</item>-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="android:textAppearance">?textAppearanceBody1</item>-->
+<!--        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>-->
+<!--        <item name="dialogTheme">@style/AppTheme.Dialog</item>-->
+<!--        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>-->
+<!--        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>-->
+<!--        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>-->
 
-        <item name="colorSwitchThumbNormal">#D8D8D8</item>
-        <item name="android:colorForeground">#c7c7c7</item>
+<!--        <item name="colorSwitchThumbNormal">#D8D8D8</item>-->
+<!--        <item name="android:colorForeground">#c7c7c7</item>-->
 
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+<!--        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>-->
 
-        <!--color of back button and overflow-->
-        <item name="colorControlNormal">@color/new_accent_color</item>
+<!--        &lt;!&ndash;color of back button and overflow&ndash;&gt;-->
+<!--        <item name="colorControlNormal">@color/new_accent_color</item>-->
 
-        <!--For setting text color to edit text (android O)-->
-        <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>
+<!--        &lt;!&ndash;For setting text color to edit text (android O)&ndash;&gt;-->
+<!--        <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>-->
 
-        <item name="searchViewStyle">@style/SearchViewStyle</item>
-        <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
+<!--        <item name="searchViewStyle">@style/SearchViewStyle</item>-->
+<!--        <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>-->
 
-        <item name="dividerVertical">@drawable/bg_divider_vertical</item>
-        <item name="dividerVerticalSize">1dp</item>
-        <item name="dividerVerticalColor">@color/grey04</item>
-        <item name="colorOnSecondary">@color/white</item>
+<!--        <item name="dividerVertical">@drawable/bg_divider_vertical</item>-->
+<!--        <item name="dividerVerticalSize">1dp</item>-->
+<!--        <item name="dividerVerticalColor">@color/grey04</item>-->
+<!--        <item name="colorOnSecondary">@color/white</item>-->
 
-        <item name="buttonCornerRadius">@dimen/button_corner_radius</item>
-        <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
+<!--        <item name="buttonCornerRadius">@dimen/button_corner_radius</item>-->
+<!--        <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>-->
 
-        <item name="buttonStyle">@style/Button</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-        <item name="android:textColorLink">?colorAccent</item>
+<!--        <item name="buttonStyle">@style/Button</item>-->
+<!--        <item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
+<!--        <item name="android:textColorLink">?colorAccent</item>-->
 
-        <item name="textAppearanceBody1">@style/TextAppearance.Body1</item>
-        <item name="textAppearanceBody2">@style/TextAppearance.Body2</item>
-        <item name="textAppearanceCaption">@style/TextAppearance.Caption</item>
-        <item name="textAppearanceSubtitle1">@style/TextAppearance.Subtitle1</item>
-        <item name="textAppearanceSubtitle2">@style/TextAppearance.Subtitle2</item>
-        <item name="textAppearanceHeadline5">@style/TextAppearance.Headline5</item>
-        <item name="textAppearanceHeadline6">@style/TextAppearance.Headline6</item>
-    </style>
+<!--        <item name="textAppearanceBody1">@style/TextAppearance.Body1</item>-->
+<!--        <item name="textAppearanceBody2">@style/TextAppearance.Body2</item>-->
+<!--        <item name="textAppearanceCaption">@style/TextAppearance.Caption</item>-->
+<!--        <item name="textAppearanceSubtitle1">@style/TextAppearance.Subtitle1</item>-->
+<!--        <item name="textAppearanceSubtitle2">@style/TextAppearance.Subtitle2</item>-->
+<!--        <item name="textAppearanceHeadline5">@style/TextAppearance.Headline5</item>-->
+<!--        <item name="textAppearanceHeadline6">@style/TextAppearance.Headline6</item>-->
+<!--    </style>-->
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_action_more_vert</item>
     </style>
 
-    <style name="AppTheme" parent="AppTheme.15" />
+<!--    <style name="AppTheme" parent="AppTheme.15" />-->
 
-    <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/green01</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/new_accent_color</item>
+<!--    <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">-->
+<!--        <item name="colorPrimary">@color/green01</item>-->
+<!--        <item name="colorPrimaryDark">@color/black</item>-->
+<!--        <item name="colorAccent">@color/new_accent_color</item>-->
 
-        <item name="android:textColorPrimary">@color/new_accent_color</item>
-        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:textAppearance">?textAppearanceBody1</item>
-        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
-        <item name="dialogTheme">@style/AppTheme.Dialog</item>
-        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+<!--        <item name="android:textColorPrimary">@color/new_accent_color</item>-->
+<!--        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+<!--        <item name="android:actionMenuTextColor">@color/white</item>-->
+<!--        <item name="windowActionBar">false</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="android:textAppearance">?textAppearanceBody1</item>-->
+<!--        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>-->
+<!--        <item name="dialogTheme">@style/AppTheme.Dialog</item>-->
+<!--        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>-->
+<!--        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>-->
+<!--        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>-->
 
-        <item name="colorSwitchThumbNormal">#D8D8D8</item>
-        <item name="android:colorForeground">#c7c7c7</item>
+<!--        <item name="colorSwitchThumbNormal">#D8D8D8</item>-->
+<!--        <item name="android:colorForeground">#c7c7c7</item>-->
 
-        <item name="buttonStyle">@style/Button</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
-        <item name="textAppearanceBody1">@style/TextAppearance.Body1</item>
-    </style>
+<!--        <item name="buttonStyle">@style/Button</item>-->
+<!--        <item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
+<!--        <item name="textAppearanceBody1">@style/TextAppearance.Body1</item>-->
+<!--    </style>-->
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
@@ -110,7 +111,7 @@
         <item name="android:windowBackground">@drawable/branded_logo</item>
     </style>
 
-    <style name="StepikTheme.Onboarding">
+    <style name="AppTheme.Onboarding">
         <item name="android:windowBackground">@drawable/onboarding_background</item>
     </style>
 
@@ -140,8 +141,8 @@
         <item name="colorSecondaryDark">@color/green03</item>
         <item name="colorOnSecondary">@color/white</item>
 
-        <item name="buttonStyle">@style/Button</item>
-        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
+        <item name="buttonStyle">@style/Widget.AppTheme.Button</item>
+<!--        <item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
 
         <item name="colorAccent">@color/green01</item>
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
@@ -159,7 +160,7 @@
         <item name="colorPrimary">@color/new_accent_color</item>
         <item name="colorOnSecondary">@color/violet1</item>
         <item name="dialogCornerRadius">@dimen/button_corner_radius</item>
-        <item name="buttonBarButtonStyle">@style/Button.Borderless</item>
+        <item name="buttonBarButtonStyle">@style/Widget.AppTheme.Button.TextButton</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
@@ -206,8 +207,8 @@
         <item name="android:gravity">center</item>
     </style>
     
-    <style name="PlaceholderButton" parent="Button.Outlined">
-        <item name="android:theme">@style/AppTheme.Violet</item>
+    <style name="PlaceholderButton" parent="Widget.AppTheme.Button">
+        <item name="android:theme">@style/ThemeOverlay.Violet</item>
         <item name="backgroundTint">?android:textColorSecondary</item>
     </style>
 
@@ -481,25 +482,20 @@
         <item name="fontFamily">@font/roboto_light</item>
     </style>
 
-    <style name="Button" parent="@style/Widget.AppCompat.Button">
-        <item name="android:textAppearance">?textAppearanceButton</item>
+    <style name="Widget.AppTheme.Button" parent="@style/Widget.MaterialComponents.Button">
         <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>
-        <item name="drawableTint">@color/color_button_text</item>
-        <item name="drawableTintMode">src_in</item>
-
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-
-        <item name="android:background">@drawable/bg_button</item>
-        <item name="backgroundTint">@color/color_button_background_tint</item>
-        <item name="backgroundTintMode">src_in</item>
+        <item name="elevation">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
-    <style name="Button.Borderless">
-        <item name="android:background">?selectableItemBackgroundRounded</item>
+    <style name="Widget.AppTheme.Button.TextButton" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 
-    <style name="Button.Outlined">
-        <item name="android:background">@drawable/bg_button_outlined</item>
+    <style name="Widget.AppTheme.Button.OutlinedButton" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
     </style>
 </resources>

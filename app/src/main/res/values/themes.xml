@@ -1,21 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="AppTheme.Brown">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!--Material color attributes -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_variant</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorSecondaryVariant">@color/color_secondary_variant</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+
+        <!--Material type attributes-->
+        <item name="textAppearanceButton">@style/TextAppearance.AppTheme.Button</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.AppTheme.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.AppTheme.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.AppTheme.Caption</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.AppTheme.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.AppTheme.Subtitle2</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.AppTheme.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.AppTheme.Headline6</item>
+
+        <!--Material shape attributes-->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.AppTheme.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.AppTheme.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.AppTheme.LargeComponent</item>
+
+        <item name="alphaEmphasisHigh">@dimen/material_emphasis_high_type</item>
+        <item name="alphaEmphasisMedium">@dimen/material_emphasis_medium</item>
+        <item name="alphaEmphasisDisabled">@dimen/material_emphasis_disabled</item>
+
+        <item name="android:statusBarColor" tools:targetApi="lollipop">?colorPrimary</item>
+
+        <!--Component styles-->
+        <item name="materialButtonStyle">@style/Widget.AppTheme.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.AppTheme.Button.OutlinedButton</item>
+    </style>
+
+    <style name="AppTheme" parent="Base.AppTheme" />
+
+    <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">
         <item name="colorOnSecondary">@color/new_accent_color</item>
         <item name="colorSecondary">@color/new_accent_color</item>
         <item name="colorSecondaryDark">@color/black2</item>
     </style>
 
-    <style name="AppTheme.Green">
-        <item name="colorOnSecondary">@color/green01</item>
-        <item name="colorSecondary">@color/green01</item>
-        <item name="colorSecondaryDark">@color/green03</item>
+    <style name="ThemeOverlay.Green" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorPrimary">@color/green01</item>
+        <item name="colorOnSurface">@color/green01</item>
     </style>
 
-    <style name="AppTheme.Violet">
-        <item name="colorOnSecondary">@color/violet1</item>
-        <item name="colorSecondary">@color/violet1</item>
-        <item name="colorSecondaryDark">@color/violet3</item>
-        <item name="colorControlHighlight">@color/violet1</item>
+    <style name="ThemeOverlay.Violet" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorPrimary">@color/violet1</item>
     </style>
 </resources>
