@@ -5,21 +5,25 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
+    android:paddingLeft="@dimen/settings_offset_horizontal"
+    android:paddingRight="@dimen/settings_offset_horizontal"
+    android:paddingTop="@dimen/settings_offset_vertical"
+    android:paddingBottom="@dimen/settings_offset_vertical"
     android:background="?selectableItemBackground">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.Body1"
+        android:textAppearance="?textAppearanceBody1"
         tools:text="Title" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.Body2Note"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         tools:text="Subtitle" />
 
 </LinearLayout>

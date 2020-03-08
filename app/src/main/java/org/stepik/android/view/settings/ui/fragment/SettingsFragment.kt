@@ -1,10 +1,9 @@
 package org.stepik.android.view.settings.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.facebook.login.LoginManager
@@ -13,7 +12,9 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.base.FragmentBase
+import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
 import org.stepic.droid.ui.dialogs.CoursesLangDialog
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -27,12 +28,11 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class SettingsFragment :
-    FragmentBase(),
+    Fragment(R.layout.fragment_settings),
     AllowMobileDataDialogFragment.Callback,
     LogoutAreYouSureDialog.Companion.OnLogoutSuccessListener,
     SettingsView {
     companion object {
-
         fun newInstance(): SettingsFragment =
             SettingsFragment()
     }
@@ -41,6 +41,18 @@ class SettingsFragment :
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
+
+    @Inject
+    internal lateinit var analytic: Analytic
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var userPreferences: UserPreferences
+
+    @Inject
+    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -53,9 +65,6 @@ class SettingsFragment :
             .of(this, viewModelFactory)
             .get(SettingsPresenter::class.java)
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_settings, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -157,7 +166,7 @@ class SettingsFragment :
         }
     }
 
-    override fun injectComponent() {
+    private fun injectComponent() {
         App.component()
             .settingsComponentBuilder()
             .build()

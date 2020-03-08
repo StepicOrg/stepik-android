@@ -3,16 +3,14 @@ package org.stepic.droid.ui.fragments
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_space_management.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.StoreManagementPresenter
 import org.stepic.droid.core.presenters.contracts.StoreManagementView
 import org.stepic.droid.persistence.model.StorageLocation
@@ -23,9 +21,10 @@ import org.stepic.droid.ui.dialogs.MovingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.TextUtil
+import org.stepik.android.view.settings.mapper.StorageLocationDescriptionMapper
 import javax.inject.Inject
 
-class StoreManagementFragment : FragmentBase(), StoreManagementView {
+class StoreManagementFragment : Fragment(R.layout.fragment_space_management), StoreManagementView {
     companion object {
         private const val LOADING_TAG = "loading_store_management"
 
@@ -37,14 +36,22 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView {
     private var loadingProgressDialogFragment: DialogFragment? = null
 
     @Inject
-    lateinit var storeManagementPresenter: StoreManagementPresenter
+    internal lateinit var analytic: Analytic
 
-    override fun injectComponent() {
-        App.component().inject(this)
+    @Inject
+    internal lateinit var storeManagementPresenter: StoreManagementPresenter
+
+    @Inject
+    internal lateinit var storageLocationDescriptionMapper: StorageLocationDescriptionMapper
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        injectComponent()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_space_management, container, false)
+    private fun injectComponent() {
+        App.component().inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -74,7 +81,7 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView {
         chooseStorageButton.visibility = View.GONE
     }
 
-    override fun setStorageOptions(options: List<StorageLocation>) {
+    override fun setStorageOptions(options: List<StorageLocation>, selectedOption: StorageLocation?) {
         when {
             options.size > 1 -> {
                 notMountExplanation.visibility = View.GONE
@@ -86,6 +93,12 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView {
                     if (!chooseStorageDialog.isAdded) {
                         chooseStorageDialog.show(requireFragmentManager(), null)
                     }
+                }
+
+                userStorageInfo.isVisible = selectedOption != null
+                if (selectedOption != null) {
+                    userStorageInfo.text =
+                        storageLocationDescriptionMapper.mapToDescription(options.indexOf(selectedOption), selectedOption)
                 }
             }
 
@@ -138,15 +151,17 @@ class StoreManagementFragment : FragmentBase(), StoreManagementView {
         ProgressHelper.dismiss(fragmentManager, LOADING_TAG)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) = when {
-        requestCode == ClearVideosDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
-            storeManagementPresenter.removeAllDownloads()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        when {
+            requestCode == ClearVideosDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
+                storeManagementPresenter.removeAllDownloads()
 
-        requestCode == WantMoveDataDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
-            data?.getParcelableExtra<StorageLocation>(WantMoveDataDialog.EXTRA_LOCATION)
-                    ?.let(storeManagementPresenter::changeStorageLocation) ?: Unit
+            requestCode == WantMoveDataDialog.REQUEST_CODE && resultCode == Activity.RESULT_OK ->
+                data?.getParcelableExtra<StorageLocation>(WantMoveDataDialog.EXTRA_LOCATION)
+                    ?.let(storeManagementPresenter::changeStorageLocation)
 
-        else ->
-            super.onActivityResult(requestCode, resultCode, data)
+            else ->
+                super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 }

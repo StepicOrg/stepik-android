@@ -27,7 +27,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import javax.inject.Inject
 
-class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
+class ProfileEditActivity : AppCompatActivity(R.layout.activity_profile_edit), ProfileEditView {
     companion object {
         fun createIntent(context: Context): Intent =
             Intent(context, ProfileEditActivity::class.java)
@@ -49,7 +49,6 @@ class ProfileEditActivity : AppCompatActivity(), ProfileEditView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profile_edit)
         injectComponent()
         profileEditPresenter = ViewModelProviders
             .of(this, viewModelFactory)
