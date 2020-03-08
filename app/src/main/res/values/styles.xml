@@ -55,6 +55,7 @@
         <item name="buttonStyle">@style/Button</item>
         <item name="textAppearanceButton">@style/ButtonTextAppearance</item>
         <item name="android:textColorLink">?colorAccent</item>
+
     </style>
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -546,9 +547,9 @@
         <item name="android:background">?selectableItemBackgroundRounded</item>
     </style>
 
-    <style name="Button.Stroke">
-        <item name="android:background">@drawable/bg_button_stroke</item>
-        <item name="backgroundTint">?colorSecondary</item>
+    <style name="Button.Outlined">
+        <item name="android:background">@drawable/bg_button_outlined</item>
+        <item name="backgroundTintMode">src_in</item>
     </style>
 
     <style name="ButtonTextAppearance" parent="body1">

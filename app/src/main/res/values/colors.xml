@@ -103,9 +103,6 @@
     <color name="onboarding_action">@color/white_color_alpha_20</color>
     <color name="launcher_background">@color/black</color>
 
-    <color name="light_rounded_button_color">@color/new_accent_color_alpha_5</color>
-    <color name="light_rounded_pressed_color">@color/black1_alpha_19</color>
-
     <!-- Design system -->
     <color name="grey01">#5E5E5E</color>
 
