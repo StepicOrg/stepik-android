@@ -99,6 +99,10 @@
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>
 
+    <style name="TextAppearance.Headline5" parent="TextAppearance.Body1">
+        <item name="android:textSize">24sp</item>
+    </style>
+
     <style name="TextAppearance.Headline6" parent="TextAppearance.Body1">
         <item name="android:textSize">20sp</item>
         <item name="fontFamily">@font/roboto_medium</item>

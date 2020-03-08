@@ -61,6 +61,7 @@
         <item name="textAppearanceCaption">@style/TextAppearance.Caption</item>
         <item name="textAppearanceSubtitle1">@style/TextAppearance.Subtitle1</item>
         <item name="textAppearanceSubtitle2">@style/TextAppearance.Subtitle2</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.Headline5</item>
         <item name="textAppearanceHeadline6">@style/TextAppearance.Headline6</item>
     </style>
 
@@ -237,12 +238,7 @@
         <item name="android:paddingHorizontal">24dp</item>
     </style>
 
-    <style name="SettingCardStyle">
-        <item name="android:layout_marginBottom">@dimen/card_bottom_margin</item>
-    </style>
-
     <style name="SettingCompoundButton">
-        <item name="android:textSize">@dimen/text_header</item>
         <item name="android:layout_marginLeft">@dimen/guideline_standard_padding</item>
         <item name="android:layout_marginRight">@dimen/guideline_standard_padding</item>
         <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>

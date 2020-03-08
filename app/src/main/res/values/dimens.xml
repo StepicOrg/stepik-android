@@ -8,8 +8,6 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="play_pause_button_size">72dp</dimen>
     <dimen name="custom_peek_height">500dp</dimen>
-    <dimen name="card_corner_radius_guideline">2dp</dimen>
-    <dimen name="text_header">16sp</dimen>
     <dimen name="guideline_tab_indicator_height">2dp</dimen>
     <dimen name="height_of_social">@dimen/min_ux_touchable_size</dimen>
     <dimen name="min_max_width_for_tablets">316dp</dimen>
@@ -17,31 +15,13 @@
     <dimen name="half_padding">8dp</dimen>
     <dimen name="padding_text_in_cv">16dp</dimen>
     <dimen name="padding_left_right_list_item">16dp</dimen>
-    <dimen name="text_size_title">24sp</dimen>
     <dimen name="min_ux_touchable_size">48dp</dimen>
     <dimen name="code_toolbar_height">@dimen/min_ux_touchable_size</dimen>
     <dimen name="padding_registration_left_right">36dp</dimen>
-    <dimen name="margin_from_image_in_items">8dp</dimen>
-    <dimen name="attempt_padding">8dp</dimen>
-    <dimen name="drawable_padding">2dp</dimen>
     <dimen name="feedback_button_length">200dp</dimen>
-    <dimen name="feedback_textsize">16sp</dimen>
-    <dimen name="button_padding">6dp</dimen>
     <dimen name="seekbar_video_margin">8dp</dimen>
     <dimen name="thumb_size">18dp</dimen>
-    <dimen name="height_of_small_button">36dp</dimen>
-    <dimen name="margin_leftRight_comment_depend_on_reply_margin">8dp</dimen>
-    <dimen name="padding_for_circle_image">4dp</dimen>
-    <dimen name="avatar_size_depend_on_reply_margin">48dp</dimen>
-    <dimen name="reply_margin">64dp</dimen>
-    <dimen name="comment_content_padding_top">4dp</dimen>
-    <dimen name="avatar_size_reply">40dp</dimen>
-    <dimen name="right_padding_comments">8dp</dimen>
-    <dimen name="bot_padding_name">4dp</dimen>
-    <dimen name="name_size_comments">14sp</dimen>
-    <dimen name="left_padding_name_comments">0dp</dimen>
     <dimen name="margin_option_top_bot">4dp</dimen>
-    <dimen name="height_image_comment_state">16dp</dimen>
     <dimen name="certificate_image_size">80dp</dimen>
     <dimen name="share_item_padding">16dp</dimen>
     <dimen name="text_size_placeholders">16sp</dimen>
@@ -49,31 +29,19 @@
     <dimen name="padding_placeholders">16dp</dimen>
 
     <dimen name="guideline_standard_padding">16dp</dimen>
-    <dimen name="card_bottom_margin">10dp</dimen>
-    <dimen name="stepik_text_size_in_button">14sp</dimen>
     <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
     <dimen name="onePx">1px</dimen>
-    <dimen name="table_cell_fixed_height">96dp</dimen>
 
     <dimen name="rewind_size">48dp</dimen>
     <dimen name="margin_rewind">56dp</dimen>
 
     <dimen name="default_dialog_elements_margin">16dp</dimen>
     <dimen name="rate_dialog_button_text_size">16sp</dimen>
-    <dimen name="profile_round_rectangle_radius">16dp</dimen>
 
     <!--width should be 2 time greater than height-->
     <dimen name="arrow_profile_width">16dp</dimen>
     <dimen name="arrow_profile_height">8dp</dimen>
 
-    <!--Profile specific-->
-    <dimen name="main_profile_avatar_size">100dp</dimen>
-    <dimen name="main_profile_avatar_half_size">50dp</dimen>
-    <dimen name="left_right_margin_in_profile">32dp</dimen>
-    <!--should be smaller than left right margin a bit-->
-    <dimen name="right_margin_switch">28dp</dimen>
-    <dimen name="profile_panel_top_margin">28dp</dimen>
-    <dimen name="text_big_header">22sp</dimen>
     <dimen name="bottom_navigation_height">56dp</dimen>
 
     <!--new course item-->

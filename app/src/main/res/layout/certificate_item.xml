@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:foreground="@drawable/card_foreground"
+    android:foreground="?selectableItemBackgroundRounded"
+    app:cardCornerRadius="?buttonCornerRadius"
     app:cardBackgroundColor="@color/white"
     app:cardUseCompatPadding="true">
 
@@ -25,7 +25,7 @@
             android:paddingStart="@dimen/padding_text_in_cv"
             android:paddingTop="@dimen/padding_text_in_cv">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/certificate_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,10 +35,10 @@
                 android:ellipsize="end"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:textSize="@dimen/text_size_title"
+                android:textAppearance="?textAppearanceHeadline5"
                 tools:text="Программирование на Python"/>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/certificate_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,11 +48,10 @@
                 android:layout_toStartOf="@+id/certificate_icon"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:textColor="?android:textColorSecondary"
-                android:textSize="14sp"
+                android:textAppearance="@style/TextAppearance.Body2Note"
                 tools:text="Сертификат с отличием за курс Безопасность в интернете"/>
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/certificate_icon"
                 android:layout_width="@dimen/certificate_image_size"
                 android:layout_height="@dimen/certificate_image_size"
@@ -61,9 +60,9 @@
                 tools:src="@drawable/general_placeholder"/>
         </RelativeLayout>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/certificate_share_button"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Button.Borderless"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -71,15 +70,11 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/abc_btn_borderless_material"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
             android:text="@string/share_title"
-            android:textColor="@color/violet1"/>
+            android:theme="@style/AppTheme.Violet" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/certificate_grade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,11 +84,9 @@
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/certificate_share_button"
             android:layout_toStartOf="@+id/certificate_share_button"
-            android:paddingEnd="@dimen/padding_text_in_cv"
+            android:textAppearance="@style/TextAppearance.Body2Note"
             android:paddingLeft="@dimen/padding_text_in_cv"
             android:paddingRight="@dimen/padding_text_in_cv"
-            android:paddingStart="@dimen/padding_text_in_cv"
-            android:textSize="14sp"
             tools:text="Результат: 100%"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
