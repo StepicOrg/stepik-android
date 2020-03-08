@@ -81,7 +81,6 @@
     </style>
     
     <style name="TextAppearance.Body2Note" parent="TextAppearance.Body2">
-        <item name="android:textSize">14sp</item>
         <item name="android:textColor">?android:textColorSecondary</item>
         <item name="android:lineSpacingExtra">6sp</item>
     </style>

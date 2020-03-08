@@ -230,10 +230,11 @@
     </style>
 
     <style name="SettingHeaderTextView">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textAppearance">?textAppearanceSubtitle2</item>
         <item name="android:textColor">@color/violet1</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
-        <item name="android:padding">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingHorizontal">24dp</item>
     </style>
 
     <style name="SettingCardStyle">
@@ -251,22 +252,13 @@
     </style>
 
     <style name="SettingSwitch">
-        <item name="android:textSize">@dimen/text_header</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
-    </style>
+        <item name="android:textAppearance">?textAppearanceBody1</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+        <item name="switchTextAppearance">?textAppearanceBody1</item>
+        <item name="android:switchTextAppearance">?textAppearanceBody1</item>
 
-    <style name="NewSettingSwitch">
-        <item name="android:textColor">@color/new_accent_color</item>
-        <item name="android:textSize">@dimen/text_header</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
+        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:paddingVertical">12dp</item>
     </style>
 
     <style name="LoginEditFields">
@@ -520,10 +512,6 @@
     <style name="CourseReviewSummaryCountTitle">
         <item name="android:textSize">12sp</item>
         <item name="fontFamily">@font/roboto_light</item>
-    </style>
-
-    <style name="Settings" parent="@style/StepikTheme">
-        <item name="android:windowBackground">@color/grey04</item>
     </style>
 
     <style name="Button" parent="@style/Widget.AppCompat.Button">
