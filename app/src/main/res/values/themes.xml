@@ -41,6 +41,11 @@
         <!--Component styles-->
         <item name="materialButtonStyle">@style/Widget.AppTheme.Button</item>
         <item name="materialButtonOutlinedStyle">@style/Widget.AppTheme.Button.OutlinedButton</item>
+        <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
+
+        <!-- Inner components parameters -->
+        <item name="dividerVerticalSize">1dp</item>
+        <item name="dividerVertical">@drawable/bg_divider_vertical</item>
     </style>
 
     <style name="AppTheme" parent="Base.AppTheme" />
@@ -58,5 +63,6 @@
 
     <style name="ThemeOverlay.Violet" parent="ThemeOverlay.MaterialComponents">
         <item name="colorPrimary">@color/violet1</item>
+        <item name="colorOnSurface">@color/violet1</item>
     </style>
 </resources>
