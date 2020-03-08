@@ -17,7 +17,9 @@
         <item name="colorOnSurface">@color/color_on_surface</item>
         <item name="colorOnError">@color/color_on_error</item>
 
+        <!--Text colors -->
         <item name="android:textColorPrimary">?colorOnSurface</item>
+        <item name="android:textColorLink">?colorSecondary</item>
 
         <!--Material type attributes-->
         <item name="textAppearanceButton">@style/TextAppearance.AppTheme.Button</item>
@@ -61,6 +63,10 @@
     <style name="ThemeOverlay.Green" parent="ThemeOverlay.MaterialComponents">
         <item name="colorPrimary">@color/green01</item>
         <item name="colorOnSurface">@color/green01</item>
+    </style>
+
+    <style name="ThemeOverlay.Secondary.Green" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorSecondary">@color/green01</item>
     </style>
 
     <style name="ThemeOverlay.Violet" parent="ThemeOverlay.MaterialComponents">
