@@ -257,16 +257,15 @@
         <item name="android:paddingBottom">@dimen/settings_offset_vertical</item>
     </style>
 
-    <style name="LoginEditFields">
+    <style name="LoginEditFields" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">24dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/new_accent_color</item>
+        <item name="android:textAppearance">?textAppearanceBody1</item>
         <item name="android:maxLength">100</item>
         <item name="android:maxLines">1</item>
+        <item name="hintEnabled">true</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:textCursorDrawable">@null</item>
     </style>
 
     <style name="CourseWidgetView" parent="android:Widget.Holo.Light.TextView">
