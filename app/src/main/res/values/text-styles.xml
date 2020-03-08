@@ -82,12 +82,20 @@
     
     <style name="TextAppearance.Body2Note" parent="TextAppearance.Body2">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/color_body2_note</item>
-        <item name="android:letterSpacing" tools:targetApi="lollipop">0.02</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
         <item name="android:lineSpacingExtra">6sp</item>
     </style>
 
+    <style name="TextAppearance.Caption" parent="TextAppearance.Body1">
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="TextAppearance.Subtitle1" parent="TextAppearance.Body1">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="TextAppearance.Subtitle2" parent="TextAppearance.Body2">
         <item name="fontFamily">@font/roboto_medium</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
     </style>

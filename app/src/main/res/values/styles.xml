@@ -58,7 +58,9 @@
 
         <item name="textAppearanceBody1">@style/TextAppearance.Body1</item>
         <item name="textAppearanceBody2">@style/TextAppearance.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.Caption</item>
         <item name="textAppearanceSubtitle1">@style/TextAppearance.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.Subtitle2</item>
         <item name="textAppearanceHeadline6">@style/TextAppearance.Headline6</item>
     </style>
 
@@ -496,10 +498,7 @@
 
     <style name="ProfileStat">
 <!--        <item name="android:background">@drawable/bg_rounded_selectable_item</item>--> <!-- disabled during analytics study -->
-        <item name="android:textColor">@color/new_accent_color</item>
-        <item name="fontFamily">@font/roboto</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textAppearance">?textAppearanceCaption</item>
         <item name="android:padding">8dp</item>
         <item name="android:drawablePadding">8dp</item>
     </style>
