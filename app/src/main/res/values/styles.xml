@@ -53,9 +53,13 @@
         <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
 
         <item name="buttonStyle">@style/Button</item>
-        <item name="textAppearanceButton">@style/ButtonTextAppearance</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
         <item name="android:textColorLink">?colorAccent</item>
 
+        <item name="textAppearanceBody1">@style/TextAppearance.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.Body2</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.Subtitle1</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.Headline6</item>
     </style>
 
     <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -86,7 +90,7 @@
         <item name="android:colorForeground">#c7c7c7</item>
 
         <item name="buttonStyle">@style/Button</item>
-        <item name="textAppearanceButton">@style/ButtonTextAppearance</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
@@ -133,7 +137,7 @@
         <item name="colorOnSecondary">@color/white</item>
 
         <item name="buttonStyle">@style/Button</item>
-        <item name="textAppearanceButton">@style/ButtonTextAppearance</item>
+        <item name="textAppearanceButton">@style/TextAppearance.Button</item>
 
         <item name="colorAccent">@color/green01</item>
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
@@ -178,7 +182,7 @@
     </style>
 
     <style name="AppTheme.Widget.TextView" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:fontFamily">@font/roboto_regular</item>
+<!--        <item name="android:fontFamily">@font/roboto_regular</item>-->
     </style>
 
     <style name="BottomSheetShareItem">
@@ -549,10 +553,5 @@
 
     <style name="Button.Outlined">
         <item name="android:background">@drawable/bg_button_outlined</item>
-        <item name="backgroundTintMode">src_in</item>
-    </style>
-
-    <style name="ButtonTextAppearance" parent="body1">
-        <item name="android:textColor">@color/color_button_text</item>
     </style>
 </resources>

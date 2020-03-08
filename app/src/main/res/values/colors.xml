@@ -207,7 +207,7 @@
 
     <color name="colorRadioButtonDefault">@color/grey03</color>
 
-    <color name="placeholder_button_pressed_color">@color/light_rounded_pressed_color</color>
+    <color name="placeholder_button_pressed_color">@color/grey04</color>
     <color name="placeholder_button_stroke_color">@color/grey03</color>
 
 

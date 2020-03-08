@@ -66,22 +66,39 @@
         <item name="android:background">@drawable/onboarding_action_background</item>
         <item name="android:layout_marginBottom">@dimen/onboarding_bottom_margin</item>
     </style>
-    
-    <style name="body1">
+
+    <style name="TextAppearance" />
+
+    <style name="TextAppearance.Body1">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">?android:textColorPrimary</item>
         <item name="android:letterSpacing" tools:targetApi="lollipop">0.02</item>
         <item name="android:lineSpacingExtra">7sp</item>
     </style>
 
-    <style name="body2" parent="body1">
+    <style name="TextAppearance.Body2" parent="TextAppearance.Body1">
         <item name="android:textSize">14sp</item>
     </style>
     
-    <style name="body2_note">
+    <style name="TextAppearance.Body2Note" parent="TextAppearance.Body2">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/color_body2_note</item>
-        <item name="android:letterSpacing">0.02</item>
+        <item name="android:letterSpacing" tools:targetApi="lollipop">0.02</item>
         <item name="android:lineSpacingExtra">6sp</item>
+    </style>
+
+    <style name="TextAppearance.Subtitle1" parent="TextAppearance.Body1">
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="TextAppearance.Headline6" parent="TextAppearance.Body1">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="TextAppearance.Button" parent="TextAppearance.Body1">
+        <item name="android:textColor">@color/color_button_text</item>
     </style>
 </resources>

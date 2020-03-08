@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:theme="@style/StepikTheme">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/storyCover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -27,19 +29,22 @@
             android:layout_margin="16dp"
             android:padding="16dp">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/storyTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:gravity="start" />
+                android:textAppearance="?textAppearanceHeadline6"
+                android:gravity="start"
+                tools:text="Some title" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/storyText"
                 android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="start" />
+                android:textAppearance="?textAppearanceBody1"
+                android:gravity="start"
+                tools:text="Some text" />
 
         </LinearLayout>
 
@@ -50,8 +55,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:textAllCaps="false"
-            android:foreground="?selectableItemBackground" />
+            tools:text="Button" />
 
     </LinearLayout>
 </FrameLayout>

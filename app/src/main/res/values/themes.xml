@@ -16,5 +16,6 @@
         <item name="colorOnSecondary">@color/violet1</item>
         <item name="colorSecondary">@color/violet1</item>
         <item name="colorSecondaryDark">@color/violet3</item>
+        <item name="colorControlHighlight">@color/violet1</item>
     </style>
 </resources>

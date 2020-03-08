@@ -43,7 +43,8 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/goToCatalog"
-        style="@style/PlaceholderButton"
+        style="@style/Button.Outlined"
+        android:theme="@style/AppTheme.Violet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/half_padding"
