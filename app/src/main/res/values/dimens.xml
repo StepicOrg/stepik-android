@@ -6,24 +6,16 @@
     <dimen name="button_corner_radius">8dp</dimen>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="play_pause_button_size">72dp</dimen>
     <dimen name="custom_peek_height">500dp</dimen>
     <dimen name="guideline_tab_indicator_height">2dp</dimen>
-    <dimen name="height_of_social">@dimen/min_ux_touchable_size</dimen>
-    <dimen name="min_max_width_for_tablets">316dp</dimen>
-    <dimen name="auth_elements_width">-1px</dimen>
     <dimen name="half_padding">8dp</dimen>
-    <dimen name="padding_text_in_cv">16dp</dimen>
     <dimen name="padding_left_right_list_item">16dp</dimen>
     <dimen name="min_ux_touchable_size">48dp</dimen>
     <dimen name="code_toolbar_height">@dimen/min_ux_touchable_size</dimen>
-    <dimen name="padding_registration_left_right">36dp</dimen>
     <dimen name="feedback_button_length">200dp</dimen>
-    <dimen name="seekbar_video_margin">8dp</dimen>
-    <dimen name="thumb_size">18dp</dimen>
     <dimen name="margin_option_top_bot">4dp</dimen>
-    <dimen name="certificate_image_size">80dp</dimen>
     <dimen name="share_item_padding">16dp</dimen>
+
     <dimen name="text_size_placeholders">16sp</dimen>
     <dimen name="placeholders_image_width">180dp</dimen>
     <dimen name="padding_placeholders">16dp</dimen>
@@ -32,15 +24,8 @@
     <dimen name="left_padding_tablayout_scrollable">60dp</dimen>
     <dimen name="onePx">1px</dimen>
 
-    <dimen name="rewind_size">48dp</dimen>
-    <dimen name="margin_rewind">56dp</dimen>
-
     <dimen name="default_dialog_elements_margin">16dp</dimen>
     <dimen name="rate_dialog_button_text_size">16sp</dimen>
-
-    <!--width should be 2 time greater than height-->
-    <dimen name="arrow_profile_width">16dp</dimen>
-    <dimen name="arrow_profile_height">8dp</dimen>
 
     <dimen name="bottom_navigation_height">56dp</dimen>
 
@@ -144,6 +129,17 @@
 
     <dimen name="notification_large_icon_size">64dp</dimen>
 
+    <!-- Auth -->
+    <dimen name="auth_social_item_size">@dimen/min_ux_touchable_size</dimen>
+    <dimen name="auth_elements_width">-1px</dimen>
+    <dimen name="auth_elements_offset">36dp</dimen>
+
+    <!-- Video player -->
+    <dimen name="video_player_play_button_size">72dp</dimen>
+    <dimen name="video_player_seek_bar_margin">8dp</dimen>
+    <dimen name="video_player_seek_bar_thumb_size">18dp</dimen>
+    <dimen name="video_player_rewind_size">48dp</dimen>
+    <dimen name="video_player_rewind_margin">56dp</dimen>
 
     <!-- Course info -->
     <dimen name="course_info_height_expanded">36dp</dimen>
@@ -167,6 +163,10 @@
     <!-- Course reviews -->
     <dimen name="course_review_item_margin">24dp</dimen>
     <dimen name="course_review_item_inner_margin">12dp</dimen>
+
+    <!-- Certificates -->
+    <dimen name="certificate_item_padding">16dp</dimen>
+    <dimen name="certificate_image_size">80dp</dimen>
 
     <!-- Step -->
     <dimen name="step_content_block_radius">8dp</dimen>
@@ -225,6 +225,9 @@
 
     <dimen name="profile_block_margin">24dp</dimen>
     <dimen name="profile_block_vertical_margin">16dp</dimen>
+
+    <dimen name="profile_arrow_width">16dp</dimen>
+    <dimen name="profile_arrow_height">8dp</dimen>
 
     <dimen name="dismiss_path_length">36dp</dimen>
 

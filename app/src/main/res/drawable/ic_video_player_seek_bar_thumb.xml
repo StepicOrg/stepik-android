@@ -4,6 +4,6 @@
     <solid android:color="@color/green01"/>
     <stroke android:color="@color/green01"/>
     <size
-        android:width="@dimen/thumb_size"
-        android:height="@dimen/thumb_size"/>
+        android:width="@dimen/video_player_seek_bar_thumb_size"
+        android:height="@dimen/video_player_seek_bar_thumb_size"/>
 </shape>

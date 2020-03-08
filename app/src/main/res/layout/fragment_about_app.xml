@@ -45,5 +45,5 @@
         android:padding="@dimen/settings_offset_vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:itemCount="3"
-        tools:listitem="@layout/social_item" />
+        tools:listitem="@layout/item_social" />
 </LinearLayout>

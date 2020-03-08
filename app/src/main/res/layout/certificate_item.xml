@@ -19,11 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/padding_text_in_cv"
-            android:paddingLeft="@dimen/padding_text_in_cv"
-            android:paddingRight="@dimen/padding_text_in_cv"
-            android:paddingStart="@dimen/padding_text_in_cv"
-            android:paddingTop="@dimen/padding_text_in_cv">
+            android:paddingEnd="@dimen/certificate_item_padding"
+            android:paddingLeft="@dimen/certificate_item_padding"
+            android:paddingRight="@dimen/certificate_item_padding"
+            android:paddingStart="@dimen/certificate_item_padding"
+            android:paddingTop="@dimen/certificate_item_padding">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/certificate_title"
@@ -85,8 +85,8 @@
             android:layout_toLeftOf="@+id/certificate_share_button"
             android:layout_toStartOf="@+id/certificate_share_button"
             android:textAppearance="@style/TextAppearance.Body2Note"
-            android:paddingLeft="@dimen/padding_text_in_cv"
-            android:paddingRight="@dimen/padding_text_in_cv"
+            android:paddingLeft="@dimen/certificate_item_padding"
+            android:paddingRight="@dimen/certificate_item_padding"
             tools:text="Результат: 100%"/>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
