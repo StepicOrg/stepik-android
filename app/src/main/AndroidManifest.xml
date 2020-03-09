@@ -151,7 +151,7 @@
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
-            android:theme="@style/StoryActivityTheme" />
+            android:theme="@style/AppTheme.Translucent" />
 
         <activity
             android:name="org.stepik.android.view.settings.ui.activity.SettingsActivity" />
@@ -212,7 +212,7 @@
 
         <activity
             android:name=".features.stories.ui.activity.StoriesActivity"
-            android:theme="@style/StoryActivityTheme" />
+            android:theme="@style/AppTheme.Translucent" />
 
         <activity
             android:name="org.stepik.android.view.course.ui.activity.CourseActivity">

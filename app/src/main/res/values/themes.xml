@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="AppTheme" parent="Base.AppTheme" />
+
     <!-- TODO replace with Theme.MaterialComponents.DayNight.NoActionBar -->
     <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!--Material color attributes -->
@@ -57,7 +59,21 @@
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>
     </style>
 
-    <style name="AppTheme" parent="Base.AppTheme" />
+    <style name="AppTheme.Translucent" parent="Base.AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <item name="android:windowIsFloating">false</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
 
     <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">
         <item name="colorOnSecondary">@color/new_accent_color</item>
