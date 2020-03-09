@@ -34,7 +34,7 @@
     app:layout_constraintBottom_toTopOf="@+id/goToCatalog"
     app:layout_constraintTop_toBottomOf="@+id/placeholderIcon" />
 
-<androidx.appcompat.widget.AppCompatButton
+<Button
     style="@style/PlaceholderButton"
     android:id="@+id/goToCatalog"
     android:layout_width="wrap_content"

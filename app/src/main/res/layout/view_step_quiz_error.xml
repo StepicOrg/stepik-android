@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="@string/step_quiz_not_ready"/>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         style="@style/PlaceholderButton"
         android:id="@+id/stepStatusTryAgain"
         android:layout_width="wrap_content"

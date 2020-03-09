@@ -48,7 +48,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/rateDialogLater"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
@@ -62,7 +62,7 @@
             android:layout_height="match_parent"
             layout="@layout/view_divider_vertical" />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/rateDialogPositive"
             android:layout_height="wrap_content"
             android:layout_width="0dp"

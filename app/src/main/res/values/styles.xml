@@ -202,14 +202,13 @@
 
     <style name="PlaceholderTextViewStyle">
         <item name="android:textAppearance">?textAppearanceBody1</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
+        <item name="android:alpha">?alphaEmphasisMedium</item>
         <item name="android:padding">@dimen/padding_placeholders</item>
         <item name="android:gravity">center</item>
     </style>
     
-    <style name="PlaceholderButton" parent="Widget.AppTheme.Button">
+    <style name="PlaceholderButton" parent="Widget.AppTheme.Button.OutlinedButton">
         <item name="android:theme">@style/ThemeOverlay.Violet</item>
-        <item name="backgroundTint">?android:textColorSecondary</item>
     </style>
 
     <style name="previousNextTextViewStyle">
