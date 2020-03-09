@@ -57,6 +57,9 @@
         <!-- Inner components parameters -->
         <item name="dividerVerticalSize">1dp</item>
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>
+        <item name="cornerRadius">@dimen/corner_radius</item>
+
+        <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
     </style>
 
     <style name="AppTheme.Translucent" parent="Base.AppTheme">
