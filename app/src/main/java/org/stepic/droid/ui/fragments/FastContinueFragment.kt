@@ -1,5 +1,6 @@
 package org.stepic.droid.ui.fragments
 
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,6 +31,7 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.view.course_list.activity.CourseListActivity
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import javax.inject.Inject
@@ -208,8 +210,10 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun handleContinueCourseClick(course: Course) {
-        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
+        val intent = Intent(requireContext(), CourseListActivity::class.java)
+        requireContext().startActivity(intent)
+//        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
+//        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
     }
 
     override fun showCourse(course: Course, isAdaptive: Boolean) {
