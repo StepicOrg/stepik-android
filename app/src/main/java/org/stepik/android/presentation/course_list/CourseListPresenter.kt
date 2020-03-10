@@ -9,8 +9,12 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import ru.nobird.android.presentation.base.PresenterBase
+import ru.nobird.android.presentation.base.PresenterViewContainer
+import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
 
 class CourseListPresenter
@@ -21,8 +25,14 @@ constructor(
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
-    private val mainScheduler: Scheduler
-) : PresenterBase<CourseListView>() {
+    private val mainScheduler: Scheduler,
+
+    viewContainer: PresenterViewContainer<CourseListView>,
+    continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
+) : PresenterBase<CourseListView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
+
+    override val delegates: List<PresenterDelegate<in CourseListView>> =
+        listOf(continueCoursePresenterDelegate)
 
     private var state: CourseListView.State = CourseListView.State.Idle
         set(value) {

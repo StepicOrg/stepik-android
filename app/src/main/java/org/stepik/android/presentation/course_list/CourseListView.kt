@@ -3,8 +3,9 @@ package org.stepik.android.presentation.course_list
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.presentation.course_continue.CourseContinueView
 
-interface CourseListView {
+interface CourseListView : CourseContinueView {
     sealed class State {
         object Idle : State()
         object Loading : State()
