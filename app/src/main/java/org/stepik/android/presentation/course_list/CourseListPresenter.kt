@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import ru.nobird.android.presentation.base.PresenterBase
@@ -66,6 +67,10 @@ constructor(
     fun fetchNextPage() {
         val oldState = state as? CourseListView.State.Content
             ?: return
+
+        if (oldState.courseListItems.any { it is CourseListItem.PlaceHolder }) {
+            return
+        }
 
         val nextPage = oldState.courseListDataItems.page + 1
 

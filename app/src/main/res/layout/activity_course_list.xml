@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include layout="@layout/progress_bar_on_empty_screen" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/courseListCoursesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:clipToPadding="false"
+
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:paddingRight="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp" />
+
+    <include
+        android:visibility="gone"
+        android:id="@+id/courseListCoursesLoadingError"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        layout="@layout/error_no_connection_with_button_small" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -1,11 +1,11 @@
 package org.stepik.android.view.profile_courses.ui.adapter.diffutil
 
 import androidx.recyclerview.widget.DiffUtil
-import org.stepik.android.model.Course
+import org.stepik.android.domain.course_list.model.CourseListItem
 
 class CourseDiffUtilCallback(
-    private val oldList: List<Course>,
-    private val newList: List<Course>
+    private val oldList: List<CourseListItem.Data>,
+    private val newList: List<CourseListItem.Data>
 ) : DiffUtil.Callback() {
 
     override fun getOldListSize(): Int =
@@ -22,7 +22,7 @@ class CourseDiffUtilCallback(
         val newItem = newList[newItemPosition]
 
         return oldItem == newItem &&
-                oldItem.title == newItem.title &&
-                oldItem.enrollment == newItem.enrollment
+                oldItem.course.title == newItem.course.title &&
+                oldItem.course.enrollment == newItem.course.enrollment
     }
 }
