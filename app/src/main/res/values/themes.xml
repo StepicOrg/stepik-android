@@ -3,7 +3,7 @@
     <style name="AppTheme" parent="Base.AppTheme" />
 
     <!-- TODO replace with Theme.MaterialComponents.DayNight.NoActionBar -->
-    <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!--Material color attributes -->
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryVariant">@color/color_primary_variant</item>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:id="@+id/loadingRoot"
-             xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:background="@color/white">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/loadingRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         style="@style/Widget.MaterialProgressBar.ProgressBar"
@@ -12,6 +12,5 @@
         android:layout_gravity="center"
         android:indeterminate="true"
         android:padding="5dp"/>
-
 
 </FrameLayout>
