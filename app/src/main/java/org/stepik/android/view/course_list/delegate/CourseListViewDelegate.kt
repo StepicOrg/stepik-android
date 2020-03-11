@@ -11,12 +11,12 @@ import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
+import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderTextAdapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListViewDelegate(
     courseItemViewDelegate: CourseItemViewDelegate,
     adaptiveCoursesResolver: AdaptiveCoursesResolver,
-    isVertical: Boolean,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListPresenter: CourseListPresenter
 ) : CourseListView, CourseContinueView by courseItemViewDelegate {
@@ -31,10 +31,9 @@ class CourseListViewDelegate(
                 courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
             }
         )
-        courseItemAdapter += CourseListPlaceHolderAdapterDelegate(isVertical)
-        with(courseItemsRecyclerView) {
-            adapter = courseItemAdapter
-        }
+        courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
+        courseItemAdapter += CourseListPlaceHolderTextAdapterDelegate()
+        courseItemsRecyclerView.adapter = courseItemAdapter
     }
 
     override fun setState(state: CourseListView.State) {

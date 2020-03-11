@@ -36,7 +36,7 @@ class CourseListActivity : FragmentActivityBase() {
         setContentView(R.layout.activity_course_list)
         injectComponent()
 
-        val isVertical = false
+        val isVertical = true
 
         courseListPresenter = ViewModelProviders
             .of(this, viewModelFactory)
@@ -52,7 +52,6 @@ class CourseListActivity : FragmentActivityBase() {
                 adaptiveCoursesResolver = adaptiveCoursesResolver
             ),
             adaptiveCoursesResolver = adaptiveCoursesResolver,
-            isVertical = isVertical,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListPresenter = courseListPresenter
         )
