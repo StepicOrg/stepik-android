@@ -100,6 +100,9 @@ constructor(
 
                 PaginationDirection.DOWN ->
                     index + 1 to min(index + PAGE_SIZE, commentIds.size)
+
+                else ->
+                    throw IllegalStateException("Direction not supported")
             }
 
         val slicedCommentIds = commentIds

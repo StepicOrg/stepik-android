@@ -5,7 +5,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_course_list.*
 import org.stepic.droid.R
@@ -47,7 +46,7 @@ class CourseListActivity : FragmentActivityBase(), CourseContinueView {
         setContentView(R.layout.activity_course_list)
         injectComponent()
 
-        val isVertical = true
+        val isVertical = false
 
         courseListPresenter = ViewModelProviders
             .of(this, viewModelFactory)
@@ -118,29 +117,16 @@ class CourseListActivity : FragmentActivityBase(), CourseContinueView {
                 itemAnimator?.changeDuration = 0
                 val snapHelper = CoursesSnapHelper(2)
                 snapHelper.attachToRecyclerView(this)
-
-                // TODO Could be extension?
-                addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                        val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
-                            ?: return
-
-                        val pastVisibleItems = layoutManager.findFirstCompletelyVisibleItemPosition()
-
-                        if (dx > 0) {
-                            val visibleItemCount = layoutManager.childCount
-                            val totalItemCount = layoutManager.itemCount
-
-                            if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                                post { courseListPresenter.fetchNextPage() }
-                            }
-                        }
+                setOnPaginationListener { pageDirection ->
+                    if (pageDirection == PaginationDirection.RIGHT) {
+                        courseListPresenter.fetchNextPage()
                     }
-                })
+                }
             }
         }
     }
 
+    // TODO Move to CourseListViewDelegate
     private fun onCourseClicked(courseListItem: CourseListItem.Data) {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
         if (courseListItem.course.enrollment != 0L) {

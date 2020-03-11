@@ -161,6 +161,9 @@ constructor(
                         ?.last { it.comment.parent == null }
                         ?.id
                         ?: return
+
+                else ->
+                    throw IllegalStateException("Direction not supported")
             }
 
         state = oldState.copy(commentsState = commentsStateMapper.mapToLoadMoreState(commentsState, direction))

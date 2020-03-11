@@ -52,6 +52,9 @@ constructor() {
 
             PaginationDirection.DOWN ->
                 commentsState.copy(commentItems = commentsState.commentItems + CommentItem.Placeholder)
+
+            else ->
+                throw IllegalStateException("Direction not supported")
         }
 
     /**
@@ -73,6 +76,9 @@ constructor() {
 
                 PaginationDirection.DOWN ->
                     commentsState.commentDataItems + items to commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals) + rawItems
+
+                else ->
+                    throw IllegalStateException("Direction not supported")
             }
 
         return state.copy(commentsState = commentsState.copy(commentDataItems = newDataItems, commentItems = newItems))
@@ -94,6 +100,9 @@ constructor() {
 
                 PaginationDirection.DOWN ->
                     state.commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals)
+
+                else ->
+                    throw IllegalStateException("Direction not supported")
             }
 
         return state.copy(commentsState = state.commentsState.copy(commentItems = newItems))
