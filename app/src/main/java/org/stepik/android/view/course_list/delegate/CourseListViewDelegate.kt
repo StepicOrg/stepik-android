@@ -40,12 +40,14 @@ class CourseListViewDelegate(
         when (state) {
             is CourseListView.State.Loading -> {
                 courseItemAdapter.items = listOf(
+//                    CourseListItem.PlaceHolderText("JUEWIHDIEHDIEHDEIHDIEHDEIDEHU"),
                     CourseListItem.PlaceHolder,
                     CourseListItem.PlaceHolder
                 )
             }
             is CourseListView.State.Content ->
                 courseItemAdapter.items = state.courseListItems
+//                courseItemAdapter.items = listOf(CourseListItem.PlaceHolderText("JUEWIHDIEHDIEHDEIHDIEHDEIDEHU")) + state.courseListItems
         }
     }
 
