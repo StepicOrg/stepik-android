@@ -39,8 +39,15 @@ class CourseListViewDelegate(
     }
 
     override fun setState(state: CourseListView.State) {
-        if (state is CourseListView.State.Content) {
-            courseItemAdapter.items = state.courseListItems
+        when (state) {
+            is CourseListView.State.Loading -> {
+                courseItemAdapter.items = listOf(
+                    CourseListItem.PlaceHolder,
+                    CourseListItem.PlaceHolder
+                )
+            }
+            is CourseListView.State.Content ->
+                courseItemAdapter.items = state.courseListItems
         }
     }
 

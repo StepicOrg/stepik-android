@@ -13,10 +13,12 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
-import org.stepic.droid.ui.decorators.RightMarginForLastItems
+import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.last_step.model.LastStep
@@ -45,51 +47,19 @@ class CourseListActivity : FragmentActivityBase(), CourseContinueView {
         setContentView(R.layout.activity_course_list)
         injectComponent()
 
+        val isVertical = true
+
         courseListPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(CourseListPresenter::class.java)
 
-        with(courseListCoursesRecycler) {
-            // Vertical
-//            layoutManager = WrapContentLinearLayoutManager(context)
-//            setOnPaginationListener { pageDirection ->
-//                if (pageDirection == PaginationDirection.DOWN) {
-//                    courseListPresenter.fetchNextPage()
-//                }
-//            }
-
-            // Horizontal
-            layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
-            itemAnimator?.changeDuration = 0
-            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), 2))
-            val snapHelper = CoursesSnapHelper(2)
-            snapHelper.attachToRecyclerView(this)
-
-            // TODO Could be extension?
-            addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
-                        ?: return
-
-                    val pastVisibleItems = layoutManager.findFirstCompletelyVisibleItemPosition()
-
-                    if (dx > 0) {
-                        val visibleItemCount = layoutManager.childCount
-                        val totalItemCount = layoutManager.itemCount
-
-                        if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                            post { courseListPresenter.fetchNextPage() }
-                        }
-                    }
-                }
-            })
-        }
+        setupCourseListRecycler(courseListCoursesRecycler, isVertical = isVertical)
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueView = this,
             onCourseClicked = ::onCourseClicked,
             adaptiveCoursesResolver = adaptiveCoursesResolver,
-            isVertical = false,
+            isVertical = isVertical,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListPresenter = courseListPresenter
         )
@@ -132,6 +102,43 @@ class CourseListActivity : FragmentActivityBase(), CourseContinueView {
 
     override fun showSteps(course: Course, lastStep: LastStep) {
         screenManager.continueCourse(this, course.id, lastStep)
+    }
+
+    private fun setupCourseListRecycler(courseListRecycler: RecyclerView, isVertical: Boolean) {
+        with(courseListRecycler) {
+            if (isVertical) {
+                layoutManager = WrapContentLinearLayoutManager(context)
+                setOnPaginationListener { pageDirection ->
+                    if (pageDirection == PaginationDirection.DOWN) {
+                        courseListPresenter.fetchNextPage()
+                    }
+                }
+            } else {
+                layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+                itemAnimator?.changeDuration = 0
+                val snapHelper = CoursesSnapHelper(2)
+                snapHelper.attachToRecyclerView(this)
+
+                // TODO Could be extension?
+                addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                        val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
+                            ?: return
+
+                        val pastVisibleItems = layoutManager.findFirstCompletelyVisibleItemPosition()
+
+                        if (dx > 0) {
+                            val visibleItemCount = layoutManager.childCount
+                            val totalItemCount = layoutManager.itemCount
+
+                            if (visibleItemCount + pastVisibleItems >= totalItemCount) {
+                                post { courseListPresenter.fetchNextPage() }
+                            }
+                        }
+                    }
+                })
+            }
+        }
     }
 
     private fun onCourseClicked(courseListItem: CourseListItem.Data) {
