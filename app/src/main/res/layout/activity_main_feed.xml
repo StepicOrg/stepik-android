@@ -11,10 +11,9 @@
         android:layout_height="@dimen/bottom_navigation_height"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:background="@color/white"
+        android:background="?colorSurface"
         app:accentColor="@color/new_accent_color"
         app:inactiveColor="@color/new_accent_color_alpha_40" />
-
 
     <FrameLayout
         android:id="@+id/frame"
