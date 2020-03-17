@@ -9,9 +9,7 @@
         android:id="@+id/courseAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/StepikTheme.DarkActionBar"
-        android:elevation="0dp"
-        app:elevation="0dp">
+        android:theme="@style/StepikTheme.DarkActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/courseCollapsingToolbar"
@@ -63,20 +61,10 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/courseTabs"
             android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            android:background="@color/course_tabbar_color"
+            android:layout_height="wrap_content"
             app:tabMode="scrollable"
-            app:tabIndicatorColor="@color/new_accent_color"
-            app:tabIndicatorHeight="2dp"
-            app:tabSelectedTextColor="@color/new_accent_color"
-            app:tabTextAppearance="@style/CourseTabAppearance"
             app:tabPaddingStart="24dp"
             app:tabPaddingEnd="24dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/course_appbar_separator" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
