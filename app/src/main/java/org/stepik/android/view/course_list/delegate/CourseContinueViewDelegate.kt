@@ -12,7 +12,7 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.CourseContinueView
 
-class CourseItemViewDelegate(
+class CourseContinueViewDelegate(
     private val activity: FragmentActivity,
     private val analytic: Analytic,
     private val screenManager: ScreenManager,

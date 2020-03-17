@@ -3,7 +3,6 @@ package org.stepik.android.view.course_list.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -13,14 +12,6 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class CourseListPlaceHolderTextAdapterDelegate : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> {
         val view = createView(parent, R.layout.course_collection_header_view)
-        val margin = parent.context.resources.getDimensionPixelOffset(R.dimen.course_list_padding)
-        // TODO Discuss about view and source of colors
-        (view.layoutParams as RecyclerView.LayoutParams).setMargins(
-            -margin,
-            -margin,
-            -margin,
-            margin
-        )
         view.setBackgroundResource(R.drawable.gradient_background_blue_squared)
         return ViewHolder(view)
     }

@@ -16,8 +16,9 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListPresenter
-import org.stepik.android.view.course_list.delegate.CourseItemViewDelegate
+import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
 import javax.inject.Inject
 
 class CourseListActivity : FragmentActivityBase() {
@@ -45,7 +46,7 @@ class CourseListActivity : FragmentActivityBase() {
         setupCourseListRecycler(courseListCoursesRecycler, isVertical = isVertical)
 
         courseListViewDelegate = CourseListViewDelegate(
-            courseItemViewDelegate = CourseItemViewDelegate(
+            courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = this,
                 analytic = analytic,
                 screenManager = screenManager,
@@ -78,6 +79,7 @@ class CourseListActivity : FragmentActivityBase() {
 
     private fun setupCourseListRecycler(courseListRecycler: RecyclerView, isVertical: Boolean) {
         with(courseListRecycler) {
+            addItemDecoration(CourseListPlaceHolderTextDecoration())
             if (isVertical) {
                 layoutManager = WrapContentLinearLayoutManager(context)
                 setOnPaginationListener { pageDirection ->

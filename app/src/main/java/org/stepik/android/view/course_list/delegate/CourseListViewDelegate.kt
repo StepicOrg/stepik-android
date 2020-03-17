@@ -15,18 +15,18 @@ import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHo
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListViewDelegate(
-    courseItemViewDelegate: CourseItemViewDelegate,
+    courseContinueViewDelegate: CourseContinueViewDelegate,
     adaptiveCoursesResolver: AdaptiveCoursesResolver,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListPresenter: CourseListPresenter
-) : CourseListView, CourseContinueView by courseItemViewDelegate {
+) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private var courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
 
     init {
         courseItemAdapter += CourseListItemAdapterDelegate(
             adaptiveCoursesResolver,
-            onItemClicked = courseItemViewDelegate::onCourseClicked,
+            onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = { courseListItem ->
                 courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
             }

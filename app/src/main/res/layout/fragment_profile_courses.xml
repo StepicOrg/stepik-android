@@ -73,14 +73,14 @@
         android:layout_marginRight="@dimen/profile_block_margin"
         android:layout_marginBottom="@dimen/profile_block_vertical_margin">
         <include
-            layout="@layout/course_item_loading_view"
+            layout="@layout/course_loading_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginBottom="16dp" />
         <include
-            layout="@layout/course_item_loading_view"
+            layout="@layout/course_loading_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"

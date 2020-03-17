@@ -26,6 +26,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesView
+import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -58,6 +59,7 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     private var userId by argument<Long>()
 
     private lateinit var profileCoursesPresenter: ProfileCoursesPresenter
+    private lateinit var courseContinueViewDelegate: CourseContinueViewDelegate
 
     private lateinit var coursesAdapter: DefaultDelegateAdapter<CourseListItem>
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCoursesView.State>
@@ -75,6 +77,13 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
             .get(ProfileCoursesPresenter::class.java)
         savedInstanceState?.let(profileCoursesPresenter::onRestoreInstanceState)
 
+        courseContinueViewDelegate = CourseContinueViewDelegate(
+            activity = requireActivity(),
+            analytic = analytic,
+            screenManager = screenManager,
+            adaptiveCoursesResolver = adaptiveCoursesResolver
+        )
+
         coursesAdapter = DefaultDelegateAdapter<CourseListItem>()
 
 //        coursesAdapter = DefaultDelegateAdapter(
@@ -85,7 +94,7 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
 //        )
         coursesAdapter += CourseListItemAdapterDelegate(
             adaptiveCoursesResolver,
-            onItemClicked = ::onCourseClicked,
+            onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = { courseListItem ->
                 profileCoursesPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
             }
@@ -156,6 +165,7 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         }
     }
 
+    // TODO Functions from ProfileCoursesView will be replaced with CourseListView
     override fun setBlockingLoading(isLoading: Boolean) {
         if (isLoading) {
             ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
@@ -174,19 +184,6 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
 
     override fun showSteps(course: Course, lastStep: LastStep) {
         screenManager.continueCourse(activity, course.id, lastStep)
-    }
-
-    private fun onCourseClicked(courseListItem: CourseListItem.Data) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
-        if (courseListItem.course.enrollment != 0L) {
-            if (adaptiveCoursesResolver.isAdaptive(courseListItem.id)) {
-                screenManager.continueAdaptiveCourse(activity, courseListItem.course)
-            } else {
-                screenManager.showCourseModules(activity, courseListItem.course)
-            }
-        } else {
-            screenManager.showCourseDescription(activity, courseListItem.course)
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

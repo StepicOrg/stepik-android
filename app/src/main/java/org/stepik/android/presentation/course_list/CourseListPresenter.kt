@@ -78,7 +78,7 @@ constructor(
         val oldState = state as? CourseListView.State.Content
             ?: return
 
-        if (oldState.courseListItems.any { it is CourseListItem.PlaceHolder }) {
+        if (oldState.courseListItems.last() is CourseListItem.PlaceHolder) {
             return
         }
 
