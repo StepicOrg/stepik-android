@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
 
-class Course(
+data class Course(
     @SerializedName("id")
     val id: Long,
     @SerializedName("title")
@@ -121,20 +121,6 @@ class Course(
     @SerializedName("price_tier")
     val priceTier: String? = null
 ): Progressable, Parcelable {
-    override fun equals(other: Any?): Boolean { // todo use data class
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Course
-
-        if (id != other.id) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)

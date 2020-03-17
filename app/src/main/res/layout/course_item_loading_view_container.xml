@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/course_item_loading_view"/>
+    <include layout="@layout/course_loading_item"/>
 
-    <include layout="@layout/course_item_loading_view"/>
+    <include layout="@layout/course_loading_item"/>
 
 </LinearLayout>

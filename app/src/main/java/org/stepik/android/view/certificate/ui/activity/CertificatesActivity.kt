@@ -71,7 +71,7 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
             setOnPaginationListener { paginationDirection ->
-                if (paginationDirection == PaginationDirection.DOWN) {
+                if (paginationDirection == PaginationDirection.NEXT) {
                     certificatesPresenter.fetchNextPageFromRemote(userId)
                 }
             }

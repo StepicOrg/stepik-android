@@ -8,7 +8,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
@@ -21,19 +20,18 @@ import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesView
-import org.stepik.android.view.course_list.ui.adapter.delegate.CourseAdapterDelegate
-import org.stepik.android.view.profile_courses.ui.adapter.diffutil.CourseDiffUtilCallback
+import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
+import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
-import ru.nobird.android.ui.adapters.diff.DiffCallbackFactory
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
-import kotlin.math.min
 
 class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     companion object {
@@ -61,8 +59,9 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     private var userId by argument<Long>()
 
     private lateinit var profileCoursesPresenter: ProfileCoursesPresenter
+    private lateinit var courseContinueViewDelegate: CourseContinueViewDelegate
 
-    private lateinit var coursesAdapter: DefaultDelegateAdapter<Course>
+    private lateinit var coursesAdapter: DefaultDelegateAdapter<CourseListItem>
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCoursesView.State>
 
     private val progressDialogFragment: DialogFragment =
@@ -78,17 +77,26 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
             .get(ProfileCoursesPresenter::class.java)
         savedInstanceState?.let(profileCoursesPresenter::onRestoreInstanceState)
 
-        coursesAdapter = DefaultDelegateAdapter(
-            diffCallbackFactory = object : DiffCallbackFactory<Course> {
-                override fun createDiffUtil(oldList: List<Course>, newList: List<Course>): DiffUtil.Callback =
-                    CourseDiffUtilCallback(oldList, newList)
-            }
+        courseContinueViewDelegate = CourseContinueViewDelegate(
+            activity = requireActivity(),
+            analytic = analytic,
+            screenManager = screenManager,
+            adaptiveCoursesResolver = adaptiveCoursesResolver
         )
-        coursesAdapter += CourseAdapterDelegate(
+
+        coursesAdapter = DefaultDelegateAdapter<CourseListItem>()
+
+//        coursesAdapter = DefaultDelegateAdapter(
+//            diffCallbackFactory = object : DiffCallbackFactory<CourseListItem.Data> {
+//                override fun createDiffUtil(oldList: List<CourseListItem.Data>, newList: List<CourseListItem.Data>): DiffUtil.Callback =
+//                    CourseDiffUtilCallback(oldList, newList)
+//            }
+//        )
+        coursesAdapter += CourseListItemAdapterDelegate(
             adaptiveCoursesResolver,
-            onItemClicked = ::onCourseClicked,
-            onContinueCourseClicked = { course ->
-                profileCoursesPresenter.continueCourse(course = course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+            onItemClicked = courseContinueViewDelegate::onCourseClicked,
+            onContinueCourseClicked = { courseListItem ->
+                profileCoursesPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
             }
         )
     }
@@ -148,15 +156,16 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         viewStateDelegate.switchState(state)
 
         when (state) {
-            is ProfileCoursesView.State.Content -> {
-                profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courses.size, state.courses.size)
-                coursesAdapter.items = state.courses
-                (profileCoursesRecycler.layoutManager as? GridLayoutManager)
-                    ?.spanCount = min(ROW_COUNT, state.courses.size)
-            }
+//            is ProfileCoursesView.State.Content -> {
+//                profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courses.size, state.courses.size)
+//                coursesAdapter.items = state.courses
+//                (profileCoursesRecycler.layoutManager as? GridLayoutManager)
+//                    ?.spanCount = min(ROW_COUNT, state.courses.size)
+//            }
         }
     }
 
+    // TODO Functions from ProfileCoursesView will be replaced with CourseListView
     override fun setBlockingLoading(isLoading: Boolean) {
         if (isLoading) {
             ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
@@ -175,19 +184,6 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
 
     override fun showSteps(course: Course, lastStep: LastStep) {
         screenManager.continueCourse(activity, course.id, lastStep)
-    }
-
-    private fun onCourseClicked(course: Course) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
-        if (course.enrollment != 0L) {
-            if (adaptiveCoursesResolver.isAdaptive(course.id)) {
-                screenManager.continueAdaptiveCourse(activity, course)
-            } else {
-                screenManager.showCourseModules(activity, course)
-            }
-        } else {
-            screenManager.showCourseDescription(activity, course)
-        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

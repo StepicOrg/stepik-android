@@ -146,7 +146,7 @@ constructor(
 
         val lastCommentId =
             when (direction) {
-                PaginationDirection.UP ->
+                PaginationDirection.PREV ->
                     commentDataItems
                         .takeIf { it.hasPrev }
                         .takeIf { commentsState.commentItems.first() !is CommentItem.Placeholder }
@@ -154,7 +154,7 @@ constructor(
                         ?.id
                         ?: return
 
-                PaginationDirection.DOWN ->
+                PaginationDirection.NEXT ->
                     commentDataItems
                         .takeIf { it.hasNext }
                         .takeIf { commentsState.commentItems.last() !is CommentItem.Placeholder }
