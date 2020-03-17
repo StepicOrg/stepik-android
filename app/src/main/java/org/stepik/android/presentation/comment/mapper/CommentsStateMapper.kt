@@ -47,14 +47,11 @@ constructor() {
      */
     fun mapToLoadMoreState(commentsState: CommentsView.CommentsState.Loaded, direction: PaginationDirection): CommentsView.CommentsState =
         when (direction) {
-            PaginationDirection.UP ->
+            PaginationDirection.PREV ->
                 commentsState.copy(commentItems = listOf(CommentItem.Placeholder) + commentsState.commentItems)
 
-            PaginationDirection.DOWN ->
+            PaginationDirection.NEXT ->
                 commentsState.copy(commentItems = commentsState.commentItems + CommentItem.Placeholder)
-
-            else ->
-                throw IllegalStateException("Direction not supported")
         }
 
     /**
@@ -71,14 +68,11 @@ constructor() {
 
         val (newDataItems: PagedList<CommentItem.Data>, newItems) =
             when (direction) {
-                PaginationDirection.UP ->
+                PaginationDirection.PREV ->
                     items + commentsState.commentDataItems to rawItems + commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
 
-                PaginationDirection.DOWN ->
+                PaginationDirection.NEXT ->
                     commentsState.commentDataItems + items to commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals) + rawItems
-
-                else ->
-                    throw IllegalStateException("Direction not supported")
             }
 
         return state.copy(commentsState = commentsState.copy(commentDataItems = newDataItems, commentItems = newItems))
@@ -95,14 +89,11 @@ constructor() {
 
         val newItems =
             when (direction) {
-                PaginationDirection.UP ->
+                PaginationDirection.PREV ->
                     state.commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
 
-                PaginationDirection.DOWN ->
+                PaginationDirection.NEXT ->
                     state.commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals)
-
-                else ->
-                    throw IllegalStateException("Direction not supported")
             }
 
         return state.copy(commentsState = state.commentsState.copy(commentItems = newItems))

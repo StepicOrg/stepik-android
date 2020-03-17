@@ -81,7 +81,7 @@ class CourseListActivity : FragmentActivityBase() {
             if (isVertical) {
                 layoutManager = WrapContentLinearLayoutManager(context)
                 setOnPaginationListener { pageDirection ->
-                    if (pageDirection == PaginationDirection.DOWN) {
+                    if (pageDirection == PaginationDirection.NEXT) {
                         courseListPresenter.fetchNextPage()
                     }
                 }
@@ -91,7 +91,7 @@ class CourseListActivity : FragmentActivityBase() {
                 val snapHelper = CoursesSnapHelper(2)
                 snapHelper.attachToRecyclerView(this)
                 setOnPaginationListener { pageDirection ->
-                    if (pageDirection == PaginationDirection.RIGHT) {
+                    if (pageDirection == PaginationDirection.NEXT) {
                         courseListPresenter.fetchNextPage()
                     }
                 }

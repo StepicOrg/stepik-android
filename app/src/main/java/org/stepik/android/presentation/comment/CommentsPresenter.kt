@@ -146,7 +146,7 @@ constructor(
 
         val lastCommentId =
             when (direction) {
-                PaginationDirection.UP ->
+                PaginationDirection.PREV ->
                     commentDataItems
                         .takeIf { it.hasPrev }
                         .takeIf { commentsState.commentItems.first() !is CommentItem.Placeholder }
@@ -154,16 +154,13 @@ constructor(
                         ?.id
                         ?: return
 
-                PaginationDirection.DOWN ->
+                PaginationDirection.NEXT ->
                     commentDataItems
                         .takeIf { it.hasNext }
                         .takeIf { commentsState.commentItems.last() !is CommentItem.Placeholder }
                         ?.last { it.comment.parent == null }
                         ?.id
                         ?: return
-
-                else ->
-                    throw IllegalStateException("Direction not supported")
             }
 
         state = oldState.copy(commentsState = commentsStateMapper.mapToLoadMoreState(commentsState, direction))
