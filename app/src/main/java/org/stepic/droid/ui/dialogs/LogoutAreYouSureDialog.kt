@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 
 class LogoutAreYouSureDialog : DialogFragment() {
@@ -12,7 +13,7 @@ class LogoutAreYouSureDialog : DialogFragment() {
         const val TAG = "logout_are_you_sure_dialog"
 
         fun newInstance(): LogoutAreYouSureDialog =
-                LogoutAreYouSureDialog()
+            LogoutAreYouSureDialog()
 
         interface OnLogoutSuccessListener {
             fun onLogout()
@@ -32,7 +33,7 @@ class LogoutAreYouSureDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.title_confirmation)
             .setMessage(R.string.are_you_sure_logout)
             .setPositiveButton(R.string.yes) { _, _ ->
