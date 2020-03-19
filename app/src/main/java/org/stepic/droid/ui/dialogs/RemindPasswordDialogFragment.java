@@ -58,7 +58,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     }
 
     private TextInputLayout emailTextWrapper;
-    private LoadingProgressDialog progressLogin;
+    private Dialog progressLogin;
     private View rootView;
 
     @BindString(R.string.email_wrong)
@@ -76,7 +76,11 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         rootView = v.findViewById(R.id.root_view_dialog);
         rootView.requestFocus();
 
-        progressLogin = new LoadingProgressDialog(requireContext());
+        progressLogin = new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.loading)
+                .setView(R.layout.dialog_progress)
+                .setCancelable(false)
+                .create();
 
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
         builder.setTitle(R.string.remind_password)

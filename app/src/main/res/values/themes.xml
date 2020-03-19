@@ -53,9 +53,10 @@
         <item name="materialButtonStyle">@style/Widget.AppTheme.Button</item>
         <item name="materialButtonOutlinedStyle">@style/Widget.AppTheme.Button.OutlinedButton</item>
         <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog</item>
 
         <!-- Inner components parameters -->
-        <item name="dividerVerticalSize">1dp</item>
+        <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>
         <item name="cornerRadius">@dimen/corner_radius</item>
 
