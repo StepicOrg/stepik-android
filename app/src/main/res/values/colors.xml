@@ -12,8 +12,8 @@
 
     <color name="color_on_primary">#ffffff</color>
     <color name="color_on_secondary">#ffffff</color>
-    <color name="color_on_background">#535366</color>
-    <color name="color_on_surface">#535366</color>
+    <color name="color_on_background">#000000</color>
+    <color name="color_on_surface">#000000</color>
     <color name="color_on_error">#ffffff</color>
 
     <color name="transparent">@color/white_color_alpha_0</color>

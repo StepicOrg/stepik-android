@@ -46,8 +46,7 @@ class VideoQualityDialog : VideoQualityDialogBase() {
             .setTitle(
                 if (forPlaying) {
                     R.string.video_quality_playing
-                }
-                else {
+                } else {
                     R.string.video_quality
                 }
             )
