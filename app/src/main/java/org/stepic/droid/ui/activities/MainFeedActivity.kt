@@ -153,8 +153,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.componentManager()
-                .mainFeedComponent()
-                .inject(this)
+            .mainFeedComponent()
+            .inject(this)
 
         setContentView(R.layout.activity_main_feed)
 
