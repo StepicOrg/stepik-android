@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -18,29 +18,27 @@
                 android:id="@+id/adaptiveLevelDialogTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fontFamily="@font/roboto_light"
-                android:textSize="96sp"
+                android:textAppearance="?textAppearanceHeadline1"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"
-                tools:ignore="MissingPrefix" />
+                tools:text="99" />
             <TextView
                 android:id="@+id/adaptiveLevelDialogText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:fontFamily="@font/roboto_light"
-                android:textSize="24sp"
+                android:textAppearance="?textAppearanceHeadline6"
                 android:text="@string/adaptive_exp_level_title"
                 android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                tools:ignore="MissingPrefix" />
+                android:gravity="center_horizontal" />
         </LinearLayout>
     </FrameLayout>
-    <include layout="@layout/view_stroke" />
+
+    <include layout="@layout/view_divider_vertical" />
+
     <Button
         android:id="@+id/continueButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/Adaptive.BorderlessButton"
-        android:textColor="@color/borderless_button_text_color"
+        style="@style/Widget.AppTheme.Button.TextButton"
         android:text="@string/adaptive_level_dialog_continue" />
 </LinearLayout>

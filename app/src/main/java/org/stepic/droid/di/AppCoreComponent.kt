@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
 import org.stepic.droid.adaptive.ui.adapters.QuizCardViewHolder
-import org.stepic.droid.adaptive.ui.dialogs.AdaptiveLevelDialog
+import org.stepic.droid.adaptive.ui.dialogs.AdaptiveLevelDialogFragment
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
@@ -262,7 +262,7 @@ interface AppCoreComponent {
 
     fun inject(quizCardViewHolder: QuizCardViewHolder)
 
-    fun inject(adaptiveLevelDialog: AdaptiveLevelDialog)
+    fun inject(adaptiveLevelDialogFragment: AdaptiveLevelDialogFragment)
 
     fun inject(notificationViewHolder: NotificationAdapter.NotificationViewHolder)
 

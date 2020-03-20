@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.fragment_recommendations.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.QuizCardsAdapter
 import org.stepic.droid.adaptive.ui.animations.RecommendationsFragmentAnimations
-import org.stepic.droid.adaptive.ui.dialogs.AdaptiveLevelDialog
+import org.stepic.droid.adaptive.ui.dialogs.AdaptiveLevelDialogFragment
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.RecommendationsPresenter
@@ -185,7 +185,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     }
 
     override fun showNewLevelDialog(level: Long) {
-        AdaptiveLevelDialog
+        AdaptiveLevelDialogFragment
             .newInstance(level)
             .showIfNotExists(childFragmentManager, LEVEL_DIALOG_TAG)
     }
