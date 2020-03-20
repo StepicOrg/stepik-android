@@ -2,9 +2,8 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -42,12 +41,9 @@ class ChooseStorageDialog : DialogFragment() {
         val youWantMoveDataDialog = WantMoveDataDialog.newInstance()
         youWantMoveDataDialog.setTargetFragment(targetFragment, WantMoveDataDialog.REQUEST_CODE)
 
-        val adapter = ArrayAdapter(requireContext(), R.layout.simple_list_item_single_choice, headers)
-
-        return AlertDialog
-            .Builder(requireContext(), R.style.StepikTheme_LoginDialog)
+        return MaterialAlertDialogBuilder(context)
             .setTitle(R.string.choose_storage_title)
-            .setSingleChoiceItems(adapter, indexChosen) { _, which ->
+            .setSingleChoiceItems(headers, indexChosen) { _, which ->
                 if (which != indexChosen && !youWantMoveDataDialog.isAdded) {
                     youWantMoveDataDialog.targetLocation = storageOptions[which]
                     youWantMoveDataDialog.show(requireFragmentManager(), null)
