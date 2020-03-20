@@ -211,36 +211,14 @@
         <item name="android:theme">@style/ThemeOverlay.Violet</item>
     </style>
 
-    <style name="previousNextTextViewStyle">
-        <item name="android:clickable">true</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:focusable">false</item>
-        <item name="android:focusableInTouchMode">false</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">16dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">?colorAccent</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:visibility">invisible</item>
-    </style>
-
     <style name="SettingHeaderTextView">
         <item name="android:textAppearance">?textAppearanceSubtitle2</item>
-        <item name="android:textColor">@color/violet1</item>
+        <item name="android:theme">@style/ThemeOverlay.Violet</item>
         <item name="android:layout_marginTop">@dimen/settings_offset_vertical</item>
         <item name="android:paddingTop">@dimen/settings_offset_vertical</item>
         <item name="android:paddingBottom">@dimen/settings_offset_vertical</item>
         <item name="android:paddingLeft">@dimen/settings_offset_horizontal</item>
         <item name="android:paddingRight">@dimen/settings_offset_horizontal</item>
-    </style>
-
-    <style name="SettingCompoundButton">
-        <item name="android:layout_marginLeft">@dimen/guideline_standard_padding</item>
-        <item name="android:layout_marginRight">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingLeft">@dimen/half_padding</item>
-        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingRight">@dimen/half_padding</item>
     </style>
 
     <style name="SettingSwitch">
@@ -317,7 +295,6 @@
 
     <style name="VideoTimeThumbnail" parent="AppTheme.Widget.TextView">
         <item name="android:background">@color/background_time_thumbnail</item>
-        <item name="android:textColor">@color/text_color_time_thumbnail</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingTop">2dp</item>
