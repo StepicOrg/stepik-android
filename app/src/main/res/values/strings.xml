@@ -552,6 +552,7 @@
     <string name="deadlines_section">Deadline: %s</string>
     <string name="deadlines_notification">Deadline for section %s in course %s comes in %s</string>
     <string name="deadlines_edit_title">Edit schedule</string>
+    <string name="deadlines_edit_date_picker_title">Select new deadline</string>
     <string name="deadlines_create_title">Choose learning mode</string>
     
     <string name="deadlines_learning_rate_hobby">Hobby</string>

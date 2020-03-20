@@ -92,7 +92,6 @@
             android:layout_height="match_parent"
             android:layout_below="@id/downloadsStorageDivider"
             android:clipToPadding="false"
-            android:divider="@color/bpRed"
             android:scrollbarStyle="outsideOverlay"
             android:visibility="gone"/>
 

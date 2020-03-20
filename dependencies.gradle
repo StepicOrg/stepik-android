@@ -70,7 +70,6 @@ ext.versions = [
         timber               : '4.7.1',
 
         numberPicker         : '1.2.1',
-        datePicker           : '3.1.0',
         photoView            : '2.3.0',
         recyclerAnimators    : '2.1.0',
         materialProgress     : '1.4.2',
@@ -183,7 +182,6 @@ ext.libraries = [
 
         // Candidates for removal
         numberPicker         : "biz.kasual:materialnumberpicker:$versions.numberPicker",
-        datePicker           : "com.code-troopers.betterpickers:library:$versions.datePicker",
         photoView            : "com.github.chrisbanes:PhotoView:$versions.photoView",
         recyclerAnimators    : "jp.wasabeef:recyclerview-animators:$versions.recyclerAnimators",
         materialProgress     : "me.zhanghai.android.materialprogressbar:library:$versions.materialProgress",

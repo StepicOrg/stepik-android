@@ -19,9 +19,11 @@ import javax.inject.Inject
 class TimeIntervalPickerDialogFragment : DialogFragment() {
     companion object {
         const val TAG = "time_interval_picker_dialog"
+
         private const val CHOSEN_POSITION_KEY = "CHOSEN_POSITION_KEY"
+
         fun newInstance(): TimeIntervalPickerDialogFragment =
-                TimeIntervalPickerDialogFragment()
+            TimeIntervalPickerDialogFragment()
 
         interface Callback {
             fun onTimeIntervalPicked(chosenInterval: Int)

@@ -9,18 +9,19 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.model.Deadline
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.model.Section
 import org.stepik.android.view.personal_deadlines.ui.adapters.EditDeadlinesAdapter
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 
 class EditDeadlinesDialog : DialogFragment() {
@@ -111,18 +112,20 @@ class EditDeadlinesDialog : DialogFragment() {
     private fun showDatePickerForDeadline(deadline: Deadline) {
         analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_OPENED)
 
-        val calendar = DateTimeHelper.calendarFromLocalMillis(deadline.deadline.time)
+        val datePicker = MaterialDatePicker
+            .Builder
+            .datePicker()
+            .setTitleText(R.string.deadlines_edit_date_picker_title)
+            .setSelection(deadline.deadline.time)
+            .build()
 
         editedSectionId = deadline.section
-        val pickerDialogFragment = CalendarDatePickerDialogFragment()
-                .setThemeCustom(R.style.CalendarPickerDialogStyle)
-                .setPreselectedDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
-        setDatePickerListener(pickerDialogFragment, deadline.section)
-        pickerDialogFragment.show(childFragmentManager, DATE_PICKER_TAG)
+        setDatePickerListener(datePicker, deadline.section)
+        datePicker.showIfNotExists(childFragmentManager, DATE_PICKER_TAG)
     }
 
     private fun restorePickerListener() {
-        val pickerDialogFragment = childFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? CalendarDatePickerDialogFragment
+        val pickerDialogFragment = childFragmentManager.findFragmentByTag(DATE_PICKER_TAG) as? MaterialDatePicker<Long>
         if (pickerDialogFragment != null) {
             setDatePickerListener(pickerDialogFragment, editedSectionId)
         } else {
@@ -130,17 +133,17 @@ class EditDeadlinesDialog : DialogFragment() {
         }
     }
 
-    private fun setDatePickerListener(pickerDialogFragment: CalendarDatePickerDialogFragment, sectionId: Long) {
-        pickerDialogFragment.setOnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+    private fun setDatePickerListener(datePicker: MaterialDatePicker<Long>, sectionId: Long) {
+        datePicker.addOnPositiveButtonClickListener { time ->
             val calendar = Calendar.getInstance()
-            calendar.set(Calendar.YEAR, year)
-            calendar.set(Calendar.MONTH, monthOfYear)
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+            calendar.time = Date(time)
             calendar.set(Calendar.HOUR_OF_DAY, 23)
             calendar.set(Calendar.MINUTE, 59)
             adapter.updateDeadline(Deadline(sectionId, calendar.time))
             editedSectionId = -1
-        }.setOnDismissListener {
+        }
+
+        datePicker.addOnDismissListener {
             editedSectionId = -1
             analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_TIME_CLOSED)
         }

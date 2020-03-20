@@ -174,7 +174,6 @@ dependencies {
     implementation libraries.timber
 
     implementation libraries.numberPicker
-    implementation libraries.datePicker
     implementation libraries.photoView
     implementation libraries.recyclerAnimators
     implementation libraries.materialProgress
