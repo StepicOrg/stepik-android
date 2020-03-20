@@ -7,8 +7,7 @@ import android.view.LayoutInflater
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.Theme
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -73,19 +72,18 @@ class AchievementDetailsDialog : DialogFragment() {
             achievementRest.isVisible = scoreDiff > 0
         }
 
-        val builder = MaterialDialog.Builder(requireContext())
-                .theme(Theme.LIGHT)
-                .customView(view, false)
+        val builder = MaterialAlertDialogBuilder(context)
+                .setView(view)
 
         if (canShare && !achievementItem.isLocked) {
             builder
-                .positiveText(R.string.share_title)
-                .negativeText(R.string.close_screen)
-                .negativeColorRes(R.color.new_accent_color_alpha_50)
-                .onPositive { _, _ -> shareAchievement() }
+                .setPositiveButton(R.string.share_title) { _, _ ->
+                    shareAchievement()
+                }
+                .setNegativeButton(R.string.close_screen, null)
         }
 
-        return builder.build()
+        return builder.create()
     }
 
     override fun onStart() {
