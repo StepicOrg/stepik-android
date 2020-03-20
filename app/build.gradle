@@ -173,7 +173,6 @@ dependencies {
 
     implementation libraries.timber
 
-    implementation libraries.materialDialog
     implementation libraries.numberPicker
     implementation libraries.datePicker
     implementation libraries.photoView
