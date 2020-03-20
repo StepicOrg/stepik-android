@@ -25,7 +25,8 @@
         <item name="colorAccent">?colorSecondary</item>
 
         <!--Text colors -->
-        <item name="android:textColorPrimary">?colorOnSurface</item>
+        <item name="android:textColorPrimary">@color/material_on_surface_emphasis_high_type</item>
+        <item name="android:textColorSecondary">@color/material_on_surface_emphasis_medium</item>
         <item name="android:textColorLink">?colorSecondary</item>
 
         <!--Material type attributes-->

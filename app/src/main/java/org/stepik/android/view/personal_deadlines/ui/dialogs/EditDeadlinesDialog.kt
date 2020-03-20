@@ -9,9 +9,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.Theme
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -74,6 +73,7 @@ class EditDeadlinesDialog : DialogFragment() {
         val context = requireContext()
 
         val recyclerView = RecyclerView(context)
+        recyclerView.isVerticalFadingEdgeEnabled = true
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = EditDeadlinesAdapter(sections, deadlines) {
             showDatePickerForDeadline(it)
@@ -84,19 +84,18 @@ class EditDeadlinesDialog : DialogFragment() {
         divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
         recyclerView.addItemDecoration(divider)
 
-        return MaterialDialog.Builder(context)
-                .theme(Theme.LIGHT)
-                .title(R.string.deadlines_edit_title)
-                .customView(recyclerView, false)
-                .positiveText(R.string.save)
-                .negativeText(R.string.cancel)
-                .onPositive { _, _ ->
-                    saveResults()
-                }
-                .build().apply {
-                    isCancelable = false
-                    setCanceledOnTouchOutside(false)
-                }
+        return MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.deadlines_edit_title)
+            .setView(recyclerView)
+            .setPositiveButton(R.string.save) { _, _ ->
+                saveResults()
+            }
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+            .apply {
+                isCancelable = false
+                setCanceledOnTouchOutside(false)
+            }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
