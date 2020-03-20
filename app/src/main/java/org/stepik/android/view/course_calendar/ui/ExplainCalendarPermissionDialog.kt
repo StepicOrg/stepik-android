@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 
 class ExplainCalendarPermissionDialog : DialogFragment() {
@@ -16,18 +17,19 @@ class ExplainCalendarPermissionDialog : DialogFragment() {
             ExplainCalendarPermissionDialog()
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity!!)
-        builder.setTitle(R.string.allow_question)
-                .setMessage(R.string.explain_calendar_permission)
-                .setPositiveButton(R.string.allow) { _, _ ->
-                    (targetFragment as Callback).onCalendarPermissionChosen(true)
-                }
-                .setNegativeButton(R.string.deny) { _, _ ->
-                    (targetFragment as Callback).onCalendarPermissionChosen(false)
-                }
-        return builder.create()
-    }
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
+        MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.allow_question)
+            .setMessage(R.string.explain_calendar_permission)
+            .setPositiveButton(R.string.allow) { _, _ ->
+                (targetFragment as Callback)
+                    .onCalendarPermissionChosen(true)
+            }
+            .setNegativeButton(R.string.deny) { _, _ ->
+                (targetFragment as Callback)
+                    .onCalendarPermissionChosen(false)
+            }
+            .create()
 
     interface Callback {
         fun onCalendarPermissionChosen(isAgreed: Boolean)
