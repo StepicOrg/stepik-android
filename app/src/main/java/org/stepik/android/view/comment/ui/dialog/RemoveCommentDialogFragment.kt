@@ -2,8 +2,8 @@ package org.stepik.android.view.comment.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import ru.nobird.android.view.base.ui.extension.argument
 
@@ -20,8 +20,7 @@ class RemoveCommentDialogFragment : DialogFragment() {
     private var commentId by argument<Long>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog
-            .Builder(requireContext())
+        MaterialAlertDialogBuilder(context)
             .setTitle(R.string.title_confirmation)
             .setMessage(R.string.comment_action_remove_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->
