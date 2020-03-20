@@ -6,8 +6,7 @@ import android.os.Bundle
 import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
 import biz.kasual.materialnumberpicker.MaterialNumberPicker
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.Theme
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -32,7 +31,7 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
     @Inject
     lateinit var sharedPreferences: SharedPreferenceHelper
 
-    lateinit var picker: MaterialNumberPicker
+    private lateinit var picker: MaterialNumberPicker
 
     private lateinit var callback: Callback
 
@@ -59,23 +58,17 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
             Timber.e("reflection failed -> ignore")
         }
 
-        callback = if (targetFragment != null) {
-            targetFragment as Callback
-        } else {
-            activity as Callback
-        }
+        callback = (targetFragment as? Callback)
+            ?: activity as Callback
 
-        return MaterialDialog.Builder(requireContext())
-            .theme(Theme.LIGHT)
-            .title(R.string.choose_notification_time_interval)
-            .customView(picker, false)
-            .positiveText(R.string.ok)
-            .negativeText(R.string.cancel)
-            .onPositive { _, _ ->
-                //todo set result to Ok with position
+        return MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.choose_notification_time_interval)
+            .setView(picker)
+            .setPositiveButton(R.string.ok) { _, _ ->
                 callback.onTimeIntervalPicked(picker.value)
             }
-            .build()
+            .setNegativeButton(R.string.cancel, null)
+            .create()
     }
 
     override fun onCancel(dialog: DialogInterface) {
@@ -83,5 +76,4 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         // explicitly click Negative or cancel by back button || touch outside
         callback.onTimeIntervalPicked(sharedPreferences.timeNotificationCode)
     }
-
 }
