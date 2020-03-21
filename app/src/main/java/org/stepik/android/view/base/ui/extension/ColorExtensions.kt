@@ -8,4 +8,10 @@ object ColorExtensions {
 
     fun colorWithAlpha(@ColorInt color: Int, alpha: Float): Int =
         (alpha * MASK_OPACITY).toInt().shl(24) or (color and MASK_NO_OPACITY)
+
+    /**
+     * Multiplies current alpha channel with given [alpha]
+     */
+    fun colorWithAlphaMul(@ColorInt color: Int, alpha: Float): Int =
+        (alpha * color.shr(24)).toInt().shl(24) or (color and MASK_NO_OPACITY)
 }
