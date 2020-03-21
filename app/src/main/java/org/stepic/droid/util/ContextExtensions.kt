@@ -10,6 +10,7 @@ import android.os.Build
 import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 
@@ -43,6 +44,13 @@ fun Context.resolveAttribute(@AttrRes attributeResId: Int): TypedValue? {
         null
     }
 }
+
+@ColorInt
+fun Context.resolveColorAttribute(@AttrRes attributeResId: Int): Int =
+    resolveAttribute(attributeResId)?.data ?: 0
+
+fun Context.resolveFloatAttribute(@AttrRes attributeResId: Int): Float =
+    resolveAttribute(attributeResId)?.float ?: 0f
 
 /**
  * Converts current value in px to dp

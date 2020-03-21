@@ -13,7 +13,9 @@ import kotlinx.android.synthetic.main.dialog_adaptive_level.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.resolveAttribute
+import org.stepic.droid.util.resolveColorAttribute
+import org.stepic.droid.util.resolveFloatAttribute
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 import ru.nobird.android.view.base.ui.extension.argument
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -54,16 +56,14 @@ class AdaptiveLevelDialogFragment : DialogFragment() {
         super.onResume()
         val context = expLevelDialogConfetti.context // with theme overlay
 
-        val alpha = context.resolveAttribute(R.attr.alphaEmphasisMedium)?.float ?: return
-        val colorOnSurface = context.resolveAttribute(R.attr.colorOnSurface)?.data ?: return
-        val colorSecondary = context.resolveAttribute(R.attr.colorSecondary)?.data ?: return
-
-        val hexAlpha = (alpha * 0xFF).toInt() shl 24
+        val alpha = context.resolveFloatAttribute(R.attr.alphaEmphasisMedium)
+        val colorOnSurface = context.resolveColorAttribute(R.attr.colorOnSurface)
+        val colorSecondary = context.resolveColorAttribute(R.attr.colorSecondary)
 
         val colors =
             intArrayOf(
                 colorOnSurface,
-                colorOnSurface and hexAlpha,
+                ColorExtensions.colorWithAlpha(colorOnSurface, alpha),
                 colorSecondary
             )
 
