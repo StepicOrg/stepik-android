@@ -74,11 +74,42 @@ constructor(
             )
     }
 
+    fun fetchCourses(vararg courseId: Long) {
+        if (state != CourseListView.State.Idle) return
+
+        state = CourseListView.State.Loading
+
+        compositeDisposable += courseListInteractor
+            .getCourseListItems(*courseId)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onSuccess = {
+                    state = if (it.isNotEmpty()) {
+                        CourseListView.State.Content(
+                            courseListQuery = CourseListQuery(),
+                            courseListDataItems = it,
+                            courseListItems = it
+                        )
+                    } else {
+                        CourseListView.State.Empty
+                    }
+                },
+                onError = {
+                    state = CourseListView.State.NetworkError
+                }
+            )
+    }
+
     fun fetchNextPage() {
         val oldState = state as? CourseListView.State.Content
             ?: return
 
         if (oldState.courseListItems.last() is CourseListItem.PlaceHolder) {
+            return
+        }
+
+        if (!oldState.courseListDataItems.hasNext) {
             return
         }
 

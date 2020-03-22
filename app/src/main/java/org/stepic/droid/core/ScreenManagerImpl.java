@@ -32,6 +32,7 @@ import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepik.android.domain.auth.model.SocialAuthType;
+import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
@@ -705,6 +706,18 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showCachedAttempts(@NotNull Context context, long courseId) {
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSIONS_SCREEN_OPENED);
         Intent intent = SolutionsActivity.Companion.createIntent(context, courseId);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesByQuery(Context context, CourseListQuery courseListQuery) {
+        Intent intent = org.stepik.android.view.course_list.activity.CourseListActivity.Companion.createIntent(context, courseListQuery);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesById(Context context, long[] courseIds) {
+        Intent intent = org.stepik.android.view.course_list.activity.CourseListActivity.Companion.createIntent(context, courseIds);
         context.startActivity(intent);
     }
 }

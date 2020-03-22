@@ -1,5 +1,6 @@
 package org.stepik.android.domain.course_list.model
 
+import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.model.Course
 import ru.nobird.android.core.model.Identifiable
@@ -15,5 +16,5 @@ sealed class CourseListItem {
 
     object PlaceHolder : CourseListItem()
 
-    data class PlaceHolderText(val text: String) : CourseListItem()
+    data class PlaceHolderText(val text: String, val colors: CollectionDescriptionColors) : CourseListItem()
 }
