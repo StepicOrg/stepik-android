@@ -25,7 +25,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     : View(context, attrs, defStyleAttr) {
 
     private val baseColorDefault = context.resolveColorAttribute(R.attr.colorControlHighlight)
-    private val deepColorDefault = ColorExtensions.colorWithAlphaMul(context.resolveColorAttribute(R.attr.colorControlHighlight), context.resolveFloatAttribute(R.attr.alphaEmphasisDisabled))
+    private val deepColorDefault = ColorExtensions.colorWithAlphaMul(baseColorDefault, context.resolveFloatAttribute(R.attr.alphaEmphasisDisabled))
     private val durationDefault = 1500L
     private val intervalDefault = 0L
 
