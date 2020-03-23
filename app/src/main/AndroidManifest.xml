@@ -123,18 +123,7 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.activities.CourseSearchResultActivity" />
-        </activity>
-
-         <activity
-            android:name=".ui.activities.CourseSearchResultActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:value="org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity" />
         </activity>
 
         <activity
@@ -358,7 +347,15 @@
             android:name="org.stepik.android.view.course_list.ui.activity.CourseListUserActivity" />
 
         <activity
-            android:name="org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity" />
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
