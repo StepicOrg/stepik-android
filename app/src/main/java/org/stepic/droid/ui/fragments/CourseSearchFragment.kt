@@ -99,9 +99,6 @@ class CourseSearchFragment: CourseListFragmentBase() {
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
         backIcon.isVisible = true
-        if (android.os.Build.VERSION.SDK_INT < 21) {
-            toolbarShadow.isVisible = true
-        }
         searchViewToolbar.isVisible = true
         searchViewContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         searchViewToolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
