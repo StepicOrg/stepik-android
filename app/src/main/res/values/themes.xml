@@ -59,6 +59,10 @@
 
         <item name="checkboxStyle">@style/Widget.MaterialComponents.CompoundButton.CheckBox</item>
 
+        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="android:contextPopupMenuStyle">@style/Widget.MaterialComponents.PopupMenu.ContextMenu</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+
         <!-- Inner components parameters -->
         <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>
