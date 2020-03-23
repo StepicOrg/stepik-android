@@ -2,8 +2,6 @@ package org.stepik.android.domain.course_list.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.writeBoolean
 
 data class CourseListQuery(
     val page: Int? = null,
@@ -19,11 +17,11 @@ data class CourseListQuery(
 
         override fun createFromParcel(parcel: Parcel): CourseListQuery =
             CourseListQuery(
-                parcel.readInt(),
-                parcel.readString(),
-                parcel.readLong(),
-                parcel.readBoolean(),
-                parcel.readBoolean()
+                parcel.readValue(Int::class.java.classLoader) as Int?,
+                parcel.readValue(String::class.java.classLoader) as String?,
+                parcel.readValue(Long::class.java.classLoader) as Long?,
+                parcel.readValue(Boolean::class.java.classLoader) as Boolean?,
+                parcel.readValue(Boolean::class.java.classLoader) as Boolean?
             )
 
         override fun newArray(size: Int): Array<CourseListQuery?> =
@@ -31,11 +29,11 @@ data class CourseListQuery(
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeInt(page ?: -1)
-        parcel.writeString(order ?: "")
-        parcel.writeLong(teacher ?: -1)
-        parcel.writeBoolean(isExcludeEnded ?: false)
-        parcel.writeBoolean(isPublic ?: false)
+        parcel.writeValue(page)
+        parcel.writeValue(order)
+        parcel.writeValue(teacher)
+        parcel.writeValue(isExcludeEnded)
+        parcel.writeValue(isPublic)
     }
 
     override fun describeContents(): Int = 0
