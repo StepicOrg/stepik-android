@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:padding="8dp"
-    android:background="@drawable/selectable_item_rounded_background">
+    android:background="?selectableItemBackgroundRounded">
 
     <ImageView
         android:id="@android:id/icon"
