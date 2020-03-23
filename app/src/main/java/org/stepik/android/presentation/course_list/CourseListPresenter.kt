@@ -156,6 +156,33 @@ constructor(
             )
     }
 
+    fun fetchCoursesByQuery(query: String) {
+        if (state != CourseListView.State.Idle) return
+
+        state = CourseListView.State.Loading
+
+        compositeDisposable += courseListInteractor
+            .getCoursesBySearch(query)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onSuccess = {
+                    state = if (it.isNotEmpty()) {
+                        CourseListView.State.Content(
+                            courseListQuery = CourseListQuery(),
+                            courseListDataItems = it,
+                            courseListItems = it
+                        )
+                    } else {
+                        CourseListView.State.Empty
+                    }
+                },
+                onError = {
+                    state = CourseListView.State.NetworkError
+                }
+            )
+    }
+
     fun fetchNextPage() {
         val oldState = state as? CourseListView.State.Content
             ?: return

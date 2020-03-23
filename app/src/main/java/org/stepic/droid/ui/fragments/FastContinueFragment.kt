@@ -207,6 +207,7 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun handleContinueCourseClick(course: Course) {
+        screenManager.showCoursesBySearch(context, "python")
 //        screenManager.showUserCourses(context)
 //        screenManager.showCoursesByTag(context, Tag(id = 22760, title = "mathematics"))
 //        screenManager.showCoursesCollection(requireContext(), CourseCollection(

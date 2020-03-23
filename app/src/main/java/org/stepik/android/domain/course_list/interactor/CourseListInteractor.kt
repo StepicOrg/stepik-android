@@ -10,6 +10,7 @@ import org.stepik.android.domain.course.interactor.CourseStatsInteractor
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.search.repository.SearchRepository
 import org.stepik.android.domain.tags.repository.TagsRepository
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
@@ -22,6 +23,7 @@ constructor(
     private val userCoursesRepository: UserCoursesRepository,
     private val courseRepository: CourseRepository,
     private val tagsRepository: TagsRepository,
+    private val searchRepository: SearchRepository,
     private val courseStatsInteractor: CourseStatsInteractor
 ) {
 
@@ -54,6 +56,16 @@ constructor(
     fun getCoursesByTag(tag: Tag): Single<PagedList<CourseListItem.Data>> =
         tagsRepository
             .getSearchResultsOfTag(1, tag, "ru")
+            .flatMap { searchResult ->
+                getCourseListItems(*searchResult.mapToLongArray { it.course })
+                    .map { courseListItems ->
+                        PagedList(list = courseListItems, page = searchResult.page, hasPrev = searchResult.hasPrev, hasNext = searchResult.hasNext)
+                    }
+            }
+
+    fun getCoursesBySearch(query: String): Single<PagedList<CourseListItem.Data>> =
+        searchRepository
+            .getSearchResultsCourses(1, query, "ru")
             .flatMap { searchResult ->
                 getCourseListItems(*searchResult.mapToLongArray { it.course })
                     .map { courseListItems ->

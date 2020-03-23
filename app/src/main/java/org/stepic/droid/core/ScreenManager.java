@@ -167,4 +167,5 @@ public interface ScreenManager {
     void showCoursesCollection(Context context, CourseCollection courseCollection);
     void showUserCourses(Context context);
     void showCoursesByTag(Context context, Tag tag);
+    void showCoursesBySearch(Context context, String query);
 }
