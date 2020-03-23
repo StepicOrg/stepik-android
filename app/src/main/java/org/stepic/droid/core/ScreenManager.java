@@ -166,4 +166,5 @@ public interface ScreenManager {
     void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery);
     void showCoursesCollection(Context context, CourseCollection courseCollection);
     void showUserCourses(Context context);
+    void showCoursesByTag(Context context, Tag tag);
 }

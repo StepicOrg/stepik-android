@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
@@ -126,7 +127,33 @@ constructor(
                     state = CourseListView.State.NetworkError
                 }
             )
+    }
 
+    fun fetchCoursesByTag(tag: Tag) {
+        if (state != CourseListView.State.Idle) return
+
+        state = CourseListView.State.Loading
+
+        compositeDisposable += courseListInteractor
+            .getCoursesByTag(tag = tag)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onSuccess = {
+                    state = if (it.isNotEmpty()) {
+                        CourseListView.State.Content(
+                            courseListQuery = CourseListQuery(),
+                            courseListDataItems = it,
+                            courseListItems = it
+                        )
+                    } else {
+                        CourseListView.State.Empty
+                    }
+                },
+                onError = {
+                    state = CourseListView.State.NetworkError
+                }
+            )
     }
 
     fun fetchNextPage() {
