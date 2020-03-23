@@ -2,6 +2,7 @@ package org.stepik.android.view.course_list.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -22,20 +23,16 @@ import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CoursesQueryFragment : Fragment() {
+class CourseListQueryFragment : Fragment() {
     companion object {
-        fun newInstance(courseListQuery: CourseListQuery): Fragment =
-            CoursesQueryFragment().apply {
-                // TODO Remove
-                this.courseListQuery = CourseListQuery(
-                    page = 1,
-                    order = CourseListQuery.ORDER_ACTIVITY_DESC,
-                    isExcludeEnded = true,
-                    isPublic = true
-                )
+        fun newInstance(courseListTitle: String, courseListQuery: CourseListQuery): Fragment =
+            CourseListQueryFragment().apply {
+                this.courseListTitle = courseListTitle
+                this.courseListQuery = courseListQuery
             }
     }
 
+    private var courseListTitle by argument<String>()
     private var courseListQuery by argument<CourseListQuery>()
 
     @Inject
@@ -72,7 +69,7 @@ class CoursesQueryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initCenteredToolbar("Course list query", true)
+        initCenteredToolbar(courseListTitle, true)
         with(courseListCoursesRecycler) {
             addItemDecoration(org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration())
             layoutManager = org.stepic.droid.ui.custom.WrapContentLinearLayoutManager(context)
@@ -103,6 +100,10 @@ class CoursesQueryFragment : Fragment() {
             .courseListExperimentalComponentBuilder()
             .build()
             .inject(this)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {

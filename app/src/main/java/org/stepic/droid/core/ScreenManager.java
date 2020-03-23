@@ -20,6 +20,7 @@ import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
+import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
@@ -162,6 +163,6 @@ public interface ScreenManager {
 
     void showCachedAttempts(@NotNull Context context, long courseId);
 
-    void showCoursesByQuery(Context context, CourseListQuery courseListQuery);
-    void showCoursesById(Context context, long[] courseIds);
+    void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery);
+    void showCoursesCollection(Context context, CourseCollection courseCollection);
 }

@@ -208,8 +208,15 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun handleContinueCourseClick(course: Course) {
-        screenManager.showCoursesByQuery(requireContext(), CourseListQuery(page = 1, order = CourseListQuery.ORDER_ACTIVITY_DESC, isExcludeEnded = true, isPublic = true))
-//        screenManager.showCoursesById(requireContext(), longArrayOf(1838, 191, 2945, 4471, 1818, 13222))
+//        screenManager.showCoursesCollection(requireContext(), CourseCollection(
+//            id = 1,
+//            position = 2,
+//            title = "TEST",
+//            language = "ru",
+//            courses = longArrayOf(1838, 191, 2945, 4471, 1818, 13222),
+//            description = "Description description"
+//        ))
+        screenManager.showCoursesByQuery(requireContext(), "Popular", CourseListQuery(page = 1, order = CourseListQuery.ORDER_ACTIVITY_DESC, isExcludeEnded = true, isPublic = true))
 //        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
 //        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
     }

@@ -14,23 +14,22 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepik.android.model.CourseCollection
 import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseCollectionFragment : Fragment() {
-
+class CourseListCollectionFragment : Fragment() {
     companion object {
-        fun newInstance(courseIds: LongArray): Fragment =
-            CourseCollectionFragment().apply {
-                this.courseIds = courseIds
+        fun newInstance(courseCollection: CourseCollection): Fragment =
+            CourseListCollectionFragment().apply {
+                this.courseCollection = courseCollection
             }
     }
 
-    private var courseIds by argument<LongArray>()
+    private var courseCollection by argument<CourseCollection>()
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -66,15 +65,10 @@ class CourseCollectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initCenteredToolbar("Course collection", true)
+        initCenteredToolbar(courseCollection.title, true)
         with(courseListCoursesRecycler) {
             addItemDecoration(org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration())
             layoutManager = org.stepic.droid.ui.custom.WrapContentLinearLayoutManager(context)
-            setOnPaginationListener { pageDirection ->
-                if (pageDirection == org.stepik.android.domain.base.PaginationDirection.NEXT) {
-                    courseListPresenter.fetchNextPage()
-                }
-            }
         }
 
         courseListViewDelegate = CourseListViewDelegate(
@@ -89,7 +83,7 @@ class CourseCollectionFragment : Fragment() {
             courseListPresenter = courseListPresenter
         )
 
-        courseListPresenter.fetchCourses(*courseIds)
+        courseListPresenter.fetchCourses(*courseCollection.courses)
     }
 
     private fun injectComponent() {

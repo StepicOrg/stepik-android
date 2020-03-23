@@ -346,7 +346,10 @@
             android:name="org.stepik.android.view.solutions.ui.activity.SolutionsActivity" />
 
         <activity
-            android:name="org.stepik.android.view.course_list.activity.CourseListActivity" />
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
