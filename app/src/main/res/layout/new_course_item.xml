@@ -62,7 +62,6 @@
                 android:layout_marginTop="@dimen/course_item_space_between_items"
                 android:textSize="@dimen/course_item_titles_text_size"
                 android:textAppearance="?textAppearanceBody1"
-                android:alpha="?alphaEmphasisHigh"
                 app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -99,7 +98,7 @@
                 android:layout_marginTop="4dp"
 
                 android:textAppearance="?textAppearanceBody2"
-                android:alpha="?alphaEmphasisMedium"
+                android:textColor="?android:textColorSecondary"
 
                 android:lineSpacingExtra="1sp"
                 android:ellipsize="end"

@@ -259,10 +259,10 @@
     <style name="CourseWidgetPropertyTextView" parent="CourseWidgetPropertyTextView.15" />
 
     <style name="CourseWidgetPropertyTextView.15" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:textSize">@dimen/course_item_property_text_size</item>
         <item name="android:layout_marginLeft">@dimen/course_item_property_text_image_margin</item>
         <item name="android:layout_marginRight">@dimen/course_item_property_between_items_margin</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textAppearance">?textAppearanceBody2</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -273,6 +273,8 @@
         <item name="android:clickable">false</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:alpha">?alphaEmphasisMedium</item>
+        <item name="android:tint">?colorOnSurface</item>
     </style>
 
     <style name="FastContinueSubtextStyle">
