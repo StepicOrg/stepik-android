@@ -63,6 +63,10 @@
         <item name="android:contextPopupMenuStyle">@style/Widget.MaterialComponents.PopupMenu.ContextMenu</item>
         <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
 
+        <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
+        <item name="appBarElevation">@dimen/appbar_elevation</item>
+        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Surface</item>
+
         <!-- Inner components parameters -->
         <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>

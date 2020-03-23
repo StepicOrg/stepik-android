@@ -4,6 +4,7 @@
     <attr name="alphaEmphasisMedium" format="float"/>
     <attr name="alphaEmphasisDisabled" format="float"/>
 
+    <attr name="appBarElevation" format="dimension|reference" />
 
     <attr name="colorSecondaryDark" format="color|reference" />
 

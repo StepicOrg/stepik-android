@@ -12,6 +12,8 @@
     <dimen name="material_emphasis_medium">0.6</dimen>
     <dimen name="material_emphasis_disabled">0.38</dimen>
 
+    <dimen name="appbar_elevation">4dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="custom_peek_height">500dp</dimen>
     <dimen name="guideline_tab_indicator_height">2dp</dimen>
