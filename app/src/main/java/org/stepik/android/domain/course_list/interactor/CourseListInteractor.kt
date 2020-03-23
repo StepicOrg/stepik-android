@@ -4,17 +4,20 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
 import javax.inject.Inject
 
 class CourseListInteractor
 @Inject
 constructor(
+    private val userCoursesRepository: UserCoursesRepository,
     private val courseRepository: CourseRepository,
     private val courseStatsInteractor: CourseStatsInteractor
 ) {
@@ -34,6 +37,16 @@ constructor(
 
     fun getCourseListItems(courseListQuery: CourseListQuery): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(coursesSource = courseRepository.getCourses(courseListQuery))
+
+    fun getUserCourses(): Single<PagedList<CourseListItem.Data>> =
+        userCoursesRepository
+            .getUserCourses()
+            .flatMap { userCourses ->
+                getCourseListItems(*userCourses.mapToLongArray { it.course })
+                    .map { courseListItems ->
+                        PagedList(list = courseListItems, page = userCourses.page, hasPrev = userCourses.hasPrev, hasNext = userCourses.hasNext)
+                    }
+            }
 
     private fun getCourseListItems(coursesSource: Single<PagedList<Course>>): Single<PagedList<CourseListItem.Data>> =
         coursesSource

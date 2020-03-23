@@ -15,24 +15,16 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
-import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
-import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseListQueryFragment : Fragment() {
+class CourseListUserFragment : Fragment() {
     companion object {
-        fun newInstance(courseListTitle: String, courseListQuery: CourseListQuery): Fragment =
-            CourseListQueryFragment().apply {
-                this.courseListTitle = courseListTitle
-                this.courseListQuery = courseListQuery
-            }
+        fun newInstance(): Fragment =
+            CourseListUserFragment()
     }
-
-    private var courseListTitle by argument<String>()
-    private var courseListQuery by argument<CourseListQuery>()
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -68,7 +60,7 @@ class CourseListQueryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initCenteredToolbar(courseListTitle, true)
+        initCenteredToolbar("User courses", true)
         with(courseListCoursesRecycler) {
             addItemDecoration(org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration())
             layoutManager = org.stepic.droid.ui.custom.WrapContentLinearLayoutManager(context)
@@ -91,7 +83,7 @@ class CourseListQueryFragment : Fragment() {
             courseListPresenter = courseListPresenter
         )
 
-        courseListPresenter.fetchCourses(courseListQuery)
+        courseListPresenter.fetchUserCourses()
     }
 
     private fun injectComponent() {
