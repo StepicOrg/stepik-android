@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:visibility="gone"
+            android:theme="@style/ThemeOverlay.Brown"
             app:tabMode="scrollable" />
 
     </com.google.android.material.appbar.AppBarLayout>

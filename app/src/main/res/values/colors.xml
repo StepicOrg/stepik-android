@@ -61,9 +61,6 @@
     <color name="tab_text_color">@color/new_accent_color</color>
     <color name="tab_text_color_70percent">@color/new_accent_color_alpha_70</color>
 
-    <color name="unviewed_step">@color/new_accent_color</color>
-    <color name="viewed_step">@color/new_accent_color_alpha_40</color>
-
     <color name="new_cover">@color/white</color>
 
     <color name="dots_color">@color/red01</color>

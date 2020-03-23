@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -143,7 +142,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         goToCatalog.setOnClickListener { screenManager.showCatalog(this); finish() }
         authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
 
-        stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)
+        stepsAdapter = StepFragmentAdapter(lessonTab.context, supportFragmentManager, stepTypeResolver)
         lessonPager.adapter = stepsAdapter
         lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonPager, stepsAdapter))
         lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
@@ -270,8 +269,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 .getDrawable(this, stepsAdapter.getTabDrawable(i))
                 ?.mutate()
 
-            val tintColor = ContextCompat
-                .getColor(this, stepsAdapter.getTabTint(i))
+            val tintColor = stepsAdapter.getTabTint(i)
 
             lessonTab.getTabAt(i)?.icon = tabIcon
             tabIcon?.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)

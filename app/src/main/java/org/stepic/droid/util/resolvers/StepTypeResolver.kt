@@ -10,8 +10,5 @@ interface StepTypeResolver {
     @DrawableRes
     fun getDrawableForType(type: String?, isPeerReview: Boolean): Int
 
-    @ColorRes
-    fun getDrawableTintForStep(isViewed: Boolean): Int
-
     fun getQuizDelegate(step: Step?): QuizDelegate
 }
