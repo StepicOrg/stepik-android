@@ -432,4 +432,10 @@
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
     </style>
+
+    <style name="Widget.AppTheme.Button.TextButton.Small" parent="Widget.AppTheme.Button.TextButton">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:textAppearance">?textAppearanceCaption</item>
+    </style>
 </resources>

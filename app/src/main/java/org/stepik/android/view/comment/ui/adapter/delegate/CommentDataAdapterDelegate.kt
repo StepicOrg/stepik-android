@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.layout_comment_actions.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.model.UserRole
@@ -80,9 +79,6 @@ class CommentDataAdapterDelegate(
 
             commentUserIcon.setOnClickListener(this)
             commentUserName.setOnClickListener(this)
-
-            commentLike.setCompoundDrawables(start = R.drawable.ic_comment_like)
-            commentDislike.setCompoundDrawables(start = R.drawable.ic_comment_dislike)
 
             voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Resolved>(commentLike, commentDislike)
             voteStatusViewStateDelegate.addState<CommentItem.Data.VoteStatus.Pending>(root.commentVoteProgress)
