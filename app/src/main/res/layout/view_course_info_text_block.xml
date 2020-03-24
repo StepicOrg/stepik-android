@@ -16,9 +16,7 @@
         android:layout_marginTop="@dimen/course_info_block_margin"
         android:layout_marginStart="@dimen/course_info_block_text_margin"
         android:layout_marginLeft="@dimen/course_info_block_text_margin"
-        android:textColor="@color/new_accent_color"
-        android:textSize="14sp"
-
-        android:fontFamily="@font/roboto_light" />
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary" />
 
 </LinearLayout>
