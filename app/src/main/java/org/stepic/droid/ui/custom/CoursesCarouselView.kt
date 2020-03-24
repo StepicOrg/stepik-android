@@ -42,8 +42,10 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.model.CourseCollection
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import java.util.ArrayList
 import java.util.EnumSet
@@ -381,7 +383,35 @@ constructor(
     }
 
     private fun viewAll() {
-        screenManager.showCoursesList(activity, info, descriptionColors)
+        when {
+            info.courseListType == CourseListType.ENROLLED ->
+                screenManager.showUserCourses(context)
+
+            info.courseListType == CourseListType.FEATURED ->
+                screenManager.showCoursesByQuery(
+                    context,
+                    "Popular",
+                    CourseListQuery(
+                        page = 1,
+                        order = CourseListQuery.ORDER_ACTIVITY_DESC,
+                        isExcludeEnded = true,
+                        isPublic = true
+                    )
+                )
+
+            info.courseListType == null && info.courseIds != null ->
+                screenManager.showCoursesCollection(
+                    context,
+                    CourseCollection(
+                        id = 0,
+                        position = 0,
+                        title = info.title,
+                        language = "",
+                        courses = info.courseIds as LongArray,
+                        description = info.description
+                    )
+                )
+        }
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {

@@ -30,6 +30,7 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import javax.inject.Inject
 
@@ -208,7 +209,6 @@ class FastContinueFragment : FragmentBase(),
 
     private fun handleContinueCourseClick(course: Course) {
 //        screenManager.showUserCourses(context)
-//        screenManager.showCoursesByTag(context, Tag(id = 22760, title = "mathematics"))
 //        screenManager.showCoursesCollection(requireContext(), CourseCollection(
 //            id = 1,
 //            position = 2,
