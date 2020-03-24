@@ -32,6 +32,10 @@
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
+    <style name="TextAppearance.AppTheme.Headline3" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="android:textColor">?android:textColorPrimary</item>
+    </style>
+
     <style name="TextAppearance.AppTheme.Headline5" parent="TextAppearance.MaterialComponents.Headline5">
         <item name="android:textColor">?android:textColorPrimary</item>
     </style>

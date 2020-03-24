@@ -13,8 +13,7 @@
 
         android:layout_marginTop="12dp"
 
-        app:fontFamily="@font/roboto_light"
-        android:textSize="48sp"
+        android:textAppearance="?textAppearanceHeadline3"
 
         tools:text="4.8"
 
@@ -51,8 +50,8 @@
         android:layout_marginTop="4dp"
         android:layout_marginBottom="@dimen/course_review_item_margin"
 
-        app:fontFamily="@font/roboto_light"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
 
         tools:text="12331"
 

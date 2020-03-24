@@ -177,11 +177,6 @@
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/new_primary_color</item>
-        <item name="colorAccent">@color/new_accent_color</item>
-    </style>
-
     <style name="TextAppearance.FontPath" parent="android:TextAppearance">
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
@@ -202,7 +197,7 @@
 
     <style name="PlaceholderTextViewStyle">
         <item name="android:textAppearance">?textAppearanceBody1</item>
-        <item name="android:alpha">?alphaEmphasisMedium</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
         <item name="android:padding">@dimen/padding_placeholders</item>
         <item name="android:gravity">center</item>
     </style>
@@ -307,16 +302,6 @@
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@color/material_on_surface_emphasis_high_type</item>
-    </style>
-
-    <style name="NewStepikButton" parent="@style/Widget.AppCompat.Button">
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:background">@drawable/new_button_selector</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
     </style>
 
     <style name="PopupAnimations">
@@ -427,8 +412,8 @@
     </style>
 
     <style name="CourseReviewSummaryCountTitle">
-        <item name="android:textSize">12sp</item>
-        <item name="fontFamily">@font/roboto_light</item>
+        <item name="android:textAppearance">?textAppearanceCaption</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
     <style name="Widget.AppTheme.Button" parent="@style/Widget.MaterialComponents.Button">
