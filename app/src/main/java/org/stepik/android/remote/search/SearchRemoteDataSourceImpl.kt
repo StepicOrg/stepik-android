@@ -6,20 +6,21 @@ import org.stepic.droid.util.PagedList
 import org.stepik.android.data.search.source.SearchRemoteDataSource
 import org.stepik.android.model.SearchResult
 import org.stepik.android.remote.base.mapper.toPagedList
+import org.stepik.android.remote.search.mapper.SearchQueryMapper
 import org.stepik.android.remote.search.model.QueriesResponse
 import org.stepik.android.remote.search.model.SearchResultResponse
 import org.stepik.android.remote.search.service.SearchService
-import java.net.URLEncoder
 import javax.inject.Inject
 
 class SearchRemoteDataSourceImpl
 @Inject
 constructor(
-    private val searchService: SearchService
+    private val searchService: SearchService,
+    private val searchQueryMapper: SearchQueryMapper
 ) : SearchRemoteDataSource {
-    override fun getSearchResultsCourses(page: Int, rawQuery: String?, lang: String): Single<PagedList<SearchResult>> =
+    override fun getSearchResultsCourses(searchQuery: org.stepik.android.domain.course_list.model.SearchQuery): Single<PagedList<SearchResult>> =
         searchService
-            .getSearchResults(page, URLEncoder.encode(rawQuery), lang)
+            .getSearchResults(searchQueryMapper.mapToQueryMap(searchQuery))
             .map { it.toPagedList(SearchResultResponse::searchResultList) }
 
     override fun getSearchQueries(query: String): Single<List<SearchQuery>> =

@@ -59,7 +59,12 @@ class SearchCoursesPresenter
 
 
 
-                    val searchResultResponseBody = searchRepository.getSearchResultsCourses(currentPage.get(), searchQuery, sharedPreferenceHelper.languageForFeatured).blockingGet()
+                    val searchResultResponseBody = searchRepository.getSearchResultsCourses(
+                        org.stepik.android.domain.course_list.model.SearchQuery(
+                            page = currentPage.get(),
+                            query = searchQuery
+                        )
+                    ).blockingGet()
                     val courseIdsForSearch = searchResolver.getCourseIdsFromSearchResults(searchResultResponseBody)
                     hasNextPage.set(searchResultResponseBody.hasNext)
                     currentPage.set(searchResultResponseBody.page + 1)

@@ -6,14 +6,12 @@ import android.os.Parcelable
 data class SearchQuery(
     val page: Int? = null,
     val tag: Int? = null,
-    val query: String? = null,
-    val lang: String? = null
+    val query: String? = null
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeValue(page)
         parcel.writeValue(tag)
         parcel.writeValue(query)
-        parcel.writeValue(lang)
     }
 
     override fun describeContents(): Int = 0
@@ -23,7 +21,6 @@ data class SearchQuery(
             SearchQuery(
                 parcel.readValue(Int::class.java.classLoader) as Int?,
                 parcel.readValue(Int::class.java.classLoader) as Int?,
-                parcel.readValue(String::class.java.classLoader) as String?,
                 parcel.readValue(String::class.java.classLoader) as String?
             )
 

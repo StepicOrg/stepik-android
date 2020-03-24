@@ -21,11 +21,15 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
+import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
-import org.stepik.android.presentation.course_list.CourseListPresenter
+import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.course_list.model.SearchQuery
+import org.stepik.android.presentation.course_list.CourseListSearchPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -58,7 +62,7 @@ class CourseListSearchFragment : Fragment() {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
-    private lateinit var courseListPresenter: CourseListPresenter
+    private lateinit var courseListPresenter: CourseListSearchPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +70,7 @@ class CourseListSearchFragment : Fragment() {
 
         courseListPresenter = ViewModelProviders
             .of(this, viewModelFactory)
-            .get(CourseListPresenter::class.java)
+            .get(CourseListSearchPresenter::class.java)
     }
 
     override fun onCreateView(
@@ -84,10 +88,10 @@ class CourseListSearchFragment : Fragment() {
         setupSearchBar()
 
         with(courseListCoursesRecycler) {
-            addItemDecoration(org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration())
-            layoutManager = org.stepic.droid.ui.custom.WrapContentLinearLayoutManager(context)
+            addItemDecoration(CourseListPlaceHolderTextDecoration())
+            layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
-                if (pageDirection == org.stepik.android.domain.base.PaginationDirection.NEXT) {
+                if (pageDirection == PaginationDirection.NEXT) {
                     courseListPresenter.fetchNextPage()
                 }
             }
@@ -105,7 +109,7 @@ class CourseListSearchFragment : Fragment() {
             courseListPresenter = courseListPresenter
         )
 
-        courseListPresenter.fetchCoursesByQuery(query)
+        courseListPresenter.fetchCourses(SearchQuery(page = 1, query = query))
     }
 
     private fun setupSearchBar() {
@@ -132,14 +136,12 @@ class CourseListSearchFragment : Fragment() {
     }
 
     private fun setupSearchView(searchView: AutoCompleteSearchView) {
-        // searchView.setCloseIconDrawableRes(getCloseIconDrawableRes())
         searchView.setSearchable(requireActivity())
         searchView.initSuggestions(rootView)
 
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 searchView.onSubmitted(query)
-                courseListPresenter.fetchCoursesByQuery(query)
                 return false
             }
 

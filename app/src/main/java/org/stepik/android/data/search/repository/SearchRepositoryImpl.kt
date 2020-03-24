@@ -13,8 +13,8 @@ class SearchRepositoryImpl
 constructor(
     private val searchRemoteDataSource: SearchRemoteDataSource
 ) : SearchRepository {
-    override fun getSearchResultsCourses(page: Int, rawQuery: String?, lang: String): Single<PagedList<SearchResult>> =
-        searchRemoteDataSource.getSearchResultsCourses(page, rawQuery, lang)
+    override fun getSearchResultsCourses(searchQuery: org.stepik.android.domain.course_list.model.SearchQuery): Single<PagedList<SearchResult>> =
+        searchRemoteDataSource.getSearchResultsCourses(searchQuery)
 
     override fun getSearchQueries(query: String): Single<List<SearchQuery>> =
         searchRemoteDataSource.getSearchQueries(query)

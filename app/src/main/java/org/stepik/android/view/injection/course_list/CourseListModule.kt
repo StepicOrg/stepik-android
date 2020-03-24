@@ -8,6 +8,9 @@ import dagger.multibindings.IntoMap
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_list.CourseListPresenter
+import org.stepik.android.presentation.course_list.CourseListSearchPresenter
+import org.stepik.android.presentation.course_list.CourseListUserPresenter
+import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
 import ru.nobird.android.presentation.base.PresenterViewContainer
@@ -22,6 +25,21 @@ abstract class CourseListModule {
     @IntoMap
     @ViewModelKey(CourseListPresenter::class)
     internal abstract fun bindCourseListPresenter(courseListPresenter: CourseListPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CourseListUserPresenter::class)
+    internal abstract fun bindCourseListUserPresenter(courseListUserPresenter: CourseListUserPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CourseListSearchPresenter::class)
+    internal abstract fun bindCourseListSearchPresenter(courseListSearchPresenter: CourseListSearchPresenter): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(CourseListCollectionPresenter::class)
+    internal abstract fun bindCourseListCollectionPresenter(courseListCollectionPresenter: CourseListCollectionPresenter): ViewModel
 
     @Binds
     internal abstract fun bindCourseContinueViewContainer(@CourseListScope viewContainer: PresenterViewContainer<CourseListView>): ViewContainer<out CourseContinueView>

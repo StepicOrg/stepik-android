@@ -15,7 +15,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.CourseCollection
-import org.stepik.android.presentation.course_list.CourseListPresenter
+import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import ru.nobird.android.view.base.ui.extension.argument
@@ -44,7 +44,7 @@ class CourseListCollectionFragment : Fragment() {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
-    private lateinit var courseListPresenter: CourseListPresenter
+    private lateinit var courseListPresenter: CourseListCollectionPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +52,7 @@ class CourseListCollectionFragment : Fragment() {
 
         courseListPresenter = ViewModelProviders
             .of(this, viewModelFactory)
-            .get(CourseListPresenter::class.java)
+            .get(CourseListCollectionPresenter::class.java)
     }
 
     override fun onCreateView(

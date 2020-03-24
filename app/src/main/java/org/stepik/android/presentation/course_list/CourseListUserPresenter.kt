@@ -6,9 +6,8 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
@@ -17,11 +16,11 @@ import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
 
-class CourseListPresenter
+class CourseListUserPresenter
 @Inject
 constructor(
     private val courseListStateMapper: CourseListStateMapper,
-    private val courseListInteractor: CourseListInteractor,
+    private val courseListUserInteractor: CourseListUserInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -40,8 +39,6 @@ constructor(
             view?.setState(value)
         }
 
-    private var courseListQuery: CourseListQuery? = null
-
     private val paginationDisposable = CompositeDisposable()
 
     override fun attachView(view: CourseListView) {
@@ -49,13 +46,13 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchCourses(courseListQuery: CourseListQuery) {
+    fun fetchCourses() {
         if (state != CourseListView.State.Idle) return
 
         state = CourseListView.State.Loading
 
-        compositeDisposable += courseListInteractor
-            .getCourseListItems(courseListQuery)
+        compositeDisposable += courseListUserInteractor
+            .getUserCourses()
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
@@ -79,8 +76,6 @@ constructor(
         val oldState = state as? CourseListView.State.Content
             ?: return
 
-        val oldCourseListQuery = courseListQuery ?: return
-
         if (oldState.courseListItems.last() is CourseListItem.PlaceHolder) {
             return
         }
@@ -91,11 +86,9 @@ constructor(
 
         val nextPage = oldState.courseListDataItems.page + 1
 
-        val courseListQuery = oldCourseListQuery.copy(page = nextPage)
-
         state = courseListStateMapper.mapToLoadMoreState(oldState)
-        paginationDisposable += courseListInteractor
-            .getCourseListItems(courseListQuery)
+        paginationDisposable += courseListUserInteractor
+            .getUserCourses(page = nextPage)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

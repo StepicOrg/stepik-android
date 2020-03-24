@@ -13,11 +13,14 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
-import org.stepik.android.presentation.course_list.CourseListPresenter
+import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
 import javax.inject.Inject
 
 class CourseListUserFragment : Fragment() {
@@ -39,7 +42,7 @@ class CourseListUserFragment : Fragment() {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
-    private lateinit var courseListPresenter: CourseListPresenter
+    private lateinit var courseListPresenter: CourseListUserPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +50,7 @@ class CourseListUserFragment : Fragment() {
 
         courseListPresenter = ViewModelProviders
             .of(this, viewModelFactory)
-            .get(CourseListPresenter::class.java)
+            .get(CourseListUserPresenter::class.java)
     }
 
     override fun onCreateView(
@@ -62,10 +65,10 @@ class CourseListUserFragment : Fragment() {
 
         initCenteredToolbar("User courses", true)
         with(courseListCoursesRecycler) {
-            addItemDecoration(org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration())
-            layoutManager = org.stepic.droid.ui.custom.WrapContentLinearLayoutManager(context)
+            addItemDecoration(CourseListPlaceHolderTextDecoration())
+            layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
-                if (pageDirection == org.stepik.android.domain.base.PaginationDirection.NEXT) {
+                if (pageDirection == PaginationDirection.NEXT) {
                     courseListPresenter.fetchNextPage()
                 }
             }
@@ -83,7 +86,7 @@ class CourseListUserFragment : Fragment() {
             courseListPresenter = courseListPresenter
         )
 
-        courseListPresenter.fetchUserCourses()
+        courseListPresenter.fetchCourses()
     }
 
     private fun injectComponent() {

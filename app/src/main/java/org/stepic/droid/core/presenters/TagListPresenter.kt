@@ -16,6 +16,7 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
+import org.stepik.android.domain.course_list.model.SearchQuery
 import org.stepik.android.domain.tags.repository.TagsRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.SearchResult
@@ -52,7 +53,12 @@ constructor(
             }
             .observeOn(backgroundScheduler)
             .flatMapSingle {
-                tagsRepository.getSearchResultsOfTag(it, tag, sharedPreferenceHelper.languageForFeatured)
+                tagsRepository.getSearchResultsOfTag(
+                    SearchQuery(
+                        page = it,
+                        tag = tag.id
+                    )
+                )
             }
             .doOnNext(::handleMeta)
             .map(searchResolver::getCourseIdsFromSearchResults)
