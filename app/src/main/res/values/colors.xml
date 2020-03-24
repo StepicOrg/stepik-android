@@ -221,10 +221,7 @@
     <color name="popup_background_color_dark">@color/new_accent_color</color>
 
     <!-- course -->
-    <color name="course_appbar_separator">@color/grey03</color>
     <color name="course_appbar_scrim_color">#6B6B7B</color>
-    <color name="course_tabbar_color">@color/new_primary_color</color>
-    <color name="course_info_organization_span">@color/blue03_alpha_80</color>
     <color name="course_content_section_background">@color/new_primary_color</color>
     <color name="course_content_section_date_disabled">@color/grey03_alpha_80</color>
 
