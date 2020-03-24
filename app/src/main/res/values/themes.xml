@@ -68,8 +68,9 @@
         <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Surface</item>
 
         <!-- Inner components parameters -->
-        <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>
+        <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
+        <item name="dividerVerticalColor">@color/color_divider_vertical</item>
         <item name="cornerRadius">@dimen/corner_radius</item>
 
         <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
