@@ -384,17 +384,6 @@
         <item name="android:textColorSecondary">@color/white</item>
     </style>
 
-    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:textColorPrimary">@color/new_accent_color</item>
-        <item name="colorControlNormal">@color/new_accent_color</item>
-        <item name="colorControlActivated">@color/new_accent_color</item>
-    </style>
-    
-    <style name="TextInputLayout.HelperTextAppearance" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/new_accent_color_alpha_50</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
     <style name="StepQuizFeedback">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
