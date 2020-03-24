@@ -52,6 +52,9 @@ fun Context.resolveColorAttribute(@AttrRes attributeResId: Int): Int =
 fun Context.resolveFloatAttribute(@AttrRes attributeResId: Int): Float =
     resolveAttribute(attributeResId)?.float ?: 0f
 
+fun Context.resolveResourceIdAttribute(@AttrRes attributeResId: Int): Int =
+    resolveAttribute(attributeResId)?.resourceId ?: 0
+
 /**
  * Converts current value in px to dp
  */

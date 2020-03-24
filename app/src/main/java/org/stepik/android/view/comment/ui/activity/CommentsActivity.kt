@@ -32,6 +32,7 @@ import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.model.DiscussionOrderItem
 import org.stepik.android.view.comment.ui.adapter.decorator.CommentItemDecoration
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentDataAdapterDelegate
@@ -109,8 +110,9 @@ class CommentsActivity :
                 },
             showHomeButton = true
         )
-        centeredToolbar.overflowIcon =
-            AppCompatResources.getDrawable(this, R.drawable.ic_comments_ordering)
+        centeredToolbar.overflowIcon = AppCompatResources
+            .getDrawable(this, R.drawable.ic_comments_ordering)
+            ?.setTintList(this, R.attr.colorControlNormal)
 
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()

@@ -4,12 +4,10 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
-import org.stepic.droid.util.resolveAttribute
+import org.stepik.android.view.base.ui.extension.setTintList
 
 
 //Fragment's functions:
@@ -77,14 +75,8 @@ private fun AppCompatActivity.initCenteredToolbarBase(
         //is not default
         val homeIndicatorDrawable = AppCompatResources
             .getDrawable(actionBar.themedContext, homeIndicatorRes)
-            ?.mutate()
+            ?.setTintList(actionBar.themedContext, R.attr.colorControlNormal)
 
-        homeIndicatorDrawable
-            ?.let { drawable ->
-                val colorControlNormalRes = actionBar.themedContext.resolveAttribute(R.attr.colorControlNormal)?.resourceId ?: return@let
-                val colorControlNormal = ContextCompat.getColorStateList(actionBar.themedContext, colorControlNormalRes)
-                DrawableCompat.setTintList(drawable, colorControlNormal)
-            }
         actionBar.setHomeAsUpIndicator(homeIndicatorDrawable)
     }
 }
