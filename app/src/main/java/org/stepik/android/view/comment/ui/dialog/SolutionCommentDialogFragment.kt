@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.LayoutRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
@@ -27,6 +28,7 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -84,7 +86,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
         injectComponent()
     }
 
@@ -130,7 +132,9 @@ class SolutionCommentDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.text = getString(R.string.comment_solution_pattern, submission.id)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.navigationIcon = AppCompatResources
+            .getDrawable(requireContext(), R.drawable.ic_close_dark)
+            ?.setTintList(requireContext(), R.attr.colorControlNormal)
 
         val state =
             StepQuizView.State.AttemptLoaded(
@@ -213,7 +217,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
             }
     }
 }

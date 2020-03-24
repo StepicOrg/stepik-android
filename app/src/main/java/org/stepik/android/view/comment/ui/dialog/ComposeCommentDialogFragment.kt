@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -28,6 +29,7 @@ import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
+import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.submission.ui.delegate.setSubmission
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -100,7 +102,7 @@ class ComposeCommentDialogFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
 
         injectComponent()
         composeCommentPresenter = ViewModelProviders
@@ -129,7 +131,9 @@ class ComposeCommentDialogFragment :
         centeredToolbarTitle.setText(
             if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) R.string.solutions_compose_title else R.string.comment_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.navigationIcon = AppCompatResources
+            .getDrawable(requireContext(), R.drawable.ic_close_dark)
+            ?.setTintList(requireContext(), R.attr.colorControlNormal)
         centeredToolbar.inflateMenu(R.menu.comment_compose_menu)
         centeredToolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.comment_submit) {
@@ -175,7 +179,7 @@ class ComposeCommentDialogFragment :
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
             }
 
         composeCommentPresenter.attachView(this)

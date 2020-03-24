@@ -6,5 +6,6 @@
         android:id="@+id/menu_item_edit"
         android:icon="@drawable/ic_edit"
         android:title="@string/step_action_edit_content"
+        app:iconTint="?colorControlNormal"
         app:showAsAction="ifRoom" />
 </menu>

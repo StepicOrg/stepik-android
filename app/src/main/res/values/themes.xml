@@ -92,6 +92,14 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="ThemeOverlay.AppTheme.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">?android:colorBackground</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+
     <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">
         <item name="colorOnSecondary">@color/new_accent_color</item>
         <item name="colorSecondary">@color/new_accent_color</item>
