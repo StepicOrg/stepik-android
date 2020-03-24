@@ -8,7 +8,9 @@ import androidx.annotation.ColorInt
 import androidx.annotation.FontRes
 import org.stepic.droid.R
 import org.stepic.droid.util.resolveColorAttribute
+import org.stepic.droid.util.resolveFloatAttribute
 import org.stepic.droid.util.toSp
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 
 data class TextAttributes(
     val textSize: Float,
@@ -33,9 +35,12 @@ data class TextAttributes(
 
         @SuppressLint("ResourceType")
         fun fromAttributeSet(context: Context, attrs: AttributeSet?): TextAttributes {
+            val colorOnSurface = context.resolveColorAttribute(R.attr.colorOnSurface)
+            val alphaEmphasisHigh = context.resolveFloatAttribute(R.attr.alphaEmphasisHigh)
+
             var textAttributes = TextAttributes( // default params
                 textSize = 14f,
-                textColor = context.resolveColorAttribute(R.attr.colorOnSurface),
+                textColor = ColorExtensions.colorWithAlphaMul(colorOnSurface, alphaEmphasisHigh),
                 textColorHighlight = context.resolveColorAttribute(android.R.attr.textColorHighlight),
                 textIsSelectable = false,
                 fontResId = R.font.roboto_regular
