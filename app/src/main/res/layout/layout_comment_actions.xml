@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
 
         style="@style/Widget.AppTheme.Button.TextButton.Small"
+        android:theme="@style/ThemeOverlay.Violet"
         android:text="@string/reply_title"
 
         android:padding="4dp"

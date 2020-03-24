@@ -30,6 +30,7 @@
 
         android:text="@string/reply_title"
 
+        android:theme="@style/ThemeOverlay.Violet"
         android:padding="4dp"
 
         app:layout_constraintTop_toTopOf="parent"
