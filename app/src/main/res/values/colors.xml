@@ -94,9 +94,6 @@
     <color name="center_gradient_fire">#EFDFE7</color>
     <color name="end_gradient_fire">#F5DEDD</color>
     <color name="text_color_gradient_fire">#18073D</color>
-
-    <color name="loading_view_base_color">@color/grey05</color>
-    <color name="loading_view_deep_color">@color/grey05_alpha_85</color>
     <!-- Gradient colors end-->
 
     <color name="code_toolbar_background">@color/grey04</color>
@@ -130,8 +127,6 @@
     <color name="grey04_alpha_70">#B3EAECF0</color>
     <color name="grey05">#F3F4F6</color>
     <color name="grey05_alpha_95">#F2F3F4F6</color>
-    <color name="grey05_alpha_85">#D9F3F4F6</color>
-
 
     <color name="green01">#66CC66</color>
     <color name="green01_alpha_5">#0C66CC66</color>
@@ -242,10 +237,6 @@
 
     <color name="color_violet_1">@color/violet1</color>
     <color name="color_violet_1_12">@color/violet1_alpha_13</color>
-
-    <!-- Lesson -->
-    <color name="lesson_tabbar_separator">@color/grey04</color>
-    <color name="lesson_toolbar_separator">@color/grey05_alpha_85</color>
 
     <!-- Step -->
     <color name="step_navigation_button">@color/stepic_brand_primary</color>

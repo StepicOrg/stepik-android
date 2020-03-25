@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.header_profile.view.*
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 
 class ProfileHeaderAnimationDelegate(
     view: View,
@@ -18,11 +19,6 @@ class ProfileHeaderAnimationDelegate(
 
     private val onMenuColorChanged: (ColorStateList) -> Unit
 ) {
-    companion object {
-        private const val MASK_OPACITY = 0xFF
-        private const val MASK_NO_OPACITY = 0x00FFFFFF
-    }
-
     private val profileCover = view.profileCover
     private val profileImage = view.profileImage
 
@@ -42,8 +38,7 @@ class ProfileHeaderAnimationDelegate(
         val coverScrollPercent = ((scrollY + 1f) / (coverHeight - toolbarHeight).coerceAtLeast(1))
             .coerceIn(0f, 1f)
 
-        val toolbarBackgroundOpacity = (coverScrollPercent * MASK_OPACITY).toInt() shl 24
-        val toolbarBackground = toolbarBackgroundOpacity or (MASK_NO_OPACITY and colorStart)
+        val toolbarBackground = ColorExtensions.colorWithAlpha(colorStart, coverScrollPercent)
         appbar.setBackgroundColor(toolbarBackground)
 
         val menuColor = argbEvaluator.evaluate(coverScrollPercent, colorStart, colorEnd) as Int
