@@ -13,14 +13,18 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.model.CollectionDescriptionColors
+import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepic.droid.util.ColorUtil
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
+import org.stepik.android.view.course_list.ui.decoration.HeaderDecoration
 import javax.inject.Inject
 
 class CourseListUserFragment : Fragment() {
@@ -63,9 +67,17 @@ class CourseListUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO Header
+        val header = PlaceholderTextView(requireContext())
+
+        header.setPlaceholderText(R.string.are_you_sure_remove_comment_text)
+        header.setBackgroundResource(CollectionDescriptionColors.FIRE.backgroundResSquared)
+        header.setTextColor(ColorUtil.getColorArgb(CollectionDescriptionColors.FIRE.textColorRes, requireContext()))
+
         initCenteredToolbar("User courses", true)
         with(courseListCoursesRecycler) {
             addItemDecoration(CourseListPlaceHolderTextDecoration())
+            addItemDecoration(HeaderDecoration(header))
             layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {

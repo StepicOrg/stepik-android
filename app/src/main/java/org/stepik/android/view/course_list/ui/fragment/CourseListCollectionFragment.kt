@@ -13,11 +13,17 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.model.CollectionDescriptionColors
+import org.stepic.droid.ui.custom.PlaceholderTextView
+import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.ColorUtil
 import org.stepik.android.model.CourseCollection
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
+import org.stepik.android.view.course_list.ui.decoration.HeaderDecoration
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -67,9 +73,17 @@ class CourseListCollectionFragment : Fragment() {
 
         initCenteredToolbar(courseCollection.title, true)
         with(courseListCoursesRecycler) {
-            addItemDecoration(org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration())
-            layoutManager = org.stepic.droid.ui.custom.WrapContentLinearLayoutManager(context)
+            addItemDecoration(CourseListPlaceHolderTextDecoration())
+            layoutManager = WrapContentLinearLayoutManager(context)
         }
+
+        val view = PlaceholderTextView(requireContext())
+
+        view.setPlaceholderText(R.string.are_you_sure_remove_comment_text)
+        view.setBackgroundResource(CollectionDescriptionColors.FIRE.backgroundResSquared)
+        view.setTextColor(ColorUtil.getColorArgb(CollectionDescriptionColors.FIRE.textColorRes, requireContext()))
+
+        courseListCoursesRecycler.addItemDecoration(HeaderDecoration(view))
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(
