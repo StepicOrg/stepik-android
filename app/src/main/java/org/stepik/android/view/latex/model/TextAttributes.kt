@@ -38,7 +38,8 @@ data class TextAttributes(
             val colorOnSurface = context.resolveColorAttribute(R.attr.colorOnSurface)
             val alphaEmphasisHigh = context.resolveFloatAttribute(R.attr.alphaEmphasisHigh)
 
-            var textAttributes = TextAttributes( // default params
+            // default params
+            var textAttributes = TextAttributes(
                 textSize = 14f,
                 textColor = ColorExtensions.colorWithAlphaMul(colorOnSurface, alphaEmphasisHigh),
                 textColorHighlight = context.resolveColorAttribute(android.R.attr.textColorHighlight),
@@ -94,6 +95,5 @@ data class TextAttributes(
             } finally {
                 array.recycle()
             }
-
     }
 }
