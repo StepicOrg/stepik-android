@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -51,8 +52,7 @@ class RemoveCachedContentDialog : DialogFragment() {
     private val unit: Unit? by lazy { arguments?.getParcelable<Unit>(ARG_UNIT) }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog
-            .Builder(requireContext())
+        MaterialAlertDialogBuilder(context)
             .setTitle(R.string.course_content_remove_item_title)
             .setMessage(R.string.course_content_remove_item_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->

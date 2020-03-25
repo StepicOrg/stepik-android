@@ -26,8 +26,7 @@
 
     <TextView
         android:id="@+id/title"
-        android:textSize="16sp"
-        android:textColor="@color/stepik_dark_web"
+        android:textAppearance="?textAppearanceBody1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Extreme"
@@ -40,10 +39,7 @@
 
     <TextView
         android:id="@+id/rate"
-        android:textSize="24sp"
-        android:textColor="@color/stepik_dark_web"
-
-        app:fontFamily="@font/roboto_light"
+        android:textAppearance="?textAppearanceHeadline5"
         tools:ignore="MissingPrefix"
 
         android:layout_width="wrap_content"
@@ -60,7 +56,7 @@
     <TextView
         android:id="@+id/rateTitle"
         android:text="@string/deadlines_learning_rate_time_template"
-        android:textColor="@color/stepik_dark_web"
+        android:textAppearance="?textAppearanceBody2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 

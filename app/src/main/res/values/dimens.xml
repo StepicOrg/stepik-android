@@ -6,6 +6,8 @@
     <dimen name="corner_radius">8dp</dimen>
     <dimen name="button_corner_radius">@dimen/corner_radius</dimen>
 
+    <dimen name="divider_vertical_size">1dp</dimen>
+
     <dimen name="material_emphasis_high_type">0.87</dimen>
     <dimen name="material_emphasis_medium">0.6</dimen>
     <dimen name="material_emphasis_disabled">0.38</dimen>

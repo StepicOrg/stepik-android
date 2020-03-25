@@ -40,19 +40,15 @@
 
     <TextView
         android:id="@+id/achievementTitle"
-        app:fontFamily="@font/roboto_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="24dp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="20sp"
-        tools:ignore="MissingPrefix"
+        android:textAppearance="?textAppearanceHeadline6"
         tools:text="Achievement title" />
 
     <TextView
         android:id="@+id/achievementDescription"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="wrap_content"
 
         android:layout_height="wrap_content"
@@ -64,9 +60,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:textColor="@color/new_accent_color"
-        android:textSize="16sp"
-        tools:ignore="MissingPrefix"
+        android:textAppearance="?textAppearanceBody1"
+        android:textColor="?android:textColorSecondary"
         tools:text="Achievement description" />
 
     <LinearLayout
@@ -85,27 +80,21 @@
         android:gravity="center_horizontal">
         <TextView
             android:id="@+id/achievementLevel"
-            app:fontFamily="@font/roboto_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:gravity="center"
-            android:textColor="@color/new_accent_color"
-            android:textSize="16sp"
-            tools:ignore="MissingPrefix"
+            android:textAppearance="?textAppearanceBody1"
             tools:text="Level 5 / 6" />
 
         <TextView
             android:id="@+id/achievementRest"
-            app:fontFamily="@font/roboto_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             android:gravity="center"
             android:layout_marginTop="8dp"
-            android:textColor="@color/new_accent_color"
-            android:textSize="16sp"
-            tools:ignore="MissingPrefix"
+            android:textAppearance="?textAppearanceBody1"
             tools:text="25 for the next level" />
     </LinearLayout>
 </LinearLayout>

@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.Theme
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -42,26 +42,31 @@ class LearningRateDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val context = requireContext()
-        val adapter = LearningRateAdapter(LearningRate.values(), this::selectLearningRate)
 
-        val dialog = MaterialDialog.Builder(context)
-                .theme(Theme.LIGHT)
-                .title(R.string.deadlines_create_title)
-                .adapter(adapter, LinearLayoutManager(context))
-                .build()
+        val recyclerView = RecyclerView(context)
+            .apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = LearningRateAdapter(LearningRate.values(), ::selectLearningRate)
 
-        val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
-        dialog.recyclerView.addItemDecoration(divider)
-        return dialog
+                val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+                divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
+                addItemDecoration(divider)
+            }
+
+        return MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.deadlines_create_title)
+            .setView(recyclerView)
+            .create()
     }
 
     private fun selectLearningRate(learningRate: LearningRate) {
-        targetFragment?.onActivityResult(
+        targetFragment
+            ?.onActivityResult(
                 LEARNING_RATE_REQUEST_CODE,
                 Activity.RESULT_OK,
                 Intent().putExtra(KEY_LEARNING_RATE, learningRate as Parcelable)
-        )
+            )
+
         val hoursValue = learningRate.millisPerWeek / AppConstants.MILLIS_IN_1HOUR
         analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_CHOSEN, Bundle().apply {
             putLong(Analytic.Deadlines.Params.HOURS, hoursValue)

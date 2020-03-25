@@ -1,17 +1,15 @@
 package org.stepik.android.view.solutions.ui.dialog
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import ru.nobird.android.view.base.ui.extension.argument
 
 class RemoveSolutionsDialog : DialogFragment() {
     companion object {
         const val TAG = "RemoveSolutionsDialog"
-
-        private const val ARG_ATTEMPT_IDS = "attempt_ids"
 
         fun newInstance(attemptIds: List<Long>): RemoveSolutionsDialog =
             RemoveSolutionsDialog()
@@ -23,8 +21,7 @@ class RemoveSolutionsDialog : DialogFragment() {
     private var attemptIds: List<Long> by argument()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog
-            .Builder(requireContext())
+        MaterialAlertDialogBuilder(context)
             .setTitle(R.string.solutions_delete_dialog_title)
             .setMessage(R.string.solutions_delete_dialog_description)
             .setPositiveButton(R.string.delete_label) { _, _ ->

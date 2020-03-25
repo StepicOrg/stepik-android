@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/video_quality_presence_text"
-        android:textAppearance="?textAppearanceBody2"
+        android:textAppearance="?textAppearanceBody1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginLeft="?dialogPreferredPadding"
+        android:layout_marginRight="?dialogPreferredPadding"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:text="@string/video_quality_presence_message"/>
@@ -23,15 +22,20 @@
         android:divider="@null"
         android:dividerHeight="0dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
-    <CheckBox
+    <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/video_quality_do_not_ask_checkbox"
-        style="@style/SettingCompoundButton"
-        android:textSize="14sp"
+        android:textAppearance="?textAppearanceBody1"
         android:layout_below="@id/video_quality_list_choices"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
+        android:layout_marginTop="@dimen/guideline_standard_padding"
+        android:layout_marginLeft="?dialogPreferredPadding"
+        android:layout_marginRight="?dialogPreferredPadding"
         android:text="@string/do_not_ask_me_again"/>
 
 </RelativeLayout>

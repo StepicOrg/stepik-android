@@ -1,11 +1,12 @@
 package org.stepic.droid.ui.dialogs;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -51,18 +52,15 @@ public class UnauthorizedDialogFragment extends DialogFragment {
             nullableCourse = null;
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new MaterialAlertDialogBuilder(requireContext());
         builder.setTitle(R.string.authorization)
                 .setMessage(R.string.unauthorization_detail)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        analytic.reportEvent(Analytic.Interaction.AUTH_FROM_DIALOG_FOR_UNAUTHORIZED_USER);
-                        if (nullableCourse == null) {
-                            screenManager.showLaunchScreen(getActivity());
-                        } else {
-                            screenManager.showLaunchScreen(getActivity(), nullableCourse);
-                        }
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    analytic.reportEvent(Analytic.Interaction.AUTH_FROM_DIALOG_FOR_UNAUTHORIZED_USER);
+                    if (nullableCourse == null) {
+                        screenManager.showLaunchScreen(getActivity());
+                    } else {
+                        screenManager.showLaunchScreen(getActivity(), nullableCourse);
                     }
                 })
                 .setNegativeButton(R.string.no, null);

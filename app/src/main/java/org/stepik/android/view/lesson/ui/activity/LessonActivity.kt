@@ -2,22 +2,16 @@ package org.stepik.android.view.lesson.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
@@ -47,19 +41,22 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
-import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
+import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView,
-    NextMoveable, RateAppDialog.Companion.Callback, TimeIntervalPickerDialogFragment.Companion.Callback {
+    NextMoveable,
+    RateAppDialog.Companion.Callback,
+    TimeIntervalPickerDialogFragment.Companion.Callback,
+    StreakNotificationDialogFragment.Callback {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -331,41 +328,24 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     override fun showStreakDialog(streakDays: Int) {
-        val streakTitle = SpannableString(getString(R.string.streak_dialog_title))
-        streakTitle.setSpan(
-            ForegroundColorSpan(Color.BLACK),
-            0,
-            streakTitle.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
-        streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        val description = if (streakDays > 0) {
-            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, streakDays.toString())
-            resources.getQuantityString(R.plurals.streak_description, streakDays, streakDays)
-        } else {
-            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, streakDays.toString())
-            getString(R.string.streak_description_not_positive)
-        }
+        val description =
+            if (streakDays > 0) {
+                analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, streakDays.toString())
+                resources.getQuantityString(R.plurals.streak_description, streakDays, streakDays)
+            } else {
+                analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, streakDays.toString())
+                getString(R.string.streak_description_not_positive)
+            }
 
         analytic.reportEvent(Analytic.Streak.SHOWN_MATERIAL_DIALOG)
-        val dialog = MaterialStyledDialog.Builder(this)
-                .setTitle(streakTitle)
-                .setDescription(description)
-                .setHeaderDrawable(R.drawable.dialog_background)
-                .setPositiveText(R.string.ok)
-                .setNegativeText(R.string.later_tatle)
-                .setScrollable(true, 10) // number of lines lines
-                .onPositive { _, _ ->
-                    analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG)
-                    TimeIntervalPickerDialogFragment
-                        .newInstance()
-                        .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
-                }
-                .onNegative { _, _ -> onStreakDialogCancelled() }
-                .build()
-        dialog.show()
+
+        StreakNotificationDialogFragment
+            .newInstance(
+                title = getString(R.string.streak_dialog_title),
+                message = description,
+                positiveEvent = Analytic.Streak.POSITIVE_MATERIAL_DIALOG
+            )
+            .showIfNotExists(supportFragmentManager, StreakNotificationDialogFragment.TAG)
     }
 
     override fun onClickLater(starNumber: Int) {
@@ -410,7 +390,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         )
     }
 
-    private fun onStreakDialogCancelled() {
+    override fun onStreakNotificationDialogCancelled() {
         analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
         lessonPager.snackbar(messageRes = R.string.streak_notification_canceled, length = Snackbar.LENGTH_LONG)
     }

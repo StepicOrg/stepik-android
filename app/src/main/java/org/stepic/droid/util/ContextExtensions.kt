@@ -7,7 +7,9 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.util.TypedValue
 import android.widget.Toast
+import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 
@@ -32,6 +34,15 @@ fun Context.contextForWebView(): Context =
     } else {
         this
     }
+
+fun Context.resolveAttribute(@AttrRes attributeResId: Int): TypedValue? {
+    val typedValue = TypedValue()
+    return if (theme.resolveAttribute(attributeResId, typedValue, true)) {
+        typedValue
+    } else {
+        null
+    }
+}
 
 /**
  * Converts current value in px to dp

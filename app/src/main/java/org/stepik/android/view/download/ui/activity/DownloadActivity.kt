@@ -123,7 +123,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         viewStateDelegate.addState<DownloadView.State.Idle>()
         viewStateDelegate.addState<DownloadView.State.Loading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<DownloadView.State.Empty>(emptyDownloading)
-        viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(downloadStorageContainer, downloadsRecyclerView)
+        viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(downloadStorageContainer, downloadsRecyclerView, downloadsStorageDivider)
     }
 
     override fun setState(state: DownloadView.State) {

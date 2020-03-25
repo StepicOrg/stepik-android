@@ -2,8 +2,7 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -15,7 +14,6 @@ import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
 class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
-
     interface Callback {
         fun onQualityChanged(newUrlQuality: VideoUrl?)
     }
@@ -91,16 +89,13 @@ class VideoQualityDialogInPlayer : VideoQualityDialogBase() {
 
 
         val position: Int = listOfVideoUrl
-                .asSequence()
-                .map { it.url }
-                .indexOf(nowPlayingUrl)
+            .asSequence()
+            .map { it.url }
+            .indexOf(nowPlayingUrl)
 
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, listOfPresentedQuality.toTypedArray())
-
-        val builder = AlertDialog.Builder(requireContext())
-        builder
+        val builder = MaterialAlertDialogBuilder(requireContext())
             .setTitle(R.string.video_quality_playing)
-            .setSingleChoiceItems(adapter, position) { dialog, which ->
+            .setSingleChoiceItems(listOfPresentedQuality.toTypedArray(), position) { dialog, which ->
                 val urlQuality = listOfVideoUrl[which]
                 (activity as? Callback)?.onQualityChanged(newUrlQuality = urlQuality)
                 dialog.dismiss()

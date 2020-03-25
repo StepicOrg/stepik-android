@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
 import org.stepic.droid.adaptive.ui.adapters.QuizCardViewHolder
-import org.stepic.droid.adaptive.ui.dialogs.AdaptiveLevelDialog
+import org.stepic.droid.adaptive.ui.dialogs.AdaptiveLevelDialogFragment
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.base.FragmentBase
@@ -32,7 +32,6 @@ import org.stepic.droid.ui.activities.AnimatedOnboardingActivity
 import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
-import org.stepic.droid.ui.adapters.SocialAuthAdapter
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
 import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
@@ -99,6 +98,7 @@ import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
+import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 
 @AppSingleton
 @Component(
@@ -230,6 +230,8 @@ interface AppCoreComponent {
 
     fun inject(remindPasswordDialogFragment: RemindPasswordDialogFragment)
 
+    fun inject(streakNotificationDialogFragment: StreakNotificationDialogFragment)
+
     fun inject(downloadClickReceiver: DownloadClickReceiver)
 
     fun inject(service: HackFcmListener)
@@ -260,7 +262,7 @@ interface AppCoreComponent {
 
     fun inject(quizCardViewHolder: QuizCardViewHolder)
 
-    fun inject(adaptiveLevelDialog: AdaptiveLevelDialog)
+    fun inject(adaptiveLevelDialogFragment: AdaptiveLevelDialogFragment)
 
     fun inject(notificationViewHolder: NotificationAdapter.NotificationViewHolder)
 

@@ -1,12 +1,12 @@
 package org.stepik.android.view.font_size_settings.ui.dialog
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -50,13 +50,9 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog
-            .Builder(requireContext())
+        MaterialAlertDialogBuilder(context)
             .setTitle(R.string.setting_font_size_dialog_title)
-            .setSingleChoiceItems(
-                ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.step_content_font_size)),
-                -1
-            ) { _, which ->
+            .setSingleChoiceItems(resources.getStringArray(R.array.step_content_font_size), -1) { _, which ->
                 val fontSize = FontSize.values()[which]
                 presenter.onFontSizeChosen(fontSize)
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.FontSize.FONT_SIZE_SELECTED, mapOf(
