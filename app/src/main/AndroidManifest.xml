@@ -29,7 +29,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/StepikTheme"
-        tools:replace="allowBackup, supportsRtl">
+        android:usesCleartextTraffic="true"
+        tools:replace="allowBackup, supportsRtl"
+        tools:targetApi="m">
 
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
