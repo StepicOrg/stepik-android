@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -20,6 +19,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.comment.model.CommentsData
@@ -29,7 +29,6 @@ import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
 import org.stepik.android.presentation.comment.ComposeCommentView
-import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.submission.ui.delegate.setSubmission
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -131,9 +130,7 @@ class ComposeCommentDialogFragment :
         centeredToolbarTitle.setText(
             if (discussionThread.thread == DiscussionThread.THREAD_SOLUTIONS) R.string.solutions_compose_title else R.string.comment_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.navigationIcon = AppCompatResources
-            .getDrawable(requireContext(), R.drawable.ic_close_dark)
-            ?.setTintList(requireContext(), R.attr.colorControlNormal)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.comment_compose_menu)
         centeredToolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.comment_submit) {

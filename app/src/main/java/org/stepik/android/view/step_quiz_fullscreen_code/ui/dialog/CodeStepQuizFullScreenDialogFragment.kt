@@ -33,6 +33,7 @@ import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
@@ -140,7 +141,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         centeredToolbarTitle.text = lessonTitle
         centeredToolbar.inflateMenu(R.menu.code_playground_menu)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.setOnMenuItemClickListener { item ->
             if (item?.itemId == R.id.action_reset_code) {
                 val dialog = ResetCodeDialogFragment.newInstance()

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -24,13 +23,13 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.user.User
-import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
@@ -94,9 +93,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.setText(if (isSelectionEnabled) R.string.submissions_select_title else R.string.submissions_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.navigationIcon = AppCompatResources
-            .getDrawable(requireContext(), R.drawable.ic_close_dark)
-            ?.setTintList(requireContext(), R.attr.colorControlNormal)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<SubmissionsView.State.Idle>()

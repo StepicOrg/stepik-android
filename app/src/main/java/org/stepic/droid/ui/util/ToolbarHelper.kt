@@ -1,9 +1,11 @@
 package org.stepic.droid.ui.util
 
+import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -79,4 +81,10 @@ private fun AppCompatActivity.initCenteredToolbarBase(
 
         actionBar.setHomeAsUpIndicator(homeIndicatorDrawable)
     }
+}
+
+fun Toolbar.setTintedNavigationIcon(@DrawableRes iconRes: Int, @AttrRes tintRes: Int = R.attr.colorControlNormal) {
+    this.navigationIcon = AppCompatResources
+        .getDrawable(context, iconRes)
+        ?.setTintList(context, tintRes)
 }

@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.LayoutRes
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.DialogFragment
@@ -20,6 +19,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.model.DiscountingPolicyType
@@ -28,7 +28,6 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.step_quiz.StepQuizView
-import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -132,9 +131,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.text = getString(R.string.comment_solution_pattern, submission.id)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.navigationIcon = AppCompatResources
-            .getDrawable(requireContext(), R.drawable.ic_close_dark)
-            ?.setTintList(requireContext(), R.attr.colorControlNormal)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         val state =
             StepQuizView.State.AttemptLoaded(

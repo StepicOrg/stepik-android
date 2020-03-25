@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -17,12 +16,12 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewPresenter
 import org.stepik.android.presentation.course_reviews.ComposeCourseReviewView
-import org.stepik.android.view.base.ui.extension.setTintList
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
@@ -89,9 +88,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.setText(R.string.course_reviews_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.navigationIcon = AppCompatResources
-            .getDrawable(requireContext(), R.drawable.ic_close_dark)
-            ?.setTintList(requireContext(), R.attr.colorControlNormal)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.compose_course_review_menu)
         centeredToolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.course_review_submit) {
