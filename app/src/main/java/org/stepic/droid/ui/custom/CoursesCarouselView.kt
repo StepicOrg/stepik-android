@@ -390,7 +390,7 @@ constructor(
             info.courseListType == CourseListType.FEATURED ->
                 screenManager.showCoursesByQuery(
                     context,
-                    "Popular",
+                    resources.getString(R.string.course_list_popular_toolbar_title),
                     CourseListQuery(
                         page = 1,
                         order = CourseListQuery.ORDER_ACTIVITY_DESC,

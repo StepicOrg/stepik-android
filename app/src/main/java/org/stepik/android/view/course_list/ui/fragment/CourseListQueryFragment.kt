@@ -13,12 +13,15 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -70,10 +73,10 @@ class CourseListQueryFragment : Fragment() {
 
         initCenteredToolbar(courseListTitle, true)
         with(courseListCoursesRecycler) {
-            addItemDecoration(org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration())
-            layoutManager = org.stepic.droid.ui.custom.WrapContentLinearLayoutManager(context)
+            addItemDecoration(CourseListPlaceHolderTextDecoration())
+            layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
-                if (pageDirection == org.stepik.android.domain.base.PaginationDirection.NEXT) {
+                if (pageDirection == PaginationDirection.NEXT) {
                     courseListPresenter.fetchNextPage()
                 }
             }

@@ -74,7 +74,7 @@ class CourseListUserFragment : Fragment() {
         header.setBackgroundResource(CollectionDescriptionColors.FIRE.backgroundResSquared)
         header.setTextColor(ColorUtil.getColorArgb(CollectionDescriptionColors.FIRE.textColorRes, requireContext()))
 
-        initCenteredToolbar("User courses", true)
+        initCenteredToolbar(R.string.course_list_user_courses_title, true)
         with(courseListCoursesRecycler) {
             addItemDecoration(CourseListPlaceHolderTextDecoration())
             addItemDecoration(HeaderDecoration(header))
