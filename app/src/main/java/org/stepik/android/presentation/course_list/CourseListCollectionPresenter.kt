@@ -34,8 +34,8 @@ constructor(
             view?.setState(value)
         }
 
-    fun fetchCourses(vararg courseId: Long) {
-        if (state != CourseListView.State.Idle) return
+    fun fetchCourses(vararg courseId: Long, forceUpdate: Boolean = false) {
+        if (state != CourseListView.State.Idle && !forceUpdate) return
 
         state = CourseListView.State.Loading
 

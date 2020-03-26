@@ -46,8 +46,8 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchCourses() {
-        if (state != CourseListView.State.Idle) return
+    fun fetchCourses(forceUpdate: Boolean = false) {
+        if (state != CourseListView.State.Idle && !forceUpdate) return
 
         state = CourseListView.State.Loading
 
@@ -76,11 +76,7 @@ constructor(
         val oldState = state as? CourseListView.State.Content
             ?: return
 
-        if (oldState.courseListItems.last() is CourseListItem.PlaceHolder) {
-            return
-        }
-
-        if (!oldState.courseListDataItems.hasNext) {
+        if (oldState.courseListItems.last() is CourseListItem.PlaceHolder || !oldState.courseListDataItems.hasNext) {
             return
         }
 
