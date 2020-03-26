@@ -34,6 +34,11 @@ constructor(
             view?.setState(value)
         }
 
+    override fun attachView(view: CourseListView) {
+        super.attachView(view)
+        view.setState(state)
+    }
+
     fun fetchCourses(vararg courseId: Long, forceUpdate: Boolean = false) {
         if (state != CourseListView.State.Idle && !forceUpdate) return
 
