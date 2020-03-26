@@ -42,6 +42,7 @@ import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.StepikUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.domain.course_list.model.CourseListOrder
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -393,7 +394,7 @@ constructor(
                     resources.getString(R.string.course_list_popular_toolbar_title),
                     CourseListQuery(
                         page = 1,
-                        order = CourseListQuery.ORDER_ACTIVITY_DESC,
+                        order = CourseListOrder.ORDER_ACTIVITY_DESC,
                         isExcludeEnded = true,
                         isPublic = true
                     )

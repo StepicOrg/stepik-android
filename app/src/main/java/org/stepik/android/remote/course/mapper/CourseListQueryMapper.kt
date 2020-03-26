@@ -19,7 +19,7 @@ constructor() {
         val mutableMap = hashMapOf<String, String>()
 
         mutableMap.putNullable(PAGE, courseListQuery.page?.toString())
-        mutableMap.putNullable(ORDER, courseListQuery.order)
+        mutableMap.putNullable(ORDER, courseListQuery.order?.order)
         mutableMap.putNullable(TEACHER, courseListQuery.teacher?.toString())
         mutableMap.putNullable(IS_PUBLIC, courseListQuery.isPublic?.toString())
         mutableMap.putNullable(IS_EXLUDE_ENDED, courseListQuery.isExcludeEnded?.toString())
