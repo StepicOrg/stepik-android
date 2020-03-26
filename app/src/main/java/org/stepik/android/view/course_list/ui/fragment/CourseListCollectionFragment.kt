@@ -20,6 +20,7 @@ import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
+import org.stepik.android.view.course_list.ui.decoration.HeaderDecoration
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -73,13 +74,7 @@ class CourseListCollectionFragment : Fragment() {
             layoutManager = WrapContentLinearLayoutManager(context)
         }
 
-//        val view = PlaceholderTextView(requireContext())
-
-//        view.setPlaceholderText(R.string.are_you_sure_remove_comment_text)
-//        view.setBackgroundResource(CollectionDescriptionColors.FIRE.backgroundResSquared)
-//        view.setTextColor(ColorUtil.getColorArgb(CollectionDescriptionColors.FIRE.textColorRes, requireContext()))
-//
-//        courseListCoursesRecycler.addItemDecoration(HeaderDecoration(view))
+        courseListCoursesRecycler.addItemDecoration(HeaderDecoration("Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"))
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(

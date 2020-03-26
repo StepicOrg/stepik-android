@@ -24,7 +24,6 @@ import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
-import org.stepik.android.view.course_list.ui.decoration.HeaderDecoration
 import javax.inject.Inject
 
 class CourseListUserFragment : Fragment() {
@@ -77,7 +76,7 @@ class CourseListUserFragment : Fragment() {
         initCenteredToolbar(R.string.course_list_user_courses_title, true)
         with(courseListCoursesRecycler) {
             addItemDecoration(CourseListPlaceHolderTextDecoration())
-            addItemDecoration(HeaderDecoration(header))
+//            addItemDecoration(HeaderDecoration(header))
             layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
