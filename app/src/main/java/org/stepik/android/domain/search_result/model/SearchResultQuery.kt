@@ -1,9 +1,9 @@
-package org.stepik.android.domain.course_list.model
+package org.stepik.android.domain.search_result.model
 
 import android.os.Parcel
 import android.os.Parcelable
 
-data class SearchQuery(
+data class SearchResultQuery(
     val page: Int? = null,
     val tag: Int? = null,
     val query: String? = null,
@@ -18,16 +18,16 @@ data class SearchQuery(
 
     override fun describeContents(): Int = 0
 
-    companion object CREATOR : Parcelable.Creator<SearchQuery> {
-        override fun createFromParcel(parcel: Parcel): SearchQuery =
-            SearchQuery(
+    companion object CREATOR : Parcelable.Creator<SearchResultQuery> {
+        override fun createFromParcel(parcel: Parcel): SearchResultQuery =
+            SearchResultQuery(
                 parcel.readValue(Int::class.java.classLoader) as Int?,
                 parcel.readValue(Int::class.java.classLoader) as Int?,
                 parcel.readValue(String::class.java.classLoader) as String?,
                 parcel.readValue(String::class.java.classLoader) as String?
             )
 
-        override fun newArray(size: Int): Array<SearchQuery?> =
+        override fun newArray(size: Int): Array<SearchResultQuery?> =
             arrayOfNulls(size)
     }
 }

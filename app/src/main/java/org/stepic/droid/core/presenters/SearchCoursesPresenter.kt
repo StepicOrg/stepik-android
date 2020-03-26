@@ -11,6 +11,8 @@ import org.stepic.droid.util.resolvers.SearchResolver
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.search.repository.SearchRepository
+import org.stepik.android.domain.search_result.model.SearchResultQuery
+import org.stepik.android.domain.search_result.repository.SearchResultRepository
 import org.stepik.android.model.Course
 import java.util.ArrayList
 import java.util.concurrent.ThreadPoolExecutor
@@ -21,9 +23,8 @@ import javax.inject.Inject
 @CourseListScope
 class SearchCoursesPresenter
 @Inject constructor(
-    private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val courseRepository: CourseRepository,
-    private val searchRepository: SearchRepository,
+    private val searchResultRepository: SearchResultRepository,
     private val threadPoolExecutor: ThreadPoolExecutor,
     private val mainHandler: MainHandler,
     private val searchResolver: SearchResolver,
@@ -59,8 +60,8 @@ class SearchCoursesPresenter
 
 
 
-                    val searchResultResponseBody = searchRepository.getSearchResultsCourses(
-                        org.stepik.android.domain.course_list.model.SearchQuery(
+                    val searchResultResponseBody = searchResultRepository.getSearchResults(
+                        SearchResultQuery(
                             page = currentPage.get(),
                             query = searchQuery
                         )

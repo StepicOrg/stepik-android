@@ -17,7 +17,7 @@ import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
-import org.stepik.android.domain.course_list.model.SearchQuery
+import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
@@ -93,7 +93,12 @@ class CourseListTagFragment : Fragment() {
             courseListPresenter = courseListPresenter
         )
 
-        courseListPresenter.fetchCourses(SearchQuery(page = 1, tag = tag.id))
+        courseListPresenter.fetchCourses(
+            SearchResultQuery(
+                page = 1,
+                tag = tag.id
+            )
+        )
     }
 
     private fun injectComponent() {

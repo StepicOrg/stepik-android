@@ -8,7 +8,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListSearchInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.course_list.model.SearchQuery
+import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
@@ -40,7 +40,7 @@ constructor(
             view?.setState(value)
         }
 
-    private var searchQuery: SearchQuery? = null
+    private var searchResultQuery: SearchResultQuery? = null
 
     private val paginationDisposable = CompositeDisposable()
 
@@ -49,14 +49,14 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchCourses(searchQuery: SearchQuery, forceUpdate: Boolean = false) {
+    fun fetchCourses(searchResultQuery: SearchResultQuery, forceUpdate: Boolean = false) {
         if (state != CourseListView.State.Idle && !forceUpdate) return
 
         state = CourseListView.State.Loading
-        this.searchQuery = searchQuery
+        this.searchResultQuery = searchResultQuery
 
         compositeDisposable += courseListSearchInteractor
-            .getCoursesBySearch(searchQuery)
+            .getCoursesBySearch(searchResultQuery)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
@@ -80,7 +80,7 @@ constructor(
         val oldState = state as? CourseListView.State.Content
             ?: return
 
-        val oldSearchQuery = searchQuery ?: return
+        val oldSearchQuery = searchResultQuery ?: return
 
         if (oldState.courseListItems.last() is CourseListItem.PlaceHolder || !oldState.courseListDataItems.hasNext) {
             return

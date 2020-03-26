@@ -10,19 +10,19 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.stepic.droid.util.PagedList
-import org.stepik.android.data.search.repository.SearchRepositoryImpl
-import org.stepik.android.data.search.source.SearchRemoteDataSource
-import org.stepik.android.domain.course_list.model.SearchQuery
+import org.stepik.android.data.search_result.repository.SearchResultRepositoryImpl
+import org.stepik.android.data.search_result.source.SearchResultRemoteDataSource
+import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.SearchResult
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchRepositoryTest {
     @Mock
-    private lateinit var searchRemoteDataSource: SearchRemoteDataSource
+    private lateinit var searchResultRemoteDataSource: SearchResultRemoteDataSource
 
     @Test
     fun searchResultsLoadingTest() {
-        val searchRepository = SearchRepositoryImpl(searchRemoteDataSource)
+        val searchRepository = SearchResultRepositoryImpl(searchResultRemoteDataSource)
 
         val page = 1
         val rawQuery = "python"
@@ -30,10 +30,22 @@ class SearchRepositoryTest {
 
         val remoteResult = PagedList(listOf(mock(SearchResult::class.java)))
 
-        whenever(searchRemoteDataSource.getSearchResultsCourses(SearchQuery(page = page, query = rawQuery))) doReturn Single.just(remoteResult)
+        whenever(searchResultRemoteDataSource.getSearchResults(
+            SearchResultQuery(
+                page = page,
+                query = rawQuery,
+                lang = lang
+            )
+        )) doReturn Single.just(remoteResult)
 
         searchRepository
-            .getSearchResultsCourses(SearchQuery(page = page, query = rawQuery))
+            .getSearchResults(
+                SearchResultQuery(
+                    page = page,
+                    query = rawQuery,
+                    lang = lang
+                )
+            )
             .test()
             .assertNoErrors()
             .assertComplete()
