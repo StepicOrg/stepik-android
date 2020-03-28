@@ -11,6 +11,12 @@ data class CourseListQuery(
     val isExcludeEnded: Boolean? = null,
     val isPublic: Boolean? = null
 ) : Parcelable {
+
+    enum class CourseListOrder(val order: String) {
+        ORDER_ACTIVITY_DESC("-activity"),
+        ORDER_POPULARITY_DESC("-popularity")
+    }
+
     companion object CREATOR : Parcelable.Creator<CourseListQuery> {
 
         override fun createFromParcel(parcel: Parcel): CourseListQuery =

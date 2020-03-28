@@ -10,7 +10,6 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
-import org.stepik.android.domain.course_list.model.CourseListOrder
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.model.Course
@@ -98,7 +97,7 @@ constructor(
                         .getCourses(
                             CourseListQuery(
                                 teacher = profileData.user.id,
-                                order = CourseListOrder.ORDER_POPULARITY_DESC
+                                order = CourseListQuery.CourseListOrder.ORDER_POPULARITY_DESC
                             )
                         )
                 }

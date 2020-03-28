@@ -96,7 +96,7 @@ class CourseListTagFragment : Fragment() {
         courseListPresenter.fetchCourses(
             SearchResultQuery(
                 page = 1,
-                tag = tag.id
+                tagId = tag.id
             )
         )
     }

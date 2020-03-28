@@ -5,13 +5,13 @@ import android.os.Parcelable
 
 data class SearchResultQuery(
     val page: Int? = null,
-    val tag: Int? = null,
+    val tagId: Int? = null,
     val query: String? = null,
     val lang: String? = null
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeValue(page)
-        parcel.writeValue(tag)
+        parcel.writeValue(tagId)
         parcel.writeValue(query)
         parcel.writeValue(lang)
     }

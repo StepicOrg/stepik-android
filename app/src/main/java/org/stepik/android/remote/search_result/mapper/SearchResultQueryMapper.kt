@@ -18,7 +18,7 @@ constructor() {
         val mutableMap = hashMapOf<String, String>()
 
         mutableMap.putNullable(PAGE, searchResultQuery.page?.toString())
-        mutableMap.putNullable(TAG, searchResultQuery.tag?.toString())
+        mutableMap.putNullable(TAG, searchResultQuery.tagId?.toString())
         mutableMap.putNullable(QUERY, searchResultQuery.query)
         mutableMap.putNullable(LANG, searchResultQuery.lang)
 

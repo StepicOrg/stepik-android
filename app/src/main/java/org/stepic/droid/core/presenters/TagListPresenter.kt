@@ -18,7 +18,6 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.domain.search_result.repository.SearchResultRepository
-import org.stepik.android.domain.tags.repository.TagsRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.SearchResult
 import org.stepik.android.model.Tag
@@ -57,7 +56,7 @@ constructor(
                 searchResultRepository.getSearchResults(
                     SearchResultQuery(
                         page = it,
-                        tag = tag.id
+                        tagId = tag.id
                     )
                 )
             }

@@ -20,7 +20,6 @@ import org.stepic.droid.util.RWLocks
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
-import org.stepik.android.domain.course_list.model.CourseListOrder
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -126,7 +125,7 @@ constructor(
                             // This combo of query params == FEATURED
                             CourseListQuery(
                                 page = currentPage.toInt(),
-                                order = CourseListOrder.ORDER_ACTIVITY_DESC,
+                                order = CourseListQuery.CourseListOrder.ORDER_ACTIVITY_DESC,
                                 isExcludeEnded = true,
                                 isPublic = true
 
