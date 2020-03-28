@@ -8,13 +8,12 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/searchIcon"
-        android:tint="?colorSecondary"
-        app:tintMode="src_atop"
+        app:tint="?colorControlNormal"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_margin="16dp"
         android:layout_gravity="center_vertical|start"
-        android:src="@drawable/ic_history" />
+        tools:src="@drawable/ic_history" />
 
     <TextView
         android:id="@+id/searchQuery"
