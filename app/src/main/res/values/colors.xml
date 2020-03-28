@@ -102,7 +102,6 @@
     <color name="element_gray_pressed">@color/grey04</color>
     <color name="language_text_color_checked">@color/white</color>
     <color name="language_text_color_unchecked">@color/new_accent_color</color>
-    <color name="search_view_suggestions_prefix_color">@color/black1_alpha_27</color>
 
     <color name="onboarding_action_pressed">@color/white_color_alpha_30</color>
     <color name="onboarding_action">@color/white_color_alpha_20</color>
