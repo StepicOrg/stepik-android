@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -27,9 +28,11 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
+import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -97,6 +100,15 @@ class CourseListSearchFragment : Fragment() {
             }
         }
 
+        goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+
+        val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
+        viewStateDelegate.addState<CourseListView.State.Idle>()
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingError)
+
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
@@ -106,6 +118,7 @@ class CourseListSearchFragment : Fragment() {
             ),
             adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListViewStateDelegate = viewStateDelegate,
             courseListPresenter = courseListPresenter
         )
 

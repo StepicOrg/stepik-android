@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
@@ -21,9 +22,11 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.util.ColorUtil
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
+import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
 class CourseListUserFragment : Fragment() {
@@ -66,17 +69,9 @@ class CourseListUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // TODO Header
-        val header = PlaceholderTextView(requireContext())
-
-        header.setPlaceholderText(R.string.are_you_sure_remove_comment_text)
-        header.setBackgroundResource(CollectionDescriptionColors.FIRE.backgroundResSquared)
-        header.setTextColor(ColorUtil.getColorArgb(CollectionDescriptionColors.FIRE.textColorRes, requireContext()))
-
         initCenteredToolbar(R.string.course_list_user_courses_title, true)
         with(courseListCoursesRecycler) {
             addItemDecoration(CourseListPlaceHolderTextDecoration())
-//            addItemDecoration(HeaderDecoration(header))
             layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
@@ -84,6 +79,15 @@ class CourseListUserFragment : Fragment() {
                 }
             }
         }
+
+        goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+
+        val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
+        viewStateDelegate.addState<CourseListView.State.Idle>()
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingError)
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(
@@ -94,6 +98,7 @@ class CourseListUserFragment : Fragment() {
             ),
             adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListViewStateDelegate = ViewStateDelegate(),
             courseListPresenter = courseListPresenter
         )
 

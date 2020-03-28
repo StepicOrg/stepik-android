@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
@@ -20,9 +21,11 @@ import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
+import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -90,8 +93,18 @@ class CourseListTagFragment : Fragment() {
             ),
             adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseItemsRecyclerView = courseListCoursesRecycler,
+            courseListViewStateDelegate = ViewStateDelegate(),
             courseListPresenter = courseListPresenter
         )
+
+        goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+
+        val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
+        viewStateDelegate.addState<CourseListView.State.Idle>()
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingError)
 
         courseListPresenter.fetchCourses(
             SearchResultQuery(
