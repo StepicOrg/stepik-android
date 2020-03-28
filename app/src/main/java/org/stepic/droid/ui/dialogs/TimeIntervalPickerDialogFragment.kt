@@ -12,6 +12,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.TimeIntervalUtil
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepic.droid.util.resolveColorAttribute
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -54,6 +55,8 @@ class TimeIntervalPickerDialogFragment : DialogFragment() {
         picker.value = savedInstanceState?.getInt(CHOSEN_POSITION_KEY) ?: sharedPreferences.timeNotificationCode
         picker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
         picker.wrapSelectorWheel = false
+        picker.setBackgroundColor(0x0)
+        picker.textColor = requireContext().resolveColorAttribute(R.attr.colorOnSurface)
         try {
             picker.setTextSize(50f) //Warning: reflection!
         } catch (exception: Exception) {
