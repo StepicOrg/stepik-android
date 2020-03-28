@@ -134,7 +134,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         app:srcCompat="@drawable/ic_adaptive_wrong"
-                        android:tint="@color/adaptive_color_wrong"
+                        android:tint="?colorError"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="6dp"
                         android:layout_marginEnd="6dp" />
@@ -142,7 +142,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:textColor="@color/adaptive_color_wrong"
+                        android:textColor="?colorError"
                         android:text="@string/adaptive_wrong" />
                 </LinearLayout>
             </RelativeLayout>
@@ -205,7 +205,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|top"
-            android:textColor="@color/adaptive_color_hard"
+            android:textColor="?colorError"
             android:text="@string/adaptive_reaction_hard"
             android:background="@drawable/adaptive_stamp_hard_bg"
             android:rotation="-30"

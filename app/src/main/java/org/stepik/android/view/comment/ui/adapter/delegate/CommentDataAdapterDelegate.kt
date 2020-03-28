@@ -6,8 +6,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
-import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
@@ -17,6 +16,7 @@ import kotlinx.android.synthetic.main.layout_comment_actions.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.UserRole
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.model.CommentItem
@@ -166,7 +166,7 @@ class CommentDataAdapterDelegate(
                 .findItem(R.id.comment_item_remove)
                 ?.let { menuItem ->
                     val title = SpannableString(menuItem.title)
-                    title.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.new_red_color)), 0, title.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    title.setSpan(ForegroundColorSpan(context.resolveColorAttribute(R.attr.colorError)), 0, title.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                     menuItem.title = title
                     menuItem.isVisible = commentDataItem.comment.actions?.delete == true
                 }

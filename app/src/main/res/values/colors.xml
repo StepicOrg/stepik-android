@@ -53,7 +53,6 @@
     <color name="text_color">@color/new_accent_color</color>
     <color name="text_color_highlight">@color/grey04_alpha_70</color>
     <color name="new_border_color">@color/new_primary_color</color>>
-    <color name="new_logout_color">@color/new_red_color</color>>
     <color name="arrow_color">@color/new_accent_color</color>>
     <color name="new_background_white">@color/white</color>
 
@@ -73,8 +72,6 @@
     <color name="login_edit_text_block_stroke_color">@color/grey02</color>
     <color name="login_edit_text_block_background_color">@color/transparent</color>
     <color name="login_edit_text_block_background_color_wrong">@color/red02_color_alpha_5</color>
-
-    <color name="login_error_color">@color/new_red_color</color>
 
     <color name="remind_password_button_text_color">@color/blue03</color>
 
@@ -200,7 +197,6 @@
 
     <color name="adaptive_color_easy">@color/green01_alpha_40</color>
     <color name="adaptive_color_hard">@color/new_red_color</color>
-    <color name="adaptive_color_wrong">@color/adaptive_color_hard</color>
     <color name="adaptive_color_correct">@color/green01_alpha_85</color>
 
     <color name="adaptive_color_title">@color/black2</color>
