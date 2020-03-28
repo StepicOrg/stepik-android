@@ -399,6 +399,7 @@
 
     <style name="ProfileItemHeader">
         <item name="android:textAppearance">?textAppearanceSubtitle1</item>
+        <item name="drawableTint">?colorControlNormal</item>
     </style>
 
     <style name="ProfileItemText">
