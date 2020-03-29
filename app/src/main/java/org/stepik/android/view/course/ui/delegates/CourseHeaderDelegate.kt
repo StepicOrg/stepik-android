@@ -1,7 +1,6 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
-import android.graphics.Bitmap
 import android.graphics.PorterDuff
 import android.view.Menu
 import android.view.MenuItem
@@ -124,10 +123,7 @@ class CourseHeaderDelegate(
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
         with(courseActivity) {
-            val multi = MultiTransformation<Bitmap>(
-                BlurTransformation(),
-                CenterCrop()
-            )
+            val multi = MultiTransformation(BlurTransformation(), CenterCrop())
             Glide
                 .with(this)
                 .load(courseHeaderData.cover)
