@@ -35,10 +35,9 @@
         android:drawablePadding="4dp"
 
         app:drawableStartCompat="@drawable/ic_course_info_learners_count"
-        app:drawableTint="@color/white"
+        app:drawableTint="?android:textColorPrimary"
 
         android:textAppearance="?textAppearanceCaption"
-        android:textColor="@color/white"
         tools:text="999K"
         tools:ignore="MissingPrefix" />
 
@@ -55,7 +54,6 @@
 
         android:text="@string/course_verified"
         android:textAppearance="?textAppearanceCaption"
-        android:textColor="@color/white"
         tools:ignore="MissingPrefix" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
