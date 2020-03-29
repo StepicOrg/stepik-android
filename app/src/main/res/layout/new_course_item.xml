@@ -122,8 +122,10 @@
                 android:background="@drawable/selectable_item_rounded_bottom_background"
 
                 android:text="@string/continue_learning"
-                android:textSize="@dimen/course_item_button_text_size"
-                android:textColor="@color/green01"
+                android:textAppearance="?textAppearanceBody2"
+                android:textColor="?colorPrimary"
+                app:drawableTint="?colorPrimary"
+                android:theme="@style/ThemeOverlay.Green"
                 android:gravity="start|center_vertical"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -147,6 +149,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:duplicateParentState="true"
-                android:background="@drawable/selectable_item_rounded_background" />
+                android:background="?selectableItemBackgroundRounded" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
