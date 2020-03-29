@@ -240,20 +240,7 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="CourseWidgetView" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:textSize">@dimen/course_item_button_text_size</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
-        <item name="android:clickable">true</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="CourseWidgetPropertyTextView" parent="CourseWidgetPropertyTextView.15" />
-
-    <style name="CourseWidgetPropertyTextView.15" parent="android:Widget.Holo.Light.TextView">
+    <style name="CourseWidgetPropertyTextView">
         <item name="android:layout_marginLeft">@dimen/course_item_property_text_image_margin</item>
         <item name="android:layout_marginRight">@dimen/course_item_property_between_items_margin</item>
         <item name="android:textAppearance">?textAppearanceBody2</item>
@@ -417,6 +404,7 @@
         <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
+    <!-- Buttons -->
     <style name="Widget.AppTheme.Button" parent="@style/Widget.MaterialComponents.Button">
         <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>
         <item name="elevation">0dp</item>
@@ -434,6 +422,7 @@
         <item name="android:insetBottom">0dp</item>
     </style>
 
+    <!-- Buttons custom -->
     <style name="Widget.AppTheme.Button.TextButton.Small" parent="Widget.AppTheme.Button.TextButton">
         <item name="android:minHeight">0dp</item>
         <item name="android:minWidth">0dp</item>

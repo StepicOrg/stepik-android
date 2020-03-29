@@ -61,10 +61,8 @@
     <dimen name="fast_continue_info_margin">10dp</dimen>
     <dimen name="fast_continue_course_progress_size">3dp</dimen>
 
-    <dimen name="header_action_radius">33dp</dimen>
-    <dimen name="header_action_text_size">16sp</dimen>
+    <dimen name="header_action_radius">24dp</dimen>
     <dimen name="header_action_horizontal_margin">60dp</dimen>
-    <dimen name="header_action_height">42dp</dimen>
 
     <dimen name="course_carousel_title">20sp</dimen>
     <dimen name="course_carousel_title_top_padding">20dp</dimen>

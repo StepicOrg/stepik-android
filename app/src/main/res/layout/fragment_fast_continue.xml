@@ -45,17 +45,16 @@
                 app:layout_constraintRight_toRightOf="parent"
                 tools:visibility="visible"/>
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/fastContinueAction"
-                style="@style/CourseWidgetView"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/header_action_height"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/header_action_background_white"
+                app:cornerRadius="@dimen/header_action_radius"
                 android:paddingEnd="@dimen/half_padding"
                 android:paddingStart="@dimen/half_padding"
                 android:text="@string/continue_learning"
-                android:textSize="@dimen/header_action_text_size"
                 android:layout_marginRight="@dimen/header_action_horizontal_margin"
                 android:layout_marginEnd="@dimen/header_action_horizontal_margin"
                 android:layout_marginLeft="@dimen/header_action_horizontal_margin"
