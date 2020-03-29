@@ -16,6 +16,8 @@
     <color name="color_on_surface">#000000</color>
     <color name="color_on_error">#ffffff</color>
 
+    <color name="color_status_bar">@color/color_primary</color>
+
     <color name="transparent">@color/white_color_alpha_0</color>
     <color name="black">@color/black1</color>
 

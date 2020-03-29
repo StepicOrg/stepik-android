@@ -15,4 +15,6 @@
     <color name="color_on_background">@color/white</color>
     <color name="color_on_surface">@color/white</color>
     <color name="color_on_error">@color/new_accent_color</color>
+
+    <color name="color_status_bar">@color/color_background</color>
 </resources>

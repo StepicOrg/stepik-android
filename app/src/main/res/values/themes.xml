@@ -49,7 +49,7 @@
         <item name="alphaEmphasisMedium">@dimen/material_emphasis_medium</item>
         <item name="alphaEmphasisDisabled">@dimen/material_emphasis_disabled</item>
 
-        <item name="android:statusBarColor" tools:targetApi="lollipop">?colorPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/color_status_bar</item>
 
         <!--Component styles-->
         <item name="materialButtonStyle">@style/Widget.AppTheme.Button</item>
