@@ -3,7 +3,6 @@ package org.stepik.android.view.course_list.ui.adapter.delegate
 import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -31,7 +30,7 @@ class CourseAdapterDelegate(
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<Course>(root) {
         private val courseCoverImageTarget =
-            RoundedBitmapImageViewTarget(context.resources.getDimension(R.dimen.course_image_radius), root.courseItemImage)
+            RoundedBitmapImageViewTarget(context.resources.getDimension(R.dimen.corner_radius), root.courseItemImage)
 
         private val coursePlaceholder = BitmapFactory
             .decodeResource(context.resources, R.drawable.general_placeholder)
@@ -39,7 +38,7 @@ class CourseAdapterDelegate(
                 RoundedBitmapDrawableFactory
                     .create(context.resources, bitmap)
                     .apply {
-                        cornerRadius = context.resources.getDimension(R.dimen.course_image_radius)
+                        cornerRadius = context.resources.getDimension(R.dimen.corner_radius)
                     }
             }
 
@@ -51,8 +50,6 @@ class CourseAdapterDelegate(
         private val courseButtonSeparator = root.courseButtonSeparator
 
         init {
-            coursePropertiesDelegate.setTextColor(ContextCompat.getColor(context, R.color.new_accent_color))
-
             root.setOnClickListener { itemData?.let(onItemClicked) }
             courseContinueButton.setOnClickListener { itemData?.let(onContinueCourseClicked) }
         }
