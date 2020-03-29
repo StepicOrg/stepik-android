@@ -21,6 +21,8 @@
     <color name="transparent">@color/white_color_alpha_0</color>
     <color name="black">@color/black1</color>
 
+    <!-- ThemeOverlay -->
+
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
     <color name="stepic_brand_primary_dark">@color/green03</color>
@@ -222,15 +224,11 @@
 
     <!-- Text styles colors -->
     <color name="color_body1">@color/black2</color>
-    <color name="color_body2_note">@color/grey02</color>
 
     <color name="color_violet_1">@color/violet1</color>
     <color name="color_violet_1_12">@color/violet1_alpha_13</color>
 
     <!-- Step -->
-    <color name="step_navigation_button">@color/stepic_brand_primary</color>
-    <color name="step_navigation_button_ripple">@color/green01_alpha_13</color>
-
     <color name="step_discussion_button">@color/new_primary_color</color>
 
     <color name="step_quiz_feedback_wrong_text">@color/red02</color>

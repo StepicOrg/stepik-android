@@ -175,8 +175,6 @@
     <dimen name="certificate_image_size">80dp</dimen>
 
     <!-- Step -->
-    <dimen name="step_content_block_radius">8dp</dimen>
-    <dimen name="step_navigation_button_radius">@dimen/step_content_block_radius</dimen>
     <dimen name="step_quiz_container_bottom_margin">16dp</dimen>
 
     <dimen name="step_control_block_radius">8dp</dimen>
