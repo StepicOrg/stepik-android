@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
@@ -19,7 +18,7 @@ import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import javax.inject.Inject
 
-class CourseSearchFragment: CourseListFragmentBase() {
+class CourseSearchFragment : CourseListFragmentBase() {
     companion object {
         private const val QUERY_KEY = "query_key"
 
@@ -100,12 +99,11 @@ class CourseSearchFragment: CourseListFragmentBase() {
         centeredToolbar.isVisible = false
         backIcon.isVisible = true
         searchViewToolbar.isVisible = true
-        searchViewContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        searchViewToolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         searchIcon.setImageResource(0)
         (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setIconifiedByDefault(false)
+        searchViewToolbar.setBackgroundColor(0)
         backIcon.setOnClickListener {
             val hasFocus = searchViewToolbar.hasFocus()
             if (hasFocus) {

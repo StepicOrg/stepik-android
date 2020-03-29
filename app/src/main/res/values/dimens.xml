@@ -221,7 +221,7 @@
     <dimen name="comment_item_separator_big">4dp</dimen>
 
     <!-- Search bar catalog -->
-    <dimen name="search_bar_margin">6dp</dimen>
+    <dimen name="search_bar_margin">4dp</dimen>
     <dimen name="search_bar_inner_padding">-4dp</dimen>
     <dimen name="back_button_left_margin">10dp</dimen>
     <dimen name="back_button_right_margin">12dp</dimen>

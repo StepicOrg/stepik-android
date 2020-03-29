@@ -42,7 +42,7 @@ import java.util.EnumSet
 import javax.inject.Inject
 
 class CatalogFragment : FragmentBase(),
-        CatalogView, FiltersView, FiltersListener, TagsView, StoriesView, AutoCompleteSearchView.FocusCallback {
+    CatalogView, FiltersView, FiltersListener, TagsView, StoriesView, AutoCompleteSearchView.FocusCallback {
 
     companion object {
         fun newInstance(): FragmentBase = CatalogFragment()
@@ -69,7 +69,7 @@ class CatalogFragment : FragmentBase(),
     @Inject
     lateinit var storiesPresenter: StoriesPresenter
 
-    lateinit var searchIcon: ImageView
+    private lateinit var searchIcon: ImageView
 
     private val courseCarouselInfoList = mutableListOf<CoursesCarouselInfo>()
 
@@ -179,15 +179,13 @@ class CatalogFragment : FragmentBase(),
                 searchEventLogged = true
             }
             searchIcon.setImageResource(0)
+            searchViewToolbar.setBackgroundColor(0)
             (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
-            searchViewContainer.setBackgroundResource(R.color.white)
-            searchViewToolbar.setBackgroundResource(R.color.white)
         } else {
             searchIcon.setImageResource(R.drawable.ic_action_search)
-            val margin = resources.getDimension(R.dimen.search_bar_margin).toInt()
-            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
-            searchViewContainer.setBackgroundResource(R.color.new_primary_color)
+            val margin = resources.getDimensionPixelOffset(R.dimen.search_bar_margin)
             searchViewToolbar.setBackgroundResource(R.drawable.bg_catalog_search_bar)
+            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
         }
     }
 
