@@ -24,7 +24,6 @@ import org.stepik.android.presentation.course_list.CourseListSearchPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
-import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -75,7 +74,6 @@ class CourseListTagFragment : Fragment() {
 
         initCenteredToolbar(tag.title, true)
         with(courseListCoursesRecycler) {
-            addItemDecoration(CourseListPlaceHolderTextDecoration())
             layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
@@ -83,6 +81,13 @@ class CourseListTagFragment : Fragment() {
                 }
             }
         }
+
+        val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
+        viewStateDelegate.addState<CourseListView.State.Idle>()
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingError)
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(
@@ -93,18 +98,11 @@ class CourseListTagFragment : Fragment() {
             ),
             adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseItemsRecyclerView = courseListCoursesRecycler,
-            courseListViewStateDelegate = ViewStateDelegate(),
+            courseListViewStateDelegate = viewStateDelegate,
             courseListPresenter = courseListPresenter
         )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-
-        val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
-        viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingError)
 
         courseListPresenter.fetchCourses(
             SearchResultQuery(

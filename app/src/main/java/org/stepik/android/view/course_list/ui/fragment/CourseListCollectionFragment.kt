@@ -21,8 +21,7 @@ import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
-import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListPlaceHolderTextDecoration
-import org.stepik.android.view.course_list.ui.decoration.HeaderDecoration
+import org.stepik.android.view.course_list.ui.adapter.decorator.CourseListCollectionHeaderDecoration
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -73,11 +72,15 @@ class CourseListCollectionFragment : Fragment() {
 
         initCenteredToolbar(courseCollection.title, true)
         with(courseListCoursesRecycler) {
-            addItemDecoration(CourseListPlaceHolderTextDecoration())
             layoutManager = WrapContentLinearLayoutManager(context)
         }
 
-        courseListCoursesRecycler.addItemDecoration(HeaderDecoration("Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"))
+        courseListCoursesRecycler.itemAnimator = null
+        courseListCoursesRecycler.addItemDecoration(
+            CourseListCollectionHeaderDecoration(
+                courseCollection.description
+            )
+        )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
 
@@ -97,7 +100,7 @@ class CourseListCollectionFragment : Fragment() {
             ),
             adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseItemsRecyclerView = courseListCoursesRecycler,
-            courseListViewStateDelegate = ViewStateDelegate(),
+            courseListViewStateDelegate = viewStateDelegate,
             courseListPresenter = courseListPresenter
         )
 

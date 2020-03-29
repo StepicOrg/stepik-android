@@ -11,7 +11,6 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
-import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderTextAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
@@ -34,7 +33,6 @@ class CourseListViewDelegate(
             }
         )
         courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
-        courseItemAdapter += CourseListPlaceHolderTextAdapterDelegate()
         courseItemsRecyclerView.adapter = courseItemAdapter
     }
 
