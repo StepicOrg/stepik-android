@@ -113,7 +113,6 @@
     <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">
         <item name="colorOnSecondary">@color/new_accent_color</item>
         <item name="colorSecondary">@color/new_accent_color</item>
-        <item name="colorSecondaryDark">@color/black2</item>
     </style>
 
     <style name="ThemeOverlay.Green" parent="ThemeOverlay.MaterialComponents">

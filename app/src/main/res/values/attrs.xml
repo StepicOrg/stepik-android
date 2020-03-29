@@ -6,8 +6,6 @@
 
     <attr name="appBarElevation" format="dimension|reference" />
 
-    <attr name="colorSecondaryDark" format="color|reference" />
-
     <attr name="dividerVerticalColor" format="color|reference" />
     <attr name="dividerVerticalSize" format="dimension|reference" />
 

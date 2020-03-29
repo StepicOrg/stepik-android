@@ -8,7 +8,6 @@
 <!--        <item name="colorPrimaryDark">@color/new_accent_color</item>-->
 <!--        <item name="colorAccent">@color/new_accent_color</item>-->
 <!--        <item name="colorSecondary">@color/green01</item>-->
-<!--        <item name="colorSecondaryDark">@color/green03</item>-->
 
 <!--        &lt;!&ndash;this change the background of main window (activity)&ndash;&gt;-->
 <!--        <item name="android:windowBackground">@color/white</item>-->
