@@ -9,6 +9,7 @@
         android:id="@+id/courseAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="?appBarElevation"
         android:theme="@style/StepikTheme.DarkActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout

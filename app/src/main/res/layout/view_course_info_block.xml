@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/blockIcon"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:contentDescription="@null"
+        android:tint="?colorOnSurface"
+        android:alpha="?alphaEmphasisHigh"
         android:layout_gravity="start|center_vertical" />
 
     <TextView
@@ -22,9 +23,6 @@
         android:layout_gravity="start|center_vertical"
         android:gravity="start|center_vertical"
 
-        android:textSize="14sp"
-
-        app:fontFamily="@font/roboto_medium"
-        tools:ignore="missingPrefix" />
+        android:textAppearance="?textAppearanceSubtitle1" />
 
 </FrameLayout>

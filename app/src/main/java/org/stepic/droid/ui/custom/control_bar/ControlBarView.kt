@@ -9,13 +9,16 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.annotation.AttrRes
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
+import androidx.core.widget.ImageViewCompat
 import org.stepic.droid.R
+import org.stepic.droid.util.resolveAttribute
 import kotlin.math.max
 
 class ControlBarView
@@ -23,7 +26,7 @@ class ControlBarView
 constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr), View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     private val inflater = LayoutInflater.from(context)
     private val menu: Menu =
-            PopupMenu(context, null).menu
+            PopupMenu(context, this).menu
 
     @LayoutRes
     private val itemLayoutRes: Int
@@ -88,7 +91,10 @@ constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr
         actionMore = ImageView(context).apply {
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setImageResource(R.drawable.ic_action_more_vert)
-            setBackgroundResource(R.drawable.selectable_item_rounded_background)
+            ImageViewCompat
+                .setImageTintList(this, ContextCompat.getColorStateList(context, com.google.android.material.R.color.mtrl_text_btn_text_color_selector))
+
+            setBackgroundResource(context.resolveAttribute(R.attr.selectableItemBackgroundRounded)?.resourceId ?: 0)
             setPadding(16, 16, 16, 16)
         }
         addView(actionMore)

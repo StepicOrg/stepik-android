@@ -6,8 +6,7 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
-import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
@@ -15,6 +14,7 @@ import kotlinx.android.synthetic.main.view_course_reviews_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.model.user.User
@@ -97,7 +97,7 @@ class CourseReviewDataDelegate(
                 .findItem(R.id.course_review_menu_remove)
                 ?.let { menuItem ->
                     val title = SpannableString(menuItem.title)
-                    title.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.new_red_color)), 0, title.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    title.setSpan(ForegroundColorSpan(context.resolveColorAttribute(R.attr.colorError)), 0, title.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                     menuItem.title = title
                 }
 

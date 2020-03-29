@@ -4,8 +4,7 @@
     android:id="@+id/centeredToolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:layout_gravity="center"
-    style="@style/Widget.MaterialComponents.Toolbar.Surface">
+    android:layout_gravity="center">
 
     <TextView
         android:id="@+id/centeredToolbarTitle"

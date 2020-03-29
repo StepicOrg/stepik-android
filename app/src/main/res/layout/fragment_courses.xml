@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?android:colorBackground">
 
     <include layout="@layout/view_catalog_search_toolbar" />
 
     <org.stepic.droid.ui.custom.TouchDispatchableFrameLayout
         android:id="@+id/root_fragment_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/new_background_white">
+        android:layout_height="match_parent">
 
         <include layout="@layout/progress_bar_on_empty_screen"/>
 
@@ -19,7 +20,6 @@
         <include layout="@layout/empty_courses"/>
 
         <include layout="@layout/empty_search"/>
-
 
         <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_mycourses"

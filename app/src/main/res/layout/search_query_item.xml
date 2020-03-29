@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/search_query_background"
-    android:orientation="horizontal"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?colorSurface"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:layout_height="56dp">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/searchIcon"
-        android:tint="@color/new_accent_color"
+        app:tint="?colorControlNormal"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:layout_margin="16dp" />
+        android:layout_margin="16dp"
+        android:layout_gravity="center_vertical|start"
+        tools:src="@drawable/ic_history" />
 
     <TextView
         android:id="@+id/searchQuery"
@@ -19,9 +21,17 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginLeft="56dp"
         android:scrollHorizontally="true"
-        android:textSize="14sp"
+        android:textAppearance="?textAppearanceBody2"
+        android:layout_gravity="center_vertical|start"
         android:ellipsize="end"
         android:maxLines="1" />
 
-</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?selectableItemBackground"
+        android:duplicateParentState="true" />
+</FrameLayout>

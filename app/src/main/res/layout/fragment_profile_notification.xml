@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -18,10 +17,9 @@
 
     <org.stepic.droid.ui.custom.BetterSwitch
         android:id="@+id/notificationStreakSwitch"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody1"
         android:layout_marginLeft="@dimen/profile_block_margin"
         android:layout_marginRight="@dimen/profile_block_margin"
         android:text="@string/notification_about_learning" />

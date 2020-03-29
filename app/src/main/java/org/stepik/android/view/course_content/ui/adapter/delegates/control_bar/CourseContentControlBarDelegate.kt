@@ -3,8 +3,8 @@ package org.stepik.android.view.course_content.ui.adapter.delegates.control_bar
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
+import androidx.appcompat.widget.PopupMenu
 import androidx.collection.LongSparseArray
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import kotlinx.android.synthetic.main.view_course_content_control_bar.view.*

@@ -65,7 +65,7 @@ class CourseItemViewHolder(
     init {
         App.component().inject(this)
 
-        applyColorType(colorType)
+//        applyColorType(colorType)
 
         imageViewTarget = RoundedBitmapImageViewTarget(itemView.resources.getDimension(R.dimen.course_image_radius), courseItemImage)
 

@@ -4,13 +4,13 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.Course
 import org.stepik.android.model.Section
 import org.stepik.android.model.Unit
@@ -80,10 +80,7 @@ class RemoveCachedContentDialog : DialogFragment() {
             .apply {
                 setOnShowListener {
                     getButton(AlertDialog.BUTTON_POSITIVE)
-                        .setTextColor(ContextCompat.getColor(context, R.color.new_red_color))
-
-                    getButton(AlertDialog.BUTTON_NEGATIVE)
-                        .setTextColor(ContextCompat.getColor(context, R.color.new_accent_color))
+                        .setTextColor(context.resolveColorAttribute(R.attr.colorError))
                 }
             }
 

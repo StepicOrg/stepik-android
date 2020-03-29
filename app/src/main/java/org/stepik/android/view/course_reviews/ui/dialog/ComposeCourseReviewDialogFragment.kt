@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course_reviews.model.CourseReview
@@ -66,7 +67,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
 
         injectComponent()
         composeCourseReviewPresenter = ViewModelProviders
@@ -87,7 +88,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.setText(R.string.course_reviews_compose_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.compose_course_review_menu)
         centeredToolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.course_review_submit) {
@@ -112,7 +113,7 @@ class ComposeCourseReviewDialogFragment : DialogFragment(), ComposeCourseReviewV
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
             }
 
         composeCourseReviewPresenter.attachView(this)

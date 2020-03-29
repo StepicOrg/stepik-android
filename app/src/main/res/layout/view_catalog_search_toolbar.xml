@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.appbar.AppBarLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/appBarLayout"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar"
-    style="@style/Widget.MaterialComponents.AppBarLayout.Surface">
+    android:background="?colorSurface"
+    android:elevation="?appBarElevation">
 
     <include layout="@layout/view_centered_toolbar"/>
 
     <LinearLayout
         android:id="@+id/searchViewContainer"
         android:orientation="horizontal"
-        android:background="@color/new_primary_color"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -45,13 +44,9 @@
             app:queryHint="@string/find_courses_hint"
             android:background="@drawable/bg_catalog_search_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            tools:visibility="visible" />
 
     </LinearLayout>
-
-    <include
-        android:id="@+id/toolbarShadow"
-        android:visibility="gone"
-        layout="@layout/drop_shadow_view" />
 
 </com.google.android.material.appbar.AppBarLayout>

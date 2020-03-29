@@ -12,6 +12,8 @@
     <dimen name="material_emphasis_medium">0.6</dimen>
     <dimen name="material_emphasis_disabled">0.38</dimen>
 
+    <dimen name="appbar_elevation">4dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="custom_peek_height">500dp</dimen>
     <dimen name="guideline_tab_indicator_height">2dp</dimen>
@@ -219,7 +221,7 @@
     <dimen name="comment_item_separator_big">4dp</dimen>
 
     <!-- Search bar catalog -->
-    <dimen name="search_bar_margin">6dp</dimen>
+    <dimen name="search_bar_margin">4dp</dimen>
     <dimen name="search_bar_inner_padding">-4dp</dimen>
     <dimen name="back_button_left_margin">10dp</dimen>
     <dimen name="back_button_right_margin">12dp</dimen>

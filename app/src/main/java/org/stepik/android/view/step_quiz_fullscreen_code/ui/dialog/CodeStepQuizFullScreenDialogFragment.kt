@@ -33,6 +33,7 @@ import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
@@ -123,7 +124,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
 
         injectComponent()
         codeRunPresenter = ViewModelProviders
@@ -140,7 +141,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         centeredToolbarTitle.text = lessonTitle
         centeredToolbar.inflateMenu(R.menu.code_playground_menu)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.setOnMenuItemClickListener { item ->
             if (item?.itemId == R.id.action_reset_code) {
                 val dialog = ResetCodeDialogFragment.newInstance()
@@ -259,7 +260,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
             }
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         runCodeDelegate?.let {

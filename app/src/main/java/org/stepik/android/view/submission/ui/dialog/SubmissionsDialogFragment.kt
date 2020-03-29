@@ -23,6 +23,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
@@ -76,7 +77,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
 
         injectComponent()
 
@@ -92,7 +93,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.setText(if (isSelectionEnabled) R.string.submissions_select_title else R.string.submissions_title)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<SubmissionsView.State.Idle>()
@@ -157,7 +158,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
             }
 
         submissionsPresenter.attachView(this)

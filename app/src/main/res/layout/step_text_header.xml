@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
-    android:textColor="@color/black"
-    android:textSize="16sp"
-    android:textColorHighlight="@color/text_color_highlight"
+    android:textAppearance="?textAppearanceBody1"
     android:textIsSelectable="true"
 
     android:layout_gravity="top"

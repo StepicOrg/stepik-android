@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:padding="8dp"
-    android:background="@drawable/selectable_item_rounded_background">
+    android:background="?selectableItemBackgroundRounded">
 
     <ImageView
         android:id="@android:id/icon"
@@ -15,15 +15,16 @@
         android:layout_height="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        android:tint="@color/mtrl_text_btn_text_color_selector" />
 
     <TextView
         android:id="@android:id/text1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@color/new_accent_color"
-        app:fontFamily="@font/roboto_light"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="@color/mtrl_text_btn_text_color_selector"
+        tools:text="Button"
         tools:ignore="missingPrefix" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

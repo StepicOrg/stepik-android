@@ -37,6 +37,7 @@
         <item name="textAppearanceSubtitle1">@style/TextAppearance.AppTheme.Subtitle1</item>
         <item name="textAppearanceSubtitle2">@style/TextAppearance.AppTheme.Subtitle2</item>
         <item name="textAppearanceHeadline1">@style/TextAppearance.AppTheme.Headline1</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.AppTheme.Headline3</item>
         <item name="textAppearanceHeadline5">@style/TextAppearance.AppTheme.Headline5</item>
         <item name="textAppearanceHeadline6">@style/TextAppearance.AppTheme.Headline6</item>
 
@@ -59,9 +60,18 @@
 
         <item name="checkboxStyle">@style/Widget.MaterialComponents.CompoundButton.CheckBox</item>
 
+        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="android:contextPopupMenuStyle">@style/Widget.MaterialComponents.PopupMenu.ContextMenu</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+
+        <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
+        <item name="appBarElevation">@dimen/appbar_elevation</item>
+        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Surface</item>
+
         <!-- Inner components parameters -->
-        <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>
+        <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
+        <item name="dividerVerticalColor">@color/color_divider_vertical</item>
         <item name="cornerRadius">@dimen/corner_radius</item>
 
         <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
@@ -81,6 +91,14 @@
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/color_background</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
     </style>
 
     <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">

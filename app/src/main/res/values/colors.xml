@@ -53,16 +53,12 @@
     <color name="text_color">@color/new_accent_color</color>
     <color name="text_color_highlight">@color/grey04_alpha_70</color>
     <color name="new_border_color">@color/new_primary_color</color>>
-    <color name="new_logout_color">@color/new_red_color</color>>
     <color name="arrow_color">@color/new_accent_color</color>>
     <color name="new_background_white">@color/white</color>
 
     <!--Tab text color, based on accent color-->
     <color name="tab_text_color">@color/new_accent_color</color>
     <color name="tab_text_color_70percent">@color/new_accent_color_alpha_70</color>
-
-    <color name="unviewed_step">@color/new_accent_color</color>
-    <color name="viewed_step">@color/new_accent_color_alpha_40</color>
 
     <color name="new_cover">@color/white</color>
 
@@ -76,8 +72,6 @@
     <color name="login_edit_text_block_stroke_color">@color/grey02</color>
     <color name="login_edit_text_block_background_color">@color/transparent</color>
     <color name="login_edit_text_block_background_color_wrong">@color/red02_color_alpha_5</color>
-
-    <color name="login_error_color">@color/new_red_color</color>
 
     <color name="remind_password_button_text_color">@color/blue03</color>
 
@@ -108,7 +102,6 @@
     <color name="element_gray_pressed">@color/grey04</color>
     <color name="language_text_color_checked">@color/white</color>
     <color name="language_text_color_unchecked">@color/new_accent_color</color>
-    <color name="search_view_suggestions_prefix_color">@color/black1_alpha_27</color>
 
     <color name="onboarding_action_pressed">@color/white_color_alpha_30</color>
     <color name="onboarding_action">@color/white_color_alpha_20</color>
@@ -203,7 +196,6 @@
 
     <color name="adaptive_color_easy">@color/green01_alpha_40</color>
     <color name="adaptive_color_hard">@color/new_red_color</color>
-    <color name="adaptive_color_wrong">@color/adaptive_color_hard</color>
     <color name="adaptive_color_correct">@color/green01_alpha_85</color>
 
     <color name="adaptive_color_title">@color/black2</color>
@@ -224,10 +216,7 @@
     <color name="popup_background_color_dark">@color/new_accent_color</color>
 
     <!-- course -->
-    <color name="course_appbar_separator">@color/grey03</color>
     <color name="course_appbar_scrim_color">#6B6B7B</color>
-    <color name="course_tabbar_color">@color/new_primary_color</color>
-    <color name="course_info_organization_span">@color/blue03_alpha_80</color>
     <color name="course_content_section_background">@color/new_primary_color</color>
     <color name="course_content_section_date_disabled">@color/grey03_alpha_80</color>
 
