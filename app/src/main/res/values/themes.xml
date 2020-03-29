@@ -92,6 +92,12 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="AppTheme.Splash">
+        <item name="colorPrimaryDark">@color/transparent_black_30</item>
+        <item name="android:windowBackground">@drawable/branded_logo</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
+    </style>
+
     <style name="ThemeOverlay.AppTheme.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>

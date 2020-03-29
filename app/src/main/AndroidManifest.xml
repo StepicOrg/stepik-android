@@ -35,7 +35,7 @@
             android:name="org.stepic.droid.ui.activities.SplashActivity"
             android:noHistory="true"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.BrandedLaunch" />
+            android:theme="@style/AppTheme.Splash" />
 
         <activity-alias
             android:name="org.stepic.droid.view.activities.SplashActivity"

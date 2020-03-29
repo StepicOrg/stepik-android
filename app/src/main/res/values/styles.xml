@@ -106,15 +106,9 @@
         <item name="behavior_peekHeight">@dimen/custom_peek_height</item>
     </style>
 
-    <style name="AppTheme.BrandedLaunch">
-        <item name="colorPrimaryDark">@color/transparent_black_30</item>
-        <item name="android:windowBackground">@drawable/branded_logo</item>
-    </style>
-
     <style name="AppTheme.Onboarding">
         <item name="android:windowBackground">@drawable/onboarding_background</item>
     </style>
-
 
     <style name="AppTheme.PhotoView">
         <item name="windowActionBar">false</item>
