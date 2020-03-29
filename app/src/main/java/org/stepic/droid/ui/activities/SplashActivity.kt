@@ -79,16 +79,20 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
     override fun onStart() {
         super.onStart()
-        Branch.getInstance().initSession({ referringParams: JSONObject?, error: BranchError? ->
-            if (error == null && referringParams != null && referringParams.has(BranchParams.FIELD_CAMPAIGN)) {
-                analytics.reportAmplitudeEvent(AmplitudeAnalytic.Branch.LINK_OPENED, mapOf(
-                    AmplitudeAnalytic.Branch.PARAM_CAMPAIGN to referringParams[BranchParams.FIELD_CAMPAIGN],
-                    AmplitudeAnalytic.Branch.IS_FIRST_SESSION to referringParams.optBoolean(BranchParams.IS_FIRST_SESSION, false)
-                ))
-            }
+        Branch
+            .sessionBuilder(this)
+            .withCallback { referringParams, error ->
+                if (error == null && referringParams != null && referringParams.has(BranchParams.FIELD_CAMPAIGN)) {
+                    analytics.reportAmplitudeEvent(AmplitudeAnalytic.Branch.LINK_OPENED, mapOf(
+                        AmplitudeAnalytic.Branch.PARAM_CAMPAIGN to referringParams[BranchParams.FIELD_CAMPAIGN],
+                        AmplitudeAnalytic.Branch.IS_FIRST_SESSION to referringParams.optBoolean(BranchParams.IS_FIRST_SESSION, false)
+                    ))
+                }
 
-            splashPresenter.onSplashCreated(referringParams)
-        }, intent?.data, this)
+                splashPresenter.onSplashCreated(referringParams)
+            }
+            .withData(intent?.data)
+            .init()
     }
 
     override fun onDestroy() {
