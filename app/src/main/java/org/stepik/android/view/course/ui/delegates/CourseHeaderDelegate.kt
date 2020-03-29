@@ -1,11 +1,9 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
-import android.graphics.PorterDuff
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -183,13 +181,7 @@ class CourseHeaderDelegate(
         dropCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState == EnrollmentState.Enrolled
 
         shareCourseMenuItem = menu.findItem(R.id.share_course)
-        shareCourseMenuItem?.let { menuItem ->
-            menuItem.icon
-                ?.mutate()
-                ?.setColorFilter(ContextCompat.getColor(courseActivity, R.color.white), PorterDuff.Mode.SRC_IN)
-
-            menuItem.isVisible = courseHeaderData != null
-        }
+        shareCourseMenuItem?.isVisible = courseHeaderData != null
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
         restorePurchaseCourseMenuItem?.isVisible = false // courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp
