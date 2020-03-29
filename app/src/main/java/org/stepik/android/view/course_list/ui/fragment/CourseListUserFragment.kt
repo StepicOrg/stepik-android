@@ -14,12 +14,9 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.model.CollectionDescriptionColors
-import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
-import org.stepic.droid.util.ColorUtil
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.presentation.course_list.CourseListView

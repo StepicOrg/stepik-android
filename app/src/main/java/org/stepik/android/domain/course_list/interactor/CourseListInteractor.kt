@@ -1,8 +1,6 @@
 package org.stepik.android.domain.course_list.interactor
 
-import io.reactivex.Maybe
 import io.reactivex.Single
-import io.reactivex.rxkotlin.toObservable
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
@@ -37,22 +35,22 @@ constructor(
 
     private fun getCourseListItems(coursesSource: Single<PagedList<Course>>): Single<PagedList<CourseListItem.Data>> =
         coursesSource
-            .flatMap { courses ->
-                courses
-                    .toObservable()
-                    .flatMapMaybe(::obtainCourseListItem)
-                    .toList()
-                    .map { PagedList(it, courses.page, courses.hasNext, courses.hasPrev) }
-            }
+            .flatMap(::obtainCourseListItem)
 
-    private fun obtainCourseListItem(course: Course): Maybe<CourseListItem.Data> =
+    private fun obtainCourseListItem(courses: PagedList<Course>): Single<PagedList<CourseListItem.Data>> =
         courseStatsInteractor
-            .getCourseStats(course)
+            .getCourseStats(courses)
             .map { courseStats ->
-                CourseListItem.Data(
-                    course = course,
-                    courseStats = courseStats
+                val list = courses.mapIndexed { index, course ->
+                    CourseListItem.Data(
+                        course = course,
+                        courseStats = courseStats[index]
+                    )
+                }
+                PagedList(list = list,
+                    page = courses.page,
+                    hasNext = courses.hasNext,
+                    hasPrev = courses.hasPrev
                 )
             }
-            .toMaybe()
 }

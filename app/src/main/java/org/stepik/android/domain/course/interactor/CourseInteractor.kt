@@ -42,7 +42,7 @@ constructor(
 
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
         zip(
-            courseStatsInteractor.getCourseStats(course),
+            courseStatsInteractor.getCourseStats(listOf(course)),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true)
         ) { courseStats, localSubmissions ->
             CourseHeaderData(
@@ -51,7 +51,7 @@ constructor(
                 title = course.title ?: "",
                 cover = course.cover ?: "",
 
-                stats = courseStats,
+                stats = courseStats.first(),
                 localSubmissionsCount = localSubmissions.count { it is SolutionItem.SubmissionItem }
             )
         }
