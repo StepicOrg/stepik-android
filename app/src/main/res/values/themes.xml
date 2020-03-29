@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="Base.AppTheme" />
 
-    <!-- TODO replace with Theme.MaterialComponents.DayNight.NoActionBar -->
     <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!--Material color attributes -->
         <item name="colorPrimary">@color/color_primary</item>
@@ -99,6 +98,10 @@
         <item name="android:windowBackground">@color/color_background</item>
         <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+
+    <style name="ThemeOverlay.Dark" parent="ThemeOverlay.MaterialComponents.Dark">
+
     </style>
 
     <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">
