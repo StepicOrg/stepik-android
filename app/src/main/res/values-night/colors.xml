@@ -14,7 +14,7 @@
     <color name="color_on_secondary">@color/black</color>
     <color name="color_on_background">@color/white</color>
     <color name="color_on_surface">@color/white</color>
-    <color name="color_on_error">@color/color_brown_700</color>
+    <color name="color_on_error">@color/black</color>
 
     <color name="color_status_bar">@color/color_background</color>
 
@@ -22,4 +22,6 @@
     <color name="color_overlay_brown">@color/color_brown_300</color>
     <color name="color_overlay_green">@color/color_green_300</color>
     <color name="color_overlay_violet">@color/color_violet_200</color>
+
+    <color name="color_overlay_dark_surface">@color/color_surface</color>
 </resources>

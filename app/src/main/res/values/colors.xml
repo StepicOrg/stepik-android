@@ -26,6 +26,8 @@
     <color name="color_overlay_green">@color/color_green_400</color>
     <color name="color_overlay_violet">@color/color_violet_300</color>
 
+    <color name="color_overlay_dark_surface">@color/color_brown_700</color>
+
     <!-- Color palette -->
     <color name="color_brown_700">#535366</color>
     <color name="color_brown_400">#AFAEC4</color>

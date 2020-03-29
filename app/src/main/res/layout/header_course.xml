@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/fast_continue_learning_opacity"
     android:gravity="center_horizontal"
     android:paddingTop="8dp"
     app:layout_collapseMode="pin">

@@ -107,7 +107,7 @@
     </style>
 
     <style name="ThemeOverlay.Dark" parent="ThemeOverlay.MaterialComponents.Dark">
-
+        <item name="colorSurface">@color/color_overlay_dark_surface</item>
     </style>
 
     <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">
