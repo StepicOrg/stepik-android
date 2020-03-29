@@ -118,43 +118,10 @@
         <item name="android:windowBackground">@color/black</item>
     </style>
 
-    <style name="StepikTheme.EditTextStyle" parent="@android:style/Widget.EditText">
-        <item name="android:textColor">@color/text_color</item>
-    </style>
-
     <style name="TransparentActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Support library compatibility -->
         <item name="windowActionBarOverlay">true</item>
-    </style>
-
-    <style name="StepikTheme.LoginLaunchRegistration" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
-        <item name="buttonCornerRadius">@dimen/button_corner_radius</item>
-        <item name="colorSecondary">@color/green01</item>
-        <item name="colorSecondaryDark">@color/green03</item>
-        <item name="colorOnSecondary">@color/white</item>
-
-        <item name="buttonStyle">@style/Widget.AppTheme.Button</item>
-<!--        <item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
-
-        <item name="colorAccent">@color/green01</item>
-        <item name="colorPrimaryDark">@color/transparent_black_30</item>
-        <item name="android:windowBackground">@color/login_launch_registration_background</item>
-        <item name="android:colorBackground">@color/login_launch_registration_background</item>
-        <item name="android:textColorPrimary">@color/text_color</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/new_accent_color</item>
-        <item name="colorControlActivated">@color/new_accent_color</item>
-        <item name="android:colorControlActivated" tools:targetApi="lollipop">@color/new_accent_color</item>
-        <item name="alertDialogTheme">@style/StepikTheme.LoginDialog</item>
-        <item name="android:textColorHighlight">@color/grey03</item>
-    </style>
-
-    <style name="StepikTheme.LoginDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorPrimary">@color/new_accent_color</item>
-        <item name="colorOnSecondary">@color/violet1</item>
-        <item name="dialogCornerRadius">@dimen/button_corner_radius</item>
-        <item name="buttonBarButtonStyle">@style/Widget.AppTheme.Button.TextButton</item>
     </style>
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
@@ -169,14 +136,6 @@
         <item name="android:windowBackground">@color/black</item>
         <item name="colorPrimaryDark">@color/transparent_black_30</item>
         <item name="windowActionBarOverlay">true</item>
-    </style>
-
-    <style name="TextAppearance.FontPath" parent="android:TextAppearance">
-        <item name="android:fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="AppTheme.Widget.TextView" parent="android:Widget.Holo.Light.TextView">
-<!--        <item name="android:fontFamily">@font/roboto_regular</item>-->
     </style>
 
     <style name="BottomSheetShareItem">
@@ -263,15 +222,7 @@
         <item name="android:lineSpacingMultiplier">1.33</item>
     </style>
 
-    <style name="NewContinueButton">
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="StepikSpinnerItem" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
-        <item name="android:gravity">center_horizontal</item>
-    </style>
-
-    <style name="VideoTimeThumbnail" parent="AppTheme.Widget.TextView">
+    <style name="VideoTimeThumbnail">
         <item name="android:background">@color/background_time_thumbnail</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
@@ -288,18 +239,6 @@
     <style name="PopupAnimations">
         <item name="android:windowEnterAnimation">@anim/popup_enter</item>
         <item name="android:windowExitAnimation">@anim/popup_exit</item>
-    </style>
-
-    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <item name="queryBackground">@android:color/transparent</item>
-        <item name="searchIcon">@null</item>
-        <item name="searchHintIcon">@null</item>
-        <item name="android:iconifiedByDefault">false</item>
-    </style>
-
-    <style name="AutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:textColorHighlight">@color/text_color_highlight</item>
     </style>
 
     <style name="Adaptive.BorderlessButton" parent="Widget.AppCompat.Button.Borderless">
@@ -339,17 +278,6 @@
         <item name="android:windowExitAnimation">@anim/adaptive_dialog_out</item>
     </style>
 
-    <style name="CourseTabAppearance">
-        <item name="android:fontFamily">@font/roboto_light</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/new_accent_color</item>
-    </style>
-    
-    <style name="StepikTheme.DarkActionBar">
-        <item name="colorControlNormal">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
-    </style>
-
     <style name="StepQuizFeedback">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -365,10 +293,8 @@
     </style>
 
     <style name="StepQuizDescription">
-        <item name="android:textColor">@color/new_accent_color</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:letterSpacing" tools:targetApi="lollipop">0.03</item>
+        <item name="android:textAppearance">?textAppearanceCaption</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
     <style name="ProfileStat">

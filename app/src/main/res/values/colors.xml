@@ -43,8 +43,6 @@
 
     <color name="exo_edit_mode_background_color">@color/grey04</color>
 
-    <color name="login_launch_registration_background">@color/white</color>
-
     <color name="rate_dialog_store">@color/green01</color>
     <color name="rate_dialog_support">@color/red01</color>
 
