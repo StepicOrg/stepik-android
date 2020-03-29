@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?selectableItemBackground"
 
     android:paddingStart="?dialogPreferredPadding"
@@ -34,11 +33,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
 
-        android:textSize="16sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody1"
 
-        app:fontFamily="@font/roboto_light"
-        tools:ignore="MissingPrefix"
         tools:text="Achievement title" />
 
     <TextView
@@ -57,11 +53,9 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
 
-        android:textSize="12sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
 
-        app:fontFamily="@font/roboto_light"
-        tools:ignore="MissingPrefix"
         tools:text="Achievement description"/>
 
 </RelativeLayout>
