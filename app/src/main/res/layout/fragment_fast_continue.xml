@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/ThemeOverlay.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="0dp"
@@ -17,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:borderRadius="@dimen/course_image_radius">
+        app:borderRadius="?cornerRadius">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -50,7 +51,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/header_action_background_white"
                 app:cornerRadius="@dimen/header_action_radius"
                 android:paddingEnd="@dimen/half_padding"
                 android:paddingStart="@dimen/half_padding"
@@ -81,10 +81,7 @@
                 android:id="@+id/fastContinueCourseName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:fontFamily="@font/roboto_light"
-                android:gravity="start"
-                android:textSize="@dimen/course_item_titles_text_size"
-                android:textColor="@color/white"
+                android:textAppearance="?textAppearanceBody1"
                 android:ellipsize="end"
                 android:maxLines="1"
                 app:layout_constraintTop_toTopOf="@id/fastContinueCourseCover"
@@ -99,7 +96,8 @@
 
             <TextView
                 android:id="@+id/fastContinueCourseProgressText"
-                style="@style/FastContinueSubtextStyle"
+                android:textAppearance="?textAppearanceCaption"
+                android:textColor="?android:textColorSecondary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toRightOf="@id/fastContinueCourseCover"
@@ -123,6 +121,7 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginLeft="0dp"
                 android:max="100"
+                android:theme="@style/ThemeOverlay.Secondary.Green"
                 app:mpb_progressTint="?colorSecondary"
                 app:mpb_progressStyle="horizontal"
                 app:mpb_useIntrinsicPadding="false"
