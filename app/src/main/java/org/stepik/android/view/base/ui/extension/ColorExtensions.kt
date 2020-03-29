@@ -25,7 +25,7 @@ object ColorExtensions {
     private fun addChannel(shift: Int, @ColorInt color1: Int, @ColorInt color2: Int): Int =
         ((color1.shr(shift) and 0xFF) + (color2.shr(shift) and 0xFF) * (color2 shr 24).toFloat() / 0xFF).toInt().coerceIn(0..0xFF).shl(shift)
 
-    fun colorWithElevationOverlay(@ColorInt color: Int, @ColorInt colorOnSurface: Int, @Dimension(unit=Dimension.DP) elevation: Int): Int {
+    fun colorWithElevationOverlay(@ColorInt color: Int, @ColorInt colorOnSurface: Int, @Dimension(unit = Dimension.DP) elevation: Int): Int {
         val overlayAlpha =
             when (elevation) {
                 0 -> 0f
