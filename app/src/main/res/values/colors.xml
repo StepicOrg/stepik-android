@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AppTheme -->
-    <color name="color_primary">@color/new_accent_color</color>
-    <color name="color_primary_variant">@color/new_accent_color</color>
-    <color name="color_secondary">@color/violet1</color>
+    <color name="color_primary">@color/color_brown_700</color>
+    <color name="color_primary_variant">@color/color_brown_700</color>
+    <color name="color_secondary">@color/color_violet_300</color>
     <color name="color_secondary_variant">@color/violet3</color>
 
     <color name="color_background">@color/white</color>
@@ -22,6 +22,21 @@
     <color name="black">@color/black1</color>
 
     <!-- ThemeOverlay -->
+    <color name="color_overlay_brown">@color/color_brown_700</color>
+    <color name="color_overlay_green">@color/color_green_400</color>
+    <color name="color_overlay_violet">@color/color_violet_300</color>
+
+    <!-- Color palette -->
+    <color name="color_brown_700">#535366</color>
+    <color name="color_brown_400">#AFAEC4</color>
+    <color name="color_brown_300">#D3D2E9</color>
+
+    <color name="color_violet_300">#6C7BDF</color>
+    <color name="color_violet_200">#98A0E8</color>
+    
+    <color name="color_green_400">#66CC66</color>
+    <color name="color_green_300">#83D683</color>
+    <color name="color_green_200">#A8E1A7</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
