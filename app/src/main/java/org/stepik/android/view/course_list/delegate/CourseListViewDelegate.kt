@@ -22,7 +22,8 @@ class CourseListViewDelegate(
     courseListTitleContainer: View,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
-    private val courseListPresenter: CourseContinuePresenterDelegate
+    private val courseListPresenter: CourseContinuePresenterDelegate,
+    private val courseListPlaceholderDelegate: CourseListPlaceholderDelegate? = null
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private val courseListCounter = courseListTitleContainer.coursesCarouselCount
@@ -41,6 +42,7 @@ class CourseListViewDelegate(
     }
 
     override fun setState(state: CourseListView.State) {
+        courseListPlaceholderDelegate?.setState(state)
         courseListViewStateDelegate.switchState(state)
         when (state) {
             is CourseListView.State.Loading -> {

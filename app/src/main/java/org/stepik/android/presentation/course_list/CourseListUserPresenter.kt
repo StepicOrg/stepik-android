@@ -17,7 +17,6 @@ import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListUserPresenter
@@ -64,13 +63,13 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = if (it.isNotEmpty()) {
-                        Timber.d("Hello")
                         userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(it.first().course))
                         CourseListView.State.Content(
                             courseListDataItems = it,
                             courseListItems = it
                         )
                     } else {
+                        userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
                         CourseListView.State.Empty
                     }
                 },

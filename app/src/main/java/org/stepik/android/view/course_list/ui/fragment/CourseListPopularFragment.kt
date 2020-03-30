@@ -25,6 +25,7 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
+import org.stepik.android.view.course_list.delegate.CourseListPlaceholderDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
@@ -74,7 +75,7 @@ class CourseListPopularFragment : Fragment() {
         appBarLayout.isVisible = false
         courseListCoursesLoadingErrorVertical.isVisible = false
         courseListTitleContainer.isVisible = true
-        courseListCoursesLoadingErrorHorizontal.isVisible = true
+        courseListPlaceholder.isVisible = true
 
         courseListTitle.text = resources.getString(R.string.course_list_popular_toolbar_title)
 
@@ -111,7 +112,8 @@ class CourseListPopularFragment : Fragment() {
         viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
         viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorHorizontal)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholder)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholder)
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(
@@ -124,7 +126,13 @@ class CourseListPopularFragment : Fragment() {
             courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
-            courseListPresenter = courseListPresenter
+            courseListPresenter = courseListPresenter,
+            courseListPlaceholderDelegate = CourseListPlaceholderDelegate(
+                placeholderTextView = courseListPlaceholder,
+                emptyMessageRes = R.string.empty_courses_popular,
+                emptyListener = { screenManager.showCatalog(requireContext()) },
+                errorListener = { courseListPresenter.fetchCourses(courseListQuery, forceUpdate = true) }
+            )
         )
 
         courseListPresenter.fetchCourses(courseListQuery)
