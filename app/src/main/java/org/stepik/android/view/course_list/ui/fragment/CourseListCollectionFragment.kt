@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -71,6 +72,8 @@ class CourseListCollectionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        courseListCoursesLoadingErrorVertical.isVisible = true
+
         initCenteredToolbar(courseCollection.title, true)
         with(courseListCoursesRecycler) {
             layoutManager = WrapContentLinearLayoutManager(context)
@@ -91,7 +94,7 @@ class CourseListCollectionFragment : Fragment() {
         viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingError)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(

@@ -86,6 +86,8 @@ class CourseListSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        courseListCoursesLoadingErrorVertical.isVisible = true
+
         initCenteredToolbar(query, true)
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
@@ -115,7 +117,7 @@ class CourseListSearchFragment : Fragment() {
         viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingError)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(

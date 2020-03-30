@@ -33,15 +33,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <org.stepic.droid.ui.custom.CoursesCarouselView
-                android:id="@+id/myCoursesView"
+            <FrameLayout
+                android:id="@+id/userCoursesContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-            <org.stepic.droid.ui.custom.CoursesCarouselView
-                android:id="@+id/popularCoursesView"
+            <FrameLayout
+                android:id="@+id/popularCoursesContainer"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

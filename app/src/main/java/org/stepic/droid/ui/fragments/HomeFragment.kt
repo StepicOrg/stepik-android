@@ -17,6 +17,7 @@ import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.model.CoursesCarouselInfoConstants
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import javax.inject.Inject
 
 class HomeFragment : FragmentBase(), HomeStreakView {
@@ -56,9 +57,13 @@ class HomeFragment : FragmentBase(), HomeStreakView {
                 .add(R.id.homeFastContinueContainer, FastContinueFragment.newInstance(), fastContinueTag)
                 .commitNow()
 
+            childFragmentManager
+                .beginTransaction()
+                .add(R.id.popularCoursesContainer, CourseListPopularFragment.newInstance())
+                .commitNow()
 
-            myCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.myCourses)
-            popularCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.popular)
+//            myCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.myCourses)
+//            popularCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.popular)
         }
 
         homeStreakPresenter.attachView(this)
