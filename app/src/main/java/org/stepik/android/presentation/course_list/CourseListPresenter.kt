@@ -53,6 +53,7 @@ constructor(
         if (state != CourseListView.State.Idle && !forceUpdate) return
 
         state = CourseListView.State.Loading
+        this.courseListQuery = courseListQuery
 
         compositeDisposable += courseListInteractor
             .getCourseListItems(courseListQuery)

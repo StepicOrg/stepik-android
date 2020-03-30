@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.empty_search.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
@@ -103,6 +104,15 @@ class CourseListTagFragment : Fragment() {
         )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        tryAgain.setOnClickListener {
+            courseListPresenter.fetchCourses(
+                SearchResultQuery(
+                    page = 1,
+                    tagId = tag.id
+                ),
+                forceUpdate = true
+            )
+        }
 
         courseListPresenter.fetchCourses(
             SearchResultQuery(

@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_centerInParent="true"
-            layout="@layout/error_no_connection_with_button_small" />
+            layout="@layout/error_no_connection_with_button" />
 
     </RelativeLayout>
 
