@@ -49,10 +49,7 @@ public class ProgressHelper {
 
     public static void activate(DialogFragment progressDialog, FragmentManager fragmentManager, String tag) {
         if (progressDialog != null && !progressDialog.isAdded() && fragmentManager.findFragmentByTag(tag) == null) {
-            fragmentManager
-                    .beginTransaction()
-                    .add(progressDialog, tag)
-                    .commitNowAllowingStateLoss();
+            progressDialog.show(fragmentManager, tag);
         }
     }
 
