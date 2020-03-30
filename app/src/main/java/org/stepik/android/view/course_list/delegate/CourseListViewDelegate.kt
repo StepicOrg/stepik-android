@@ -1,6 +1,8 @@
 package org.stepik.android.view.course_list.delegate
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_course_list.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.ui.util.snackbar
@@ -17,11 +19,13 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
     adaptiveCoursesResolver: AdaptiveCoursesResolver,
+    courseListTitleContainer: View,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     private val courseListPresenter: CourseContinuePresenterDelegate
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
+    private val courseListCounter = courseListTitleContainer.coursesCarouselCount
     private var courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
 
     init {
@@ -45,8 +49,15 @@ class CourseListViewDelegate(
                     CourseListItem.PlaceHolder
                 )
             }
-            is CourseListView.State.Content ->
+            is CourseListView.State.Content -> {
                 courseItemAdapter.items = state.courseListItems
+                courseListCounter.text =
+                    courseItemsRecyclerView.context.resources.getQuantityString(
+                        R.plurals.course_count,
+                        state.courseListDataItems.size,
+                        state.courseListDataItems.size
+                    )
+            }
         }
     }
 

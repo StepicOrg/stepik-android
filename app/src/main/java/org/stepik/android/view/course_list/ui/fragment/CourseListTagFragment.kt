@@ -101,6 +101,7 @@ class CourseListTagFragment : Fragment() {
                 adaptiveCoursesResolver = adaptiveCoursesResolver
             ),
             adaptiveCoursesResolver = adaptiveCoursesResolver,
+            courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             courseListPresenter = courseListPresenter

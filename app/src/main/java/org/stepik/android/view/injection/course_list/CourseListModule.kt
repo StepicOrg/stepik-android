@@ -5,6 +5,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.subjects.BehaviorSubject
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_list.CourseListPresenter
@@ -51,5 +56,17 @@ abstract class CourseListModule {
         @CourseListScope
         fun provideViewContainer(): PresenterViewContainer<CourseListView> =
             DefaultPresenterViewContainer()
+
+        @Provides
+        @JvmStatic
+        @CourseListScope
+        internal fun provideCourseBehaviorSubject(): BehaviorSubject<Course> =
+            BehaviorSubject.create()
+
+        @Provides
+        @JvmStatic
+        @CourseListScope
+        internal fun provideCourseObservableSource(courseSubject: BehaviorSubject<Course>, @BackgroundScheduler scheduler: Scheduler): Observable<Course> =
+            courseSubject.observeOn(scheduler)
     }
 }

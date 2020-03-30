@@ -1,22 +1,28 @@
 package org.stepic.droid.core.presenters
 
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
-import org.stepic.droid.core.FirstCourseProvider
+import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.core.presenters.contracts.FastContinueView
-import org.stepic.droid.di.course_list.CourseGeneralScope
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.course_list.model.UserCoursesLoaded
+import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import javax.inject.Inject
 
-@CourseGeneralScope
 class FastContinuePresenter
 @Inject
 constructor(
-        private val sharedPreferenceHelper: SharedPreferenceHelper,
-        private val firstCourseProvider: FirstCourseProvider,
-        @MainScheduler
-        private val mainScheduler: Scheduler
+    private val sharedPreferenceHelper: SharedPreferenceHelper,
+    @MainScheduler
+    private val mainScheduler: Scheduler,
+    @BackgroundScheduler
+    private val backgroundScheduler: Scheduler,
+    @UserCoursesLoadedBus
+    private val userCoursesLoadedObservable: Observable<UserCoursesLoaded>
 ) : PresenterBase<FastContinueView>() {
 
     private var disposable: Disposable? = null
@@ -31,17 +37,19 @@ constructor(
     }
 
     private fun subscribeToFirstCourse() {
-        disposable = firstCourseProvider
-                .firstCourse()
-                .observeOn(mainScheduler)
-                .subscribe {
-                    val course = it.value
-                    if (course == null) {
-                        view?.onEmptyCourse()
+        disposable = userCoursesLoadedObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = {
+                    if (it is UserCoursesLoaded.FirstCourse) {
+                        view?.onShowCourse(it.course)
                     } else {
-                        view?.onShowCourse(course)
+                        view?.onEmptyCourse()
                     }
-                }
+                },
+                onError = emptyOnErrorStub
+            )
     }
 
     override fun detachView(view: FastContinueView) {

@@ -62,6 +62,7 @@ import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_collection.CourseCollectionDataModule
+import org.stepik.android.view.injection.course_list.CourseListBusModule
 import org.stepik.android.view.injection.course_list.CourseListComponent
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
@@ -139,7 +140,8 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
         SearchResultDataModule::class,
         UserCoursesDataModule::class,
         CourseCollectionDataModule::class,
-        SolutionsBusModule::class
+        SolutionsBusModule::class,
+        CourseListBusModule::class
     ]
 )
 interface AppCoreComponent {
