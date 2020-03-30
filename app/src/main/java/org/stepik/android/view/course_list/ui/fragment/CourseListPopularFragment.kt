@@ -21,6 +21,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.presentation.course_list.CourseListView
@@ -90,6 +92,11 @@ class CourseListPopularFragment : Fragment() {
             addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
             val snapHelper = CoursesSnapHelper(ROW_COUNT)
             snapHelper.attachToRecyclerView(this)
+            setOnPaginationListener { pageDirection ->
+                if (pageDirection == PaginationDirection.NEXT) {
+                    courseListPresenter.fetchNextPage()
+                }
+            }
         }
 
         val courseListQuery = CourseListQuery(
