@@ -291,7 +291,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 getNextFragmentOrNull(currentFragmentTag, HomeFragment::class.java.simpleName, HomeFragment.Companion::newInstance)
             }
             R.id.catalog -> {
-                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, CatalogFragment.Companion::newInstance)
+                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, org.stepik.android.view.catalog.ui.fragment.CatalogFragment.Companion::newInstance)
+//                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, CatalogFragment.Companion::newInstance)
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
