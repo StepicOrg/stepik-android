@@ -180,14 +180,18 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
             .inject(this)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
+        /**
+         * On Android 4, 5, 6 onSaveInstanceState is called after onStart
+         * and we can't show fragment dialog after onSaveInstanceState
+         */
         socialAuthPresenter.attachView(this)
     }
 
-    override fun onStop() {
+    override fun onPause() {
         socialAuthPresenter.detachView(this)
-        super.onStop()
+        super.onPause()
     }
 
     private fun initSocialRecycler(state: SocialAuthAdapter.State = SocialAuthAdapter.State.NORMAL) {
