@@ -214,6 +214,8 @@ interface AppCoreComponent {
 
     fun courseListExperimentalComponentBuilder(): CourseListComponent.Builder
 
+    fun catalogNewComponentBuilder(): org.stepik.android.view.injection.catalog.CatalogComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)
