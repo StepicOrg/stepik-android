@@ -393,7 +393,7 @@ constructor(
                     resources.getString(R.string.course_list_popular_toolbar_title),
                     CourseListQuery(
                         page = 1,
-                        order = CourseListQuery.CourseListOrder.ORDER_ACTIVITY_DESC,
+                        order = CourseListQuery.Order.ACTIVITY_DESC,
                         isExcludeEnded = true,
                         isPublic = true
                     )
