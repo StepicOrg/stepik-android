@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-<!--    <item android:state_enabled="false" android:color="?colorAccent" android:alpha="0.4" />-->
-<!--    <item android:state_enabled="true" android:color="?colorAccent" />-->
-<!--    <item android:state_enabled="false" android:color="?colorSecondary" android:alpha="0.05" />-->
-    <item android:state_enabled="true" android:state_pressed="true" android:color="?colorSecondaryDark" />
-    <item android:color="?colorSecondary" />
-</selector>

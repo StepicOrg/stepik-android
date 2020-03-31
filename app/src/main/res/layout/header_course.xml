@@ -6,73 +6,54 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/fast_continue_learning_opacity"
     android:gravity="center_horizontal"
     android:paddingTop="8dp"
     app:layout_collapseMode="pin">
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/courseContinueAction"
-        style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
         android:minWidth="200dp"
-        android:background="@drawable/header_action_background_green"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/continue_learning"
-        android:textSize="@dimen/header_action_text_size"
-        android:textColor="@color/white"
         android:layout_marginTop="?actionBarSize" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/courseEnrollAction"
-        style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
         android:minWidth="200dp"
-        android:background="@drawable/header_action_background_green"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/course_item_join"
-        android:textSize="@dimen/header_action_text_size"
-        android:textColor="@color/white"
         android:layout_marginTop="?actionBarSize" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/courseBuyInAppAction"
-        style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
         android:minWidth="200dp"
-        android:background="@drawable/header_action_background_green"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/course_payments_purchase_in_app"
-        android:textSize="@dimen/header_action_text_size"
-        android:textColor="@color/white"
         android:layout_marginTop="?actionBarSize" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/courseBuyInWebAction"
-        style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
         android:minWidth="200dp"
-        android:background="@drawable/header_action_background_green"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/course_payments_purchase_in_web"
-        android:textSize="@dimen/header_action_text_size"
-        android:textColor="@color/white"
         android:layout_marginTop="?actionBarSize" />
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/courseEnrollmentProgress"
-        android:alpha="@dimen/loading_view_dark_alpha"
-        style="@style/CourseWidgetView"
         android:layout_width="200dp"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="48dp"
         app:radius="@dimen/header_action_radius"
         android:paddingEnd="@dimen/guideline_standard_padding"
         android:paddingStart="@dimen/guideline_standard_padding"
@@ -86,12 +67,12 @@
         android:layout_marginTop="24dp"
         android:layout_marginBottom="24dp" />
 
-    <View
+    <include
         android:id="@+id/courseProgressSeparator"
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#20000000"/>
+        android:layout_height="?dividerVerticalSize"
+        layout="@layout/view_divider_vertical" />
 
     <include
         android:id="@+id/courseProgress"

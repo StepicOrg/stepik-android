@@ -1,12 +1,9 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
-import android.graphics.Bitmap
-import android.graphics.PorterDuff
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -21,9 +18,11 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.getAllQueryParameters
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -59,6 +58,10 @@ class CourseHeaderDelegate(
 
     private fun initCollapsingAnimation() {
         with(courseActivity) {
+            val colorSurface = courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorSurface)
+            val colorOnSurface = courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorOnSurface)
+            courseToolbarScrim.setBackgroundColor(ColorExtensions.colorWithElevationOverlay(colorSurface, colorOnSurface, 4))
+
             courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                 val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
                 courseToolbarScrim.alpha = ratio * 1.5f
@@ -118,10 +121,7 @@ class CourseHeaderDelegate(
 
     private fun setCourseData(courseHeaderData: CourseHeaderData) =
         with(courseActivity) {
-            val multi = MultiTransformation<Bitmap>(
-                BlurTransformation(),
-                CenterCrop()
-            )
+            val multi = MultiTransformation(BlurTransformation(), CenterCrop())
             Glide
                 .with(this)
                 .load(courseHeaderData.cover)
@@ -181,13 +181,7 @@ class CourseHeaderDelegate(
         dropCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState == EnrollmentState.Enrolled
 
         shareCourseMenuItem = menu.findItem(R.id.share_course)
-        shareCourseMenuItem?.let { menuItem ->
-            menuItem.icon
-                ?.mutate()
-                ?.setColorFilter(ContextCompat.getColor(courseActivity, R.color.white), PorterDuff.Mode.SRC_IN)
-
-            menuItem.isVisible = courseHeaderData != null
-        }
+        shareCourseMenuItem?.isVisible = courseHeaderData != null
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
         restorePurchaseCourseMenuItem?.isVisible = false // courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp

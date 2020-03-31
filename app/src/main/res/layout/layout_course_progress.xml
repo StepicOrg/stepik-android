@@ -23,7 +23,6 @@
 
         android:textAppearance="?textAppearanceSubtitle2"
 
-        android:textColor="@color/white"
         android:text="@string/course_progress_current" />
 
     <org.stepic.droid.ui.custom.CircleProgressView
@@ -45,7 +44,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:textColor="@color/white"
         android:textAppearance="?textAppearanceSubtitle2"
 
         app:layout_constraintBaseline_toBaselineOf="@id/courseProgressTitle"
@@ -59,7 +57,6 @@
         android:layout_height="wrap_content"
 
         android:text="@string/course_progress_solutions"
-        android:textColor="@color/white"
         android:textAppearance="?textAppearanceSubtitle2"
 
         app:layout_constraintStart_toStartOf="parent"
@@ -81,15 +78,17 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
 
-        android:textColor="@color/white"
         android:textAppearance="?textAppearanceSubtitle2"
         android:gravity="center_vertical"
 
         app:drawableStartCompat="@drawable/ic_course_solutions"
         app:drawableLeftCompat="@drawable/ic_course_solutions"
+        app:drawableTint="?android:textColorPrimary"
         android:drawablePadding="8dp"
 
         app:layout_constraintBaseline_toBaselineOf="@id/courseSolutionsTitle"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

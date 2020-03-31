@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- AppTheme -->
-    <color name="color_primary">@color/new_accent_color</color>
-    <color name="color_primary_variant">@color/new_accent_color</color>
-    <color name="color_secondary">@color/violet1</color>
+    <color name="color_primary">@color/color_brown_700</color>
+    <color name="color_primary_variant">@color/color_brown_700</color>
+    <color name="color_secondary">@color/color_violet_300</color>
     <color name="color_secondary_variant">@color/violet3</color>
 
     <color name="color_background">@color/white</color>
@@ -16,8 +16,29 @@
     <color name="color_on_surface">#000000</color>
     <color name="color_on_error">#ffffff</color>
 
+    <color name="color_status_bar">@color/color_primary</color>
+
     <color name="transparent">@color/white_color_alpha_0</color>
     <color name="black">@color/black1</color>
+
+    <!-- ThemeOverlay -->
+    <color name="color_overlay_brown">@color/color_brown_700</color>
+    <color name="color_overlay_green">@color/color_green_400</color>
+    <color name="color_overlay_violet">@color/color_violet_300</color>
+
+    <color name="color_overlay_dark_surface">@color/color_brown_700</color>
+
+    <!-- Color palette -->
+    <color name="color_brown_700">#535366</color>
+    <color name="color_brown_400">#AFAEC4</color>
+    <color name="color_brown_300">#D3D2E9</color>
+
+    <color name="color_violet_300">#6C7BDF</color>
+    <color name="color_violet_200">#98A0E8</color>
+    
+    <color name="color_green_400">#66CC66</color>
+    <color name="color_green_300">#83D683</color>
+    <color name="color_green_200">#A8E1A7</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
@@ -40,8 +61,6 @@
     <color name="text_color_time_thumbnail">@color/grey03</color>
 
     <color name="exo_edit_mode_background_color">@color/grey04</color>
-
-    <color name="login_launch_registration_background">@color/white</color>
 
     <color name="rate_dialog_store">@color/green01</color>
     <color name="rate_dialog_support">@color/red01</color>
@@ -222,15 +241,11 @@
 
     <!-- Text styles colors -->
     <color name="color_body1">@color/black2</color>
-    <color name="color_body2_note">@color/grey02</color>
 
     <color name="color_violet_1">@color/violet1</color>
     <color name="color_violet_1_12">@color/violet1_alpha_13</color>
 
     <!-- Step -->
-    <color name="step_navigation_button">@color/stepic_brand_primary</color>
-    <color name="step_navigation_button_ripple">@color/green01_alpha_13</color>
-
     <color name="step_discussion_button">@color/new_primary_color</color>
 
     <color name="step_quiz_feedback_wrong_text">@color/red02</color>

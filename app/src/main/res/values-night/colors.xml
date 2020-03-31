@@ -3,16 +3,25 @@
     <!-- AppTheme -->
     <color name="color_primary">@color/grey04</color>
     <color name="color_primary_variant">@color/grey03</color>
-    <color name="color_secondary">@color/violet2</color>
-    <color name="color_secondary_variant">@color/violet2</color>
+    <color name="color_secondary">@color/color_violet_200</color>
+    <color name="color_secondary_variant">@color/color_violet_200</color>
 
     <color name="color_background">#121212</color>
     <color name="color_surface">#121212</color>
     <color name="color_error">@color/red02</color>
 
-    <color name="color_on_primary">@color/new_accent_color</color>
-    <color name="color_on_secondary">@color/new_accent_color</color>
+    <color name="color_on_primary">@color/black</color>
+    <color name="color_on_secondary">@color/black</color>
     <color name="color_on_background">@color/white</color>
     <color name="color_on_surface">@color/white</color>
-    <color name="color_on_error">@color/new_accent_color</color>
+    <color name="color_on_error">@color/black</color>
+
+    <color name="color_status_bar">@color/color_background</color>
+
+    <!-- ThemeOverlay -->
+    <color name="color_overlay_brown">@color/color_brown_300</color>
+    <color name="color_overlay_green">@color/color_green_300</color>
+    <color name="color_overlay_violet">@color/color_violet_200</color>
+
+    <color name="color_overlay_dark_surface">@color/color_surface</color>
 </resources>

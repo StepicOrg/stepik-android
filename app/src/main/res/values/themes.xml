@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="AppTheme" parent="Base.AppTheme" />
 
-    <!-- TODO replace with Theme.MaterialComponents.DayNight.NoActionBar -->
     <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!--Material color attributes -->
         <item name="colorPrimary">@color/color_primary</item>
@@ -50,7 +49,7 @@
         <item name="alphaEmphasisMedium">@dimen/material_emphasis_medium</item>
         <item name="alphaEmphasisDisabled">@dimen/material_emphasis_disabled</item>
 
-        <item name="android:statusBarColor" tools:targetApi="lollipop">?colorPrimary</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/color_status_bar</item>
 
         <!--Component styles-->
         <item name="materialButtonStyle">@style/Widget.AppTheme.Button</item>
@@ -93,6 +92,12 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
+    <style name="AppTheme.Splash">
+        <item name="colorPrimaryDark">@color/transparent_black_30</item>
+        <item name="android:windowBackground">@drawable/branded_logo</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
+    </style>
+
     <style name="ThemeOverlay.AppTheme.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
@@ -101,23 +106,28 @@
         <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
     </style>
 
+    <style name="ThemeOverlay.Dark" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="colorSurface">@color/color_overlay_dark_surface</item>
+        <item name="android:textColorPrimary">@color/material_on_surface_emphasis_high_type</item>
+        <item name="android:textColorSecondary">@color/material_on_surface_emphasis_medium</item>
+    </style>
+
     <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">
-        <item name="colorOnSecondary">@color/new_accent_color</item>
-        <item name="colorSecondary">@color/new_accent_color</item>
-        <item name="colorSecondaryDark">@color/black2</item>
+        <item name="colorOnSecondary">@color/color_overlay_brown</item>
+        <item name="colorSecondary">@color/color_overlay_brown</item>
     </style>
 
     <style name="ThemeOverlay.Green" parent="ThemeOverlay.MaterialComponents">
-        <item name="colorPrimary">@color/green01</item>
-        <item name="colorOnSurface">@color/green01</item>
+        <item name="colorPrimary">@color/color_overlay_green</item>
+        <item name="colorOnSurface">@color/color_overlay_green</item>
     </style>
 
     <style name="ThemeOverlay.Secondary.Green" parent="ThemeOverlay.MaterialComponents">
-        <item name="colorSecondary">@color/green01</item>
+        <item name="colorSecondary">@color/color_overlay_green</item>
     </style>
 
     <style name="ThemeOverlay.Violet" parent="ThemeOverlay.MaterialComponents">
-        <item name="colorPrimary">@color/violet1</item>
-        <item name="colorOnSurface">@color/violet1</item>
+        <item name="colorPrimary">@color/color_overlay_violet</item>
+        <item name="colorOnSurface">@color/color_overlay_violet</item>
     </style>
 </resources>
