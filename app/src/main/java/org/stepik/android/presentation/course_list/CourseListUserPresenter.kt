@@ -51,6 +51,7 @@ constructor(
 
         state = CourseListView.State.Loading
 
+        // todo show courses from cache and then update 
         compositeDisposable += courseListUserInteractor
             .getUserCourses()
             .observeOn(mainScheduler)
