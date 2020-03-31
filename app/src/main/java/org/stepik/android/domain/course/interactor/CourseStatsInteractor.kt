@@ -14,6 +14,7 @@ import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
+import org.stepik.android.model.Progressable
 import javax.inject.Inject
 
 class CourseStatsInteractor
@@ -40,7 +41,7 @@ constructor(
                     review = reviewsMap[course.id]?.average ?: 0.0,
                     learnersCount = course.learnersCount,
                     readiness = course.readiness,
-                    progress = course.progress?.let { progressMaps[it] },
+                    progress = course.progress?.let(progressMaps::get),
                     enrollmentState = enrollmentMap.getValue(course.id)
                 )
             }
@@ -53,12 +54,13 @@ constructor(
 
     private fun resolveCourseProgress(courses: List<Course>): Single<List<Progress>> =
         progressRepository
-            .getProgresses(
-                progressIds = *courses.mapNotNull { it.progress }.toTypedArray()
-            )
+            .getProgresses(progressIds = *courses.mapNotNull(Progressable::progress).toTypedArray())
 
     private fun resolveCoursesEnrollmentStates(courses: List<Course>): Single<List<Pair<Long, EnrollmentState>>> =
-        courses.toObservable().flatMapSingle { resolveCourseEnrollmentState(it) }.toList()
+        courses
+            .toObservable()
+            .flatMapSingle(::resolveCourseEnrollmentState)
+            .toList()
 
     private fun resolveCourseEnrollmentState(course: Course): Single<Pair<Long, EnrollmentState>> =
         when {

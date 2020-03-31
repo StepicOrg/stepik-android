@@ -97,7 +97,7 @@ constructor(
                         .getCourses(
                             CourseListQuery(
                                 teacher = profileData.user.id,
-                                order = CourseListQuery.CourseListOrder.ORDER_POPULARITY_DESC
+                                order = CourseListQuery.Order.POPULARITY_DESC
                             )
                         )
                 }

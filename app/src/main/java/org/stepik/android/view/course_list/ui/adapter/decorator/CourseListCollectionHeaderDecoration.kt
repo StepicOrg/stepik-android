@@ -11,29 +11,29 @@ import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.util.inflate
 
-class CourseListCollectionHeaderDecoration(private val headerText: String) : RecyclerView.ItemDecoration() {
-    private var header: PlaceholderTextView? = null
+class CourseListCollectionHeaderDecoration(
+    private val headerText: String
+) : RecyclerView.ItemDecoration() {
+    private lateinit var header: PlaceholderTextView
 
     override fun onDrawOver(canvas: Canvas, parent: RecyclerView, state: RecyclerView.State) {
         initHeader(parent)
-        val headerView = header ?: return
-        if (header != null) {
-            val child = parent.getChildAt(0)
-            canvas.save()
 
-            val left = child.left - parent.context.resources.getDimensionPixelOffset(R.dimen.padding_placeholders)
-            val top = child.y.toInt() - headerView.height - parent.context.resources.getDimensionPixelOffset(R.dimen.padding_placeholders)
-            canvas.translate(left.toFloat(), top.toFloat())
+        val child = parent.getChildAt(0)
+        canvas.save()
 
-            headerView.translationX = left.toFloat()
-            headerView.translationX = top.toFloat()
-            headerView.draw(canvas)
-            canvas.restore()
-        }
+        val left = child.left - parent.context.resources.getDimensionPixelOffset(R.dimen.padding_placeholders)
+        val top = child.y.toInt() - header.height - parent.context.resources.getDimensionPixelOffset(R.dimen.padding_placeholders)
+        canvas.translate(left.toFloat(), top.toFloat())
+
+        header.translationX = left.toFloat()
+        header.translationX = top.toFloat()
+        header.draw(canvas)
+        canvas.restore()
     }
 
     private fun initHeader(parent: RecyclerView) {
-        if (header == null) {
+        if (!this::header.isInitialized) {
             val view = parent.inflate(R.layout.course_collection_header_view) as PlaceholderTextView
 
             view.setPlaceholderText(headerText)
@@ -60,9 +60,7 @@ class CourseListCollectionHeaderDecoration(private val headerText: String) : Rec
             ?.takeIf { it == 0 }
             ?: return
 
-        val headerView = header
-            ?: return
-
-        outRect.set(0, headerView.height, 0, 0)
+        initHeader(parent)
+        outRect.set(0, header.height, 0, 0)
     }
 }

@@ -55,6 +55,7 @@ constructor(
         state = CourseListView.State.Loading
         this.courseListQuery = courseListQuery
 
+        // todo cancel paginationDisposable
         compositeDisposable += courseListInteractor
             .getCourseListItems(courseListQuery)
             .observeOn(mainScheduler)
@@ -71,6 +72,7 @@ constructor(
                     }
                 },
                 onError = {
+                    // todo handle oldState
                     state = CourseListView.State.NetworkError
                 }
             )
@@ -82,7 +84,8 @@ constructor(
 
         val oldCourseListQuery = courseListQuery ?: return
 
-        if (oldState.courseListItems.last() is CourseListItem.PlaceHolder || !oldState.courseListDataItems.hasNext) {
+        if (oldState.courseListItems.last() is CourseListItem.PlaceHolder ||
+            !oldState.courseListDataItems.hasNext) {
             return
         }
 
