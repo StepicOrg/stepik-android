@@ -37,6 +37,7 @@ import org.stepic.droid.util.resolveResourceIdAttribute
 import org.stepik.android.model.user.User
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.profile.ui.activity.ProfileActivity
 import org.stepik.android.view.profile.ui.animation.ProfileHeaderAnimationDelegate
@@ -162,11 +163,18 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         val colorControlNormal =
             ContextCompat.getColorStateList(requireContext(), requireContext().resolveResourceIdAttribute(R.attr.colorControlNormal))
 
+        val colorSurface =
+            requireContext().resolveColorAttribute(R.attr.colorSurface)
+
+        val colorOnSurface =
+            requireContext().resolveColorAttribute(R.attr.colorOnSurface)
+
         headerAnimationDelegate =
             ProfileHeaderAnimationDelegate(
                 view,
-                colorStart = ContextCompat.getColor(requireContext(), R.color.white),
-                colorEnd = colorControlNormal?.defaultColor ?: 0x0 // ContextCompat.getColor(requireContext(), R.color.new_accent_color)
+                menuColorStart = ContextCompat.getColor(requireContext(), R.color.white),
+                menuColorEnd = colorControlNormal?.defaultColor ?: 0x0,
+                toolbarColor = ColorExtensions.colorWithElevationOverlay(colorSurface, colorOnSurface, 4)
             ) { menuTintStateList = it }
 
         scrollContainer

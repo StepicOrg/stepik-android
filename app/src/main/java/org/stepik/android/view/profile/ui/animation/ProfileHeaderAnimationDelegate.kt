@@ -13,9 +13,11 @@ import org.stepik.android.view.base.ui.extension.ColorExtensions
 class ProfileHeaderAnimationDelegate(
     view: View,
     @ColorInt
-    private val colorStart: Int,
+    private val menuColorStart: Int,
     @ColorInt
-    private val colorEnd: Int,
+    private val menuColorEnd: Int,
+    @ColorInt
+    private val toolbarColor: Int,
 
     private val onMenuColorChanged: (ColorStateList) -> Unit
 ) {
@@ -38,10 +40,10 @@ class ProfileHeaderAnimationDelegate(
         val coverScrollPercent = ((scrollY + 1f) / (coverHeight - toolbarHeight).coerceAtLeast(1))
             .coerceIn(0f, 1f)
 
-        val toolbarBackground = ColorExtensions.colorWithAlpha(colorStart, coverScrollPercent)
+        val toolbarBackground = ColorExtensions.colorWithAlpha(toolbarColor, coverScrollPercent)
         appbar.setBackgroundColor(toolbarBackground)
 
-        val menuColor = argbEvaluator.evaluate(coverScrollPercent, colorStart, colorEnd) as Int
+        val menuColor = argbEvaluator.evaluate(coverScrollPercent, menuColorStart, menuColorEnd) as Int
         onMenuColorChanged(ColorStateList.valueOf(menuColor))
 
         ViewCompat.setElevation(appbar, if (scrollY > headerHeight - toolbarHeight) ViewCompat.getElevation(header) else 0f)
