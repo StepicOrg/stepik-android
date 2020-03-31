@@ -1,15 +1,19 @@
 package org.stepik.android.domain.course_list.model
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class CourseListQuery(
     val page: Int? = null,
-    val order: String? = null,
+    val order: Order? = null,
     val teacher: Long? = null,
 
     val isExcludeEnded: Boolean? = null,
     val isPublic: Boolean? = null
-) {
-    companion object {
-        const val ORDER_ACTIVITY_DESC = "-activity"
-        const val ORDER_POPULARITY_DESC = "-popularity"
+) : Parcelable {
+    enum class Order(val order: String) {
+        ACTIVITY_DESC("-activity"),
+        POPULARITY_DESC("-popularity")
     }
 }

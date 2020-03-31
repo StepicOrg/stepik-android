@@ -5,6 +5,7 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.profile.ProfileDataModule
+import org.stepik.android.view.injection.tags.TagsDataModule
 import org.stepik.android.view.injection.user.UserDataModule
 import org.stepik.android.view.injection.user_profile.UserProfileDataModule
 
@@ -14,7 +15,8 @@ import org.stepik.android.view.injection.user_profile.UserProfileDataModule
     CoursePaymentsDataModule::class,
     UserDataModule::class,
     UserProfileDataModule::class,
-    ProfileDataModule::class
+    ProfileDataModule::class,
+    TagsDataModule::class
 ])
 interface MainScreenComponent {
 

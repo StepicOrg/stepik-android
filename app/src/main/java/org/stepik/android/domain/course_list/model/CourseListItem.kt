@@ -14,6 +14,4 @@ sealed class CourseListItem {
     }
 
     object PlaceHolder : CourseListItem()
-
-    data class PlaceHolderText(val text: String) : CourseListItem()
 }

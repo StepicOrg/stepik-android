@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.fragments
 
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,9 +30,8 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.view.course_list.activity.CourseListActivity
+import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_continue.CourseContinueView
-import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
@@ -210,8 +208,16 @@ class FastContinueFragment : FragmentBase(),
     }
 
     private fun handleContinueCourseClick(course: Course) {
-        val intent = Intent(requireContext(), CourseListActivity::class.java)
-        requireContext().startActivity(intent)
+//        screenManager.showUserCourses(context)
+//        screenManager.showCoursesCollection(requireContext(), CourseCollection(
+//            id = 1,
+//            position = 2,
+//            title = "TEST",
+//            language = "ru",
+//            courses = longArrayOf(1838, 191, 2945, 4471, 1818, 13222),
+//            description = "Description description"
+//        ))
+//        screenManager.showCoursesByQuery(requireContext(), "Popular", CourseListQuery(page = 1, order = CourseListQuery.ORDER_ACTIVITY_DESC, isExcludeEnded = true, isPublic = true))
 //        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
 //        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
     }

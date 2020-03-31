@@ -6,19 +6,20 @@ import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.presentation.course_continue.CourseContinueView
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
-import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
-import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderTextAdapterDelegate
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
     adaptiveCoursesResolver: AdaptiveCoursesResolver,
     private val courseItemsRecyclerView: RecyclerView,
-    private val courseListPresenter: CourseListPresenter
+    private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
+    private val courseListPresenter: CourseContinuePresenterDelegate
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private var courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
@@ -32,22 +33,20 @@ class CourseListViewDelegate(
             }
         )
         courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
-        courseItemAdapter += CourseListPlaceHolderTextAdapterDelegate()
         courseItemsRecyclerView.adapter = courseItemAdapter
     }
 
     override fun setState(state: CourseListView.State) {
+        courseListViewStateDelegate.switchState(state)
         when (state) {
             is CourseListView.State.Loading -> {
                 courseItemAdapter.items = listOf(
-//                    CourseListItem.PlaceHolderText("JUEWIHDIEHDIEHDEIHDIEHDEIDEHU"),
                     CourseListItem.PlaceHolder,
                     CourseListItem.PlaceHolder
                 )
             }
             is CourseListView.State.Content ->
                 courseItemAdapter.items = state.courseListItems
-//                courseItemAdapter.items = listOf(CourseListItem.PlaceHolderText("JUEWIHDIEHDIEHDEIHDIEHDEIDEHU")) + state.courseListItems
         }
     }
 

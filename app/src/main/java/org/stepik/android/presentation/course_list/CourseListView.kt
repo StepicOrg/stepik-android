@@ -2,7 +2,6 @@ package org.stepik.android.presentation.course_list
 
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_continue.CourseContinueView
 
 interface CourseListView : CourseContinueView {
@@ -13,7 +12,6 @@ interface CourseListView : CourseContinueView {
         object NetworkError : State()
 
         data class Content(
-            val courseListQuery: CourseListQuery,
             val courseListDataItems: PagedList<CourseListItem.Data>,
             val courseListItems: List<CourseListItem>
         ) : State()

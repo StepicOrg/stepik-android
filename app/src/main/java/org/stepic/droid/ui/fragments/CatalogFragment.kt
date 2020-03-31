@@ -141,7 +141,7 @@ class CatalogFragment : FragmentBase(),
     }
 
     private fun onTagClicked(tag: Tag) {
-        screenManager.showListOfTag(activity, tag)
+        screenManager.showCoursesByTag(context, tag)
     }
 
     override fun showCollections(courseItems: List<CoursesCarouselInfo>) {

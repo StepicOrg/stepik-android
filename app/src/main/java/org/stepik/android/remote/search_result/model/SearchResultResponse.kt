@@ -1,4 +1,4 @@
-package org.stepik.android.remote.search.model
+package org.stepik.android.remote.search_result.model
 
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.Meta
