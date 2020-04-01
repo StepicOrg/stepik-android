@@ -8,4 +8,10 @@
             android:tileMode="disabled"
             android:gravity="center"/>
     </item>
+    <item android:bottom="64dp">
+        <bitmap
+            android:gravity="bottom"
+            android:src="@drawable/study_home" />
+    </item>
+
 </layer-list>
