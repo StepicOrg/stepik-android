@@ -5,6 +5,7 @@ import org.stepik.android.domain.auth.interactor.AuthInteractor
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class SocialAuthPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val authInteractor: AuthInteractor,
 
     @BackgroundScheduler
@@ -56,6 +58,7 @@ constructor(
             .subscribeBy(
                 onComplete = { state = SocialAuthView.State.Success },
                 onError = { throwable ->
+                    analytic.reportError(Analytic.Error.SOCIAL_AUTH_FAILED, throwable)
                     val failType =
                         when ((throwable as? HttpException)?.code()) {
                             429 -> LoginFailType.TOO_MANY_ATTEMPTS

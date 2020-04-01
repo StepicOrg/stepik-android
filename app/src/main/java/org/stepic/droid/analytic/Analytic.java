@@ -284,6 +284,9 @@ public interface Analytic {
         String COURSE_COLLECTION_EMPTY = "course_collection_empty";
         String FEEDBACK_BROKEN = "feedback_broken";
         String CANT_RESTORE_VIDEO_FILE = "cant_restore_video_file";
+        String REGISTRATION_FAILED = "registration_failed";
+        String SOCIAL_AUTH_FAILED = "social_auth_failed";
+        String CREDENTIAL_AUTH_FAILED = "credential_auth_failed";
     }
 
     interface Web {
