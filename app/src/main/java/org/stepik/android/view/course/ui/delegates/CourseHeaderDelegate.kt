@@ -18,7 +18,6 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.getAllQueryParameters
-import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
@@ -58,9 +57,7 @@ class CourseHeaderDelegate(
 
     private fun initCollapsingAnimation() {
         with(courseActivity) {
-            val colorSurface = courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorSurface)
-            val colorOnSurface = courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorOnSurface)
-            courseToolbarScrim.setBackgroundColor(ColorExtensions.colorWithElevationOverlay(colorSurface, colorOnSurface, 4))
+            courseToolbarScrim.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(courseCollapsingToolbar.context, 4))
 
             courseAppBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
                 val ratio = abs(verticalOffset).toFloat() / (courseCollapsingToolbar.height - courseToolbar.height)
