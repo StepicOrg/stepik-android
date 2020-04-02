@@ -29,10 +29,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
 
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
-
-        app:fontFamily="@font/roboto_light"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/reviewIcon"
@@ -50,10 +48,7 @@
         android:layout_marginRight="@dimen/course_review_item_margin"
         android:layout_marginTop="4dp"
 
-        android:textColor="@color/new_accent_color"
-        android:textSize="14sp"
-
-        app:fontFamily="@font/roboto_light"
+        android:textAppearance="?textAppearanceBody2"
 
         app:layout_constraintTop_toBottomOf="@id/reviewDate"
         app:layout_constraintStart_toEndOf="@id/reviewIcon"
@@ -82,12 +77,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:textColor="@color/new_accent_color"
-        android:textSize="14sp"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         android:lineSpacingExtra="4sp"
-
-        app:fontFamily="@font/roboto_light"
-        tools:ignore="missingPrefix"
 
         android:layout_marginTop="8dp"
         android:layout_marginStart="@dimen/course_review_item_inner_margin"
@@ -113,17 +105,14 @@
         android:layout_marginTop="@dimen/course_review_item_inner_margin"
         android:layout_marginBottom="@dimen/course_review_item_inner_margin"
 
-
         app:layout_constraintStart_toEndOf="@id/reviewIcon"
         app:layout_constraintTop_toBottomOf="@id/reviewText"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        android:textSize="12sp"
-        android:text="@string/course_reviews_compose_hint"
-        android:textColor="@color/color_violet_1"
-        app:fontFamily="@font/roboto_medium"
-        tools:ignore="missingPrefix"
-        />
+        android:textAppearance="?textAppearanceCaption"
+        android:theme="@style/ThemeOverlay.Violet"
+
+        android:text="@string/course_reviews_compose_hint" />
 
     <ImageView
         android:id="@+id/reviewMenu"
@@ -131,6 +120,7 @@
         android:layout_height="12dp"
         android:background="?selectableItemBackgroundBorderless"
         android:contentDescription="@null"
+        android:tint="?colorControlNormal"
         android:src="@drawable/ic_more_without_padding"
 
         android:layout_marginTop="@dimen/course_review_item_inner_margin"

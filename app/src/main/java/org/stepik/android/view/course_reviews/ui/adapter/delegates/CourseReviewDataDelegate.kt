@@ -43,12 +43,12 @@ class CourseReviewDataDelegate(
         private val reviewMark = root.reviewMark
 
         private val reviewIconTarget = RoundedBitmapImageViewTarget(
-            context.resources.getDimension(R.dimen.course_image_radius), reviewIcon)
+            context.resources.getDimension(R.dimen.corner_radius), reviewIcon)
 
         private val reviewIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
             val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(this, coursePlaceholderBitmap)
-            circularBitmapDrawable.cornerRadius = getDimension(R.dimen.course_image_radius)
+            circularBitmapDrawable.cornerRadius = getDimension(R.dimen.corner_radius)
             circularBitmapDrawable
         }
 
