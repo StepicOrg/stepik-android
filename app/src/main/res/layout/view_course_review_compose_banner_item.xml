@@ -10,7 +10,7 @@
         android:id="@+id/bannerText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_violet_1_12"
+        android:background="@drawable/bg_color_on_surface_alpha_12"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,8 +18,9 @@
         app:layout_constraintBottom_toTopOf="@id/bannerButton"
 
         android:padding="@dimen/course_review_item_margin"
+        android:textAppearance="?textAppearanceBody2"
+        android:theme="@style/ThemeOverlay.Violet"
 
-        android:textColor="@color/color_violet_1"
         android:text="@string/course_reviews_compose_banner_review_description" />
 
     <Button
