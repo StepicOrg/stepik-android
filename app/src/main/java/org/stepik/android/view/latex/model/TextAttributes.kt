@@ -30,7 +30,7 @@ data class TextAttributes(
                 android.R.attr.textColor,
                 android.R.attr.textColorHighlight,
                 android.R.attr.textIsSelectable,
-                android.R.attr.fontFamily
+                R.attr.fontFamily
             ).apply { sort() }
 
         @SuppressLint("ResourceType")
@@ -90,7 +90,7 @@ data class TextAttributes(
                         array.getBoolean(attrsSet.indexOf(android.R.attr.textIsSelectable), textAttributes.textIsSelectable),
 
                     fontResId =
-                        array.getResourceId(attrsSet.indexOf(android.R.attr.fontFamily), textAttributes.fontResId)
+                        array.getResourceId(attrsSet.indexOf(R.attr.fontFamily), textAttributes.fontResId)
                 )
             } finally {
                 array.recycle()
