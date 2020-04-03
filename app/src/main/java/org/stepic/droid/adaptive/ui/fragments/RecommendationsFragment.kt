@@ -19,6 +19,7 @@ import org.stepic.droid.core.presenters.RecommendationsPresenter
 import org.stepic.droid.core.presenters.contracts.RecommendationsView
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.Course
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -43,8 +44,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     @Inject
     lateinit var recommendationsPresenter: RecommendationsPresenter
 
-    @Inject
-    lateinit var animations: RecommendationsFragmentAnimations
+    private lateinit var animations: RecommendationsFragmentAnimations
 
     private var course: Course? = null
 
@@ -64,14 +64,16 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.fragment_recommendations, container, false)
+        inflater.inflate(R.layout.fragment_recommendations, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val context = requireContext()
 
-        error.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
+        animations = RecommendationsFragmentAnimations(streakSuccessContainer.context)
+
+        error.setBackgroundColor(0)
 
         tryAgain.setOnClickListener {
             recommendationsPresenter.retry()
@@ -94,7 +96,7 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
         }
 
         streakSuccessContainer.nestedTextView = streakSuccess
-        streakSuccessContainer.setGradientDrawableParams(ContextCompat.getColor(context, R.color.adaptive_color_correct), 0f)
+        streakSuccessContainer.setGradientDrawableParams(streakSuccessContainer.context.resolveColorAttribute(R.attr.colorPrimary), 0f)
     }
 
     override fun onAdapter(cardsAdapter: QuizCardsAdapter) {
@@ -165,11 +167,11 @@ class RecommendationsFragment : FragmentBase(), RecommendationsView {
 
         if (streak > 1) {
             animations.playStreakSuccessAnimationSequence(
-                    root = rootView,
-                    streakSuccessContainer = streakSuccessContainer,
-                    expProgress = expProgress,
-                    expInc = expInc,
-                    expBubble = expBubble
+                root = rootView,
+                streakSuccessContainer = streakSuccessContainer,
+                expProgress = expProgress,
+                expInc = expInc,
+                expBubble = expBubble
             )
         } else {
             animations.playStreakBubbleAnimation(expInc)

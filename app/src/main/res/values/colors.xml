@@ -8,7 +8,7 @@
 
     <color name="color_background">@color/white</color>
     <color name="color_surface">@color/white</color>
-    <color name="color_error">@color/new_red_color</color>
+    <color name="color_error">@color/red01</color>
 
     <color name="color_on_primary">#ffffff</color>
     <color name="color_on_secondary">#ffffff</color>
@@ -48,32 +48,18 @@
     <color name="correct_answer_background">@color/green02</color>
 
     <color name="disabled_button_color">@color/new_accent_color_alpha_40</color>
-    <color name="feedback_bad_color">@color/red01</color>
-    <color name="feedback_good_color">@color/green01</color>
-
 
     <color name="transparent_black_30">@color/black1_alpha_30</color>
 
-    <color name="overscroll_color">@color/new_accent_color_alpha_30</color>
     <color name="snack_action_color">@color/violet1</color>
     <color name="black_alpha_40">@color/black1_alpha_40</color>
     <color name="background_time_thumbnail">@color/black1_alpha_40</color>
-    <color name="text_color_time_thumbnail">@color/grey03</color>
 
     <color name="exo_edit_mode_background_color">@color/grey04</color>
 
-    <color name="rate_dialog_store">@color/green01</color>
-    <color name="rate_dialog_support">@color/red01</color>
-
     <!--Redesigned colors-->
 
-    <color name="new_red_color">@color/red01</color>
-
     <color name="text_color">@color/new_accent_color</color>
-    <color name="text_color_highlight">@color/grey04_alpha_70</color>
-    <color name="new_border_color">@color/new_primary_color</color>>
-    <color name="arrow_color">@color/new_accent_color</color>>
-    <color name="new_background_white">@color/white</color>
 
     <!--Tab text color, based on accent color-->
     <color name="tab_text_color">@color/new_accent_color</color>
@@ -213,8 +199,6 @@
 
     <!--adaptive-->
 
-    <color name="adaptive_color_easy">@color/green01_alpha_40</color>
-    <color name="adaptive_color_hard">@color/new_red_color</color>
     <color name="adaptive_color_correct">@color/green01_alpha_85</color>
 
     <color name="adaptive_color_title">@color/black2</color>
@@ -222,7 +206,6 @@
     <color name="adaptive_rank_separator">@color/new_accent_color</color>
 
     <color name="adaptive_course_marker">@color/violet2</color>
-    <color name="color_stroke">@color/grey04</color>
 
     <color name="colorRadioButtonDefault">@color/grey03</color>
 

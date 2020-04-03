@@ -53,7 +53,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:layout_height="?actionBarSize"
         android:background="@drawable/background_toolbar_translucent"
         app:theme="@style/TransparentActionBar"/>
 

@@ -28,6 +28,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
+        android:textAppearance="?textAppearanceBody1"
         android:text="@string/deadlines_banner_description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -35,8 +36,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/action"
-        style="@style/Adaptive.BorderlessButton"
-        android:textSize="14sp"
+        style="@style/Widget.AppTheme.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -50,8 +50,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/not_now_button"
-        style="@style/Adaptive.BorderlessButton"
-        android:textSize="14sp"
+        style="@style/Widget.AppTheme.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
