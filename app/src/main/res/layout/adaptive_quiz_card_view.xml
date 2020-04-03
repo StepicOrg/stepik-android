@@ -11,7 +11,7 @@
     android:layerType="hardware"
     android:id="@+id/container">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:cardUseCompatPadding="true"
@@ -32,16 +32,15 @@
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/adaptive_color_title"
-                    app:fontFamily="@font/roboto_bold"
-                    android:textSize="18sp"
+                    android:textAppearance="?textAppearanceSubtitle1"
                     android:paddingTop="12dp"
                     android:paddingBottom="12dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
                     android:gravity="start"
+                    tools:text="Heading"
                     tools:ignore="MissingPrefix" />
-                <include layout="@layout/view_stroke" />
+                <include layout="@layout/view_divider_vertical" />
             </LinearLayout>
 
             <RelativeLayout
@@ -54,9 +53,10 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Adaptive.BorderlessButton"
+                    style="@style/Widget.AppTheme.Button.TextButton"
                     android:text="@string/adaptive_attempt_button"
                     android:id="@+id/solve"
+                    tools:visibility="visible"
                     android:visibility="gone"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true" />
@@ -64,7 +64,7 @@
                 <Button
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/Adaptive.BorderlessButton"
+                    style="@style/Widget.AppTheme.Button.TextButton"
                     android:text="@string/submit"
                     android:gravity="start|center_vertical"
                     android:id="@+id/submit"
@@ -75,7 +75,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Adaptive.BorderlessButton"
+                    style="@style/Widget.AppTheme.Button.TextButton"
                     android:text="@string/next"
                     android:id="@+id/next"
                     android:visibility="gone"
@@ -85,7 +85,7 @@
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/Adaptive.BorderlessButton"
+                    style="@style/Widget.AppTheme.Button.TextButton"
                     android:text="@string/adaptive_retry"
                     android:id="@+id/wrongRetry"
                     android:visibility="gone"
@@ -99,6 +99,8 @@
                     android:orientation="horizontal"
                     android:gravity="start"
                     android:visibility="gone"
+                    tools:visibility="visible"
+                    android:theme="@style/ThemeOverlay.Secondary.Green"
                     android:layout_marginLeft="10dp"
                     android:layout_marginStart="10dp"
                     android:layout_alignParentLeft="true"
@@ -107,7 +109,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         app:srcCompat="@drawable/ic_adaptive_correct"
-                        android:tint="@color/adaptive_color_correct"
+                        android:tint="?colorSecondary"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="6dp"
                         android:layout_marginEnd="6dp" />
@@ -115,7 +117,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:textColor="@color/adaptive_color_correct"
+                        android:textColor="?colorSecondary"
                         android:text="@string/adaptive_correct" />
                 </LinearLayout>
 
@@ -147,15 +149,14 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <View
+            <include
+                layout="@layout/view_divider_vertical"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="?dividerVerticalSize"
                 android:layout_above="@id/supplemental_actions"
-                android:background="@color/color_stroke"
                 android:id="@+id/bottom_divider"/>
 
             <org.stepic.droid.adaptive.ui.custom.CardScrollView
-                android:background="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/scroll"
@@ -172,11 +173,11 @@
                         android:layout_height="wrap_content"
                         android:textAppearance="?textAppearanceBody1" />
 
-                    <View
+                    <include
+                        layout="@layout/view_divider_vertical"
                         android:id="@+id/separatorAnswers"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/color_stroke"/>
+                        android:layout_height="?dividerVerticalSize" />
 
                     <FrameLayout
                         android:id="@+id/quizViewContainer"
@@ -214,14 +215,15 @@
             android:layout_marginStart="12dp"
             android:layout_marginTop="36dp"
             android:alpha="0"
+            tools:alpha="1"
             style="@style/Adaptive.ReactionStamp"
             android:id="@+id/reaction_hard" />
 
         <TextView
+            android:theme="@style/ThemeOverlay.Green"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|top"
-            android:textColor="@color/adaptive_color_easy"
             android:text="@string/adaptive_reaction_easy"
             android:background="@drawable/adaptive_stamp_easy_bg"
             android:rotation="30"
@@ -229,18 +231,20 @@
             android:layout_marginEnd="12dp"
             android:layout_marginTop="36dp"
             android:alpha="0"
+            tools:alpha="1"
             style="@style/Adaptive.ReactionStamp"
             android:id="@+id/reaction_easy" />
 
         <FrameLayout
             android:id="@+id/curtain"
-            android:background="@android:color/white"
+            android:background="?colorSurface"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:visibility="gone">
             <ProgressBar
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_gravity="center" />
         </FrameLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </org.stepic.droid.adaptive.ui.custom.SwipeableLayout>
