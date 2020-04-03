@@ -223,7 +223,6 @@
 
     <color name="adaptive_course_marker">@color/violet2</color>
     <color name="color_stroke">@color/grey04</color>
-    <color name="highlighted_elements_background">@color/grey05_alpha_95</color>
 
     <color name="colorRadioButtonDefault">@color/grey03</color>
 

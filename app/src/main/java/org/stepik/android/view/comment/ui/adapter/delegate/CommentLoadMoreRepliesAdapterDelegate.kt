@@ -12,10 +12,6 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class CommentLoadMoreRepliesAdapterDelegate(
     private val onItemClick: (CommentItem.LoadMoreReplies) -> Unit
 ) : AdapterDelegate<CommentItem, DelegateViewHolder<CommentItem>>() {
-    companion object {
-        private const val ELEVATION_DP = 2
-    }
-
     override fun isForViewType(position: Int, data: CommentItem): Boolean =
         data is CommentItem.LoadMoreReplies
 
@@ -28,7 +24,7 @@ class CommentLoadMoreRepliesAdapterDelegate(
 
         init {
             root.setOnClickListener { (itemData as? CommentItem.LoadMoreReplies)?.let(onItemClick) }
-            root.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(context, ELEVATION_DP, overrideLightTheme = true))
+            root.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(context, context.resources.getInteger(R.integer.highlighted_element_elevation), overrideLightTheme = true))
         }
 
         override fun onBind(data: CommentItem) {

@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.adaptive_rating_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.model.adaptive.RatingItem
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 
 class AdaptiveRatingAdapter(
     context: Context,
@@ -28,11 +29,11 @@ class AdaptiveRatingAdapter(
 
         @JvmStatic
         private fun isRatingGap(current: RatingItem, next: RatingItem) =
-                current.rank + 1 != next.rank
+            current.rank + 1 != next.rank
 
         @JvmStatic
         private fun isNotSeparatorStub(item: RatingItem) =
-                item.user != SEPARATOR
+            item.user != SEPARATOR
     }
 
     private val profileId = sharedPreferenceHelper.profile?.id ?: 0
@@ -57,11 +58,11 @@ class AdaptiveRatingAdapter(
     override fun getItemCount() = items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            when(viewType) {
+        when(viewType) {
                 RATING_ITEM_VIEW_TYPE -> RatingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_rating_item, parent, false))
-                SEPARATOR_VIEW_TYPE -> SeparatorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_ranks_separator, parent, false))
-                else -> throw IllegalStateException("Unknown view type $viewType")
-            }
+            SEPARATOR_VIEW_TYPE -> SeparatorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_ranks_separator, parent, false))
+            else -> throw IllegalStateException("Unknown view type $viewType")
+        }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
@@ -100,8 +101,8 @@ class AdaptiveRatingAdapter(
 
     private fun addSeparator() {
         (items.size - 2 downTo 0)
-                .filter { isRatingGap(items[it], items[it + 1]) && isNotSeparatorStub(items[it]) && isNotSeparatorStub(items[it + 1]) }
-                .forEach { items.add(it + 1, RatingItem(0, "", 0, SEPARATOR)) }
+            .filter { isRatingGap(items[it], items[it + 1]) && isNotSeparatorStub(items[it]) && isNotSeparatorStub(items[it + 1]) }
+            .forEach { items.add(it + 1, RatingItem(0, "", 0, SEPARATOR)) }
     }
 
     class RatingViewHolder(val root: View) : RecyclerView.ViewHolder(root) {
@@ -111,5 +112,10 @@ class AdaptiveRatingAdapter(
         val name: TextView = root.name
     }
 
-    class SeparatorViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    class SeparatorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        init {
+            val elevation = view.resources.getInteger(R.integer.highlighted_element_elevation)
+            view.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(view.context, elevation, overrideLightTheme = true))
+        }
+    }
 }

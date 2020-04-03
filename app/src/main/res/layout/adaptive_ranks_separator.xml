@@ -5,6 +5,5 @@
     android:layout_width="match_parent"
     android:layout_height="24dp"
     android:layout_gravity="center"
-    android:background="@color/highlighted_elements_background"
-    android:tint="?accentColor"
+    app:tint="?colorControlNormal"
     app:srcCompat="@drawable/ic_dots" />
