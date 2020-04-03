@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import ru.nobird.android.presentation.base.PresenterBase
@@ -24,7 +25,9 @@ constructor(
 
     viewContainer: PresenterViewContainer<CourseListView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
-) : PresenterBase<CourseListView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
+) : PresenterBase<CourseListView>(viewContainer),
+    CourseContinuePresenterDelegate by continueCoursePresenterDelegate,
+    CatalogItem {
     override val delegates: List<PresenterDelegate<in CourseListView>> =
         listOf(continueCoursePresenterDelegate)
 

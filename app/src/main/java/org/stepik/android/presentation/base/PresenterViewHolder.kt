@@ -4,10 +4,10 @@ import android.view.View
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
-abstract class PresenterViewHolder<V>(root: View) : DelegateViewHolder<PresenterBase<V>>(root) {
-    private var presenter: PresenterBase<V>? = null
+abstract class PresenterViewHolder<V, P : PresenterBase<V>>(root: View) : DelegateViewHolder<P>(root) {
+    private var presenter: P? = null
 
-    override fun onBind(data: PresenterBase<V>) {
+    override fun onBind(data: P) {
         presenter = data
         attachView(data)
     }
@@ -17,6 +17,6 @@ abstract class PresenterViewHolder<V>(root: View) : DelegateViewHolder<Presenter
         presenter = null
     }
 
-    protected abstract fun attachView(data: PresenterBase<V>)
-    protected abstract fun detachView(data: PresenterBase<V>)
+    protected abstract fun attachView(data: P)
+    protected abstract fun detachView(data: P)
 }

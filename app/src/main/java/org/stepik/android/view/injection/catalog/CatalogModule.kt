@@ -19,4 +19,6 @@ abstract class CatalogModule {
     @IntoMap
     @ViewModelKey(FiltersPresenter::class)
     internal abstract fun bindFiltersPresenter(filtersPresenter: FiltersPresenter): ViewModel
+
+    // TODO TagsPresenter and attach CourseListCollctionPresenter module
 }

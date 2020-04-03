@@ -51,6 +51,8 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
         catalogPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(CatalogPresenter::class.java)
+
+        // TODO Initialize AdapterDelegates
     }
 
     override fun onCreateView(

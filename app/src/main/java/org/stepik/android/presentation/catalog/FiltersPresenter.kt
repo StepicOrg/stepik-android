@@ -14,8 +14,7 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     @FiltersBus
     private val filtersPublisher: PublishSubject<EnumSet<StepikFilter>>
-
-) : PresenterBase<FiltersView>() {
+) : PresenterBase<FiltersView>(), CatalogItem {
     fun onNeedFilters() {
         view?.onFiltersPrepared(sharedPreferenceHelper.filterForFeatured)
     }

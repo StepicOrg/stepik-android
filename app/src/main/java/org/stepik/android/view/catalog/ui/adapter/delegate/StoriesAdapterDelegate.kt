@@ -5,25 +5,26 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.view_stories_container.view.*
 import org.stepic.droid.R
+import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.features.stories.presentation.StoriesView
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.presentation.base.PresenterViewHolder
-import ru.nobird.android.presentation.base.PresenterBase
+import org.stepik.android.presentation.catalog.CatalogItem
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class StoriesAdapterDelegate(
     private val onStoryClicked: (Story, Int) -> Unit
-) : AdapterDelegate<PresenterBase<StoriesView>, DelegateViewHolder<PresenterBase<StoriesView>>>() {
-    override fun isForViewType(position: Int, data: PresenterBase<StoriesView>): Boolean =
-        data is StoriesView
+) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
+    override fun isForViewType(position: Int, data: CatalogItem): Boolean =
+        data is StoriesPresenter
 
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<PresenterBase<StoriesView>> =
-        StoriesViewHolder(createView(parent, R.layout.view_stories_container), onStoryClicked = onStoryClicked)
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
+        StoriesViewHolder(createView(parent, R.layout.view_stories_container), onStoryClicked = onStoryClicked) as DelegateViewHolder<CatalogItem>
 
-    private class StoriesViewHolder(root: View, onStoryClicked: (Story, Int) -> Unit) : PresenterViewHolder<StoriesView>(root), StoriesView {
+    private class StoriesViewHolder(root: View, onStoryClicked: (Story, Int) -> Unit) : PresenterViewHolder<StoriesView, StoriesPresenter>(root), StoriesView {
         private val storiesPlaceholder = root.storiesContainerLoadingPlaceholder
         private val storiesRecycler = root.storiesRecycler
         private val storiesAdapter = StoriesAdapter(root.context, onStoryClicked = onStoryClicked)
@@ -52,11 +53,11 @@ class StoriesAdapterDelegate(
             }
         }
 
-        override fun attachView(data: PresenterBase<StoriesView>) {
+        override fun attachView(data: StoriesPresenter) {
             data.attachView(this)
         }
 
-        override fun detachView(data: PresenterBase<StoriesView>) {
+        override fun detachView(data: StoriesPresenter) {
             data.detachView(this)
         }
     }
