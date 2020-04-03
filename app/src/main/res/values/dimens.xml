@@ -42,7 +42,6 @@
     <dimen name="course_item_space_between_items">8dp</dimen>
     <dimen name="course_item_titles_text_size">16sp</dimen>
     <dimen name="course_item_button_text_size">14sp</dimen>
-    <dimen name="course_widget_radius">8dp</dimen>
     <dimen name="placeholder_radius">8dp</dimen>
     <dimen name="course_image_radius">8dp</dimen>
 
