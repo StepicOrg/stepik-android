@@ -125,7 +125,7 @@ constructor(
                             // This combo of query params == FEATURED
                             CourseListQuery(
                                 page = currentPage.toInt(),
-                                order = CourseListQuery.CourseListOrder.ORDER_ACTIVITY_DESC,
+                                order = CourseListQuery.Order.ACTIVITY_DESC,
                                 isExcludeEnded = true,
                                 isPublic = true
 

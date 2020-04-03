@@ -7,6 +7,7 @@ import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.domain.search_result.repository.SearchResultRepository
+import org.stepik.android.model.SearchResult
 import javax.inject.Inject
 
 class CourseListSearchInteractor
@@ -21,7 +22,7 @@ constructor(
             .getSearchResults(searchResultQuery.copy(lang = sharedPreferenceHelper.languageForFeatured))
             .flatMap { searchResult ->
                 courseListInteractor
-                    .getCourseListItems(*searchResult.mapToLongArray { it.course })
+                    .getCourseListItems(*searchResult.mapToLongArray(SearchResult::course))
                     .map { courseListItems ->
                         PagedList(
                             list = courseListItems,

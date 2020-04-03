@@ -86,10 +86,18 @@ class CourseListPopularFragment : Fragment() {
             .let(Drawable::mutate)
         DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(requireContext(), R.color.view_all_course_list_color_dark))
 
+        val courseListPadding = resources.getDimensionPixelOffset(R.dimen.course_list_padding)
+        courseListCoursesRecycler.setPadding(
+            courseListPadding,
+            courseListPadding,
+            resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding),
+            courseListPadding
+        )
+
         with(courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
             itemAnimator?.changeDuration = 0
-            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
+            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), ROW_COUNT))
             val snapHelper = CoursesSnapHelper(ROW_COUNT)
             snapHelper.attachToRecyclerView(this)
             setOnPaginationListener { pageDirection ->
@@ -101,7 +109,7 @@ class CourseListPopularFragment : Fragment() {
 
         val courseListQuery = CourseListQuery(
             page = 1,
-            order = CourseListQuery.CourseListOrder.ORDER_ACTIVITY_DESC,
+            order = CourseListQuery.Order.ACTIVITY_DESC,
             isExcludeEnded = true,
             isPublic = true
         )

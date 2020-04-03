@@ -13,6 +13,7 @@ import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.doOnGlobalLayout
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -66,6 +67,7 @@ class CourseListItemAdapterDelegate(
 
                 dataItem.let(onContinueCourseClicked)
             }
+            courseContinueButton.setCompoundDrawables(start = R.drawable.ic_step_navigation_next)
         }
 
         override fun onBind(data: CourseListItem) {

@@ -6,6 +6,7 @@ import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
+import org.stepik.android.model.UserCourse
 import javax.inject.Inject
 
 class CourseListUserInteractor
@@ -19,7 +20,7 @@ constructor(
             .getUserCourses(page = page, sourceType = DataSourceType.REMOTE)
             .flatMap { userCourses ->
                 courseListInteractor
-                    .getCourseListItems(*userCourses.mapToLongArray { it.course })
+                    .getCourseListItems(*userCourses.mapToLongArray(UserCourse::course))
                     .map { courseListItems ->
                         PagedList(
                             list = courseListItems,

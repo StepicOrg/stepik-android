@@ -47,7 +47,8 @@ constructor(
                         courseStats = courseStats[index]
                     )
                 }
-                PagedList(list = list,
+                PagedList(
+                    list = list,
                     page = courses.page,
                     hasNext = courses.hasNext,
                     hasPrev = courses.hasPrev
