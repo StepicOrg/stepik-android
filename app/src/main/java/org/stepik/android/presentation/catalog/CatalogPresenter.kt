@@ -15,7 +15,6 @@ import javax.inject.Provider
 class CatalogPresenter
 @Inject
 constructor(
-    // TODO Inject Filters and Tags
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -23,6 +22,7 @@ constructor(
     private val catalogInteractor: CatalogInteractor,
     private val storiesPresenter: StoriesPresenter,
     private val tagsPresenter: TagsPresenter,
+    private val filtersPresenter: FiltersPresenter,
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>
 ) : PresenterBase<CatalogView>() {
 
@@ -38,8 +38,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { courseCollections ->
-                    // TODO Add Filters and Tags Presenter
-                    state = CatalogView.State.Content(listOf<CatalogItem>(storiesPresenter, tagsPresenter))
+                    state = CatalogView.State.Content(listOf<CatalogItem>(storiesPresenter, tagsPresenter, filtersPresenter))
 //                    courseCollections.map {
 //                        courseListCollectionPresenterProvider.get().apply { fetchCourses(*it.courses) }
 //                    }

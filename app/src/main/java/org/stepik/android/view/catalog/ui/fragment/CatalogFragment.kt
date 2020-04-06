@@ -24,6 +24,7 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
+import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
@@ -82,6 +83,10 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
 
         catalogItemAdapter += TagsAdapterDelegate(
             onTagClicked = { tag -> }
+        )
+
+        catalogItemAdapter += FiltersAdapterDelegate(
+            onFiltersChanged = {}
         )
 
         with(catalogRecyclerView) {
