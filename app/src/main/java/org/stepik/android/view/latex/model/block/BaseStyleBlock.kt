@@ -9,7 +9,8 @@ class BaseStyleBlock(
     private val textColor: Int
 ) : ContentBlock {
     override val header: String = """
-        <link rel="stylesheet" type="text/css" href="file:///android_asset/wysiwyg.css"/>
+        <link rel="stylesheet" type="text/css" href="file:///android_asset/css/wysiwyg.css"/>
+        <link rel="stylesheet" type="text/css" href="file:///android_asset/css/hljs-night.css"/>
         
         <style>
             @font-face {
