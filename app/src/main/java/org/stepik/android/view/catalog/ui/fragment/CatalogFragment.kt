@@ -18,10 +18,14 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
+import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
+import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
@@ -40,6 +44,8 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     private lateinit var searchIcon: ImageView
 
     private lateinit var catalogPresenter: CatalogPresenter
+
+    private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
 
     // This workaround is necessary, because onFocus get activated multiple times
     private var searchEventLogged: Boolean = false
@@ -67,7 +73,27 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
         initCenteredToolbar(R.string.catalog_title, showHomeButton = false)
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
+
+        catalogItemAdapter += StoriesAdapterDelegate(
+            onStoryClicked = { _, position -> showStories(position) }
+        )
+
+        with(catalogRecyclerView) {
+            adapter = catalogItemAdapter
+            layoutManager = WrapContentLinearLayoutManager(context)
+        }
+        catalogPresenter.fetchCollections()
     }
+
+    override fun setState(state: CatalogView.State) {
+        when (state) {
+            is CatalogView.State.Content -> {
+                catalogItemAdapter.items = state.collections
+            }
+        }
+    }
+
+    private fun showStories(position: Int) {}
 
     override fun onFocusChanged(hasFocus: Boolean) {
         backIcon.isVisible = hasFocus

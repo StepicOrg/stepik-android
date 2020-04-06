@@ -12,7 +12,6 @@ import org.stepik.android.presentation.base.PresenterViewHolder
 import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.catalog.FiltersPresenter
 import org.stepik.android.presentation.catalog.FiltersView
-import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import java.util.EnumSet
