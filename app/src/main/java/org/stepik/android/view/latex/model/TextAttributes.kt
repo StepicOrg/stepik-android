@@ -21,7 +21,9 @@ data class TextAttributes(
     val textIsSelectable: Boolean,
 
     @FontRes
-    val fontResId: Int
+    val fontResId: Int,
+
+    val isNightMode: Boolean
 ) {
     companion object {
         private val attrsSet =
@@ -30,7 +32,8 @@ data class TextAttributes(
                 android.R.attr.textColor,
                 android.R.attr.textColorHighlight,
                 android.R.attr.textIsSelectable,
-                R.attr.fontFamily
+                R.attr.fontFamily,
+                R.attr.isNightMode
             ).apply { sort() }
 
         @SuppressLint("ResourceType")
@@ -44,7 +47,8 @@ data class TextAttributes(
                 textColor = ColorExtensions.colorWithAlphaMul(colorOnSurface, alphaEmphasisHigh),
                 textColorHighlight = context.resolveColorAttribute(android.R.attr.textColorHighlight),
                 textIsSelectable = false,
-                fontResId = R.font.roboto_regular
+                fontResId = R.font.roboto_regular,
+                isNightMode = false
             )
 
             val textAppearance = obtainTextAppearance(context, attrs)
@@ -90,7 +94,10 @@ data class TextAttributes(
                         array.getBoolean(attrsSet.indexOf(android.R.attr.textIsSelectable), textAttributes.textIsSelectable),
 
                     fontResId =
-                        array.getResourceId(attrsSet.indexOf(R.attr.fontFamily), textAttributes.fontResId)
+                        array.getResourceId(attrsSet.indexOf(R.attr.fontFamily), textAttributes.fontResId),
+
+                    isNightMode =
+                        array.getBoolean(attrsSet.indexOf(R.attr.isNightMode), textAttributes.isNightMode)
                 )
             } finally {
                 array.recycle()

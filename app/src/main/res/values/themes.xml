@@ -73,6 +73,8 @@
         <item name="dividerVerticalColor">@color/color_divider_vertical</item>
         <item name="cornerRadius">@dimen/corner_radius</item>
 
+        <item name="isNightMode">@bool/is_night_mode</item>
+
         <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
     </style>
 

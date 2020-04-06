@@ -24,7 +24,7 @@ constructor(
 
         val blocks =
             listOf(
-                BaseStyleBlock(fontPath, attributes.textColor),
+                BaseStyleBlock(attributes.isNightMode, fontPath, attributes.textColor),
                 SelectionColorStyleBlock(attributes.textColorHighlight)
             )
 
