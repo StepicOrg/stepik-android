@@ -480,8 +480,8 @@
     <string name="adaptive_reaction_easy">EASY</string>
     <string name="adaptive_reaction_hard">HARD</string>
     <string name="adaptive_retry">Retry</string>
-    <string name="adaptive_correct">CORRECT</string>
-    <string name="adaptive_wrong">WRONG</string>
+    <string name="adaptive_correct">Correct</string>
+    <string name="adaptive_wrong">Wrong</string>
     <string name="adaptive_attempt_button">Solve</string>
     <string name="adaptive_course_completed">Congratulations!\n\nYou have successfully completed the course!</string>
     <string name="adaptive_course_not_supported">This course is not supported in adaptive mode</string>

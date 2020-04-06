@@ -118,6 +118,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:textColor="?colorSecondary"
+                        android:textAllCaps="true"
+                        android:textAppearance="?textAppearanceButton"
                         android:text="@string/adaptive_correct" />
                 </LinearLayout>
 
@@ -145,6 +147,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:textColor="?colorError"
+                        android:textAppearance="?textAppearanceButton"
+                        android:textAllCaps="true"
                         android:text="@string/adaptive_wrong" />
                 </LinearLayout>
             </RelativeLayout>
