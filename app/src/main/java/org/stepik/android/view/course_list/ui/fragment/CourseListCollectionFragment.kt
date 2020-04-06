@@ -84,12 +84,14 @@ class CourseListCollectionFragment : Fragment() {
         )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(*courseCollection.courses, forceUpdate = true) }
         tryAgain.setOnClickListener { courseListPresenter.fetchCourses(*courseCollection.courses, forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListSwipeRefresh, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListSwipeRefresh, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.ContentLoading>(courseListSwipeRefresh, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingError)
 
@@ -101,6 +103,7 @@ class CourseListCollectionFragment : Fragment() {
                 adaptiveCoursesResolver = adaptiveCoursesResolver
             ),
             adaptiveCoursesResolver = adaptiveCoursesResolver,
+            courseListSwipeRefresh = courseListSwipeRefresh,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             courseListPresenter = courseListPresenter

@@ -15,6 +15,11 @@ interface CourseListView : CourseContinueView {
             val courseListDataItems: PagedList<CourseListItem.Data>,
             val courseListItems: List<CourseListItem>
         ) : State()
+
+        data class ContentLoading(
+            val courseListDataItems: PagedList<CourseListItem.Data>,
+            val courseListItems: List<CourseListItem>
+        ) : State()
     }
 
     fun setState(state: State)

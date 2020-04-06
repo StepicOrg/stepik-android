@@ -3,6 +3,7 @@ package org.stepik.android.view.course_list.delegate
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
+import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.presentation.course_continue.CourseContinueView
@@ -17,6 +18,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
     adaptiveCoursesResolver: AdaptiveCoursesResolver,
+    private val courseListSwipeRefresh: StepikSwipeRefreshLayout,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     private val courseListPresenter: CourseContinuePresenterDelegate
@@ -37,6 +39,11 @@ class CourseListViewDelegate(
     }
 
     override fun setState(state: CourseListView.State) {
+        courseListSwipeRefresh.isRefreshing = false
+        courseListSwipeRefresh.isEnabled = (state is CourseListView.State.Content ||
+                state is CourseListView.State.ContentLoading ||
+                state is CourseListView.State.NetworkError)
+
         courseListViewStateDelegate.switchState(state)
         when (state) {
             is CourseListView.State.Loading -> {
@@ -45,7 +52,11 @@ class CourseListViewDelegate(
                     CourseListItem.PlaceHolder
                 )
             }
+
             is CourseListView.State.Content ->
+                courseItemAdapter.items = state.courseListItems
+
+            is CourseListView.State.ContentLoading ->
                 courseItemAdapter.items = state.courseListItems
         }
     }
