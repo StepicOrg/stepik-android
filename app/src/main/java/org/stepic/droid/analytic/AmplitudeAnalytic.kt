@@ -11,6 +11,7 @@ interface AmplitudeAnalytic {
         const val STREAKS_NOTIFICATIONS_ENABLED = "streaks_notifications_enabled"
         const val TEACHING_COURSES_COUNT = "teaching_courses_count"
         const val IS_NIGHT_MODE_ENABLED = "is_night_mode_enabled"
+        const val IS_AR_SUPPORTED = "is_ar_supported"
     }
 
     object Launch {
