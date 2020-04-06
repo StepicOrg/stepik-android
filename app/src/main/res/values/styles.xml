@@ -144,7 +144,7 @@
         <item name="android:drawablePadding">@dimen/share_item_padding</item>
         <item name="android:padding">@dimen/share_item_padding</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
+        <item name="android:foreground">?selectableItemBackground</item>
     </style>
 
     <style name="PlaceholderTextViewStyle">

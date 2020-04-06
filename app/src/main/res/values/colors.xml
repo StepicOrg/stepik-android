@@ -47,8 +47,6 @@
     <color name="default_color_of_link">@color/blue02</color>
     <color name="correct_answer_background">@color/green02</color>
 
-    <color name="disabled_button_color">@color/new_accent_color_alpha_40</color>
-
     <color name="transparent_black_30">@color/black1_alpha_30</color>
 
     <color name="snack_action_color">@color/violet1</color>

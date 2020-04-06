@@ -57,5 +57,5 @@
         android:clickable="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:foreground="@drawable/non_radius_foreground" />
+        android:foreground="?selectableItemBackground" />
 </merge>
