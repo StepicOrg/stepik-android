@@ -25,8 +25,10 @@ import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCallback {
@@ -78,6 +80,10 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
             onStoryClicked = { _, position -> showStories(position) }
         )
 
+        catalogItemAdapter += TagsAdapterDelegate(
+            onTagClicked = { tag -> }
+        )
+
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
             layoutManager = WrapContentLinearLayoutManager(context)
@@ -88,6 +94,7 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     override fun setState(state: CatalogView.State) {
         when (state) {
             is CatalogView.State.Content -> {
+                Timber.d("Collctions: ${state.collections}")
                 catalogItemAdapter.items = state.collections
             }
         }

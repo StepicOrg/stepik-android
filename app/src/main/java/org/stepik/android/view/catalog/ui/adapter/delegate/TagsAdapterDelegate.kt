@@ -5,45 +5,54 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.view_catalog_tags.view.*
 import org.stepic.droid.R
-import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.adapters.TagsAdapter
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.base.PresenterViewHolder
 import org.stepik.android.presentation.catalog.CatalogItem
-import org.stepik.android.presentation.catalog.FiltersPresenter
-import org.stepik.android.presentation.catalog.FiltersView
+import org.stepik.android.presentation.catalog.TagsPresenter
+import org.stepik.android.presentation.catalog.TagsView
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
-import java.util.EnumSet
 
 class TagsAdapterDelegate(
     private val onTagClicked: (Tag) -> Unit
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
-        data is FiltersPresenter
+        data is TagsPresenter
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         TagsViewHolder(createView(parent, R.layout.view_catalog_tags), onTagClicked = onTagClicked) as DelegateViewHolder<CatalogItem>
 
-    private class TagsViewHolder(root: View, onTagClicked: (Tag) -> Unit) : PresenterViewHolder<FiltersView, FiltersPresenter>(root), FiltersView {
+    private class TagsViewHolder(root: View, onTagClicked: (Tag) -> Unit) : PresenterViewHolder<TagsView, TagsPresenter>(root), TagsView {
 
         private val tagsRecyclerView = root.tagsRecycler
         private val tagsAdapter = TagsAdapter(onTagClicked)
 
+        private val viewStateDelegate =  ViewStateDelegate<TagsView.State>()
+
         init {
             tagsRecyclerView.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
             tagsRecyclerView.adapter = tagsAdapter
+
+            viewStateDelegate.addState<TagsView.State.Idle>()
+            viewStateDelegate.addState<TagsView.State.Empty>()
+            viewStateDelegate.addState<TagsView.State.Loading>()
+            viewStateDelegate.addState<TagsView.State.TagsLoaded>(itemView, tagsRecyclerView)
         }
 
-        override fun onFiltersPrepared(filters: EnumSet<StepikFilter>) {
-            TODO("Not yet implemented")
+        override fun setState(state: TagsView.State) {
+            viewStateDelegate.switchState(state)
+            if (state is TagsView.State.TagsLoaded) {
+                tagsAdapter.setTags(state.tags)
+            }
         }
 
-        override fun attachView(data: FiltersPresenter) {
+        override fun attachView(data: TagsPresenter) {
             data.attachView(this)
         }
 
-        override fun detachView(data: FiltersPresenter) {
+        override fun detachView(data: TagsPresenter) {
             data.detachView(this)
         }
     }

@@ -22,6 +22,7 @@ constructor(
     private val mainScheduler: Scheduler,
     private val catalogInteractor: CatalogInteractor,
     private val storiesPresenter: StoriesPresenter,
+    private val tagsPresenter: TagsPresenter,
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>
 ) : PresenterBase<CatalogView>() {
 
@@ -38,7 +39,7 @@ constructor(
             .subscribeBy(
                 onSuccess = { courseCollections ->
                     // TODO Add Filters and Tags Presenter
-                    state = CatalogView.State.Content(listOf<CatalogItem>(storiesPresenter))
+                    state = CatalogView.State.Content(listOf<CatalogItem>(storiesPresenter, tagsPresenter))
 //                    courseCollections.map {
 //                        courseListCollectionPresenterProvider.get().apply { fetchCourses(*it.courses) }
 //                    }
