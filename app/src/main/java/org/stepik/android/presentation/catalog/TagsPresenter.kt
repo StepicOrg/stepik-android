@@ -40,17 +40,15 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = {
+                    state = if (it.isNotEmpty()) {
+                        TagsView.State.TagsLoaded(it)
+                    } else {
+                        TagsView.State.Empty
+                    }
+                },
+                onError = {
                     state = TagsView.State.Empty
                 }
-//                    state = if (it.isNotEmpty()) {
-//                        TagsView.State.TagsLoaded(it)
-//                    } else {
-//                        TagsView.State.Empty
-//                    }
-//                },
-//                onError = {
-//                    state = TagsView.State.Empty
-//                }
             )
     }
 }
