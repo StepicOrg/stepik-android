@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_course_list.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -41,9 +40,6 @@ class CourseListPopularFragment : Fragment() {
 
     @Inject
     internal lateinit var screenManager: ScreenManager
-
-    @Inject
-    internal lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -131,10 +127,8 @@ class CourseListPopularFragment : Fragment() {
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,
-                screenManager = screenManager,
-                adaptiveCoursesResolver = adaptiveCoursesResolver
+                screenManager = screenManager
             ),
-            adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,

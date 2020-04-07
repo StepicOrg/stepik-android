@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_course_list.view.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.presentation.course_continue.CourseContinueView
@@ -19,7 +18,6 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
-    adaptiveCoursesResolver: AdaptiveCoursesResolver,
     courseListTitleContainer: View,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
@@ -31,7 +29,6 @@ class CourseListViewDelegate(
 
     init {
         courseItemAdapter += CourseListItemAdapterDelegate(
-            adaptiveCoursesResolver,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = { courseListItem ->
                 courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)

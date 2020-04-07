@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -46,9 +45,6 @@ class CourseListQueryFragment : Fragment() {
 
     @Inject
     internal lateinit var screenManager: ScreenManager
-
-    @Inject
-    internal lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -101,10 +97,8 @@ class CourseListQueryFragment : Fragment() {
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,
-                screenManager = screenManager,
-                adaptiveCoursesResolver = adaptiveCoursesResolver
+                screenManager = screenManager
             ),
-            adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
