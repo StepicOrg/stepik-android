@@ -120,7 +120,7 @@ data class Course(
     val displayPrice: String? = null,
     @SerializedName("price_tier")
     val priceTier: String? = null
-): Progressable, Parcelable {
+) : Progressable, Parcelable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
