@@ -13,6 +13,7 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
+import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
@@ -22,7 +23,8 @@ class CourseListViewDelegate(
     courseListTitleContainer: View,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
-    private val courseListPresenter: CourseContinuePresenterDelegate,
+    private val onContinueCourseClicked: (CourseListItem) -> Unit,
+//    private val courseListPresenter: CourseContinuePresenterDelegate,
     private val courseListPlaceholderDelegate: CourseListPlaceholderDelegate? = null
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
@@ -33,9 +35,10 @@ class CourseListViewDelegate(
         courseItemAdapter += CourseListItemAdapterDelegate(
             adaptiveCoursesResolver,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
-            onContinueCourseClicked = { courseListItem ->
-                courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
-            }
+            onContinueCourseClicked = onContinueCourseClicked
+//            onContinueCourseClicked = { courseListItem ->
+//                courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+//            }
         )
         courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
         courseItemsRecyclerView.adapter = courseItemAdapter
