@@ -48,10 +48,13 @@ class CourseListAdapterDelegate(
             viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
             viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
-            courseListTitleContainer.setOnClickListener {
-                val collection = itemData?.courseCollection ?: return@setOnClickListener
+            val onClickListener = View.OnClickListener { _ ->
+                val collection = itemData?.courseCollection ?: return@OnClickListener
                 screenManager.showCoursesCollection(itemView.context, collection)
             }
+
+            courseListDescription.setOnClickListener(onClickListener)
+            courseListTitleContainer.setOnClickListener(onClickListener)
 
             courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(itemView.context) }
             courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
