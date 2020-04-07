@@ -75,6 +75,7 @@ constructor(
                     }
                 },
                 onError = {
+                    userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
                     state = CourseListView.State.NetworkError
                 }
             )
