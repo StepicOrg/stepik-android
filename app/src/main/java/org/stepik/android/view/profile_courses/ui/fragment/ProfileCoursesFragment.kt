@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -48,9 +47,6 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    internal lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
-
-    @Inject
     internal lateinit var analytic: Analytic
 
     @Inject
@@ -80,8 +76,7 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         courseContinueViewDelegate = CourseContinueViewDelegate(
             activity = requireActivity(),
             analytic = analytic,
-            screenManager = screenManager,
-            adaptiveCoursesResolver = adaptiveCoursesResolver
+            screenManager = screenManager
         )
 
         coursesAdapter = DefaultDelegateAdapter<CourseListItem>()
@@ -93,7 +88,6 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
 //            }
 //        )
         coursesAdapter += CourseListItemAdapterDelegate(
-            adaptiveCoursesResolver,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = { courseListItem ->
                 profileCoursesPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)

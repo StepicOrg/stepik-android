@@ -88,25 +88,18 @@
 
         </RelativeLayout>
 
-        <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
-            android:id="@+id/courseListSwipeRefresh"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/courseListCoursesRecycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/courseListCoursesRecycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/courseListTitleContainer"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingRight="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp" />
-
-        </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
+            android:layout_height="match_parent"
+            android:layout_below="@id/courseListTitleContainer"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingLeft="8dp"
+            android:paddingStart="8dp"
+            android:paddingRight="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="8dp" />
 
         <include
             android:id="@+id/courseListCoursesEmpty"

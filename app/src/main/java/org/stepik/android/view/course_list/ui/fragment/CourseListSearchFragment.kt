@@ -18,7 +18,6 @@ import kotlinx.android.synthetic.main.fragment_course_list.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
@@ -60,9 +59,6 @@ class CourseListSearchFragment : Fragment() {
     internal lateinit var screenManager: ScreenManager
 
     @Inject
-    internal lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
-
-    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
@@ -87,8 +83,6 @@ class CourseListSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        courseListCoursesLoadingErrorVertical.isVisible = true
-
         initCenteredToolbar(query, true)
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
@@ -103,6 +97,15 @@ class CourseListSearchFragment : Fragment() {
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListSwipeRefresh.setOnRefreshListener {
+            courseListPresenter.fetchCourses(
+                SearchResultQuery(
+                    page = 1,
+                    query = query
+                ),
+                forceUpdate = true
+            )
+        }
         tryAgain.setOnClickListener {
             courseListPresenter.fetchCourses(
                 SearchResultQuery(
@@ -115,8 +118,9 @@ class CourseListSearchFragment : Fragment() {
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListSwipeRefresh, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListSwipeRefresh, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.ContentLoading>(courseListSwipeRefresh, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
 
@@ -124,11 +128,10 @@ class CourseListSearchFragment : Fragment() {
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,
-                screenManager = screenManager,
-                adaptiveCoursesResolver = adaptiveCoursesResolver
+                screenManager = screenManager
             ),
-            adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseListTitleContainer = courseListTitleContainer,
+            courseListSwipeRefresh = courseListSwipeRefresh,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
