@@ -117,9 +117,23 @@
             layout="@layout/error_no_connection_with_button" />
 
         <org.stepic.droid.ui.custom.PlaceholderTextView
-            android:id="@+id/courseListPlaceholder"
+            android:id="@+id/courseListPlaceholderNoConnection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="@dimen/guideline_standard_padding"
+            android:visibility="gone"
+            tools:visibility="visible"/>
+
+        <org.stepic.droid.ui.custom.PlaceholderTextView
+            android:id="@+id/courseListPlaceholderEmpty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/internet_problem"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="20dp"
             android:layout_marginLeft="20dp"

@@ -1,6 +1,7 @@
 package org.stepik.android.view.course_list.delegate
 
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_course_list.view.*
 import org.stepic.droid.R
@@ -22,8 +23,7 @@ class CourseListViewDelegate(
     courseListTitleContainer: View,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
-    private val courseListPresenter: CourseContinuePresenterDelegate,
-    private val courseListPlaceholderDelegate: CourseListPlaceholderDelegate? = null
+    private val courseListPresenter: CourseContinuePresenterDelegate
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private val courseListCounter = courseListTitleContainer.coursesCarouselCount
@@ -42,7 +42,6 @@ class CourseListViewDelegate(
     }
 
     override fun setState(state: CourseListView.State) {
-        courseListPlaceholderDelegate?.setState(state)
         courseListViewStateDelegate.switchState(state)
         when (state) {
             is CourseListView.State.Loading -> {
@@ -57,7 +56,7 @@ class CourseListViewDelegate(
                  * notify is necessary, because margins don't get recalculated after adding loading placeholder
                  */
                 val size = state.courseListItems.size
-                if (size > 2) {
+                if (size > 2 && (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL) {
                     courseItemAdapter.notifyItemChanged(size - 2)
                     courseItemAdapter.notifyItemChanged(size - 3)
                 }

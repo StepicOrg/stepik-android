@@ -24,7 +24,6 @@ import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
-import org.stepik.android.view.course_list.delegate.CourseListPlaceholderDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
@@ -75,7 +74,8 @@ class CourseListUserHorizontalFragment : Fragment() {
         courseListCoursesLoadingErrorVertical.isVisible = false
         courseListTitleContainer.isVisible = true
         coursesCarouselCount.isVisible = true
-        courseListPlaceholder.isVisible = true
+        courseListPlaceholderEmpty.isVisible = true
+        courseListPlaceholderNoConnection.isVisible = true
 
         courseListTitle.text = resources.getString(R.string.course_list_user_courses_title)
 
@@ -101,14 +101,18 @@ class CourseListUserHorizontalFragment : Fragment() {
         }
 
         courseListTitleContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
+        courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
+        courseListPlaceholderNoConnection.setOnClickListener { courseListPresenter.fetchCourses(forceUpdate = true) }
+        courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
         viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
         viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholder)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholder)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(
@@ -121,13 +125,7 @@ class CourseListUserHorizontalFragment : Fragment() {
             courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
-            courseListPresenter = courseListPresenter,
-            courseListPlaceholderDelegate = CourseListPlaceholderDelegate(
-                placeholderTextView = courseListPlaceholder,
-                emptyMessageRes = R.string.courses_carousel_my_courses_empty,
-                emptyListener = { screenManager.showCatalog(requireContext()) },
-                errorListener = { courseListPresenter.fetchCourses(forceUpdate = true) }
-            )
+            courseListPresenter = courseListPresenter
         )
 
         courseListPresenter.fetchCourses()
