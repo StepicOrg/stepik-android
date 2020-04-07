@@ -1,12 +1,9 @@
 package org.stepik.android.view.course_list.ui.fragment
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +24,6 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
-import org.stepik.android.view.course_list.delegate.CourseListPlaceholderDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
@@ -77,14 +73,10 @@ class CourseListPopularFragment : Fragment() {
         appBarLayout.isVisible = false
         courseListCoursesLoadingErrorVertical.isVisible = false
         courseListTitleContainer.isVisible = true
-        courseListPlaceholder.isVisible = true
+        courseListPlaceholderEmpty.isVisible = true
+        courseListPlaceholderNoConnection.isVisible = true
 
         courseListTitle.text = resources.getString(R.string.course_list_popular_toolbar_title)
-
-        val iconDrawable = coursesViewAll.drawable
-            .let(DrawableCompat::wrap)
-            .let(Drawable::mutate)
-        DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(requireContext(), R.color.view_all_course_list_color_dark))
 
         val courseListPadding = resources.getDimensionPixelOffset(R.dimen.course_list_padding)
         courseListCoursesRecycler.setPadding(
@@ -122,13 +114,18 @@ class CourseListPopularFragment : Fragment() {
             )
         }
 
+        courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
+        courseListPlaceholderNoConnection.setOnClickListener { courseListPresenter.fetchCourses(courseListQuery, forceUpdate = true) }
+        courseListPlaceholderNoConnection.setText(R.string.internet_problem)
+
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
         viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
         viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholder)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholder)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
         courseListViewDelegate = CourseListViewDelegate(
             courseContinueViewDelegate = CourseContinueViewDelegate(
@@ -141,13 +138,7 @@ class CourseListPopularFragment : Fragment() {
             courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
-            courseListPresenter = courseListPresenter,
-            courseListPlaceholderDelegate = CourseListPlaceholderDelegate(
-                placeholderTextView = courseListPlaceholder,
-                emptyMessageRes = R.string.empty_courses_popular,
-                emptyListener = { screenManager.showCatalog(requireContext()) },
-                errorListener = { courseListPresenter.fetchCourses(courseListQuery, forceUpdate = true) }
-            )
+            courseListPresenter = courseListPresenter
         )
 
         courseListPresenter.fetchCourses(courseListQuery)

@@ -10,6 +10,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
+import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import javax.inject.Inject
 
@@ -26,11 +27,16 @@ constructor(
 ) : PresenterBase<FastContinueView>() {
 
     private var disposable: Disposable? = null
+    private var course: Course? = null
 
     fun onCreated() {
         if (sharedPreferenceHelper.authResponseFromStore != null) {
-            view?.onLoading()
-            subscribeToFirstCourse()
+            if (course == null) {
+                view?.onLoading()
+                subscribeToFirstCourse()
+            } else {
+                view?.onShowCourse(course as Course)
+            }
         } else {
             view?.onAnonymous()
         }
@@ -43,6 +49,7 @@ constructor(
             .subscribeBy(
                 onNext = {
                     if (it is UserCoursesLoaded.FirstCourse) {
+                        course = it.course
                         view?.onShowCourse(it.course)
                     } else {
                         view?.onEmptyCourse()
