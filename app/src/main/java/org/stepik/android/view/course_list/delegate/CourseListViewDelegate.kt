@@ -53,6 +53,15 @@ class CourseListViewDelegate(
             }
             is CourseListView.State.Content -> {
                 courseItemAdapter.items = state.courseListItems
+                /**
+                 * notify is necessary, because margins don't get recalculated after adding loading placeholder
+                 */
+                val size = state.courseListItems.size
+                if (size > 2) {
+                    courseItemAdapter.notifyItemChanged(size - 2)
+                    courseItemAdapter.notifyItemChanged(size - 3)
+                }
+
                 courseListCounter.text =
                     courseItemsRecyclerView.context.resources.getQuantityString(
                         R.plurals.course_count,
