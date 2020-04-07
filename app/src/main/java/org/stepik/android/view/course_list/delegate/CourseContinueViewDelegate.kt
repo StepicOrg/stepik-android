@@ -2,7 +2,6 @@ package org.stepik.android.view.course_list.delegate
 
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
@@ -15,8 +14,7 @@ import org.stepik.android.presentation.course_continue.CourseContinueView
 class CourseContinueViewDelegate(
     private val activity: FragmentActivity,
     private val analytic: Analytic,
-    private val screenManager: ScreenManager,
-    private val adaptiveCoursesResolver: AdaptiveCoursesResolver
+    private val screenManager: ScreenManager
 ) : CourseContinueView {
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -44,7 +42,7 @@ class CourseContinueViewDelegate(
     fun onCourseClicked(courseListItem: CourseListItem.Data) {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
         if (courseListItem.course.enrollment != 0L) {
-            if (adaptiveCoursesResolver.isAdaptive(courseListItem.id)) {
+            if (courseListItem.isAdaptive) {
                 screenManager.continueAdaptiveCourse(activity, courseListItem.course)
             } else {
                 screenManager.showCourseModules(activity, courseListItem.course)

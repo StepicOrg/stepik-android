@@ -4,13 +4,16 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
+import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -25,6 +28,8 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
+    @UserCoursesLoadedBus
+    private val userCoursesLoadedPublisher: PublishSubject<UserCoursesLoaded>,
 
     viewContainer: PresenterViewContainer<CourseListView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
@@ -67,11 +72,13 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = if (it.isNotEmpty()) {
+                        userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(it.first().course))
                         CourseListView.State.Content(
                             courseListDataItems = it,
                             courseListItems = it
                         )
                     } else {
+                        userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
                         CourseListView.State.Empty
                     }
                 },
@@ -89,6 +96,7 @@ constructor(
                             )
 
                         else ->
+                            userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
                             state = CourseListView.State.NetworkError
                     }
                 }

@@ -1,6 +1,9 @@
 package org.stepik.android.view.course_list.delegate
 
+import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_course_list.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
@@ -17,18 +20,18 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
-    adaptiveCoursesResolver: AdaptiveCoursesResolver,
+    courseListTitleContainer: View,
     private val courseListSwipeRefresh: StepikSwipeRefreshLayout,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     private val courseListPresenter: CourseContinuePresenterDelegate
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
+    private val courseListCounter = courseListTitleContainer.coursesCarouselCount
     private var courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
 
     init {
         courseItemAdapter += CourseListItemAdapterDelegate(
-            adaptiveCoursesResolver,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = { courseListItem ->
                 courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
@@ -53,11 +56,25 @@ class CourseListViewDelegate(
                 )
             }
 
-            is CourseListView.State.Content ->
+            is CourseListView.State.Content -> {
                 courseItemAdapter.items = state.courseListItems
+                courseListCounter.text =
+                    courseItemsRecyclerView.context.resources.getQuantityString(
+                        R.plurals.course_count,
+                        state.courseListDataItems.size,
+                        state.courseListDataItems.size
+                    )
 
             is CourseListView.State.ContentLoading ->
                 courseItemAdapter.items = state.courseListItems
+                /**
+                 * notify is necessary, because margins don't get recalculated after adding loading placeholder
+                 */
+                val size = state.courseListItems.size
+                if (size > 2 && (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL) {
+                    courseItemAdapter.notifyItemChanged(size - 2)
+                    courseItemAdapter.notifyItemChanged(size - 3)
+                }
         }
     }
 

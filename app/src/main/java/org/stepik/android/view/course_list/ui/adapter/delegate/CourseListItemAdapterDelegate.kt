@@ -10,7 +10,6 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.new_course_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -19,7 +18,6 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseListItemAdapterDelegate(
-    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
     private val onItemClicked: (CourseListItem.Data) -> Unit,
     private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
@@ -90,7 +88,7 @@ class CourseListItemAdapterDelegate(
                 courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
             }
 
-            adaptiveCourseMarker.isVisible = adaptiveCoursesResolver.isAdaptive(data.id)
+            adaptiveCourseMarker.isVisible = data.isAdaptive
 
             // TODO Handle in delegate
             coursePropertiesDelegate.setStats(data.course)

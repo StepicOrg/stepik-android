@@ -1,6 +1,7 @@
 package org.stepik.android.domain.course_list.interactor
 
 import io.reactivex.Single
+import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
@@ -13,6 +14,7 @@ import javax.inject.Inject
 class CourseListInteractor
 @Inject
 constructor(
+    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
     private val courseRepository: CourseRepository,
     private val courseStatsInteractor: CourseStatsInteractor
 ) {
@@ -44,7 +46,8 @@ constructor(
                 val list = courses.mapIndexed { index, course ->
                     CourseListItem.Data(
                         course = course,
-                        courseStats = courseStats[index]
+                        courseStats = courseStats[index],
+                        isAdaptive = adaptiveCoursesResolver.isAdaptive(course.id)
                     )
                 }
                 PagedList(
