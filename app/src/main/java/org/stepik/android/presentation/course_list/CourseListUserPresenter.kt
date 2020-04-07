@@ -95,9 +95,10 @@ constructor(
                                 courseListItems = oldState.courseListItems
                             )
 
-                        else ->
+                        else -> {
                             userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
                             state = CourseListView.State.NetworkError
+                        }
                     }
                 }
             )

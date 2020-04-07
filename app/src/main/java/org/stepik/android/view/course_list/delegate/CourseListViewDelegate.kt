@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_course_list.view.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -21,7 +20,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
     courseListTitleContainer: View,
-    private val courseListSwipeRefresh: StepikSwipeRefreshLayout,
+    private val courseListSwipeRefresh: StepikSwipeRefreshLayout? = null,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     private val courseListPresenter: CourseContinuePresenterDelegate
@@ -42,8 +41,8 @@ class CourseListViewDelegate(
     }
 
     override fun setState(state: CourseListView.State) {
-        courseListSwipeRefresh.isRefreshing = false
-        courseListSwipeRefresh.isEnabled = (state is CourseListView.State.Content ||
+        courseListSwipeRefresh?.isRefreshing = false
+        courseListSwipeRefresh?.isEnabled = (state is CourseListView.State.Content ||
                 state is CourseListView.State.ContentLoading ||
                 state is CourseListView.State.NetworkError)
 
@@ -64,8 +63,9 @@ class CourseListViewDelegate(
                         state.courseListDataItems.size,
                         state.courseListDataItems.size
                     )
+            }
 
-            is CourseListView.State.ContentLoading ->
+            is CourseListView.State.ContentLoading -> {
                 courseItemAdapter.items = state.courseListItems
                 /**
                  * notify is necessary, because margins don't get recalculated after adding loading placeholder
@@ -75,6 +75,7 @@ class CourseListViewDelegate(
                     courseItemAdapter.notifyItemChanged(size - 2)
                     courseItemAdapter.notifyItemChanged(size - 3)
                 }
+            }
         }
     }
 
