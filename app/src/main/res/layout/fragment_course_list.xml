@@ -92,36 +92,31 @@
             android:id="@+id/courseListSwipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/courseListCoursesRecycler"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/courseListTitleContainer"
-                android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingRight="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp" />
+                android:layout_height="match_parent">
+                <include
+                    android:id="@+id/courseListCoursesEmpty"
+                    layout="@layout/empty_search"/>
 
+                <include
+                    android:id="@+id/courseListCoursesLoadingErrorVertical"
+                    android:visibility="gone"
+                    layout="@layout/error_no_connection_with_button" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/courseListCoursesRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingStart="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingBottom="8dp" />
+            </FrameLayout>
         </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
-
-        <include
-            android:id="@+id/courseListCoursesEmpty"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_centerInParent="true"
-            layout="@layout/empty_search"/>
-
-        <include
-            android:id="@+id/courseListCoursesLoadingErrorVertical"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            layout="@layout/error_no_connection_with_button" />
 
         <org.stepic.droid.ui.custom.PlaceholderTextView
             android:id="@+id/courseListPlaceholderNoConnection"

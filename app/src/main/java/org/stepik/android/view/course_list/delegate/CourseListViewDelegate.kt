@@ -43,6 +43,7 @@ class CourseListViewDelegate(
     override fun setState(state: CourseListView.State) {
         courseListSwipeRefresh?.isRefreshing = false
         courseListSwipeRefresh?.isEnabled = (state is CourseListView.State.Content ||
+                state is CourseListView.State.Empty ||
                 state is CourseListView.State.NetworkError)
 
         courseListViewStateDelegate.switchState(state)
