@@ -17,6 +17,7 @@ import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.model.CoursesCarouselInfoConstants
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.util.commitNow
 import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
 import javax.inject.Inject
@@ -53,23 +54,11 @@ class HomeFragment : FragmentBase(), HomeStreakView {
         initCenteredToolbar(R.string.home_title)
 
         if (savedInstanceState == null) {
-            childFragmentManager
-                .beginTransaction() //false positive Lint: ... should completed with commit()
-                .add(R.id.homeFastContinueContainer, FastContinueFragment.newInstance(), fastContinueTag)
-                .commitNow()
-
-            childFragmentManager
-                .beginTransaction()
-                .add(R.id.popularCoursesContainer, CourseListPopularFragment.newInstance())
-                .commitNow()
-
-            childFragmentManager
-                .beginTransaction()
-                .add(R.id.userCoursesContainer, CourseListUserHorizontalFragment.newInstance())
-                .commitNow()
-
-//            myCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.myCourses)
-//            popularCoursesView.setCourseCarouselInfo(CoursesCarouselInfoConstants.popular)
+            childFragmentManager.commitNow {
+                add(R.id.homeFastContinueContainer, FastContinueFragment.newInstance(), fastContinueTag)
+                add(R.id.popularCoursesContainer, CourseListPopularFragment.newInstance())
+                add(R.id.userCoursesContainer, CourseListUserHorizontalFragment.newInstance())
+            }
         }
 
         homeStreakPresenter.attachView(this)

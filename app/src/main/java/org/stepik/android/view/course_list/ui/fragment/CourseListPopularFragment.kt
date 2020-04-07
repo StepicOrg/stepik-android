@@ -1,12 +1,9 @@
 package org.stepik.android.view.course_list.ui.fragment
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -80,11 +77,6 @@ class CourseListPopularFragment : Fragment() {
         courseListPlaceholder.isVisible = true
 
         courseListTitle.text = resources.getString(R.string.course_list_popular_toolbar_title)
-
-        val iconDrawable = coursesViewAll.drawable
-            .let(DrawableCompat::wrap)
-            .let(Drawable::mutate)
-        DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(requireContext(), R.color.view_all_course_list_color_dark))
 
         val courseListPadding = resources.getDimensionPixelOffset(R.dimen.course_list_padding)
         courseListCoursesRecycler.setPadding(
