@@ -39,7 +39,7 @@ class CourseListViewDelegate(
     override fun setState(state: CourseListView.State) {
         courseListSwipeRefresh?.isRefreshing = false
         courseListSwipeRefresh?.isEnabled = (state is CourseListView.State.Content ||
-                state is CourseListView.State.ContentLoading ||
+                state is CourseListView.State.Empty ||
                 state is CourseListView.State.NetworkError)
 
         courseListViewStateDelegate.switchState(state)
@@ -59,15 +59,13 @@ class CourseListViewDelegate(
                         state.courseListDataItems.size,
                         state.courseListDataItems.size
                     )
-            }
-
-            is CourseListView.State.ContentLoading -> {
-                courseItemAdapter.items = state.courseListItems
                 /**
                  * notify is necessary, because margins don't get recalculated after adding loading placeholder
                  */
                 val size = state.courseListItems.size
-                if (size > 2 && (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL) {
+                if (size > 2 &&
+                    (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL &&
+                    state.courseListItems.last() is CourseListItem.PlaceHolder) {
                     courseItemAdapter.notifyItemChanged(size - 2)
                     courseItemAdapter.notifyItemChanged(size - 3)
                 }

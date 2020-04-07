@@ -10,13 +10,13 @@ class CourseListStateMapper
 @Inject
 constructor() {
     fun mapToLoadMoreState(courseListState: CourseListView.State.Content): CourseListView.State =
-        CourseListView.State.ContentLoading(
+        CourseListView.State.Content(
             courseListDataItems = courseListState.courseListDataItems,
             courseListItems = courseListState.courseListItems + CourseListItem.PlaceHolder
         )
 
     fun mapFromLoadMoreToSuccess(state: CourseListView.State, items: PagedList<CourseListItem.Data>): CourseListView.State {
-        if (state !is CourseListView.State.ContentLoading) {
+        if (state !is CourseListView.State.Content) {
             return state
         }
 
@@ -27,7 +27,7 @@ constructor() {
     }
 
     fun mapFromLoadMoreToError(state: CourseListView.State): CourseListView.State {
-        if (state !is CourseListView.State.ContentLoading) {
+        if (state !is CourseListView.State.Content) {
             return state
         }
         return CourseListView.State.Content(
