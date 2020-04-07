@@ -7,21 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_course_list.courseListCoursesLoadingErrorVertical
-import kotlinx.android.synthetic.main.fragment_course_list.courseListCoursesRecycler
-import kotlinx.android.synthetic.main.fragment_course_list.courseListPlaceholderEmpty
-import kotlinx.android.synthetic.main.fragment_course_list.courseListPlaceholderNoConnection
-import kotlinx.android.synthetic.main.fragment_course_list.courseListTitle
-import kotlinx.android.synthetic.main.fragment_course_list.courseListTitleContainer
-import kotlinx.android.synthetic.main.fragment_course_list.coursesCarouselCount
-import kotlinx.android.synthetic.main.fragment_course_list.coursesViewAll
-import kotlinx.android.synthetic.main.fragment_course_list_horizontal.*
-import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
+import kotlinx.android.synthetic.main.fragment_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -70,17 +60,10 @@ class CourseListUserHorizontalFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.fragment_course_list_horizontal, container, false)
+        inflater.inflate(R.layout.item_course_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        appBarLayout.isVisible = false
-        courseListCoursesLoadingErrorVertical.isVisible = false
-        courseListTitleContainer.isVisible = true
-        coursesCarouselCount.isVisible = true
-        courseListPlaceholderEmpty.isVisible = true
-        courseListPlaceholderNoConnection.isVisible = true
 
         courseListTitle.text = resources.getString(R.string.course_list_user_courses_title)
 
