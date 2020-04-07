@@ -12,6 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.fragment_course_list.*
+import kotlinx.android.synthetic.main.fragment_course_list.courseListCoursesRecycler
+import kotlinx.android.synthetic.main.fragment_course_list.courseListPlaceholderEmpty
+import kotlinx.android.synthetic.main.fragment_course_list.courseListPlaceholderNoConnection
+import kotlinx.android.synthetic.main.item_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App

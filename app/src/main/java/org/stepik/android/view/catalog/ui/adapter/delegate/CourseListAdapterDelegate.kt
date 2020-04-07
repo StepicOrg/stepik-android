@@ -45,7 +45,6 @@ class CourseListAdapterDelegate(
             viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer, courseListDescription)
             viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListView.State.ContentLoading>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
             viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 

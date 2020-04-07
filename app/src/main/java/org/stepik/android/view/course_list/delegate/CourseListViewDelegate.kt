@@ -3,7 +3,7 @@ package org.stepik.android.view.course_list.delegate
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.fragment_course_list.view.*
+import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
@@ -17,14 +17,14 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
-    courseListTitleContainer: View,
+    courseListTitleContainer: View? = null,
     private val courseListSwipeRefresh: StepikSwipeRefreshLayout? = null,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
-    private val courseListCounter = courseListTitleContainer.coursesCarouselCount
+    private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
     private var courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
 
     init {
@@ -53,7 +53,7 @@ class CourseListViewDelegate(
 
             is CourseListView.State.Content -> {
                 courseItemAdapter.items = state.courseListItems
-                courseListCounter.text =
+                courseListCounter?.text =
                     courseItemsRecyclerView.context.resources.getQuantityString(
                         R.plurals.course_count,
                         state.courseListDataItems.size,
