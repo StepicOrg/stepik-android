@@ -56,17 +56,5 @@ abstract class CourseListModule {
         @CourseListScope
         fun provideViewContainer(): PresenterViewContainer<CourseListView> =
             DefaultPresenterViewContainer()
-
-        @Provides
-        @JvmStatic
-        @CourseListScope
-        internal fun provideCourseBehaviorSubject(): BehaviorSubject<Course> =
-            BehaviorSubject.create()
-
-        @Provides
-        @JvmStatic
-        @CourseListScope
-        internal fun provideCourseObservableSource(courseSubject: BehaviorSubject<Course>, @BackgroundScheduler scheduler: Scheduler): Observable<Course> =
-            courseSubject.observeOn(scheduler)
     }
 }

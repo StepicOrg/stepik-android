@@ -82,8 +82,6 @@ class CourseListSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        courseListCoursesLoadingErrorVertical.isVisible = true
-
         initCenteredToolbar(query, true)
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
