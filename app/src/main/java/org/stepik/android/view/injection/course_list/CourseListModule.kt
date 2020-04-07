@@ -5,11 +5,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.multibindings.IntoMap
-import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.subjects.BehaviorSubject
-import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_list.CourseListPresenter
