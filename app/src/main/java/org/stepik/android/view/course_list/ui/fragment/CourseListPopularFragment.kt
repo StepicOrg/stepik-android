@@ -125,6 +125,7 @@ class CourseListPopularFragment : Fragment() {
                 screenManager = screenManager
             ),
             courseListTitleContainer = courseListTitleContainer,
+            courseDescriptionPlaceHolder = courseListDescription,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->

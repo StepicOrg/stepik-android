@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.model.CourseCollection
 import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
@@ -38,6 +39,9 @@ constructor(
             view?.setState(value)
         }
 
+    var courseCollection: CourseCollection? = null
+        private set
+
     private val paginationDisposable = CompositeDisposable()
 
     init {
@@ -49,17 +53,29 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchCourses(vararg courseId: Long, forceUpdate: Boolean = false) {
+    fun setDataToPresenter(courseCollection: CourseCollection) {
+        this.courseCollection = courseCollection
+        fetchCourses(forceUpdate = false)
+    }
+
+    fun fetchCourses(forceUpdate: Boolean = false) {
         if (state != CourseListView.State.Idle && !forceUpdate) return
+
+        val collection = courseCollection ?: return
 
         paginationDisposable.clear()
 
         val oldState = state
 
-        state = CourseListView.State.Loading
+        state = CourseListView.State.Loading(
+            collectionData = CourseListView.State.CollectionData(
+                title = collection.title,
+                description = collection.description
+            )
+        )
 
         paginationDisposable += courseListInteractor
-            .getCourseListItems(*courseId)
+            .getCourseListItems(*collection.courses)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(

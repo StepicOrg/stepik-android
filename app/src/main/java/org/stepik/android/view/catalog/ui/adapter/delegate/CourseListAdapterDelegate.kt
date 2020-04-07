@@ -48,11 +48,15 @@ class CourseListAdapterDelegate(
             viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
             viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
+            courseListTitleContainer.setOnClickListener {
+                val collection = itemData?.courseCollection ?: return@setOnClickListener
+                screenManager.showCoursesCollection(itemView.context, collection)
+            }
+
             courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(itemView.context) }
             courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
             courseListPlaceholderNoConnection.setOnClickListener {
-                // TODO
-                // courseListPresenter.fetchCourses(courseListQuery, forceUpdate = true)
+                itemData?.fetchCourses(forceUpdate = true)
             }
             courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 
@@ -68,6 +72,7 @@ class CourseListAdapterDelegate(
         private val delegate = CourseListViewDelegate(
             courseContinueViewDelegate = courseContinueViewDelegate,
             courseListTitleContainer = root.courseListTitleContainer,
+            courseDescriptionPlaceHolder = root.courseListDescription,
             courseItemsRecyclerView = root.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->

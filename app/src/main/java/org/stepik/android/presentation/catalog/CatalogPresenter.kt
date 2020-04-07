@@ -45,7 +45,7 @@ constructor(
 //                    }
 
                     // TODO Single presenter
-                    val a = courseListCollectionPresenterProvider.get().apply { fetchCourses(*courseCollections.first().courses) }
+                    val a = courseListCollectionPresenterProvider.get().apply { setDataToPresenter(courseCollections.first()) }
                     state = CatalogView.State.Content(base + a)
                 },
                 onError = {}

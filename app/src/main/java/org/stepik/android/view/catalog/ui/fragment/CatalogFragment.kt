@@ -33,7 +33,6 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCallback {
@@ -70,8 +69,6 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
         catalogPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(CatalogPresenter::class.java)
-
-        // TODO Initialize AdapterDelegates
     }
 
     override fun onCreateView(
@@ -92,7 +89,7 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
         )
 
         catalogItemAdapter += TagsAdapterDelegate(
-            onTagClicked = { tag -> }
+            onTagClicked = { tag -> screenManager.showCoursesByTag(requireContext(), tag) }
         )
 
         catalogItemAdapter += FiltersAdapterDelegate(
@@ -118,7 +115,6 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     override fun setState(state: CatalogView.State) {
         when (state) {
             is CatalogView.State.Content -> {
-                Timber.d("Collctions: ${state.collections}")
                 catalogItemAdapter.items = state.collections
             }
         }
