@@ -7,6 +7,7 @@
     android:layout_height="wrap_content">
     <FrameLayout
         android:id="@+id/adaptiveLevelDialogConfetti"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
         android:layout_width="match_parent"
         android:layout_height="220dp" >
         <LinearLayout

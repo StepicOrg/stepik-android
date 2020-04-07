@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.fragment_achievements_list.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.presentation.achievement.AchievementsPresenter
 import org.stepik.android.presentation.achievement.AchievementsView
@@ -106,10 +105,7 @@ class AchievementsListFragment : Fragment(), AchievementsView {
 
         for (i in 0..(screenHeight / itemHeight).toInt()) {
             progress.addView(layoutInflater.inflate(R.layout.view_achievement_item_placeholder, progress, false))
-            val stroke = layoutInflater.inflate(R.layout.view_stroke, progress, false)
-            stroke.setBackgroundResource(R.drawable.bg_divider_vertical)
-            stroke.setHeight(1)
-            progress.addView(stroke)
+            progress.addView(layoutInflater.inflate(R.layout.view_divider_vertical, progress, false))
         }
     }
 

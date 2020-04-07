@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.ColorRes
+import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import kotlinx.android.synthetic.main.dialog_rate_app.*
 import org.stepic.droid.R
@@ -15,6 +14,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.util.RatingUtil
 import org.stepic.droid.util.reportRateEvent
+import org.stepic.droid.util.resolveColorAttribute
 import javax.inject.Inject
 
 class RateAppDialog : DialogFragment() {
@@ -50,13 +50,9 @@ class RateAppDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isCancelable = false
-        rateDialogPositive.typeface = ResourcesCompat.getFont(requireContext(), R.font.roboto_bold)
 
-        val callback = if (targetFragment != null) {
-            targetFragment as Callback
-        } else {
-            activity as Callback
-        }
+        val callback = targetFragment as? Callback
+            ?: activity as Callback
 
         rateDialogLater.setOnClickListener {
             dialog?.dismiss()
@@ -97,12 +93,13 @@ class RateAppDialog : DialogFragment() {
         } else {
             rateDialogHint.visibility = View.VISIBLE
             rateDialogTitle.setText(R.string.rate_dialog_thanks)
+
             if (rating in 1..4) {
                 rateDialogHint.setText(R.string.rate_dialog_hint_negative)
-                rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.color.rate_dialog_support)
+                rateDialogPositive.setTextAndColor(R.string.rate_dialog_support, R.attr.colorError)
             } else if (RatingUtil.isExcellent(rating)) {
                 rateDialogHint.setText(R.string.rate_dialog_hint_positive)
-                rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.color.rate_dialog_store)
+                rateDialogPositive.setTextAndColor(R.string.rate_dialog_google_play, R.attr.colorSecondary)
             }
 
             rateDialogButtonsContainer.visibility = View.VISIBLE
@@ -114,8 +111,8 @@ class RateAppDialog : DialogFragment() {
         outState.putInt(ratingKey, rateDialogRatingBar.rating.toInt())
     }
 
-    private fun TextView.setTextAndColor(@StringRes stringRes: Int, @ColorRes textColorRes: Int) {
+    private fun TextView.setTextAndColor(@StringRes stringRes: Int, @AttrRes textColorRes: Int) {
         this.setText(stringRes)
-        this.setTextColor(org.stepic.droid.util.ColorUtil.getColorArgb(textColorRes, context))
+        this.setTextColor(this.context.resolveColorAttribute(textColorRes))
     }
 }

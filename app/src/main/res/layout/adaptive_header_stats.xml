@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:background="@color/highlighted_elements_background"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
 
-    <include layout="@layout/view_stroke"/>
+    <include layout="@layout/view_divider_vertical"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,16 +28,20 @@
                 android:id="@+id/level"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:fontFamily="@font/roboto_light"
-                tools:ignore="MissingPrefix"
-                android:textSize="64sp" />
+                android:textAppearance="?textAppearanceHeadline2" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="?textAppearanceBody2"
+                android:textColor="?android:textColorSecondary"
                 android:text="@string/adaptive_stats_level"/>
         </LinearLayout>
 
-        <include layout="@layout/view_stroke_vertical"/>
+        <View
+            android:layout_width="?dividerVerticalSize"
+            android:layout_height="match_parent"
+            android:background="?dividerVertical" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -55,15 +58,17 @@
                     android:id="@+id/expThisWeek"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textAppearance="?textAppearanceHeadline6"
                     android:gravity="center" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:textAppearance="?textAppearanceBody2"
+                    android:textColor="?android:textColorSecondary"
                     android:text="@string/adaptive_stats_last_7_days"/>
             </LinearLayout>
-            <include layout="@layout/view_stroke"/>
+            <include layout="@layout/view_divider_vertical"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,12 +79,14 @@
                     android:id="@+id/expTotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textAppearance="?textAppearanceHeadline6"
                     android:gravity="center" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:textAppearance="?textAppearanceBody2"
+                    android:textColor="?android:textColorSecondary"
                     android:text="@string/adaptive_stats_total_exp"/>
             </LinearLayout>
 

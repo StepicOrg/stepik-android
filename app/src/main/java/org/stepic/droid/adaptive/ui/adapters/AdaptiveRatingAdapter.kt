@@ -1,20 +1,20 @@
 package org.stepic.droid.adaptive.ui.adapters
 
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.adaptive_rating_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.model.adaptive.RatingItem
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 
 class AdaptiveRatingAdapter(
     context: Context,
@@ -28,40 +28,44 @@ class AdaptiveRatingAdapter(
 
         @JvmStatic
         private fun isRatingGap(current: RatingItem, next: RatingItem) =
-                current.rank + 1 != next.rank
+            current.rank + 1 != next.rank
 
         @JvmStatic
         private fun isNotSeparatorStub(item: RatingItem) =
-                item.user != SEPARATOR
+            item.user != SEPARATOR
     }
 
     private val profileId = sharedPreferenceHelper.profile?.id ?: 0
 
-    private val leaderIconDrawable: Drawable? = AppCompatResources.getDrawable(context, R.drawable.ic_crown)?.apply {
-        DrawableCompat.setTint(this, ContextCompat.getColor(context, R.color.adaptive_color_yellow))
-    }
+    private val leaderIconDrawableTint =
+        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.color_secondary))
 
-    private val leaderIconDrawableSelected: Drawable? = AppCompatResources.getDrawable(context, R.drawable.ic_crown)?.apply {
-        DrawableCompat.setTint(this, ContextCompat.getColor(context,  android.R.color.white))
-    }
+    private val leaderIconDrawableSelectedTint =
+        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.color_on_secondary))
 
     private val items = ArrayList<RatingItem>()
 
-    override fun getItemViewType(position: Int) =
-            if (isNotSeparatorStub(items[position])) {
-                RATING_ITEM_VIEW_TYPE
-            } else {
-                SEPARATOR_VIEW_TYPE
-            }
+    override fun getItemViewType(position: Int): Int =
+        if (isNotSeparatorStub(items[position])) {
+            RATING_ITEM_VIEW_TYPE
+        } else {
+            SEPARATOR_VIEW_TYPE
+        }
 
-    override fun getItemCount() = items.size
+    override fun getItemCount(): Int =
+        items.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            when(viewType) {
-                RATING_ITEM_VIEW_TYPE -> RatingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_rating_item, parent, false))
-                SEPARATOR_VIEW_TYPE -> SeparatorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_ranks_separator, parent, false))
-                else -> throw IllegalStateException("Unknown view type $viewType")
-            }
+        when(viewType) {
+            RATING_ITEM_VIEW_TYPE ->
+                RatingViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_rating_item, parent, false))
+
+            SEPARATOR_VIEW_TYPE ->
+                SeparatorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.adaptive_ranks_separator, parent, false))
+
+            else ->
+                throw IllegalStateException("Unknown view type $viewType")
+        }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
@@ -74,11 +78,13 @@ class AdaptiveRatingAdapter(
                     it.root.isSelected = profileId == items[position].user
 
                     if (items[position].rank == 1) {
-                        it.icon.setImageDrawable(if (profileId == items[position].user) {
-                            leaderIconDrawableSelected
-                        } else {
-                            leaderIconDrawable
-                        })
+                        val tint =
+                            if (profileId == items[position].user) {
+                                leaderIconDrawableSelectedTint
+                            } else {
+                                leaderIconDrawableTint
+                            }
+                        ImageViewCompat.setImageTintList(it.icon, tint)
 
                         it.icon.visibility = View.VISIBLE
                         it.rank.visibility = View.GONE
@@ -100,8 +106,8 @@ class AdaptiveRatingAdapter(
 
     private fun addSeparator() {
         (items.size - 2 downTo 0)
-                .filter { isRatingGap(items[it], items[it + 1]) && isNotSeparatorStub(items[it]) && isNotSeparatorStub(items[it + 1]) }
-                .forEach { items.add(it + 1, RatingItem(0, "", 0, SEPARATOR)) }
+            .filter { isRatingGap(items[it], items[it + 1]) && isNotSeparatorStub(items[it]) && isNotSeparatorStub(items[it + 1]) }
+            .forEach { items.add(it + 1, RatingItem(0, "", 0, SEPARATOR)) }
     }
 
     class RatingViewHolder(val root: View) : RecyclerView.ViewHolder(root) {
@@ -111,5 +117,10 @@ class AdaptiveRatingAdapter(
         val name: TextView = root.name
     }
 
-    class SeparatorViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    class SeparatorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        init {
+            val elevation = view.resources.getInteger(R.integer.highlighted_element_elevation)
+            view.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(view.context, elevation, overrideLightTheme = true))
+        }
+    }
 }

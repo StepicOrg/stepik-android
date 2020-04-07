@@ -160,6 +160,7 @@ public abstract class StepikOptionView extends FrameLayout implements Checkable 
         } else {
             optionIcon.setImageResource(getUncheckedDrawableForOption());
         }
+        optionIcon.setSelected(isChecked);
     }
 
     @Override

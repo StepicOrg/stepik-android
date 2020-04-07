@@ -10,9 +10,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:elevation="0dp"
-        app:elevation="0dp">
+        android:elevation="?appBarElevation">
 
         <include
             layout="@layout/view_centered_toolbar"
@@ -23,9 +21,7 @@
             app:tabMode="scrollable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            app:tabIndicatorHeight="1dp"/>
-        <include layout="@layout/view_stroke"/>
+            android:minHeight="?attr/actionBarSize" />
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"

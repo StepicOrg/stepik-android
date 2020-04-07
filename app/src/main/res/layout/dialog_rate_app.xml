@@ -62,11 +62,12 @@
             android:layout_height="match_parent"
             layout="@layout/view_divider_vertical" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/rateDialogPositive"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
+            android:fontFamily="@font/roboto_bold"
             style="@style/Widget.AppTheme.Button.TextButton"
             android:theme="@style/ThemeOverlay.Brown"
             tools:text="Google Play"/>

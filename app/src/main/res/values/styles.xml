@@ -144,7 +144,7 @@
         <item name="android:drawablePadding">@dimen/share_item_padding</item>
         <item name="android:padding">@dimen/share_item_padding</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
+        <item name="android:foreground">?selectableItemBackground</item>
     </style>
 
     <style name="PlaceholderTextViewStyle">
@@ -240,28 +240,7 @@
         <item name="android:windowExitAnimation">@anim/popup_exit</item>
     </style>
 
-    <style name="Adaptive.BorderlessButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:foreground">@null</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textColor">@color/borderless_button_text_color</item>
-    </style>
-
-
-    <style name="Adaptive" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/new_primary_color</item>
-        <item name="colorPrimaryDark">@color/new_accent_color</item>
-        <item name="colorAccent">@color/new_accent_color</item>
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Adaptive.White" parent="Adaptive">
-        <item name="android:windowBackground">@color/white</item>
-    </style>
-
-    <style name="Adaptive.ReactionStamp">
+    <style name="AdaptiveReactionStamp">
         <item name="android:textSize">24sp</item>
         <item name="android:gravity">center</item>
         <item name="fontFamily">sans-serif-black</item>

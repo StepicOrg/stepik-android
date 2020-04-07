@@ -8,6 +8,6 @@
     <path
         android:name="arrow_bottom"
         android:pathData="@string/arrow_bottom_path"
-        android:strokeColor="@color/arrow_color"
+        android:strokeColor="#000000"
         android:strokeWidth="@integer/arrow_stroke"/>
 </vector>

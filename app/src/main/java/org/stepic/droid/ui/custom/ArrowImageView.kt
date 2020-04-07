@@ -23,8 +23,8 @@ class ArrowImageView(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
         private const val isArrowBottomKey = "isArrowBottomKey"
     }
 
-    val arrowBottomToTopRes = R.drawable.avd_arrow_bottom_to_top
-    val arrowTopToBottomRes = R.drawable.avd_arrow_top_to_bottom
+    private val arrowBottomToTopRes = R.drawable.avd_arrow_bottom_to_top
+    private val arrowTopToBottomRes = R.drawable.avd_arrow_top_to_bottom
     private var isArrowBottom: Boolean = IS_ARROW_BOTTOM_DEFAULT
 
     init {

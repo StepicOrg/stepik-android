@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_width="match_parent"
+<FrameLayout
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -20,10 +21,10 @@
         android:layout_height="match_parent">
 
         <FrameLayout
+            android:id="@+id/spinnerContainer"
             android:padding="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/highlighted_elements_background">
+            android:layout_height="wrap_content">
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/spinner"
@@ -33,7 +34,8 @@
                 android:layout_marginRight="@dimen/spinner_arrow_margin"/>
 
         </FrameLayout>
-        <include layout="@layout/view_stroke" />
+
+        <include layout="@layout/view_divider_vertical" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
