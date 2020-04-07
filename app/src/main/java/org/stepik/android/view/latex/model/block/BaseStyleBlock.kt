@@ -4,12 +4,14 @@ import androidx.annotation.ColorInt
 import org.stepik.android.domain.latex.model.block.ContentBlock
 
 class BaseStyleBlock(
+    isNightMode: Boolean,
     fontPath: String,
     @ColorInt
     private val textColor: Int
 ) : ContentBlock {
     override val header: String = """
-        <link rel="stylesheet" type="text/css" href="file:///android_asset/wysiwyg.css"/>
+        <link rel="stylesheet" type="text/css" href="file:///android_asset/css/wysiwyg.css"/>
+        <link rel="stylesheet" type="text/css" href="file:///android_asset/css/hljs${if (isNightMode) "-night" else ""}.css"/>
         
         <style>
             @font-face {

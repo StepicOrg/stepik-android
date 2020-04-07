@@ -13,6 +13,8 @@
 
     <attr name="selectableItemBackgroundRounded" format="reference" />
 
+    <attr name="isNightMode" format="boolean" />
+
     <attr name="progressBackgroundColor" format="color"/>
     <attr name="progressForegroundColor" format="color"/>
 
