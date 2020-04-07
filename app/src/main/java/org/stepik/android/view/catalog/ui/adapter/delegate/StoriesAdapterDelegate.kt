@@ -24,10 +24,10 @@ class StoriesAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         StoriesViewHolder(createView(parent, R.layout.view_stories_container), onStoryClicked = onStoryClicked) as DelegateViewHolder<CatalogItem>
 
-    private class StoriesViewHolder(root: View, onStoryClicked: (Story, Int) -> Unit) : PresenterViewHolder<StoriesView, StoriesPresenter>(root), StoriesView {
+    class StoriesViewHolder(root: View, onStoryClicked: (Story, Int) -> Unit) : PresenterViewHolder<StoriesView, StoriesPresenter>(root), StoriesView {
         private val storiesPlaceholder = root.storiesContainerLoadingPlaceholder
-        private val storiesRecycler = root.storiesRecycler
-        private val storiesAdapter = StoriesAdapter(root.context, onStoryClicked = onStoryClicked)
+        val storiesRecycler = root.storiesRecycler
+        val storiesAdapter = StoriesAdapter(root.context, onStoryClicked = onStoryClicked)
 
         private val viewStateDelegate = ViewStateDelegate<StoriesView.State>()
 

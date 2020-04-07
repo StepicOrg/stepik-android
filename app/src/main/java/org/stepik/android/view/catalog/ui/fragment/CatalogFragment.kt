@@ -19,6 +19,9 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.features.stories.presentation.StoriesPresenter
+import org.stepic.droid.features.stories.ui.activity.StoriesActivity
+import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
@@ -31,6 +34,9 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegat
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
+import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
+import ru.nobird.android.stories.transition.SharedTransitionsManager
+import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
@@ -39,6 +45,9 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     companion object {
         fun newInstance(): Fragment =
             CatalogFragment()
+
+        private const val CATALOG_STORIES_INDEX = 0
+        private const val CATALOG_STORIES_KEY = "catalog_stories"
     }
 
     @Inject
@@ -120,7 +129,17 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
         }
     }
 
-    private fun showStories(position: Int) {}
+    private fun showStories(position: Int) {
+        val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
+            as? StoriesAdapterDelegate.StoriesViewHolder
+            ?: return
+
+        val stories = storiesViewHolder.storiesAdapter.stories
+
+        requireContext().startActivity(SharedTransitionIntentBuilder.createIntent(
+            requireContext(), StoriesActivity::class.java, CATALOG_STORIES_KEY, position, stories)
+        )
+    }
 
     override fun onFocusChanged(hasFocus: Boolean) {
         backIcon.isVisible = hasFocus
@@ -198,9 +217,40 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     override fun onStart() {
         super.onStart()
         catalogPresenter.attachView(this)
+        SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
+            override fun getSharedView(position: Int): View? {
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
+                        as? StoriesAdapterDelegate.StoriesViewHolder
+                    ?: return null
+
+                val storyViewHolder = storiesViewHolder.storiesRecycler.findViewHolderForAdapterPosition(position)
+                        as? StoriesAdapter.StoryViewHolder
+                    ?: return null
+
+                return storyViewHolder.cover
+            }
+
+            override fun onPositionChanged(position: Int) {
+                val storiesViewHolder = catalogRecyclerView.findViewHolderForAdapterPosition(CATALOG_STORIES_INDEX)
+                        as? StoriesAdapterDelegate.StoriesViewHolder
+                    ?: return
+
+                storiesViewHolder.storiesRecycler.layoutManager?.scrollToPosition(position)
+                storiesViewHolder.storiesAdapter.selected = position
+
+                if (position != -1) {
+                    val story = storiesViewHolder.storiesAdapter.stories[position]
+                    (catalogItemAdapter.items[CATALOG_STORIES_INDEX] as StoriesPresenter).onStoryViewed(story.id)
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.STORY_OPENED, mapOf(
+                        AmplitudeAnalytic.Stories.Values.STORY_ID to story.id
+                    ))
+                }
+            }
+        })
     }
 
     override fun onStop() {
+        SharedTransitionsManager.unregisterTransitionDelegate(CATALOG_STORIES_KEY)
         catalogPresenter.detachView(this)
         super.onStop()
     }
