@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:background="?selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/ic_more_without_padding"
+        app:tint="?colorControlNormal"
 
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

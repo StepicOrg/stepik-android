@@ -32,7 +32,6 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.activities.contracts.CloseButtonInToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.commitNow
-import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.resolveResourceIdAttribute
 import org.stepik.android.model.user.User
 import org.stepik.android.presentation.profile.ProfilePresenter
@@ -163,18 +162,12 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         val colorControlNormal =
             ContextCompat.getColorStateList(requireContext(), requireContext().resolveResourceIdAttribute(R.attr.colorControlNormal))
 
-        val colorSurface =
-            requireContext().resolveColorAttribute(R.attr.colorSurface)
-
-        val colorOnSurface =
-            requireContext().resolveColorAttribute(R.attr.colorOnSurface)
-
         headerAnimationDelegate =
             ProfileHeaderAnimationDelegate(
                 view,
                 menuColorStart = ContextCompat.getColor(requireContext(), R.color.white),
                 menuColorEnd = colorControlNormal?.defaultColor ?: 0x0,
-                toolbarColor = ColorExtensions.colorWithElevationOverlay(colorSurface, colorOnSurface, 4)
+                toolbarColor = ColorExtensions.colorSurfaceWithElevationOverlay(requireContext(), 4)
             ) { menuTintStateList = it }
 
         scrollContainer
