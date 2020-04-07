@@ -220,8 +220,6 @@
     <color name="color_violet_1_12">@color/violet1_alpha_13</color>
 
     <!-- Step -->
-    <color name="step_discussion_button">@color/new_primary_color</color>
-
     <color name="step_quiz_feedback_wrong_text">@color/red02</color>
     <color name="step_quiz_feedback_wrong_background">@color/red02_color_alpha_15</color>
 

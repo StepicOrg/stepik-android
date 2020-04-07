@@ -19,7 +19,8 @@
         android:id="@+id/stepAmountPassed"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:textSize="14sp"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         android:paddingLeft="24dp"
         android:paddingStart="24dp"
         android:paddingRight="24dp"
@@ -39,7 +40,8 @@
         android:id="@+id/stepSolvedPercentage"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:textSize="14sp"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         android:paddingLeft="24dp"
         android:paddingStart="24dp"
         android:paddingRight="24dp"
@@ -62,7 +64,5 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
