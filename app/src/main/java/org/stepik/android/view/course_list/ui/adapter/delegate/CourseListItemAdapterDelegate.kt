@@ -92,6 +92,7 @@ class CourseListItemAdapterDelegate(
                 courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
             }
 
+            // todo add to CourseListItem field and resolve in domain layer
             adaptiveCourseMarker.isVisible = adaptiveCoursesResolver.isAdaptive(data.id)
 
             // TODO Handle in delegate

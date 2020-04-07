@@ -23,7 +23,7 @@ class CourseListViewDelegate(
     courseListTitleContainer: View,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
-    private val onContinueCourseClicked: (CourseListItem) -> Unit,
+    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit,
 //    private val courseListPresenter: CourseContinuePresenterDelegate,
     private val courseListPlaceholderDelegate: CourseListPlaceholderDelegate? = null
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
