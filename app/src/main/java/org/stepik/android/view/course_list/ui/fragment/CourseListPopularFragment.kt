@@ -21,6 +21,7 @@ import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
@@ -138,7 +139,9 @@ class CourseListPopularFragment : Fragment() {
             courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
-            courseListPresenter = courseListPresenter
+            onContinueCourseClicked = { courseListItem ->
+                courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+            }
         )
 
         courseListPresenter.fetchCourses(courseListQuery)

@@ -28,6 +28,7 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.search_result.model.SearchResultQuery
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
@@ -130,7 +131,9 @@ class CourseListSearchFragment : Fragment() {
             courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
-            courseListPresenter = courseListPresenter
+            onContinueCourseClicked = { courseListItem ->
+                courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+            }
         )
 
         courseListPresenter.fetchCourses(

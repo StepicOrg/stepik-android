@@ -9,6 +9,7 @@ import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import ru.nobird.android.presentation.base.PresenterBase
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -38,10 +39,12 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { courseCollections ->
-                    state = CatalogView.State.Content(listOf<CatalogItem>(storiesPresenter, tagsPresenter, filtersPresenter))
-//                    courseCollections.map {
-//                        courseListCollectionPresenterProvider.get().apply { fetchCourses(*it.courses) }
-//                    }
+                    val base = listOf<CatalogItem>(storiesPresenter, tagsPresenter, filtersPresenter)
+                    val collections = courseCollections.map {
+                        Timber.d("Collection: $it")
+                        courseListCollectionPresenterProvider.get().apply { fetchCourses(*it.courses) }
+                    }
+                    state = CatalogView.State.Content(base + collections)
                 },
                 onError = {}
             )

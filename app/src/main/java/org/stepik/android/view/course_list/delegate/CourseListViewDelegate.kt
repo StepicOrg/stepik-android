@@ -21,7 +21,7 @@ class CourseListViewDelegate(
     courseListTitleContainer: View,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
-    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit,
+    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private val courseListCounter = courseListTitleContainer.coursesCarouselCount

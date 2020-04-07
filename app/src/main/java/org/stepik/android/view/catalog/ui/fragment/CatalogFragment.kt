@@ -14,9 +14,11 @@ import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
+import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
@@ -24,9 +26,11 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
+import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
+import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import timber.log.Timber
@@ -37,6 +41,12 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
         fun newInstance(): Fragment =
             CatalogFragment()
     }
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -87,6 +97,17 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
 
         catalogItemAdapter += FiltersAdapterDelegate(
             onFiltersChanged = {}
+        )
+
+        catalogItemAdapter += CourseListAdapterDelegate(
+            screenManager = screenManager,
+            adaptiveCoursesResolver = adaptiveCoursesResolver,
+            courseContinueViewDelegate = CourseContinueViewDelegate(
+                activity = requireActivity(),
+                analytic = analytic,
+                screenManager = screenManager,
+                adaptiveCoursesResolver = adaptiveCoursesResolver
+            )
         )
 
         with(catalogRecyclerView) {
