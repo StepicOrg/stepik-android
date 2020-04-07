@@ -2,12 +2,9 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_course_list.view.*
-import kotlinx.android.synthetic.main.view_catalog_search_toolbar.view.*
+import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
@@ -24,22 +21,19 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseListAdapterDelegate(
     private val screenManager: ScreenManager,
-    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
     private val courseContinueViewDelegate: CourseContinueViewDelegate
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
         data is CourseListCollectionPresenter
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
-        CourseCollectionViewHolder(createView(parent, R.layout.fragment_course_list)) as DelegateViewHolder<CatalogItem>
+        CourseCollectionViewHolder(createView(parent, R.layout.item_course_list)) as DelegateViewHolder<CatalogItem>
 
     private inner class CourseCollectionViewHolder(
         root: View
     ) : PresenterViewHolder<CourseListView, CourseListCollectionPresenter>(root) {
 
-        private val appBarLayout = root.appBarLayout
-        private val courseListCoursesLoadingErrorVertical = root.courseListCoursesLoadingErrorVertical
-        private val coursesCarouselCount = root.coursesCarouselCount
+        private val courseListDescription = root.courseListDescription
         private val courseListCoursesRecycler = root.courseListCoursesRecycler
         private val courseListPlaceholderEmpty = root.courseListPlaceholderEmpty
         private val courseListTitleContainer = root.courseListTitleContainer
@@ -48,16 +42,10 @@ class CourseListAdapterDelegate(
         private val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
         init {
-            appBarLayout.isVisible = false
-            courseListCoursesLoadingErrorVertical.isVisible = false
-            courseListTitleContainer.isVisible = true
-            coursesCarouselCount.isVisible = true
-            courseListPlaceholderEmpty.isVisible = true
-            courseListPlaceholderNoConnection.isVisible = true
-
-            viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
-            viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
-            viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer, courseListDescription)
+            viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
+            viewStateDelegate.addState<CourseListView.State.ContentLoading>(courseListTitleContainer, courseListDescription, courseListCoursesRecycler)
             viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
             viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
@@ -80,7 +68,6 @@ class CourseListAdapterDelegate(
 
         private val delegate = CourseListViewDelegate(
             courseContinueViewDelegate = courseContinueViewDelegate,
-            adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseListTitleContainer = root.courseListTitleContainer,
             courseItemsRecyclerView = root.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,

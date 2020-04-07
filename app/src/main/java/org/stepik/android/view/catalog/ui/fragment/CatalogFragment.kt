@@ -101,12 +101,10 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
 
         catalogItemAdapter += CourseListAdapterDelegate(
             screenManager = screenManager,
-            adaptiveCoursesResolver = adaptiveCoursesResolver,
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,
-                screenManager = screenManager,
-                adaptiveCoursesResolver = adaptiveCoursesResolver
+                screenManager = screenManager
             )
         )
 
