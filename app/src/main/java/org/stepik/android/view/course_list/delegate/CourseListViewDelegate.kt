@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_course_list.view.*
 import org.stepic.droid.R
+import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.presentation.course_continue.CourseContinueView
@@ -19,6 +20,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
     courseListTitleContainer: View,
+    private val courseListSwipeRefresh: StepikSwipeRefreshLayout? = null,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     private val courseListPresenter: CourseContinuePresenterDelegate
@@ -39,6 +41,11 @@ class CourseListViewDelegate(
     }
 
     override fun setState(state: CourseListView.State) {
+        courseListSwipeRefresh?.isRefreshing = false
+        courseListSwipeRefresh?.isEnabled = (state is CourseListView.State.Content ||
+                state is CourseListView.State.Empty ||
+                state is CourseListView.State.NetworkError)
+
         courseListViewStateDelegate.switchState(state)
         when (state) {
             is CourseListView.State.Loading -> {
@@ -47,23 +54,25 @@ class CourseListViewDelegate(
                     CourseListItem.PlaceHolder
                 )
             }
+
             is CourseListView.State.Content -> {
                 courseItemAdapter.items = state.courseListItems
-                /**
-                 * notify is necessary, because margins don't get recalculated after adding loading placeholder
-                 */
-                val size = state.courseListItems.size
-                if (size > 2 && (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL) {
-                    courseItemAdapter.notifyItemChanged(size - 2)
-                    courseItemAdapter.notifyItemChanged(size - 3)
-                }
-
                 courseListCounter.text =
                     courseItemsRecyclerView.context.resources.getQuantityString(
                         R.plurals.course_count,
                         state.courseListDataItems.size,
                         state.courseListDataItems.size
                     )
+                /**
+                 * notify is necessary, because margins don't get recalculated after adding loading placeholder
+                 */
+                val size = state.courseListItems.size
+                if (size > 2 &&
+                    (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL &&
+                    state.courseListItems.last() is CourseListItem.PlaceHolder) {
+                    courseItemAdapter.notifyItemChanged(size - 2)
+                    courseItemAdapter.notifyItemChanged(size - 3)
+                }
             }
         }
     }

@@ -80,6 +80,7 @@ class CourseListCollectionFragment : Fragment() {
         )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(*courseCollection.courses, forceUpdate = true) }
         tryAgain.setOnClickListener { courseListPresenter.fetchCourses(*courseCollection.courses, forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -96,6 +97,7 @@ class CourseListCollectionFragment : Fragment() {
                 screenManager = screenManager
             ),
             courseListTitleContainer = courseListTitleContainer,
+            courseListSwipeRefresh = courseListSwipeRefresh,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             courseListPresenter = courseListPresenter

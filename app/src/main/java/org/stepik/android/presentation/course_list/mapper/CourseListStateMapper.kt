@@ -10,14 +10,17 @@ class CourseListStateMapper
 @Inject
 constructor() {
     fun mapToLoadMoreState(courseListState: CourseListView.State.Content): CourseListView.State =
-        courseListState.copy(courseListItems = courseListState.courseListItems + CourseListItem.PlaceHolder)
+        CourseListView.State.Content(
+            courseListDataItems = courseListState.courseListDataItems,
+            courseListItems = courseListState.courseListItems + CourseListItem.PlaceHolder
+        )
 
     fun mapFromLoadMoreToSuccess(state: CourseListView.State, items: PagedList<CourseListItem.Data>): CourseListView.State {
         if (state !is CourseListView.State.Content) {
             return state
         }
 
-        return state.copy(
+        return CourseListView.State.Content(
             courseListDataItems = state.courseListDataItems + items,
             courseListItems = state.courseListItems.dropLastWhile(CourseListItem.PlaceHolder::equals) + items
         )
@@ -27,6 +30,9 @@ constructor() {
         if (state !is CourseListView.State.Content) {
             return state
         }
-        return state.copy(courseListItems = state.courseListItems.dropLastWhile(CourseListItem.PlaceHolder::equals))
+        return CourseListView.State.Content(
+            courseListDataItems = state.courseListDataItems,
+            courseListItems = state.courseListItems.dropLastWhile(CourseListItem.PlaceHolder::equals)
+        )
     }
 }

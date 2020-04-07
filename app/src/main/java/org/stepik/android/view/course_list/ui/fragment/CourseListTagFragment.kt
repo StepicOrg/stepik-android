@@ -93,12 +93,22 @@ class CourseListTagFragment : Fragment() {
                 screenManager = screenManager
             ),
             courseListTitleContainer = courseListTitleContainer,
+            courseListSwipeRefresh = courseListSwipeRefresh,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             courseListPresenter = courseListPresenter
         )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListSwipeRefresh.setOnRefreshListener {
+            courseListPresenter.fetchCourses(
+                SearchResultQuery(
+                    page = 1,
+                    tagId = tag.id
+                ),
+                forceUpdate = true
+            )
+        }
         tryAgain.setOnClickListener {
             courseListPresenter.fetchCourses(
                 SearchResultQuery(

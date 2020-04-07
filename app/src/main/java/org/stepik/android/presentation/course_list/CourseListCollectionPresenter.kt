@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.course_list
 
 import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -34,6 +35,12 @@ constructor(
             view?.setState(value)
         }
 
+    private val paginationDisposable = CompositeDisposable()
+
+    init {
+        compositeDisposable += paginationDisposable
+    }
+
     override fun attachView(view: CourseListView) {
         super.attachView(view)
         view.setState(state)
@@ -42,9 +49,13 @@ constructor(
     fun fetchCourses(vararg courseId: Long, forceUpdate: Boolean = false) {
         if (state != CourseListView.State.Idle && !forceUpdate) return
 
+        paginationDisposable.clear()
+
+        val oldState = state
+
         state = CourseListView.State.Loading
 
-        compositeDisposable += courseListInteractor
+        paginationDisposable += courseListInteractor
             .getCourseListItems(*courseId)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -60,7 +71,14 @@ constructor(
                     }
                 },
                 onError = {
-                    state = CourseListView.State.NetworkError
+                    when (oldState) {
+                        is CourseListView.State.Content -> {
+                            state = oldState
+                            view?.showNetworkError()
+                        }
+                        else ->
+                            state = CourseListView.State.NetworkError
+                    }
                 }
             )
     }

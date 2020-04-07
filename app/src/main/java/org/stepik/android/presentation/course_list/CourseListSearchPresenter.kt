@@ -44,6 +44,10 @@ constructor(
 
     private val paginationDisposable = CompositeDisposable()
 
+    init {
+        compositeDisposable += paginationDisposable
+    }
+
     override fun attachView(view: CourseListView) {
         super.attachView(view)
         view.setState(state)
@@ -52,10 +56,14 @@ constructor(
     fun fetchCourses(searchResultQuery: SearchResultQuery, forceUpdate: Boolean = false) {
         if (state != CourseListView.State.Idle && !forceUpdate) return
 
+        paginationDisposable.clear()
+
+        val oldState = state
+
         state = CourseListView.State.Loading
         this.searchResultQuery = searchResultQuery
 
-        compositeDisposable += courseListSearchInteractor
+        paginationDisposable += courseListSearchInteractor
             .getCoursesBySearch(searchResultQuery)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -71,7 +79,14 @@ constructor(
                     }
                 },
                 onError = {
-                    state = CourseListView.State.NetworkError
+                    when (oldState) {
+                        is CourseListView.State.Content -> {
+                            state = oldState
+                            view?.showNetworkError()
+                        }
+                        else ->
+                            state = CourseListView.State.NetworkError
+                    }
                 }
             )
     }

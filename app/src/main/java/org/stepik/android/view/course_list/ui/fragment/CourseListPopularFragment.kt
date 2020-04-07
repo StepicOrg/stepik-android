@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_course_list.*
+import kotlinx.android.synthetic.main.fragment_course_list_horizontal.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -61,7 +61,7 @@ class CourseListPopularFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.fragment_course_list, container, false)
+        inflater.inflate(R.layout.fragment_course_list_horizontal, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

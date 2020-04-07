@@ -96,6 +96,15 @@ class CourseListSearchFragment : Fragment() {
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+        courseListSwipeRefresh.setOnRefreshListener {
+            courseListPresenter.fetchCourses(
+                SearchResultQuery(
+                    page = 1,
+                    query = query
+                ),
+                forceUpdate = true
+            )
+        }
         tryAgain.setOnClickListener {
             courseListPresenter.fetchCourses(
                 SearchResultQuery(
@@ -120,6 +129,7 @@ class CourseListSearchFragment : Fragment() {
                 screenManager = screenManager
             ),
             courseListTitleContainer = courseListTitleContainer,
+            courseListSwipeRefresh = courseListSwipeRefresh,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             courseListPresenter = courseListPresenter
