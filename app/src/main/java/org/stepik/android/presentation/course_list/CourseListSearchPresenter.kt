@@ -84,13 +84,6 @@ constructor(
                             state = oldState
                             view?.showNetworkError()
                         }
-
-                        is CourseListView.State.ContentLoading ->
-                            state = CourseListView.State.Content(
-                                courseListDataItems = oldState.courseListDataItems,
-                                courseListItems = oldState.courseListItems
-                            )
-
                         else ->
                             state = CourseListView.State.NetworkError
                     }

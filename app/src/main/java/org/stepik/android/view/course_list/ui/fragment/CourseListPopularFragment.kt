@@ -120,7 +120,6 @@ class CourseListPopularFragment : Fragment() {
         viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
         viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.ContentLoading>(courseListTitleContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
