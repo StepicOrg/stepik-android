@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.util.setCompoundDrawables
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 

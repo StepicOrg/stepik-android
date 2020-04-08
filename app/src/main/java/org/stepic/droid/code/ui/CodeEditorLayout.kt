@@ -3,6 +3,7 @@ package org.stepic.droid.code.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import androidx.core.content.res.use
 import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
 import org.stepic.droid.R
@@ -45,7 +46,18 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     init {
         LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)
         codeEditor = findViewById(R.id.codeEdit)
-        theme = Presets.themes[0]
+
+        val isNightMode =
+            context.obtainStyledAttributes(intArrayOf(R.attr.isNightMode)).use {
+                it.getBoolean(0, false)
+            }
+
+        theme =
+            if (isNightMode) {
+                Presets.themes[2]
+            } else {
+                Presets.themes[0]
+            }
     }
 
     override fun onAttachedToWindow() {
