@@ -21,7 +21,6 @@
 
     <FrameLayout
         android:id="@+id/stepQuizCodeDetails"
-        android:background="@drawable/bg_step_quiz_code_details"
         android:layout_width="match_parent"
         android:layout_height="48dp">
         <androidx.appcompat.widget.AppCompatImageView
