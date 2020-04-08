@@ -30,6 +30,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_gravity="center_vertical"
+            app:tint="?colorControlNormal"
             app:srcCompat="@drawable/ic_step_quiz_code_details" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -38,8 +39,7 @@
             android:gravity="center_vertical|start"
 
             android:text="@string/step_quiz_code_details"
-            android:textColor="@color/new_accent_color"
-            android:textSize="16sp"
+            android:textAppearance="?textAppearanceBody1"
 
             android:layout_marginStart="48dp"
             android:layout_marginLeft="48dp"
@@ -54,6 +54,12 @@
             app:tint="?colorControlNormal"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:duplicateParentState="true"
+            android:background="?selectableItemBackground" />
     </FrameLayout>
 
     <include layout="@layout/view_divider_vertical" />
@@ -62,7 +68,6 @@
         android:id="@+id/stepQuizCodeDetailsContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/new_primary_color"
         tools:listitem="@layout/item_step_quiz_code_detail_sample"
         android:visibility="gone" />
 
@@ -72,8 +77,7 @@
         android:layout_height="48dp"
 
         android:text="@string/step_quiz_code_lang_chooser"
-        android:textSize="16sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody1"
         android:gravity="center_vertical|start"
 
         android:drawablePadding="18dp"
@@ -82,7 +86,8 @@
         android:paddingRight="16dp"
         android:paddingEnd="16dp"
 
-        tools:drawableStart="@drawable/ic_step_quiz_code_lang" />
+        app:drawableTint="?colorControlNormal"
+        app:drawableStartCompat="@drawable/ic_step_quiz_code_lang" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stepQuizCodeLangChooser"
