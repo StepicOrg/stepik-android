@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isGone
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
@@ -16,6 +17,7 @@ import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.PopupHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
@@ -104,13 +106,7 @@ class CodeStepRunCodeDelegate(
 
         val popupWindow = ListPopupWindow(context)
 
-        popupWindow.setAdapter(
-            ArrayAdapter<String>(
-                context,
-                R.layout.run_code_spinner_item,
-                inputSamples
-            )
-        )
+        popupWindow.setAdapter(ArrayAdapter(context, R.layout.run_code_spinner_item, inputSamples))
 
         popupWindow.setOnItemClickListener { _, _, position, _ ->
             val sampleInput = samples[position].first()
@@ -123,11 +119,6 @@ class CodeStepRunCodeDelegate(
         popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
 
         runCodeInputSamplePicker.setOnClickListener { popupWindow.show() }
-        runCodeInputSamplePicker.supportCompoundDrawablesTintList =
-            ContextCompat.getColorStateList(context, R.color.color_step_quiz_code_samples)
-
-        runCodeAction.supportCompoundDrawablesTintList =
-            ContextCompat.getColorStateList(context, R.color.color_step_submit_button_text)
 
         runCodeAction.setOnClickListener {
             codeRunPresenter.createUserCodeRun(
@@ -143,6 +134,8 @@ class CodeStepRunCodeDelegate(
         evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
         evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
         evaluationDrawable.isOneShot = false
+
+        DrawableCompat.setTint(evaluationDrawable, context.resolveColorAttribute(R.attr.colorSecondary))
 
         runCodeFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
         evaluationDrawable.start()

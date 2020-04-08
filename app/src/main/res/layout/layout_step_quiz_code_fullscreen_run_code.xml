@@ -32,33 +32,32 @@
                     android:layout_marginTop="16dp"
 
                     android:text="@string/step_quiz_code_input_data"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/color_body1"
+                    android:textAppearance="?textAppearanceSubtitle1"
 
-                    app:fontFamily="@font/roboto_medium"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintLeft_toLeftOf="parent" />
 
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/inputDataSamplePicker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:minHeight="0dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:padding="8dp"
 
-                    android:background="@drawable/selectable_item_rounded_background"
+                    style="@style/Widget.AppTheme.Button.TextButton"
+                    android:theme="@style/ThemeOverlay.Violet"
+
                     android:text="@string/step_quiz_code_samples"
-                    android:textColor="@color/color_step_quiz_code_samples"
                     android:drawablePadding="12dp"
-                    android:textSize="16sp"
                     android:layout_gravity="end"
-                    app:fontFamily="@font/roboto_regular"
-                    app:drawableRightCompat="@drawable/ic_arrow_bottom"
-                    app:drawableEndCompat="@drawable/ic_arrow_bottom"
+
+                    app:icon="@drawable/ic_arrow_bottom"
+                    app:iconGravity="end"
+
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintRight_toRightOf="parent"/>
             </FrameLayout>
@@ -73,8 +72,7 @@
                 android:paddingBottom="16dp"
                 android:hint="@string/step_quiz_code_input_data_hint"
 
-                android:textSize="14sp"
-                android:textColor="@color/new_accent_color"
+                android:textAppearance="?textAppearanceBody2"
                 app:fontFamily="@font/pt_mono"
 
                 android:inputType="textMultiLine"
@@ -103,7 +101,6 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"/>
 
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/outputDataTitle"
                 android:layout_width="match_parent"
@@ -116,9 +113,7 @@
                 android:background="@color/run_code_output_background"
 
                 android:text="@string/step_quiz_code_output_data"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@color/color_body1"
+                android:textAppearance="?textAppearanceSubtitle1"
 
                 android:visibility="visible"
 
@@ -136,8 +131,7 @@
 
                 android:background="@color/run_code_output_background"
 
-                android:textSize="14sp"
-                android:textColor="@color/new_accent_color"
+                android:textAppearance="?textAppearanceBody2"
                 app:fontFamily="@font/pt_mono"
 
                 android:visibility="visible"
@@ -157,14 +151,17 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/runCodeFeedback"
         style="@style/StepQuizFeedback"
-        android:background="@drawable/bg_step_quiz_feedback_evaluation"
+
+        android:theme="@style/ThemeOverlay.Violet"
+
+        android:background="@drawable/bg_shape_round"
+        app:backgroundTint="@color/color_secondary_alpha_12"
+        app:drawableTint="?android:textColorPrimary"
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:gravity="center_vertical"
-        android:fontFamily="@font/roboto_regular"
-        android:textSize="16sp"
         android:drawablePadding="16dp"
 
         android:layout_marginLeft="16dp"
@@ -174,33 +171,30 @@
         android:layout_marginBottom="16dp"
 
         android:text="@string/step_quiz_feedback_evaluation"
-        android:textColor="@color/violet1"
 
         android:visibility="gone"
+        tools:visibility="visible"
 
         android:layout_above="@id/runCodeAction"/>
 
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/runCodeAction"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
 
-        android:background="@drawable/bg_step_run_code_button"
+        android:theme="@style/ThemeOverlay.Violet"
+
         android:text="@string/step_quiz_code_run_code_action"
-        android:textColor="@color/color_step_submit_button_text"
-        android:textSize="16sp"
-        android:gravity="center"
 
-        app:drawableLeftCompat="@drawable/ic_step_run_code"
-        app:drawableStartCompat="@drawable/ic_step_run_code"
+        app:icon="@drawable/ic_step_run_code"
+        app:iconPadding="-18dp"
 
         android:paddingLeft="18dp"
         android:paddingRight="18dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:drawablePadding="-18dp"
 
         android:layout_alignParentBottom="true"/>
 
