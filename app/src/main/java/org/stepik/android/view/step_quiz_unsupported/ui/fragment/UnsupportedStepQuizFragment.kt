@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
 import org.stepic.droid.R
@@ -49,6 +50,5 @@ class UnsupportedStepQuizFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         stepQuizAction.setOnClickListener { screenManager.openStepInWeb(context, stepWrapper.step) }
-        stepQuizFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
     }
 }
