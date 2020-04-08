@@ -53,7 +53,6 @@ constructor(
             .subscribeBy(
                 onSuccess = { state = CredentialAuthView.State.Success(it) },
                 onError = { throwable ->
-                    analytic.reportError(Analytic.Error.CREDENTIAL_AUTH_FAILED, throwable)
                     val loginFailType =
                         if (throwable is HttpException) {
                             if (throwable.code() == 429) {
@@ -64,6 +63,13 @@ constructor(
                         } else {
                             LoginFailType.CONNECTION_PROBLEM
                         }
+
+                    if (throwable is HttpException) {
+                        analytic.reportEvent(Analytic.Error.CREDENTIAL_AUTH_FAILED, throwable.response()?.errorBody()?.string() ?: "empty response")
+                    } else {
+                        analytic.reportError(Analytic.Error.CREDENTIAL_AUTH_FAILED, throwable)
+                    }
+
                     state = CredentialAuthView.State.Error(loginFailType)
                 }
             )

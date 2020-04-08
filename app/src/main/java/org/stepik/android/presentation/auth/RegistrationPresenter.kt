@@ -54,12 +54,17 @@ constructor(
             .subscribeBy(
                 onSuccess = { state = RegistrationView.State.Success(it) },
                 onError = { throwable ->
-                    analytic.reportError(Analytic.Error.REGISTRATION_FAILED, throwable)
                     val error = (throwable as? HttpException)
                         ?.response()
                         ?.errorBody()
                         ?.string()
                         ?.toObject<RegistrationError>()
+
+                    if (throwable is HttpException) {
+                        analytic.reportEvent(Analytic.Error.REGISTRATION_FAILED, throwable.response()?.errorBody()?.string() ?: "empty response")
+                    } else {
+                        analytic.reportError(Analytic.Error.REGISTRATION_FAILED, throwable)
+                    }
 
                     state =
                         if (error != null) {
