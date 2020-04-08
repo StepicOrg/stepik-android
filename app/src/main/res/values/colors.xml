@@ -61,7 +61,6 @@
 
     <!--Tab text color, based on accent color-->
     <color name="tab_text_color">@color/new_accent_color</color>
-    <color name="tab_text_color_70percent">@color/new_accent_color_alpha_70</color>
 
     <color name="new_cover">@color/white</color>
 
