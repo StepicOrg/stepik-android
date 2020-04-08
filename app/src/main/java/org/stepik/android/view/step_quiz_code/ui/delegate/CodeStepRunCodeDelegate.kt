@@ -7,7 +7,6 @@ import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import androidx.appcompat.widget.ListPopupWindow
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isGone
 import com.google.android.material.tabs.TabLayout
@@ -21,10 +20,8 @@ import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
-import org.stepik.android.view.step_quiz_code.model.CodeOutputColors
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
-import ru.nobird.android.view.base.ui.extension.setTextColorRes
 import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CodeStepRunCodeDelegate(
@@ -161,7 +158,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun showNetworkError() {
-        runCodeScrollView.snackbar(messageRes = R.string.connectionProblems) { setTextColorRes(R.color.white) }
+        runCodeScrollView.snackbar(messageRes = R.string.connectionProblems)
     }
 
     override fun showRunCodePopup() {
@@ -179,7 +176,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun showEmptyCodeError() {
-        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code) { setTextColorRes(R.color.white) }
+        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code)
     }
 
     fun onDetach() {
@@ -187,13 +184,15 @@ class CodeStepRunCodeDelegate(
     }
 
     private fun resolveOutputText(userCodeRun: UserCodeRun) {
+        val isError = userCodeRun.status == UserCodeRun.Status.FAILURE
+        runCodeOutputDataTitle.isActivated = isError
+        runCodeOutputDataSample.isActivated = isError
+
         when (userCodeRun.status) {
             UserCodeRun.Status.SUCCESS -> {
-                setOutputTextColor(CodeOutputColors.STANDARD)
                 setOutputText(userCodeRun.stdout)
             }
             UserCodeRun.Status.FAILURE -> {
-                setOutputTextColor(CodeOutputColors.ERROR)
                 if (lang == ProgrammingLanguage.SQL.serverPrintableName) {
                     setOutputText(userCodeRun.stdout)
                 } else {
@@ -203,13 +202,6 @@ class CodeStepRunCodeDelegate(
             else ->
                 return
         }
-    }
-
-    private fun setOutputTextColor(codeOutputColors: CodeOutputColors) {
-        runCodeOutputDataTitle.setTextColor(ContextCompat.getColor(context, codeOutputColors.titleColor))
-        runCodeOutputDataSample.setTextColor(ContextCompat.getColor(context, codeOutputColors.bodyColor))
-        runCodeOutputDataTitle.setBackgroundColor(ContextCompat.getColor(context, codeOutputColors.backgroundColor))
-        runCodeOutputDataSample.setBackgroundColor(ContextCompat.getColor(context, codeOutputColors.backgroundColor))
     }
 
     private fun setOutputText(text: String?) {

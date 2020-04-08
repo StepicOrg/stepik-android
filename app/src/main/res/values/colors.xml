@@ -193,13 +193,6 @@
     <!-- Design system finished -->
 
     <!--adaptive-->
-
-    <color name="adaptive_color_correct">@color/green01_alpha_85</color>
-
-    <color name="adaptive_color_title">@color/black2</color>
-    <color name="adaptive_color_yellow">@color/yellow1</color>
-    <color name="adaptive_rank_separator">@color/new_accent_color</color>
-
     <color name="adaptive_course_marker">@color/violet2</color>
 
     <color name="popup_background_color_light">@color/blue03</color>
