@@ -5,6 +5,8 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
@@ -63,6 +65,9 @@ class StepQuizFeedbackBlocksDelegate(
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
 
         stepQuizFeedbackValidation.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
+
+        ViewCompat.setBackgroundTintList(
+            stepQuizFeedbackHint, ContextCompat.getColorStateList(context, R.color.color_elevation_overlay_1dp))
     }
 
     fun setState(state: StepQuizFeedbackState) {

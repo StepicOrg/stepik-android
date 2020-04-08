@@ -9,17 +9,9 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/stepQuizFeedback"
-        style="@style/StepQuizFeedback"
-
-        android:background="@drawable/bg_shape_round"
-        app:backgroundTint="@color/color_secondary_alpha_12"
-
+        style="@style/StepQuizFeedback.Info"
         android:text="@string/step_quiz_unsupported_message"
-        android:theme="@style/ThemeOverlay.Violet"
-
         android:layout_margin="16dp"
-
-        app:drawableTint="?android:textColorPrimary"
         app:drawableStartCompat="@drawable/ic_step_quiz_validation" />
 
     <Button

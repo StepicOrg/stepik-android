@@ -28,21 +28,15 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackEvaluation"
-        style="@style/StepQuizFeedback"
+        style="@style/StepQuizFeedback.Info"
 
-        android:background="@drawable/bg_step_quiz_feedback_evaluation"
-        android:text="@string/step_quiz_feedback_evaluation"
-        android:textColor="@color/color_violet_1" />
+        android:text="@string/step_quiz_feedback_evaluation" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackValidation"
-        style="@style/StepQuizFeedback"
-
-        android:background="@drawable/bg_step_quiz_feedback_evaluation"
+        style="@style/StepQuizFeedback.Info"
         android:text="@string/step_quiz_feedback_evaluation"
-        android:textColor="@color/color_violet_1"
-
-        tools:drawableStart="@drawable/ic_step_quiz_validation" />
+        app:drawableStartCompat="@drawable/ic_step_quiz_validation" />
 
     <org.stepik.android.view.latex.ui.widget.LatexView
         android:id="@+id/stepQuizFeedbackHint"

@@ -9,18 +9,11 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedback"
-        style="@style/StepQuizFeedback"
-
-        android:background="@drawable/bg_shape_round"
-        app:backgroundTint="@color/color_secondary_alpha_12"
-
+        style="@style/StepQuizFeedback.Info"
         android:text="@string/step_quiz_pycharm_message"
         android:textColorLink="?android:textColorPrimary"
-        android:theme="@style/ThemeOverlay.Violet"
-
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        app:drawableTint="?android:textColorPrimary"
         app:drawableStartCompat="@drawable/ic_step_quiz_validation" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

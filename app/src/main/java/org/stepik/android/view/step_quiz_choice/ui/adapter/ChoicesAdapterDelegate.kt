@@ -1,6 +1,5 @@
 package org.stepik.android.view.step_quiz_choice.ui.adapter
 
-import android.content.res.ColorStateList
 import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import org.stepic.droid.R
-import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.latex.ui.widget.ProgressableWebViewClient
 import org.stepik.android.view.step_quiz_choice.model.Choice
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
@@ -59,7 +57,7 @@ class ChoicesAdapterDelegate(
             itemChoiceLatex.webViewClient = ProgressableWebViewClient(itemChoiceLatexProgress, itemChoiceLatex.webView)
 
             ViewCompat.setBackgroundTintList(
-                itemChoiceFeedback, ColorStateList.valueOf(ColorExtensions.colorSurfaceWithElevationOverlay(context, 1, overrideLightTheme = true)))
+                itemChoiceFeedback, ContextCompat.getColorStateList(context, R.color.color_elevation_overlay_1dp))
         }
 
         override fun onBind(data: Choice) {

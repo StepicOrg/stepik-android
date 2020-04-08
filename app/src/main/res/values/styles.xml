@@ -269,6 +269,13 @@
         <item name="android:drawablePadding">16dp</item>
     </style>
 
+    <style name="StepQuizFeedback.Info">
+        <item name="android:theme">@style/ThemeOverlay.Violet</item>
+        <item name="android:background">@drawable/bg_shape_round</item>
+        <item name="backgroundTint">@color/color_secondary_alpha_12</item>
+        <item name="drawableTint">?android:textColorPrimary</item>
+    </style>
+
     <style name="StepQuizDescription">
         <item name="android:textAppearance">?textAppearanceCaption</item>
         <item name="android:textColor">?android:textColorSecondary</item>

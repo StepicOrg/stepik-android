@@ -40,25 +40,13 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/solutionsSubmitFeedback"
-            style="@style/StepQuizFeedback"
-            android:background="@drawable/bg_step_quiz_feedback_evaluation"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/roboto_regular"
-            android:textSize="16sp"
-            android:drawablePadding="16dp"
+            style="@style/StepQuizFeedback.Info"
 
             android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
 
             android:text="@string/solutions_submit_in_progress"
-            android:textColor="@color/violet1"
 
             android:layout_above="@id/solutionsSubmitButton"
 
