@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/coordinator"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/fullScreenCodeViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <include
+            layout="@layout/layout_step_quiz_code_keyboard_extension"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
+
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/fullScreenCodeAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="?appBarElevation">
@@ -23,26 +40,4 @@
             app:tabPaddingEnd="24dp"
             app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
     </com.google.android.material.appbar.AppBarLayout>
-
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:id="@+id/stepQuizProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/fullScreenCodeViewPager"
-        android:layout_below="@id/fullScreenCodeAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <include
-        layout="@layout/layout_step_quiz_code_keyboard_extension"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_alignParentBottom="true" />
-
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
