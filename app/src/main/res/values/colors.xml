@@ -234,11 +234,6 @@
     <color name="step_quiz_choice_correct_border">@color/green01_alpha_50</color>
     <color name="step_quiz_choice_wrong_border">@color/red02_color_alpha_50</color>
 
-    <!-- Sorting quiz -->
-    <color name="step_quiz_sorting_background">@color/white</color>
-    <color name="step_quiz_sorting_stroke">@color/grey03</color>
-    <color name="step_quiz_sorting_stroke_disabled">@color/grey03_alpha_50</color>
-
     <!-- Course item -->
     <color name="course_item_separator_light">@color/grey04</color>
     <color name="course_item_separator_dark">@color/grey02_alpha_19</color>
