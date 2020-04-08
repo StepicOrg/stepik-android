@@ -88,15 +88,20 @@
         app:drawableTint="?colorControlNormal"
         app:drawableStartCompat="@drawable/ic_step_quiz_code_lang" />
 
+    <include layout="@layout/view_divider_vertical"
+        android:id="@+id/stepQuizCodeLangChooserDividerTop" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stepQuizCodeLangChooser"
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:background="@drawable/bg_step_quiz_code_lang_chooser"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:clipToPadding="false"
         tools:listitem="@layout/item_step_quiz_code_lang" />
+
+    <include layout="@layout/view_divider_vertical"
+        android:id="@+id/stepQuizCodeLangChooserDividerBottom" />
 
     <FrameLayout
         android:id="@+id/stepQuizActions"
