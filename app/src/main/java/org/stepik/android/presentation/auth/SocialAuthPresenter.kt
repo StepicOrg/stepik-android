@@ -58,7 +58,6 @@ constructor(
             .subscribeBy(
                 onComplete = { state = SocialAuthView.State.Success },
                 onError = { throwable ->
-                    analytic.reportError(Analytic.Error.SOCIAL_AUTH_FAILED, throwable)
                     val failType =
                         when ((throwable as? HttpException)?.code()) {
                             429 -> LoginFailType.TOO_MANY_ATTEMPTS
@@ -82,6 +81,12 @@ constructor(
                             else ->
                                 LoginFailType.CONNECTION_PROBLEM
                         }
+
+                    if (throwable is HttpException) {
+                        analytic.reportEvent(Analytic.Error.SOCIAL_AUTH_FAILED, throwable.response()?.errorBody()?.string() ?: "empty response")
+                    } else {
+                        analytic.reportError(Analytic.Error.SOCIAL_AUTH_FAILED, throwable)
+                    }
 
                     view?.showAuthError(failType)
 
