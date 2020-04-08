@@ -101,9 +101,7 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
             onTagClicked = { tag -> screenManager.showCoursesByTag(requireContext(), tag) }
         )
 
-        catalogItemAdapter += FiltersAdapterDelegate(
-            onFiltersChanged = {}
-        )
+        catalogItemAdapter += FiltersAdapterDelegate()
 
         catalogItemAdapter += CourseListAdapterDelegate(
             screenManager = screenManager,

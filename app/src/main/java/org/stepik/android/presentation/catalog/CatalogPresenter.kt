@@ -1,20 +1,27 @@
 package org.stepik.android.presentation.catalog
 
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.features.stories.presentation.StoriesPresenter
+import org.stepic.droid.model.StepikFilter
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
+import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.PresenterBase
+import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Provider
 
 class CatalogPresenter
 @Inject
 constructor(
+    @FiltersBus
+    private val filtersObservable: Observable<EnumSet<StepikFilter>>,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -31,6 +38,11 @@ constructor(
             field = value
             view?.setState(value)
         }
+
+    init {
+        subscribeForFilterUpdates()
+    }
+
     fun fetchCollections() {
         compositeDisposable += catalogInteractor
             .fetchCourseCollections()
@@ -49,6 +61,19 @@ constructor(
                     state = CatalogView.State.Content(base + a)
                 },
                 onError = {}
+            )
+    }
+
+    private fun subscribeForFilterUpdates() {
+        compositeDisposable += filtersObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = {
+                    catalogInteractor.updateFiltersForFeatured(it)
+                    // TODO Fetch colletions with new filter
+                },
+                onError = emptyOnErrorStub
             )
     }
 }

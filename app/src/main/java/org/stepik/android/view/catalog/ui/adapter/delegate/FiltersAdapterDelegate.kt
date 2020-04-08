@@ -15,19 +15,14 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 import java.util.EnumSet
 
-class FiltersAdapterDelegate(
-    private val onFiltersChanged: (EnumSet<StepikFilter>) -> Unit
-) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
+class FiltersAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
         data is FiltersPresenter
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
-        FiltersViewHolder(createView(parent, R.layout.view_course_languages), onFiltersChanged =  onFiltersChanged) as DelegateViewHolder<CatalogItem>
+        FiltersViewHolder(createView(parent, R.layout.view_course_languages)) as DelegateViewHolder<CatalogItem>
 
-    private class FiltersViewHolder(
-        root: View,
-        onFiltersChanged: (EnumSet<StepikFilter>) -> Unit
-    ) : PresenterViewHolder<FiltersView, FiltersPresenter>(root), FiltersView {
+    private class FiltersViewHolder(root: View) : PresenterViewHolder<FiltersView, FiltersPresenter>(root), FiltersView {
 
         private val languageRu = itemView.languageRu
         private val languageEn = itemView.languageEn
@@ -44,7 +39,7 @@ class FiltersAdapterDelegate(
                 languageRu.toggle()
                 languageEn.toggle()
                 val filters = composeFilters()
-                onFiltersChanged(filters)
+                itemData?.onFilterChanged(filters)
             }
 
             languageRu.setOnClickListener(onClickListener)
