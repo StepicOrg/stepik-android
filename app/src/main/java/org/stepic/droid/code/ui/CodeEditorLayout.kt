@@ -2,7 +2,6 @@ package org.stepic.droid.code.ui
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.LayoutInflater
 import androidx.core.content.res.use
 import androidx.core.view.ViewCompat
 import androidx.core.widget.NestedScrollView
@@ -10,6 +9,7 @@ import org.stepic.droid.R
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
+import org.stepic.droid.ui.util.inflate
 import org.stepic.droid.util.insertText
 
 class CodeEditorLayout
@@ -44,7 +44,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.view_code_editor, this, true)
+        inflate(R.layout.view_code_editor, true)
         codeEditor = findViewById(R.id.codeEdit)
 
         val isNightMode =

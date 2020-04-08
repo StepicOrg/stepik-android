@@ -92,7 +92,6 @@
     <color name="text_color_gradient_fire">#18073D</color>
     <!-- Gradient colors end-->
 
-    <color name="code_toolbar_background">@color/grey04</color>
     <color name="code_toolbar_autocomplete_prefix_background">@color/grey03</color>
     <color name="default_code_error_highlight_color">@color/red02</color>
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
