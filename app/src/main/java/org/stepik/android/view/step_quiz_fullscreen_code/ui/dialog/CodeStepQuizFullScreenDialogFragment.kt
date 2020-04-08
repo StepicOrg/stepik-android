@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.RelativeLayout
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
@@ -93,7 +93,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      * Run code views
      */
     private var runCodeActionSeparator: View? = null
-    private var runCodeAction: AppCompatTextView? = null
+    private var runCodeAction: MaterialButton? = null
 
     private var lang: String by argument()
     private var code: String by argument()
