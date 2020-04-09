@@ -155,7 +155,7 @@
             style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding" />
     </FrameLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/autoplayCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -171,7 +171,6 @@
         android:id="@+id/autoplaySwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:foreground="?selectableItemBackgroundRounded"
         android:layout_margin="8dp"
         android:padding="8dp"
         android:layout_centerHorizontal="true"
