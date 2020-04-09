@@ -58,14 +58,14 @@ constructor(
             .subscribeBy(
                 onSuccess = { courseCollections ->
                     val base = listOf<CatalogItem>(storiesPresenter, tagsPresenter, filtersPresenter)
-//                    val collections = courseCollections.map {
+                    val collections = courseCollections.map {
 //                        Timber.d("Collection: $it")
-//                        courseListCollectionPresenterProvider.get().apply { fetchCourses(*it.courses) }
-//                    }
+                        courseListCollectionPresenterProvider.get().apply { setDataToPresenter(it) }
+                    }
 
                     // TODO Single presenter
-                    val a = courseListCollectionPresenterProvider.get().apply { setDataToPresenter(courseCollections.first()) }
-                    state = CatalogView.State.Content(base + a)
+//                    val a = courseListCollectionPresenterProvider.get().apply { setDataToPresenter(courseCollections.first()) }
+                    state = CatalogView.State.Content(base + collections)
                 },
                 onError = {}
             )

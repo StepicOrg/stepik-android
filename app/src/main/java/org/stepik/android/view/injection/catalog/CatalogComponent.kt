@@ -13,7 +13,7 @@ import org.stepik.android.view.injection.tags.TagsDataModule
 @Subcomponent(modules = [
     CatalogModule::class,
     CourseCollectionDataModule::class,
-    CourseListModule::class,
+    CourseListCollectionModule::class,
     CoursePaymentsDataModule::class,
     LastStepDataModule::class,
     TagsDataModule::class
