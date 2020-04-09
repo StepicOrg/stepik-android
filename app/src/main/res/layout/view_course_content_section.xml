@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:foreground="?selectableItemBackground"
-    android:background="@color/color_elevation_overlay_1dp">
+    android:foreground="?selectableItemBackground">
 
     <TextView
         android:id="@+id/sectionPosition"

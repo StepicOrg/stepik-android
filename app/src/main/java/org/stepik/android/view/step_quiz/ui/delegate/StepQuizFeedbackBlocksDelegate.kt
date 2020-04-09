@@ -57,6 +57,7 @@ class StepQuizFeedbackBlocksDelegate(
         } else {
             stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
         }
+        // todo fix ripple
         stepQuizFeedbackCorrect.setTextViewBackgroundWithoutResettingPadding(R.drawable.bg_shape_rounded)
 
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)

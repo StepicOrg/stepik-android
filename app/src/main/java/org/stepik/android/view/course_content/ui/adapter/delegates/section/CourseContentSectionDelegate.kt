@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.StartSnapHelper
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
@@ -76,6 +77,8 @@ class CourseContentSectionDelegate(
                 val item = (itemData as? CourseContentItem.SectionItem) ?: return@setOnClickListener
                 sectionClickListener.onItemClicked(item)
             }
+
+            root.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(context, 1, overrideLightTheme = true))
         }
 
         override fun onBind(data: CourseContentItem) {
