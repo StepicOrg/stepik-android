@@ -19,11 +19,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
+            android:textAppearance="?textAppearanceCaption"
             android:textSize="12sp"
-            app:fontFamily="@font/roboto_light"
             android:textColor="?android:textColorSecondary"
-            tools:text="23.11.2015 14:33"
-            tools:ignore="MissingPrefix" />
+            tools:text="23.11.2015 14:33" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -58,11 +57,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/guideline_standard_padding"
                 android:layout_marginLeft="@dimen/guideline_standard_padding"
-                app:fontFamily="@font/roboto_light"
+                android:textAppearance="?textAppearanceBody2"
                 android:clickable="false"
                 android:focusable="false"
-                tools:text="В курсе Археология фольклора: мифологические мотивы на карте мира менее чем через 36 часов наступит совсем крайний срок сдачи заданий по модулю Ныряльщик и антропогонические мифы"
-                tools:ignore="MissingPrefix" />
+                tools:text="В курсе Археология фольклора: мифологические мотивы на карте мира менее чем через 36 часов наступит совсем крайний срок сдачи заданий по модулю Ныряльщик и антропогонические мифы" />
         </RelativeLayout>
 
 
@@ -76,15 +74,17 @@
 
             <FrameLayout
                 android:id="@+id/check_view_unread"
+                android:background="?selectableItemBackgroundBorderless"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:clickable="true"
                 android:focusable="true">
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:contentDescription="@string/accessibility_switch_viewed_state"
+                    app:tint="?colorControlNormal"
                     app:srcCompat="@drawable/ic_notification_state_unread" />
 
                 <View
@@ -97,13 +97,14 @@
                     android:layout_marginRight="1dp" />
             </FrameLayout>
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/check_view_read"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:contentDescription="@string/accessibility_switch_viewed_state"
                 app:srcCompat="@drawable/ic_notification_state_read"
+                app:tint="?colorControlNormal"
                 android:visibility="gone"/>
         </FrameLayout>
     </RelativeLayout>

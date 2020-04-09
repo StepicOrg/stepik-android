@@ -32,6 +32,7 @@ import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
 import org.stepic.droid.util.glide.GlideSvgRequestFactory;
 import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
+import org.stepik.android.view.base.ui.extension.ColorExtensions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -220,6 +221,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public DateHeaderViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setBackgroundColor(ColorExtensions.INSTANCE.colorSurfaceWithElevationOverlay(itemView.getContext(), 1, false));
         }
     }
 
@@ -299,7 +301,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         private void resolveNotificationText(Notification notification) {
             if (notification.getNotificationText() == null) {
-                notification.setNotificationText(notificationTextResolver.resolveNotificationText(context, notification.getHtmlText()));
+                notification.setNotificationText(notificationTextResolver.resolveNotificationText(notification.getHtmlText()));
             }
 
             notificationBody.setText(notification.getNotificationText());
