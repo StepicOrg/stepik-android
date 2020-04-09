@@ -155,9 +155,9 @@
         android:id="@+id/unitProgress"
         android:layout_width="3dp"
         android:layout_height="0dp"
-        android:theme="@style/ThemeOverlay.Secondary.Green"
+        android:theme="@style/ThemeOverlay.Green"
         app:progressBackgroundColor="@android:color/transparent"
-        app:progressForegroundColor="?colorSecondary"
+        app:progressForegroundColor="?colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

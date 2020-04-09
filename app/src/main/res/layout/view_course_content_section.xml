@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:foreground="?selectableItemBackground"
-    android:background="@color/course_content_section_background">
+    android:background="@color/color_elevation_overlay_1dp">
 
     <TextView
         android:id="@+id/sectionPosition"
@@ -22,9 +22,8 @@
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@color/new_accent_color"
 
-        android:textSize="16sp"
+        android:textAppearance="?textAppearanceBody1"
 
         tools:text="1" />
 
@@ -38,8 +37,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:gravity="start"
-        android:lineSpacingExtra="2sp"
-        android:textSize="14sp"
+
+        android:textAppearance="?textAppearanceBody2"
+
         app:layout_constraintBaseline_toBaselineOf="@id/sectionPosition"
         app:layout_constraintEnd_toStartOf="@+id/sectionDownloadStatus"
         app:layout_constraintStart_toEndOf="@+id/sectionPosition"
@@ -49,16 +49,13 @@
 
     <TextView
         android:id="@+id/sectionTextProgress"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
-        android:textStyle="normal"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintStart_toEndOf="@+id/sectionPosition"
         app:layout_constraintTop_toBottomOf="@+id/sectionTitle"
         tools:ignore="missingPrefix"
@@ -66,7 +63,6 @@
 
     <TextView
         android:id="@+id/sectionRequirementsDescription"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
@@ -74,18 +70,15 @@
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
         android:layout_marginEnd="@dimen/course_content_item_inner_margin"
         android:layout_marginRight="@dimen/course_content_item_inner_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
         android:text="@string/course_content_section_exam_description"
-        android:textSize="12sp"
-        android:textStyle="normal"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintEnd_toStartOf="@id/sectionDownloadStatus"
         app:layout_constraintStart_toEndOf="@+id/sectionPosition"
         app:layout_constraintTop_toBottomOf="@+id/sectionTextProgress" />
 
     <TextView
         android:id="@+id/sectionExamDescription"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
@@ -93,11 +86,10 @@
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
         android:layout_marginEnd="@dimen/course_content_item_inner_margin"
         android:layout_marginRight="@dimen/course_content_item_inner_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
         android:text="@string/course_content_section_exam_description"
-        android:textSize="12sp"
-        android:textStyle="normal"
+
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintEnd_toStartOf="@id/sectionDownloadStatus"
         app:layout_constraintStart_toEndOf="@+id/sectionPosition"
         app:layout_constraintTop_toBottomOf="@+id/sectionRequirementsDescription" />
@@ -136,8 +128,9 @@
         android:id="@+id/sectionProgress"
         android:layout_width="3dp"
         android:layout_height="0dp"
+        android:theme="@style/ThemeOverlay.Green"
         app:progressBackgroundColor="@android:color/transparent"
-        app:progressForegroundColor="?colorSecondary"
+        app:progressForegroundColor="?colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
