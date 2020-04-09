@@ -12,6 +12,7 @@ import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
+import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
 import java.util.EnumSet
 import javax.inject.Inject
@@ -38,6 +39,12 @@ constructor(
             field = value
             view?.setState(value)
         }
+
+    override val nestedDisposables: List<DisposableViewModel>
+        get() = (state as? CatalogView.State.Content)
+            ?.collections
+            ?.filterIsInstance<DisposableViewModel>()
+            ?: emptyList()
 
     init {
         subscribeForFilterUpdates()
@@ -75,5 +82,12 @@ constructor(
                 },
                 onError = emptyOnErrorStub
             )
+    }
+
+    override fun detachView(view: CatalogView) {
+        nestedDisposables
+            .filterIsInstance<PresenterBase<Any>>()
+            .forEach { it.view?.let(it::detachView) }
+        super.detachView(view)
     }
 }
