@@ -27,9 +27,7 @@
         android:layout_marginTop="@dimen/course_content_item_margin"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:lineSpacingExtra="3sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="14sp"
+        android:textAppearance="?textAppearanceBody2"
         app:layout_constraintEnd_toStartOf="@+id/unitDownloadStatus"
         app:layout_constraintStart_toEndOf="@+id/unitIcon"
         app:layout_constraintTop_toTopOf="parent"
@@ -37,16 +35,14 @@
 
     <TextView
         android:id="@+id/unitTextProgress"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
         android:layout_marginBottom="@dimen/course_content_item_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintStart_toEndOf="@+id/unitIcon"
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -55,30 +51,28 @@
 
     <TextView
         android:id="@+id/unitTimeToComplete"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
         android:layout_marginTop="@dimen/course_content_item_inner_margin"
         android:layout_marginBottom="@dimen/course_content_item_margin"
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintStart_toEndOf="@+id/unitTextProgress"
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="missingPrefix"
         tools:text="≈ 2 min"/>
 
 
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/unitViewCountIcon"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:contentDescription="@null"
         app:srcCompat="@drawable/ic_course_info_target_audience"
+        app:tint="?colorControlNormal"
 
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
@@ -94,9 +88,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
 
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
@@ -107,16 +100,15 @@
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        app:fontFamily="@font/roboto_light"
-        tools:ignore="missingPrefix"
         tools:text="718k" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/unitRatingIcon"
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:contentDescription="@null"
         app:srcCompat="@drawable/ic_course_content_like"
+        app:tint="?colorControlNormal"
 
         android:layout_marginStart="@dimen/course_content_item_inner_margin"
         android:layout_marginLeft="@dimen/course_content_item_inner_margin"
@@ -132,9 +124,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
 
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
@@ -145,8 +136,6 @@
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
 
-        app:fontFamily="@font/roboto_light"
-        tools:ignore="missingPrefix"
         tools:text="999" />
 
     <org.stepik.android.view.course_content.ui.view.DownloadStatusView
@@ -166,6 +155,7 @@
         android:id="@+id/unitProgress"
         android:layout_width="3dp"
         android:layout_height="0dp"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
         app:progressBackgroundColor="@android:color/transparent"
         app:progressForegroundColor="?colorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
