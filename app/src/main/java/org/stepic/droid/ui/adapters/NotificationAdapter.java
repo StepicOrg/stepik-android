@@ -322,11 +322,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     notificationIcon.setImageResource(R.drawable.ic_notification_type_other);
                     break;
                 case comments:
-                    setCommentNotificationIcon(notification);
+                    notificationIcon.setImageResource(R.drawable.general_placeholder);
                     break;
             }
         }
 
+        // avatars in notifications is no longer supported
         private void setCommentNotificationIcon(Notification notification) {
             final String userAvatarUrl = notification.getUserAvatarUrl();
             if (userAvatarUrl != null) {
