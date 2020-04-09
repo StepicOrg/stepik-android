@@ -52,9 +52,6 @@
 
     <color name="exo_edit_mode_background_color">@color/grey04</color>
 
-    <!--Tab text color, based on accent color-->
-    <color name="new_cover">@color/white</color>
-
     <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
     <color name="home_streak_view_color">@color/blue03_alpha_8</color>
     <color name="view_all_course_list_color">@color/grey03</color>
