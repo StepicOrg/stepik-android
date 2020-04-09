@@ -161,10 +161,6 @@
     <color name="popup_background_color_light">@color/blue03</color>
     <color name="popup_background_color_dark">@color/new_accent_color</color>
 
-    <!-- course -->
-    <color name="course_content_section_background">@color/new_primary_color</color>
-    <color name="course_content_section_date_disabled">@color/grey03_alpha_80</color>
-
     <!-- Step -->
     <color name="step_quiz_feedback_wrong_text">@color/red02</color>
     <color name="step_quiz_feedback_wrong_background">@color/red02_color_alpha_15</color>
