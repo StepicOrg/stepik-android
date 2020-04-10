@@ -14,6 +14,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.model.CourseCollection
@@ -29,13 +30,15 @@ import javax.inject.Inject
 
 class CourseListCollectionFragment : Fragment() {
     companion object {
-        fun newInstance(courseCollection: CourseCollection): Fragment =
+        fun newInstance(courseCollection: CourseCollection, collectionDescriptionColors: CollectionDescriptionColors): Fragment =
             CourseListCollectionFragment().apply {
                 this.courseCollection = courseCollection
+                this.collectionDescriptionColors = collectionDescriptionColors
             }
     }
 
     private var courseCollection by argument<CourseCollection>()
+    private var collectionDescriptionColors by argument<CollectionDescriptionColors>()
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -76,7 +79,8 @@ class CourseListCollectionFragment : Fragment() {
         courseListCoursesRecycler.itemAnimator = null
         courseListCoursesRecycler.addItemDecoration(
             CourseListCollectionHeaderDecoration(
-                courseCollection.description
+                courseCollection.description,
+                collectionDescriptionColors
             )
         )
 

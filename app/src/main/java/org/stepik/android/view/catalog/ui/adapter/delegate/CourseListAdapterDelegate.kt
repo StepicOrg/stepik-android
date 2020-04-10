@@ -51,14 +51,6 @@ class CourseListAdapterDelegate(
             viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
             viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
-            val onClickListener = View.OnClickListener { _ ->
-                val collection = itemData?.courseCollection ?: return@OnClickListener
-                screenManager.showCoursesCollection(itemView.context, collection)
-            }
-
-            courseListDescription.setOnClickListener(onClickListener)
-            courseListTitleContainer.setOnClickListener(onClickListener)
-
             courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(itemView.context) }
             courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
             courseListPlaceholderNoConnection.setOnClickListener {
@@ -88,10 +80,19 @@ class CourseListAdapterDelegate(
 
         override fun attachView(data: CourseListCollectionPresenter) {
             data.attachView(delegate)
+
             val collectionColors = when (adapterPosition % 2) {
                 0 -> CollectionDescriptionColors.BLUE
                 else -> CollectionDescriptionColors.FIRE
             }
+
+            val onClickListener = View.OnClickListener { _ ->
+                val collection = itemData?.courseCollection ?: return@OnClickListener
+                screenManager.showCoursesCollection(itemView.context, collection, collectionColors)
+            }
+
+            courseListDescription.setOnClickListener(onClickListener)
+            courseListTitleContainer.setOnClickListener(onClickListener)
 
             courseListDescription.setBackgroundResource(collectionColors.backgroundRes)
             courseListDescription.setTextColor(ContextCompat.getColor(context, collectionColors.textColorRes))
@@ -100,6 +101,8 @@ class CourseListAdapterDelegate(
 
         override fun detachView(data: CourseListCollectionPresenter) {
             data.firstVisibleItemPosition = (courseListCoursesRecycler.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
+            courseListDescription.setOnClickListener(null)
+            courseListTitleContainer.setOnClickListener(null)
             data.detachView(delegate)
         }
     }

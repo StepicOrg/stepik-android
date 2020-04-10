@@ -399,18 +399,18 @@ constructor(
                     )
                 )
 
-            info.courseListType == null && info.courseIds != null ->
-                screenManager.showCoursesCollection(
-                    context,
-                    CourseCollection(
-                        id = 0,
-                        position = 0,
-                        title = info.title,
-                        language = "",
-                        courses = info.courseIds as LongArray,
-                        description = info.description
-                    )
-                )
+            info.courseListType == null && info.courseIds != null -> {}
+//                screenManager.showCoursesCollection(
+//                    context,
+//                    CourseCollection(
+//                        id = 0,
+//                        position = 0,
+//                        title = info.title,
+//                        language = "",
+//                        courses = info.courseIds as LongArray,
+//                        description = info.description
+//                    )
+//                )
         }
     }
 
