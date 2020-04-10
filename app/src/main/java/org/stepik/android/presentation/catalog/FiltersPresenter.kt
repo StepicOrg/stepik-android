@@ -44,7 +44,8 @@ constructor(
         onNeedFilters()
     }
 
-    fun onNeedFilters() {
+    private fun onNeedFilters(forceUpdate: Boolean = false) {
+        if (state != FiltersView.State.Idle && !forceUpdate) return
         compositeDisposable += Single.fromCallable { sharedPreferenceHelper.filterForFeatured }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
@@ -65,6 +66,7 @@ constructor(
             .subscribeBy(
                 onComplete = {
                     filtersPublisher.onNext(newAppliedFilters)
+                    onNeedFilters(forceUpdate = true)
                 },
                 onError = emptyOnErrorStub
             )
