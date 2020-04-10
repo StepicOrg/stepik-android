@@ -15,6 +15,7 @@ import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAda
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
+import timber.log.Timber
 
 class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,

@@ -14,6 +14,7 @@ import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
+import timber.log.Timber
 import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Provider
@@ -59,12 +60,8 @@ constructor(
                 onSuccess = { courseCollections ->
                     val base = listOf<CatalogItem>(storiesPresenter, tagsPresenter, filtersPresenter)
                     val collections = courseCollections.map {
-//                        Timber.d("Collection: $it")
                         courseListCollectionPresenterProvider.get().apply { setDataToPresenter(it) }
                     }
-
-                    // TODO Single presenter
-//                    val a = courseListCollectionPresenterProvider.get().apply { setDataToPresenter(courseCollections.first()) }
                     state = CatalogView.State.Content(base + collections)
                 },
                 onError = {}
