@@ -2,11 +2,13 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.presentation.base.PresenterViewHolder
@@ -86,6 +88,13 @@ class CourseListAdapterDelegate(
 
         override fun attachView(data: CourseListCollectionPresenter) {
             data.attachView(delegate)
+            val collectionColors = when (adapterPosition % 2) {
+                0 -> CollectionDescriptionColors.BLUE
+                else -> CollectionDescriptionColors.FIRE
+            }
+
+            courseListDescription.setBackgroundResource(collectionColors.backgroundRes)
+            courseListDescription.setTextColor(ContextCompat.getColor(context, collectionColors.textColorRes))
             courseListCoursesRecycler.scrollToPosition(data.firstVisibleItemPosition ?: 0)
         }
 
