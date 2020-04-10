@@ -3,6 +3,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
 import org.stepic.droid.core.ScreenManager
@@ -85,9 +86,11 @@ class CourseListAdapterDelegate(
 
         override fun attachView(data: CourseListCollectionPresenter) {
             data.attachView(delegate)
+            courseListCoursesRecycler.scrollToPosition(data.firstVisibleItemPosition ?: 0)
         }
 
         override fun detachView(data: CourseListCollectionPresenter) {
+            data.firstVisibleItemPosition = (courseListCoursesRecycler.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
             data.detachView(delegate)
         }
     }

@@ -11,6 +11,7 @@ import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
+import org.stepik.android.presentation.course_list.CourseListPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
@@ -31,7 +32,8 @@ constructor(
     private val storiesPresenter: StoriesPresenter,
     private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
-    private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>
+    private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
+    private val courseListPresenter: CourseListPresenter
 ) : PresenterBase<CatalogView>() {
 
     private var state: CatalogView.State = CatalogView.State.Idle

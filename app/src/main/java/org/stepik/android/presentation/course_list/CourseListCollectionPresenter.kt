@@ -42,6 +42,8 @@ constructor(
     var courseCollection: CourseCollection? = null
         private set
 
+    var firstVisibleItemPosition: Int? = null
+
     private val paginationDisposable = CompositeDisposable()
 
     init {
