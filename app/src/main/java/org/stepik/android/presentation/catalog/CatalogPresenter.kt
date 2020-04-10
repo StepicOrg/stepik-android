@@ -14,7 +14,6 @@ import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
-import timber.log.Timber
 import java.util.EnumSet
 import javax.inject.Inject
 import javax.inject.Provider
@@ -51,7 +50,8 @@ constructor(
         subscribeForFilterUpdates()
     }
 
-    fun fetchCollections() {
+    fun fetchCollections(forceUpdate: Boolean = false) {
+        if (state != CatalogView.State.Idle && !forceUpdate) return
         compositeDisposable += catalogInteractor
             .fetchCourseCollections()
             .subscribeOn(backgroundScheduler)
@@ -75,7 +75,7 @@ constructor(
             .subscribeBy(
                 onNext = {
                     catalogInteractor.updateFiltersForFeatured(it)
-                    // TODO Fetch colletions with new filter
+                    fetchCollections(forceUpdate = true)
                 },
                 onError = emptyOnErrorStub
             )

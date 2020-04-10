@@ -13,7 +13,6 @@ import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.ViewContainer
 
-
 // todo only sample
 @Module
 abstract class CourseListCollectionModule {
