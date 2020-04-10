@@ -13,7 +13,7 @@ abstract class PresenterViewHolder<V, P : PresenterBase<V>>(root: View) : Delega
     }
 
     override fun onUnbind() {
-        presenter?.let(::detachView)
+        presenter?.takeIf { it.view != null }?.let(::detachView)
         presenter = null
     }
 

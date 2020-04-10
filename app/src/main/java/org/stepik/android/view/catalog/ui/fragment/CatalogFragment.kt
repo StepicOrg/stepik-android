@@ -214,6 +214,7 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
 
     override fun onStart() {
         super.onStart()
+        catalogItemAdapter.notifyDataSetChanged() // re-attach existing view holders
         catalogPresenter.attachView(this)
         SharedTransitionsManager.registerTransitionDelegate(CATALOG_STORIES_KEY, object : SharedTransitionContainerDelegate {
             override fun getSharedView(position: Int): View? {
