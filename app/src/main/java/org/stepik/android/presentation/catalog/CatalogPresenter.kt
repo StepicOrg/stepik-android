@@ -12,7 +12,7 @@ import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
-import org.stepik.android.presentation.course_list.CourseListPresenter
+import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
@@ -34,7 +34,7 @@ constructor(
     private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
-    private val courseListPresenter: CourseListPresenter
+    private val courseListQueryPresenter: CourseListQueryPresenter
 ) : PresenterBase<CatalogView>() {
 
     companion object {
@@ -74,7 +74,7 @@ constructor(
                     val collections = courseCollections.map {
                         courseListCollectionPresenterProvider.get().apply { setDataToPresenter(it) }
                     }
-                    state = CatalogView.State.Content(base + collections + courseListPresenter.apply { setDataToPresenter(POPULAR_COURSES_QUERY) })
+                    state = CatalogView.State.Content(base + collections + courseListQueryPresenter.apply { setDataToPresenter(POPULAR_COURSES_QUERY) })
                 },
                 onError = {}
             )

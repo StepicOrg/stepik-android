@@ -20,7 +20,7 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
-import org.stepik.android.presentation.course_list.CourseListPresenter
+import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -50,15 +50,15 @@ class CourseListQueryFragment : Fragment() {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
-    private lateinit var courseListPresenter: CourseListPresenter
+    private lateinit var courseListQueryPresenter: CourseListQueryPresenter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
 
-        courseListPresenter = ViewModelProviders
+        courseListQueryPresenter = ViewModelProviders
             .of(this, viewModelFactory)
-            .get(CourseListPresenter::class.java)
+            .get(CourseListQueryPresenter::class.java)
     }
 
     override fun onCreateView(
@@ -76,14 +76,14 @@ class CourseListQueryFragment : Fragment() {
             layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
-                    courseListPresenter.fetchNextPage()
+                    courseListQueryPresenter.fetchNextPage()
                 }
             }
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(forceUpdate = true) }
+        courseListSwipeRefresh.setOnRefreshListener { courseListQueryPresenter.fetchCourses(forceUpdate = true) }
+        tryAgain.setOnClickListener { courseListQueryPresenter.fetchCourses(forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
@@ -102,11 +102,11 @@ class CourseListQueryFragment : Fragment() {
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
-                courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+                courseListQueryPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
             }
         )
 
-        courseListPresenter.setDataToPresenter(courseListQuery)
+        courseListQueryPresenter.setDataToPresenter(courseListQuery)
     }
 
     private fun injectComponent() {
@@ -118,11 +118,11 @@ class CourseListQueryFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        courseListPresenter.attachView(courseListViewDelegate)
+        courseListQueryPresenter.attachView(courseListViewDelegate)
     }
 
     override fun onStop() {
-        courseListPresenter.detachView(courseListViewDelegate)
+        courseListQueryPresenter.detachView(courseListViewDelegate)
         super.onStop()
     }
 }

@@ -18,7 +18,7 @@ import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
 
-class CourseListPresenter
+class CourseListQueryPresenter
 @Inject
 constructor(
     private val courseListStateMapper: CourseListStateMapper,

@@ -15,7 +15,7 @@ import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.presentation.base.PresenterViewHolder
 import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
-import org.stepik.android.presentation.course_list.CourseListPresenter
+import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -28,14 +28,14 @@ class CourseListQueryAdapterDelegate(
     private val courseContinueViewDelegate: CourseContinueViewDelegate
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
-        data is CourseListPresenter
+        data is CourseListQueryPresenter
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         CourseQueryViewHolder(createView(parent, R.layout.item_course_list)) as DelegateViewHolder<CatalogItem>
 
     private inner class CourseQueryViewHolder(
         root: View
-    ) : PresenterViewHolder<CourseListView, CourseListPresenter>(root) {
+    ) : PresenterViewHolder<CourseListView, CourseListQueryPresenter>(root) {
 
         private val courseListCount = root.coursesCarouselCount
         private val courseListDescription = root.courseListDescription
@@ -99,12 +99,12 @@ class CourseListQueryAdapterDelegate(
             }
         )
 
-        override fun attachView(data: CourseListPresenter) {
+        override fun attachView(data: CourseListQueryPresenter) {
             data.attachView(delegate)
             courseListCoursesRecycler.scrollToPosition(data.firstVisibleItemPosition ?: 0)
         }
 
-        override fun detachView(data: CourseListPresenter) {
+        override fun detachView(data: CourseListQueryPresenter) {
             data.firstVisibleItemPosition = (courseListCoursesRecycler.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
             data.detachView(delegate)
         }
