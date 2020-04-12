@@ -29,7 +29,6 @@ import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
@@ -37,6 +36,7 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
@@ -291,8 +291,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
                 getNextFragmentOrNull(currentFragmentTag, HomeFragment::class.java.simpleName, HomeFragment.Companion::newInstance)
             }
             R.id.catalog -> {
-                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, org.stepik.android.view.catalog.ui.fragment.CatalogFragment.Companion::newInstance)
-//                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, CatalogFragment.Companion::newInstance)
+                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, CatalogFragment.Companion::newInstance)
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)

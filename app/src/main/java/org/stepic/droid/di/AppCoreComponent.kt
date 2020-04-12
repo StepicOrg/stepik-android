@@ -11,7 +11,6 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.ui.CodeEditor
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.analytic.AnalyticModule
-import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
 import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.home.HomeComponent
@@ -29,7 +28,6 @@ import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity
-import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
@@ -172,8 +170,6 @@ interface AppCoreComponent {
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
 
-    fun catalogComponentBuilder(): CatalogComponent.Builder
-
     fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
 
     fun courseComponentBuilder(): CourseComponent.Builder
@@ -221,8 +217,6 @@ interface AppCoreComponent {
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)
-
-    fun inject(adapter: CoursesAdapter)
 
     fun inject(adapter: Course)
 

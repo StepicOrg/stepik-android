@@ -8,10 +8,10 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.Theme
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.core.presenters.FiltersPresenter
-import org.stepic.droid.core.presenters.contracts.FiltersView
 import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.ui.adapters.SingleChoiceAdapter
+import org.stepik.android.presentation.catalog.FiltersPresenter
+import org.stepik.android.presentation.catalog.FiltersView
 import java.util.EnumSet
 import javax.inject.Inject
 
@@ -52,10 +52,14 @@ class CoursesLangDialog: DialogFragment(), FiltersView {
             .build()
     }
 
+    override fun setState(state: FiltersView.State) {
+        TODO("Not yet implemented")
+    }
+
     override fun onStart() {
         super.onStart()
         filtersPresenter.attachView(this)
-        filtersPresenter.onNeedFilters()
+//        filtersPresenter.onNeedFilters()
     }
 
     override fun onStop() {
@@ -63,11 +67,11 @@ class CoursesLangDialog: DialogFragment(), FiltersView {
         super.onStop()
     }
 
-    override fun onFiltersPrepared(filters: EnumSet<StepikFilter>) {
-        adapter.selection = when {
-            StepikFilter.RUSSIAN in filters -> 0
-            StepikFilter.ENGLISH in filters -> 1
-            else -> -1
-        }
-    }
+//    override fun onFiltersPrepared(filters: EnumSet<StepikFilter>) {
+//        adapter.selection = when {
+//            StepikFilter.RUSSIAN in filters -> 0
+//            StepikFilter.ENGLISH in filters -> 1
+//            else -> -1
+//        }
+//    }
 }

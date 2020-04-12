@@ -21,7 +21,6 @@ import org.stepic.droid.core.dropping.contract.DroppingListener
 import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.FastContinuePresenter
-import org.stepic.droid.core.presenters.PersistentCourseListPresenter
 import org.stepic.droid.core.presenters.contracts.FastContinueView
 import org.stepic.droid.model.CourseListType
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -30,7 +29,6 @@ import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import javax.inject.Inject
 
@@ -45,9 +43,6 @@ class FastContinueFragment : FragmentBase(),
 
         private const val CONTINUE_LOADING_TAG = "CONTINUE_LOADING_TAG"
     }
-
-    @Inject
-    lateinit var courseListPresenter: PersistentCourseListPresenter
 
     @Inject
     lateinit var continueCoursePresenter: ContinueCoursePresenter
@@ -184,7 +179,7 @@ class FastContinueFragment : FragmentBase(),
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
-        courseListPresenter.refreshData(CourseListType.ENROLLED)
+//        courseListPresenter.refreshData(CourseListType.ENROLLED)
     }
 
     override fun onFailDropCourse(course: Course) {

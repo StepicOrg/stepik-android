@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.auth.model.SocialAuthType;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
@@ -138,11 +137,6 @@ public interface ScreenManager {
     void openImage(Context context, String path);
 
     void showAdaptiveStats(Context context, long courseId);
-
-
-    void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors collectionDescriptionColors);
-
-    void showListOfTag(Activity activity, @NotNull Tag tag);
 
     void showOnboarding(@NotNull Activity activity);
 

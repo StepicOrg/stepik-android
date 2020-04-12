@@ -139,8 +139,6 @@
         <activity
             android:name="org.stepik.android.view.comment.ui.activity.CommentsActivity" />
 
-        <activity android:name=".ui.activities.CourseListActivity" />
-
         <activity
             android:name=".ui.activities.PhotoViewActivity"
             android:theme="@style/StoryActivityTheme"
@@ -188,8 +186,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity" />
         </activity>
-
-        <activity android:name=".ui.activities.TagActivity" />
 
         <activity
             android:name=".adaptive.ui.activities.AdaptiveCourseActivity"
