@@ -1,6 +1,6 @@
 package org.stepic.droid.core.presenters.contracts
 
-import org.stepik.android.model.Course
+import org.stepik.android.domain.course_list.model.CourseListItem
 
 interface FastContinueView {
 
@@ -10,5 +10,5 @@ interface FastContinueView {
 
     fun onEmptyCourse()
 
-    fun onShowCourse(course: Course)
+    fun onShowCourse(courseListItem: CourseListItem.Data)
 }

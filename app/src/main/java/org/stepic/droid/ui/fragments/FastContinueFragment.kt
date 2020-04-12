@@ -27,9 +27,11 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.CourseContinueView
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
@@ -129,15 +131,15 @@ class FastContinueFragment : FragmentBase(),
         }
     }
 
-    override fun onShowCourse(course: Course) {
+    override fun onShowCourse(courseListItem: CourseListItem.Data) {
         fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.visibility = View.GONE
 
         analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
-        setCourse(course)
+        setCourse(courseListItem)
         showMainGroup(true)
-        fastContinueOverlay.setOnClickListener { handleContinueCourseClick(course) }
-        fastContinueAction.setOnClickListener { handleContinueCourseClick(course) }
+        fastContinueOverlay.setOnClickListener { handleContinueCourseClick(courseListItem.course) }
+        fastContinueAction.setOnClickListener { handleContinueCourseClick(courseListItem.course) }
     }
 
     override fun onLoading() {
@@ -147,38 +149,39 @@ class FastContinueFragment : FragmentBase(),
     }
 
 
-    private fun setCourse(course: Course) {
+    private fun setCourse(courseListItem: CourseListItem.Data) {
         Glide
             .with(requireContext())
             .asBitmap()
-            .load(course.cover)
+            .load(courseListItem.course.cover)
             .placeholder(coursePlaceholderDrawable)
             .fitCenter()
             .into(courseCoverImageViewTarget)
 
-        fastContinueCourseName.text = course.title
+        fastContinueCourseName.text = courseListItem.course.title
 
-//        val progress = course.progressObject
-//        val needShow = if (progress != null && progress.cost > 0) {
-//            val score = progress
-//                .score
-//                ?.toFloatOrNull()
-//                ?.toLong()
-//                ?: 0L
-//
-//            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score, progress.cost)
-//            fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
-//            true
-//        } else {
-//            fastContinueCourseProgress.progress = 0
-//            false
-//        }
-//        fastContinueCourseProgressText.isVisible = needShow
+        val progress = courseListItem.courseStats.progress
+        val needShow = if (progress != null && progress.cost > 0) {
+            val score = progress
+                .score
+                ?.toFloatOrNull()
+                ?.toLong()
+                ?: 0L
+
+            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score, progress.cost)
+            fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
+            true
+        } else {
+            fastContinueCourseProgress.progress = 0
+            false
+        }
+        fastContinueCourseProgressText.isVisible = needShow
     }
 
     //Client<DroppingListener>
     override fun onSuccessDropCourse(course: Course) {
         //reload the last course
+        // TODO Check DroppingListener
 //        courseListPresenter.refreshData(CourseListType.ENROLLED)
     }
 
@@ -199,22 +202,12 @@ class FastContinueFragment : FragmentBase(),
     }
 
     override fun onSuccessJoin(joinedCourse: Course) {
-        onShowCourse(joinedCourse)
+        // onShowCourse(joinedCourse)
     }
 
     private fun handleContinueCourseClick(course: Course) {
-//        screenManager.showUserCourses(context)
-//        screenManager.showCoursesCollection(requireContext(), CourseCollection(
-//            id = 1,
-//            position = 2,
-//            title = "TEST",
-//            language = "ru",
-//            courses = longArrayOf(1838, 191, 2945, 4471, 1818, 13222),
-//            description = "Description description"
-//        ))
-//        screenManager.showCoursesByQuery(requireContext(), "Popular", CourseListQuery(page = 1, order = CourseListQuery.ORDER_ACTIVITY_DESC, isExcludeEnded = true, isPublic = true))
-//        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-//        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
+        analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
+        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
     }
 
     override fun showCourse(course: Course, isAdaptive: Boolean) {

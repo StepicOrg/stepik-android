@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
@@ -27,15 +28,15 @@ constructor(
 ) : PresenterBase<FastContinueView>() {
 
     private var disposable: Disposable? = null
-    private var course: Course? = null
+    private var courseListItem: CourseListItem.Data? = null
 
     fun onCreated() {
         if (sharedPreferenceHelper.authResponseFromStore != null) {
-            if (course == null) {
+            if (courseListItem == null) {
                 view?.onLoading()
                 subscribeToFirstCourse()
             } else {
-                view?.onShowCourse(course as Course)
+                view?.onShowCourse(courseListItem as CourseListItem.Data)
             }
         } else {
             view?.onAnonymous()
@@ -49,8 +50,8 @@ constructor(
             .subscribeBy(
                 onNext = {
                     if (it is UserCoursesLoaded.FirstCourse) {
-                        course = it.course
-                        view?.onShowCourse(it.course)
+                        courseListItem = it.courseListItem
+                        view?.onShowCourse(it.courseListItem)
                     } else {
                         view?.onEmptyCourse()
                     }

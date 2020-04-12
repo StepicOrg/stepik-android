@@ -91,8 +91,7 @@ class CourseListItemAdapterDelegate(
             // todo add to CourseListItem field and resolve in domain layer
             adaptiveCourseMarker.isVisible = data.isAdaptive
 
-            // TODO Handle in delegate
-            coursePropertiesDelegate.setStats(data.course)
+            coursePropertiesDelegate.setStats(data)
         }
     }
 }

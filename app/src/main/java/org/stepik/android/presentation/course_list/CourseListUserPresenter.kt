@@ -72,7 +72,7 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = if (it.isNotEmpty()) {
-                        userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(it.first().course))
+                        userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(it.first()))
                         CourseListView.State.Content(
                             courseListDataItems = it,
                             courseListItems = it

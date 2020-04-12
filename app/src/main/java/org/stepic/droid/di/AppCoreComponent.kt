@@ -31,7 +31,6 @@ import org.stepic.droid.ui.activities.AnimatedOnboardingActivity
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
-import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.dialogs.CertificateShareDialog
@@ -259,8 +258,6 @@ interface AppCoreComponent {
     fun inject(latexView: LatexView)
 
     fun inject(autoCompleteSearchView: AutoCompleteSearchView)
-
-    fun inject(courseItemViewHolder: CourseItemViewHolder)
 
     fun inject(quizCardViewHolder: QuizCardViewHolder)
 
