@@ -8,6 +8,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.model.StepikFilter
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -34,7 +35,8 @@ constructor(
     private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
-    private val courseListQueryPresenter: CourseListQueryPresenter
+    private val courseListQueryPresenterProvider: Provider<CourseListQueryPresenter>,
+    private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CatalogView>() {
 
     companion object {
@@ -74,7 +76,19 @@ constructor(
                     val collections = courseCollections.map {
                         courseListCollectionPresenterProvider.get().apply { setDataToPresenter(it) }
                     }
-                    state = CatalogView.State.Content(base + collections + courseListQueryPresenter.apply { setDataToPresenter(POPULAR_COURSES_QUERY) })
+                    state = CatalogView.State.Content(base + collections +
+                            courseListQueryPresenterProvider.get().apply {
+                                setDataToPresenter(
+                                    courseListQuery = CourseListQuery(
+                                        page = 1,
+                                        order = CourseListQuery.Order.ACTIVITY_DESC,
+                                        language = sharedPreferenceHelper.languageForFeatured,
+                                        isExcludeEnded = true,
+                                        isPublic = true
+                                    )
+                                )
+                            }
+                    )
                 },
                 onError = {}
             )

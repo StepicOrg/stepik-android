@@ -14,6 +14,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
@@ -43,6 +44,9 @@ class CourseListPopularFragment : Fragment() {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private lateinit var courseListQueryPresenter: CourseListQueryPresenter
@@ -93,6 +97,7 @@ class CourseListPopularFragment : Fragment() {
         val courseListQuery = CourseListQuery(
             page = 1,
             order = CourseListQuery.Order.ACTIVITY_DESC,
+            language = sharedPreferenceHelper.languageForFeatured,
             isExcludeEnded = true,
             isPublic = true
         )
