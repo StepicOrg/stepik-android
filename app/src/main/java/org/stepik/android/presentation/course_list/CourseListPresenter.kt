@@ -9,6 +9,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
@@ -29,7 +30,9 @@ constructor(
 
     viewContainer: PresenterViewContainer<CourseListView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
-) : PresenterBase<CourseListView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
+) : PresenterBase<CourseListView>(viewContainer),
+    CourseContinuePresenterDelegate by continueCoursePresenterDelegate,
+    CatalogItem {
 
     override val delegates: List<PresenterDelegate<in CourseListView>> =
         listOf(continueCoursePresenterDelegate)
@@ -40,7 +43,10 @@ constructor(
             view?.setState(value)
         }
 
-    private var courseListQuery: CourseListQuery? = null
+    var firstVisibleItemPosition: Int? = null
+
+    var courseListQuery: CourseListQuery? = null
+        private set
 
     private val paginationDisposable = CompositeDisposable()
 
@@ -53,15 +59,21 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchCourses(courseListQuery: CourseListQuery, forceUpdate: Boolean = false) {
+    fun setDataToPresenter(courseListQuery: CourseListQuery) {
+        this.courseListQuery = courseListQuery
+        fetchCourses(forceUpdate = false)
+    }
+
+    fun fetchCourses(forceUpdate: Boolean = false) {
         if (state != CourseListView.State.Idle && !forceUpdate) return
+
+        val courseListQuery = courseListQuery ?: return
 
         paginationDisposable.clear()
 
         val oldState = state
 
         state = CourseListView.State.Loading()
-        this.courseListQuery = courseListQuery
 
         paginationDisposable += courseListInteractor
             .getCourseListItems(courseListQuery)

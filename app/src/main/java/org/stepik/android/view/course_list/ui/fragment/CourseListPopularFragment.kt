@@ -107,7 +107,7 @@ class CourseListPopularFragment : Fragment() {
 
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
-        courseListPlaceholderNoConnection.setOnClickListener { courseListPresenter.fetchCourses(courseListQuery, forceUpdate = true) }
+        courseListPlaceholderNoConnection.setOnClickListener { courseListPresenter.fetchCourses(forceUpdate = true) }
         courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -133,7 +133,7 @@ class CourseListPopularFragment : Fragment() {
             }
         )
 
-        courseListPresenter.fetchCourses(courseListQuery)
+        courseListPresenter.setDataToPresenter(courseListQuery)
     }
 
     private fun injectComponent() {

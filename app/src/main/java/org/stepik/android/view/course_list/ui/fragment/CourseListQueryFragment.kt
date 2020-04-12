@@ -82,8 +82,8 @@ class CourseListQueryFragment : Fragment() {
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(courseListQuery, forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(courseListQuery, forceUpdate = true) }
+        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(forceUpdate = true) }
+        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
@@ -106,7 +106,7 @@ class CourseListQueryFragment : Fragment() {
             }
         )
 
-        courseListPresenter.fetchCourses(courseListQuery)
+        courseListPresenter.setDataToPresenter(courseListQuery)
     }
 
     private fun injectComponent() {

@@ -33,6 +33,7 @@ import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDele
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -103,13 +104,20 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
 
         catalogItemAdapter += FiltersAdapterDelegate()
 
+        val courseContinueViewDelegate = CourseContinueViewDelegate(
+            activity = requireActivity(),
+            analytic = analytic,
+            screenManager = screenManager
+        )
+
         catalogItemAdapter += CourseListAdapterDelegate(
             screenManager = screenManager,
-            courseContinueViewDelegate = CourseContinueViewDelegate(
-                activity = requireActivity(),
-                analytic = analytic,
-                screenManager = screenManager
-            )
+            courseContinueViewDelegate = courseContinueViewDelegate
+        )
+
+        catalogItemAdapter += CourseListQueryAdapterDelegate(
+            screenManager = screenManager,
+            courseContinueViewDelegate = courseContinueViewDelegate
         )
 
         with(catalogRecyclerView) {
