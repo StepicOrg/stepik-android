@@ -15,14 +15,10 @@ import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.base.Client
 import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.core.dropping.contract.DroppingListener
-import org.stepic.droid.core.joining.contract.JoiningListener
 import org.stepic.droid.core.presenters.ContinueCoursePresenter
 import org.stepic.droid.core.presenters.FastContinuePresenter
 import org.stepic.droid.core.presenters.contracts.FastContinueView
-import org.stepic.droid.model.CourseListType
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
@@ -36,8 +32,6 @@ import javax.inject.Inject
 
 class FastContinueFragment : FragmentBase(),
         CourseContinueView,
-        DroppingListener,
-        JoiningListener,
         FastContinueView {
 
     companion object {
@@ -48,12 +42,6 @@ class FastContinueFragment : FragmentBase(),
 
     @Inject
     lateinit var continueCoursePresenter: ContinueCoursePresenter
-
-    @Inject
-    lateinit var droppingClient: Client<DroppingListener>
-
-    @Inject
-    lateinit var joiningListenerClient: Client<JoiningListener>
 
     @Inject
     lateinit var fastContinuePresenter: FastContinuePresenter
@@ -88,8 +76,6 @@ class FastContinueFragment : FragmentBase(),
         courseCoverImageViewTarget = RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), fastContinueCourseCover)
 
         continueCoursePresenter.attachView(this)
-        droppingClient.subscribe(this)
-        joiningListenerClient.subscribe(this)
         fastContinueOverlay.isEnabled = true
         fastContinueAction.isEnabled = true
     }
@@ -108,9 +94,7 @@ class FastContinueFragment : FragmentBase(),
 
     override fun onDestroyView() {
         super.onDestroyView()
-        joiningListenerClient.unsubscribe(this)
         continueCoursePresenter.detachView(this)
-        droppingClient.unsubscribe(this)
     }
 
     override fun onAnonymous() {
@@ -179,13 +163,13 @@ class FastContinueFragment : FragmentBase(),
     }
 
     //Client<DroppingListener>
-    override fun onSuccessDropCourse(course: Course) {
+    fun onSuccessDropCourse(course: Course) {
         //reload the last course
         // TODO Check DroppingListener
 //        courseListPresenter.refreshData(CourseListType.ENROLLED)
     }
 
-    override fun onFailDropCourse(course: Course) {
+    fun onFailDropCourse(course: Course) {
         //no-op
     }
 
@@ -201,7 +185,7 @@ class FastContinueFragment : FragmentBase(),
         fastContinueMask.isVisible = needShow
     }
 
-    override fun onSuccessJoin(joinedCourse: Course) {
+    fun onSuccessJoin(joinedCourse: Course) {
         // onShowCourse(joinedCourse)
     }
 

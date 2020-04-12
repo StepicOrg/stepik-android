@@ -30,4 +30,9 @@ constructor(
                         )
                     }
             }
+
+    fun getUserCourse(courseId: Long): Single<CourseListItem.Data> =
+        courseListInteractor
+            .getCourseListItems(courseId)
+            .map { it.first() }
 }

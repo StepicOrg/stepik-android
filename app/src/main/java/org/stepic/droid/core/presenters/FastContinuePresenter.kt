@@ -13,6 +13,7 @@ import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
+import timber.log.Timber
 import javax.inject.Inject
 
 class FastContinuePresenter
@@ -43,6 +44,7 @@ constructor(
         }
     }
 
+    // TODO Handle enrollment updates
     private fun subscribeToFirstCourse() {
         disposable = userCoursesLoadedObservable
             .subscribeOn(backgroundScheduler)
