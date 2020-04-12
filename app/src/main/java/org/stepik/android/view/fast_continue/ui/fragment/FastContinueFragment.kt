@@ -1,4 +1,4 @@
-package org.stepic.droid.ui.fragments
+package org.stepik.android.view.fast_continue.ui.fragment
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -9,16 +9,16 @@ import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.base.FragmentBase
-import org.stepic.droid.core.presenters.ContinueCoursePresenter
-import org.stepic.droid.core.presenters.FastContinuePresenter
-import org.stepic.droid.core.presenters.contracts.FastContinueView
+import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
@@ -26,25 +26,32 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
+import org.stepik.android.presentation.fast_continue.FastContinuePresenter
+import org.stepik.android.presentation.fast_continue.FastContinueView
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class FastContinueFragment : FragmentBase(),
-        CourseContinueView,
-        FastContinueView {
+class FastContinueFragment : Fragment(), FastContinueView {
 
     companion object {
-        fun newInstance(): FastContinueFragment = FastContinueFragment()
+        fun newInstance(): FastContinueFragment =
+            FastContinueFragment()
 
         private const val CONTINUE_LOADING_TAG = "CONTINUE_LOADING_TAG"
     }
 
     @Inject
-    lateinit var continueCoursePresenter: ContinueCoursePresenter
+    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var fastContinuePresenter: FastContinuePresenter
+    internal lateinit var analytic: Analytic
+
+    @Inject
+    internal lateinit var screenManager: ScreenManager
+
+    private lateinit var fastContinuePresenter: FastContinuePresenter
+    private lateinit var viewStateDelegate: ViewStateDelegate<FastContinueView.State>
 
     private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
 
@@ -58,80 +65,78 @@ class FastContinueFragment : FragmentBase(),
         return@lazy circularBitmapDrawable
     }
 
-    override fun injectComponent() {
-        App
-                .componentManager()
-                .courseGeneralComponent()
-                .courseListComponentBuilder()
-                .build()
-                .inject(this)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        injectComponent()
+
+        fastContinuePresenter = ViewModelProviders
+            .of(this, viewModelFactory)
+            .get(FastContinuePresenter::class.java)
+
+        fastContinuePresenter.onCreated()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
-            = inflater.inflate(R.layout.fragment_fast_continue, container, false)
+    private fun injectComponent() {
+        App
+            .component()
+            .fastContinueComponentBuilder()
+            .build()
+            .inject(this)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_fast_continue, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<FastContinueView.State.Idle>()
+        viewStateDelegate.addState<FastContinueView.State.Loading>(fastContinueProgress)
+        viewStateDelegate.addState<FastContinueView.State.Empty>(fastContinuePlaceholder)
+        viewStateDelegate.addState<FastContinueView.State.Anonymous>(fastContinuePlaceholder)
+        viewStateDelegate.addState<FastContinueView.State.Content>(fastContinueMask)
 
         courseCoverImageViewTarget = RoundedBitmapImageViewTarget(resources.getDimension(R.dimen.course_image_radius), fastContinueCourseCover)
-
-        continueCoursePresenter.attachView(this)
         fastContinueOverlay.isEnabled = true
         fastContinueAction.isEnabled = true
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         fastContinuePresenter.attachView(this)
-        fastContinuePresenter.onCreated()
     }
 
-    override fun onPause() {
+    override fun onStop() {
         fastContinuePresenter.detachView(this)
-        super.onPause()
-        ProgressHelper.dismiss(fragmentManager, CONTINUE_LOADING_TAG)
+        super.onStop()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        continueCoursePresenter.detachView(this)
-    }
-
-    override fun onAnonymous() {
-        analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
-        showPlaceholder(R.string.placeholder_login) {
-            analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
-            screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
+    override fun setState(state: FastContinueView.State) {
+        viewStateDelegate.switchState(state)
+        when (state) {
+            is FastContinueView.State.Empty -> {
+                analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
+                showPlaceholder(R.string.placeholder_explore_courses) {
+                    analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
+                    screenManager.showCatalog(context)
+                }
+            }
+            is FastContinueView.State.Anonymous -> {
+                analytic.reportEvent(Analytic.FastContinue.AUTH_SHOWN)
+                showPlaceholder(R.string.placeholder_login) {
+                    analytic.reportEvent(Analytic.FastContinue.AUTH_CLICK)
+                    screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
+                }
+            }
+            is FastContinueView.State.Content -> {
+                analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
+                setCourse(state.courseListItem)
+                fastContinueOverlay.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
+                fastContinueAction.setOnClickListener { handleContinueCourseClick(state.courseListItem.course) }
+            }
         }
     }
-
-    override fun onEmptyCourse() {
-        // tbh: courses might be not empty, but not active
-        // we can show suggestion for enroll, but not write, that you have zero courses
-        analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_SHOWN)
-        showPlaceholder(R.string.placeholder_explore_courses) {
-            analytic.reportEvent(Analytic.FastContinue.EMPTY_COURSES_CLICK)
-            screenManager.showCatalog(context)
-        }
-    }
-
-    override fun onShowCourse(courseListItem: CourseListItem.Data) {
-        fastContinueProgress.visibility = View.GONE
-        fastContinuePlaceholder.visibility = View.GONE
-
-        analytic.reportEvent(Analytic.FastContinue.CONTINUE_SHOWN)
-        setCourse(courseListItem)
-        showMainGroup(true)
-        fastContinueOverlay.setOnClickListener { handleContinueCourseClick(courseListItem.course) }
-        fastContinueAction.setOnClickListener { handleContinueCourseClick(courseListItem.course) }
-    }
-
-    override fun onLoading() {
-        fastContinueProgress.visibility = View.VISIBLE
-        showMainGroup(false)
-        fastContinuePlaceholder.visibility = View.GONE
-    }
-
 
     private fun setCourse(courseListItem: CourseListItem.Data) {
         Glide
@@ -162,36 +167,14 @@ class FastContinueFragment : FragmentBase(),
         fastContinueCourseProgressText.isVisible = needShow
     }
 
-    //Client<DroppingListener>
-    fun onSuccessDropCourse(course: Course) {
-        //reload the last course
-        // TODO Check DroppingListener
-//        courseListPresenter.refreshData(CourseListType.ENROLLED)
-    }
-
-    fun onFailDropCourse(course: Course) {
-        //no-op
-    }
-
     private fun showPlaceholder(@StringRes stringRes: Int, listener: (view: View) -> Unit) {
-        fastContinueProgress.visibility = View.GONE
         fastContinuePlaceholder.setPlaceholderText(stringRes)
         fastContinuePlaceholder.setOnClickListener(listener)
-        showMainGroup(false)
-        fastContinuePlaceholder.visibility = View.VISIBLE
-    }
-
-    private fun showMainGroup(needShow: Boolean) {
-        fastContinueMask.isVisible = needShow
-    }
-
-    fun onSuccessJoin(joinedCourse: Course) {
-        // onShowCourse(joinedCourse)
     }
 
     private fun handleContinueCourseClick(course: Course) {
         analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-        continueCoursePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
+        fastContinuePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
     }
 
     override fun showCourse(course: Course, isAdaptive: Boolean) {

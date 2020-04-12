@@ -12,7 +12,6 @@ import org.stepic.droid.code.ui.CodeEditor
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.analytic.AnalyticModule
 import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
-import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
@@ -54,6 +53,7 @@ import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialo
 import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.auth.AuthComponent
 import org.stepik.android.view.injection.catalog.CatalogBusModule
+import org.stepik.android.view.injection.catalog.CatalogComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
@@ -66,6 +66,7 @@ import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewCompo
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
 import org.stepik.android.view.injection.email_address.EmailAddressDataModule
+import org.stepik.android.view.injection.fast_continue.FastContinueComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
@@ -163,8 +164,6 @@ interface AppCoreComponent {
 
     fun homeComponentBuilder(): HomeComponent.Builder
 
-    fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
-
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
@@ -211,7 +210,9 @@ interface AppCoreComponent {
 
     fun courseListExperimentalComponentBuilder(): CourseListComponent.Builder
 
-    fun catalogNewComponentBuilder(): org.stepik.android.view.injection.catalog.CatalogComponent.Builder
+    fun catalogNewComponentBuilder(): CatalogComponent.Builder
+
+    fun fastContinueComponentBuilder(): FastContinueComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

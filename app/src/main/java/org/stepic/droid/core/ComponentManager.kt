@@ -2,7 +2,6 @@ package org.stepic.droid.core
 
 import androidx.annotation.MainThread
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
-import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -22,9 +21,6 @@ interface ComponentManager {
 
     @MainThread
     fun releaseSplashComponent()
-
-    @MainThread
-    fun courseGeneralComponent(): CourseGeneralComponent
 
     @MainThread
     fun adaptiveCourseComponent(courseId: Long): AdaptiveCourseComponent

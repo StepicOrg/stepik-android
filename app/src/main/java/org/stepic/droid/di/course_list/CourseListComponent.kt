@@ -1,7 +1,7 @@
 package org.stepic.droid.di.course_list
 
 import dagger.Subcomponent
-import org.stepic.droid.ui.fragments.FastContinueFragment
+import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
