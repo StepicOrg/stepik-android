@@ -33,7 +33,8 @@ constructor(
         fetchFeaturedTags()
     }
 
-    private fun fetchFeaturedTags() {
+    fun fetchFeaturedTags(forceUpdate: Boolean = false) {
+        if (state != TagsView.State.Idle && !forceUpdate) return
         compositeDisposable += tagsInteractor
             .fetchFeaturedTags()
             .subscribeOn(backgroundScheduler)

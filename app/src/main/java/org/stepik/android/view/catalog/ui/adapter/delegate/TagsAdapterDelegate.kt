@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.view_catalog_tags.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.adapters.TagsAdapter
+import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.base.PresenterViewHolder
 import org.stepik.android.presentation.catalog.CatalogItem
@@ -43,8 +44,16 @@ class TagsAdapterDelegate(
 
         override fun setState(state: TagsView.State) {
             viewStateDelegate.switchState(state)
-            if (state is TagsView.State.TagsLoaded) {
-                tagsAdapter.setTags(state.tags)
+            when (state) {
+                is TagsView.State.Idle,
+                is TagsView.State.Empty,
+                is TagsView.State.Loading -> {
+                    itemView.setHeight(0)
+                }
+                is TagsView.State.TagsLoaded -> {
+                    itemView.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                    tagsAdapter.setTags(state.tags)
+                }
             }
         }
 

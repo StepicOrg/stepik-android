@@ -40,7 +40,7 @@ constructor(
 
     private var state: CatalogView.State = CatalogView.State(
         headers = listOf(storiesPresenter, tagsPresenter, filtersPresenter),
-        collectionsState = CatalogView.CollectionsState.Error,
+        collectionsState = CatalogView.CollectionsState.Idle,
         footers = emptyList()
 //        footers = listOf(courseListQueryPresenter)
     )
@@ -85,6 +85,11 @@ constructor(
         if (state.collectionsState != CatalogView.CollectionsState.Idle && !forceUpdate) return
 
         state = state.copy(collectionsState = CatalogView.CollectionsState.Loading)
+
+        if (forceUpdate) {
+            storiesPresenter.fetchStories(forceUpdate = forceUpdate)
+            tagsPresenter.fetchFeaturedTags(forceUpdate = forceUpdate)
+        }
 
         compositeDisposable += catalogInteractor
             .fetchCourseCollections()

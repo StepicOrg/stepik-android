@@ -36,8 +36,8 @@ constructor(
         fetchStories()
     }
 
-    private fun fetchStories() {
-        if (state != StoriesView.State.Idle) return
+    fun fetchStories(forceUpdate: Boolean = false) {
+        if (state != StoriesView.State.Idle && !forceUpdate) return
         state = StoriesView.State.Loading
 
         val locale = Resources.getSystem().configuration.defaultLocale
