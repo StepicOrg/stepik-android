@@ -25,22 +25,19 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler,
 
-    viewContainer: PresenterViewContainer<CourseListView>,
+    viewContainer: PresenterViewContainer<CourseListCollectionView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
-) : PresenterBase<CourseListView>(viewContainer),
+) : PresenterBase<CourseListCollectionView>(viewContainer),
     CourseContinuePresenterDelegate by continueCoursePresenterDelegate,
     CatalogItem {
-    override val delegates: List<PresenterDelegate<in CourseListView>> =
+    override val delegates: List<PresenterDelegate<in CourseListCollectionView>> =
         listOf(continueCoursePresenterDelegate)
 
-    private var state: CourseListView.State = CourseListView.State.Idle
+    private var state: CourseListCollectionView.State = CourseListCollectionView.State.Idle
         set(value) {
             field = value
             view?.setState(value)
         }
-
-    var courseCollection: CourseCollection? = null
-        private set
 
     var firstVisibleItemPosition: Int? = null
 
@@ -50,61 +47,55 @@ constructor(
         compositeDisposable += paginationDisposable
     }
 
-    override fun attachView(view: CourseListView) {
+    override fun attachView(view: CourseListCollectionView) {
         super.attachView(view)
         view.setState(state)
     }
 
-    fun setDataToPresenter(courseCollection: CourseCollection) {
-        this.courseCollection = courseCollection
-        fetchCourses(forceUpdate = false)
-    }
-
-    fun fetchCourses(forceUpdate: Boolean = false) {
-        if (state != CourseListView.State.Idle && !forceUpdate) return
-
-        val collection = courseCollection ?: return
+    fun fetchCourses(courseCollection: CourseCollection, forceUpdate: Boolean = false) {
+        if (state != CourseListCollectionView.State.Idle && !forceUpdate) return
 
         paginationDisposable.clear()
 
         val oldState = state
 
-        state = CourseListView.State.Loading(
-            collectionData = CourseListView.State.CollectionData(
-                title = collection.title,
-                description = collection.description
-            )
+        state = CourseListCollectionView.State.Data(
+            courseCollection = courseCollection,
+            courseListViewState = CourseListView.State.Loading
         )
 
         paginationDisposable += courseListInteractor
-            .getCourseListItems(*collection.courses)
+            .getCourseListItems(*(state as CourseListCollectionView.State.Data).courseCollection.courses)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onSuccess = {
                     state = if (it.isNotEmpty()) {
-                        CourseListView.State.Content(
-                            collectionData = CourseListView.State.CollectionData(
-                                collection.title,
-                                collection.description
-                            ),
-                            courseListDataItems = it,
-                            courseListItems = it
+                        (state as CourseListCollectionView.State.Data)
+                            .copy(courseListViewState = CourseListView.State.Content(
+                                courseListDataItems = it,
+                                courseListItems = it
+                            )
                         )
                     } else {
-                        CourseListView.State.Empty
+                        (state as CourseListCollectionView.State.Data)
+                            .copy(courseListViewState = CourseListView.State.Empty)
                     }
                 },
                 onError = {
-                    when (oldState) {
+                    when (val courseListViewState = (oldState as CourseListCollectionView.State.Data).courseListViewState) {
                         is CourseListView.State.Content -> {
                             state = oldState
                             view?.showNetworkError()
                         }
                         else ->
-                            state = CourseListView.State.NetworkError
+                            state = (oldState as CourseListCollectionView.State.Data).copy(courseListViewState = CourseListView.State.NetworkError)
                     }
                 }
             )
+    }
+
+    public override fun onCleared() {
+        super.onCleared()
     }
 }

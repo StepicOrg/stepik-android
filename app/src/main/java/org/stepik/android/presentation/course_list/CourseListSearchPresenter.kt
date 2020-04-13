@@ -60,7 +60,7 @@ constructor(
 
         val oldState = state
 
-        state = CourseListView.State.Loading()
+        state = CourseListView.State.Loading
         this.searchResultQuery = searchResultQuery
 
         paginationDisposable += courseListSearchInteractor

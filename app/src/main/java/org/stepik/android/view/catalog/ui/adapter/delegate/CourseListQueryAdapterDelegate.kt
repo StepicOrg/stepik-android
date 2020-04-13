@@ -91,7 +91,6 @@ class CourseListQueryAdapterDelegate(
         private val delegate = CourseListViewDelegate(
             courseContinueViewDelegate = courseContinueViewDelegate,
             courseListTitleContainer = root.courseListTitleContainer,
-            courseDescriptionPlaceHolder = root.courseListDescription,
             courseItemsRecyclerView = root.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->

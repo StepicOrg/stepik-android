@@ -2,6 +2,7 @@ package org.stepik.android.presentation.catalog
 
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -11,9 +12,7 @@ import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
-import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
-import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
@@ -35,60 +34,90 @@ constructor(
     private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
-    private val courseListQueryPresenterProvider: Provider<CourseListQueryPresenter>,
+//    private val courseListQueryPresenter: CourseListQueryPresenter,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CatalogView>() {
 
-    companion object {
-        val POPULAR_COURSES_QUERY = CourseListQuery(
-            page = 1,
-            order = CourseListQuery.Order.ACTIVITY_DESC,
-            isExcludeEnded = true,
-            isPublic = true
-        )
-    }
-
-    private var state: CatalogView.State = CatalogView.State.Idle
+    private var state: CatalogView.State = CatalogView.State(
+        headers = listOf(storiesPresenter, tagsPresenter, filtersPresenter),
+        collectionsState = CatalogView.CollectionsState.Idle,
+        footers = emptyList()
+//        footers = listOf(courseListQueryPresenter)
+    )
         set(value) {
             field = value
             view?.setState(value)
         }
 
     override val nestedDisposables: List<DisposableViewModel>
-        get() = (state as? CatalogView.State.Content)
-            ?.collections
-            ?.filterIsInstance<DisposableViewModel>()
-            ?: emptyList()
+        get() = (state.headers +
+                (state.collectionsState as? CatalogView.CollectionsState.Content)?.collections.orEmpty() +
+                state.footers
+                )
+            .filterIsInstance<DisposableViewModel>()
+
+    private val collectionsDisposable = CompositeDisposable()
+
+    init {
+        compositeDisposable += collectionsDisposable
+
+//        courseListQueryPresenter.setDataToPresenter(
+//            courseListQuery = CourseListQuery(
+//                page = 1,
+//                order = CourseListQuery.Order.ACTIVITY_DESC,
+//                language = sharedPreferenceHelper.languageForFeatured,
+//                isExcludeEnded = true,
+//                isPublic = true
+//            )
+//        )
+    }
 
     init {
         subscribeForFilterUpdates()
     }
 
+    override fun attachView(view: CatalogView) {
+        super.attachView(view)
+        view.setState(state)
+    }
+
     fun fetchCollections(forceUpdate: Boolean = false) {
-        if (state != CatalogView.State.Idle && !forceUpdate) return
+        if (state.collectionsState != CatalogView.CollectionsState.Idle && !forceUpdate) return
+
+        state = state.copy(collectionsState = CatalogView.CollectionsState.Loading)
+
         compositeDisposable += catalogInteractor
             .fetchCourseCollections()
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { courseCollections ->
-                    val base = listOf<CatalogItem>(storiesPresenter, tagsPresenter, filtersPresenter)
                     val collections = courseCollections.map {
-                        courseListCollectionPresenterProvider.get().apply { setDataToPresenter(it) }
+                        courseListCollectionPresenterProvider.get().apply { fetchCourses(it) }
                     }
-                    state = CatalogView.State.Content(base + collections +
-                            courseListQueryPresenterProvider.get().apply {
-                                setDataToPresenter(
-                                    courseListQuery = CourseListQuery(
-                                        page = 1,
-                                        order = CourseListQuery.Order.ACTIVITY_DESC,
-                                        language = sharedPreferenceHelper.languageForFeatured,
-                                        isExcludeEnded = true,
-                                        isPublic = true
-                                    )
-                                )
-                            }
-                    )
+
+                    (state.collectionsState as? CatalogView.CollectionsState.Content)
+                        ?.collections
+                        ?.forEach {
+                            it.view?.let(it::detachView)
+                            it.onCleared()
+                        }
+
+                    state = state.copy(collectionsState = CatalogView.CollectionsState.Content(collections = collections))
+
+//                    state = CatalogView.State.Content(base + collections +
+//                            courseListQueryPresenterProvider.get().apply {
+//                                setDataToPresenter(
+//                                    courseListQuery = CourseListQuery(
+//                                        page = 1,
+//                                        order = CourseListQuery.Order.ACTIVITY_DESC,
+//                                        language = sharedPreferenceHelper.languageForFeatured,
+//                                        isExcludeEnded = true,
+//                                        isPublic = true
+//                                    )
+//                                )
+//                            }
+//                    )
                 },
                 onError = {}
             )
@@ -100,8 +129,9 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = {
-                    catalogInteractor.updateFiltersForFeatured(it)
+                    compositeDisposable.clear()
                     fetchCollections(forceUpdate = true)
+                    // fetch popular
                 },
                 onError = emptyOnErrorStub
             )

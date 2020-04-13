@@ -43,6 +43,8 @@ constructor(
             view?.setState(value)
         }
 
+    // TODO Similar to CourseListCollectionPresenter
+
     var firstVisibleItemPosition: Int? = null
 
     var courseListQuery: CourseListQuery? = null
@@ -73,7 +75,7 @@ constructor(
 
         val oldState = state
 
-        state = CourseListView.State.Loading()
+        state = CourseListView.State.Loading
 
         paginationDisposable += courseListInteractor
             .getCourseListItems(courseListQuery)

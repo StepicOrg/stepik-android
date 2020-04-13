@@ -17,9 +17,12 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.model.Course
 import org.stepik.android.model.CourseCollection
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
+import org.stepik.android.presentation.course_list.CourseListCollectionView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -28,7 +31,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseListCollectionFragment : Fragment() {
+class CourseListCollectionFragment : Fragment(), CourseListCollectionView {
     companion object {
         fun newInstance(courseCollection: CourseCollection, collectionDescriptionColors: CollectionDescriptionColors): Fragment =
             CourseListCollectionFragment().apply {
@@ -85,8 +88,8 @@ class CourseListCollectionFragment : Fragment() {
         )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(forceUpdate = true) }
+        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(courseCollection = courseCollection, forceUpdate = true) }
+        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(courseCollection = courseCollection, forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
@@ -109,7 +112,7 @@ class CourseListCollectionFragment : Fragment() {
             }
         )
 
-        courseListPresenter.setDataToPresenter(courseCollection)
+        courseListPresenter.fetchCourses(courseCollection)
     }
 
     private fun injectComponent() {
@@ -119,13 +122,36 @@ class CourseListCollectionFragment : Fragment() {
             .inject(this)
     }
 
+    override fun setState(state: CourseListCollectionView.State) {
+        val courseListState = (state as? CourseListCollectionView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+        courseListViewDelegate.setState(courseListState)
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, isAdaptive)
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        courseListViewDelegate.setBlockingLoading(isLoading)
+    }
+
+    override fun showNetworkError() {
+        courseListViewDelegate.showNetworkError()
+    }
+
     override fun onStart() {
         super.onStart()
-        courseListPresenter.attachView(courseListViewDelegate)
+        courseListPresenter.attachView(this)
+//        courseListPresenter.attachView(courseListViewDelegate)
     }
 
     override fun onStop() {
-        courseListPresenter.detachView(courseListViewDelegate)
+        courseListPresenter.detachView(this)
+//        courseListPresenter.detachView(courseListViewDelegate)
         super.onStop()
     }
 }

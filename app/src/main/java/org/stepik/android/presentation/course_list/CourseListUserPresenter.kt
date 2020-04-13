@@ -62,7 +62,7 @@ constructor(
 
         val oldState = state
 
-        state = CourseListView.State.Loading()
+        state = CourseListView.State.Loading
 
         // todo show courses from cache and then update 
         paginationDisposable += courseListUserInteractor

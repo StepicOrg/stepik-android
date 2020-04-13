@@ -40,6 +40,7 @@ import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCallback {
@@ -128,10 +129,13 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     }
 
     override fun setState(state: CatalogView.State) {
-        when (state) {
-            is CatalogView.State.Content -> {
-                catalogItemAdapter.items = state.collections
+        Timber.d("State: $state")
+        when (val collectionsState = state.collectionsState) {
+            is CatalogView.CollectionsState.Content -> {
+                catalogItemAdapter.items = state.headers + collectionsState.collections
             }
+            else ->
+                catalogItemAdapter.items = state.headers
         }
     }
 
