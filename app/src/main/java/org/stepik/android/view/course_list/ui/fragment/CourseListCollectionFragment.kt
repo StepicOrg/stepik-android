@@ -146,12 +146,10 @@ class CourseListCollectionFragment : Fragment(), CourseListCollectionView {
     override fun onStart() {
         super.onStart()
         courseListPresenter.attachView(this)
-//        courseListPresenter.attachView(courseListViewDelegate)
     }
 
     override fun onStop() {
         courseListPresenter.detachView(this)
-//        courseListPresenter.detachView(courseListViewDelegate)
         super.onStop()
     }
 }

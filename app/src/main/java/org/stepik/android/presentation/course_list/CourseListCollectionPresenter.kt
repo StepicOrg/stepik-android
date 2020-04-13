@@ -65,7 +65,7 @@ constructor(
         )
 
         paginationDisposable += courseListInteractor
-            .getCourseListItems(*(state as CourseListCollectionView.State.Data).courseCollection.courses)
+            .getCourseListItems(*courseCollection.courses)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
@@ -83,13 +83,13 @@ constructor(
                     }
                 },
                 onError = {
-                    when (val courseListViewState = (oldState as CourseListCollectionView.State.Data).courseListViewState) {
+                    when ((oldState as CourseListCollectionView.State.Data).courseListViewState) {
                         is CourseListView.State.Content -> {
                             state = oldState
                             view?.showNetworkError()
                         }
                         else ->
-                            state = (oldState as CourseListCollectionView.State.Data).copy(courseListViewState = CourseListView.State.NetworkError)
+                            state = oldState.copy(courseListViewState = CourseListView.State.NetworkError)
                     }
                 }
             )
