@@ -4,8 +4,8 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.view_catalog_no_internet_clickable.view.*
 import org.stepic.droid.R
-import org.stepik.android.presentation.catalog.CatalogItem
-import org.stepik.android.presentation.catalog.OfflinePlaceholder
+import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.OfflinePlaceholder
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 

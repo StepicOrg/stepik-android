@@ -2,7 +2,6 @@ package org.stepic.droid.features.stories.presentation
 
 import android.content.res.Resources
 import io.reactivex.Scheduler
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -12,7 +11,7 @@ import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.util.addDisposable
 import org.stepic.droid.util.defaultLocale
 import org.stepik.android.model.StoryTemplate
-import org.stepik.android.presentation.catalog.CatalogItem
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import ru.nobird.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -25,7 +24,8 @@ constructor(
         private val backgroundScheduler: Scheduler,
         @MainScheduler
         private val mainScheduler: Scheduler
-) : PresenterBase<StoriesView>(), CatalogItem {
+) : PresenterBase<StoriesView>(),
+    CatalogItem {
     private var state : StoriesView.State = StoriesView.State.Idle
         set(value) {
             field = value

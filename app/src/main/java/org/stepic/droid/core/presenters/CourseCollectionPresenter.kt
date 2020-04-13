@@ -18,7 +18,7 @@ import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
-import org.stepik.android.presentation.catalog.CatalogItem
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import javax.inject.Inject
 
 @CourseListScope
@@ -32,7 +32,8 @@ constructor(
     private val courseReviewSummaryRepository: CourseReviewSummaryRepository,
     private val courseRepository: CourseRepository,
     private val progressRepository: ProgressRepository
-) : PresenterBase<CoursesView>(), CatalogItem {
+) : PresenterBase<CoursesView>(),
+    CatalogItem {
 
     private val compositeDisposable = CompositeDisposable()
 

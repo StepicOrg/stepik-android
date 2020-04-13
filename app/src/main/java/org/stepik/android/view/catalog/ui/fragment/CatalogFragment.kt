@@ -26,10 +26,12 @@ import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
-import org.stepik.android.presentation.catalog.OfflinePlaceholder
+import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.LoadingPlaceholder
+import org.stepik.android.presentation.catalog.model.OfflinePlaceholder
+import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
@@ -42,7 +44,6 @@ import ru.nobird.android.stories.transition.SharedTransitionsManager
 import ru.nobird.android.stories.ui.delegate.SharedTransitionContainerDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCallback {
@@ -129,6 +130,8 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
             }
         )
 
+        catalogItemAdapter += LoadingAdapterDelegate()
+
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
             layoutManager = WrapContentLinearLayoutManager(context)
@@ -137,13 +140,15 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     }
 
     override fun setState(state: CatalogView.State) {
-        Timber.d("State: $state")
         when (val collectionsState = state.collectionsState) {
+            is CatalogView.CollectionsState.Loading -> {
+                catalogItemAdapter.items = state.headers + listOf(LoadingPlaceholder) + state.footers
+            }
             is CatalogView.CollectionsState.Content -> {
-                catalogItemAdapter.items = state.headers + collectionsState.collections
+                catalogItemAdapter.items = state.headers + collectionsState.collections + state.footers
             }
             is CatalogView.CollectionsState.Error -> {
-                catalogItemAdapter.items = state.headers + listOf(OfflinePlaceholder)
+                catalogItemAdapter.items = state.headers + listOf(OfflinePlaceholder) + state.footers
             }
             else ->
                 catalogItemAdapter.items = state.headers

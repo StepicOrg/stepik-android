@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.catalog
 
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 
 interface CatalogView {

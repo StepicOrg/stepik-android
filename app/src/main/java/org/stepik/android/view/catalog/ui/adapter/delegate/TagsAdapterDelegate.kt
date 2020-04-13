@@ -9,7 +9,7 @@ import org.stepic.droid.ui.adapters.TagsAdapter
 import org.stepic.droid.ui.util.setHeight
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.base.PresenterViewHolder
-import org.stepik.android.presentation.catalog.CatalogItem
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.catalog.TagsPresenter
 import org.stepik.android.presentation.catalog.TagsView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate

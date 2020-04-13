@@ -16,7 +16,7 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterViewHolder
-import org.stepik.android.presentation.catalog.CatalogItem
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryView

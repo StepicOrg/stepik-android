@@ -8,7 +8,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.model.CourseCollection
-import org.stepik.android.presentation.catalog.CatalogItem
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import ru.nobird.android.presentation.base.PresenterBase
