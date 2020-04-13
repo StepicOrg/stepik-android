@@ -29,11 +29,13 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
+import org.stepik.android.presentation.catalog.OfflinePlaceholder
+import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -121,6 +123,12 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
             courseContinueViewDelegate = courseContinueViewDelegate
         )
 
+        catalogItemAdapter += OfflineAdapterDelegate(
+            onRetry = {
+                catalogPresenter.fetchCollections(forceUpdate = true)
+            }
+        )
+
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
             layoutManager = WrapContentLinearLayoutManager(context)
@@ -133,6 +141,9 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
         when (val collectionsState = state.collectionsState) {
             is CatalogView.CollectionsState.Content -> {
                 catalogItemAdapter.items = state.headers + collectionsState.collections
+            }
+            is CatalogView.CollectionsState.Error -> {
+                catalogItemAdapter.items = state.headers + listOf(OfflinePlaceholder)
             }
             else ->
                 catalogItemAdapter.items = state.headers

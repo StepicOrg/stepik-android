@@ -40,7 +40,7 @@ constructor(
 
     private var state: CatalogView.State = CatalogView.State(
         headers = listOf(storiesPresenter, tagsPresenter, filtersPresenter),
-        collectionsState = CatalogView.CollectionsState.Idle,
+        collectionsState = CatalogView.CollectionsState.Error,
         footers = emptyList()
 //        footers = listOf(courseListQueryPresenter)
     )
@@ -104,22 +104,10 @@ constructor(
                         }
 
                     state = state.copy(collectionsState = CatalogView.CollectionsState.Content(collections = collections))
-
-//                    state = CatalogView.State.Content(base + collections +
-//                            courseListQueryPresenterProvider.get().apply {
-//                                setDataToPresenter(
-//                                    courseListQuery = CourseListQuery(
-//                                        page = 1,
-//                                        order = CourseListQuery.Order.ACTIVITY_DESC,
-//                                        language = sharedPreferenceHelper.languageForFeatured,
-//                                        isExcludeEnded = true,
-//                                        isPublic = true
-//                                    )
-//                                )
-//                            }
-//                    )
                 },
-                onError = {}
+                onError = {
+                    state = state.copy(collectionsState = CatalogView.CollectionsState.Error)
+                }
             )
     }
 
