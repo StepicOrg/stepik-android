@@ -1,9 +1,9 @@
 <vector android:height="24dp" android:viewportHeight="90.0"
     android:viewportWidth="90.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillColor="#F6F6F6" android:fillType="evenOdd"
+    <path android:fillColor="@color/color_elevation_overlay_1dp" android:fillType="evenOdd"
         android:pathData="M12,0L78,0A12,12 0,0 1,90 12L90,78A12,12 0,0 1,78 90L12,90A12,12 0,0 1,0 78L0,12A12,12 0,0 1,12 0z"
         android:strokeColor="#00000000" android:strokeWidth="1"/>
-    <path android:fillColor="#535366" android:fillType="evenOdd"
+    <path android:fillColor="@color/color_primary" android:fillType="evenOdd"
         android:pathData="M44.63,49.63L39.03,49.63L39.03,62.13L32,62.13L32,28L44.68,28C48.71,28 51.82,28.9 54.01,30.7C56.2,32.49 57.29,35.03 57.29,38.31C57.29,40.64 56.79,42.58 55.78,44.14C54.77,45.69 53.24,46.93 51.2,47.85L58.58,61.8L58.58,62.13L51.03,62.13L44.63,49.63ZM39.03,43.94L44.7,43.94C46.47,43.94 47.84,43.49 48.8,42.59C49.77,41.69 50.26,40.45 50.26,38.88C50.26,37.27 49.8,36 48.89,35.08C47.97,34.16 46.57,33.7 44.68,33.7L39.03,33.7L39.03,43.94Z"
         android:strokeColor="#00000000" android:strokeWidth="1"/>
 </vector>

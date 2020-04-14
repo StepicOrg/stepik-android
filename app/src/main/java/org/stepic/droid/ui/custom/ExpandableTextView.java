@@ -29,7 +29,7 @@ public class ExpandableTextView extends AppCompatTextView {
         if (isInEditMode()) {
             ELLIPSIS = "<font color=" + "#CCCCCC" + ">" + "more..." + "</font>";
         } else {
-            ELLIPSIS = "<font color=" + getResources().getColor(R.color.default_color_of_link) + ">" + context.getString(R.string.tap_to_see_more) + "</font>";
+            ELLIPSIS = "<font color=" + getResources().getColor(R.color.color_secondary) + ">" + context.getString(R.string.tap_to_see_more) + "</font>";
         }
 
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);

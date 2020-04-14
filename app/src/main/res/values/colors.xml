@@ -25,7 +25,7 @@
 
     <color name="color_status_bar">@color/color_primary</color>
 
-    <color name="transparent">@color/white_color_alpha_0</color>
+    <color name="transparent">@android:color/transparent</color>
     <color name="black">@color/black1</color>
 
     <!-- ThemeOverlay -->
@@ -60,40 +60,23 @@
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
-    <color name="stepic_brand_primary_dark">@color/green03</color>
 
-    <color name="default_color_of_link">@color/blue02</color>
     <color name="correct_answer_background">@color/green02</color>
 
     <color name="transparent_black_30">@color/black1_alpha_30</color>
 
-    <color name="snack_action_color">@color/violet1</color>
     <color name="black_alpha_40">@color/black1_alpha_40</color>
     <color name="background_time_thumbnail">@color/black1_alpha_40</color>
 
     <color name="exo_edit_mode_background_color">@color/grey04</color>
 
-    <!--Redesigned colors-->
-
-    <color name="text_color">@color/new_accent_color</color>
-
     <!--Tab text color, based on accent color-->
-    <color name="tab_text_color">@color/new_accent_color</color>
-
     <color name="new_cover">@color/white</color>
-
-    <color name="dots_color">@color/red01</color>
 
     <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
     <color name="home_streak_view_color">@color/blue03_alpha_8</color>
     <color name="view_all_course_list_color">@color/grey03</color>
     <color name="view_all_course_list_color_dark">@color/grey03_alpha_50</color>
-
-    <color name="login_edit_text_block_stroke_color">@color/grey02</color>
-    <color name="login_edit_text_block_background_color">@color/transparent</color>
-    <color name="login_edit_text_block_background_color_wrong">@color/red02_color_alpha_5</color>
-
-    <color name="remind_password_button_text_color">@color/blue03</color>
 
     <!-- Gradient colors -->
     <color name="start_gradient_placeholder">#8E8EB5</color>
@@ -126,24 +109,16 @@
     <color name="launcher_background">@color/black</color>
 
     <!-- Design system -->
-    <color name="grey01">#5E5E5E</color>
-
     <color name="grey02">#999999</color>
     <color name="grey02_alpha_19">#30999999</color>
-    <color name="grey02_alpha_50">#80999999</color>
     <color name="grey03">#CCCCCC</color>
     <color name="grey03_alpha_50">#80CCCCCC</color>
     <color name="grey03_alpha_80">#CCCCCCCC</color>
     <color name="grey04">#EAECF0</color>
-    <color name="grey04_alpha_70">#B3EAECF0</color>
     <color name="grey05">#F3F4F6</color>
-    <color name="grey05_alpha_95">#F2F3F4F6</color>
 
     <color name="green01">#66CC66</color>
     <color name="green01_alpha_5">#0C66CC66</color>
-    <color name="green01_alpha_10">#1966CC66</color>
-    <color name="green01_alpha_13">#2066CC66</color>
-    <color name="green01_alpha_40">#6666CC66</color>
     <color name="green01_alpha_50">#8066CC66</color>
     <color name="green01_alpha_85">#D966CC66</color>
 
@@ -151,15 +126,11 @@
     <color name="green04">#ACD1AC</color>
 
     <color name="violet1">#6C7BDF</color>
-    <color name="violet1_alpha_40">#666C7BDF</color>
-    <color name="violet1_alpha_13">#206C7BDF</color>
     <color name="violet1_alpha_50">#806C7BDF</color>
 
     <color name="violet2">#E9EBFA</color>
     <color name="violet3">#3E50CB</color>
     <color name="yellow1">#FFA961</color>
-
-    <color name="step_quiz_code_output_title">#f04a42</color> <!-- Generated from red01 -->
 
     <color name="black1">#000000</color>
     <color name="black1_alpha_19">#30000000</color> <!-- Ripple color -->
@@ -167,15 +138,11 @@
     <color name="black1_alpha_30">#4D000000</color>
     <color name="black1_alpha_40">#66000000</color>
 
-    <color name="black2">#222222</color>
-
-    <color name="black2_1">#1A222222</color>
     <color name="blue01">#003E86</color>
     <color name="blue02">#1466C6</color>
 
     <color name="blue03">#56A4FF</color>
     <color name="blue03_alpha_8">#1456A4FF</color>
-    <color name="blue03_alpha_80">#CC56A4FF</color>
     <color name="green02">#E9F9E9</color>
     <color name="green05">#85D685</color>
     <color name="green06">#E5EFE5</color>
@@ -190,19 +157,15 @@
     <color name="red03">#FFEBE8</color>
 <!---->
     <color name="white">#FFFFFF</color>
-    <color name="white_color_alpha_0">#00FFFFFF</color>
-    <color name="white_color_alpha_5">#0DFFFFFF</color>
     <color name="white_color_alpha_20">#33FFFFFF</color>
     <color name="white_color_alpha_30">#4DFFFFFF</color>
     <color name="white_color_alpha_60">#99FFFFFF</color>
     <color name="white_color_alpha_70">#B3FFFFFF</color>
-    <color name="white_color_alpha_80">#CCFFFFFF</color>
 <!--@color/-->
 
     <color name="new_primary_color">#F6F6F6</color>
     <color name="new_accent_color">#535366</color>
     <color name="new_accent_color_alpha_85">#DA535366</color>
-    <color name="new_accent_color_alpha_70">#B3535366</color>
     <color name="new_accent_color_alpha_60">#9a535366</color>
     <color name="new_accent_color_alpha_50">#80535366</color>
     <color name="new_accent_color_alpha_40">#66535366</color>
@@ -217,15 +180,8 @@
     <color name="popup_background_color_dark">@color/new_accent_color</color>
 
     <!-- course -->
-    <color name="course_appbar_scrim_color">#6B6B7B</color>
     <color name="course_content_section_background">@color/new_primary_color</color>
     <color name="course_content_section_date_disabled">@color/grey03_alpha_80</color>
-
-    <!-- Text styles colors -->
-    <color name="color_body1">@color/black2</color>
-
-    <color name="color_violet_1">@color/violet1</color>
-    <color name="color_violet_1_12">@color/violet1_alpha_13</color>
 
     <!-- Step -->
     <color name="step_quiz_feedback_wrong_text">@color/color_error</color>
