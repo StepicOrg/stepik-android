@@ -8,14 +8,14 @@
     android:layout_marginTop="@dimen/course_list_side_padding"
     android:layout_marginLeft="@dimen/course_list_side_padding"
     android:layout_marginRight="@dimen/course_list_side_padding"
-    android:background="@drawable/home_streak_view_background">
+    android:background="@drawable/background_home_streak_view">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/streakLightingIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_lightning"
-        android:tint="@color/new_accent_color"
+        app:srcCompat="@drawable/ic_profile_activities_streak"
+        app:tint="?colorPrimary"
         android:contentDescription="@string/current_streak"
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true"
@@ -26,8 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:textSize="16sp"
-        app:fontFamily="@font/roboto_medium"
+        android:textAppearance="?textAppearanceSubtitle1"
         tools:ignore="MissingPrefix"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
@@ -39,9 +38,7 @@
         android:id="@+id/streakText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        app:fontFamily="@font/roboto_light"
-        tools:ignore="MissingPrefix"
+        android:textAppearance="?textAppearanceBody1"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/streakCounter"
         android:layout_toEndOf="@id/streakCounter"

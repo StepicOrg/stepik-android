@@ -18,7 +18,6 @@
                 android:id="@+id/courseItemImage"
                 android:layout_width="@dimen/new_course_image_size"
                 android:layout_height="@dimen/new_course_image_size"
-                android:background="@drawable/course_image_background"
                 android:contentDescription="@string/content_course_logo"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"

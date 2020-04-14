@@ -22,10 +22,9 @@
                 android:id="@+id/feedbackBadButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_thumb_down_white_24dp"
-                android:drawableStart="@drawable/ic_thumb_down_white_24dp"
+                app:icon="@drawable/ic_comment_dislike"
+                app:iconGravity="textStart"
                 app:backgroundTint="?colorError"
-                android:gravity="center"
                 android:text="@string/feedback_bad" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -51,9 +50,9 @@
                 android:id="@+id/feedbackGoodButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/ic_thumb_up_white_24dp"
-                android:drawableStart="@drawable/ic_thumb_up_white_24dp"
-                android:gravity="center"
+                app:icon="@drawable/ic_comment_like"
+                app:iconGravity="textStart"
+                android:theme="@style/ThemeOverlay.Green"
                 android:text="@string/feedback_good" />
 
             <androidx.appcompat.widget.AppCompatTextView

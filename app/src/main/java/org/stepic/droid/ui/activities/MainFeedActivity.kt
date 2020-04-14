@@ -7,8 +7,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
@@ -95,8 +93,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     internal lateinit var threadPoolExecutor: ThreadPoolExecutor
-
-    private lateinit var navigationAdapter: AHBottomNavigationAdapter
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -205,9 +201,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         when (getFragmentIndexFromIntent(launchIntent)) {
-            CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
-            PROFILE_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.profile)
-            NOTIFICATIONS_INDEX -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.notifications)
+            CATALOG_INDEX       -> navigationView.selectedItemId = R.id.catalog
+            PROFILE_INDEX       -> navigationView.selectedItemId = R.id.profile
+            NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
             else -> {
                 //do nothing
             }
@@ -215,19 +211,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun initNavigation() {
-        navigationAdapter = AHBottomNavigationAdapter(this, R.menu.drawer_menu)
-        navigationAdapter.setupWithBottomNavigation(navigationView)
-
-        navigationView.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
-        navigationView.setOnTabSelectedListener { position, wasSelected ->
-            val menuItem = navigationAdapter.getMenuItem(position)
-            if (wasSelected) {
-                onNavigationItemReselected(menuItem)
-            } else {
-                onNavigationItemSelected(menuItem)
-            }
-            true
-        }
+        navigationView.setOnNavigationItemSelectedListener(::onNavigationItemSelected)
+        navigationView.setOnNavigationItemReselectedListener(::onNavigationItemReselected)
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
@@ -245,12 +230,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onBackPressed() {
-        val homeTabPosition = navigationAdapter.getPositionByMenuId(R.id.home)
-        if (navigationView.currentItem == homeTabPosition) {
+        if (navigationView.selectedItemId == R.id.home) {
             finish()
             return
         } else {
-            navigationView.currentItem = homeTabPosition
+            navigationView.selectedItemId = R.id.home
         }
     }
 
@@ -289,7 +273,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             }
             R.id.profile -> {
                 getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
-//                getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
             }
             R.id.notifications -> {
                 getNextFragmentOrNull(currentFragmentTag, NotificationsFragment::class.java.simpleName, NotificationsFragment::newInstance)
@@ -320,9 +303,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     //RootScreen methods
     override fun showCatalog() {
-        val catalogTabPosition = navigationAdapter.getPositionByMenuId(R.id.catalog)
-        if (navigationView.currentItem != catalogTabPosition) {
-            navigationView.currentItem = catalogTabPosition
+        if (navigationView.selectedItemId != R.id.catalog) {
+            navigationView.selectedItemId = R.id.catalog
         }
     }
 
@@ -352,17 +334,15 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onBadgeShouldBeHidden() {
-        navigationView.setNotification("", navigationAdapter.getPositionByMenuId(R.id.notifications))
+        navigationView.removeBadge(R.id.notifications)
     }
 
     override fun onBadgeCountChanged(count: Int) {
-        navigationView.setNotification(getBadgeStringForCount(count), navigationAdapter.getPositionByMenuId(R.id.notifications))
+        val badge = navigationView.getOrCreateBadge(R.id.notifications)
+        badge.number = count
+        badge.maxCharacterCount = 3
+        badge.isVisible = true
+        // TODO 09.04.2020: Uncomment after stable release of Material Components 1.2.0
+//        badge.verticalOffset = 8
     }
-
-    private fun getBadgeStringForCount(count: Int) =
-        if (count > MAX_NOTIFICATION_BADGE_COUNT) {
-            getString(R.string.notification_badge_placeholder)
-        } else {
-            count.toString()
-        }
 }

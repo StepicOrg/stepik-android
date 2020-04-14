@@ -178,7 +178,6 @@ dependencies {
     implementation libraries.recyclerAnimators
     implementation libraries.materialProgress
     implementation libraries.circleImageView
-    implementation libraries.ahbottomnavigation
     implementation libraries.circleIndicator
     implementation libraries.confetti
     implementation libraries.MPAndroidChart

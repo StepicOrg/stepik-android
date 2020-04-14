@@ -20,9 +20,9 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.HtmlHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -245,7 +245,7 @@ constructor(
             }
 
             val largeIcon = notificationHelper.getPictureByCourse(relatedCourse)
-            val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+            val colorArgb = applicationContext.resolveColorAttribute(R.attr.colorSecondary)
 
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepikNotification.htmlText)
             val intent =

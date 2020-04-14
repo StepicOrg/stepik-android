@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.widget.TextViewCompat
 import org.stepic.droid.R
 import org.stepic.droid.model.CertificateViewItem
 import org.stepik.android.model.Certificate
@@ -33,17 +34,18 @@ class CertificateProfileAdapterDelegate(
         override fun onBind(data: CertificateViewItem) {
             certificateTextView.text = data.title.orEmpty()
 
-            val tintColorRes = when (data.certificate.type) {
-                Certificate.Type.REGULAR ->
-                    R.color.certificate_regular
-                Certificate.Type.DISTINCTION ->
-                    R.color.certificate_distinction
-                else ->
-                    R.color.white
-            }
+            val tintColorRes =
+                when (data.certificate.type) {
+                    Certificate.Type.REGULAR ->
+                        R.color.certificate_regular
+                    Certificate.Type.DISTINCTION ->
+                        R.color.certificate_distinction
+                    else ->
+                        R.color.white
+                }
 
-            certificateTextView.supportCompoundDrawablesTintList = ColorStateList
-                .valueOf(ContextCompat.getColor(context, tintColorRes))
+            TextViewCompat.setCompoundDrawableTintList(certificateTextView,
+                ColorStateList.valueOf(ContextCompat.getColor(context, tintColorRes)))
         }
     }
 }

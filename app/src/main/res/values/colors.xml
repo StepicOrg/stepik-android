@@ -26,7 +26,7 @@
     <color name="color_status_bar">@color/color_primary</color>
 
     <color name="transparent">@android:color/transparent</color>
-    <color name="black">@color/black1</color>
+    <color name="black">@android:color/black</color>
 
     <!-- ThemeOverlay -->
     <color name="color_overlay_brown">@color/color_brown_700</color>
@@ -59,9 +59,7 @@
     <color name="color_red_300_alpha_12">#30FF7965</color>
 
     <!-- stepic brand book-->
-    <color name="stepic_brand_primary">@color/green01</color>
-
-    <color name="correct_answer_background">@color/green02</color>
+    <color name="correct_answer_background">@color/color_overlay_green_alpha_12</color>
 
     <color name="transparent_black_30">@color/black1_alpha_30</color>
 
@@ -71,7 +69,7 @@
     <color name="exo_edit_mode_background_color">@color/grey04</color>
 
     <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
-    <color name="home_streak_view_color">@color/blue03_alpha_8</color>
+    <color name="home_streak_view_color">@color/color_secondary_alpha_12</color>
     <color name="view_all_course_list_color">@color/grey03</color>
     <color name="view_all_course_list_color_dark">@color/grey03_alpha_50</color>
 
@@ -90,7 +88,7 @@
     <color name="text_color_gradient_fire">#18073D</color>
     <!-- Gradient colors end-->
 
-    <color name="default_code_error_highlight_color">@color/red02</color>
+    <color name="default_code_error_highlight_color">@color/color_error</color>
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
     <color name="stepik_swipe_refresh">@color/new_accent_color</color>
 
@@ -106,66 +104,31 @@
     <color name="launcher_background">@color/black</color>
 
     <!-- Design system -->
-    <color name="grey02">#999999</color>
     <color name="grey02_alpha_19">#30999999</color>
     <color name="grey03">#CCCCCC</color>
     <color name="grey03_alpha_50">#80CCCCCC</color>
-    <color name="grey03_alpha_80">#CCCCCCCC</color>
     <color name="grey04">#EAECF0</color>
     <color name="grey05">#F3F4F6</color>
-
-    <color name="green01">#66CC66</color>
-    <color name="green01_alpha_5">#0C66CC66</color>
-    <color name="green01_alpha_50">#8066CC66</color>
-    <color name="green01_alpha_85">#D966CC66</color>
-
-    <color name="green03">#54AD54</color>
-    <color name="green04">#ACD1AC</color>
-
-    <color name="violet1">#6C7BDF</color>
-    <color name="violet1_alpha_50">#806C7BDF</color>
 
     <color name="violet2">#E9EBFA</color>
     <color name="violet3">#3E50CB</color>
     <color name="yellow1">#FFA961</color>
 
-    <color name="black1">#000000</color>
-    <color name="black1_alpha_19">#30000000</color> <!-- Ripple color -->
-    <color name="black1_alpha_27">#44000000</color>
     <color name="black1_alpha_30">#4D000000</color>
     <color name="black1_alpha_40">#66000000</color>
 
-    <color name="blue01">#003E86</color>
-    <color name="blue02">#1466C6</color>
-
     <color name="blue03">#56A4FF</color>
-    <color name="blue03_alpha_8">#1456A4FF</color>
-    <color name="green02">#E9F9E9</color>
-    <color name="green05">#85D685</color>
-    <color name="green06">#E5EFE5</color>
-    <color name="red01">#D41F1F</color>
-
-    <color name="red02">#FF7965</color>
-    <color name="red02_color_alpha_5">#0DFF7965</color>
-    <color name="red02_color_alpha_15">#26FF7965</color>
-    <color name="red02_color_alpha_50">#80FF7965</color>
-    <color name="red02_color_alpha_82">#D0FF7965</color>
-
-    <color name="red03">#FFEBE8</color>
 <!---->
     <color name="white">#FFFFFF</color>
     <color name="white_color_alpha_20">#33FFFFFF</color>
     <color name="white_color_alpha_30">#4DFFFFFF</color>
-    <color name="white_color_alpha_60">#99FFFFFF</color>
     <color name="white_color_alpha_70">#B3FFFFFF</color>
 <!--@color/-->
 
     <color name="new_primary_color">#F6F6F6</color>
     <color name="new_accent_color">#535366</color>
     <color name="new_accent_color_alpha_85">#DA535366</color>
-    <color name="new_accent_color_alpha_60">#9a535366</color>
     <color name="new_accent_color_alpha_50">#80535366</color>
-    <color name="new_accent_color_alpha_40">#66535366</color>
     <color name="new_accent_color_alpha_30">#4D535366</color>
     <color name="new_accent_color_alpha_5">#0D535366</color>
     <!-- Design system finished -->
@@ -199,7 +162,6 @@
     <!-- Solutions screen -->
     <color name="section_color">@color/new_primary_color</color>
     <color name="lesson_color">@color/grey05</color>
-    <color name="submission_time">@color/grey02</color>
-    <color name="submission_correct">@color/green01_alpha_85</color>
-    <color name="submission_incorrect">@color/red02_color_alpha_82</color>
+    <color name="submission_correct">@color/color_overlay_green</color>
+    <color name="submission_incorrect">@color/color_error</color>
 </resources>

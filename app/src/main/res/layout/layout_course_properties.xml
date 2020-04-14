@@ -48,6 +48,7 @@
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/courseRatingText"
         android:layout_toRightOf="@id/courseRatingText"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
         app:progressBarStroke="@dimen/course_item_progress_bar_size" />
 
     <androidx.appcompat.widget.AppCompatTextView
