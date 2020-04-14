@@ -1,46 +1,100 @@
 package org.stepik.android.view.injection.catalog
 
-import androidx.lifecycle.ViewModel
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import dagger.multibindings.IntoMap
-import org.stepik.android.presentation.base.injection.ViewModelKey
-import org.stepik.android.presentation.course_continue.CourseContinueView
+import io.reactivex.Scheduler
+import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
+import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.di.qualifiers.BackgroundScheduler
+import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
+import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListCollectionView
+import org.stepik.android.presentation.course_list.CourseListQueryPresenter
+import org.stepik.android.presentation.course_list.CourseListQueryView
+import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
 import ru.nobird.android.presentation.base.PresenterViewContainer
-import ru.nobird.android.presentation.base.ViewContainer
 
-// todo only sample
 @Module
 abstract class CourseListCollectionModule {
-    @Binds
-    @IntoMap
-    @ViewModelKey(CourseListCollectionPresenter::class)
-    internal abstract fun bindCourseListCollectionPresenter(courseListCollectionPresenter: CourseListCollectionPresenter): ViewModel
-
-//    @Binds
-//    @IntoMap
-//    @ViewModelKey(CourseListQueryPresenter::class)
-//    internal abstract fun bindCourseListPresenter(courseListQueryPresenter: CourseListQueryPresenter): ViewModel
-
     @Module
     companion object {
-        private var pvc: PresenterViewContainer<CourseListCollectionView>? = null
+        @Provides
+        @JvmStatic
+        fun provideCourseListCollectionPresenter(
+            courseListInteractor: CourseListInteractor,
+            @BackgroundScheduler
+            backgroundScheduler: Scheduler,
+            @MainScheduler
+            mainScheduler: Scheduler,
+
+            viewContainer: PresenterViewContainer<CourseListCollectionView>,
+
+            analytic: Analytic,
+            adaptiveCoursesResolver: AdaptiveCoursesResolver,
+            continueLearningInteractor: ContinueLearningInteractor
+        ): CourseListCollectionPresenter =
+            CourseListCollectionPresenter(
+                courseListInteractor = courseListInteractor,
+                backgroundScheduler = backgroundScheduler,
+                mainScheduler = mainScheduler,
+                viewContainer = viewContainer,
+
+                continueCoursePresenterDelegate = CourseContinuePresenterDelegateImpl(
+                    viewContainer,
+                    analytic,
+                    adaptiveCoursesResolver,
+                    continueLearningInteractor,
+                    backgroundScheduler,
+                    mainScheduler
+                )
+            )
 
         @Provides
         @JvmStatic
-        fun provideViewContainer(): PresenterViewContainer<CourseListCollectionView> =
-            pvc ?: DefaultPresenterViewContainer<CourseListCollectionView>().also { pvc = it }
+        fun provideCourseListQueryPresenter(
+            courseListStateMapper: CourseListStateMapper,
+            courseListInteractor: CourseListInteractor,
+            @BackgroundScheduler
+            backgroundScheduler: Scheduler,
+            @MainScheduler
+            mainScheduler: Scheduler,
+
+            viewContainer: PresenterViewContainer<CourseListQueryView>,
+
+            analytic: Analytic,
+            adaptiveCoursesResolver: AdaptiveCoursesResolver,
+            continueLearningInteractor: ContinueLearningInteractor
+        ): CourseListQueryPresenter =
+            CourseListQueryPresenter(
+                courseListStateMapper = courseListStateMapper,
+                courseListInteractor = courseListInteractor,
+                backgroundScheduler = backgroundScheduler,
+                mainScheduler = mainScheduler,
+                viewContainer = viewContainer,
+
+                continueCoursePresenterDelegate = CourseContinuePresenterDelegateImpl(
+                    viewContainer,
+                    analytic,
+                    adaptiveCoursesResolver,
+                    continueLearningInteractor,
+                    backgroundScheduler,
+                    mainScheduler
+                )
+            )
 
         @Provides
         @JvmStatic
-        fun bindCourseContinueViewContainer(): ViewContainer<out CourseContinueView> {
-            val vc = requireNotNull(pvc)
-            pvc = null
-            return vc
-        }
+        fun provideCollectionViewContainer(): PresenterViewContainer<CourseListCollectionView> =
+            DefaultPresenterViewContainer()
+
+
+        @Provides
+        @JvmStatic
+        fun provideQueryViewContainer(): PresenterViewContainer<CourseListQueryView> =
+            DefaultPresenterViewContainer()
     }
 }

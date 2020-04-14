@@ -12,7 +12,9 @@ import org.stepic.droid.model.StepikFilter
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
+import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
+import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
@@ -34,15 +36,14 @@ constructor(
     private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
-//    private val courseListQueryPresenter: CourseListQueryPresenter,
+    private val courseListQueryPresenter: CourseListQueryPresenter,
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CatalogView>() {
 
     private var state: CatalogView.State = CatalogView.State(
         headers = listOf(storiesPresenter, tagsPresenter, filtersPresenter),
         collectionsState = CatalogView.CollectionsState.Idle,
-        footers = emptyList()
-//        footers = listOf(courseListQueryPresenter)
+        footers = listOf(courseListQueryPresenter)
     )
         set(value) {
             field = value
@@ -61,15 +62,15 @@ constructor(
     init {
         compositeDisposable += collectionsDisposable
 
-//        courseListQueryPresenter.setDataToPresenter(
-//            courseListQuery = CourseListQuery(
-//                page = 1,
-//                order = CourseListQuery.Order.ACTIVITY_DESC,
-//                language = sharedPreferenceHelper.languageForFeatured,
-//                isExcludeEnded = true,
-//                isPublic = true
-//            )
-//        )
+        courseListQueryPresenter.fetchCourses(
+            courseListQuery = CourseListQuery(
+                page = 1,
+                order = CourseListQuery.Order.ACTIVITY_DESC,
+                language = sharedPreferenceHelper.languageForFeatured,
+                isExcludeEnded = true,
+                isPublic = true
+            )
+        )
     }
 
     init {
