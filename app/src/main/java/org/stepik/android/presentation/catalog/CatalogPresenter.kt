@@ -46,32 +46,27 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CatalogView>() {
 
-    private var state: CatalogView.State = CatalogView.State(
-        headers = getHeaders(),
-        collectionsState = CatalogView.CollectionsState.Idle,
-        footers = listOf(courseListQueryPresenter)
-    )
+    private var state: CatalogView.State =
+        CatalogView.State(
+            headers = getHeaders(),
+            collectionsState = CatalogView.CollectionsState.Idle,
+            footers = listOf(courseListQueryPresenter)
+        )
         set(value) {
             field = value
             view?.setState(value)
         }
 
     override val nestedDisposables: List<DisposableViewModel>
-        get() = (state.headers +
-                (state.collectionsState as? CatalogView.CollectionsState.Content)?.collections.orEmpty() +
-                state.footers
-                )
+        get() = (state.headers + (state.collectionsState as? CatalogView.CollectionsState.Content)?.collections.orEmpty() + state.footers)
             .filterIsInstance<DisposableViewModel>()
 
     private val collectionsDisposable = CompositeDisposable()
 
     init {
         compositeDisposable += collectionsDisposable
-        fetchPopularCourses()
-    }
-
-    init {
         subscribeForFilterUpdates()
+        fetchPopularCourses()
     }
 
     override fun attachView(view: CatalogView) {
@@ -87,6 +82,7 @@ constructor(
         if (forceUpdate) {
             storiesPresenter.fetchStories(forceUpdate = forceUpdate)
             tagsPresenter.fetchFeaturedTags(forceUpdate = forceUpdate)
+            fetchPopularCourses(forceUpdate = forceUpdate)
         }
 
         collectionsDisposable += catalogInteractor
@@ -135,14 +131,13 @@ constructor(
                 onNext = {
                     collectionsDisposable.clear()
                     fetchCollections(forceUpdate = true)
-                    fetchPopularCourses(forceUpdate = true)
                 },
                 onError = emptyOnErrorStub
             )
     }
 
     private fun getHeaders(): List<CatalogItem> =
-        if (sharedPreferenceHelper.isNeedShowLangWidget) {
+        if (true) {
             listOf(storiesPresenter, tagsPresenter, filtersPresenter)
         } else {
             listOf(storiesPresenter, tagsPresenter)

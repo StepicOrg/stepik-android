@@ -37,13 +37,13 @@ constructor(
             view?.setState(value)
         }
 
+    init {
+        onNeedFilters()
+    }
+
     override fun attachView(view: FiltersView) {
         super.attachView(view)
         view.setState(state)
-    }
-
-    init {
-        onNeedFilters()
     }
 
     private fun onNeedFilters(forceUpdate: Boolean = false) {

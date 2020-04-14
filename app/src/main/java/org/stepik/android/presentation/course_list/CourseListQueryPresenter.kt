@@ -86,13 +86,13 @@ constructor(
                     }
                 },
                 onError = {
-                    when (val oldState = (state as CourseListQueryView.State.Data).courseListViewState) {
+                    when (val oldState = (state as? CourseListQueryView.State.Data)?.courseListViewState) {
                         is CourseListView.State.Content -> {
                             state = (state as CourseListQueryView.State.Data).copy(courseListViewState = oldState)
                             view?.showNetworkError()
                         }
                         else ->
-                            state = (state as CourseListQueryView.State.Data).copy(courseListViewState = CourseListView.State.NetworkError)
+                            state = CourseListQueryView.State.Data(courseListQuery, CourseListView.State.NetworkError)
                     }
                 }
             )
