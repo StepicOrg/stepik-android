@@ -7,9 +7,10 @@
     android:layout_height="@dimen/code_toolbar_height"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:clickable="true"
+    android:focusable="true"
     android:gravity="center"
     android:minWidth="@dimen/code_toolbar_height"
     android:padding="@dimen/half_padding"
     android:textStyle="bold"
-    android:textSize="14sp"
+    android:textAppearance="?textAppearanceBody2"
     tools:text="TAB"/>

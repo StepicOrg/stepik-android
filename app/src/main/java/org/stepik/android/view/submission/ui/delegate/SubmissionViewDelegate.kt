@@ -2,9 +2,13 @@ package org.stepik.android.view.submission.ui.delegate
 
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.TextViewCompat
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.util.resolveResourceIdAttribute
 import org.stepik.android.model.Submission
 
 fun TextView.setSubmission(submission: Submission?, showArrow: Boolean = false) {
@@ -23,7 +27,28 @@ fun TextView.setSubmission(submission: Submission?, showArrow: Boolean = false) 
                 else ->
                     -1
             }
-        setCompoundDrawables(start = compoundDrawableRes, end = if (showArrow) R.drawable.ic_nav_arrow_right else -1)
+
+        val startDrawable =
+            if (compoundDrawableRes != -1) {
+                AppCompatResources.getDrawable(context, compoundDrawableRes)
+            } else {
+                null
+            }
+
+        val endDrawable =
+            if (showArrow) {
+                AppCompatResources
+                    .getDrawable(context, R.drawable.ic_nav_arrow_right)
+                    ?.apply {
+                        mutate()
+                        DrawableCompat.setTintList(this, ContextCompat.getColorStateList(context, context.resolveResourceIdAttribute(R.attr.colorControlNormal)))
+                    }
+            } else {
+                null
+            }
+
+        TextViewCompat
+            .setCompoundDrawablesRelativeWithIntrinsicBounds(this, startDrawable, null, endDrawable, null)
         isVisible = true
     } else {
         isVisible = false

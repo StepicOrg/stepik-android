@@ -178,9 +178,9 @@
         android:layout_below="@id/autoplay_controller_panel"
         app:switchPadding="8dp"
 
+        android:theme="@style/ThemeOverlay.Green"
         android:text="@string/setting_autoplay_short"
-        android:textColor="@color/white"
-        app:thumbTint="@color/color_switch_accent" />
+        android:textColor="@color/white" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_controller_panel"

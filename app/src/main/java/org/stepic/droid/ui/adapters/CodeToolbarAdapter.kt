@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.code.data.AutocompleteState
 import org.stepic.droid.model.code.symbolsForLanguage
+import org.stepic.droid.util.resolveColorAttribute
 import kotlin.math.abs
 
 class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -26,9 +26,8 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
         fun onSymbolClick(symbol: String, offset: Int = 0)
     }
 
-    private val autocompletePrefixBackgroundSpan by lazy {
-        BackgroundColorSpan(ContextCompat.getColor(context, R.color.code_toolbar_autocomplete_prefix_background))
-    }
+    private val autocompletePrefixBackgroundSpan =
+        BackgroundColorSpan(context.resolveColorAttribute(R.attr.colorControlHighlight))
 
     private var recyclerView: RecyclerView? = null
     private var items: MutableList<Spannable?> = ArrayList()

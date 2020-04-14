@@ -1,102 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="StepikTheme" />
-<!--        parent="StepikTheme.15"-->
-
-<!--    <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light.NoActionBar">-->
-<!--        <item name="colorPrimary">@color/new_primary_color</item>-->
-<!--        <item name="colorPrimaryDark">@color/new_accent_color</item>-->
-<!--        <item name="colorAccent">@color/new_accent_color</item>-->
-<!--        <item name="colorSecondary">@color/green01</item>-->
-
-<!--        &lt;!&ndash;this change the background of main window (activity)&ndash;&gt;-->
-<!--        <item name="android:windowBackground">@color/white</item>-->
-
-<!--        &lt;!&ndash;this change the background of main window (activity and) AND all the components (dialogs) &ndash;&gt;-->
-<!--        <item name="android:colorBackground">@color/new_cover</item>-->
-
-<!--        <item name="android:textColorPrimary">@color/text_color</item>-->
-<!--        <item name="android:textColorSecondary">@color/grey02</item>-->
-
-<!--        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>-->
-<!--        <item name="android:windowContentOverlay">@null</item>-->
-<!--        <item name="android:actionMenuTextColor">@color/white</item>-->
-<!--        <item name="windowActionBar">false</item>-->
-<!--        <item name="windowNoTitle">true</item>-->
-<!--        <item name="android:textAppearance">?textAppearanceBody1</item>-->
-<!--        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>-->
-<!--        <item name="dialogTheme">@style/AppTheme.Dialog</item>-->
-<!--        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>-->
-<!--        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>-->
-<!--        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>-->
-
-<!--        <item name="colorSwitchThumbNormal">#D8D8D8</item>-->
-<!--        <item name="android:colorForeground">#c7c7c7</item>-->
-
-<!--        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>-->
-
-<!--        &lt;!&ndash;color of back button and overflow&ndash;&gt;-->
-<!--        <item name="colorControlNormal">@color/new_accent_color</item>-->
-
-<!--        &lt;!&ndash;For setting text color to edit text (android O)&ndash;&gt;-->
-<!--        <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>-->
-
-<!--        <item name="searchViewStyle">@style/SearchViewStyle</item>-->
-<!--        <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>-->
-
-<!--        <item name="dividerVertical">@drawable/bg_divider_vertical</item>-->
-<!--        <item name="dividerVerticalSize">1dp</item>-->
-<!--        <item name="dividerVerticalColor">@color/grey04</item>-->
-<!--        <item name="colorOnSecondary">@color/white</item>-->
-
-<!--        <item name="buttonCornerRadius">@dimen/button_corner_radius</item>-->
-<!--        <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>-->
-
-<!--        <item name="buttonStyle">@style/Button</item>-->
-<!--        <item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
-<!--        <item name="android:textColorLink">?colorAccent</item>-->
-
-<!--        <item name="textAppearanceBody1">@style/TextAppearance.Body1</item>-->
-<!--        <item name="textAppearanceBody2">@style/TextAppearance.Body2</item>-->
-<!--        <item name="textAppearanceCaption">@style/TextAppearance.Caption</item>-->
-<!--        <item name="textAppearanceSubtitle1">@style/TextAppearance.Subtitle1</item>-->
-<!--        <item name="textAppearanceSubtitle2">@style/TextAppearance.Subtitle2</item>-->
-<!--        <item name="textAppearanceHeadline5">@style/TextAppearance.Headline5</item>-->
-<!--        <item name="textAppearanceHeadline6">@style/TextAppearance.Headline6</item>-->
-<!--    </style>-->
-
-    <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_action_more_vert</item>
-    </style>
-
-<!--    <style name="AppTheme" parent="AppTheme.15" />-->
-
-<!--    <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">-->
-<!--        <item name="colorPrimary">@color/green01</item>-->
-<!--        <item name="colorPrimaryDark">@color/black</item>-->
-<!--        <item name="colorAccent">@color/new_accent_color</item>-->
-
-<!--        <item name="android:textColorPrimary">@color/new_accent_color</item>-->
-<!--        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>-->
-<!--        <item name="android:windowContentOverlay">@null</item>-->
-<!--        <item name="android:actionMenuTextColor">@color/white</item>-->
-<!--        <item name="windowActionBar">false</item>-->
-<!--        <item name="windowNoTitle">true</item>-->
-<!--        <item name="android:textAppearance">?textAppearanceBody1</item>-->
-<!--        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>-->
-<!--        <item name="dialogTheme">@style/AppTheme.Dialog</item>-->
-<!--        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>-->
-<!--        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>-->
-<!--        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>-->
-
-<!--        <item name="colorSwitchThumbNormal">#D8D8D8</item>-->
-<!--        <item name="android:colorForeground">#c7c7c7</item>-->
-
-<!--        <item name="buttonStyle">@style/Button</item>-->
-<!--        <item name="textAppearanceButton">@style/TextAppearance.Button</item>-->
-<!--        <item name="textAppearanceBody1">@style/TextAppearance.Body1</item>-->
-<!--    </style>-->
-
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
@@ -265,9 +168,15 @@
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textAppearance">?textAppearanceBody1</item>
         <item name="android:drawablePadding">16dp</item>
+    </style>
+
+    <style name="StepQuizFeedback.Info">
+        <item name="android:theme">@style/ThemeOverlay.Violet</item>
+        <item name="android:background">@drawable/bg_shape_rounded</item>
+        <item name="backgroundTint">@color/color_secondary_alpha_12</item>
+        <item name="drawableTint">?android:textColorPrimary</item>
     </style>
 
     <style name="StepQuizDescription">

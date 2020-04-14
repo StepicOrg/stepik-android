@@ -11,6 +11,7 @@ import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.ui.util.collapse
 import org.stepic.droid.ui.util.expand
 import org.stepik.android.model.Step
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
 import org.stepik.android.view.step_quiz_code.ui.adapter.delegate.CodeDetailLimitAdapterDelegate
@@ -33,6 +34,13 @@ class CodeQuizInstructionDelegate(
         stepQuizCodeDetailsAdapter += CodeDetailSampleAdapterDelegate()
         stepQuizCodeDetailsAdapter += CodeDetailLimitAdapterDelegate()
 
+        val elevatedBackgroudColor = ColorExtensions
+            .colorSurfaceWithElevationOverlay(
+                detailsContainerView.context,
+                detailsContainerView.resources.getInteger(R.integer.highlighted_element_elevation),
+                overrideLightTheme = true
+            )
+
         with(stepQuizCodeDetailsContent) {
             layoutManager = LinearLayoutManager(context)
             adapter = stepQuizCodeDetailsAdapter
@@ -41,7 +49,11 @@ class CodeQuizInstructionDelegate(
             val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
             divider.setDrawable(AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)!!)
             addItemDecoration(divider)
+
+            setBackgroundColor(elevatedBackgroudColor)
         }
+
+        stepQuizCodeDetails.setBackgroundColor(elevatedBackgroudColor)
 
         if (isCollapseable) {
             stepQuizCodeDetails.setOnClickListener {
@@ -53,7 +65,7 @@ class CodeQuizInstructionDelegate(
                 }
             }
         } else {
-            stepQuizCodeDetailsContent.visibility = View.VISIBLE
+            stepQuizCodeDetailsContent.isVisible = true
         }
     }
 

@@ -40,38 +40,24 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/solutionsSubmitFeedback"
-            style="@style/StepQuizFeedback"
-            android:background="@drawable/bg_step_quiz_feedback_evaluation"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            android:gravity="center_vertical"
-            android:fontFamily="@font/roboto_regular"
-            android:textSize="16sp"
-            android:drawablePadding="16dp"
+            style="@style/StepQuizFeedback.Info"
 
             android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
 
             android:text="@string/solutions_submit_in_progress"
-            android:textColor="@color/violet1"
 
             android:layout_above="@id/solutionsSubmitButton"
 
             android:visibility="gone" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <Button
             android:id="@+id/solutionsSubmitButton"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/step_submit_button_height"
-            android:background="@drawable/bg_step_submit_button"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.Green"
 
-            android:drawablePadding="-36dp"
-            android:padding="12dp"
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginRight="16dp"
@@ -79,10 +65,7 @@
             android:layout_marginBottom="16dp"
 
             android:text="@string/solutions_submit_all"
-            android:textSize="16sp"
-            android:textColor="@color/color_step_submit_button_text"
-            android:layout_alignParentBottom="true"
-            android:gravity="center" />
+            android:layout_alignParentBottom="true" />
 
     </RelativeLayout>
 

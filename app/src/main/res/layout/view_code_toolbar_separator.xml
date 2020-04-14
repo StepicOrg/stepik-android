@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <View xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/code_toolbar_autocomplete_prefix_background"
-    android:layout_width="1dp"
+    android:background="?dividerVertical"
+    android:layout_width="?dividerVerticalSize"
     android:layout_height="@dimen/code_toolbar_height" />

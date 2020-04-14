@@ -3,6 +3,9 @@ package org.stepik.android.view.step_quiz_choice.ui.adapter
 import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import org.stepic.droid.R
@@ -52,16 +55,15 @@ class ChoicesAdapterDelegate(
                 itemChoiceContainer.background.mutate() as LayerDrawable
             )
             itemChoiceLatex.webViewClient = ProgressableWebViewClient(itemChoiceLatexProgress, itemChoiceLatex.webView)
+
+            ViewCompat.setBackgroundTintList(
+                itemChoiceFeedback, ContextCompat.getColorStateList(context, R.color.color_elevation_overlay_1dp))
         }
 
         override fun onBind(data: Choice) {
             itemView.itemChoiceContainer.isEnabled = data.isEnabled
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            itemChoiceCheckmark.visibility = if (data.correct == true) {
-                View.VISIBLE
-            } else {
-                View.INVISIBLE
-            }
+            itemChoiceCheckmark.isInvisible = data.correct != true
             itemChoiceLatex.setText(data.option)
             layerListDrawableDelegate.showLayer(getItemBackgroundLayer(data))
             bindHint(data)

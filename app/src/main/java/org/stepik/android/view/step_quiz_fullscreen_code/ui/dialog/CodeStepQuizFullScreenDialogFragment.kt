@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.RelativeLayout
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
+import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
@@ -35,6 +35,7 @@ import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepRunCodeDelegate
@@ -92,7 +93,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      * Run code views
      */
     private var runCodeActionSeparator: View? = null
-    private var runCodeAction: AppCompatTextView? = null
+    private var runCodeAction: MaterialButton? = null
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -317,6 +318,9 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      * Keyboard extension
      */
     private fun setupKeyboardExtension() {
+        stepQuizCodeKeyboardExtension.setBackgroundColor(
+            ColorExtensions.colorSurfaceWithElevationOverlay(requireContext(), resources.getInteger(R.integer.highlighted_element_elevation), overrideLightTheme = true))
+
         stepQuizCodeKeyboardExtension.adapter = codeToolbarAdapter
         stepQuizCodeKeyboardExtension.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         codeLayout.codeToolbarAdapter = codeToolbarAdapter
