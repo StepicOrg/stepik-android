@@ -217,12 +217,10 @@
     <color name="step_quiz_feedback_wrong_background">@color/red02_color_alpha_15</color>
 
     <!-- Choice quiz -->
-    <color name="step_quiz_choice_not_checked">@color/white</color>
     <color name="step_quiz_choice_checked">@color/violet2</color>
     <color name="step_quiz_choice_correct">@color/green06</color>
     <color name="step_quiz_choice_wrong">@color/red03</color>
 
-    <color name="step_quiz_choice_not_checked_border">@color/grey03</color>
     <color name="step_quiz_choice_checked_border">@color/violet1_alpha_50</color>
     <color name="step_quiz_choice_correct_border">@color/green01_alpha_50</color>
     <color name="step_quiz_choice_wrong_border">@color/red02_color_alpha_50</color>

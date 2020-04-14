@@ -24,7 +24,7 @@
         style="@style/StepQuizFeedback"
 
         android:background="@drawable/bg_shape_rounded"
-        app:backgroundTint="@color/color_on_surface_alpha_12"
+        app:backgroundTint="@color/color_on_surface_alpha_12_selector"
         android:theme="@style/ThemeOverlay.Green"
 
         tools:text="@string/step_quiz_feedback_correct_free_answer"
