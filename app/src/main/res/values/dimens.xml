@@ -98,8 +98,8 @@
     <dimen name="popup_text_padding">12dp</dimen>
     <dimen name="popup_arrow_size">16dp</dimen>
 
-    <dimen name="language_radius">4dp</dimen>
-    <dimen name="onboarding_radius">4dp</dimen>
+    <dimen name="language_radius">@dimen/corner_radius</dimen>
+    <dimen name="onboarding_radius">@dimen/corner_radius</dimen>
 
     <dimen name="course_collection_header_min_height">120dp</dimen>
     <dimen name="tag_radius">20dp</dimen>

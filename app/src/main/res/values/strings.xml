@@ -86,10 +86,6 @@
     <string name="correct">Correct!</string>
     <string name="wrong">Wrong. Please, try again.</string>
     <string name="try_again">Try again</string>
-    <string name="step_only_online">Steps are only available online. Connect to the Internet and
-        start
-        completing the assignments.
-    </string>
     <string name="correct_free_response">Your answer was saved.</string>
     <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive
         the points.

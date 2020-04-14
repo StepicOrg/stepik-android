@@ -72,9 +72,6 @@
     <string name="wrong">Неправильно. Пожалуйста, попробуйте еще раз.</string>
     <string name="correct">Верно!</string>
     <string name="try_again">Попробовать снова</string>
-    <string name="step_only_online">Шаги можно проходить только онлайн. Чтобы начать решать,
-        включите интернет-соединение.
-    </string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
     <string name="terms_message_register">
         <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>

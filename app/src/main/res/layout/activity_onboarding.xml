@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:contentDescription="@string/close_screen"
-        android:src="@drawable/ic_close_onboarding" />
+        android:src="@drawable/ic_close_white_24dp" />
 
     <androidx.viewpager.widget.StepikSlowViewPager
         android:id="@+id/onboardingViewPager"
