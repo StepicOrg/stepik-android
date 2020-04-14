@@ -6,11 +6,12 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <View
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/dateDot"
         android:layout_width="8dp"
         android:layout_height="8dp"
-        android:background="@drawable/ic_course_content_date_dot"
+        app:srcCompat="@drawable/ic_course_content_date_dot"
+        app:tint="?colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -22,8 +23,8 @@
         style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         app:mpb_progressStyle="horizontal"
         app:mpb_useIntrinsicPadding="false"
-        app:mpb_progressTint="@color/new_accent_color"
-        app:mpb_progressBackgroundTint="@color/course_content_section_date_disabled"
+        app:mpb_progressTint="?colorPrimary"
+        app:mpb_progressBackgroundTint="@color/color_on_surface_alpha_12"
 
         app:layout_constraintBottom_toBottomOf="@+id/dateDot"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,38 +36,32 @@
 
     <TextView
         android:id="@+id/dateTitle"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="@dimen/course_content_item_margin"
         android:layout_marginRight="@dimen/course_content_item_margin"
-        android:lineSpacingExtra="4dp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateDot"
         app:layout_constraintHorizontal_bias="0"
-        tools:ignore="missingPrefix"
         tools:text="Start date" />
 
     <TextView
         android:id="@+id/dateValue"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/course_content_item_margin"
         android:layout_marginRight="@dimen/course_content_item_margin"
-        android:lineSpacingExtra="4dp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dateTitle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0"
-        tools:ignore="missingPrefix"
         tools:text="18 October 2018 00:00" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
