@@ -13,6 +13,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
@@ -46,7 +47,7 @@ constructor(
 ) : PresenterBase<CatalogView>() {
 
     private var state: CatalogView.State = CatalogView.State(
-        headers = listOf(storiesPresenter, tagsPresenter, filtersPresenter),
+        headers = getHeaders(),
         collectionsState = CatalogView.CollectionsState.Idle,
         footers = listOf(courseListQueryPresenter)
     )
@@ -113,8 +114,7 @@ constructor(
             )
     }
 
-    private fun fetchPopularCourses() {
-        courseListQueryPresenter.onCleared()
+    private fun fetchPopularCourses(forceUpdate: Boolean = false) {
         courseListQueryPresenter.fetchCourses(
             courseListQuery = CourseListQuery(
                 page = 1,
@@ -122,7 +122,8 @@ constructor(
                 language = sharedPreferenceHelper.languageForFeatured,
                 isExcludeEnded = true,
                 isPublic = true
-            )
+            ),
+            forceUpdate = forceUpdate
         )
     }
 
@@ -134,12 +135,18 @@ constructor(
                 onNext = {
                     collectionsDisposable.clear()
                     fetchCollections(forceUpdate = true)
-                    fetchPopularCourses()
-                    // fetch popular
+                    fetchPopularCourses(forceUpdate = true)
                 },
                 onError = emptyOnErrorStub
             )
     }
+
+    private fun getHeaders(): List<CatalogItem> =
+        if (sharedPreferenceHelper.isNeedShowLangWidget) {
+            listOf(storiesPresenter, tagsPresenter, filtersPresenter)
+        } else {
+            listOf(storiesPresenter, tagsPresenter)
+        }
 
     override fun detachView(view: CatalogView) {
         nestedDisposables

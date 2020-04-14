@@ -61,8 +61,6 @@ constructor(
 
         paginationDisposable.clear()
 
-        val oldState = state
-
         state = CourseListQueryView.State.Data(
             courseListQuery = courseListQuery,
             courseListViewState = CourseListView.State.Loading
@@ -88,13 +86,13 @@ constructor(
                     }
                 },
                 onError = {
-                    when ((oldState as CourseListQueryView.State.Data).courseListViewState) {
+                    when (val oldState = (state as CourseListQueryView.State.Data).courseListViewState) {
                         is CourseListView.State.Content -> {
-                            state = oldState
+                            state = (state as CourseListQueryView.State.Data).copy(courseListViewState = oldState)
                             view?.showNetworkError()
                         }
                         else ->
-                            state = oldState.copy(courseListViewState = CourseListView.State.NetworkError)
+                            state = (state as CourseListQueryView.State.Data).copy(courseListViewState = CourseListView.State.NetworkError)
                     }
                 }
             )

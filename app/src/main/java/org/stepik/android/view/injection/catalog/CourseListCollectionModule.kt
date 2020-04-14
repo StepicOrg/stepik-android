@@ -91,7 +91,6 @@ abstract class CourseListCollectionModule {
         fun provideCollectionViewContainer(): PresenterViewContainer<CourseListCollectionView> =
             DefaultPresenterViewContainer()
 
-
         @Provides
         @JvmStatic
         fun provideQueryViewContainer(): PresenterViewContainer<CourseListQueryView> =
