@@ -93,6 +93,7 @@ constructor(
                         userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
                         CourseListView.State.Empty
                     }
+                    fetchNextPage()
                 },
                 onError = {
                     when (oldState) {
@@ -127,6 +128,7 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = courseListStateMapper.mapFromLoadMoreToSuccess(state, it)
+                    fetchNextPage()
                 },
                 onError = {
                     state = courseListStateMapper.mapFromLoadMoreToError(state)
@@ -184,7 +186,7 @@ constructor(
                 onSuccess = { enrolledCourseListItem ->
                     userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(enrolledCourseListItem))
                     state = oldState.copy(
-                        courseListDataItems =  PagedList(
+                        courseListDataItems = PagedList(
                             listOf(enrolledCourseListItem) + oldState.courseListDataItems,
                             oldState.courseListDataItems.page,
                             oldState.courseListDataItems.hasNext,
