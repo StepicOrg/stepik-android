@@ -88,7 +88,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         downloadPresenter.fetchDownloadedCourses()
 
         downloadsOtherApps.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_on_surface_alpha_12))
-        downloadsStepik.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green01))
+        downloadsStepik.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_green))
         downloadsFree.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey04))
     }
 

@@ -42,7 +42,7 @@
     <dimen name="course_item_space_between_items">8dp</dimen>
     <dimen name="course_item_titles_text_size">16sp</dimen>
     <dimen name="course_item_button_text_size">14sp</dimen>
-    <dimen name="placeholder_radius">8dp</dimen>
+    <dimen name="placeholder_radius">@dimen/corner_radius</dimen>
     <dimen name="course_image_radius">8dp</dimen>
 
     <dimen name="course_list_side_padding">20dp</dimen> <!-- Horizontal offset of content on HomeFragment & CatalogFragment -->
@@ -93,7 +93,7 @@
     <dimen name="courses_carousel_top_margin">12dp</dimen>
 
     <!-- popup windows -->
-    <dimen name="popup_border_radius">7dp</dimen>
+    <dimen name="popup_border_radius">@dimen/corner_radius</dimen>
     <dimen name="popup_window_padding">8dp</dimen>
     <dimen name="popup_text_padding">12dp</dimen>
     <dimen name="popup_arrow_size">16dp</dimen>
