@@ -41,7 +41,6 @@ class CourseListAdapterDelegate(
     ) : PresenterViewHolder<CourseListCollectionView, CourseListCollectionPresenter>(root), CourseListCollectionView {
 
         private var courseCollection: CourseCollection? = null
-        private var collectionColors: CollectionDescriptionColors? = null
 
         private val courseListTitle = root.courseListTitle
         private val courseListDescription = root.courseListDescription
@@ -59,9 +58,15 @@ class CourseListAdapterDelegate(
             viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
             viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
-            val onClickListener = View.OnClickListener { _ ->
-                val collection       = courseCollection ?: return@OnClickListener
-                val collectionColors = collectionColors ?: return@OnClickListener
+            val onClickListener = View.OnClickListener {
+                val collection = courseCollection ?: return@OnClickListener
+
+                val collectionColors =
+                    if (adapterPosition % 2 == 0) {
+                        CollectionDescriptionColors.BLUE
+                    } else {
+                        CollectionDescriptionColors.FIRE
+                    }
                 screenManager.showCoursesCollection(itemView.context, collection, collectionColors)
             }
 
@@ -126,12 +131,14 @@ class CourseListAdapterDelegate(
         override fun attachView(data: CourseListCollectionPresenter) {
             data.attachView(this)
 
-            collectionColors = when (adapterPosition % 2) {
-                0 -> CollectionDescriptionColors.BLUE
-                else -> CollectionDescriptionColors.FIRE
-            }
+            val collectionColors =
+                if (adapterPosition % 2 == 0) {
+                    CollectionDescriptionColors.BLUE
+                } else {
+                    CollectionDescriptionColors.FIRE
+                }
 
-            with((collectionColors as CollectionDescriptionColors)) {
+            with(collectionColors) {
                 courseListDescription.setBackgroundResource(backgroundRes)
                 courseListDescription.setTextColor(ContextCompat.getColor(context, textColorRes))
             }
@@ -141,8 +148,6 @@ class CourseListAdapterDelegate(
 
         override fun detachView(data: CourseListCollectionPresenter) {
             data.firstVisibleItemPosition = (courseListCoursesRecycler.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
-            courseListDescription.setOnClickListener(null)
-            courseListTitleContainer.setOnClickListener(null)
             data.detachView(this)
         }
     }

@@ -32,7 +32,7 @@ constructor(
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
-    
+
     private val catalogInteractor: CatalogInteractor,
 
     private val storiesPresenter: StoriesPresenter,
