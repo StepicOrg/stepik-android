@@ -65,5 +65,4 @@
                 android:topRightRadius="@dimen/step_quiz_choice_option_view_radius" />
         </shape>
     </item>
-
 </layer-list>

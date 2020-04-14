@@ -14,6 +14,8 @@
     <color name="color_on_secondary">@color/black</color>
     <color name="color_on_background">@color/white</color>
     <color name="color_on_surface">@color/white</color>
+    <color name="color_on_surface_alpha_12">#30FFFFFF</color>
+
     <color name="color_on_error">@color/black</color>
 
     <color name="color_status_bar">@color/color_background</color>

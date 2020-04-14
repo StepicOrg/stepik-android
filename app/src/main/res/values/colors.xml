@@ -13,7 +13,10 @@
     <color name="color_on_primary">#ffffff</color>
     <color name="color_on_secondary">#ffffff</color>
     <color name="color_on_background">#000000</color>
+
     <color name="color_on_surface">#000000</color>
+    <color name="color_on_surface_alpha_12">#30000000</color>
+
     <color name="color_on_error">#ffffff</color>
 
     <color name="color_status_bar">@color/color_primary</color>
@@ -230,10 +233,7 @@
 
     <!-- Certificate icon color -->
     <color name="certificate_distinction">@color/yellow1</color>
-    <color name="certificate_regular">@color/green01</color>
-
-    <color name="custom_grey">@color/grey03_alpha_80</color>
-
+    <color name="certificate_regular">@color/color_overlay_green</color>
     <!-- Solutions screen -->
     <color name="section_color">@color/new_primary_color</color>
     <color name="lesson_color">@color/grey05</color>

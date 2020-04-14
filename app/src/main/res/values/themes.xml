@@ -71,7 +71,7 @@
         <!-- Inner components parameters -->
         <item name="dividerVertical">@drawable/bg_divider_vertical</item>
         <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
-        <item name="dividerVerticalColor">@color/color_divider_vertical</item>
+        <item name="dividerVerticalColor">@color/color_on_surface_alpha_12</item>
         <item name="cornerRadius">@dimen/corner_radius</item>
 
         <item name="isNightMode">@bool/is_night_mode</item>
