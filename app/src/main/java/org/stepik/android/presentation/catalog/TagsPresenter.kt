@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.tags.interactor.TagsInteractor
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import ru.nobird.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -17,23 +18,25 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler,
     private val tagsInteractor: TagsInteractor
-) : PresenterBase<TagsView>(), CatalogItem {
+) : PresenterBase<TagsView>(),
+    CatalogItem {
     private var state: TagsView.State = TagsView.State.Idle
         set(value) {
             field = value
             view?.setState(value)
         }
 
+    init {
+        fetchFeaturedTags()
+    }
+
     override fun attachView(view: TagsView) {
         super.attachView(view)
         view.setState(state)
     }
 
-    init {
-        fetchFeaturedTags()
-    }
-
-    private fun fetchFeaturedTags() {
+    fun fetchFeaturedTags(forceUpdate: Boolean = false) {
+        if (state != TagsView.State.Idle && !forceUpdate) return
         compositeDisposable += tagsInteractor
             .fetchFeaturedTags()
             .subscribeOn(backgroundScheduler)

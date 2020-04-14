@@ -12,10 +12,14 @@ import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.PresenterViewHolder
-import org.stepik.android.presentation.catalog.CatalogItem
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
+import org.stepik.android.presentation.course_list.CourseListQueryView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -35,7 +39,9 @@ class CourseListQueryAdapterDelegate(
 
     private inner class CourseQueryViewHolder(
         root: View
-    ) : PresenterViewHolder<CourseListView, CourseListQueryPresenter>(root) {
+    ) : PresenterViewHolder<CourseListQueryView, CourseListQueryPresenter>(root), CourseListQueryView {
+
+        private var courseListQuery: CourseListQuery? = null
 
         private val courseListCount = root.coursesCarouselCount
         private val courseListDescription = root.courseListDescription
@@ -61,12 +67,13 @@ class CourseListQueryAdapterDelegate(
             courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(itemView.context) }
             courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
             courseListPlaceholderNoConnection.setOnClickListener {
-                itemData?.fetchCourses(forceUpdate = true)
+                val courseListQuery = courseListQuery ?: return@setOnClickListener
+                itemData?.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true)
             }
             courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 
             courseListTitleContainer.setOnClickListener {
-                val courseListQuery = itemData?.courseListQuery ?: return@setOnClickListener
+                val courseListQuery = courseListQuery ?: return@setOnClickListener
                 screenManager.showCoursesByQuery(
                     itemView.context,
                     context.resources.getString(R.string.course_list_popular_toolbar_title),
@@ -91,7 +98,6 @@ class CourseListQueryAdapterDelegate(
         private val delegate = CourseListViewDelegate(
             courseContinueViewDelegate = courseContinueViewDelegate,
             courseListTitleContainer = root.courseListTitleContainer,
-            courseDescriptionPlaceHolder = root.courseListDescription,
             courseItemsRecyclerView = root.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
@@ -99,14 +105,38 @@ class CourseListQueryAdapterDelegate(
             }
         )
 
+        override fun setState(state: CourseListQueryView.State) {
+            courseListQuery = (state as? CourseListQueryView.State.Data)?.courseListQuery
+
+            val courseListState = (state as? CourseListQueryView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+            viewStateDelegate.switchState(courseListState)
+            delegate.setState(courseListState)
+        }
+
+        override fun showNetworkError() {
+            delegate.showNetworkError()
+        }
+
+        override fun showCourse(course: Course, isAdaptive: Boolean) {
+            delegate.showCourse(course, isAdaptive)
+        }
+
+        override fun showSteps(course: Course, lastStep: LastStep) {
+            delegate.showSteps(course, lastStep)
+        }
+
+        override fun setBlockingLoading(isLoading: Boolean) {
+            delegate.setBlockingLoading(isLoading)
+        }
+
         override fun attachView(data: CourseListQueryPresenter) {
-            data.attachView(delegate)
+            data.attachView(this)
             courseListCoursesRecycler.scrollToPosition(data.firstVisibleItemPosition ?: 0)
         }
 
         override fun detachView(data: CourseListQueryPresenter) {
             data.firstVisibleItemPosition = (courseListCoursesRecycler.layoutManager as? LinearLayoutManager)?.findFirstVisibleItemPosition()
-            data.detachView(delegate)
+            data.detachView(this)
         }
     }
 }

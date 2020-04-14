@@ -26,14 +26,18 @@ import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepik.android.presentation.catalog.CatalogItem
 import org.stepik.android.presentation.catalog.CatalogPresenter
 import org.stepik.android.presentation.catalog.CatalogView
+import org.stepik.android.presentation.catalog.model.CatalogItem
+import org.stepik.android.presentation.catalog.model.LoadingPlaceholder
+import org.stepik.android.presentation.catalog.model.OfflinePlaceholder
+import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import ru.nobird.android.stories.transition.SharedTransitionIntentBuilder
 import ru.nobird.android.stories.transition.SharedTransitionsManager
@@ -120,18 +124,35 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
             courseContinueViewDelegate = courseContinueViewDelegate
         )
 
+        catalogItemAdapter += OfflineAdapterDelegate(
+            onRetry = {
+                catalogPresenter.fetchCollections(forceUpdate = true)
+            }
+        )
+
+        catalogItemAdapter += LoadingAdapterDelegate()
+
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
             layoutManager = WrapContentLinearLayoutManager(context)
+            itemAnimator = null
         }
         catalogPresenter.fetchCollections()
     }
 
     override fun setState(state: CatalogView.State) {
-        when (state) {
-            is CatalogView.State.Content -> {
-                catalogItemAdapter.items = state.collections
+        when (val collectionsState = state.collectionsState) {
+            is CatalogView.CollectionsState.Loading -> {
+                catalogItemAdapter.items = state.headers + listOf(LoadingPlaceholder) + state.footers
             }
+            is CatalogView.CollectionsState.Content -> {
+                catalogItemAdapter.items = state.headers + collectionsState.collections + state.footers
+            }
+            is CatalogView.CollectionsState.Error -> {
+                catalogItemAdapter.items = state.headers + listOf(OfflinePlaceholder) + state.footers
+            }
+            else ->
+                catalogItemAdapter.items = state.headers
         }
     }
 

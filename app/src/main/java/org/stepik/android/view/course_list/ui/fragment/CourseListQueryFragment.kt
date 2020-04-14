@@ -19,8 +19,11 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
+import org.stepik.android.presentation.course_list.CourseListQueryView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -28,7 +31,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseListQueryFragment : Fragment() {
+class CourseListQueryFragment : Fragment(), CourseListQueryView {
     companion object {
         fun newInstance(courseListTitle: String, courseListQuery: CourseListQuery): Fragment =
             CourseListQueryFragment().apply {
@@ -82,8 +85,8 @@ class CourseListQueryFragment : Fragment() {
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListQueryPresenter.fetchCourses(forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListQueryPresenter.fetchCourses(forceUpdate = true) }
+        courseListSwipeRefresh.setOnRefreshListener { courseListQueryPresenter.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true) }
+        tryAgain.setOnClickListener { courseListQueryPresenter.fetchCourses(courseListQuery = courseListQuery, forceUpdate = true) }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
@@ -106,7 +109,7 @@ class CourseListQueryFragment : Fragment() {
             }
         )
 
-        courseListQueryPresenter.setDataToPresenter(courseListQuery)
+        courseListQueryPresenter.fetchCourses(courseListQuery)
     }
 
     private fun injectComponent() {
@@ -116,13 +119,34 @@ class CourseListQueryFragment : Fragment() {
             .inject(this)
     }
 
+    override fun setState(state: CourseListQueryView.State) {
+        val courseListState = (state as? CourseListQueryView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+        courseListViewDelegate.setState(courseListState)
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, isAdaptive)
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        courseListViewDelegate.setBlockingLoading(isLoading)
+    }
+
+    override fun showNetworkError() {
+        courseListViewDelegate.showNetworkError()
+    }
+
     override fun onStart() {
         super.onStart()
-        courseListQueryPresenter.attachView(courseListViewDelegate)
+        courseListQueryPresenter.attachView(this)
     }
 
     override fun onStop() {
-        courseListQueryPresenter.detachView(courseListViewDelegate)
+        courseListQueryPresenter.detachView(this)
         super.onStop()
     }
 }

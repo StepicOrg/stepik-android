@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -20,13 +19,11 @@ class CourseListViewDelegate(
     courseContinueViewDelegate: CourseContinueViewDelegate,
     courseListTitleContainer: View? = null,
     private val courseListSwipeRefresh: StepikSwipeRefreshLayout? = null,
-    private val courseDescriptionPlaceHolder: PlaceholderTextView? = null,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
-    private val courseListTitle = courseListTitleContainer?.courseListTitle
     private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
     private var courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
 
@@ -52,10 +49,6 @@ class CourseListViewDelegate(
                     CourseListItem.PlaceHolder,
                     CourseListItem.PlaceHolder
                 )
-                state.collectionData?.let { collectionData ->
-                    courseListTitle?.text = collectionData.title
-                    courseDescriptionPlaceHolder?.setPlaceholderText(collectionData.description)
-                }
             }
 
             is CourseListView.State.Content -> {
@@ -66,10 +59,6 @@ class CourseListViewDelegate(
                         state.courseListDataItems.size,
                         state.courseListDataItems.size
                     )
-                state.collectionData?.let { collectionData ->
-                    courseListTitle?.text = collectionData.title
-                    courseDescriptionPlaceHolder?.setPlaceholderText(collectionData.description)
-                }
 
                 /**
                  * notify is necessary, because margins don't get recalculated after adding loading placeholder

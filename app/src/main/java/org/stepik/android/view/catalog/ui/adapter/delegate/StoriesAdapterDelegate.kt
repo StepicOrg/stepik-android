@@ -9,7 +9,7 @@ import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.features.stories.presentation.StoriesView
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepik.android.presentation.base.PresenterViewHolder
-import org.stepik.android.presentation.catalog.CatalogItem
+import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
