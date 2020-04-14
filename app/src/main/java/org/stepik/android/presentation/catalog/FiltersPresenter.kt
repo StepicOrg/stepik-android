@@ -37,13 +37,14 @@ constructor(
             view?.setState(value)
         }
 
+    init {
+        // todo handle sharedPreferenceHelper.isNeedShowLangWidget
+        onNeedFilters()
+    }
+
     override fun attachView(view: FiltersView) {
         super.attachView(view)
         view.setState(state)
-    }
-
-    init {
-        onNeedFilters()
     }
 
     private fun onNeedFilters(forceUpdate: Boolean = false) {

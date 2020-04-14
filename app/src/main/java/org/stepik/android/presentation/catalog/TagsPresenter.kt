@@ -26,13 +26,13 @@ constructor(
             view?.setState(value)
         }
 
+    init {
+        fetchFeaturedTags()
+    }
+
     override fun attachView(view: TagsView) {
         super.attachView(view)
         view.setState(state)
-    }
-
-    init {
-        fetchFeaturedTags()
     }
 
     fun fetchFeaturedTags(forceUpdate: Boolean = false) {
