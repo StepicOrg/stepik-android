@@ -35,7 +35,6 @@ import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.dialogs.CertificateShareDialog
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
-import org.stepic.droid.ui.dialogs.CoursesLangDialog
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialog
@@ -68,6 +67,7 @@ import org.stepik.android.view.injection.download.DownloadComponent
 import org.stepik.android.view.injection.email_address.EmailAddressDataModule
 import org.stepik.android.view.injection.fast_continue.FastContinueComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
+import org.stepik.android.view.injection.filter.FilterComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
@@ -213,6 +213,8 @@ interface AppCoreComponent {
 
     fun fastContinueComponentBuilder(): FastContinueComponent.Builder
 
+    fun filterComponentBuilder(): FilterComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)
@@ -252,8 +254,6 @@ interface AppCoreComponent {
     fun inject(stepShareDialog: StepShareDialog)
 
     fun inject(videoQualityDetailedDialog: VideoQualityDetailedDialog)
-
-    fun inject(coursesLangDialog: CoursesLangDialog)
 
     fun inject(latexView: LatexView)
 

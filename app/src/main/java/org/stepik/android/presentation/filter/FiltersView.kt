@@ -1,4 +1,4 @@
-package org.stepik.android.presentation.catalog
+package org.stepik.android.presentation.filter
 
 import org.stepic.droid.model.StepikFilter
 import java.util.EnumSet

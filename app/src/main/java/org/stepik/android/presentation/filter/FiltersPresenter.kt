@@ -1,4 +1,4 @@
-package org.stepik.android.presentation.catalog
+package org.stepik.android.presentation.filter
 
 import io.reactivex.Completable
 import io.reactivex.Scheduler
@@ -31,7 +31,8 @@ constructor(
 ) : PresenterBase<FiltersView>(),
     CatalogItem {
 
-    private var state: FiltersView.State = FiltersView.State.Idle
+    private var state: FiltersView.State =
+        FiltersView.State.Idle
         set(value) {
             field = value
             view?.setState(value)
@@ -53,10 +54,14 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = {
-                    state = FiltersView.State.FiltersLoaded(it)
+                    state =
+                        FiltersView.State.FiltersLoaded(
+                            it
+                        )
                 },
                 onError = {
-                    state = FiltersView.State.Empty
+                    state =
+                        FiltersView.State.Empty
                 }
             )
     }

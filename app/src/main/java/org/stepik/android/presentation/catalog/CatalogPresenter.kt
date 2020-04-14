@@ -16,6 +16,7 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
+import org.stepik.android.presentation.filter.FiltersPresenter
 import org.stepik.android.view.injection.catalog.FiltersBus
 import ru.nobird.android.presentation.base.DisposableViewModel
 import ru.nobird.android.presentation.base.PresenterBase
