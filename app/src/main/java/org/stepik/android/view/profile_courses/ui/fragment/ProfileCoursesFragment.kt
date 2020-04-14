@@ -61,9 +61,6 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     private lateinit var coursesAdapter: DefaultDelegateAdapter<CourseListItem>
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCoursesView.State>
 
-    private val progressDialogFragment: DialogFragment =
-        LoadingProgressDialogFragment.newInstance()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -154,25 +151,16 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         }
     }
 
-    // TODO Functions from ProfileCoursesView will be replaced with CourseListView
     override fun setBlockingLoading(isLoading: Boolean) {
-        if (isLoading) {
-            ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
-        } else {
-            ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
-        }
+        courseContinueViewDelegate.setBlockingLoading(isLoading)
     }
 
     override fun showCourse(course: Course, isAdaptive: Boolean) {
-        if (isAdaptive) {
-            screenManager.continueAdaptiveCourse(activity, course)
-        } else {
-            screenManager.showCourseModules(activity, course)
-        }
+        courseContinueViewDelegate.showCourse(course, isAdaptive)
     }
 
     override fun showSteps(course: Course, lastStep: LastStep) {
-        screenManager.continueCourse(activity, course.id, lastStep)
+        courseContinueViewDelegate.showSteps(course, lastStep)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
