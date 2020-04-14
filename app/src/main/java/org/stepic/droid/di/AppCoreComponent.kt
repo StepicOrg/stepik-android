@@ -109,7 +109,6 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
     modules = [
         AppCoreModule::class,
         AnalyticModule::class,
-        AppFiltersModule::class,
         GoogleModule::class,
         FirebaseModule::class,
         PersistenceModule::class,
