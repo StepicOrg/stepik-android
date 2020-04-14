@@ -131,4 +131,8 @@ constructor(
                 }
             )
     }
+
+    public override fun onCleared() {
+        super.onCleared()
+    }
 }

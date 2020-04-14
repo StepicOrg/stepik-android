@@ -27,16 +27,21 @@ class CatalogPresenter
 constructor(
     @FiltersBus
     private val filtersObservable: Observable<EnumSet<StepikFilter>>,
+
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
+    
     private val catalogInteractor: CatalogInteractor,
+
     private val storiesPresenter: StoriesPresenter,
     private val tagsPresenter: TagsPresenter,
     private val filtersPresenter: FiltersPresenter,
+
     private val courseListCollectionPresenterProvider: Provider<CourseListCollectionPresenter>,
     private val courseListQueryPresenter: CourseListQueryPresenter,
+
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : PresenterBase<CatalogView>() {
 
@@ -61,16 +66,7 @@ constructor(
 
     init {
         compositeDisposable += collectionsDisposable
-
-        courseListQueryPresenter.fetchCourses(
-            courseListQuery = CourseListQuery(
-                page = 1,
-                order = CourseListQuery.Order.ACTIVITY_DESC,
-                language = sharedPreferenceHelper.languageForFeatured,
-                isExcludeEnded = true,
-                isPublic = true
-            )
-        )
+        fetchPopularCourses()
     }
 
     init {
@@ -92,7 +88,7 @@ constructor(
             tagsPresenter.fetchFeaturedTags(forceUpdate = forceUpdate)
         }
 
-        compositeDisposable += catalogInteractor
+        collectionsDisposable += catalogInteractor
             .fetchCourseCollections()
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
@@ -117,14 +113,28 @@ constructor(
             )
     }
 
+    private fun fetchPopularCourses() {
+        courseListQueryPresenter.onCleared()
+        courseListQueryPresenter.fetchCourses(
+            courseListQuery = CourseListQuery(
+                page = 1,
+                order = CourseListQuery.Order.ACTIVITY_DESC,
+                language = sharedPreferenceHelper.languageForFeatured,
+                isExcludeEnded = true,
+                isPublic = true
+            )
+        )
+    }
+
     private fun subscribeForFilterUpdates() {
         compositeDisposable += filtersObservable
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = {
-                    compositeDisposable.clear()
+                    collectionsDisposable.clear()
                     fetchCollections(forceUpdate = true)
+                    fetchPopularCourses()
                     // fetch popular
                 },
                 onError = emptyOnErrorStub
