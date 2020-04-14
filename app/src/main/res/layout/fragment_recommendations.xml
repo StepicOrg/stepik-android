@@ -56,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_adaptive_exp_bubble"
-                    app:backgroundTint="@color/color_on_surface_alpha_12"
+                    app:backgroundTint="@color/color_on_surface_alpha_12_selector"
                     android:textAppearance="?textAppearanceSubtitle2"
                     android:gravity="center"
                     tools:ignore="MissingPrefix" />

@@ -3,17 +3,24 @@
     <!-- AppTheme -->
     <color name="color_primary">@color/color_brown_700</color>
     <color name="color_primary_variant">@color/color_brown_700</color>
+
     <color name="color_secondary">@color/color_violet_300</color>
+    <color name="color_secondary_alpha_12">@color/color_violet_300_alpha_12</color>
+
     <color name="color_secondary_variant">@color/violet3</color>
 
     <color name="color_background">@color/white</color>
     <color name="color_surface">@color/white</color>
-    <color name="color_error">@color/red01</color>
+    <color name="color_error">@color/color_red_500</color>
+    <color name="color_error_alpha_12">@color/color_red_500_alpha_12</color>
 
     <color name="color_on_primary">#ffffff</color>
     <color name="color_on_secondary">#ffffff</color>
     <color name="color_on_background">#000000</color>
+
     <color name="color_on_surface">#000000</color>
+    <color name="color_on_surface_alpha_12">#30000000</color>
+
     <color name="color_on_error">#ffffff</color>
 
     <color name="color_status_bar">@color/color_primary</color>
@@ -24,6 +31,7 @@
     <!-- ThemeOverlay -->
     <color name="color_overlay_brown">@color/color_brown_700</color>
     <color name="color_overlay_green">@color/color_green_400</color>
+    <color name="color_overlay_green_alpha_12">@color/color_green_400_alpha_12</color>
     <color name="color_overlay_violet">@color/color_violet_300</color>
 
     <color name="color_overlay_dark_surface">@color/color_brown_700</color>
@@ -34,11 +42,21 @@
     <color name="color_brown_300">#D3D2E9</color>
 
     <color name="color_violet_300">#6C7BDF</color>
+    <color name="color_violet_300_alpha_12">#306C7BDF</color>
     <color name="color_violet_200">#98A0E8</color>
-    
+    <color name="color_violet_200_alpha_12">#3098A0E8</color>
+
     <color name="color_green_400">#66CC66</color>
+    <color name="color_green_400_alpha_12">#3066CC66</color>
     <color name="color_green_300">#83D683</color>
+    <color name="color_green_300_alpha_12">#3083D683</color>
     <color name="color_green_200">#A8E1A7</color>
+    <color name="color_green_200_alpha_12">#30A8E1A7</color>
+
+    <color name="color_red_500">#FF3329</color>
+    <color name="color_red_500_alpha_12">#30FF3329</color>
+    <color name="color_red_300">#FF7965</color>
+    <color name="color_red_300_alpha_12">#30FF7965</color>
 
     <!-- stepic brand book-->
     <color name="stepic_brand_primary">@color/green01</color>
@@ -166,19 +184,17 @@
     <color name="course_content_section_date_disabled">@color/grey03_alpha_80</color>
 
     <!-- Step -->
-    <color name="step_quiz_feedback_wrong_text">@color/red02</color>
-    <color name="step_quiz_feedback_wrong_background">@color/red02_color_alpha_15</color>
+    <color name="step_quiz_feedback_wrong_text">@color/color_error</color>
+    <color name="step_quiz_feedback_wrong_background">@color/color_error_alpha_12</color>
 
     <!-- Choice quiz -->
-    <color name="step_quiz_choice_not_checked">@color/white</color>
-    <color name="step_quiz_choice_checked">@color/violet2</color>
-    <color name="step_quiz_choice_correct">@color/green06</color>
-    <color name="step_quiz_choice_wrong">@color/red03</color>
+    <color name="step_quiz_choice_checked">@color/color_secondary_alpha_12</color>
+    <color name="step_quiz_choice_correct">@color/color_overlay_green_alpha_12</color>
+    <color name="step_quiz_choice_wrong">@color/color_error_alpha_12</color>
 
-    <color name="step_quiz_choice_not_checked_border">@color/grey03</color>
-    <color name="step_quiz_choice_checked_border">@color/violet1_alpha_50</color>
-    <color name="step_quiz_choice_correct_border">@color/green01_alpha_50</color>
-    <color name="step_quiz_choice_wrong_border">@color/red02_color_alpha_50</color>
+    <color name="step_quiz_choice_checked_border">@color/color_overlay_violet</color>
+    <color name="step_quiz_choice_correct_border">@color/color_overlay_green</color>
+    <color name="step_quiz_choice_wrong_border">@color/color_error</color>
 
     <!-- Course item -->
     <color name="course_item_separator_light">@color/grey04</color>
@@ -186,10 +202,7 @@
 
     <!-- Certificate icon color -->
     <color name="certificate_distinction">@color/yellow1</color>
-    <color name="certificate_regular">@color/green01</color>
-
-    <color name="custom_grey">@color/grey03_alpha_80</color>
-
+    <color name="certificate_regular">@color/color_overlay_green</color>
     <!-- Solutions screen -->
     <color name="section_color">@color/new_primary_color</color>
     <color name="lesson_color">@color/grey05</color>
