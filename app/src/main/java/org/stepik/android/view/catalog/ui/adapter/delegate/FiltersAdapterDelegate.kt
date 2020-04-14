@@ -8,8 +8,8 @@ import org.stepic.droid.R
 import org.stepic.droid.model.StepikFilter
 import org.stepik.android.presentation.base.PresenterViewHolder
 import org.stepik.android.presentation.catalog.model.CatalogItem
-import org.stepik.android.presentation.catalog.FiltersPresenter
-import org.stepik.android.presentation.catalog.FiltersView
+import org.stepik.android.presentation.filter.FiltersPresenter
+import org.stepik.android.presentation.filter.FiltersView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -22,7 +22,8 @@ class FiltersAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<C
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         FiltersViewHolder(createView(parent, R.layout.view_course_languages)) as DelegateViewHolder<CatalogItem>
 
-    private class FiltersViewHolder(root: View) : PresenterViewHolder<FiltersView, FiltersPresenter>(root), FiltersView {
+    private class FiltersViewHolder(root: View) : PresenterViewHolder<FiltersView, FiltersPresenter>(root),
+        FiltersView {
 
         private val languageRu = itemView.languageRu
         private val languageEn = itemView.languageEn

@@ -5,21 +5,13 @@ import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.model.BlockPersistentWrapper
-import org.stepic.droid.model.CourseListType
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.ViewedNotification
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
-import org.stepic.droid.storage.dao.CourseListDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
-import org.stepic.droid.storage.structure.DbStructureCourse
-import org.stepic.droid.storage.structure.DbStructureLastStep
-import org.stepic.droid.storage.structure.DbStructureNotification
-import org.stepic.droid.storage.structure.DbStructureProgress
-import org.stepic.droid.storage.structure.DbStructureVideoTimestamp
-import org.stepic.droid.storage.structure.DbStructureViewQueue
-import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
+import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
@@ -33,18 +25,8 @@ import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.model.Assignment
-import org.stepik.android.model.Certificate
-import org.stepik.android.model.Course
-import org.stepik.android.model.Lesson
-import org.stepik.android.model.Progress
-import org.stepik.android.model.Section
-import org.stepik.android.model.SocialProfile
-import org.stepik.android.model.Step
-import org.stepik.android.model.Submission
+import org.stepik.android.model.*
 import org.stepik.android.model.Unit
-import org.stepik.android.model.UserCourse
-import org.stepik.android.model.ViewAssignment
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import javax.inject.Inject
@@ -64,7 +46,6 @@ constructor(
     private val viewAssignmentDao: IDao<ViewAssignment>,
     private val stepDao: IDao<Step>,
     private val courseDao: IDao<Course>,
-    private val courseListDao: CourseListDao,
     private val notificationDao: IDao<Notification>,
     private val videoTimestampDao: IDao<VideoTimestamp>,
     private val lastStepDao: IDao<LastStep>,
@@ -90,7 +71,6 @@ constructor(
         viewedNotificationsQueueDao.removeAll()
         stepDao.removeAll()
         courseDao.removeAll()
-        courseListDao.removeAll()
         notificationDao.removeAll()
         lastStepDao.removeAll()
         blockDao.removeAll()
@@ -165,24 +145,12 @@ constructor(
     fun getUnitById(unitId: Long) =
         unitDao.get(DbStructureUnit.Columns.ID, unitId.toString())
 
-    fun getAllCourses(courseListType: CourseListType) =
-        courseListDao.getCourseList(courseListType)
-
     fun addCourses(courses: List<Course>) {
         courseDao.insertOrReplaceAll(courses)
     }
 
     fun deleteCourse(courseId: Long) =
         courseDao.remove(DbStructureCourse.Columns.ID, courseId.toString())
-
-    fun addCourseList(courseListType: CourseListType, courses: List<Course>) =
-        courseListDao.addCourseList(courseListType, courses)
-
-    fun addCourseToList(courseListType: CourseListType, courseId: Long) =
-        courseListDao.addCourseToList(courseListType, courseId)
-
-    fun deleteCourseFromList(courseListType: CourseListType, courseId: Long) =
-        courseListDao.removeCourseFromList(courseListType, courseId)
 
     fun addSection(section: Section) =
         sectionDao.insertOrUpdate(section)
@@ -241,14 +209,6 @@ constructor(
 
     fun dropOnlyCourseTable() {
         courseDao.removeAll()
-    }
-
-    fun dropEnrolledCourses() {
-        courseListDao.removeCourseList(CourseListType.ENROLLED)
-    }
-
-    fun dropFeaturedCourses() {
-        courseListDao.removeCourseList(CourseListType.FEATURED)
     }
 
     fun getLessonsByIds(lessonIds: LongArray): List<Lesson> {

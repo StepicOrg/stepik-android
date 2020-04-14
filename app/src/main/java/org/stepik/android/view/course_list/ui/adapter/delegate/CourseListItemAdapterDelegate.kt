@@ -8,7 +8,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
-import kotlinx.android.synthetic.main.new_course_item.view.*
+import kotlinx.android.synthetic.main.item_course.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.doOnGlobalLayout
@@ -25,7 +25,7 @@ class CourseListItemAdapterDelegate(
         data is CourseListItem.Data
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> =
-        ViewHolder(createView(parent, R.layout.new_course_item))
+        ViewHolder(createView(parent, R.layout.item_course))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
         private val courseCoverImageTarget =
@@ -91,8 +91,7 @@ class CourseListItemAdapterDelegate(
             // todo add to CourseListItem field and resolve in domain layer
             adaptiveCourseMarker.isVisible = data.isAdaptive
 
-            // TODO Handle in delegate
-            coursePropertiesDelegate.setStats(data.course)
+            coursePropertiesDelegate.setStats(data)
         }
     }
 }

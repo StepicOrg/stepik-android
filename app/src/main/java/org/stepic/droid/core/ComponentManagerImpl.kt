@@ -2,7 +2,6 @@ package org.stepic.droid.core
 
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
-import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -122,16 +121,6 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             mainScreenComponentProp = null
         }
     }
-
-    // Course general
-
-    private val _courseGeneralComponent by lazy {
-        appCoreComponent
-                .courseGeneralComponentBuilder()
-                .build()
-    }
-
-    override fun courseGeneralComponent(): CourseGeneralComponent = _courseGeneralComponent
 }
 
 class ComponentHolder<T> {

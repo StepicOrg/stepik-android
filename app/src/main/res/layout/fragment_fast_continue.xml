@@ -16,7 +16,7 @@
         android:id="@+id/fastContinueMask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         app:borderRadius="@dimen/course_image_radius">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -136,7 +136,7 @@
         android:id="@+id/fastContinueProgress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <include
             layout="@layout/progress_bar_on_empty_screen"
@@ -150,7 +150,7 @@
         android:id="@+id/fastContinuePlaceholder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:visibility="visible" />
 
 </FrameLayout>

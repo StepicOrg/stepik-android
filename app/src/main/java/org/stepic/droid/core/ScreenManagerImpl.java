@@ -33,20 +33,17 @@ import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
-import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
-import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
@@ -158,19 +155,6 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(context, AdaptiveStatsActivity.class);
         intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, courseId);
         context.startActivity(intent);
-    }
-
-    @Override
-    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors descriptionColors) {
-        Intent intent = new Intent(activity, CourseListActivity.class);
-        intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
-        intent.putExtra(CourseListActivity.COURSE_DESCRIPTION_COLORS, (Parcelable) descriptionColors);
-        activity.startActivity(intent);
-    }
-
-    @Override
-    public void showListOfTag(Activity activity, @NotNull Tag tag) {
-        TagActivity.Companion.launch(activity, tag);
     }
 
     @Override

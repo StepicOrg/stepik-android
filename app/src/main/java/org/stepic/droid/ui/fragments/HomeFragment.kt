@@ -15,11 +15,11 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
-import org.stepic.droid.model.CoursesCarouselInfoConstants
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.commitNow
 import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
+import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
 import javax.inject.Inject
 
 class HomeFragment : FragmentBase(), HomeStreakView {

@@ -4,8 +4,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.stepic.droid.concurrency.SingleThreadExecutor
-import org.stepic.droid.util.resolvers.SearchResolver
-import org.stepic.droid.util.resolvers.SearchResolverImpl
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
 import ru.nobird.android.presentation.base.PresenterViewContainer
@@ -14,10 +12,6 @@ import java.util.concurrent.Executors
 
 @Module
 abstract class CourseListModule {
-
-    @CourseListScope
-    @Binds
-    abstract fun provideSearchResolver(searchResolver: SearchResolverImpl): SearchResolver
 
     @Binds
     internal abstract fun bindCourseContinueViewContainer(

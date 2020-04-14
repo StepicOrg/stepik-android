@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import io.reactivex.Scheduler
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
-import org.stepic.droid.core.joining.contract.JoiningPoster
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -26,7 +25,7 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
 
     private val courseRepository: CourseRepository,
-    private val joiningPoster: JoiningPoster,
+    // private val joiningPoster: JoiningPoster,
 
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>,

@@ -13,7 +13,7 @@ class LoadingAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<C
         data is LoadingPlaceholder
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
-        LoadingViewHolder(createView(parent, R.layout.course_item_loading_view_container)) as DelegateViewHolder<CatalogItem>
+        LoadingViewHolder(createView(parent, R.layout.item_course_loading_skeleton_container)) as DelegateViewHolder<CatalogItem>
 
     private inner class LoadingViewHolder(root: View) : DelegateViewHolder<LoadingPlaceholder>(root)
 }
