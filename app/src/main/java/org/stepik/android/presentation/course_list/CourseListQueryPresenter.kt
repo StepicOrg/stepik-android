@@ -148,22 +148,30 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { enrolledCourse ->
-                    val oldState = (state as? CourseListView.State.Content) ?: return@subscribeBy
-                    state = oldState.copy(
-                        courseListDataItems = PagedList(
-                            oldState.courseListDataItems.map {
-                                if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
-                            },
-                            oldState.courseListDataItems.page,
-                            oldState.courseListDataItems.hasNext,
-                            oldState.courseListDataItems.hasPrev
-                        ),
-                        courseListItems = oldState.courseListDataItems.map {
-                            if (it.course.id == enrolledCourse.id) it.copy(
-                                course = enrolledCourse
-                            ) else it
-                        }
-                    )
+                    val oldState = (state as? CourseListQueryView.State.Data)
+                        ?: return@subscribeBy
+
+                    val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
+                        ?: return@subscribeBy
+
+                    state =
+                        oldState.copy(
+                            courseListViewState = oldCourseListState.copy(
+                                courseListDataItems = PagedList(
+                                    oldCourseListState.courseListDataItems.map {
+                                        if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
+                                    },
+                                    oldCourseListState.courseListDataItems.page,
+                                    oldCourseListState.courseListDataItems.hasNext,
+                                    oldCourseListState.courseListDataItems.hasPrev
+                                ),
+                                courseListItems = oldCourseListState.courseListDataItems.map {
+                                    if (it.course.id == enrolledCourse.id) it.copy(
+                                        course = enrolledCourse
+                                    ) else it
+                                }
+                            )
+                        )
                 },
                 onError = emptyOnErrorStub
             )
