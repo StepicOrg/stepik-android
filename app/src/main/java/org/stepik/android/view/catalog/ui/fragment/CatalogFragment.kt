@@ -135,6 +135,7 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
             layoutManager = WrapContentLinearLayoutManager(context)
+            itemAnimator = null
         }
         catalogPresenter.fetchCollections()
     }
