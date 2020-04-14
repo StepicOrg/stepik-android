@@ -35,7 +35,7 @@ class CourseListCollectionHeaderDecoration(
 
     private fun initHeader(parent: RecyclerView) {
         if (!this::header.isInitialized) {
-            val view = parent.inflate(R.layout.course_collection_header_view) as PlaceholderTextView
+            val view = parent.inflate(R.layout.item_course_collection_header) as PlaceholderTextView
 
             view.setPlaceholderText(headerText)
             view.setBackgroundResource(collectionDescriptionColors.backgroundResSquared)
