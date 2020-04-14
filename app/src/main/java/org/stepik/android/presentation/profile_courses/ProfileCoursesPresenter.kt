@@ -7,9 +7,11 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.model.Course
@@ -75,7 +77,7 @@ constructor(
             if (state == ProfileCoursesView.State.Idle) {
                 state = ProfileCoursesView.State.SilentLoading
                 compositeDisposable += courseListInteractor
-                    .getSavedCourses(courseIds)
+                    .getCourseListItems(*courseIds) // TODO Cache data source?
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
@@ -94,7 +96,7 @@ constructor(
                 .flatMapSingleElement { profileData ->
                     // TODO Pagination
                     courseListInteractor
-                        .getCourses(
+                        .getCourseListItems(
                             CourseListQuery(
                                 teacher = profileData.user.id,
                                 order = CourseListQuery.Order.POPULARITY_DESC
@@ -117,10 +119,19 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { course ->
+                onNext = { enrolledCourse ->
                     val oldState = state
                     if (oldState is ProfileCoursesView.State.Content) {
-                        state = ProfileCoursesView.State.Content(oldState.courses.map { if (it.id == course.id) course else it })
+                        state = ProfileCoursesView.State.Content(
+                            courseListDataItems = PagedList(
+                                oldState.courseListDataItems.map {
+                                    if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
+                                },
+                                oldState.courseListDataItems.page,
+                                oldState.courseListDataItems.hasNext,
+                                oldState.courseListDataItems.hasPrev
+                            )
+                        )
                     }
                 },
                 onError = emptyOnErrorStub
@@ -128,11 +139,11 @@ constructor(
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        val courses = (state as? ProfileCoursesView.State.Content)
-            ?.courses
+        val courseListDataItems = (state as? ProfileCoursesView.State.Content)
+            ?.courseListDataItems
             ?: return
 
-        outState.putLongArray(KEY_COURSES, courses.mapToLongArray(Course::id))
+        outState.putLongArray(KEY_COURSES, courseListDataItems.mapToLongArray(CourseListItem.Data::id))
         super.onSaveInstanceState(outState)
     }
 }

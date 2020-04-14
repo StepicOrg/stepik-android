@@ -31,6 +31,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
+import kotlin.math.min
 
 class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     companion object {
@@ -79,14 +80,8 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
             screenManager = screenManager
         )
 
-        coursesAdapter = DefaultDelegateAdapter<CourseListItem>()
+        coursesAdapter = DefaultDelegateAdapter()
 
-//        coursesAdapter = DefaultDelegateAdapter(
-//            diffCallbackFactory = object : DiffCallbackFactory<CourseListItem.Data> {
-//                override fun createDiffUtil(oldList: List<CourseListItem.Data>, newList: List<CourseListItem.Data>): DiffUtil.Callback =
-//                    CourseDiffUtilCallback(oldList, newList)
-//            }
-//        )
         coursesAdapter += CourseListItemAdapterDelegate(
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = { courseListItem ->
@@ -150,12 +145,12 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
         viewStateDelegate.switchState(state)
 
         when (state) {
-//            is ProfileCoursesView.State.Content -> {
-//                profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courses.size, state.courses.size)
-//                coursesAdapter.items = state.courses
-//                (profileCoursesRecycler.layoutManager as? GridLayoutManager)
-//                    ?.spanCount = min(ROW_COUNT, state.courses.size)
-//            }
+            is ProfileCoursesView.State.Content -> {
+                profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courseListDataItems.size, state.courseListDataItems.size)
+                coursesAdapter.items = state.courseListDataItems
+                (profileCoursesRecycler.layoutManager as? GridLayoutManager)
+                    ?.spanCount = min(ROW_COUNT, state.courseListDataItems.size)
+            }
         }
     }
 
