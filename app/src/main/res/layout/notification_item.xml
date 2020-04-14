@@ -85,27 +85,29 @@
                     android:layout_gravity="center"
                     android:contentDescription="@string/accessibility_switch_viewed_state"
                     app:tint="?colorControlNormal"
-                    app:srcCompat="@drawable/ic_notification_state_unread" />
+                    app:srcCompat="@drawable/ic_notification_state_unread"
+                    android:alpha="0.5" />
 
                 <View
                     android:background="@drawable/ic_notification_circle"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
                     android:layout_gravity="top|end"
-                    android:layout_marginTop="3dp"
-                    android:layout_marginEnd="1dp"
-                    android:layout_marginRight="1dp" />
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="3dp"
+                    android:layout_marginRight="3dp" />
             </FrameLayout>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/check_view_read"
                 android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:contentDescription="@string/accessibility_switch_viewed_state"
-                app:srcCompat="@drawable/ic_notification_state_read"
+                app:srcCompat="@drawable/ic_check_rounded"
                 app:tint="?colorControlNormal"
-                android:visibility="gone"/>
+                android:alpha="0.5"
+                android:visibility="gone" />
         </FrameLayout>
     </RelativeLayout>
 
