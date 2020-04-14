@@ -36,7 +36,8 @@
         app:layout_constraintTop_toTopOf="@id/courseProgressValue"
         app:layout_constraintBottom_toBottomOf="@id/courseProgressValue"
 
-        app:progressBackgroundColor="@color/white"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
+        app:progressBackgroundColor="?colorOnSurface"
         app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
 
     <androidx.appcompat.widget.AppCompatTextView

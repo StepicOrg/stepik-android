@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.annotation.ColorInt
 import org.stepic.droid.R
-import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.toPx
 
 /**
@@ -42,14 +42,14 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
 
     //Colors (with defaults)
     @ColorInt
-    var backgroundPaintColor = ColorUtil.getColorArgb(R.color.new_accent_color, context)
+    var backgroundPaintColor = context.resolveColorAttribute(R.attr.colorPrimary)
         set(value) {
             field = value
             setupPaint(backgroundPaint, field)
             invalidate()
         }
     @ColorInt
-    private var foregroundPaintColor = ColorUtil.getColorArgb(R.color.stepic_brand_primary, context)
+    private var foregroundPaintColor = context.resolveColorAttribute(R.attr.colorSecondary)
 
     private var isStrokeSmall: Boolean = true
     private var strokeWidth = DEFAULT_STROKE_WIDTH_DP.toPx()

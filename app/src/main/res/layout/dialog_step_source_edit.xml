@@ -21,8 +21,8 @@
                 android:padding="4dp"
                 android:gravity="center"
                 android:text="@string/step_action_edit_description"
-                android:textSize="12sp"
-                android:textColor="@color/grey03" />
+                android:textAppearance="?textAppearanceCaption"
+                android:textColor="?android:textColorSecondary" />
 
             <include layout="@layout/view_divider_vertical" />
 

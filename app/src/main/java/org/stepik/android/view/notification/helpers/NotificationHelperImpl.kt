@@ -19,8 +19,8 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.Course
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ constructor(
     ):  NotificationCompat.Builder {
         val pendingIntent = taskBuilder.getPendingIntent(id.toInt(), PendingIntent.FLAG_ONE_SHOT) // fixme if it will overlay courses id -> bug
 
-        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+        val colorArgb = context.resolveColorAttribute(R.attr.colorSecondary)
         val notification = NotificationCompat.Builder(context, stepikNotification?.type?.channel?.channelId ?: StepikNotificationChannel.user.channelId)
                 .setSmallIcon(R.drawable.ic_notification_icon_1)
                 .setContentTitle(title)

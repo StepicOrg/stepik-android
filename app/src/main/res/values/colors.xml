@@ -59,8 +59,6 @@
     <color name="color_red_300_alpha_12">#30FF7965</color>
 
     <!-- stepic brand book-->
-    <color name="stepic_brand_primary">@color/green01</color>
-
     <color name="correct_answer_background">@color/color_overlay_green_alpha_12</color>
 
     <color name="transparent_black_30">@color/black1_alpha_30</color>
@@ -109,11 +107,8 @@
     <color name="grey02_alpha_19">#30999999</color>
     <color name="grey03">#CCCCCC</color>
     <color name="grey03_alpha_50">#80CCCCCC</color>
-    <color name="grey03_alpha_80">#CCCCCCCC</color>
     <color name="grey04">#EAECF0</color>
     <color name="grey05">#F3F4F6</color>
-
-    <color name="green01">#66CC66</color>
 
     <color name="violet2">#E9EBFA</color>
     <color name="violet3">#3E50CB</color>
