@@ -8,6 +8,7 @@ data class CourseListQuery(
     val page: Int? = null,
     val order: Order? = null,
     val teacher: Long? = null,
+    val language: String? = null,
 
     val isExcludeEnded: Boolean? = null,
     val isPublic: Boolean? = null

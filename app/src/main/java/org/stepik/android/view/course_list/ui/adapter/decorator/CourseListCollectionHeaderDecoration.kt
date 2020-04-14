@@ -12,7 +12,8 @@ import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.util.inflate
 
 class CourseListCollectionHeaderDecoration(
-    private val headerText: String
+    private val headerText: String,
+    private val collectionDescriptionColors: CollectionDescriptionColors
 ) : RecyclerView.ItemDecoration() {
     private lateinit var header: PlaceholderTextView
 
@@ -37,8 +38,8 @@ class CourseListCollectionHeaderDecoration(
             val view = parent.inflate(R.layout.course_collection_header_view) as PlaceholderTextView
 
             view.setPlaceholderText(headerText)
-            view.setBackgroundResource(CollectionDescriptionColors.FIRE.backgroundResSquared)
-            view.setTextColor(ContextCompat.getColor(parent.context, CollectionDescriptionColors.FIRE.textColorRes))
+            view.setBackgroundResource(collectionDescriptionColors.backgroundResSquared)
+            view.setTextColor(ContextCompat.getColor(parent.context, collectionDescriptionColors.textColorRes))
 
             val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.measuredWidth, View.MeasureSpec.EXACTLY)
             val heightSpec = View.MeasureSpec.makeMeasureSpec(parent.measuredHeight, View.MeasureSpec.UNSPECIFIED)

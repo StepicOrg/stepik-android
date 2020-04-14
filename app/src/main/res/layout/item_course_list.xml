@@ -4,10 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
-
-    <include layout="@layout/view_catalog_search_toolbar" />
 
     <RelativeLayout
         android:id="@+id/rootView"
@@ -31,8 +29,8 @@
             android:id="@+id/courseListTitleContainer"
             android:background="?selectableItemBackground"
             android:layout_marginTop="@dimen/course_carousel_title_top_padding"
-            android:visibility="gone"
-            android:layout_alignParentTop="true"
+            android:visibility="visible"
+            android:layout_below="@id/courseListDescription"
             android:layout_marginBottom="12dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -68,7 +66,7 @@
                 android:padding="0dp"
                 android:textColor="@color/view_all_course_list_color"
                 android:textSize="16sp"
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:ignore="MissingPrefix"
                 tools:text="10 courses"/>
 
@@ -85,36 +83,20 @@
                 android:visibility="visible"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true" />
-
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/courseListCoursesRecycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@id/courseListTitleContainer"
             android:clipToPadding="false"
             android:paddingTop="8dp"
             android:paddingLeft="8dp"
             android:paddingStart="8dp"
-            android:paddingRight="8dp"
-            android:paddingEnd="8dp"
+            android:paddingRight="46dp"
+            android:paddingEnd="46dp"
             android:paddingBottom="8dp" />
-
-        <include
-            android:id="@+id/courseListCoursesEmpty"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_centerInParent="true"
-            layout="@layout/empty_search"/>
-
-        <include
-            android:id="@+id/courseListCoursesLoadingErrorVertical"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            layout="@layout/error_no_connection_with_button" />
 
         <org.stepic.droid.ui.custom.PlaceholderTextView
             android:id="@+id/courseListPlaceholderNoConnection"
@@ -126,7 +108,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:visibility="visible"/>
 
         <org.stepic.droid.ui.custom.PlaceholderTextView
@@ -140,7 +122,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:visibility="visible"/>
 
     </RelativeLayout>

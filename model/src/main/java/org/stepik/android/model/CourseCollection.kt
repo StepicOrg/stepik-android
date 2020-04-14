@@ -3,7 +3,7 @@ package org.stepik.android.model
 import android.os.Parcel
 import android.os.Parcelable
 
-class CourseCollection(
+data class CourseCollection(
     val id: Long,
     val position: Int,
     val title: String,

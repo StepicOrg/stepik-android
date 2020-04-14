@@ -11,6 +11,7 @@ constructor() {
         private const val PAGE = "page"
         private const val ORDER = "order"
         private const val TEACHER = "teacher"
+        private const val LANGUAGE = "language"
         private const val IS_PUBLIC = "is_public"
         private const val IS_EXLUDE_ENDED = "exclude_ended"
     }
@@ -21,6 +22,7 @@ constructor() {
         mutableMap.putNullable(PAGE, courseListQuery.page?.toString())
         mutableMap.putNullable(ORDER, courseListQuery.order?.order)
         mutableMap.putNullable(TEACHER, courseListQuery.teacher?.toString())
+        mutableMap.putNullable(LANGUAGE, courseListQuery.language)
         mutableMap.putNullable(IS_PUBLIC, courseListQuery.isPublic?.toString())
         mutableMap.putNullable(IS_EXLUDE_ENDED, courseListQuery.isExcludeEnded?.toString())
 
