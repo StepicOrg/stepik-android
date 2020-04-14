@@ -137,7 +137,7 @@ constructor(
     }
 
     private fun getHeaders(): List<CatalogItem> =
-        if (true) {
+        if (sharedPreferenceHelper.isNeedShowLangWidget) {
             listOf(storiesPresenter, tagsPresenter, filtersPresenter)
         } else {
             listOf(storiesPresenter, tagsPresenter)
