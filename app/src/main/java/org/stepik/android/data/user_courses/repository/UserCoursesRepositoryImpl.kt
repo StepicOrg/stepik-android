@@ -17,18 +17,27 @@ constructor(
     private val userCoursesRemoteDataSource: UserCoursesRemoteDataSource,
     private val userCoursesCacheDataSource: UserCoursesCacheDataSource
 ) : UserCoursesRepository {
-    override fun getUserCourses(page: Int, sourceType: DataSourceType): Single<PagedList<UserCourse>> =
-        when (sourceType) {
+    override fun getUserCourses(page: Int, sourceType: DataSourceType): Single<PagedList<UserCourse>> {
+        val remoteSource = userCoursesRemoteDataSource
+            .getUserCourses(page)
+            .doCompletableOnSuccess(userCoursesCacheDataSource::saveUserCourses)
+
+        val cacheSource = userCoursesCacheDataSource
+            .getUserCourses()
+            .map { PagedList(it) }
+
+        return when (sourceType) {
             DataSourceType.CACHE ->
-                userCoursesCacheDataSource
-                    .getUserCourses()
-                    .map { PagedList(it) }
+                cacheSource
 
             DataSourceType.REMOTE ->
-                userCoursesRemoteDataSource
-                    .getUserCourses(page)
-                    .doCompletableOnSuccess(userCoursesCacheDataSource::saveUserCourses)
+                if (page == 1) {
+                    remoteSource.onErrorResumeNext(cacheSource)
+                } else {
+                    remoteSource
+                }
         }
+    }
 
     override fun addUserCourse(userCourse: UserCourse): Completable =
         userCoursesCacheDataSource.saveUserCourses(listOf(userCourse))
