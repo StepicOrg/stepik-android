@@ -52,7 +52,7 @@ constructor(
         view.setState(state)
     }
 
-    fun onCreated() {
+    private fun onCreated() {
         state = if (sharedPreferenceHelper.authResponseFromStore != null) {
             FastContinueView.State.Loading
         } else {
