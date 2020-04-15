@@ -18,15 +18,18 @@ import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
+import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class CourseListUserFragment : Fragment() {
+class CourseListUserFragment : Fragment(), CourseListUserView {
     companion object {
         fun newInstance(): Fragment =
             CourseListUserFragment()
@@ -74,8 +77,12 @@ class CourseListUserFragment : Fragment() {
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListSwipeRefresh.setOnRefreshListener { courseListPresenter.fetchCourses(forceUpdate = true) }
-        tryAgain.setOnClickListener { courseListPresenter.fetchCourses(forceUpdate = true) }
+        courseListSwipeRefresh.setOnRefreshListener {
+            // courseListPresenter.fetchCourses(forceUpdate = true)
+        }
+        tryAgain.setOnClickListener {
+            // courseListPresenter.fetchCourses(forceUpdate = true)
+        }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
         viewStateDelegate.addState<CourseListView.State.Idle>()
@@ -98,7 +105,7 @@ class CourseListUserFragment : Fragment() {
             }
         )
 
-        courseListPresenter.fetchCourses()
+        // courseListPresenter.fetchCourses()
     }
 
     private fun injectComponent() {
@@ -108,13 +115,34 @@ class CourseListUserFragment : Fragment() {
             .inject(this)
     }
 
+    override fun setState(state: CourseListUserView.State) {
+        val courseListState = (state as? CourseListUserView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+        courseListViewDelegate.setState(courseListState)
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, isAdaptive)
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        courseListViewDelegate.setBlockingLoading(isLoading)
+    }
+
+    override fun showNetworkError() {
+        courseListViewDelegate.showNetworkError()
+    }
+
     override fun onStart() {
         super.onStart()
-        courseListPresenter.attachView(courseListViewDelegate)
+        courseListPresenter.attachView(this)
     }
 
     override fun onStop() {
-        courseListPresenter.detachView(courseListViewDelegate)
+        courseListPresenter.detachView(this)
         super.onStop()
     }
 }

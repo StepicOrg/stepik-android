@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -22,15 +21,18 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
+import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class CourseListUserHorizontalFragment : Fragment() {
+class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
     companion object {
         private const val ROW_COUNT = 2
 
@@ -69,7 +71,6 @@ class CourseListUserHorizontalFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        coursesCarouselCount.isVisible = false
         courseListTitle.text = resources.getString(R.string.course_list_user_courses_title)
 
         val iconDrawable = coursesViewAll.drawable
@@ -96,7 +97,9 @@ class CourseListUserHorizontalFragment : Fragment() {
         courseListTitleContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
-        courseListPlaceholderNoConnection.setOnClickListener { courseListPresenter.fetchCourses(forceUpdate = true) }
+        courseListPlaceholderNoConnection.setOnClickListener {
+            // courseListPresenter.fetchCourses(forceUpdate = true)
+        }
         courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -121,7 +124,7 @@ class CourseListUserHorizontalFragment : Fragment() {
             }
         )
 
-        courseListPresenter.fetchCourses()
+        // courseListPresenter.fetchCourses()
     }
 
     private fun injectComponent() {
@@ -131,13 +134,34 @@ class CourseListUserHorizontalFragment : Fragment() {
             .inject(this)
     }
 
+    override fun setState(state: CourseListUserView.State) {
+        val courseListState = (state as? CourseListUserView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+        courseListViewDelegate.setState(courseListState)
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, isAdaptive)
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        courseListViewDelegate.setBlockingLoading(isLoading)
+    }
+
+    override fun showNetworkError() {
+        courseListViewDelegate.showNetworkError()
+    }
+
     override fun onStart() {
         super.onStart()
-        courseListPresenter.attachView(courseListViewDelegate)
+        courseListPresenter.attachView(this)
     }
 
     override fun onStop() {
-        courseListPresenter.detachView(courseListViewDelegate)
+        courseListPresenter.detachView(this)
         super.onStop()
     }
 }

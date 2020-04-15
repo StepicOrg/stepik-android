@@ -82,4 +82,20 @@ constructor() {
             courseListItems = courseListDataItems
         )
     }
+
+    fun mapEnrolledCourseListItemState(state: CourseListView.State, courseListItemEnrolled: CourseListItem.Data): CourseListView.State {
+        if (state !is CourseListView.State.Content) {
+            return state
+        }
+
+        return CourseListView.State.Content(
+            courseListDataItems = PagedList(
+                listOf(courseListItemEnrolled) + state.courseListDataItems,
+                state.courseListDataItems.page,
+                state.courseListDataItems.hasNext,
+                state.courseListDataItems.hasPrev
+            ),
+            courseListItems = listOf(courseListItemEnrolled) + state.courseListItems
+        )
+    }
 }

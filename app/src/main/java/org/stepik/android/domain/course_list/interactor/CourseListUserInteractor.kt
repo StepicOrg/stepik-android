@@ -1,5 +1,6 @@
 package org.stepik.android.domain.course_list.interactor
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapToLongArray
@@ -15,6 +16,13 @@ constructor(
     private val userCoursesRepository: UserCoursesRepository,
     private val courseListInteractor: CourseListInteractor
 ) {
+
+    fun getAllUserCourses(): Single<List<UserCourse>> =
+        Observable.range(1, Int.MAX_VALUE)
+            .concatMapSingle { userCoursesRepository.getUserCourses(page = it) }
+            .takeUntil { !it.hasNext }
+            .reduce(emptyList()) { a, b -> a + b }
+
     fun getUserCourses(page: Int = 1): Single<PagedList<CourseListItem.Data>> =
         userCoursesRepository
             .getUserCourses(page = page, sourceType = DataSourceType.REMOTE)

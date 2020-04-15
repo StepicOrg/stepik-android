@@ -14,6 +14,7 @@ import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
+import org.stepik.android.presentation.course_list.CourseListUserView
 import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.ViewContainer
@@ -58,6 +59,12 @@ abstract class CourseListModule {
         @JvmStatic
         @CourseListScope
         fun provideCollectionViewContainer(): PresenterViewContainer<CourseListCollectionView> =
+            DefaultPresenterViewContainer()
+
+        @Provides
+        @JvmStatic
+        @CourseListScope
+        fun provideUserViewContainer(): PresenterViewContainer<CourseListUserView> =
             DefaultPresenterViewContainer()
 
         @Provides

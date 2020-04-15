@@ -80,6 +80,7 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = if (it.isNotEmpty()) {
+                        // TODO Unsafe casting
                         (state as CourseListQueryView.State.Data).copy(
                             courseListViewState = CourseListView.State.Content(
                                 courseListDataItems = it,
