@@ -15,6 +15,7 @@ import org.stepic.droid.util.mutate
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
+import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
@@ -32,6 +33,7 @@ constructor(
     private val analytic: Analytic,
     private val courseListStateMapper: CourseListStateMapper,
     private val courseListUserInteractor: CourseListUserInteractor,
+    private val deadlinesSynchronizationInteractor: DeadlinesSynchronizationInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -95,6 +97,7 @@ constructor(
                         userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
                         CourseListView.State.Empty
                     }
+                    synchronizeDeadlines()
                     fetchNextPage()
                 },
                 onError = {
@@ -198,6 +201,17 @@ constructor(
                         courseListItems = listOf(enrolledCourseListItem) + oldState.courseListItems
                     )
                 },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun synchronizeDeadlines() {
+        compositeDisposable += deadlinesSynchronizationInteractor
+            .syncPersonalDeadlines()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {},
                 onError = emptyOnErrorStub
             )
     }
