@@ -44,6 +44,7 @@ constructor(
 
     init {
         subscribeToFirstCourse()
+        onCreated()
     }
 
     override fun attachView(view: FastContinueView) {

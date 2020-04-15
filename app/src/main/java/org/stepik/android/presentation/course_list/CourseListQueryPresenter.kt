@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -154,24 +153,7 @@ constructor(
                     val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
                         ?: return@subscribeBy
 
-                    state =
-                        oldState.copy(
-                            courseListViewState = oldCourseListState.copy(
-                                courseListDataItems = PagedList(
-                                    oldCourseListState.courseListDataItems.map {
-                                        if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
-                                    },
-                                    oldCourseListState.courseListDataItems.page,
-                                    oldCourseListState.courseListDataItems.hasNext,
-                                    oldCourseListState.courseListDataItems.hasPrev
-                                ),
-                                courseListItems = oldCourseListState.courseListDataItems.map {
-                                    if (it.course.id == enrolledCourse.id) it.copy(
-                                        course = enrolledCourse
-                                    ) else it
-                                }
-                            )
-                        )
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldCourseListState, enrolledCourse))
                 },
                 onError = emptyOnErrorStub
             )

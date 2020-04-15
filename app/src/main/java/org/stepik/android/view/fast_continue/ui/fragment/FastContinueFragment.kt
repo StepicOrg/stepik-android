@@ -73,8 +73,6 @@ class FastContinueFragment : Fragment(), FastContinueView {
         fastContinuePresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(FastContinuePresenter::class.java)
-
-        fastContinuePresenter.onCreated()
     }
 
     private fun injectComponent() {

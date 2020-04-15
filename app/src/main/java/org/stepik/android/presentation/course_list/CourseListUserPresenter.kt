@@ -6,6 +6,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.PagedList
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class CourseListUserPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val courseListStateMapper: CourseListStateMapper,
     private val courseListUserInteractor: CourseListUserInteractor,
     @BackgroundScheduler
@@ -144,6 +146,7 @@ constructor(
             .subscribeBy(
                 onNext = { enrollmentCourseUpdate ->
                     if (enrollmentCourseUpdate.enrollment == 0L) {
+                        analytic.reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, enrollmentCourseUpdate.id.toString())
                         removeDroppedCourse(enrollmentCourseUpdate.id)
                     } else {
                         fetchEnrolledCourse(enrollmentCourseUpdate.id)
