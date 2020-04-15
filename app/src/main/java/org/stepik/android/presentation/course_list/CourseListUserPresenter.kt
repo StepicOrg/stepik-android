@@ -22,6 +22,7 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
+import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -42,6 +43,8 @@ constructor(
     private val userCoursesLoadedPublisher: PublishSubject<UserCoursesLoaded>,
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
+    @UserCoursesUpdateBus
+    private val userCoursesUpdateObservable: Observable<Course>,
 
     viewContainer: PresenterViewContainer<CourseListView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
@@ -60,6 +63,7 @@ constructor(
 
     init {
         subscribeForEnrollmentUpdates()
+        subscribeForContinueCourseUpdates()
     }
 
     init {
@@ -139,6 +143,22 @@ constructor(
                     state = courseListStateMapper.mapFromLoadMoreToError(state)
                     view?.showNetworkError()
                 }
+            )
+    }
+
+    private fun subscribeForContinueCourseUpdates() {
+        compositeDisposable += userCoursesUpdateObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { continuedCourse ->
+                    state = courseListStateMapper.mapToContinueCourseUpdateState(state, continuedCourse).apply {
+                        if (this is CourseListView.State.Content) {
+                            userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(courseListDataItems.first()))
+                        }
+                    }
+                },
+                onError = emptyOnErrorStub
             )
     }
 

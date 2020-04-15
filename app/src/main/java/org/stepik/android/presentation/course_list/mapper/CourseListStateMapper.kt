@@ -1,6 +1,7 @@
 package org.stepik.android.presentation.course_list.mapper
 
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.model.Course
@@ -56,6 +57,29 @@ constructor() {
                     course = enrolledCourse
                 ) else it
             }
+        )
+    }
+
+    fun mapToContinueCourseUpdateState(state: CourseListView.State, continuedCourse: Course): CourseListView.State {
+        if (state !is CourseListView.State.Content) {
+            return state
+        }
+
+        val indexOf = state.courseListDataItems.indexOfFirst { it.id == continuedCourse.id }
+
+        val courseListDataItems = state.courseListDataItems.mutate {
+            val courseListItem = removeAt(indexOf)
+            add(0, courseListItem)
+        }
+
+        return CourseListView.State.Content(
+            courseListDataItems = PagedList(
+                courseListDataItems,
+                state.courseListDataItems.page,
+                state.courseListDataItems.hasNext,
+                state.courseListDataItems.hasPrev
+            ),
+            courseListItems = courseListDataItems
         )
     }
 }

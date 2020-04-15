@@ -8,6 +8,7 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
+import org.stepik.android.model.Course
 
 @Module
 abstract class CourseListBusModule {
@@ -31,5 +32,24 @@ abstract class CourseListBusModule {
             scheduler: Scheduler
         ): Observable<UserCoursesLoaded> =
             userCoursesLoadedPublisher.observeOn(scheduler)
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @UserCoursesUpdateBus
+        internal fun provideUserCoursesUpdatePublisher(): PublishSubject<Course> =
+            PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @UserCoursesUpdateBus
+        internal fun provideUserCoursesUpdateObservable(
+            @UserCoursesUpdateBus
+            userCoursesUpdatePublisher: PublishSubject<Course>,
+            @BackgroundScheduler
+            scheduler: Scheduler
+        ): Observable<Course> =
+            userCoursesUpdatePublisher.observeOn(scheduler)
     }
 }

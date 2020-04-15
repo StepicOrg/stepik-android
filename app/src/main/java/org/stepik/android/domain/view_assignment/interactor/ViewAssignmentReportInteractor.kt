@@ -3,6 +3,7 @@ package org.stepik.android.domain.view_assignment.interactor
 import io.reactivex.Completable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.last_step.model.LastStep
@@ -31,7 +32,9 @@ constructor(
     private val progressesPublisher: PublishSubject<Progress>,
 
     @ViewAssignmentBus
-    private val viewAssignmentObserver: BehaviorSubject<kotlin.Unit>
+    private val viewAssignmentObserver: BehaviorSubject<kotlin.Unit>,
+
+    private val earlyStreakPoster: EarlyStreakPoster
 ) {
     fun updatePassedStep(step: Step, assignment: Assignment?): Completable =
         updateLocalStepProgress(step, assignment)
@@ -45,6 +48,7 @@ constructor(
     private fun updateLocalLastStep(step: Step, unit: Unit?, course: Course?): Completable {
         val lastStepId = course?.lastStepId
         return if (unit != null && lastStepId != null) {
+            earlyStreakPoster.showStreakSuggestion()
             lastStepRepository
                 .saveLastStep(LastStep(lastStepId, unit.id, unit.lesson, step.id))
         } else {
