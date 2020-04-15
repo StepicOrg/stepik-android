@@ -9,7 +9,7 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseListPlaceHolderAdapterDelegate : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> =
-        ViewHolder(createView(parent, R.layout.course_list_item_loading_view))
+        ViewHolder(createView(parent, R.layout.item_course_list_skeleton))
 
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
         data is CourseListItem.PlaceHolder

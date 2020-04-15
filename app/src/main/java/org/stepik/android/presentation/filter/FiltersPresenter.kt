@@ -54,14 +54,10 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = {
-                    state =
-                        FiltersView.State.FiltersLoaded(
-                            it
-                        )
+                    state = FiltersView.State.FiltersLoaded(it)
                 },
                 onError = {
-                    state =
-                        FiltersView.State.Empty
+                    state = FiltersView.State.Empty
                 }
             )
     }

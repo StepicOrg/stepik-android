@@ -33,13 +33,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <FrameLayout
-                android:id="@+id/userCoursesContainer"
+            <fragment
+                android:name="org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment"
+                android:id="@+id/userCoursesFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <FrameLayout
-                android:id="@+id/popularCoursesContainer"
+            <fragment
+                android:name="org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment"
+                android:id="@+id/popularCoursesFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

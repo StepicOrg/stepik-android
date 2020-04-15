@@ -29,9 +29,6 @@ constructor(
     private val userCoursesRepository: UserCoursesRepository,
     private val profileRepository: ProfileRepository,
 
-//    private val joiningPoster: JoiningPoster,
-//    private val droppingPoster: DroppingPoster,
-
     private val deadlinesRepository: DeadlinesRepository,
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>
@@ -56,7 +53,6 @@ constructor(
             .addEnrollment(courseId)
             .andThen(addUserCourse(courseId))
             .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
-            // .doOnSuccess(joiningPoster::joinCourse) // interop with old code
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 
     fun dropCourse(courseId: Long): Single<Course> =
@@ -66,7 +62,6 @@ constructor(
             .andThen(deadlinesRepository.removeDeadlineRecordByCourseId(courseId).onErrorComplete())
             .andThen(userCoursesRepository.removeUserCourse(courseId))
             .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
-            // .doOnSuccess(droppingPoster::successDropCourse) // interop with old code
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 
     private fun addUserCourse(courseId: Long): Completable =

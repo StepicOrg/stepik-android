@@ -207,7 +207,7 @@ interface AppCoreComponent {
 
     fun userCodeRunComponentBuilder(): UserCodeRunComponent.Builder
 
-    fun courseListExperimentalComponentBuilder(): CourseListComponent.Builder
+    fun courseListComponentBuilder(): CourseListComponent.Builder
 
     fun catalogNewComponentBuilder(): CatalogComponent.Builder
 

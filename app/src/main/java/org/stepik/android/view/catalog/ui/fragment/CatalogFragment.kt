@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -23,7 +24,6 @@ import org.stepic.droid.features.stories.presentation.StoriesPresenter
 import org.stepic.droid.features.stories.ui.activity.StoriesActivity
 import org.stepic.droid.features.stories.ui.adapter.StoriesAdapter
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
-import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.CloseIconHolder.getCloseIconDrawableRes
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.presentation.catalog.CatalogPresenter
@@ -31,11 +31,11 @@ import org.stepik.android.presentation.catalog.CatalogView
 import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.catalog.model.LoadingPlaceholder
 import org.stepik.android.presentation.catalog.model.OfflinePlaceholder
+import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
+import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.LoadingAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.OfflineAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListQueryAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.CourseListAdapterDelegate
-import org.stepik.android.view.catalog.ui.adapter.delegate.FiltersAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.StoriesAdapterDelegate
 import org.stepik.android.view.catalog.ui.adapter.delegate.TagsAdapterDelegate
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
@@ -79,6 +79,7 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
 
         catalogPresenter = ViewModelProviders
             .of(this, viewModelFactory)
@@ -102,9 +103,7 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
             onStoryClicked = { _, position -> showStories(position) }
         )
 
-        catalogItemAdapter += TagsAdapterDelegate(
-            onTagClicked = { tag -> screenManager.showCoursesByTag(requireContext(), tag) }
-        )
+        catalogItemAdapter += TagsAdapterDelegate { tag -> screenManager.showCoursesByTag(requireContext(), tag) }
 
         catalogItemAdapter += FiltersAdapterDelegate()
 
@@ -124,35 +123,32 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
             courseContinueViewDelegate = courseContinueViewDelegate
         )
 
-        catalogItemAdapter += OfflineAdapterDelegate(
-            onRetry = {
-                catalogPresenter.fetchCollections(forceUpdate = true)
-            }
-        )
+        catalogItemAdapter += OfflineAdapterDelegate { catalogPresenter.fetchCollections(forceUpdate = true) }
 
         catalogItemAdapter += LoadingAdapterDelegate()
 
         with(catalogRecyclerView) {
             adapter = catalogItemAdapter
-            layoutManager = WrapContentLinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context)
             itemAnimator = null
         }
         catalogPresenter.fetchCollections()
     }
 
     override fun setState(state: CatalogView.State) {
-        when (val collectionsState = state.collectionsState) {
-            is CatalogView.CollectionsState.Loading -> {
-                catalogItemAdapter.items = state.headers + listOf(LoadingPlaceholder) + state.footers
-            }
-            is CatalogView.CollectionsState.Content -> {
-                catalogItemAdapter.items = state.headers + collectionsState.collections + state.footers
-            }
-            is CatalogView.CollectionsState.Error -> {
-                catalogItemAdapter.items = state.headers + listOf(OfflinePlaceholder) + state.footers
-            }
-            else ->
-                catalogItemAdapter.items = state.headers
+        catalogItemAdapter.items =
+            when (val collectionsState = state.collectionsState) {
+                is CatalogView.CollectionsState.Loading ->
+                    state.headers + listOf(LoadingPlaceholder) + state.footers
+
+                is CatalogView.CollectionsState.Content ->
+                    state.headers + collectionsState.collections + state.footers
+
+                is CatalogView.CollectionsState.Error ->
+                    state.headers + listOf(OfflinePlaceholder) + state.footers
+
+                else ->
+                    state.headers
         }
     }
 

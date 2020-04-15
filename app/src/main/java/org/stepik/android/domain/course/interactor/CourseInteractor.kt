@@ -56,8 +56,4 @@ constructor(
             )
         }
             .toMaybe()
-
-    fun restoreCourse(course: Course) {
-        coursePublishSubject.onNext(course)
-    }
 }

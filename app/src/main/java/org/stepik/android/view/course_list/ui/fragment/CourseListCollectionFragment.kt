@@ -117,7 +117,7 @@ class CourseListCollectionFragment : Fragment(), CourseListCollectionView {
 
     private fun injectComponent() {
         App.component()
-            .courseListExperimentalComponentBuilder()
+            .courseListComponentBuilder()
             .build()
             .inject(this)
     }

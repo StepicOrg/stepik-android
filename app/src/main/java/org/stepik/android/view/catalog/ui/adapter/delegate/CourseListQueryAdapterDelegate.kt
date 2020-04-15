@@ -31,6 +31,10 @@ class CourseListQueryAdapterDelegate(
     private val screenManager: ScreenManager,
     private val courseContinueViewDelegate: CourseContinueViewDelegate
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
+    companion object {
+        private const val ROW_COUNT = 2
+    }
+
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
         data is CourseListQueryPresenter
 
@@ -82,10 +86,10 @@ class CourseListQueryAdapterDelegate(
             }
 
             with(courseListCoursesRecycler) {
-                layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+                layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
                 itemAnimator?.changeDuration = 0
-                addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), 2))
-                val snapHelper = CoursesSnapHelper(2)
+                addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), ROW_COUNT))
+                val snapHelper = CoursesSnapHelper(ROW_COUNT)
                 snapHelper.attachToRecyclerView(this)
                 setOnPaginationListener { pageDirection ->
                     if (pageDirection == PaginationDirection.NEXT) {

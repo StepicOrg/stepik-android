@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,70 +7,73 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/view_catalog_search_toolbar" />
-
-    <RelativeLayout
-        android:id="@+id/rootView"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
-            android:id="@+id/courseListSwipeRefresh"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <FrameLayout
+            android:id="@+id/rootView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <FrameLayout
+
+            <org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
+                android:id="@+id/courseListSwipeRefresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-                <include
-                    android:id="@+id/courseListCoursesEmpty"
-                    layout="@layout/empty_search"/>
-
-                <include
-                    android:id="@+id/courseListCoursesLoadingErrorVertical"
-                    android:visibility="gone"
-                    layout="@layout/error_no_connection_with_button" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/courseListCoursesRecycler"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:paddingTop="8dp"
-                    android:paddingLeft="8dp"
-                    android:paddingStart="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingEnd="8dp"
-                    android:paddingBottom="8dp" />
-            </FrameLayout>
-        </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
+                    android:layout_height="match_parent">
+                    <include
+                        android:id="@+id/courseListCoursesEmpty"
+                        layout="@layout/empty_search"/>
 
-        <org.stepic.droid.ui.custom.PlaceholderTextView
-            android:id="@+id/courseListPlaceholderNoConnection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+                    <include
+                        android:id="@+id/courseListCoursesLoadingErrorVertical"
+                        android:visibility="gone"
+                        layout="@layout/error_no_connection_with_button" />
 
-        <org.stepic.droid.ui.custom.PlaceholderTextView
-            android:id="@+id/courseListPlaceholderEmpty"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/internet_problem"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/courseListCoursesRecycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clipToPadding="false"
+                        android:paddingTop="8dp"
+                        android:paddingLeft="8dp"
+                        android:paddingStart="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="8dp" />
+                </FrameLayout>
+            </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
 
-    </RelativeLayout>
+            <org.stepic.droid.ui.custom.PlaceholderTextView
+                android:id="@+id/courseListPlaceholderNoConnection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="@dimen/guideline_standard_padding"
+                android:visibility="gone"
+                tools:visibility="visible"/>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+            <org.stepic.droid.ui.custom.PlaceholderTextView
+                android:id="@+id/courseListPlaceholderEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/internet_problem"
+                android:layout_marginEnd="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="@dimen/guideline_standard_padding"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+        </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <include layout="@layout/view_catalog_search_toolbar" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

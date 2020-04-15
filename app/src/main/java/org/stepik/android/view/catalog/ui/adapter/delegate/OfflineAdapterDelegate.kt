@@ -18,7 +18,7 @@ class OfflineAdapterDelegate(
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         OfflineViewHolder(createView(parent, R.layout.view_catalog_no_internet_clickable), onRetry = onRetry) as DelegateViewHolder<CatalogItem>
 
-    private inner class OfflineViewHolder(root: View, private val onRetry: () -> Unit) : DelegateViewHolder<OfflinePlaceholder>(root) {
+    private class OfflineViewHolder(root: View, private val onRetry: () -> Unit) : DelegateViewHolder<OfflinePlaceholder>(root) {
 
         private val placeholderText = root.noInternetPlaceholder
 

@@ -103,7 +103,7 @@ class CourseListUserFragment : Fragment() {
 
     private fun injectComponent() {
         App.component()
-            .courseListExperimentalComponentBuilder()
+            .courseListComponentBuilder()
             .build()
             .inject(this)
     }

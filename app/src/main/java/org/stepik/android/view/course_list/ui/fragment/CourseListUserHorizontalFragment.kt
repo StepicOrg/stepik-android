@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_course_list.*
 import kotlinx.android.synthetic.main.fragment_course_list.courseListCoursesRecycler
 import kotlinx.android.synthetic.main.fragment_course_list.courseListPlaceholderEmpty
 import kotlinx.android.synthetic.main.fragment_course_list.courseListPlaceholderNoConnection
@@ -125,7 +124,7 @@ class CourseListUserHorizontalFragment : Fragment() {
 
     private fun injectComponent() {
         App.component()
-            .courseListExperimentalComponentBuilder()
+            .courseListComponentBuilder()
             .build()
             .inject(this)
     }

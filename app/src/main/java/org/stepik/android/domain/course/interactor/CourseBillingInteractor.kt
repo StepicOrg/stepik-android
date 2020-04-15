@@ -25,7 +25,6 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
 
     private val courseRepository: CourseRepository,
-    // private val joiningPoster: JoiningPoster,
 
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>,
@@ -104,7 +103,6 @@ constructor(
 //        courseListRepository
 //            .addCourseToList(CourseListType.ENROLLED, courseId)
 //            .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
-//            .doOnSuccess(joiningPoster::joinCourse) // interop with old code
 //            .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 //            .ignoreElement()
 
