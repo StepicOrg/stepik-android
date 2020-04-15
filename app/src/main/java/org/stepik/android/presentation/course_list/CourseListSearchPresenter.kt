@@ -5,6 +5,7 @@ import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
@@ -24,6 +25,7 @@ import javax.inject.Inject
 class CourseListSearchPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val courseListStateMapper: CourseListStateMapper,
     private val courseListSearchInteractor: CourseListSearchInteractor,
     @BackgroundScheduler
@@ -66,6 +68,8 @@ constructor(
         paginationDisposable.clear()
 
         val oldState = state
+
+        logEvent(searchResultQuery)
 
         state = CourseListView.State.Loading
         this.searchResultQuery = searchResultQuery
@@ -139,5 +143,13 @@ constructor(
                 },
                 onError = emptyOnErrorStub
             )
+    }
+
+    private fun logEvent(searchResultQuery: SearchResultQuery) {
+        if (searchResultQuery.query == null) {
+            analytic.reportEvent(Analytic.Search.SEARCH_NULL)
+        } else {
+            analytic.reportEventWithName(Analytic.Search.SEARCH_QUERY, searchResultQuery.query)
+        }
     }
 }

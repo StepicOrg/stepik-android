@@ -1,5 +1,6 @@
 package org.stepik.android.domain.course_list.interactor
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.util.PagedList
@@ -18,10 +19,11 @@ constructor(
     private val courseStatsInteractor: CourseStatsInteractor
 ) {
 
-    // TODO Remove this method
-    fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
-        courseRepository
-            .getCourses(courseListQuery)
+    fun getAllCourses(courseListQuery: CourseListQuery): Single<List<Course>> =
+        Observable.range(1, Int.MAX_VALUE)
+            .concatMapSingle { courseRepository.getCourses(courseListQuery.copy(page = it)) }
+            .takeUntil { !it.hasNext }
+            .reduce(emptyList()) { a, b -> a + b }
 
     fun getCourseListItems(vararg courseId: Long): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(coursesSource = courseRepository.getCourses(*courseId))

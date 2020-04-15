@@ -70,9 +70,8 @@ class ProfileMainFeedPresenter
     }
 
     private fun logTeacherAnalytic(userId: Long) {
-        // TODO Pagination
         compositeDisposable += courseListInteractor
-            .getCourses(
+            .getAllCourses(
                 CourseListQuery(
                     teacher = userId
                 )
