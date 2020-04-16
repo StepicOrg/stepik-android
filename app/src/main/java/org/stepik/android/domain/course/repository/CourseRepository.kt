@@ -1,5 +1,6 @@
 package org.stepik.android.domain.course.repository
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
@@ -13,4 +14,6 @@ interface CourseRepository {
     fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<Course>>
 
     fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>>
+
+    fun clearRepository(): Completable
 }

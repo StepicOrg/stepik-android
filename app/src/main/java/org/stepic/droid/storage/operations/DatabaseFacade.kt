@@ -90,6 +90,10 @@ constructor(
         userCourseDao.removeAll()
     }
 
+    fun clearCourses() {
+        courseDao.removeAll()
+    }
+
     fun addAssignments(assignments: List<Assignment>) {
         assignmentDao.insertOrReplaceAll(assignments)
     }

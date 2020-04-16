@@ -1,5 +1,6 @@
 package org.stepik.android.data.course.repository
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
@@ -64,4 +65,8 @@ constructor(
         courseRemoteDataSource
             .getCourses(courseListQuery)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
+
+    override fun clearRepository(): Completable =
+        courseCacheDataSource
+            .clearDatabase()
 }

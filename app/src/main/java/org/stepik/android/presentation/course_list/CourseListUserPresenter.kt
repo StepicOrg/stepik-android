@@ -265,6 +265,7 @@ constructor(
         userCoursesLoadedPublisher.onNext(publishUserCourses)
 
         state = oldState.copy(
+            userCourses = oldState.userCourses.drop(1),
             courseListViewState = oldCourseListState.copy(
                 courseListDataItems = newItems,
                 courseListItems = newItems
@@ -286,7 +287,17 @@ constructor(
             .subscribeBy(
                 onSuccess = { enrolledCourseListItem ->
                     userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(enrolledCourseListItem))
-                    state = oldState.copy(courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(oldCourseListState, enrolledCourseListItem))
+                    state = oldState.copy(
+                        userCourses = listOf(UserCourse(
+                            id = 0,
+                            user = 0,
+                            course = enrolledCourseListItem.id,
+                            isFavorite = false,
+                            isPinned = false,
+                            isArchived = false,
+                            lastViewed = null
+                        )) + oldState.userCourses,
+                        courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(oldCourseListState, enrolledCourseListItem))
                 },
                 onError = emptyOnErrorStub
             )

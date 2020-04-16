@@ -1,18 +1,19 @@
 package org.stepik.android.presentation.auth
 
 import io.reactivex.Completable
-import org.stepik.android.domain.auth.interactor.AuthInteractor
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.AppConstants
+import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.toObject
-import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.domain.auth.interactor.AuthInteractor
+import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepik.android.domain.auth.model.SocialAuthError
 import org.stepik.android.domain.auth.model.SocialAuthType
+import org.stepik.android.presentation.base.PresenterBase
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -54,7 +55,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = { state = SocialAuthView.State.Success },
+                onComplete = { clearCoursesBeforeAuth() },
                 onError = { throwable ->
                     val failType =
                         when ((throwable as? HttpException)?.code()) {
@@ -84,6 +85,16 @@ constructor(
 
                     state = SocialAuthView.State.Idle
                 }
+            )
+    }
+
+    private fun clearCoursesBeforeAuth() {
+        compositeDisposable += authInteractor.clearCourseRepository()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { state = SocialAuthView.State.Success },
+                onError = emptyOnErrorStub
             )
     }
 }

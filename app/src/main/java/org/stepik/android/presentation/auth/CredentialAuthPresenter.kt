@@ -1,13 +1,14 @@
 package org.stepik.android.presentation.auth
 
-import org.stepik.android.domain.auth.interactor.AuthInteractor
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Credentials
+import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.auth.interactor.AuthInteractor
+import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepik.android.presentation.base.PresenterBase
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -49,7 +50,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { state = CredentialAuthView.State.Success(it) },
+                onSuccess = { clearCoursesBeforeAuth(it) },
                 onError = { throwable ->
                     val loginFailType =
                         if (throwable is HttpException) {
@@ -63,6 +64,16 @@ constructor(
                         }
                     state = CredentialAuthView.State.Error(loginFailType)
                 }
+            )
+    }
+
+    private fun clearCoursesBeforeAuth(credentials: Credentials) {
+        compositeDisposable += authInteractor.clearCourseRepository()
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { state = CredentialAuthView.State.Success(credentials) },
+                onError = emptyOnErrorStub
             )
     }
 }

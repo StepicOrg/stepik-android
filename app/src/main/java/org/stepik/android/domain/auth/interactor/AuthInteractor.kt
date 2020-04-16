@@ -9,6 +9,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.auth.model.SocialAuthType
 import org.stepik.android.domain.auth.repository.AuthRepository
+import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.user_profile.repository.UserProfileRepository
 import org.stepik.android.model.user.RegistrationCredentials
 import javax.inject.Inject
@@ -19,7 +20,8 @@ constructor(
     private val analytic: Analytic,
     private val authRepository: AuthRepository,
 
-    private val userProfileRepository: UserProfileRepository
+    private val userProfileRepository: UserProfileRepository,
+    private val courseRepository: CourseRepository
 ) {
     companion object {
         private const val MINUTES_TO_CONSIDER_REGISTRATION = 5
@@ -52,6 +54,9 @@ constructor(
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
+
+    fun clearCourseRepository(): Completable =
+        courseRepository.clearRepository()
 
     private fun reportSocialAuthAnalytics(type: SocialAuthType): Completable =
         userProfileRepository
