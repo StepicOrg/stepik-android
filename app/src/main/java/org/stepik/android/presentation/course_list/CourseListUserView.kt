@@ -7,6 +7,8 @@ interface CourseListUserView : CourseContinueView {
     sealed class State {
         object Idle : State()
         object Loading : State()
+        object NetworkError : State()
+        object EmptyLogin : State()
         data class Data(val userCourses: List<UserCourse>, val courseListViewState: CourseListView.State) : State()
     }
 

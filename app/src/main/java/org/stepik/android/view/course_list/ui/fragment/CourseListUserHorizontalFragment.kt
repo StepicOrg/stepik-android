@@ -11,14 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_course_list.courseListCoursesRecycler
-import kotlinx.android.synthetic.main.fragment_course_list.courseListPlaceholderEmpty
-import kotlinx.android.synthetic.main.fragment_course_list.courseListPlaceholderNoConnection
-import kotlinx.android.synthetic.main.item_course_list.*
+import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
@@ -53,6 +51,7 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private lateinit var courseListPresenter: CourseListUserPresenter
+    private lateinit var wrapperViewStateDelegate: ViewStateDelegate<CourseListUserView.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +67,7 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.item_course_list, container, false)
+        inflater.inflate(R.layout.fragment_user_course_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -105,13 +104,21 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
         courseListPlaceholderNoConnection.setOnClickListener {
-            // courseListPresenter.fetchCourses(forceUpdate = true)
+            courseListPresenter.fetchCourses(forceUpdate = true)
+        }
+        courseListUserPlaceholderNoConnection.setOnClickListener {
+            courseListPresenter.fetchUserCourses(forceUpdate = true)
+        }
+        courseListWrapperPlaceholderEmptyLogin.setOnClickListener {
+            screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
         }
         courseListPlaceholderNoConnection.setText(R.string.internet_problem)
+        courseListUserPlaceholderNoConnection.setPlaceholderText(R.string.internet_problem)
+        courseListWrapperPlaceholderEmptyLogin.setPlaceholderText(R.string.empty_courses_anonymous)
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
 
-        viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
+        viewStateDelegate.addState<CourseListView.State.Idle>()
         viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
@@ -129,8 +136,15 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
                 courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
             }
         )
-        courseListPresenter.fetch()
-        // courseListPresenter.fetchCourses()
+
+        wrapperViewStateDelegate = ViewStateDelegate()
+        wrapperViewStateDelegate.addState<CourseListUserView.State.Idle>()
+        wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(courseListUserSkeleton)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.EmptyLogin>(courseListWrapperPlaceholderEmptyLogin)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListUserPlaceholderNoConnection)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
+
+        courseListPresenter.fetchUserCourses()
     }
 
     private fun injectComponent() {
@@ -141,6 +155,7 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
     }
 
     override fun setState(state: CourseListUserView.State) {
+        wrapperViewStateDelegate.switchState(state)
         if (state is CourseListUserView.State.Data) {
             coursesCarouselCount.text = requireContext().resources.getQuantityString(
                 R.plurals.course_count,

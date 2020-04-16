@@ -25,6 +25,7 @@ import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
+import retrofit2.HttpException
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -82,12 +83,10 @@ constructor(
         view.setState(state)
     }
 
-    fun fetch() {
-        if (state != CourseListUserView.State.Idle) return
+    fun fetchUserCourses(forceUpdate: Boolean = false) {
+        if (state != CourseListUserView.State.Idle && !forceUpdate) return
 
         paginationDisposable.clear()
-
-        Timber.d("A")
 
         state = CourseListUserView.State.Loading
 
@@ -103,11 +102,15 @@ constructor(
                     )
                     fetchCourses()
                 },
-                onError = emptyOnErrorStub
+                onError = {
+                    if (it is HttpException && it.code() == 401) {
+                        state = CourseListUserView.State.EmptyLogin
+                    }
+                }
             )
     }
 
-    private fun fetchCourses(forceUpdate: Boolean = false) {
+    fun fetchCourses(forceUpdate: Boolean = false) {
         if (state !is CourseListUserView.State.Data && !forceUpdate) return
 
         val oldState = state as? CourseListUserView.State.Data

@@ -78,10 +78,10 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListSwipeRefresh.setOnRefreshListener {
-            // courseListPresenter.fetchCourses(forceUpdate = true)
+            courseListPresenter.fetchCourses(forceUpdate = true)
         }
         tryAgain.setOnClickListener {
-            // courseListPresenter.fetchCourses(forceUpdate = true)
+            courseListPresenter.fetchCourses(forceUpdate = true)
         }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -105,8 +105,7 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
             }
         )
 
-        courseListPresenter.fetch()
-        // courseListPresenter.fetchCourses()
+        courseListPresenter.fetchUserCourses()
     }
 
     private fun injectComponent() {
