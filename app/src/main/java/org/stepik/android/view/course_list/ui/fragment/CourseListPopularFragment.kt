@@ -145,7 +145,7 @@ class CourseListPopularFragment : Fragment(), CourseListQueryView {
 
     private fun injectComponent() {
         App.component()
-            .courseListComponentBuilder()
+            .courseListQueryComponentBuilder()
             .build()
             .inject(this)
     }

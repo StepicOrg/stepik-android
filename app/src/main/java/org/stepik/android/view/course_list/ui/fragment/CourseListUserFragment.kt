@@ -123,7 +123,7 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
 
     private fun injectComponent() {
         App.component()
-            .courseListComponentBuilder()
+            .courseListUserComponentBuilder()
             .build()
             .inject(this)
     }

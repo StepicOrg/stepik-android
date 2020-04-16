@@ -61,6 +61,9 @@ import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_collection.CourseCollectionDataModule
 import org.stepik.android.view.injection.course_list.CourseListBusModule
 import org.stepik.android.view.injection.course_list.CourseListComponent
+import org.stepik.android.view.injection.course_list.collection.CourseListCollectionComponent
+import org.stepik.android.view.injection.course_list.query.CourseListQueryComponent
+import org.stepik.android.view.injection.course_list.user.CourseListUserComponent
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
@@ -214,6 +217,12 @@ interface AppCoreComponent {
     fun fastContinueComponentBuilder(): FastContinueComponent.Builder
 
     fun filterComponentBuilder(): FilterComponent.Builder
+
+    fun courseListQueryComponentBuilder(): CourseListQueryComponent.Builder
+
+    fun courseListCollectionComponentBuilder(): CourseListCollectionComponent.Builder
+
+    fun courseListUserComponentBuilder(): CourseListUserComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
