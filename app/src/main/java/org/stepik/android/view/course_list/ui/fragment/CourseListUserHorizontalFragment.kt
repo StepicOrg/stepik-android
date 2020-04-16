@@ -21,6 +21,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -92,6 +94,11 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
             addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), ROW_COUNT))
             val snapHelper = CoursesSnapHelper(ROW_COUNT)
             snapHelper.attachToRecyclerView(this)
+            setOnPaginationListener { pageDirection ->
+                if (pageDirection == PaginationDirection.NEXT) {
+                    courseListPresenter.fetchNextPage()
+                }
+            }
         }
 
         courseListTitleContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
@@ -116,14 +123,13 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
                 analytic = analytic,
                 screenManager = screenManager
             ),
-            courseListTitleContainer = courseListTitleContainer,
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
                 courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
             }
         )
-
+        courseListPresenter.fetch()
         // courseListPresenter.fetchCourses()
     }
 
@@ -135,6 +141,13 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
     }
 
     override fun setState(state: CourseListUserView.State) {
+        if (state is CourseListUserView.State.Data) {
+            coursesCarouselCount.text = requireContext().resources.getQuantityString(
+                R.plurals.course_count,
+                state.userCourses.size,
+                state.userCourses.size
+            )
+        }
         val courseListState = (state as? CourseListUserView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
         courseListViewDelegate.setState(courseListState)
     }

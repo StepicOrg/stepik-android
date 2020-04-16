@@ -105,6 +105,7 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
             }
         )
 
+        courseListPresenter.fetch()
         // courseListPresenter.fetchCourses()
     }
 
