@@ -10,7 +10,6 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepik.android.domain.auth.interactor.AuthInteractor
-import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepik.android.presentation.base.PresenterBase
 import retrofit2.HttpException
 import javax.inject.Inject

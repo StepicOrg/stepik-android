@@ -12,7 +12,6 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.toObject
 import org.stepik.android.domain.auth.interactor.AuthInteractor
-import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepik.android.domain.auth.model.SocialAuthError
 import org.stepik.android.domain.auth.model.SocialAuthType
 import org.stepik.android.presentation.base.PresenterBase
