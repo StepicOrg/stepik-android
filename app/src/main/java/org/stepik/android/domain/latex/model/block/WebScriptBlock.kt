@@ -11,5 +11,6 @@ class WebScriptBlock : ContentBlock {
         "<h6" in content ||
         "<img" in content ||
         "<iframe" in content ||
-        "<audio" in content
+        "<audio" in content ||
+        "<table" in content
 }

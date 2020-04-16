@@ -3,6 +3,7 @@ package org.stepic.droid.util
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
@@ -76,3 +77,16 @@ fun Float.toSp(): Float =
  */
 fun Context.isNightModeEnabled(): Boolean =
     (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+/**
+ * "com.google.android.googlequicksearchbox" is necessary to launch Scene Viewer
+ * Reference: https://developers.google.com/ar/develop/java/scene-viewer#3d-or-ar
+ */
+
+fun Context.isARSupported(): Boolean =
+    try {
+        packageManager.getApplicationInfo("com.google.android.googlequicksearchbox", 0)
+        true
+    } catch (e : PackageManager.NameNotFoundException) {
+        false
+    }

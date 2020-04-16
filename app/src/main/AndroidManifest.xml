@@ -29,7 +29,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
         android:theme="@style/StepikTheme"
-        tools:replace="allowBackup, supportsRtl">
+        android:usesCleartextTraffic="true"
+        tools:replace="allowBackup, supportsRtl"
+        tools:targetApi="m">
 
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
@@ -438,13 +440,6 @@
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Branch install referrer tracking -->
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 

@@ -4,6 +4,7 @@ import org.stepik.android.domain.auth.interactor.AuthInteractor
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.toObject
@@ -16,6 +17,7 @@ import javax.inject.Inject
 class RegistrationPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val authInteractor: AuthInteractor,
 
     @BackgroundScheduler
@@ -57,6 +59,12 @@ constructor(
                         ?.errorBody()
                         ?.string()
                         ?.toObject<RegistrationError>()
+
+                    if (throwable is HttpException) {
+                        analytic.reportEvent(Analytic.Error.REGISTRATION_FAILED, throwable.response()?.errorBody()?.string() ?: "empty response")
+                    } else {
+                        analytic.reportError(Analytic.Error.REGISTRATION_FAILED, throwable)
+                    }
 
                     state =
                         if (error != null) {

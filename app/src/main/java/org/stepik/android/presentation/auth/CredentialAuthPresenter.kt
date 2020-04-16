@@ -3,6 +3,8 @@ package org.stepik.android.presentation.auth
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
+import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Credentials
@@ -16,6 +18,7 @@ import javax.inject.Inject
 class CredentialAuthPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val authInteractor: AuthInteractor,
 
     @BackgroundScheduler
@@ -62,6 +65,13 @@ constructor(
                         } else {
                             LoginFailType.CONNECTION_PROBLEM
                         }
+
+                    if (throwable is HttpException) {
+                        analytic.reportEvent(Analytic.Error.CREDENTIAL_AUTH_FAILED, throwable.response()?.errorBody()?.string() ?: "empty response")
+                    } else {
+                        analytic.reportError(Analytic.Error.CREDENTIAL_AUTH_FAILED, throwable)
+                    }
+
                     state = CredentialAuthView.State.Error(loginFailType)
                 }
             )
