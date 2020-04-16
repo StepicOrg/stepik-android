@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
@@ -27,6 +28,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseListAdapterDelegate(
+    private val analytic: Analytic,
     private val screenManager: ScreenManager,
     private val courseContinueViewDelegate: CourseContinueViewDelegate
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
@@ -112,6 +114,9 @@ class CourseListAdapterDelegate(
             }
 
             val courseListState = (state as? CourseListCollectionView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+            if (courseListState == CourseListView.State.Empty) {
+                analytic.reportEvent(Analytic.Error.COURSE_COLLECTION_EMPTY)
+            }
             viewStateDelegate.switchState(courseListState)
             delegate.setState(courseListState)
         }

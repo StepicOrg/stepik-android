@@ -110,6 +110,7 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
             courseListPresenter.fetchUserCourses(forceUpdate = true)
         }
         courseListWrapperPlaceholderEmptyLogin.setOnClickListener {
+            analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER)
             screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
         }
         courseListPlaceholderNoConnection.setText(R.string.internet_problem)

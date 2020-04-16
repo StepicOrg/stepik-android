@@ -100,6 +100,7 @@ constructor(
                         userCourses = it,
                         courseListViewState = CourseListView.State.Idle
                     )
+                    analytic.setCoursesCount(it.size)
                     fetchCourses()
                 },
                 onError = {

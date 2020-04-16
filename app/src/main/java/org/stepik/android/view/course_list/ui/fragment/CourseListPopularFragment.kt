@@ -152,6 +152,9 @@ class CourseListPopularFragment : Fragment(), CourseListQueryView {
 
     override fun setState(state: CourseListQueryView.State) {
         val courseListState = (state as? CourseListQueryView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+        if (courseListState == CourseListView.State.Empty) {
+            analytic.reportEvent(Analytic.Error.FEATURED_EMPTY)
+        }
         courseListViewDelegate.setState(courseListState)
     }
 
