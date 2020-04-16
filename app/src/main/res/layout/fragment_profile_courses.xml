@@ -37,6 +37,7 @@
             android:drawableRight="@drawable/ic_nav_arrow_right"
         -->
 
+    <!--
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/profileCoursesCount"
             android:layout_width="match_parent"
@@ -47,6 +48,7 @@
             android:textColor="@color/new_accent_color"
 
             tools:text="9 courses" />
+    -->
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

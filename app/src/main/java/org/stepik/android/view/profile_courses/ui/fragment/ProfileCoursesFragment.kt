@@ -140,7 +140,6 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
 
         when (state) {
             is ProfileCoursesView.State.Content -> {
-                profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courseListDataItems.size, state.courseListDataItems.size)
                 coursesAdapter.items = state.courseListDataItems
                 (profileCoursesRecycler.layoutManager as? GridLayoutManager)
                     ?.spanCount = min(ROW_COUNT, state.courseListDataItems.size)
