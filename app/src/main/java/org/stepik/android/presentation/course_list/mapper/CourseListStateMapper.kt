@@ -43,6 +43,12 @@ constructor() {
             return state
         }
 
+        val courseListItems = state.courseListDataItems.map {
+            if (it.course.id == enrolledCourse.id) it.copy(
+                course = enrolledCourse
+            ) else it
+        }
+
         return CourseListView.State.Content(
             courseListDataItems = PagedList(
                 state.courseListDataItems.map {
@@ -52,10 +58,10 @@ constructor() {
                 state.courseListDataItems.hasNext,
                 state.courseListDataItems.hasPrev
             ),
-            courseListItems = state.courseListDataItems.map {
-                if (it.course.id == enrolledCourse.id) it.copy(
-                    course = enrolledCourse
-                ) else it
+            courseListItems = if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
+                courseListItems + CourseListItem.PlaceHolder
+            } else {
+                courseListItems
             }
         )
     }
@@ -72,6 +78,12 @@ constructor() {
             add(0, courseListItem)
         }
 
+        val courseListItems = if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
+            courseListDataItems + CourseListItem.PlaceHolder
+        } else {
+            courseListDataItems
+        }
+
         return CourseListView.State.Content(
             courseListDataItems = PagedList(
                 courseListDataItems,
@@ -79,7 +91,7 @@ constructor() {
                 state.courseListDataItems.hasNext,
                 state.courseListDataItems.hasPrev
             ),
-            courseListItems = courseListDataItems
+            courseListItems = courseListItems
         )
     }
 

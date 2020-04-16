@@ -33,6 +33,7 @@ import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.commit
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
@@ -285,54 +286,52 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun setFragment(@IdRes id: Int) {
-        val fragmentTag = getNextFragment(id)
+        val fragmentTag = getNextFragmentTag(id)
 
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        supportFragmentManager.fragments.forEach { fragmentTransaction.hide(it) }
-
-        val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)
-
-        if (fragment != null) {
-            fragmentTransaction.show(fragment)
-        } else {
-            val nextFragment = getNextFragmentInstance(id)
-            fragmentTransaction.add(R.id.frame, nextFragment, nextFragment::class.java.simpleName)
+        supportFragmentManager.commit {
+            supportFragmentManager.fragments.forEach { hide(it) }
+            val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+            if (fragment != null) {
+                show(fragment)
+            } else {
+                val nextFragment = getNextFragmentInstance(id)
+                add(R.id.frame, nextFragment, nextFragment::class.java.simpleName)
+            }
         }
-        fragmentTransaction.commit()
     }
 
-    private fun getNextFragment(@IdRes menuId: Int): String =
+    private fun getNextFragmentTag(@IdRes menuId: Int): String =
         when (menuId) {
-            R.id.home -> {
+            R.id.home ->
                 HomeFragment::class.java.simpleName
-            }
-            R.id.catalog -> {
+
+            R.id.catalog ->
                 CatalogFragment::class.java.simpleName
-            }
-            R.id.profile -> {
+
+            R.id.profile ->
                 ProfileFragment::class.java.simpleName
-            }
-            R.id.notifications -> {
+
+            R.id.notifications ->
                 NotificationsFragment::class.java.simpleName
-            }
+
             else ->
                 throw IllegalStateException()
         }
 
     private fun getNextFragmentInstance(@IdRes menuId: Int): Fragment =
         when (menuId) {
-            R.id.home -> {
+            R.id.home ->
                 HomeFragment.newInstance()
-            }
-            R.id.catalog -> {
+
+            R.id.catalog ->
                 CatalogFragment.newInstance()
-            }
-            R.id.profile -> {
+
+            R.id.profile ->
                 ProfileFragment.newInstance()
-            }
-            R.id.notifications -> {
+
+            R.id.notifications ->
                 NotificationsFragment.newInstance()
-            }
+
             else ->
                 throw IllegalStateException()
         }

@@ -229,7 +229,7 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
 
     private fun injectComponent() {
         App.component()
-            .catalogNewComponentBuilder()
+            .catalogComponentBuilder()
             .build()
             .inject(this)
     }

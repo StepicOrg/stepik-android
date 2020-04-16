@@ -29,7 +29,6 @@ import retrofit2.HttpException
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListUserPresenter
@@ -181,15 +180,11 @@ constructor(
             return
         }
 
-        Timber.d("A")
-
         val ids = oldState
             .userCourses
             .drop(oldState.courseListViewState.courseListDataItems.size)
             .take(PAGE_SIZE)
             .mapToLongArray(UserCourse::course)
-
-        Timber.d("Ids: $ids")
 
         state = oldState.copy(courseListViewState = courseListStateMapper.mapToLoadMoreState(oldCourseListState))
         paginationDisposable += courseListUserInteractor
@@ -199,7 +194,6 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(oldCourseListState, it))
-                    // fetchNextPage()
                 },
                 onError = {
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToError(oldCourseListState))

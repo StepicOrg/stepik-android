@@ -3,7 +3,6 @@ package org.stepik.android.domain.view_assignment.interactor
 import io.reactivex.Completable
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import org.stepic.droid.core.earlystreak.contract.EarlyStreakPoster
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.last_step.model.LastStep
@@ -17,12 +16,15 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepik.android.model.ViewAssignment
+import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBus
 import javax.inject.Inject
 
 class ViewAssignmentReportInteractor
 @Inject
 constructor(
+    @UserCoursesUpdateBus
+    private val userCoursesUpdatePublisher: PublishSubject<Course>,
     private val viewAssignmentRepository: ViewAssignmentRepository,
     private val localProgressInteractor: LocalProgressInteractor,
 
@@ -32,9 +34,7 @@ constructor(
     private val progressesPublisher: PublishSubject<Progress>,
 
     @ViewAssignmentBus
-    private val viewAssignmentObserver: BehaviorSubject<kotlin.Unit>,
-
-    private val earlyStreakPoster: EarlyStreakPoster
+    private val viewAssignmentObserver: BehaviorSubject<kotlin.Unit>
 ) {
     fun updatePassedStep(step: Step, assignment: Assignment?): Completable =
         updateLocalStepProgress(step, assignment)
@@ -47,8 +47,8 @@ constructor(
 
     private fun updateLocalLastStep(step: Step, unit: Unit?, course: Course?): Completable {
         val lastStepId = course?.lastStepId
+        course?.let { userCoursesUpdatePublisher.onNext(it) }
         return if (unit != null && lastStepId != null) {
-            earlyStreakPoster.showStreakSuggestion()
             lastStepRepository
                 .saveLastStep(LastStep(lastStepId, unit.id, unit.lesson, step.id))
         } else {

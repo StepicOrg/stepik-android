@@ -4,7 +4,6 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -19,7 +18,6 @@ import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryView
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
-import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
 import ru.nobird.android.presentation.base.DefaultPresenterViewContainer
 import ru.nobird.android.presentation.base.PresenterViewContainer
 
@@ -30,6 +28,7 @@ abstract class CourseListCollectionModule {
         @Provides
         @JvmStatic
         fun provideCourseListCollectionPresenter(
+            courseListStateMapper: CourseListStateMapper,
             courseListInteractor: CourseListInteractor,
             @BackgroundScheduler
             backgroundScheduler: Scheduler,
@@ -41,13 +40,15 @@ abstract class CourseListCollectionModule {
             analytic: Analytic,
             adaptiveCoursesResolver: AdaptiveCoursesResolver,
             continueLearningInteractor: ContinueLearningInteractor,
-            @UserCoursesUpdateBus
-            userCoursesUpdatePublisher: PublishSubject<Course>
+            @EnrollmentCourseUpdates
+            enrollmentUpdatesObservable: Observable<Course>
         ): CourseListCollectionPresenter =
             CourseListCollectionPresenter(
+                courseListStateMapper = courseListStateMapper,
                 courseListInteractor = courseListInteractor,
                 backgroundScheduler = backgroundScheduler,
                 mainScheduler = mainScheduler,
+                enrollmentUpdatesObservable = enrollmentUpdatesObservable,
                 viewContainer = viewContainer,
 
                 continueCoursePresenterDelegate = CourseContinuePresenterDelegateImpl(
@@ -56,8 +57,7 @@ abstract class CourseListCollectionModule {
                     adaptiveCoursesResolver,
                     continueLearningInteractor,
                     backgroundScheduler,
-                    mainScheduler,
-                    userCoursesUpdatePublisher
+                    mainScheduler
                 )
             )
 
@@ -77,9 +77,7 @@ abstract class CourseListCollectionModule {
             adaptiveCoursesResolver: AdaptiveCoursesResolver,
             continueLearningInteractor: ContinueLearningInteractor,
             @EnrollmentCourseUpdates
-            enrollmentUpdatesObservable: Observable<Course>,
-            @UserCoursesUpdateBus
-            userCoursesUpdatePublisher: PublishSubject<Course>
+            enrollmentUpdatesObservable: Observable<Course>
         ): CourseListQueryPresenter =
             CourseListQueryPresenter(
                 courseListStateMapper = courseListStateMapper,
@@ -95,8 +93,7 @@ abstract class CourseListCollectionModule {
                     adaptiveCoursesResolver,
                     continueLearningInteractor,
                     backgroundScheduler,
-                    mainScheduler,
-                    userCoursesUpdatePublisher
+                    mainScheduler
                 )
             )
 

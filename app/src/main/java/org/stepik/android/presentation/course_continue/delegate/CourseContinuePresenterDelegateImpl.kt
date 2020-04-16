@@ -3,7 +3,6 @@ package org.stepik.android.presentation.course_continue.delegate
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -13,7 +12,6 @@ import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
-import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
 import ru.nobird.android.presentation.base.ViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
@@ -28,9 +26,7 @@ constructor(
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
-    private val mainScheduler: Scheduler,
-    @UserCoursesUpdateBus
-    private val userCoursesUpdatePublisher: PublishSubject<Course>
+    private val mainScheduler: Scheduler
 ) : PresenterDelegate<CourseContinueView>(), CourseContinuePresenterDelegate {
 
     private var isBlockingLoading: Boolean = false
@@ -45,7 +41,6 @@ constructor(
     }
 
     override fun continueCourse(course: Course, interactionSource: CourseContinueInteractionSource) {
-        userCoursesUpdatePublisher.onNext(course)
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(

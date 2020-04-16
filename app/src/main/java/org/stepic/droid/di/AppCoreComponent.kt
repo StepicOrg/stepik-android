@@ -209,7 +209,7 @@ interface AppCoreComponent {
 
     fun courseListComponentBuilder(): CourseListComponent.Builder
 
-    fun catalogNewComponentBuilder(): CatalogComponent.Builder
+    fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun fastContinueComponentBuilder(): FastContinueComponent.Builder
 

@@ -28,8 +28,9 @@
                 layout="@layout/home_streak_view"
                 android:visibility="gone" />
 
-            <FrameLayout
-                android:id="@+id/homeFastContinueContainer"
+            <fragment
+                android:name="org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment"
+                android:id="@+id/fastContinueFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

@@ -47,17 +47,10 @@ class HomeFragment : FragmentBase(), HomeStreakView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_home, container, false)
 
-    @SuppressLint("CommitTransaction")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         nullifyActivityBackground()
         super.onViewCreated(view, savedInstanceState)
         initCenteredToolbar(R.string.home_title)
-
-        if (savedInstanceState == null) {
-            childFragmentManager.commitNow {
-                add(R.id.homeFastContinueContainer, FastContinueFragment.newInstance(), fastContinueTag)
-            }
-        }
 
         homeStreakPresenter.attachView(this)
         homeStreakPresenter.onNeedShowStreak()
