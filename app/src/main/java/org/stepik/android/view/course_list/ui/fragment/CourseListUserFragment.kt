@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button.view.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -46,6 +48,7 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private lateinit var courseListPresenter: CourseListUserPresenter
+    private lateinit var wrapperViewStateDelegate: ViewStateDelegate<CourseListUserView.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +69,8 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        courseListUserSkeleton.isVisible = true
+
         initCenteredToolbar(R.string.course_list_user_courses_title, true)
         with(courseListCoursesRecycler) {
             layoutManager = WrapContentLinearLayoutManager(context)
@@ -80,8 +85,11 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
         courseListSwipeRefresh.setOnRefreshListener {
             courseListPresenter.fetchCourses(forceUpdate = true)
         }
-        tryAgain.setOnClickListener {
+        courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener {
             courseListPresenter.fetchCourses(forceUpdate = true)
+        }
+        courseListUserCoursesLoadingErrorVertical.tryAgain.setOnClickListener {
+            courseListPresenter.fetchUserCourses(forceUpdate = true)
         }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -105,6 +113,11 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
             }
         )
 
+        wrapperViewStateDelegate = ViewStateDelegate()
+        wrapperViewStateDelegate.addState<CourseListUserView.State.Idle>()
+        wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(courseListUserSkeleton)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListUserCoursesLoadingErrorVertical)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
         courseListPresenter.fetchUserCourses()
     }
 
@@ -116,6 +129,7 @@ class CourseListUserFragment : Fragment(), CourseListUserView {
     }
 
     override fun setState(state: CourseListUserView.State) {
+        wrapperViewStateDelegate.switchState(state)
         val courseListState = (state as? CourseListUserView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
         courseListViewDelegate.setState(courseListState)
     }

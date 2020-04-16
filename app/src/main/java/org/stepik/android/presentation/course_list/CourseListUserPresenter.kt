@@ -103,8 +103,11 @@ constructor(
                     fetchCourses()
                 },
                 onError = {
-                    if (it is HttpException && it.code() == 401) {
-                        state = CourseListUserView.State.EmptyLogin
+                    userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
+                    state = if (it is HttpException && it.code() == 401) {
+                        CourseListUserView.State.EmptyLogin
+                    } else {
+                        CourseListUserView.State.NetworkError
                     }
                 }
             )

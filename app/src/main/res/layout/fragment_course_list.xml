@@ -33,6 +33,11 @@
                         android:visibility="gone"
                         layout="@layout/error_no_connection_with_button" />
 
+                    <include
+                        android:id="@+id/courseListUserCoursesLoadingErrorVertical"
+                        android:visibility="gone"
+                        layout="@layout/error_no_connection_with_button" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/courseListCoursesRecycler"
                         android:layout_width="match_parent"
@@ -47,30 +52,17 @@
                 </FrameLayout>
             </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
 
-            <org.stepic.droid.ui.custom.PlaceholderTextView
-                android:id="@+id/courseListPlaceholderNoConnection"
+            <include
+                android:id="@+id/courseListUserSkeleton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="@dimen/guideline_standard_padding"
+                android:layout_marginTop="16dp"
+                android:paddingLeft="8dp"
+                android:paddingStart="8dp"
+                android:paddingRight="8dp"
+                android:paddingEnd="8dp"
                 android:visibility="gone"
-                tools:visibility="visible"/>
-
-            <org.stepic.droid.ui.custom.PlaceholderTextView
-                android:id="@+id/courseListPlaceholderEmpty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/internet_problem"
-                android:layout_marginEnd="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="@dimen/guideline_standard_padding"
-                android:visibility="gone"
-                tools:visibility="visible"/>
+                layout="@layout/item_course_loading_skeleton_container" />
         </FrameLayout>
     </androidx.core.widget.NestedScrollView>
 
