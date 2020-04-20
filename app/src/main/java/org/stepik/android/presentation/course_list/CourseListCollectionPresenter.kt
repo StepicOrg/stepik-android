@@ -113,10 +113,7 @@ constructor(
                     val oldState = (state as? CourseListCollectionView.State.Data)
                         ?: return@subscribeBy
 
-                    val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
-                        ?: return@subscribeBy
-
-                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldCourseListState, enrolledCourse))
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, enrolledCourse))
                 },
                 onError = emptyOnErrorStub
             )

@@ -136,10 +136,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { enrolledCourse ->
-                    val oldCourseListState = state as? CourseListView.State.Content
-                        ?: return@subscribeBy
-
-                    state = courseListStateMapper.mapToEnrollmentUpdateState(oldCourseListState, enrolledCourse)
+                    state = courseListStateMapper.mapToEnrollmentUpdateState(state, enrolledCourse)
                 },
                 onError = emptyOnErrorStub
             )

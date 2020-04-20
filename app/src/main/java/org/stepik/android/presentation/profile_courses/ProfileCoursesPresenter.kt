@@ -7,8 +7,8 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -123,14 +123,9 @@ constructor(
                     val oldState = state
                     if (oldState is ProfileCoursesView.State.Content) {
                         state = ProfileCoursesView.State.Content(
-                            courseListDataItems = PagedList(
-                                oldState.courseListDataItems.map {
-                                    if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
-                                },
-                                oldState.courseListDataItems.page,
-                                oldState.courseListDataItems.hasNext,
-                                oldState.courseListDataItems.hasPrev
-                            )
+                            oldState.courseListDataItems.mapPaged {
+                                if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
+                            }
                         )
                     }
                 },

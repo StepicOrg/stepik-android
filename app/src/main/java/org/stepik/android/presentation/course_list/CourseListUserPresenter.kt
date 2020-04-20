@@ -211,11 +211,8 @@ constructor(
                     val oldState = state as? CourseListUserView.State.Data
                         ?: return@subscribeBy
 
-                    val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
-                        ?: return@subscribeBy
-
                     state = oldState.copy(
-                        courseListViewState = courseListStateMapper.mapToContinueCourseUpdateState(oldCourseListState, continuedCourse).apply {
+                        courseListViewState = courseListStateMapper.mapToContinueCourseUpdateState(oldState.courseListViewState, continuedCourse).apply {
                             if (this is CourseListView.State.Content) {
                                 userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(courseListDataItems.first()))
                             }
@@ -308,9 +305,6 @@ constructor(
             .syncPersonalDeadlines()
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {},
-                onError = emptyOnErrorStub
-            )
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 }
