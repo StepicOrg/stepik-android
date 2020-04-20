@@ -112,9 +112,7 @@ constructor(
             )
     }
 
-    fun fetchCourses(forceUpdate: Boolean = false) {
-        if (state !is CourseListUserView.State.Data && !forceUpdate) return
-
+    private fun fetchCourses() {
         val oldState = state as? CourseListUserView.State.Data
             ?: return
 
