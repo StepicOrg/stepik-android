@@ -1,47 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/languageTitle"
         style="@style/CatalogItemTitle"
         android:text="@string/language_of_courses"/>
 
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/languages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/course_list_side_padding"
+        android:layout_marginRight="@dimen/course_list_side_padding"
+        android:layout_marginBottom="@dimen/catalog_header_bottom_margin"
+        app:singleSelection="true">
 
-    <org.stepic.droid.ui.custom.LanguageTextView
-        android:id="@+id/languageRu"
-        style="@style/LanguageFilterItem"
-        android:layout_alignLeft="@id/languageTitle"
-        android:layout_alignStart="@id/languageTitle"
-        android:layout_below="@id/languageTitle"
-        android:text="@string/ru_language_filter"/>
+        <Button
+            android:id="@+id/languageRu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ru_language_filter"
+            android:theme="@style/ThemeOverlay.Violet"
+            style="?attr/materialButtonOutlinedStyle" />
 
+        <Button
+            android:id="@+id/languageEn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/en_language_filter"
+            android:theme="@style/ThemeOverlay.Violet"
+            style="?attr/materialButtonOutlinedStyle" />
 
-    <org.stepic.droid.ui.custom.LanguageTextView
-        android:id="@+id/languageEn"
-        style="@style/LanguageFilterItem"
-        android:layout_alignBaseline="@id/languageRu"
-        android:layout_toEndOf="@id/languageRu"
-        android:layout_toRightOf="@id/languageRu"
-        android:text="@string/en_language_filter"/>
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <TextView
         android:id="@+id/languageHint"
         android:text="@string/language_widget_hint"
-        android:textColor="@color/new_accent_color_alpha_30"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/languageRu"
         android:layout_marginStart="@dimen/course_list_side_padding"
         android:layout_marginLeft="@dimen/course_list_side_padding"
         android:layout_marginBottom="20dp" />
 
-    <include
-        layout="@layout/view_divider_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="?dividerVerticalSize"
-        android:layout_below="@id/languageHint"/>
+    <include layout="@layout/view_divider_vertical" />
 
-</RelativeLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

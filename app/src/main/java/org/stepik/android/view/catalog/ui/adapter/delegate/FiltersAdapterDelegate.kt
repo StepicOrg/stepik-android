@@ -2,7 +2,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Checkable
+import com.google.android.material.button.MaterialButtonToggleGroup
 import kotlinx.android.synthetic.main.view_course_languages.view.*
 import org.stepic.droid.R
 import org.stepic.droid.model.StepikFilter
@@ -22,29 +22,25 @@ class FiltersAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<C
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CatalogItem> =
         FiltersViewHolder(createView(parent, R.layout.view_course_languages)) as DelegateViewHolder<CatalogItem>
 
-    private class FiltersViewHolder(root: View) : PresenterViewHolder<FiltersView, FiltersPresenter>(root),
-        FiltersView {
-
-        private val languageRu = itemView.languageRu
-        private val languageEn = itemView.languageEn
-
+    private class FiltersViewHolder(root: View) : PresenterViewHolder<FiltersView, FiltersPresenter>(root), FiltersView {
         private val viewStateDelegate = ViewStateDelegate<FiltersView.State>()
+        private val languages = itemView.languages
 
         init {
-            val onClickListener = View.OnClickListener { checkableView ->
-                checkableView as Checkable
-                if (checkableView.isChecked) {
-                    // skip click event
-                    return@OnClickListener
+            val toggleListener =
+                object : MaterialButtonToggleGroup.OnButtonCheckedListener {
+                    override fun onButtonChecked(group: MaterialButtonToggleGroup, checkedId: Int, isChecked: Boolean) {
+                        if (languages.checkedButtonIds.isEmpty()) {
+                            group.removeOnButtonCheckedListener(this)
+                            group.check(checkedId)
+                            group.addOnButtonCheckedListener(this)
+                            return
+                        }
+                        val filters = composeFilters()
+                        itemData?.onFilterChanged(filters)
+                    }
                 }
-                languageRu.toggle()
-                languageEn.toggle()
-                val filters = composeFilters()
-                itemData?.onFilterChanged(filters)
-            }
-
-            languageRu.setOnClickListener(onClickListener)
-            languageEn.setOnClickListener(onClickListener)
+            languages.addOnButtonCheckedListener(toggleListener)
 
             viewStateDelegate.addState<FiltersView.State.Idle>()
             viewStateDelegate.addState<FiltersView.State.Empty>()
@@ -54,8 +50,13 @@ class FiltersAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<C
         override fun setState(state: FiltersView.State) {
             viewStateDelegate.switchState(state)
             if (state is FiltersView.State.FiltersLoaded) {
-                updateCheckableView(languageRu, state.filters.contains(StepikFilter.RUSSIAN))
-                updateCheckableView(languageEn, state.filters.contains(StepikFilter.ENGLISH))
+                if (StepikFilter.RUSSIAN in state.filters) {
+                    languages.check(R.id.languageRu)
+                }
+
+                if (StepikFilter.ENGLISH in state.filters) {
+                    languages.check(R.id.languageEn)
+                }
             }
         }
 
@@ -66,19 +67,14 @@ class FiltersAdapterDelegate : AdapterDelegate<CatalogItem, DelegateViewHolder<C
         override fun detachView(data: FiltersPresenter) {
             data.detachView(this)
         }
-        private fun updateCheckableView(view: Checkable, shouldBeChecked: Boolean) {
-            if (view.isChecked != shouldBeChecked) {
-                view.isChecked = shouldBeChecked
-            }
-        }
 
         private fun composeFilters(): EnumSet<StepikFilter> {
             val filters = EnumSet.noneOf(StepikFilter::class.java)
-            if (languageRu.isChecked) {
+            if (R.id.languageRu in languages.checkedButtonIds) {
                 filters.add(StepikFilter.RUSSIAN)
             }
 
-            if (languageEn.isChecked) {
+            if (R.id.languageEn in languages.checkedButtonIds) {
                 filters.add(StepikFilter.ENGLISH)
             }
             return filters
