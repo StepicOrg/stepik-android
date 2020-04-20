@@ -1,7 +1,6 @@
 package org.stepik.android.view.course_list.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -36,7 +35,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseListSearchFragment : Fragment() {
+class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
     companion object {
         fun newInstance(query: String?): Fragment =
             CourseListSearchFragment().apply {
@@ -72,13 +71,6 @@ class CourseListSearchFragment : Fragment() {
             .of(this, viewModelFactory)
             .get(CourseListSearchPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_course_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

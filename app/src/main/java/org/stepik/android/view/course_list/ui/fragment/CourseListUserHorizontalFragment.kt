@@ -2,9 +2,7 @@ package org.stepik.android.view.course_list.ui.fragment
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
@@ -32,7 +30,7 @@ import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
+class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_list), CourseListUserView {
     companion object {
         private const val ROW_COUNT = 2
 
@@ -61,13 +59,6 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
             .of(this, viewModelFactory)
             .get(CourseListUserPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_user_course_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -104,9 +95,6 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
         courseListPlaceholderNoConnection.setOnClickListener {
-            courseListPresenter.fetchCourses(forceUpdate = true)
-        }
-        courseListUserPlaceholderNoConnection.setOnClickListener {
             courseListPresenter.fetchUserCourses(forceUpdate = true)
         }
         courseListWrapperPlaceholderEmptyLogin.setOnClickListener {
@@ -114,7 +102,6 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
             screenManager.showLaunchScreen(context, true, MainFeedActivity.HOME_INDEX)
         }
         courseListPlaceholderNoConnection.setText(R.string.internet_problem)
-        courseListUserPlaceholderNoConnection.setPlaceholderText(R.string.internet_problem)
         courseListWrapperPlaceholderEmptyLogin.setPlaceholderText(R.string.empty_courses_anonymous)
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -142,7 +129,7 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
         wrapperViewStateDelegate.addState<CourseListUserView.State.Idle>()
         wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(courseListUserSkeleton)
         wrapperViewStateDelegate.addState<CourseListUserView.State.EmptyLogin>(courseListWrapperPlaceholderEmptyLogin)
-        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListUserPlaceholderNoConnection)
+        wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListPlaceholderNoConnection)
         wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
 
         courseListPresenter.fetchUserCourses()
@@ -156,7 +143,6 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
     }
 
     override fun setState(state: CourseListUserView.State) {
-        wrapperViewStateDelegate.switchState(state)
         if (state is CourseListUserView.State.Data) {
             coursesCarouselCount.text = requireContext().resources.getQuantityString(
                 R.plurals.course_count,
@@ -166,6 +152,7 @@ class CourseListUserHorizontalFragment : Fragment(), CourseListUserView {
         }
         val courseListState = (state as? CourseListUserView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
         courseListViewDelegate.setState(courseListState)
+        wrapperViewStateDelegate.switchState(state)
     }
 
     override fun showCourse(course: Course, isAdaptive: Boolean) {

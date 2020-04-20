@@ -149,19 +149,6 @@
             android:visibility="visible"
             tools:visibility="visible"/>
 
-        <org.stepic.droid.ui.custom.PlaceholderTextView
-            android:id="@+id/courseListUserPlaceholderNoConnection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="@dimen/guideline_standard_padding"
-            android:visibility="visible"
-            tools:visibility="visible"/>
-
     </RelativeLayout>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

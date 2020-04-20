@@ -31,7 +31,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseListQueryFragment : Fragment(), CourseListQueryView {
+class CourseListQueryFragment : Fragment(R.layout.fragment_course_list), CourseListQueryView {
     companion object {
         fun newInstance(courseListTitle: String, courseListQuery: CourseListQuery): Fragment =
             CourseListQueryFragment().apply {
@@ -63,13 +63,6 @@ class CourseListQueryFragment : Fragment(), CourseListQueryView {
             .of(this, viewModelFactory)
             .get(CourseListQueryPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_course_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

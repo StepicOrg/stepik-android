@@ -2,9 +2,7 @@ package org.stepik.android.view.fast_continue.ui.fragment
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
@@ -32,13 +30,10 @@ import org.stepik.android.presentation.fast_continue.FastContinueView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class FastContinueFragment : Fragment(), FastContinueView {
-
+class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastContinueView {
     companion object {
         fun newInstance(): FastContinueFragment =
             FastContinueFragment()
-
-        private const val CONTINUE_LOADING_TAG = "CONTINUE_LOADING_TAG"
     }
 
     @Inject
@@ -82,9 +77,6 @@ class FastContinueFragment : Fragment(), FastContinueView {
             .build()
             .inject(this)
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_fast_continue, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

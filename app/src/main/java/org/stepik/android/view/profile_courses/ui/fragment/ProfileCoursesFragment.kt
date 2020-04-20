@@ -1,9 +1,7 @@
 package org.stepik.android.view.profile_courses.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -30,7 +28,7 @@ import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 import kotlin.math.min
 
-class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
+class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), ProfileCoursesView {
     companion object {
         private const val ROW_COUNT = 2
 
@@ -91,13 +89,6 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
             .build()
             .inject(this)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_profile_courses, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()

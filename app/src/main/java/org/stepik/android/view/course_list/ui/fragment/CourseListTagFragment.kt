@@ -29,7 +29,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseListTagFragment : Fragment() {
+class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
     companion object {
         fun newInstance(tag: Tag): Fragment =
             CourseListTagFragment().apply {
@@ -59,13 +59,6 @@ class CourseListTagFragment : Fragment() {
             .of(this, viewModelFactory)
             .get(CourseListSearchPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_course_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

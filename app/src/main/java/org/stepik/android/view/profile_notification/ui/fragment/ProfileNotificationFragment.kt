@@ -1,9 +1,7 @@
 package org.stepik.android.view.profile_notification.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.Animation
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
@@ -28,7 +26,7 @@ import java.util.Date
 import java.util.TimeZone
 import javax.inject.Inject
 
-class ProfileNotificationFragment : Fragment(), ProfileNotificationView, TimeIntervalPickerDialogFragment.Companion.Callback {
+class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notification), ProfileNotificationView, TimeIntervalPickerDialogFragment.Companion.Callback {
     companion object {
         fun newInstance(userId: Long): Fragment =
             ProfileNotificationFragment()
@@ -56,13 +54,6 @@ class ProfileNotificationFragment : Fragment(), ProfileNotificationView, TimeInt
             .of(this, viewModelFactory)
             .get(ProfileNotificationPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_profile_notification, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

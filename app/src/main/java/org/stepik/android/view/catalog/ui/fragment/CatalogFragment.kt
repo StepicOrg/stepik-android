@@ -1,7 +1,6 @@
 package org.stepik.android.view.catalog.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -45,7 +44,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import javax.inject.Inject
 
-class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCallback {
+class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCompleteSearchView.FocusCallback {
     companion object {
         fun newInstance(): Fragment =
             CatalogFragment()
@@ -75,19 +74,12 @@ class CatalogFragment : Fragment(), CatalogView, AutoCompleteSearchView.FocusCal
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-        // TODO analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
 
         catalogPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(CatalogPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_catalog, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

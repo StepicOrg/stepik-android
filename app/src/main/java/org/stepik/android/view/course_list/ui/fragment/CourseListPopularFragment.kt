@@ -31,7 +31,7 @@ import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class CourseListPopularFragment : Fragment(), CourseListQueryView {
+class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseListQueryView {
     companion object {
         private const val ROW_COUNT = 2
 
@@ -62,13 +62,6 @@ class CourseListPopularFragment : Fragment(), CourseListQueryView {
             .of(this, viewModelFactory)
             .get(CourseListQueryPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.item_course_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
