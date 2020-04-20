@@ -66,39 +66,36 @@ constructor(
 
         paginationDisposable.clear()
 
-        val oldState = state
+        val oldCourseListViewState = (state as? CourseListCollectionView.State.Data)
+            ?.courseListViewState
 
-        state = CourseListCollectionView.State.Data(
-            courseCollection = courseCollection,
-            courseListViewState = CourseListView.State.Loading
-        )
-
+        state = CourseListCollectionView.State.Data(courseCollection, CourseListView.State.Loading)
         paginationDisposable += courseListInteractor
             .getCourseListItems(*courseCollection.courses)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = {
-                    state = if (it.isNotEmpty()) {
-                        (state as CourseListCollectionView.State.Data)
-                            .copy(courseListViewState = CourseListView.State.Content(
-                                courseListDataItems = it,
-                                courseListItems = it
+                onSuccess = { items ->
+                    val courseListViewState =
+                        if (items.isNotEmpty()) {
+                            CourseListView.State.Content(
+                                courseListDataItems = items,
+                                courseListItems = items
                             )
-                        )
-                    } else {
-                        (state as CourseListCollectionView.State.Data)
-                            .copy(courseListViewState = CourseListView.State.Empty)
-                    }
+                        } else {
+                            CourseListView.State.Empty
+                        }
+
+                    state = CourseListCollectionView.State.Data(courseCollection, courseListViewState)
                 },
                 onError = {
-                    when ((oldState as CourseListCollectionView.State.Data).courseListViewState) {
+                    when (oldCourseListViewState) {
                         is CourseListView.State.Content -> {
-                            state = oldState
+                            state = CourseListCollectionView.State.Data(courseCollection, oldCourseListViewState)
                             view?.showNetworkError()
                         }
                         else ->
-                            state = oldState.copy(courseListViewState = CourseListView.State.NetworkError)
+                            state = CourseListCollectionView.State.Data(courseCollection, CourseListView.State.NetworkError)
                     }
                 }
             )
