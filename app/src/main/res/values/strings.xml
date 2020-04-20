@@ -649,6 +649,7 @@
     <string name="course_restore_purchase">Restore purchase</string>
     <string name="course_payments_purchase_in_app">Buy for %s</string>
     <string name="course_payments_purchase_in_web">Buy in web version</string>
+    <string name="course_payments_purchase_in_web_with_price">Buy for %s</string>
 
     <string name="course_purchase_server_error">An error occurred while processing your purchase, try to restore purchase and contact support if the error persists</string>
     <string name="course_purchase_billing_error">An error occurred while processing your purchase</string>
