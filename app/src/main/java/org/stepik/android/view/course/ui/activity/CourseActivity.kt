@@ -183,6 +183,8 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     private fun injectComponent(courseId: Long) {
         App.componentManager()
             .courseComponent(courseId)
+            .coursePresentationComponentBuilder()
+            .build()
             .inject(this)
     }
 
@@ -378,18 +380,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePager.snackbar(messageRes = errorMessage)
     }
 
-    override fun showContinueLearningError() {
-        coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
-    }
-
-    override fun continueCourse(lastStep: LastStep) {
-        screenManager.continueCourse(this, lastStep)
-    }
-
-    override fun continueAdaptiveCourse(course: Course) {
-        screenManager.continueAdaptiveCourse(this, course)
-    }
-
     override fun shareCourse(course: Course) {
         startActivity(shareHelper.getIntentForCourseSharing(course))
     }
@@ -417,5 +407,25 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     override fun onDestroy() {
         releaseComponent(courseId)
         super.onDestroy()
+    }
+
+    override fun showCourse(course: Course, isAdaptive: Boolean) {
+        if (isAdaptive) {
+            screenManager.continueAdaptiveCourse(this, course)
+        } else {
+            coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
+        }
+    }
+
+    override fun showSteps(course: Course, lastStep: LastStep) {
+        screenManager.continueCourse(this, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
     }
 }

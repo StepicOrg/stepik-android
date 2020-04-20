@@ -1,9 +1,7 @@
 package org.stepik.android.view.profile_id.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -19,7 +17,7 @@ import org.stepik.android.presentation.profile_id.ProfileIdView
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class ProfileIdFragment : Fragment(), ProfileIdView {
+class ProfileIdFragment : Fragment(R.layout.view_profile_user_id), ProfileIdView {
     companion object {
         fun newInstance(userId: Long): Fragment =
             ProfileIdFragment()
@@ -44,13 +42,6 @@ class ProfileIdFragment : Fragment(), ProfileIdView {
             .of(this, viewModelFactory)
             .get(ProfileIdPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.view_profile_user_id, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.isVisible = false

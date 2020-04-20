@@ -125,18 +125,7 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.activities.CourseSearchResultActivity" />
-        </activity>
-
-         <activity
-            android:name=".ui.activities.CourseSearchResultActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:value="org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity" />
         </activity>
 
         <activity
@@ -151,8 +140,6 @@
 
         <activity
             android:name="org.stepik.android.view.comment.ui.activity.CommentsActivity" />
-
-        <activity android:name=".ui.activities.CourseListActivity" />
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
@@ -201,8 +188,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity" />
         </activity>
-
-        <activity android:name=".ui.activities.TagActivity" />
 
         <activity
             android:name=".adaptive.ui.activities.AdaptiveCourseActivity"
@@ -346,6 +331,29 @@
 
         <activity
             android:name="org.stepik.android.view.solutions.ui.activity.SolutionsActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListTagActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListUserActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

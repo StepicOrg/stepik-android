@@ -1,13 +1,21 @@
 package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
+import java.util.Date
 
 class UserCourse(
-    val id: Long,
+    @SerializedName("id")
+    val id: Long = 0,
+    @SerializedName("user")
     val user: Long,
+    @SerializedName("course")
     val course: Long,
     @SerializedName("is_favorite")
     val isFavorite: Boolean,
+    @SerializedName("is_pinned")
+    val isPinned: Boolean,
+    @SerializedName("is_archived")
+    val isArchived: Boolean,
     @SerializedName("last_viewed")
-    val lastViewed: String
+    val lastViewed: Date?
 )
