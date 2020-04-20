@@ -20,6 +20,6 @@ constructor(
         val isPriceVisible: Boolean
     ) : SplitTest.Group {
         Control(isPriceVisible = false),
-        CoursePrice(isPriceVisible = false)
+        CoursePrice(isPriceVisible = true)
     }
 }
