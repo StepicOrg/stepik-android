@@ -9,7 +9,6 @@ import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.toObject
 import org.stepik.android.domain.auth.interactor.AuthInteractor
 import org.stepik.android.domain.auth.model.SocialAuthError
@@ -57,7 +56,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = { clearCoursesBeforeAuth() },
+                onComplete = { state = SocialAuthView.State.Success },
                 onError = { throwable ->
                     val failType =
                         when ((throwable as? HttpException)?.code()) {
@@ -93,16 +92,6 @@ constructor(
 
                     state = SocialAuthView.State.Idle
                 }
-            )
-    }
-
-    private fun clearCoursesBeforeAuth() {
-        compositeDisposable += authInteractor.clearCourseRepository()
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = { state = SocialAuthView.State.Success },
-                onError = emptyOnErrorStub
             )
     }
 }

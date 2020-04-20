@@ -13,7 +13,10 @@ interface CourseRepository {
 
     fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<Course>>
 
+    /**
+     * Fetches courses from remote source with [courseListQuery]
+     */
     fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>>
 
-    fun clearRepository(): Completable
+    fun removeCachedCourses(): Completable
 }

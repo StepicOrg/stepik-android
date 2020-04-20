@@ -66,7 +66,7 @@ constructor(
             .getCourses(courseListQuery)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
 
-    override fun clearRepository(): Completable =
+    override fun removeCachedCourses(): Completable =
         courseCacheDataSource
-            .clearDatabase()
+            .removeCachedCourses()
 }

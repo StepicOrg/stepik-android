@@ -28,8 +28,8 @@ constructor(
             databaseFacade.deleteCourse(courseId)
         }
 
-    override fun clearDatabase(): Completable =
+    override fun removeCachedCourses(): Completable =
         Completable.fromAction {
-            databaseFacade.clearCourses()
+            databaseFacade.deleteCourses()
         }
 }

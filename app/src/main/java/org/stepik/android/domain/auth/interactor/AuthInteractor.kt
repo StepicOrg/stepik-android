@@ -7,6 +7,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.domain.auth.model.SocialAuthType
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -40,6 +41,7 @@ constructor(
                 val event = if (isRegistration) AmplitudeAnalytic.Auth.REGISTERED else AmplitudeAnalytic.Auth.LOGGED_ID
                 analytic.reportAmplitudeEvent(event, mapOf(AmplitudeAnalytic.Auth.PARAM_SOURCE to AmplitudeAnalytic.Auth.VALUE_SOURCE_EMAIL))
             }
+            .doCompletableOnSuccess { courseRepository.removeCachedCourses() }
 
     fun authWithNativeCode(code: String, type: SocialAuthType, email: String? = null): Completable =
         authRepository
@@ -47,6 +49,7 @@ constructor(
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
+            .andThen(courseRepository.removeCachedCourses())
 
     fun authWithCode(code: String, type: SocialAuthType): Completable =
         authRepository
@@ -54,9 +57,7 @@ constructor(
             .flatMapCompletable {
                 reportSocialAuthAnalytics(type)
             }
-
-    fun clearCourseRepository(): Completable =
-        courseRepository.clearRepository()
+            .andThen(courseRepository.removeCachedCourses())
 
     private fun reportSocialAuthAnalytics(type: SocialAuthType): Completable =
         userProfileRepository

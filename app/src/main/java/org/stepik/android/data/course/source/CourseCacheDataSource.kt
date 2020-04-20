@@ -13,5 +13,5 @@ interface CourseCacheDataSource {
 
     fun removeCourse(courseId: Long): Completable
 
-    fun clearDatabase(): Completable
+    fun removeCachedCourses(): Completable
 }

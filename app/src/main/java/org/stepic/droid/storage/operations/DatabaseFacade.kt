@@ -1,11 +1,9 @@
 package org.stepic.droid.storage.operations
 
-import android.content.ContentValues
 import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.model.BlockPersistentWrapper
-import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.ViewedNotification
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
@@ -90,10 +88,6 @@ constructor(
         userCourseDao.removeAll()
     }
 
-    fun clearCourses() {
-        courseDao.removeAll()
-    }
-
     fun addAssignments(assignments: List<Assignment>) {
         assignmentDao.insertOrReplaceAll(assignments)
     }
@@ -156,8 +150,9 @@ constructor(
     fun deleteCourse(courseId: Long) =
         courseDao.remove(DbStructureCourse.Columns.ID, courseId.toString())
 
-    fun addSection(section: Section) =
-        sectionDao.insertOrUpdate(section)
+    fun deleteCourses() {
+        courseDao.removeAll()
+    }
 
     fun addSections(sections: List<Section>) =
         sectionDao.insertOrReplaceAll(sections)
@@ -166,14 +161,8 @@ constructor(
         stepDao.insertOrReplaceAll(steps)
     }
 
-    fun addUnit(unit: Unit) =
-        unitDao.insertOrUpdate(unit)
-
     fun addUnits(units: List<Unit>) =
         unitDao.insertOrReplaceAll(units)
-
-    fun addLesson(lesson: Lesson) =
-        lessonDao.insertOrUpdate(lesson)
 
     fun addLessons(lessons: List<Lesson>) =
         lessonDao.insertOrReplaceAll(lessons)
@@ -193,15 +182,6 @@ constructor(
     fun removeFromQueue(viewAssignmentWrapper: ViewAssignment?) {
         val assignmentId = viewAssignmentWrapper?.assignment ?: return
         viewAssignmentDao.remove(DbStructureViewQueue.Column.ASSIGNMENT_ID, assignmentId.toString())
-    }
-
-    fun markProgressAsPassedIfInDb(progressId: String) {
-        val inDb = progressDao.isInDb(DbStructureProgress.Columns.ID, progressId)
-        if (inDb) {
-            val values = ContentValues()
-            values.put(DbStructureProgress.Columns.IS_PASSED, true)
-            progressDao.update(DbStructureProgress.Columns.ID, progressId, values)
-        }
     }
 
     fun addProgresses(progresses: List<Progress>) =
@@ -256,11 +236,7 @@ constructor(
     }
 
     fun getSearchQueries(constraint: String, count: Int) =
-            searchQueryDao.getSearchQueries(constraint, count)
-
-    fun addSearchQuery(searchQuery: SearchQuery) {
-        searchQueryDao.insertOrReplace(searchQuery)
-    }
+        searchQueryDao.getSearchQueries(constraint, count)
 
     fun addToViewedNotificationsQueue(viewedNotification: ViewedNotification) {
         viewedNotificationsQueueDao.insertOrReplace(viewedNotification)
