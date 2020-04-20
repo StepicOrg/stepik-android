@@ -8,5 +8,9 @@ enum class UserRole {
     @SerializedName("staff")
     STAFF,
     @SerializedName("teacher")
-    TEACHER
+    TEACHER,
+    @SerializedName("assistant")
+    ASSISTANT,
+    @SerializedName("moderator")
+    MODERATOR
 }
