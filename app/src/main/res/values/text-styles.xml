@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="FilterItem">
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
-        <item name="android:minWidth">@dimen/min_ux_touchable_size</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="TagFilterItem" parent="FilterItem">
-        <item name="android:layout_marginRight">@dimen/guideline_standard_padding</item>
-        <item name="android:padding">12dp</item>
-        <item name="android:background">@drawable/tag_background</item>
-    </style>
-
     <style name="CatalogItemTitle">
         <item name="android:textAppearance">?textAppearanceSubtitle1</item>
         <item name="android:layout_width">wrap_content</item>

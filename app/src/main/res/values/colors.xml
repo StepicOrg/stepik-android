@@ -90,17 +90,12 @@
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
     <color name="stepik_swipe_refresh">@color/color_primary</color>
 
-    <color name="element_gray">@color/new_accent_color_alpha_5</color>
-    <color name="element_gray_pressed">@color/grey04</color>
-
     <color name="onboarding_action_pressed">@color/white_color_alpha_30</color>
     <color name="onboarding_action">@color/white_color_alpha_20</color>
     <color name="launcher_background">@color/black</color>
 
     <!-- Design system -->
-    <color name="grey02_alpha_19">#30999999</color>
     <color name="grey03">#CCCCCC</color>
-    <color name="grey03_alpha_50">#80CCCCCC</color>
     <color name="grey04">#EAECF0</color>
     <color name="grey05">#F3F4F6</color>
 
@@ -123,8 +118,6 @@
     <color name="new_accent_color">#535366</color>
     <color name="new_accent_color_alpha_85">#DA535366</color>
     <color name="new_accent_color_alpha_50">#80535366</color>
-    <color name="new_accent_color_alpha_30">#4D535366</color>
-    <color name="new_accent_color_alpha_5">#0D535366</color>
     <!-- Design system finished -->
 
     <!--adaptive-->

@@ -103,7 +103,6 @@
     <dimen name="onboarding_radius">@dimen/corner_radius</dimen>
 
     <dimen name="course_collection_header_min_height">120dp</dimen>
-    <dimen name="tag_radius">20dp</dimen>
     <dimen name="catalog_header_bottom_margin">20dp</dimen>
 
     <dimen name="bottom_navigation_notification_margin_left" tools:override="true">10dp</dimen>
