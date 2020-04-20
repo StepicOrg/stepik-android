@@ -12,12 +12,6 @@
         <item name="android:clickable">true</item>
     </style>
 
-    <style name="LanguageFilterItem" parent="FilterItem">
-        <item name="android:layout_marginBottom">@dimen/catalog_header_bottom_margin</item>
-        <item name="android:layout_marginRight">13dp</item>
-
-    </style>
-
     <style name="TagFilterItem" parent="FilterItem">
         <item name="android:layout_marginRight">@dimen/guideline_standard_padding</item>
         <item name="android:padding">12dp</item>
