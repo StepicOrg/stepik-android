@@ -1,5 +1,6 @@
 package org.stepik.android.data.search
 
+
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
@@ -9,18 +10,19 @@ import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.stepic.droid.util.PagedList
-import org.stepik.android.data.search.repository.SearchRepositoryImpl
-import org.stepik.android.data.search.source.SearchRemoteDataSource
+import org.stepik.android.data.search_result.repository.SearchResultRepositoryImpl
+import org.stepik.android.data.search_result.source.SearchResultRemoteDataSource
+import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.SearchResult
 
 @RunWith(MockitoJUnitRunner::class)
 class SearchRepositoryTest {
     @Mock
-    private lateinit var searchRemoteDataSource: SearchRemoteDataSource
+    private lateinit var searchResultRemoteDataSource: SearchResultRemoteDataSource
 
     @Test
     fun searchResultsLoadingTest() {
-        val searchRepository = SearchRepositoryImpl(searchRemoteDataSource)
+        val searchRepository = SearchResultRepositoryImpl(searchResultRemoteDataSource)
 
         val page = 1
         val rawQuery = "python"
@@ -28,10 +30,22 @@ class SearchRepositoryTest {
 
         val remoteResult = PagedList(listOf(mock(SearchResult::class.java)))
 
-        whenever(searchRemoteDataSource.getSearchResultsCourses(page, rawQuery, lang)) doReturn Single.just(remoteResult)
+        whenever(searchResultRemoteDataSource.getSearchResults(
+            SearchResultQuery(
+                page = page,
+                query = rawQuery,
+                lang = lang
+            )
+        )) doReturn Single.just(remoteResult)
 
         searchRepository
-            .getSearchResultsCourses(page, rawQuery, lang)
+            .getSearchResults(
+                SearchResultQuery(
+                    page = page,
+                    query = rawQuery,
+                    lang = lang
+                )
+            )
             .test()
             .assertNoErrors()
             .assertComplete()

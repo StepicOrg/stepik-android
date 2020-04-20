@@ -1,40 +1,34 @@
 package org.stepik.android.view.profile_courses.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
 import org.stepic.droid.R
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
-import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.CoursesSnapHelper
-import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesView
-import org.stepik.android.view.course_list.ui.adapter.delegate.CourseAdapterDelegate
-import org.stepik.android.view.profile_courses.ui.adapter.diffutil.CourseDiffUtilCallback
+import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
+import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
-import ru.nobird.android.ui.adapters.diff.DiffCallbackFactory
+import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 import kotlin.math.min
 
-class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
+class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), ProfileCoursesView {
     companion object {
         private const val ROW_COUNT = 2
 
@@ -49,9 +43,6 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    internal lateinit var adaptiveCoursesResolver: AdaptiveCoursesResolver
-
-    @Inject
     internal lateinit var analytic: Analytic
 
     @Inject
@@ -60,12 +51,10 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
     private var userId by argument<Long>()
 
     private lateinit var profileCoursesPresenter: ProfileCoursesPresenter
+    private lateinit var courseContinueViewDelegate: CourseContinueViewDelegate
 
-    private lateinit var coursesAdapter: DefaultDelegateAdapter<Course>
+    private lateinit var coursesAdapter: DefaultDelegateAdapter<CourseListItem>
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCoursesView.State>
-
-    private val progressDialogFragment: DialogFragment =
-        LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,31 +66,29 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
             .get(ProfileCoursesPresenter::class.java)
         savedInstanceState?.let(profileCoursesPresenter::onRestoreInstanceState)
 
-        coursesAdapter = DefaultDelegateAdapter(
-            diffCallbackFactory = object : DiffCallbackFactory<Course> {
-                override fun createDiffUtil(oldList: List<Course>, newList: List<Course>): DiffUtil.Callback =
-                    CourseDiffUtilCallback(oldList, newList)
-            }
+        courseContinueViewDelegate = CourseContinueViewDelegate(
+            activity = requireActivity(),
+            analytic = analytic,
+            screenManager = screenManager
         )
-        coursesAdapter += CourseAdapterDelegate(
-            adaptiveCoursesResolver,
-            onItemClicked = ::onCourseClicked,
-            onContinueCourseClicked = profileCoursesPresenter::continueCourse
+
+        coursesAdapter = DefaultDelegateAdapter()
+
+        coursesAdapter += CourseListItemAdapterDelegate(
+            onItemClicked = courseContinueViewDelegate::onCourseClicked,
+            onContinueCourseClicked = { courseListItem ->
+                profileCoursesPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+            }
         )
     }
 
     private fun injectComponent() {
         App.componentManager()
             .profileComponent(userId)
+            .profileCoursesPresentationComponentBuilder()
+            .build()
             .inject(this)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_profile_courses, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
@@ -144,45 +131,23 @@ class ProfileCoursesFragment : Fragment(), ProfileCoursesView {
 
         when (state) {
             is ProfileCoursesView.State.Content -> {
-                profileCoursesCount.text = resources.getQuantityString(R.plurals.course_count, state.courses.size, state.courses.size)
-                coursesAdapter.items = state.courses
+                coursesAdapter.items = state.courseListDataItems
                 (profileCoursesRecycler.layoutManager as? GridLayoutManager)
-                    ?.spanCount = min(ROW_COUNT, state.courses.size)
+                    ?.spanCount = min(ROW_COUNT, state.courseListDataItems.size)
             }
         }
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
-        if (isLoading) {
-            ProgressHelper.activate(progressDialogFragment, activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
-        } else {
-            ProgressHelper.dismiss(activity?.supportFragmentManager, LoadingProgressDialogFragment.TAG)
-        }
+        courseContinueViewDelegate.setBlockingLoading(isLoading)
     }
 
     override fun showCourse(course: Course, isAdaptive: Boolean) {
-        if (isAdaptive) {
-            screenManager.continueAdaptiveCourse(activity, course)
-        } else {
-            screenManager.showCourseModules(activity, course)
-        }
+        courseContinueViewDelegate.showCourse(course, isAdaptive)
     }
 
     override fun showSteps(course: Course, lastStep: LastStep) {
-        screenManager.continueCourse(activity, course.id, lastStep)
-    }
-
-    private fun onCourseClicked(course: Course) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
-        if (course.enrollment != 0L) {
-            if (adaptiveCoursesResolver.isAdaptive(course.id)) {
-                screenManager.continueAdaptiveCourse(activity, course)
-            } else {
-                screenManager.showCourseModules(activity, course)
-            }
-        } else {
-            screenManager.showCourseDescription(activity, course)
-        }
+        courseContinueViewDelegate.showSteps(course, lastStep)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

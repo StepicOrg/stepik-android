@@ -5,43 +5,48 @@ import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
-import org.stepic.droid.analytic.AmplitudeAnalytic
-import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mapToLongArray
-import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.profile.model.ProfileData
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import ru.nobird.android.presentation.base.PresenterBase
+import ru.nobird.android.presentation.base.PresenterViewContainer
+import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
 
 class ProfileCoursesPresenter
 @Inject
 constructor(
-    private val analytic: Analytic,
     private val profileDataObservable: Observable<ProfileData>,
     private val courseListInteractor: CourseListInteractor,
 
-    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
-    private val continueLearningInteractor: ContinueLearningInteractor,
-
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
+
+    viewContainer: PresenterViewContainer<ProfileCoursesView>,
+
+    continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler
-) : PresenterBase<ProfileCoursesView>() {
+) : PresenterBase<ProfileCoursesView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
     companion object {
         private const val KEY_COURSES = "courses"
     }
+
+    override val delegates: List<PresenterDelegate<in ProfileCoursesView>> =
+        listOf(continueCoursePresenterDelegate)
 
     private var state: ProfileCoursesView.State = ProfileCoursesView.State.Idle
         set(value) {
@@ -66,12 +71,13 @@ constructor(
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
         val courseIds = savedInstanceState.getLongArray(KEY_COURSES)
         if (courseIds != null) {
             if (state == ProfileCoursesView.State.Idle) {
                 state = ProfileCoursesView.State.SilentLoading
                 compositeDisposable += courseListInteractor
-                    .getCourseList(courseIds)
+                    .getCourseListItems(*courseIds) // TODO Cache data source?
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
@@ -88,11 +94,12 @@ constructor(
             compositeDisposable += profileDataObservable
                 .firstElement()
                 .flatMapSingleElement { profileData ->
+                    // TODO Pagination
                     courseListInteractor
-                        .getCourseList(
+                        .getCourseListItems(
                             CourseListQuery(
                                 teacher = profileData.user.id,
-                                order = CourseListQuery.ORDER_POPULARITY_DESC
+                                order = CourseListQuery.Order.POPULARITY_DESC
                             )
                         )
                 }
@@ -112,45 +119,26 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { course ->
+                onNext = { enrolledCourse ->
                     val oldState = state
                     if (oldState is ProfileCoursesView.State.Content) {
-                        state = ProfileCoursesView.State.Content(oldState.courses.map { if (it.id == course.id) course else it })
+                        state = ProfileCoursesView.State.Content(
+                            oldState.courseListDataItems.mapPaged {
+                                if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
+                            }
+                        )
                     }
                 },
                 onError = emptyOnErrorStub
             )
     }
 
-    fun continueCourse(course: Course) {
-        analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
-        analytic.reportAmplitudeEvent(
-            AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
-                AmplitudeAnalytic.Course.Params.COURSE to course.id,
-                AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_WIDGET
-            ))
-
-        if (adaptiveCoursesResolver.isAdaptive(course.id)) {
-            view?.showCourse(course, isAdaptive = true)
-        } else {
-            isBlockingLoading = true
-            compositeDisposable += continueLearningInteractor
-                .getLastStepForCourse(course)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .doFinally { isBlockingLoading = false }
-                .subscribeBy(
-                    onSuccess = { view?.showSteps(course, it) },
-                    onError = { view?.showCourse(course, isAdaptive = false) }
-                )
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
-        val courses = (state as? ProfileCoursesView.State.Content)
-            ?.courses
+        val courseListDataItems = (state as? ProfileCoursesView.State.Content)
+            ?.courseListDataItems
             ?: return
 
-        outState.putLongArray(KEY_COURSES, courses.mapToLongArray(Course::id))
+        outState.putLongArray(KEY_COURSES, courseListDataItems.mapToLongArray(CourseListItem.Data::id))
+        super.onSaveInstanceState(outState)
     }
 }

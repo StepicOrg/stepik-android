@@ -1,9 +1,7 @@
 package org.stepik.android.view.profile_certificates.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -22,7 +20,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
+class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certificates), ProfileCertificatesView {
     companion object {
         private const val CERTIFICATES_TO_DISPLAY = 4
 
@@ -65,13 +63,6 @@ class ProfileCertificatesFragment : Fragment(), ProfileCertificatesView {
             .profileComponent(userId)
             .inject(this)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_profile_certificates, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()

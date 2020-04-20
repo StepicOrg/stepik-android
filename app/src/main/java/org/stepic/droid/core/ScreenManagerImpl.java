@@ -31,35 +31,29 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepik.android.domain.auth.model.SocialAuthType;
-import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
-import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
-import org.stepik.android.view.auth.model.AutoAuth;
-import org.stepik.android.view.auth.ui.activity.SocialAuthActivity;
-import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
-import org.stepik.android.view.auth.ui.activity.RegistrationActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
-import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepic.droid.util.UriExtensionsKt;
+import org.stepik.android.domain.auth.model.SocialAuthType;
+import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
+import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
@@ -69,11 +63,19 @@ import org.stepik.android.model.Video;
 import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
 import org.stepik.android.remote.auth.model.TokenType;
-import org.stepik.android.view.solutions.ui.activity.SolutionsActivity;
+import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity;
+import org.stepik.android.view.auth.model.AutoAuth;
+import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity;
+import org.stepik.android.view.auth.ui.activity.RegistrationActivity;
+import org.stepik.android.view.auth.ui.activity.SocialAuthActivity;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListTagActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
 import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile.ui.activity.ProfileActivity;
@@ -83,6 +85,7 @@ import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActiv
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
 import org.stepik.android.view.settings.ui.activity.SettingsActivity;
+import org.stepik.android.view.solutions.ui.activity.SolutionsActivity;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
@@ -152,19 +155,6 @@ public class ScreenManagerImpl implements ScreenManager {
         Intent intent = new Intent(context, AdaptiveStatsActivity.class);
         intent.putExtra(AppConstants.KEY_COURSE_LONG_ID, courseId);
         context.startActivity(intent);
-    }
-
-    @Override
-    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors descriptionColors) {
-        Intent intent = new Intent(activity, CourseListActivity.class);
-        intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
-        intent.putExtra(CourseListActivity.COURSE_DESCRIPTION_COLORS, (Parcelable) descriptionColors);
-        activity.startActivity(intent);
-    }
-
-    @Override
-    public void showListOfTag(Activity activity, @NotNull Tag tag) {
-        TagActivity.Companion.launch(activity, tag);
     }
 
     @Override
@@ -705,6 +695,30 @@ public class ScreenManagerImpl implements ScreenManager {
     public void showCachedAttempts(@NotNull Context context, long courseId) {
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSIONS_SCREEN_OPENED);
         Intent intent = SolutionsActivity.Companion.createIntent(context, courseId);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery) {
+        Intent intent = CourseListQueryActivity.Companion.createIntent(context, courseListTitle, courseListQuery);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesCollection(Context context, CourseCollection courseCollection, CollectionDescriptionColors collectionDescriptionColors) {
+        Intent intent = CourseListCollectionActivity.Companion.createIntent(context, courseCollection, collectionDescriptionColors);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showUserCourses(Context context) {
+        Intent intent = CourseListUserActivity.Companion.createIntent(context);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesByTag(Context context, Tag tag) {
+        Intent intent = CourseListTagActivity.Companion.createIntent(context, tag);
         context.startActivity(intent);
     }
 }

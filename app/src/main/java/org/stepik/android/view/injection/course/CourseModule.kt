@@ -11,7 +11,6 @@ import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.base.injection.ViewModelKey
-import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_info.CourseInfoPresenter
 import org.stepik.android.presentation.course_reviews.CourseReviewsPresenter
@@ -21,10 +20,6 @@ abstract class CourseModule {
     /**
      * PRESENTATION LAYER
      */
-    @Binds
-    @IntoMap
-    @ViewModelKey(CoursePresenter::class)
-    internal abstract fun bindCoursePresenter(coursePresenter: CoursePresenter): ViewModel
 
     @Binds
     @IntoMap

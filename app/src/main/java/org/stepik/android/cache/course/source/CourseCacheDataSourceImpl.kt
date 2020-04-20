@@ -27,4 +27,9 @@ constructor(
         Completable.fromAction {
             databaseFacade.deleteCourse(courseId)
         }
+
+    override fun removeCachedCourses(): Completable =
+        Completable.fromAction {
+            databaseFacade.deleteCourses()
+        }
 }

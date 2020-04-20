@@ -28,8 +28,6 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.configuration.ConfigImpl
 import org.stepic.droid.core.DefaultFilter
 import org.stepic.droid.core.DefaultFilterImpl
-import org.stepic.droid.core.FilterApplicator
-import org.stepic.droid.core.FilterApplicatorImpl
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.LocalLessonSessionManagerImpl
 import org.stepic.droid.core.ScreenManager
@@ -101,10 +99,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideDefaultFilter(defaultFilter: DefaultFilterImpl): DefaultFilter
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideFilterApplicator(filterApplicator: FilterApplicatorImpl): FilterApplicator
 
     @Binds
     @AppSingleton

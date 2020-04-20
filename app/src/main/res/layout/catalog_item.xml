@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<org.stepic.droid.ui.custom.CoursesCarouselView
-    android:id="@+id/coursesCarouselItem"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"/>

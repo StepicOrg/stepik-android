@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.auth
 
-import org.stepik.android.domain.auth.interactor.AuthInteractor
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -9,6 +8,7 @@ import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.model.Credentials
+import org.stepik.android.domain.auth.interactor.AuthInteractor
 import org.stepik.android.presentation.base.PresenterBase
 import retrofit2.HttpException
 import javax.inject.Inject

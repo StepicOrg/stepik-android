@@ -25,10 +25,14 @@ class CourseHeaderDataTest {
             course = Course(id = 100),
             title = "title",
             cover = "cover",
-            stats = CourseStats(review = 1.0, learnersCount = 100, readiness = 1.0),
-            progress = Progress(),
-            localSubmissionsCount = 5,
-            enrollmentState = EnrollmentState.NotEnrolledWeb
+            stats = CourseStats(
+                review = 1.0,
+                learnersCount = 100,
+                readiness = 1.0,
+                progress = Progress(),
+                enrollmentState = EnrollmentState.NotEnrolledWeb
+            ),
+            localSubmissionsCount = 5
         )
 
         courseHeaderData.assertThatObjectParcelable<CourseHeaderData>()

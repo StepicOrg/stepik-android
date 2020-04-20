@@ -16,12 +16,15 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
 import org.stepik.android.model.ViewAssignment
+import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBus
 import javax.inject.Inject
 
 class ViewAssignmentReportInteractor
 @Inject
 constructor(
+    @UserCoursesUpdateBus
+    private val userCoursesUpdatePublisher: PublishSubject<Course>,
     private val viewAssignmentRepository: ViewAssignmentRepository,
     private val localProgressInteractor: LocalProgressInteractor,
 
@@ -44,6 +47,7 @@ constructor(
 
     private fun updateLocalLastStep(step: Step, unit: Unit?, course: Course?): Completable {
         val lastStepId = course?.lastStepId
+        course?.let { userCoursesUpdatePublisher.onNext(it) }
         return if (unit != null && lastStepId != null) {
             lastStepRepository
                 .saveLastStep(LastStep(lastStepId, unit.id, unit.lesson, step.id))
