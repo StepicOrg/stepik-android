@@ -13,12 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.auth.model.SocialAuthType;
+import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
+import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
@@ -137,11 +138,6 @@ public interface ScreenManager {
 
     void showAdaptiveStats(Context context, long courseId);
 
-
-    void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors collectionDescriptionColors);
-
-    void showListOfTag(Activity activity, @NotNull Tag tag);
-
     void showOnboarding(@NotNull Activity activity);
 
     void showAchievementsList(Context context, long userId, boolean isMyProfile);
@@ -160,4 +156,9 @@ public interface ScreenManager {
     void loginWithSocial(FragmentActivity activity, SocialAuthType type);
 
     void showCachedAttempts(@NotNull Context context, long courseId);
+
+    void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery);
+    void showCoursesCollection(Context context, CourseCollection courseCollection, CollectionDescriptionColors collectionDescriptionColors);
+    void showUserCourses(Context context);
+    void showCoursesByTag(Context context, Tag tag);
 }

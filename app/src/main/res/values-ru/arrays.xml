@@ -34,4 +34,9 @@
         <item>Средний</item>
         <item>Большой</item>
     </string-array>
+
+    <string-array name="course_list_languages">
+        <item>Русский</item>
+        <item>Английский</item>
+    </string-array>
 </resources>

@@ -1,9 +1,7 @@
 package org.stepik.android.view.profile_achievements.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -26,7 +24,7 @@ import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class ProfileAchievementsFragment : Fragment(), AchievementsView {
+class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achievements), AchievementsView {
     companion object {
         private const val MAX_ACHIEVEMENTS_TO_DISPLAY = 6
 
@@ -77,13 +75,6 @@ class ProfileAchievementsFragment : Fragment(), AchievementsView {
             .profileComponent(userId)
             .inject(this)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_profile_achievements, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()

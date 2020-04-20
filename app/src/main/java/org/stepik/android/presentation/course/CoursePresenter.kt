@@ -14,7 +14,6 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.plus
-import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
@@ -24,12 +23,17 @@ import org.stepik.android.domain.notification.interactor.CourseNotificationInter
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
+import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
+import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
+import ru.nobird.android.presentation.base.PresenterBase
+import ru.nobird.android.presentation.base.PresenterViewContainer
+import ru.nobird.android.presentation.base.delegate.PresenterDelegate
 import javax.inject.Inject
 
 class CoursePresenter
@@ -38,16 +42,17 @@ constructor(
     @CourseId
     private val courseId: Long,
 
+    viewContainer: PresenterViewContainer<CourseView>,
+
+    private val courseContinuePresenterDelegateImpl: CourseContinuePresenterDelegateImpl,
+
     private val courseInteractor: CourseInteractor,
 //    private val courseBillingInteractor: CourseBillingInteractor,
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
-    private val continueLearningInteractor: ContinueLearningInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
     private val solutionsInteractor: SolutionsInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
-
-    private val adaptiveCoursesResolver: AdaptiveCoursesResolver,
 
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
@@ -63,7 +68,7 @@ constructor(
     @MainScheduler
     private val mainScheduler: Scheduler,
     private val analytic: Analytic
-) : PresenterBase<CourseView>() {
+) : PresenterBase<CourseView>(viewContainer), CourseContinuePresenterDelegate by courseContinuePresenterDelegateImpl {
     private var state: CourseView.State = CourseView.State.Idle
         set(value) {
             field = value
@@ -72,6 +77,9 @@ constructor(
         }
 
 //    private var uiCheckout: UiCheckout? = null
+
+    override val delegates: List<PresenterDelegate<in CourseView>> =
+        listOf(courseContinuePresenterDelegateImpl)
 
     init {
         subscriberForEnrollmentUpdates()
@@ -148,6 +156,7 @@ constructor(
     fun autoEnroll() {
         val enrollmentState = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
+            ?.stats
             ?.enrollmentState
             ?: return
 
@@ -174,10 +183,16 @@ constructor(
     private inline fun toggleEnrollment(enrollmentAction: CourseEnrollmentInteractor.(Long) -> Single<Course>) {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.takeIf { it.enrollmentState != EnrollmentState.Pending }
+            ?.takeIf { it.stats.enrollmentState != EnrollmentState.Pending }
             ?: return
 
-        state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.Pending))
+        state = CourseView.State.BlockingLoading(
+            headerData.copy(
+                stats = headerData.stats.copy(
+                    enrollmentState = EnrollmentState.Pending
+                )
+            )
+        )
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -240,7 +255,7 @@ constructor(
     }
 
     private fun resolveCourseShareTooltip(courseHeaderData: CourseHeaderData) {
-        if (courseHeaderData.enrollmentState == EnrollmentState.Enrolled) {
+        if (courseHeaderData.stats.enrollmentState == EnrollmentState.Enrolled) {
             view?.showCourseShareTooltip()
         }
     }
@@ -323,30 +338,10 @@ constructor(
     fun continueLearning() {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.takeIf { it.enrollmentState == EnrollmentState.Enrolled }
+            ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
             ?: return
 
-        val course = headerData.course
-
-        if (adaptiveCoursesResolver.isAdaptive(course.id)) {
-            view?.continueAdaptiveCourse(course)
-        } else {
-            state = CourseView.State.BlockingLoading(headerData.copy(enrollmentState = EnrollmentState.Pending))
-            compositeDisposable += continueLearningInteractor
-                .getLastStepForCourse(course)
-                .subscribeOn(backgroundScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = {
-                        state = CourseView.State.CourseLoaded(headerData)
-                        view?.continueCourse(it)
-                    },
-                    onError = {
-                        state = CourseView.State.CourseLoaded(headerData)
-                        view?.showContinueLearningError()
-                    }
-                )
-        }
+        courseContinuePresenterDelegateImpl.continueCourse(headerData.course, CourseContinueInteractionSource.COURSE_SCREEN)
     }
 
     /**
