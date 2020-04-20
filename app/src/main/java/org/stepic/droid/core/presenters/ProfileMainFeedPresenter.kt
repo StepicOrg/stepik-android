@@ -71,7 +71,7 @@ class ProfileMainFeedPresenter
 
     private fun logTeacherAnalytic(userId: Long) {
         compositeDisposable += courseListInteractor
-            .getCourseList(
+            .getAllCourses(
                 CourseListQuery(
                     teacher = userId
                 )

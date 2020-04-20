@@ -47,10 +47,10 @@ constructor() {
      */
     fun mapToLoadMoreState(commentsState: CommentsView.CommentsState.Loaded, direction: PaginationDirection): CommentsView.CommentsState =
         when (direction) {
-            PaginationDirection.UP ->
+            PaginationDirection.PREV ->
                 commentsState.copy(commentItems = listOf(CommentItem.Placeholder) + commentsState.commentItems)
 
-            PaginationDirection.DOWN ->
+            PaginationDirection.NEXT ->
                 commentsState.copy(commentItems = commentsState.commentItems + CommentItem.Placeholder)
         }
 
@@ -68,10 +68,10 @@ constructor() {
 
         val (newDataItems: PagedList<CommentItem.Data>, newItems) =
             when (direction) {
-                PaginationDirection.UP ->
+                PaginationDirection.PREV ->
                     items + commentsState.commentDataItems to rawItems + commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
 
-                PaginationDirection.DOWN ->
+                PaginationDirection.NEXT ->
                     commentsState.commentDataItems + items to commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals) + rawItems
             }
 
@@ -89,10 +89,10 @@ constructor() {
 
         val newItems =
             when (direction) {
-                PaginationDirection.UP ->
+                PaginationDirection.PREV ->
                     state.commentsState.commentItems.dropWhile(CommentItem.Placeholder::equals)
 
-                PaginationDirection.DOWN ->
+                PaginationDirection.NEXT ->
                     state.commentsState.commentItems.dropLastWhile(CommentItem.Placeholder::equals)
             }
 

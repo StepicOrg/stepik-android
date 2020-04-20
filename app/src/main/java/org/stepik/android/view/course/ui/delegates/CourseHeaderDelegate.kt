@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.header_course.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -100,6 +101,13 @@ class CourseHeaderDelegate(
                     ?.getAllQueryParameters()
 
                 coursePresenter.openCoursePurchaseInWeb(queryParams)
+
+                courseHeaderData?.let { headerData ->
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.BUY_COURSE_PRESSED, mapOf(
+                        AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
+                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
+                    ))
+                }
             }
 
 //            courseBuyInAppAction.setOnClickListener {
@@ -133,13 +141,13 @@ class CourseHeaderDelegate(
 
             courseToolbarTitle.text = courseHeaderData.title
 
-            val isNeedShowProgress = courseHeaderData.progress != null
+            val isNeedShowProgress = courseHeaderData.stats.progress != null
             courseProgress.isVisible = isNeedShowProgress
             courseProgressSeparator.isVisible = isNeedShowProgress
             courseStats.isVisible = !isNeedShowProgress
 
-            if (courseHeaderData.progress != null) {
-                courseProgressDelegate.setProgress(courseHeaderData.progress)
+            if (courseHeaderData.stats.progress != null) {
+                courseProgressDelegate.setProgress(courseHeaderData.stats.progress)
                 courseProgressDelegate.setSolutionsCount(courseHeaderData.localSubmissionsCount)
             } else {
                 courseStatsDelegate.setStats(courseHeaderData.stats)
@@ -151,7 +159,7 @@ class CourseHeaderDelegate(
                 getString(R.string.course_payments_purchase_in_web)
             }
 
-            with(courseHeaderData.enrollmentState) {
+            with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
 
                 courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
@@ -186,7 +194,7 @@ class CourseHeaderDelegate(
 
     fun onOptionsMenuCreated(menu: Menu) {
         dropCourseMenuItem = menu.findItem(R.id.drop_course)
-        dropCourseMenuItem?.isVisible = courseHeaderData?.enrollmentState == EnrollmentState.Enrolled
+        dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState == EnrollmentState.Enrolled
 
         shareCourseMenuItem = menu.findItem(R.id.share_course)
         shareCourseMenuItem?.let { menuItem ->
