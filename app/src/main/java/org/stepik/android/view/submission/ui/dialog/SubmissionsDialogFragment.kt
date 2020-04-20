@@ -11,10 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
-import org.stepik.android.presentation.submission.SubmissionsPresenter
-import org.stepik.android.presentation.submission.SubmissionsView
 import androidx.recyclerview.widget.LinearLayoutManager
-import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import kotlinx.android.synthetic.main.dialog_submissions.*
 import kotlinx.android.synthetic.main.empty_default.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -30,10 +27,13 @@ import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.user.User
+import org.stepik.android.presentation.submission.SubmissionsPresenter
+import org.stepik.android.presentation.submission.SubmissionsView
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionDataAdapterDelegate
 import org.stepik.android.view.submission.ui.adapter.delegate.SubmissionPlaceholderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -131,7 +131,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
             layoutManager = LinearLayoutManager(context)
 
             setOnPaginationListener { paginationDirection ->
-                if (paginationDirection == PaginationDirection.DOWN) {
+                if (paginationDirection == PaginationDirection.NEXT) {
                     submissionsPresenter.fetchNextPage(step.id)
                 }
             }

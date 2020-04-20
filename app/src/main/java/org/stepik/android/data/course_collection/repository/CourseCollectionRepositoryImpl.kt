@@ -12,5 +12,7 @@ constructor(
     private val courseCollectionRemoteDataSource: CourseCollectionRemoteDataSource
 ) : CourseCollectionRepository {
     override fun getCourseCollection(lang: String): Single<List<CourseCollection>> =
-        courseCollectionRemoteDataSource.getCourseCollectionList(lang)
+        courseCollectionRemoteDataSource
+            .getCourseCollectionList(lang)
+            .map { it.sortedBy(CourseCollection::position) }
 }

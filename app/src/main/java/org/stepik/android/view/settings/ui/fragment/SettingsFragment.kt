@@ -16,7 +16,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.ui.dialogs.AllowMobileDataDialogFragment
-import org.stepic.droid.ui.dialogs.CoursesLangDialog
+import org.stepik.android.view.filter.ui.dialog.CoursesLangDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialog
@@ -130,7 +130,9 @@ class SettingsFragment :
         storageManagementButton.setOnClickListener { screenManager.showStorageManagement(activity) }
 
         langWidgetActionButton.setOnClickListener {
-            CoursesLangDialog.newInstance().show(requireFragmentManager(), null)
+            CoursesLangDialogFragment
+                .newInstance()
+                .showIfNotExists(requireFragmentManager(), CoursesLangDialogFragment.TAG)
         }
 
         fontSizeSettingsButton.setOnClickListener {

@@ -3,14 +3,13 @@ package org.stepik.android.view.splash.notification
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.TaskStackBuilder
-import org.stepic.droid.model.CourseListType
 import org.stepic.droid.notifications.model.RetentionNotificationType
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.activities.SplashActivity
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.course_list.repository.CourseListRepository
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
 import org.stepik.android.view.notification.helpers.NotificationHelper
@@ -21,8 +20,8 @@ class RetentionNotificationDelegate
 @Inject
 constructor(
     private val context: Context,
+    private val userCoursesRepository: UserCoursesRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
-    private val courseListRepository: CourseListRepository,
     private val notificationHelper: NotificationHelper,
     stepikNotificationManager: StepikNotificationManager
 ) : NotificationDelegate("show_retention_notification", stepikNotificationManager) {
@@ -104,13 +103,8 @@ constructor(
     }
 
     private fun isEnrolledEmpty(): Boolean =
-        courseListRepository
-            .getCourseList(
-                CourseListType.ENROLLED,
-                1,
-                sharedPreferenceHelper.languageForFeatured,
-                sourceType = DataSourceType.CACHE
-            )
+        userCoursesRepository
+            .getUserCourses(sourceType = DataSourceType.CACHE)
             .blockingGet()
             .isEmpty()
 }

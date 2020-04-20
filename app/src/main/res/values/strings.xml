@@ -216,8 +216,6 @@
     <string name="cant_show_next_step">Sorry, the next lesson is not available</string>
     <string name="cant_show_previous_step">Sorry, the previous lesson is not available</string>
     <string name="previous_lesson">Previous lesson</string>
-    <string name="language_ru_filter">Russian</string>
-    <string name="language_en_filter">English</string>
     <string name="lesson_not_found_or_not_access">The lesson does not exist or you don\'t have
         permission to view it
     </string>
@@ -879,4 +877,8 @@
     <string name="solutions_submit_in_progress">Submission in progress</string>
     <string name="solutions_submission_correctly">Problem solved correctly</string>
     <string name="solutions_submission_incorrectly">Problem solved incorrectly</string>
+
+    <!-- Course list -->
+    <string name="course_list_popular_toolbar_title">Popular</string>
+    <string name="course_list_user_courses_title">My courses</string>
 </resources>

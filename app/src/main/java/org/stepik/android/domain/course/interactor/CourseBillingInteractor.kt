@@ -4,12 +4,10 @@ import com.google.gson.Gson
 import io.reactivex.Scheduler
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
-import org.stepic.droid.core.joining.contract.JoiningPoster
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.domain.course.repository.CourseRepository
-import org.stepik.android.domain.course_list.repository.CourseListRepository
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
@@ -27,8 +25,6 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
 
     private val courseRepository: CourseRepository,
-    private val courseListRepository: CourseListRepository,
-    private val joiningPoster: JoiningPoster,
 
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>,
@@ -107,7 +103,6 @@ constructor(
 //        courseListRepository
 //            .addCourseToList(CourseListType.ENROLLED, courseId)
 //            .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
-//            .doOnSuccess(joiningPoster::joinCourse) // interop with old code
 //            .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 //            .ignoreElement()
 

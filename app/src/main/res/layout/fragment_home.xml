@@ -28,20 +28,23 @@
                 layout="@layout/home_streak_view"
                 android:visibility="gone" />
 
-            <FrameLayout
-                android:id="@+id/homeFastContinueContainer"
+            <fragment
+                android:name="org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment"
+                android:id="@+id/fastContinueFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <org.stepic.droid.ui.custom.CoursesCarouselView
-                android:id="@+id/myCoursesView"
+            <fragment
+                android:name="org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment"
+                android:id="@+id/userCoursesFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
-            <org.stepic.droid.ui.custom.CoursesCarouselView
-                android:id="@+id/popularCoursesView"
+            <fragment
+                android:name="org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment"
+                android:id="@+id/popularCoursesFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

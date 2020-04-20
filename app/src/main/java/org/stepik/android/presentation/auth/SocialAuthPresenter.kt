@@ -1,24 +1,26 @@
 package org.stepik.android.presentation.auth
 
 import io.reactivex.Completable
-import org.stepik.android.domain.auth.interactor.AuthInteractor
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.Analytic
 import org.stepik.android.domain.auth.model.LoginFailType
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.toObject
-import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.domain.auth.interactor.AuthInteractor
 import org.stepik.android.domain.auth.model.SocialAuthError
 import org.stepik.android.domain.auth.model.SocialAuthType
+import org.stepik.android.presentation.base.PresenterBase
 import retrofit2.HttpException
 import javax.inject.Inject
 
 class SocialAuthPresenter
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val authInteractor: AuthInteractor,
 
     @BackgroundScheduler
@@ -79,6 +81,12 @@ constructor(
                             else ->
                                 LoginFailType.CONNECTION_PROBLEM
                         }
+
+                    if (throwable is HttpException) {
+                        analytic.reportEvent(Analytic.Error.SOCIAL_AUTH_FAILED, throwable.response()?.errorBody()?.string() ?: "empty response")
+                    } else {
+                        analytic.reportError(Analytic.Error.SOCIAL_AUTH_FAILED, throwable)
+                    }
 
                     view?.showAuthError(failType)
 

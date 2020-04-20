@@ -3,13 +3,11 @@ package org.stepik.android.view.injection.course
 import dagger.BindsInstance
 import dagger.Subcomponent
 import org.stepic.droid.di.qualifiers.CourseId
-import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.course_info.ui.fragment.CourseInfoFragment
 import org.stepik.android.view.course_reviews.ui.fragment.CourseReviewsFragment
 import org.stepik.android.view.injection.calendar.CalendarDataModule
 import org.stepik.android.view.injection.course_calendar.CourseCalendarDataModule
-import org.stepik.android.view.injection.course_list.CourseListDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.course_reviews.CourseReviewsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
@@ -30,7 +28,7 @@ import org.stepik.android.view.injection.user.UserDataModule
     UserDataModule::class,
     StepDataModule::class,
 
-    CourseListDataModule::class,
+    CourseDataModule::class,
     CoursePaymentsDataModule::class,
     CourseReviewsDataModule::class,
     PersonalDeadlinesDataModule::class,
@@ -49,7 +47,8 @@ interface CourseComponent {
         fun courseId(@CourseId courseId: Long): Builder
     }
 
-    fun inject(courseActivity: CourseActivity)
+    fun coursePresentationComponentBuilder(): CoursePresentationComponent.Builder
+
     fun inject(courseInfoFragment: CourseInfoFragment)
     fun inject(courseReviewsFragment: CourseReviewsFragment)
     fun inject(courseContentFragment: CourseContentFragment)

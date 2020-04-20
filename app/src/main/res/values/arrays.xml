@@ -47,4 +47,9 @@
         <item>Medium</item>
         <item>Large</item>
     </string-array>
+
+    <string-array name="course_list_languages">
+        <item>Russian</item>
+        <item>English</item>
+    </string-array>
 </resources>

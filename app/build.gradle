@@ -134,6 +134,7 @@ dependencies {
     implementation libraries.multidex
     implementation libraries.adapterDelegates
     implementation libraries.adapters
+    implementation libraries.presentationBase
     implementation libraries.viewKit
 
     implementation libraries.exoPlayerCore

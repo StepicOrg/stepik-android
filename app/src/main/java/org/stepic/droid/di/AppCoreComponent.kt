@@ -11,9 +11,7 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.code.ui.CodeEditor
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.analytic.AnalyticModule
-import org.stepic.droid.di.catalog.CatalogComponent
 import org.stepic.droid.di.course_general.CourseEnrollmentBusModule
-import org.stepic.droid.di.course_general.CourseGeneralComponent
 import org.stepic.droid.di.home.HomeComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.notifications.NotificationsComponent
@@ -29,17 +27,14 @@ import org.stepic.droid.persistence.service.FileTransferService
 import org.stepic.droid.receivers.DownloadClickReceiver
 import org.stepic.droid.receivers.InternetConnectionEnabledReceiver
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity
-import org.stepic.droid.ui.adapters.CoursesAdapter
 import org.stepic.droid.ui.adapters.NotificationAdapter
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
 import org.stepic.droid.ui.adapters.StepikRadioGroupAdapter
-import org.stepic.droid.ui.adapters.viewhoders.CourseItemViewHolder
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.custom.PlaceholderTextView
 import org.stepic.droid.ui.dialogs.CertificateShareDialog
 import org.stepic.droid.ui.dialogs.ChooseStorageDialog
 import org.stepic.droid.ui.dialogs.ClearVideosDialog
-import org.stepic.droid.ui.dialogs.CoursesLangDialog
 import org.stepic.droid.ui.dialogs.LogoutAreYouSureDialog
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment
 import org.stepic.droid.ui.dialogs.StepShareDialog
@@ -56,17 +51,26 @@ import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.auth.AuthComponent
+import org.stepik.android.view.injection.catalog.CatalogBusModule
+import org.stepik.android.view.injection.catalog.CatalogComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
 import org.stepik.android.view.injection.comment.CommentsComponent
 import org.stepik.android.view.injection.comment.ComposeCommentComponent
 import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_collection.CourseCollectionDataModule
+import org.stepik.android.view.injection.course_list.CourseListBusModule
+import org.stepik.android.view.injection.course_list.CourseListComponent
+import org.stepik.android.view.injection.course_list.collection.CourseListCollectionComponent
+import org.stepik.android.view.injection.course_list.query.CourseListQueryComponent
+import org.stepik.android.view.injection.course_list.user.CourseListUserComponent
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
 import org.stepik.android.view.injection.email_address.EmailAddressDataModule
+import org.stepik.android.view.injection.fast_continue.FastContinueComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
+import org.stepik.android.view.injection.filter.FilterComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
@@ -78,6 +82,7 @@ import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
 import org.stepik.android.view.injection.search.SearchDataModule
+import org.stepik.android.view.injection.search_result.SearchResultDataModule
 import org.stepik.android.view.injection.settings.SettingsComponent
 import org.stepik.android.view.injection.social_profile.SocialProfileComponent
 import org.stepik.android.view.injection.solutions.SolutionsBusModule
@@ -108,7 +113,6 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
     modules = [
         AppCoreModule::class,
         AnalyticModule::class,
-        AppFiltersModule::class,
         GoogleModule::class,
         FirebaseModule::class,
         PersistenceModule::class,
@@ -135,9 +139,12 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
         NotificationDataModule::class,
         EmailAddressDataModule::class,
         SearchDataModule::class,
+        SearchResultDataModule::class,
         UserCoursesDataModule::class,
         CourseCollectionDataModule::class,
-        SolutionsBusModule::class
+        SolutionsBusModule::class,
+        CourseListBusModule::class,
+        CatalogBusModule::class
     ]
 )
 interface AppCoreComponent {
@@ -160,13 +167,9 @@ interface AppCoreComponent {
 
     fun homeComponentBuilder(): HomeComponent.Builder
 
-    fun courseGeneralComponentBuilder(): CourseGeneralComponent.Builder
-
     fun mainScreenComponentBuilder(): MainScreenComponent.Builder
 
     fun notificationsComponentBuilder(): NotificationsComponent.Builder
-
-    fun catalogComponentBuilder(): CatalogComponent.Builder
 
     fun adaptiveCourseComponentBuilder(): AdaptiveCourseComponent.Builder
 
@@ -208,11 +211,23 @@ interface AppCoreComponent {
 
     fun userCodeRunComponentBuilder(): UserCodeRunComponent.Builder
 
+    fun courseListComponentBuilder(): CourseListComponent.Builder
+
+    fun catalogComponentBuilder(): CatalogComponent.Builder
+
+    fun fastContinueComponentBuilder(): FastContinueComponent.Builder
+
+    fun filterComponentBuilder(): FilterComponent.Builder
+
+    fun courseListQueryComponentBuilder(): CourseListQueryComponent.Builder
+
+    fun courseListCollectionComponentBuilder(): CourseListCollectionComponent.Builder
+
+    fun courseListUserComponentBuilder(): CourseListUserComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)
-
-    fun inject(adapter: CoursesAdapter)
 
     fun inject(adapter: Course)
 
@@ -252,13 +267,9 @@ interface AppCoreComponent {
 
     fun inject(videoQualityDetailedDialog: VideoQualityDetailedDialog)
 
-    fun inject(coursesLangDialog: CoursesLangDialog)
-
     fun inject(latexView: LatexView)
 
     fun inject(autoCompleteSearchView: AutoCompleteSearchView)
-
-    fun inject(courseItemViewHolder: CourseItemViewHolder)
 
     fun inject(quizCardViewHolder: QuizCardViewHolder)
 

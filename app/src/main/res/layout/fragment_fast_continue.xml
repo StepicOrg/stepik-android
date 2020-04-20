@@ -45,8 +45,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                tools:visibility="visible"/>
+                app:layout_constraintRight_toRightOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/fastContinueAction"
@@ -135,22 +134,19 @@
     <FrameLayout
         android:id="@+id/fastContinueProgress"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
+        android:layout_height="match_parent">
 
         <include
             layout="@layout/progress_bar_on_empty_screen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="visible"/>
+            android:visibility="visible"
+            android:layout_gravity="center" />
     </FrameLayout>
 
     <org.stepic.droid.ui.custom.PlaceholderTextView
         android:id="@+id/fastContinuePlaceholder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

@@ -77,7 +77,7 @@ constructor(
     ): Single<PagedList<CommentItem.Data>> =
         getMore(
             comment.replies ?: emptyList(),
-            PaginationDirection.DOWN,
+            PaginationDirection.NEXT,
             lastCommentId
         )
 
@@ -95,10 +95,10 @@ constructor(
 
         val (start, end) =
             when (direction) {
-                PaginationDirection.UP ->
+                PaginationDirection.PREV ->
                     max(0, index - PAGE_SIZE) to index
 
-                PaginationDirection.DOWN ->
+                PaginationDirection.NEXT ->
                     index + 1 to min(index + PAGE_SIZE, commentIds.size)
             }
 

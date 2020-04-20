@@ -21,13 +21,14 @@ import org.stepic.droid.notifications.badges.NotificationsBadgesListener
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.ui.activities.contracts.RootScreen
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
-import org.stepic.droid.ui.fragments.CatalogFragment
 import org.stepic.droid.ui.fragments.HomeFragment
 import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.commit
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
+import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -54,8 +55,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         private const val CATALOG_DEEPLINK = "catalog"
         private const val NOTIFICATIONS_DEEPLINK = "notifications"
-
-        private const val MAX_NOTIFICATION_BADGE_COUNT = 99
 
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
@@ -263,43 +262,55 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun setFragment(@IdRes id: Int) {
-        val currentFragmentTag: String? = supportFragmentManager.findFragmentById(R.id.frame)?.tag
-        val nextFragment: Fragment? = when (id) {
-            R.id.home -> {
-                getNextFragmentOrNull(currentFragmentTag, HomeFragment::class.java.simpleName, HomeFragment.Companion::newInstance)
+        val fragmentTag = getNextFragmentTag(id)
+
+        supportFragmentManager.commit {
+            supportFragmentManager.fragments.forEach { hide(it) }
+            val fragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+            if (fragment != null) {
+                show(fragment)
+            } else {
+                val nextFragment = getNextFragmentInstance(id)
+                add(R.id.frame, nextFragment, nextFragment::class.java.simpleName)
             }
-            R.id.catalog -> {
-                getNextFragmentOrNull(currentFragmentTag, CatalogFragment::class.java.simpleName, CatalogFragment.Companion::newInstance)
-            }
-            R.id.profile -> {
-                getNextFragmentOrNull(currentFragmentTag, ProfileFragment::class.java.simpleName, ProfileFragment.Companion::newInstance)
-            }
-            R.id.notifications -> {
-                getNextFragmentOrNull(currentFragmentTag, NotificationsFragment::class.java.simpleName, NotificationsFragment::newInstance)
-            }
-            else -> {
-                null
-            }
-        }
-        if (nextFragment != null) {
-            //animation on change fragment, not for just adding
-            setFragment(R.id.frame, nextFragment)
         }
     }
 
-    private fun getNextFragmentOrNull(currentFragmentTag: String?, nextFragmentTag: String, nextFragmentCreation: () -> Fragment): Fragment? {
-        return if (currentFragmentTag == null || currentFragmentTag != nextFragmentTag) {
-            nextFragmentCreation.invoke()
-        } else {
-            null
-        }
-    }
+    private fun getNextFragmentTag(@IdRes menuId: Int): String =
+        when (menuId) {
+            R.id.home ->
+                HomeFragment::class.java.simpleName
 
-    private fun setFragment(@IdRes containerId: Int, fragment: Fragment) {
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        fragmentTransaction.replace(containerId, fragment, fragment.javaClass.simpleName)
-        fragmentTransaction.commit()
-    }
+            R.id.catalog ->
+                CatalogFragment::class.java.simpleName
+
+            R.id.profile ->
+                ProfileFragment::class.java.simpleName
+
+            R.id.notifications ->
+                NotificationsFragment::class.java.simpleName
+
+            else ->
+                throw IllegalStateException()
+        }
+
+    private fun getNextFragmentInstance(@IdRes menuId: Int): Fragment =
+        when (menuId) {
+            R.id.home ->
+                HomeFragment.newInstance()
+
+            R.id.catalog ->
+                CatalogFragment.newInstance()
+
+            R.id.profile ->
+                ProfileFragment.newInstance()
+
+            R.id.notifications ->
+                NotificationsFragment.newInstance()
+
+            else ->
+                throw IllegalStateException()
+        }
 
     //RootScreen methods
     override fun showCatalog() {

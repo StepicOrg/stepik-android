@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -32,20 +30,6 @@
             android:paddingBottom="5dp"
 
             style="@style/ProfileItemHeader" />
-        <!--
-            android:drawableEnd="@drawable/ic_nav_arrow_right"
-            android:drawableRight="@drawable/ic_nav_arrow_right"
-        -->
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/profileCoursesCount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:textAppearance="?textAppearanceBody2"
-            android:textColor="?android:textColorSecondary"
-
-            tools:text="9 courses" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -72,14 +56,14 @@
         android:layout_marginRight="@dimen/profile_block_margin"
         android:layout_marginBottom="@dimen/profile_block_vertical_margin">
         <include
-            layout="@layout/course_item_loading_view"
+            layout="@layout/course_loading_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
             android:layout_marginRight="0dp"
             android:layout_marginBottom="16dp" />
         <include
-            layout="@layout/course_item_loading_view"
+            layout="@layout/course_loading_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"

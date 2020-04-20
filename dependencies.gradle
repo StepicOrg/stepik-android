@@ -1,6 +1,6 @@
 ext.versions = [
-        code                 : 2090,
-        name                 : '1.117',
+        code                 : 2096,
+        name                 : '1.119',
 
         minSdk               : 16,
         targetSdk            : 28,
@@ -38,6 +38,7 @@ ext.versions = [
         multidex             : '2.0.1',
         adapterDelegates     : '1.0.1',
         adapters             : '1.0.1',
+        presentationBase     : '1.1.1',
         viewKit              : '1.0.1',
 
         retrofit             : '2.6.1',
@@ -144,6 +145,7 @@ ext.libraries = [
         multidex             : "androidx.multidex:multidex:$versions.multidex",
         adapterDelegates     : "ru.nobird.android.ui:AdapterDelegates:$versions.adapterDelegates",
         adapters             : "ru.nobird.android.ui:Adapters:$versions.adapters",
+        presentationBase     : "ru.nobird.android.presentation:base:$versions.presentationBase",
         viewKit              : "ru.nobird.android:view:$versions.viewKit",
 
         retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
