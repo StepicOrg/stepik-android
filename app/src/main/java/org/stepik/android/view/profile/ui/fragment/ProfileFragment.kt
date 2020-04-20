@@ -2,12 +2,10 @@ package org.stepik.android.view.profile.ui.fragment
 
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
@@ -53,7 +51,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class ProfileFragment : Fragment(), ProfileView {
+class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
     companion object {
         fun newInstance(): Fragment =
             newInstance(0)
@@ -136,13 +134,6 @@ class ProfileFragment : Fragment(), ProfileView {
             .profileComponent(userId)
         profileComponent.inject(this)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_profile, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()

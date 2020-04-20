@@ -105,17 +105,25 @@ fun RecyclerView.setOnPaginationListener(onPagination: (PaginationDirection) -> 
             val layoutManager = (recyclerView.layoutManager as? LinearLayoutManager)
                 ?: return
 
+
             val pastVisibleItems = layoutManager.findFirstVisibleItemPosition()
-            if (dy > 0) {
+
+            val delta = if (layoutManager.orientation == LinearLayoutManager.HORIZONTAL) {
+                dx
+            } else {
+                dy
+            }
+
+            if (delta > 0) {
                 val visibleItemCount = layoutManager.childCount
                 val totalItemCount = layoutManager.itemCount
 
                 if (visibleItemCount + pastVisibleItems >= totalItemCount) {
-                    post { onPagination(PaginationDirection.DOWN) }
+                    post { onPagination(PaginationDirection.NEXT) }
                 }
             } else {
                 if (pastVisibleItems == 0) {
-                    post { onPagination(PaginationDirection.UP) }
+                    post { onPagination(PaginationDirection.PREV) }
                 }
             }
         }

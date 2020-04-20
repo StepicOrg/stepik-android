@@ -14,7 +14,6 @@ import org.stepik.android.presentation.base.injection.ViewModelKey
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile_achievements.ProfileAchievementsPresenter
 import org.stepik.android.presentation.profile_activities.ProfileActivitiesPresenter
-import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_certificates.ProfileCertificatesPresenter
 import org.stepik.android.presentation.profile_detail.ProfileDetailPresenter
 import org.stepik.android.presentation.profile_id.ProfileIdPresenter
@@ -60,11 +59,6 @@ abstract class ProfileModule {
     @IntoMap
     @ViewModelKey(ProfileIdPresenter::class)
     internal abstract fun bindProfileIdPresenter(profileIdPresenter: ProfileIdPresenter): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ProfileCoursesPresenter::class)
-    internal abstract fun bindProfileCoursesPresenter(ProfileCoursesPresenter: ProfileCoursesPresenter): ViewModel
 
     @Binds
     @IntoMap

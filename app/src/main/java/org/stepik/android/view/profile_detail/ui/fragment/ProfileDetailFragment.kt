@@ -1,9 +1,7 @@
 package org.stepik.android.view.profile_detail.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.Fragment
@@ -20,7 +18,7 @@ import org.stepik.android.presentation.profile_detail.ProfileDetailView
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class ProfileDetailFragment : Fragment(), ProfileDetailView {
+class ProfileDetailFragment : Fragment(R.layout.fragment_profile_detail), ProfileDetailView {
     companion object {
         fun newInstance(userId: Long): Fragment =
             ProfileDetailFragment()
@@ -45,13 +43,6 @@ class ProfileDetailFragment : Fragment(), ProfileDetailView {
             .of(this, viewModelFactory)
             .get(ProfileDetailPresenter::class.java)
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? =
-        inflater.inflate(R.layout.fragment_profile_detail, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         TextViewCompat.setLineHeight(profileDetails.textView, resources.getDimensionPixelOffset(R.dimen.comment_item_text_line))

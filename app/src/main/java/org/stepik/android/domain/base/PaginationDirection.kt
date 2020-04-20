@@ -1,5 +1,5 @@
 package org.stepik.android.domain.base
 
 enum class PaginationDirection {
-    UP, DOWN
+    PREV, NEXT
 }

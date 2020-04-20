@@ -1,22 +1,20 @@
 package org.stepik.android.presentation.profile_courses
 
-import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.model.Course
+import org.stepic.droid.util.PagedList
+import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.presentation.course_continue.CourseContinueView
 
-interface ProfileCoursesView {
+interface ProfileCoursesView : CourseContinueView {
     sealed class State {
         object Idle : State()
         object SilentLoading : State()
         object Empty : State()
         object Error : State()
 
-        class Content(val courses: List<Course>) : State()
+        class Content(
+            val courseListDataItems: PagedList<CourseListItem.Data>
+        ) : State()
     }
 
     fun setState(state: State)
-
-    fun setBlockingLoading(isLoading: Boolean)
-
-    fun showCourse(course: Course, isAdaptive: Boolean)
-    fun showSteps(course: Course, lastStep: LastStep)
 }

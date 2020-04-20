@@ -8,7 +8,8 @@ import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.safeDiv
-import org.stepik.android.model.Course
+import org.stepik.android.domain.course.model.CourseStats
+import org.stepik.android.domain.course_list.model.CourseListItem
 import java.util.Locale
 
 class CoursePropertiesDelegate(
@@ -32,10 +33,10 @@ class CoursePropertiesDelegate(
         courseItemProgressTitle.setTextColor(color)
     }
 
-    fun setStats(course: Course) {
-        setLearnersCount(course.learnersCount)
-        setProgress(course)
-        setRating(course)
+    fun setStats(courseListItem: CourseListItem.Data) {
+        setLearnersCount(courseListItem.course.learnersCount)
+        setProgress(courseListItem.courseStats)
+        setRating(courseListItem.courseStats)
 
         view.isVisible = view.children.any(View::isVisible)
     }
@@ -49,8 +50,8 @@ class CoursePropertiesDelegate(
         learnersCountText.isVisible = needShowLearners
     }
 
-    private fun setProgress(course: Course) {
-        val progress = course.progressObject
+    private fun setProgress(courseStats: CourseStats) {
+        val progress = courseStats.progress
         val needShow = if (progress != null && progress.cost > 0) {
             val score = progress
                 .score
@@ -74,10 +75,10 @@ class CoursePropertiesDelegate(
             .getString(R.string.course_content_text_progress, score, cost)
     }
 
-    private fun setRating(course: Course) {
-        val needShow = course.rating > 0
+    private fun setRating(courseStats: CourseStats) {
+        val needShow = courseStats.review > 0
         if (needShow) {
-            courseRatingText.text = String.format(Locale.ROOT, view.resources.getString(R.string.course_rating_value), course.rating)
+            courseRatingText.text = String.format(Locale.ROOT, view.resources.getString(R.string.course_rating_value), courseStats.review)
         }
         courseRatingImage.isVisible = needShow
         courseRatingText.isVisible = needShow

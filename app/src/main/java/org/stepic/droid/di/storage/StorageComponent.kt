@@ -16,6 +16,7 @@ import org.stepik.android.model.Certificate
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.SocialProfile
 import org.stepik.android.model.Submission
+import org.stepik.android.model.UserCourse
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
@@ -50,4 +51,5 @@ interface StorageComponent {
     val attemptDao: IDao<Attempt>
     val downloadedCoursesDao: DownloadedCoursesDao
     val socialProfileDao: IDao<SocialProfile>
+    val userCourseDao: IDao<UserCourse>
 }
