@@ -39,7 +39,7 @@ class CourseListCollectionHeaderDecoration(
 
             view.setPlaceholderText(headerText)
             view.setBackgroundResource(collectionDescriptionColors.backgroundResSquared)
-            view.setTextColor(ContextCompat.getColor(parent.context, collectionDescriptionColors.textColorRes))
+            view.setTextColor(ContextCompat.getColorStateList(parent.context, collectionDescriptionColors.textColorRes))
 
             val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.measuredWidth, View.MeasureSpec.EXACTLY)
             val heightSpec = View.MeasureSpec.makeMeasureSpec(parent.measuredHeight, View.MeasureSpec.UNSPECIFIED)

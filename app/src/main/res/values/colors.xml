@@ -70,27 +70,25 @@
 
     <color name="fast_continue_learning_opacity">@color/new_accent_color_alpha_85</color>
     <color name="home_streak_view_color">@color/color_secondary_alpha_12</color>
-    <color name="view_all_course_list_color">@color/grey03</color>
-    <color name="view_all_course_list_color_dark">@color/grey03_alpha_50</color>
 
     <!-- Gradient colors -->
     <color name="start_gradient_placeholder">#8E8EB5</color>
     <color name="end_gradient_placeholder">#6969A0</color>
     <color name="placeholder_text_color">@color/white</color>
 
-    <color name="start_gradient_blue">#D3E4EC</color>
-    <color name="end_gradient_blue">#CFE8F5</color>
-    <color name="text_color_gradient_blue">#00484E</color>
+    <color name="start_gradient_blue">#30006997</color>
+    <color name="end_gradient_blue">#908CC3E0</color>
+    <color name="text_color_gradient_blue">@color/material_on_surface_emphasis_high_type</color>
 
-    <color name="start_gradient_fire">#E8E0F3</color>
-    <color name="center_gradient_fire">#EFDFE7</color>
-    <color name="end_gradient_fire">#F5DEDD</color>
-    <color name="text_color_gradient_fire">#18073D</color>
+    <color name="start_gradient_fire">#3037088B</color>
+    <color name="center_gradient_fire">#30A9004C</color>
+    <color name="end_gradient_fire">#30B00000</color>
+    <color name="text_color_gradient_fire">@color/material_on_surface_emphasis_high_type</color>
     <!-- Gradient colors end-->
 
     <color name="default_code_error_highlight_color">@color/color_error</color>
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
-    <color name="stepik_swipe_refresh">@color/new_accent_color</color>
+    <color name="stepik_swipe_refresh">@color/color_primary</color>
 
     <color name="language_checked">@color/new_accent_color</color>
     <color name="language_checked_pressed">@color/new_accent_color_alpha_85</color>
