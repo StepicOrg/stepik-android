@@ -46,6 +46,7 @@ interface AmplitudeAnalytic {
         const val JOINED = "Course joined"
         const val UNSUBSCRIBED = "Course unsubscribed"
         const val CONTINUE_PRESSED = "Continue course pressed"
+        const val BUY_COURSE_PRESSED = "Buy course pressed"
 
         object Params {
             const val COURSE = "course"

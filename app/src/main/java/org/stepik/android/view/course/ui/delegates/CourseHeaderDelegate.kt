@@ -15,6 +15,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.AppBarLayout
 import jp.wasabeef.glide.transformations.BlurTransformation
 import kotlinx.android.synthetic.main.activity_course.*
+import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.android.synthetic.main.header_course.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -98,6 +99,13 @@ class CourseHeaderDelegate(
                     ?.getAllQueryParameters()
 
                 coursePresenter.openCoursePurchaseInWeb(queryParams)
+
+                courseHeaderData?.let { headerData ->
+                    analytic.reportAmplitudeEvent(AmplitudeAnalytic.Course.BUY_COURSE_PRESSED, mapOf(
+                        AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId,
+                        AmplitudeAnalytic.Course.Params.SOURCE to AmplitudeAnalytic.Course.Values.COURSE_SCREEN
+                    ))
+                }
             }
 
 //            courseBuyInAppAction.setOnClickListener {
