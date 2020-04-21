@@ -120,9 +120,10 @@ class CommentDataAdapterDelegate(
                 data.comment.actions?.delete == true || data.comment.actions?.edit == true
 
             commentTagsAdapter.items = listOfNotNull(
-                CommentTag.COURSE_TEAM.takeIf { data.comment.userRole == UserRole.TEACHER },
+                CommentTag.COURSE_TEAM.takeIf { data.comment.userRole == UserRole.TEACHER || data.comment.userRole == UserRole.ASSISTANT },
                 CommentTag.STAFF.takeIf { data.comment.userRole == UserRole.STAFF },
-                CommentTag.PINNED.takeIf { data.comment.isPinned }
+                CommentTag.PINNED.takeIf { data.comment.isPinned },
+                CommentTag.MODERATOR.takeIf { data.comment.userRole == UserRole.MODERATOR }
             )
             commentTags.isVisible = commentTagsAdapter.itemCount > 0
 

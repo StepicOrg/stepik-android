@@ -35,5 +35,11 @@ enum class CommentTag(
         textColorRes = R.color.white,
         compoundDrawableRes = R.drawable.ic_comment_tag_pinned,
         textRes = R.string.comment_tag_pinned
+    ),
+    MODERATOR(
+        backgroundRes = R.drawable.bg_comment_tag_course_moderator,
+        textColorRes = R.color.white,
+        compoundDrawableRes = -1,
+        textRes = R.string.comment_tag_moderator
     )
 }
