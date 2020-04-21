@@ -1,12 +1,15 @@
 package org.stepik.android.domain.comment.mapper
 
 import org.stepik.android.domain.comment.model.CommentsData
+import org.stepik.android.domain.latex.mapper.LatexTextMapper
 import org.stepik.android.presentation.comment.model.CommentItem
 import javax.inject.Inject
 
 class CommentsDataMapper
 @Inject
-constructor() {
+constructor(
+    private val latexTextMapper: LatexTextMapper
+) {
     fun mapToCommentDataItems(
         commentIds: LongArray,
         commentsData: CommentsData,
@@ -44,6 +47,7 @@ constructor() {
 
                 CommentItem.Data(
                     comment = comment,
+                    textData = latexTextMapper.mapToLatexText(comment.text?.replace("\n", "<br>") ?: ""),
                     user = user,
                     voteStatus = CommentItem.Data.VoteStatus.Resolved(vote),
                     isFocused = discussionId == comment.id,

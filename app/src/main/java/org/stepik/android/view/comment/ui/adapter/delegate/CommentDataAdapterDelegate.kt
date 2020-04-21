@@ -114,7 +114,7 @@ class CommentDataAdapterDelegate(
 
             commentUserIconWrapper.setImagePath(data.user.avatar ?: "", commentUserIconPlaceholder)
 
-            commentText.setText(data.comment.text)
+            commentText.latexData = data.textData
 
             commentMenu.isVisible =
                 data.comment.actions?.delete == true || data.comment.actions?.edit == true

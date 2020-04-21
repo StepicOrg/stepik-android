@@ -616,6 +616,7 @@
     <string name="course_restore_purchase">Восстановить покупку</string>
     <string name="course_payments_purchase_in_app">Купить за %s</string>
     <string name="course_payments_purchase_in_web">Купить в веб версии</string>
+    <string name="course_payments_purchase_in_web_with_price">Купить за %s</string>
 
     <string name="course_purchase_server_error">При обработке платежа произошла ошибка, попробуйте восстановить покупку и свяжитесь с поддержкой, если ошибка не будет устранена</string>
     <string name="course_purchase_billing_error">При обработке платежа произошла ошибка</string>
