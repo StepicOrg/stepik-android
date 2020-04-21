@@ -20,6 +20,7 @@ import org.stepic.droid.ui.util.inflate
 import org.stepik.android.domain.latex.mapper.LatexTextMapper
 import org.stepik.android.domain.latex.model.LatexData
 import org.stepik.android.view.base.ui.extension.ExternalLinkWebViewClient
+import org.stepik.android.view.latex.js_interface.ModelViewerInterface
 import org.stepik.android.view.latex.mapper.LatexWebViewMapper
 import org.stepik.android.view.latex.model.TextAttributes
 import javax.inject.Inject
@@ -129,6 +130,10 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
             webViewId -> {
                 webView = child as LatexWebView
                 webView.attributes = attributes
+                webView.addJavascriptInterface(
+                    ModelViewerInterface(
+                        context
+                    ), ModelViewerInterface.MODEL_VIEWER_INTERFACE)
             }
         }
         super.addView(child, index, params)

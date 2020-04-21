@@ -17,8 +17,8 @@ class ReplaceModelViewWithImage : ContentRule {
         return document.toString()
     }
 
-    private fun formARElement(src: String, href: String): Element {
-        val imageTag = Element("img").attr("src", src)
-        return Element("a").attr("href", href).insertChildren(0, imageTag)
-    }
+    private fun formARElement(src: String, href: String): Element =
+        Element("div")
+        .attr("style", "height: 200px; width: 200px; background-image: url($src);")
+        .attr("onClick", "handleARModel('$href')")
 }

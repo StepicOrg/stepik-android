@@ -12,6 +12,7 @@ import org.stepik.android.domain.latex.model.block.MinVisibleBlock
 import org.stepik.android.domain.latex.model.block.WebScriptBlock
 import org.stepik.android.domain.latex.model.LatexData
 import org.stepik.android.domain.latex.model.block.MetaBlock
+import org.stepik.android.domain.latex.model.block.ModelViewerBlock
 import org.stepik.android.domain.latex.model.rule.RelativePathContentRule
 import org.stepik.android.domain.latex.model.rule.ReplaceModelViewWithImage
 import javax.inject.Inject
@@ -33,7 +34,8 @@ constructor(
         listOf(
             HorizontalScrollBlock(),
             MinVisibleBlock(),
-            MetaBlock(config.baseUrl)
+            MetaBlock(config.baseUrl),
+            ModelViewerBlock()
         )
 
     private val rules =
