@@ -92,6 +92,7 @@ import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -210,6 +211,10 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCourseDescription(Context context, long courseId) {
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.CoursePreview.COURSE_PREVIEW_SCREEN_OPENED, new HashMap<String, Object>() {{
+                    put(AmplitudeAnalytic.CoursePreview.Params.COURSE, courseId);
+                }}
+        );
         Intent intent = CourseActivity.Companion.createIntent(context, courseId, CourseScreenTab.INFO);
         context.startActivity(intent);
     }
@@ -231,6 +236,12 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.CoursePreview.COURSE_PREVIEW_SCREEN_OPENED, new HashMap<String, Object>() {{
+                    put(AmplitudeAnalytic.CoursePreview.Params.COURSE, course.getId());
+                    put(AmplitudeAnalytic.CoursePreview.Params.TITLE, course.getTitle());
+                    put(AmplitudeAnalytic.CoursePreview.Params.IS_PAID, course.isPaid());
+                }}
+        );
         Intent intent = getIntentForDescription(context, course, autoEnroll, tab);
         context.startActivity(intent);
     }
