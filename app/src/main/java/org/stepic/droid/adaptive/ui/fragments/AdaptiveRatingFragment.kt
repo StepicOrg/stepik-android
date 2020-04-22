@@ -17,7 +17,6 @@ import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.AdaptiveRatingPresenter
 import org.stepic.droid.core.presenters.contracts.AdaptiveRatingView
-import org.stepik.android.view.base.ui.extension.ColorExtensions
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -52,7 +51,6 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
         divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
         recycler.addItemDecoration(divider)
 
-        spinnerContainer.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(context, resources.getInteger(R.integer.highlighted_element_elevation), overrideLightTheme = true))
         val spinnerAdapter = ArrayAdapter<CharSequence>(context, R.layout.adaptive_item_rating_period, context.resources.getStringArray(R.array.adaptive_rating_periods))
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner.adapter = spinnerAdapter

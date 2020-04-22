@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.item_comment_load_more_replies.view.*
 import org.stepic.droid.R
 import org.stepik.android.presentation.comment.model.CommentItem
-import org.stepik.android.view.base.ui.extension.ColorExtensions
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
@@ -24,7 +23,6 @@ class CommentLoadMoreRepliesAdapterDelegate(
 
         init {
             root.setOnClickListener { (itemData as? CommentItem.LoadMoreReplies)?.let(onItemClick) }
-            root.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(context, context.resources.getInteger(R.integer.highlighted_element_elevation), overrideLightTheme = true))
         }
 
         override fun onBind(data: CommentItem) {

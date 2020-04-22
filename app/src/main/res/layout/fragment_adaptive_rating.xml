@@ -22,6 +22,7 @@
 
         <FrameLayout
             android:id="@+id/spinnerContainer"
+            android:background="@color/color_elevation_overlay_2dp"
             android:padding="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

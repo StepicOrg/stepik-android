@@ -4,9 +4,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_step.view.*
 import kotlinx.android.synthetic.main.view_step_discussion.view.*
-import org.stepic.droid.R
 import org.stepik.android.model.comments.DiscussionThread
-import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.comment.model.DiscussionThreadContainer
 
 class StepDiscussionsDelegate(
@@ -34,14 +32,6 @@ class StepDiscussionsDelegate(
 
         init {
             containerView.isVisible = false
-            containerView
-                .setBackgroundColor(
-                    ColorExtensions.colorSurfaceWithElevationOverlay(
-                        containerView.context,
-                        elevation = containerView.resources.getInteger(R.integer.highlighted_element_elevation),
-                        overrideLightTheme = true
-                    )
-                )
             stepDiscussions.setOnClickListener { discussionThread?.let(onDiscussionThreadClicked) }
         }
 

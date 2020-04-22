@@ -20,6 +20,7 @@
         <FrameLayout
             android:id="@+id/stepQuizCodeDetails"
             android:layout_below="@id/stepQuizCodeTextContent"
+            android:background="@color/color_elevation_overlay_2dp"
             android:layout_width="match_parent"
             android:layout_height="48dp">
             <androidx.appcompat.widget.AppCompatImageView
@@ -49,6 +50,7 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/stepQuizCodeDetailsContent"
+            android:background="@color/color_elevation_overlay_2dp"
             android:layout_below="@id/stepQuizCodeDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

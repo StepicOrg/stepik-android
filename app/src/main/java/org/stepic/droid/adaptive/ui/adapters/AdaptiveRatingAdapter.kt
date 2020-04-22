@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.adaptive_rating_item.view.*
 import org.stepic.droid.R
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepik.android.model.adaptive.RatingItem
-import org.stepik.android.view.base.ui.extension.ColorExtensions
 
 class AdaptiveRatingAdapter(
     context: Context,
@@ -117,10 +116,5 @@ class AdaptiveRatingAdapter(
         val name: TextView = root.name
     }
 
-    class SeparatorViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        init {
-            val elevation = view.resources.getInteger(R.integer.highlighted_element_elevation)
-            view.setBackgroundColor(ColorExtensions.colorSurfaceWithElevationOverlay(view.context, elevation, overrideLightTheme = true))
-        }
-    }
+    class SeparatorViewHolder(view: View) : RecyclerView.ViewHolder(view)
 }

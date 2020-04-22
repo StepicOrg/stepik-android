@@ -35,7 +35,6 @@ import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
 import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
-import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeStepRunCodeDelegate
@@ -318,9 +317,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      * Keyboard extension
      */
     private fun setupKeyboardExtension() {
-        stepQuizCodeKeyboardExtension.setBackgroundColor(
-            ColorExtensions.colorSurfaceWithElevationOverlay(requireContext(), resources.getInteger(R.integer.highlighted_element_elevation), overrideLightTheme = true))
-
         stepQuizCodeKeyboardExtension.adapter = codeToolbarAdapter
         stepQuizCodeKeyboardExtension.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         codeLayout.codeToolbarAdapter = codeToolbarAdapter
