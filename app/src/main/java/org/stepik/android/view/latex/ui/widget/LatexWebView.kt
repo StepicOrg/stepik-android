@@ -15,6 +15,7 @@ import org.stepic.droid.util.contextForWebView
 import org.stepic.droid.util.toDp
 import org.stepik.android.view.latex.model.TextAttributes
 import org.stepik.android.domain.latex.model.block.HorizontalScrollBlock
+import org.stepik.android.view.latex.js_interface.ModelViewerInterface
 import kotlin.math.abs
 
 @SuppressLint("AddJavascriptInterface")
@@ -35,6 +36,10 @@ constructor(
         private const val MIME_TYPE = "text/html"
         private const val ENCODING = "UTF-8"
         private const val ASSETS = "file:///android_asset/"
+    }
+
+    init {
+        addJavascriptInterface(ModelViewerInterface(context), ModelViewerInterface.MODEL_VIEWER_INTERFACE)
     }
 
     var attributes = TextAttributes.fromAttributeSet(context, attrs)
