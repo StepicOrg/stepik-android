@@ -6,6 +6,8 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -63,7 +65,8 @@ constructor(
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
-    private val mainScheduler: Scheduler
+    private val mainScheduler: Scheduler,
+    private val analytic: Analytic
 ) : PresenterBase<CourseView>(viewContainer), CourseContinuePresenterDelegate by courseContinuePresenterDelegateImpl {
     private var state: CourseView.State = CourseView.State.Idle
         set(value) {
@@ -73,6 +76,8 @@ constructor(
         }
 
 //    private var uiCheckout: UiCheckout? = null
+
+    private var isCoursePreviewLogged = false
 
     override val delegates: List<PresenterDelegate<in CourseView>> =
         listOf(courseContinuePresenterDelegateImpl)
@@ -125,7 +130,11 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onComplete = { state = CourseView.State.EmptyCourse },
-                onSuccess  = { state = CourseView.State.CourseLoaded(it); postCourseViewedNotification(it.courseId) },
+                onSuccess  = {
+                    state = CourseView.State.CourseLoaded(it)
+                    postCourseViewedNotification(it.courseId)
+                    logCoursePreviewOpenedEvent(it.course)
+                },
                 onError    = { state = CourseView.State.NetworkError }
             )
     }
@@ -357,5 +366,21 @@ constructor(
             ?: return
 
         view?.shareCourse(course)
+    }
+
+    /**
+     * Analytics
+     */
+    private fun logCoursePreviewOpenedEvent(course: Course) {
+        if (isCoursePreviewLogged) {
+            return
+        }
+        isCoursePreviewLogged = true
+        analytic.reportAmplitudeEvent(
+            AmplitudeAnalytic.CoursePreview.COURSE_PREVIEW_SCREEN_OPENED, mapOf(
+            AmplitudeAnalytic.CoursePreview.Params.COURSE to course.enrollment,
+            AmplitudeAnalytic.CoursePreview.Params.TITLE to course.title,
+            AmplitudeAnalytic.CoursePreview.Params.IS_PAID to course.isPaid
+        ))
     }
 }
