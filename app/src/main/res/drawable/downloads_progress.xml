@@ -4,8 +4,8 @@
     <item android:id="@android:id/background">
         <shape>
             <gradient
-                android:startColor="@color/grey04"
-                android:endColor="@color/grey04"
+                android:startColor="@color/color_elevation_overlay_2dp"
+                android:endColor="@color/color_elevation_overlay_2dp"
                 android:angle="270"
                 />
         </shape>

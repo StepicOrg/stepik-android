@@ -26,6 +26,7 @@
     <color name="color_on_error">#ffffff</color>
 
     <color name="color_status_bar">@color/color_primary</color>
+    <color name="color_divider">@color/color_elevation_overlay_2dp</color>
 
     <color name="transparent">@android:color/transparent</color>
     <color name="black">@android:color/black</color>

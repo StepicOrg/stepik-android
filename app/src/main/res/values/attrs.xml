@@ -6,7 +6,6 @@
 
     <attr name="appBarElevation" format="dimension|reference" />
 
-    <attr name="dividerVerticalColor" format="color|reference" />
     <attr name="dividerVerticalSize" format="dimension|reference" />
 
     <attr name="buttonCornerRadius" format="dimension|reference" />

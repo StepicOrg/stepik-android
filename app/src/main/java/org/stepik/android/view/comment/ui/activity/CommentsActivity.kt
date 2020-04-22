@@ -151,7 +151,7 @@ class CommentsActivity :
             layoutManager = LinearLayoutManager(context)
 
             addItemDecoration(CommentItemDecoration(
-                separatorColor = ContextCompat.getColor(context, context.resolveResourceIdAttribute(R.attr.dividerVerticalColor)),
+                separatorColor = ContextCompat.getColor(context, R.color.color_divider),
                 bigSeparatorBounds =
                     CommentItemDecoration.SeparatorBounds(
                         size = resources.getDimensionPixelSize(R.dimen.comment_item_separator_big),
