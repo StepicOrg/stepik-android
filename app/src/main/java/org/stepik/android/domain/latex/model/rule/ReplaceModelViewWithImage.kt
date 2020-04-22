@@ -2,8 +2,13 @@ package org.stepik.android.domain.latex.model.rule
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import org.stepic.droid.util.toPx
 
 class ReplaceModelViewWithImage : ContentRule {
+    companion object {
+        private const val BORDER_RADIUS_DP = 8f
+    }
+
     override fun process(content: String): String {
         val document = Jsoup.parse(content)
 
@@ -19,6 +24,7 @@ class ReplaceModelViewWithImage : ContentRule {
 
     private fun formARElement(src: String, href: String): Element =
         Element("div")
-        .attr("style", "height: 200px; width: 200px; background-image: url($src);")
+        .attr("style", "background-image: url($src); border-radius: ${BORDER_RADIUS_DP.toPx()}px;")
+        .attr("class", "ar-model")
         .attr("onClick", "handleARModel('$href')")
 }
