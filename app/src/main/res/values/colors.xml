@@ -91,7 +91,7 @@
 
     <color name="default_code_error_highlight_color">@color/color_error</color>
     <color name="default_code_brackets_highlight_color">#AAFFD77A</color>
-    <color name="stepik_swipe_refresh">@color/color_primary</color>
+    <color name="stepik_swipe_refresh">@color/color_brown_700</color>
 
     <color name="onboarding_action_pressed">@color/white_color_alpha_30</color>
     <color name="onboarding_action">@color/white_color_alpha_20</color>
@@ -146,8 +146,8 @@
     <color name="certificate_distinction">@color/yellow1</color>
     <color name="certificate_regular">@color/color_overlay_green</color>
     <!-- Solutions screen -->
-    <color name="section_color">@color/new_primary_color</color>
-    <color name="lesson_color">@color/grey05</color>
+    <color name="section_color">@color/color_elevation_overlay_2dp</color>
+    <color name="lesson_color">@color/color_elevation_overlay_1dp</color>
     <color name="submission_correct">@color/color_overlay_green</color>
     <color name="submission_incorrect">@color/color_error</color>
 </resources>

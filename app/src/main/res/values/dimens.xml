@@ -130,6 +130,7 @@
     <dimen name="achievement_details_icon_size">164dp</dimen>
 
     <dimen name="stories_default_corner_radius">16dp</dimen>
+    <dimen name="stories_default_corner_outer_radius">18dp</dimen>
     <dimen name="stories_size">96dp</dimen>
 
     <dimen name="notification_large_icon_size">64dp</dimen>

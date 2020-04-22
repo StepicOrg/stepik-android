@@ -1,15 +1,14 @@
 package org.stepik.android.view.solutions.ui.adapter.delegate
 
-import android.graphics.PorterDuff
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import kotlinx.android.synthetic.main.item_solution_submission.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.resolveResourceIdAttribute
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Submission
 import org.stepik.android.view.base.ui.mapper.DateMapper
@@ -57,20 +56,16 @@ class SolutionSubmissionAdapterDelegate(
             submissionRoot.isEnabled = data.isEnabled
             submissionCheckBox.isEnabled = data.isEnabled
 
-            val resourceId = when (data.step.block?.name) {
-                AppConstants.TYPE_CODE ->
-                    R.drawable.ic_hard_quiz
-                else ->
-                    R.drawable.ic_easy_quiz
-            }
+            val resourceId =
+                when (data.step.block?.name) {
+                    AppConstants.TYPE_CODE ->
+                        R.drawable.ic_hard_quiz
+                    else ->
+                        R.drawable.ic_easy_quiz
+                }
 
-            val icon = AppCompatResources
-                .getDrawable(context, resourceId)
-                ?.mutate()
-            icon?.setColorFilter(
-                ContextCompat.getColor(context, R.color.new_accent_color), PorterDuff.Mode.SRC_IN)
-            submissionQuizIcon.setImageDrawable(icon)
-            submissionTitle.text =  HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
+            submissionQuizIcon.setImageResource(resourceId)
+            submissionTitle.text = HtmlCompat.fromHtml(data.step.block?.text ?: "", HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
             submissionStep.text =
                 context.resources.getString(
                     R.string.solutions_submission_step_position,
@@ -98,7 +93,7 @@ class SolutionSubmissionAdapterDelegate(
                     submissionCheckBox.visibility = View.INVISIBLE
                 }
                 else -> {
-                    submissionRoot.setBackgroundResource(R.drawable.bg_attempt_submission_item)
+                    submissionRoot.setBackgroundResource(context.resolveResourceIdAttribute(R.attr.selectableItemBackground))
                     submissionStatusText.visibility = View.GONE
                     submissionStatusIconCorrect.visibility = View.GONE
                     submissionStatusIconWrong.visibility = View.GONE
