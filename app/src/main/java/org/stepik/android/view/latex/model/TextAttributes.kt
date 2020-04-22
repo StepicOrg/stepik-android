@@ -6,6 +6,7 @@ import android.content.res.TypedArray
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
 import androidx.annotation.FontRes
+import androidx.appcompat.content.res.AppCompatResources
 import org.stepic.droid.R
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.resolveFloatAttribute
@@ -53,11 +54,11 @@ data class TextAttributes(
 
             val textAppearance = obtainTextAppearance(context, attrs)
             if (textAppearance != null) {
-                textAttributes = readTypedArray(textAttributes, textAppearance)
+                textAttributes = readTypedArray(textAttributes, context, textAppearance)
             }
 
             val array = context.obtainStyledAttributes(attrs, attrsSet)
-            textAttributes = readTypedArray(textAttributes, array)
+            textAttributes = readTypedArray(textAttributes, context, array)
 
             return textAttributes
         }
@@ -74,8 +75,14 @@ data class TextAttributes(
             }
         }
 
-        private fun readTypedArray(textAttributes: TextAttributes, array: TypedArray): TextAttributes =
+        private fun readTypedArray(textAttributes: TextAttributes, context: Context, array: TypedArray): TextAttributes =
             try {
+                val textColor = array.getResourceId(attrsSet.indexOf(android.R.attr.textColor), 0)
+                    .takeIf { it != 0 }
+                    ?.let { AppCompatResources.getColorStateList(context, it) }
+                    ?.defaultColor
+                    ?: textAttributes.textColor
+
                 TextAttributes(
                     textSize =
                         array.getDimensionPixelSize(attrsSet.indexOf(android.R.attr.textSize), 0)
@@ -84,8 +91,7 @@ data class TextAttributes(
                             ?.toSp()
                             ?: textAttributes.textSize,
 
-                    textColor =
-                        array.getColor(attrsSet.indexOf(android.R.attr.textColor), textAttributes.textColor),
+                    textColor = textColor,
 
                     textColorHighlight =
                         array.getColor(attrsSet.indexOf(android.R.attr.textColorHighlight), textAttributes.textColorHighlight),
