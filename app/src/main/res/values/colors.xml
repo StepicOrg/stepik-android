@@ -20,6 +20,8 @@
 
     <color name="color_on_surface">#000000</color>
     <color name="color_on_surface_alpha_12">#30000000</color>
+    <color name="color_elevation_overlay_1dp">#12000000</color>
+    <color name="color_elevation_overlay_2dp">#17000000</color>
 
     <color name="color_on_error">#ffffff</color>
 
