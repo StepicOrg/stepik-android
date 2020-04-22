@@ -87,7 +87,7 @@ class CommentsActivity :
     private var isMenuOrderGroupVisible: Boolean = false
     private var menuDiscussionOrderItem: DiscussionOrderItem = DiscussionOrderItem.LAST_DISCUSSION
 
-    private val commentPlaceholders = List(10) { CommentItem.Placeholder }
+    private val commentPlaceholders = List(5) { CommentItem.Placeholder }
 
     private val step by lazy { intent.getParcelableExtra<Step>(EXTRA_STEP) }
     private val discussionThread by lazy { intent.getParcelableExtra<DiscussionThread>(EXTRA_DISCUSSION_THREAD) }
