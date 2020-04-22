@@ -92,7 +92,6 @@ import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

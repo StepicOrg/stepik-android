@@ -33,7 +33,6 @@ import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePresenter
@@ -376,7 +375,6 @@ constructor(
         if (isCoursePreviewLogged) {
             return
         }
-        Timber.d("Course id: ${course.id}, Course title: ${course.title} Course isPaid: ${course.isPaid}")
         isCoursePreviewLogged = true
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.CoursePreview.COURSE_PREVIEW_SCREEN_OPENED, mapOf(
