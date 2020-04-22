@@ -7,6 +7,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.MenuItemCompat
@@ -160,7 +161,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }
 
         val colorControlNormal =
-            ContextCompat.getColorStateList(requireContext(), requireContext().resolveResourceIdAttribute(R.attr.colorControlNormal))
+            AppCompatResources.getColorStateList(requireContext(), requireContext().resolveResourceIdAttribute(R.attr.colorControlNormal))
 
         headerAnimationDelegate =
             ProfileHeaderAnimationDelegate(

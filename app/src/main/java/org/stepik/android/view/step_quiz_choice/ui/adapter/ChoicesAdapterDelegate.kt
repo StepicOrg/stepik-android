@@ -3,7 +3,7 @@ package org.stepik.android.view.step_quiz_choice.ui.adapter
 import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -57,7 +57,7 @@ class ChoicesAdapterDelegate(
             itemChoiceLatex.webViewClient = ProgressableWebViewClient(itemChoiceLatexProgress, itemChoiceLatex.webView)
 
             ViewCompat.setBackgroundTintList(
-                itemChoiceFeedback, ContextCompat.getColorStateList(context, R.color.color_elevation_overlay_1dp))
+                itemChoiceFeedback, AppCompatResources.getColorStateList(context, R.color.color_elevation_overlay_1dp))
         }
 
         override fun onBind(data: Choice) {

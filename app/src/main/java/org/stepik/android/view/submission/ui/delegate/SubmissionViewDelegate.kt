@@ -41,7 +41,7 @@ fun TextView.setSubmission(submission: Submission?, showArrow: Boolean = false) 
                     .getDrawable(context, R.drawable.ic_nav_arrow_right)
                     ?.apply {
                         mutate()
-                        DrawableCompat.setTintList(this, ContextCompat.getColorStateList(context, context.resolveResourceIdAttribute(R.attr.colorControlNormal)))
+                        DrawableCompat.setTintList(this, AppCompatResources.getColorStateList(context, context.resolveResourceIdAttribute(R.attr.colorControlNormal)))
                     }
             } else {
                 null

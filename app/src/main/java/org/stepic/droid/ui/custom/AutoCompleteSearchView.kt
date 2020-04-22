@@ -10,8 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,7 +35,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     private var focusCallback: FocusCallback? = null
 
     private val colorControlNormal =
-        ContextCompat.getColorStateList(context, context.resolveResourceIdAttribute(R.attr.colorControlNormal))
+        AppCompatResources.getColorStateList(context, context.resolveResourceIdAttribute(R.attr.colorControlNormal))
 
     var suggestionsOnTouchListener: OnTouchListener? = null
 

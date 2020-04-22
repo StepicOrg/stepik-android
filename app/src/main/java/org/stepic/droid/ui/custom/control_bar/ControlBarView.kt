@@ -14,8 +14,8 @@ import androidx.annotation.AttrRes
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.MenuRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import androidx.core.widget.ImageViewCompat
 import org.stepic.droid.R
 import org.stepic.droid.util.resolveAttribute
@@ -92,7 +92,7 @@ constructor(context: Context, attrs: AttributeSet? = null, @AttrRes defStyleAttr
             layoutParams = LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
             setImageResource(R.drawable.ic_action_more_vert)
             ImageViewCompat
-                .setImageTintList(this, ContextCompat.getColorStateList(context, com.google.android.material.R.color.mtrl_text_btn_text_color_selector))
+                .setImageTintList(this, AppCompatResources.getColorStateList(context, com.google.android.material.R.color.mtrl_text_btn_text_color_selector))
 
             setBackgroundResource(context.resolveAttribute(R.attr.selectableItemBackgroundRounded)?.resourceId ?: 0)
             setPadding(16, 16, 16, 16)

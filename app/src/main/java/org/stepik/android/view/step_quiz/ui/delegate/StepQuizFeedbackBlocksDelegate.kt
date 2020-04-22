@@ -4,7 +4,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
@@ -63,7 +63,7 @@ class StepQuizFeedbackBlocksDelegate(
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
 
         ViewCompat.setBackgroundTintList(
-            stepQuizFeedbackHint, ContextCompat.getColorStateList(context, R.color.color_elevation_overlay_1dp))
+            stepQuizFeedbackHint, AppCompatResources.getColorStateList(context, R.color.color_elevation_overlay_1dp))
     }
 
     fun setState(state: StepQuizFeedbackState) {
