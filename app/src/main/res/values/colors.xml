@@ -7,7 +7,7 @@
     <color name="color_secondary">@color/color_violet_300</color>
     <color name="color_secondary_alpha_12">@color/color_violet_300_alpha_12</color>
 
-    <color name="color_secondary_variant">@color/violet3</color>
+    <color name="color_secondary_variant">@color/color_violet_300</color>
 
     <color name="color_background">@color/white</color>
     <color name="color_surface">@color/white</color>
@@ -64,10 +64,7 @@
     <!-- stepic brand book-->
     <color name="correct_answer_background">@color/color_overlay_green_alpha_12</color>
 
-    <color name="transparent_black_30">@color/black1_alpha_30</color>
-
-    <color name="black_alpha_40">@color/black1_alpha_40</color>
-    <color name="background_time_thumbnail">@color/black1_alpha_40</color>
+    <color name="background_time_thumbnail">@color/black_alpha_40</color>
 
     <color name="exo_edit_mode_background_color">@color/grey04</color>
 
@@ -100,25 +97,21 @@
     <!-- Design system -->
     <color name="grey03">#CCCCCC</color>
     <color name="grey04">#EAECF0</color>
-    <color name="grey05">#F3F4F6</color>
 
     <color name="violet2">#E9EBFA</color>
-    <color name="violet3">#3E50CB</color>
     <color name="yellow1">#FFA961</color>
 
-    <color name="black1_alpha_30">#4D000000</color>
-    <color name="black1_alpha_40">#66000000</color>
+    <color name="black_alpha_30">#4D000000</color>
+    <color name="black_alpha_40">#66000000</color>
 
     <color name="blue03">#56A4FF</color>
-<!---->
+
     <color name="white">#FFFFFF</color>
     <color name="white_color_alpha_20">#33FFFFFF</color>
     <color name="white_color_alpha_30">#4DFFFFFF</color>
     <color name="white_color_alpha_70">#B3FFFFFF</color>
-<!--@color/-->
 
-    <color name="new_primary_color">#F6F6F6</color>
-    <color name="new_accent_color">#535366</color>
+    <color name="new_accent_color">@color/color_brown_700</color>
     <color name="new_accent_color_alpha_85">#DA535366</color>
     <color name="new_accent_color_alpha_50">#80535366</color>
     <!-- Design system finished -->
@@ -145,6 +138,7 @@
     <!-- Certificate icon color -->
     <color name="certificate_distinction">@color/yellow1</color>
     <color name="certificate_regular">@color/color_overlay_green</color>
+
     <!-- Solutions screen -->
     <color name="section_color">@color/color_elevation_overlay_2dp</color>
     <color name="lesson_color">@color/color_elevation_overlay_1dp</color>

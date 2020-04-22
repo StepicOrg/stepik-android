@@ -95,7 +95,7 @@
     </style>
 
     <style name="AppTheme.Splash">
-        <item name="colorPrimaryDark">@color/transparent_black_30</item>
+        <item name="colorPrimaryDark">@color/black_alpha_30</item>
         <item name="android:windowBackground">@drawable/branded_logo</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
     </style>

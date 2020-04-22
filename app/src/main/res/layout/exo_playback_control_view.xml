@@ -19,7 +19,7 @@
         android:id="@+id/topControllerPanel"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/transparent_black_30">
+        android:background="@color/black_alpha_30">
 
         <ImageView
             android:id="@+id/closeButton"
@@ -186,7 +186,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/transparent_black_30"
+        android:background="@color/black_alpha_30"
         android:padding="8dp">
         <org.stepic.droid.ui.custom_exo.AppCompatSeekTimeBar
             android:id="@+id/exo_progress"

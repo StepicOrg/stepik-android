@@ -59,7 +59,6 @@
                 android:layout_marginRight="@dimen/course_item_space_between_items"
                 android:layout_marginStart="@dimen/course_item_space_between_items"
                 android:layout_marginTop="@dimen/course_item_space_between_items"
-                android:textSize="@dimen/course_item_titles_text_size"
                 android:textAppearance="?textAppearanceBody1"
                 app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
                 app:layout_constraintRight_toRightOf="parent"
