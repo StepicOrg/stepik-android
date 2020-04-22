@@ -109,7 +109,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         app:srcCompat="@drawable/ic_adaptive_correct"
-                        android:tint="?colorSecondary"
+                        app:tint="?colorSecondary"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="6dp"
                         android:layout_marginEnd="6dp" />
@@ -138,7 +138,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         app:srcCompat="@drawable/ic_adaptive_wrong"
-                        android:tint="?colorError"
+                        app:tint="?colorError"
                         android:layout_gravity="center_vertical"
                         android:layout_marginRight="6dp"
                         android:layout_marginEnd="6dp" />

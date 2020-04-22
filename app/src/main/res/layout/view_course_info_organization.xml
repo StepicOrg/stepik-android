@@ -12,12 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="24dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:contentDescription="@null"
             app:srcCompat="@drawable/ic_course_info_instructors"
-            android:tint="?colorOnSurface"
+            app:tint="?colorOnSurface"
             android:alpha="?alphaEmphasisHigh"
             android:layout_gravity="start|center_vertical" />
 

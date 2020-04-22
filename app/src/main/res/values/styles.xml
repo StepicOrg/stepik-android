@@ -111,7 +111,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:alpha">?alphaEmphasisMedium</item>
-        <item name="android:tint">?colorOnSurface</item>
+        <item name="tint">?colorOnSurface</item>
     </style>
 
     <style name="FastContinueSubtextStyle">
