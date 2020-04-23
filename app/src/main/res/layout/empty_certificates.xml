@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/reportEmptyCertificates"
-    android:background="@color/new_cover"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="gone"
@@ -34,7 +33,7 @@
         app:layout_constraintBottom_toTopOf="@+id/goToCatalog"
         app:layout_constraintTop_toBottomOf="@+id/placeholderIcon" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         style="@style/PlaceholderButton"
         android:id="@+id/goToCatalog"
         android:layout_width="wrap_content"

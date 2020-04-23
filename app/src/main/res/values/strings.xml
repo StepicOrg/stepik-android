@@ -86,10 +86,6 @@
     <string name="correct">Correct!</string>
     <string name="wrong">Wrong. Please, try again.</string>
     <string name="try_again">Try again</string>
-    <string name="step_only_online">Steps are only available online. Connect to the Internet and
-        start
-        completing the assignments.
-    </string>
     <string name="correct_free_response">Your answer was saved.</string>
     <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive
         the points.
@@ -478,8 +474,8 @@
     <string name="adaptive_reaction_easy">EASY</string>
     <string name="adaptive_reaction_hard">HARD</string>
     <string name="adaptive_retry">Retry</string>
-    <string name="adaptive_correct">CORRECT</string>
-    <string name="adaptive_wrong">WRONG</string>
+    <string name="adaptive_correct">Correct</string>
+    <string name="adaptive_wrong">Wrong</string>
     <string name="adaptive_attempt_button">Solve</string>
     <string name="adaptive_course_completed">Congratulations!\n\nYou have successfully completed the course!</string>
     <string name="adaptive_course_not_supported">This course is not supported in adaptive mode</string>
@@ -550,6 +546,7 @@
     <string name="deadlines_section">Deadline: %s</string>
     <string name="deadlines_notification">Deadline for section %s in course %s comes in %s</string>
     <string name="deadlines_edit_title">Edit schedule</string>
+    <string name="deadlines_edit_date_picker_title">Select new deadline</string>
     <string name="deadlines_create_title">Choose learning mode</string>
     
     <string name="deadlines_learning_rate_hobby">Hobby</string>

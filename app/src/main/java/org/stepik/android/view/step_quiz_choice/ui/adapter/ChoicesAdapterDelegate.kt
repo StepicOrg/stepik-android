@@ -1,8 +1,13 @@
 package org.stepik.android.view.step_quiz_choice.ui.adapter
 
+import android.graphics.PorterDuff
 import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_step_quiz_choice.view.*
 import org.stepic.droid.R
@@ -52,16 +57,21 @@ class ChoicesAdapterDelegate(
                 itemChoiceContainer.background.mutate() as LayerDrawable
             )
             itemChoiceLatex.webViewClient = ProgressableWebViewClient(itemChoiceLatexProgress, itemChoiceLatex.webView)
+
+            itemChoiceFeedback.background = AppCompatResources
+                .getDrawable(context, R.drawable.bg_shape_rounded_bottom)
+                ?.mutate()
+                ?.let { DrawableCompat.wrap(it) }
+                ?.also {
+                    DrawableCompat.setTint(it, ContextCompat.getColor(context, R.color.color_elevation_overlay_1dp))
+                    DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
+                }
         }
 
         override fun onBind(data: Choice) {
             itemView.itemChoiceContainer.isEnabled = data.isEnabled
             itemView.isSelected = selectionHelper.isSelected(adapterPosition)
-            itemChoiceCheckmark.visibility = if (data.correct == true) {
-                View.VISIBLE
-            } else {
-                View.INVISIBLE
-            }
+            itemChoiceCheckmark.isInvisible = data.correct != true
             itemChoiceLatex.setText(data.option)
             layerListDrawableDelegate.showLayer(getItemBackgroundLayer(data))
             bindHint(data)

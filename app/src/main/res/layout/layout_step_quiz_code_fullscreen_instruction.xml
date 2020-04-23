@@ -13,14 +13,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
+            android:textAppearance="?textAppearanceBody1"
             android:textIsSelectable="true"
-            android:textSize="16sp"
             android:padding="16dp" />
 
         <FrameLayout
             android:id="@+id/stepQuizCodeDetails"
-            android:background="@drawable/bg_step_quiz_code_details"
             android:layout_below="@id/stepQuizCodeTextContent"
+            android:background="@color/color_elevation_overlay_2dp"
             android:layout_width="match_parent"
             android:layout_height="48dp">
             <androidx.appcompat.widget.AppCompatImageView
@@ -29,6 +29,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_gravity="center_vertical"
+                app:tint="?colorControlNormal"
                 app:srcCompat="@drawable/ic_step_quiz_code_details" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -37,8 +38,7 @@
                 android:gravity="center_vertical|start"
 
                 android:text="@string/step_quiz_code_details"
-                android:textColor="@color/new_accent_color"
-                android:textSize="16sp"
+                android:textAppearance="?textAppearanceBody1"
 
                 android:layout_marginStart="48dp"
                 android:layout_marginLeft="48dp"
@@ -46,17 +46,14 @@
                 android:layout_marginRight="48dp" />
         </FrameLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/step_quiz_separator" />
+        <include layout="@layout/view_divider_vertical" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/stepQuizCodeDetailsContent"
+            android:background="@color/color_elevation_overlay_2dp"
             android:layout_below="@id/stepQuizCodeDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/new_primary_color"
             tools:listitem="@layout/item_step_quiz_code_detail_sample" />
 
     </RelativeLayout>

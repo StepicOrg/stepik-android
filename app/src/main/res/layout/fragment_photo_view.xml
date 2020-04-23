@@ -27,7 +27,7 @@
         android:id="@+id/internetProblemRootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_black_30"
+        android:background="@color/black_alpha_30"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
@@ -42,11 +42,10 @@
 
         <Button
             android:id="@+id/retryButton"
-            style="@style/StepicSmallMaterialButton"
+            style="?materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/retry"
-            />
+            android:text="@string/retry" />
 
     </LinearLayout>
 
@@ -54,7 +53,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:layout_height="?actionBarSize"
         android:background="@drawable/background_toolbar_translucent"
         app:theme="@style/TransparentActionBar"/>
 

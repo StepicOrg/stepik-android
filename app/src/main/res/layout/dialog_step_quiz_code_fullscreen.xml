@@ -1,56 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/coordinator"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/view_centered_toolbar"/>
-
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/fullScreenCodeTabs"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/course_tabbar_color"
-        android:layout_below="@id/centeredToolbar"
-        app:tabMode="fixed"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@color/new_accent_color"
-        app:tabIndicatorHeight="2dp"
-        app:tabSelectedTextColor="@color/new_accent_color"
-        app:tabTextAppearance="@style/CourseTabAppearance"
-        app:tabPaddingStart="24dp"
-        app:tabPaddingEnd="24dp"
-        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <View
-        android:id="@+id/fullScreenCodeSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@id/fullScreenCodeTabs"
-        android:background="@color/course_appbar_separator" />
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/fullScreenCodeViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:id="@+id/stepQuizProgress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
+        <include
+            layout="@layout/layout_step_quiz_code_keyboard_extension"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/fullScreenCodeViewPager"
-        android:layout_below="@id/fullScreenCodeSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <include
-        layout="@layout/layout_step_quiz_code_keyboard_extension"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:layout_alignParentBottom="true" />
+        android:elevation="?appBarElevation">
 
-</RelativeLayout>
+        <include layout="@layout/view_centered_toolbar"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/fullScreenCodeTabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabGravity="fill"
+            app:tabPaddingStart="24dp"
+            app:tabPaddingEnd="24dp"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed" />
+    </com.google.android.material.appbar.AppBarLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

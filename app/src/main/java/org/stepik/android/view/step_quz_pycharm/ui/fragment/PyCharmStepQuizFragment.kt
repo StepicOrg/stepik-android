@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_step_quiz_pycharm.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.setCompoundDrawables
 
 class PyCharmStepQuizFragment : Fragment() {
     companion object {
@@ -23,6 +22,5 @@ class PyCharmStepQuizFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         stepQuizFeedback.movementMethod = LinkMovementMethod.getInstance()
-        stepQuizFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
     }
 }

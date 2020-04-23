@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/rootView">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,15 +34,15 @@
                     android:text="@string/adaptive_exp_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"/>
+                    android:textAppearance="@style/StepikToolbarTextAppearance"/>
                 <TextView
                     android:id="@+id/expLevelNext"
                     android:text="@string/adaptive_exp_title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
-
 
             <FrameLayout
                 android:id="@+id/expBubble"
@@ -51,24 +51,25 @@
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="@dimen/adaptive_exp_bubble_margin"
                 android:layout_marginRight="@dimen/adaptive_exp_bubble_margin">
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/expCounter"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:background="@drawable/gray_circle"
-                    app:fontFamily="@font/roboto_bold"
+                    android:background="@drawable/bg_adaptive_exp_bubble"
+                    app:backgroundTint="@color/color_on_surface_alpha_12_selector"
+                    android:textAppearance="?textAppearanceSubtitle2"
                     android:gravity="center"
                     tools:ignore="MissingPrefix" />
-                <TextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/expInc"
                     android:text="@string/adaptive_exp_inc"
+                    android:theme="@style/ThemeOverlay.Secondary.Green"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:background="@drawable/green_circle"
-                    app:fontFamily="@font/roboto_bold"
-                    android:textColor="@android:color/white"
+                    android:textAppearance="?textAppearanceSubtitle2"
+                    android:background="@drawable/bg_adaptive_exp_bubble"
+                    app:backgroundTint="?colorSecondary"
+                    android:textColor="?colorOnSecondary"
                     android:alpha="0"
                     android:gravity="center"
                     tools:ignore="MissingPrefix" />
@@ -76,18 +77,17 @@
 
             <org.stepic.droid.adaptive.ui.custom.morphing.MorphingView
                 android:id="@+id/streakSuccessContainer"
+                android:theme="@style/ThemeOverlay.Green"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:alpha="0"
                 android:layout_gravity="end|center_vertical">
                 <TextView
                     android:id="@+id/streakSuccess"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
+                    android:textAppearance="?textAppearanceSubtitle1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="@android:color/white"
-                    app:fontFamily="@font/roboto_bold"
+                    android:textColor="?colorOnSecondary"
                     android:layout_gravity="center"
                     android:gravity="center"
                     tools:ignore="MissingPrefix" />
@@ -97,16 +97,13 @@
                 android:id="@+id/streakFailed"
                 android:alpha="0"
                 android:text="@string/adaptive_streak_failed"
-                android:textSize="18sp"
-                android:textStyle="bold"
+                android:textAppearance="?textAppearanceSubtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/adaptive_color_wrong"
-                android:textColor="@android:color/white"
+                android:background="?colorError"
+                android:textColor="?colorOnError"
                 android:layout_gravity="center"
-                app:fontFamily="@font/roboto_bold"
-                android:gravity="center"
-                tools:ignore="MissingPrefix" />
+                android:gravity="center"/>
         </FrameLayout>
 
 
@@ -115,7 +112,8 @@
             style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            app:mpb_progressTint="@color/adaptive_color_correct"
+            android:theme="@style/ThemeOverlay.Secondary.Green"
+            app:mpb_progressTint="?colorSecondary"
             app:mpb_progressStyle="horizontal"
             app:mpb_useIntrinsicPadding="false" />
 
@@ -139,6 +137,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:textAppearance="?textAppearanceBody2"
+                    android:textColor="?android:textColorSecondary"
                     android:id="@+id/loadingPlaceholder"/>
             </LinearLayout>
 
@@ -168,6 +168,8 @@
                     android:maxWidth="256dp"
                     android:gravity="center"
                     android:layout_marginTop="16dp"
+                    android:textAppearance="?textAppearanceBody1"
+                    android:textColor="?android:textColorSecondary"
                     android:text="@string/adaptive_course_completed"
                     android:id="@+id/courseStateText"/>
 

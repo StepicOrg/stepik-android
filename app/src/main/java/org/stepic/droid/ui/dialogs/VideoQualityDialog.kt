@@ -2,8 +2,7 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.ArrayAdapter
-import androidx.appcompat.app.AlertDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -42,19 +41,16 @@ class VideoQualityDialog : VideoQualityDialogBase() {
 
         val chosenOptionPosition = qualityToPositionMap[qualityValue]!!
 
-        val adapter = ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.video_quality))
-
-        val builder = AlertDialog.Builder(requireContext())
+        val builder = MaterialAlertDialogBuilder(requireContext())
         builder
             .setTitle(
                 if (forPlaying) {
                     R.string.video_quality_playing
-                }
-                else {
+                } else {
                     R.string.video_quality
                 }
             )
-            .setSingleChoiceItems(adapter, chosenOptionPosition) { dialog, which ->
+            .setSingleChoiceItems(resources.getStringArray(R.array.video_quality), chosenOptionPosition) { dialog, which ->
                 val qualityString = positionToQualityMap[which]
                 analytic.reportEventWithIdName(Analytic.Preferences.VIDEO_QUALITY, which.toString(), qualityString)
 

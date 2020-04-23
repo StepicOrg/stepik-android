@@ -2,13 +2,14 @@ package org.stepic.droid.features.stories.ui.delegate
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.drawable.GradientDrawable
+import android.content.res.ColorStateList
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -24,8 +25,8 @@ import ru.nobird.android.stories.ui.custom.StoryView
 import ru.nobird.android.stories.ui.delegate.StoryPartViewDelegate
 
 class PlainTextWithButtonStoryPartDelegate(
-        private val analytic: Analytic,
-        private val context: Context
+    private val analytic: Analytic,
+    private val context: Context
 ) : StoryPartViewDelegate() {
     companion object {
         private const val DARK_BACKGROUND_STYLE = "dark"
@@ -68,11 +69,13 @@ class PlainTextWithButtonStoryPartDelegate(
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
         val storyTextContainer = view.storyTextContainer
         if (text != null) {
-            @DrawableRes val textBackgroundRes = if (text.backgroundStyle == DARK_BACKGROUND_STYLE) {
-                R.drawable.stories_text_background_dark
-            } else {
-                R.drawable.stories_text_background_light
-            }
+            @DrawableRes
+            val textBackgroundRes =
+                if (text.backgroundStyle == DARK_BACKGROUND_STYLE) {
+                    R.drawable.stories_text_background_dark
+                } else {
+                    R.drawable.stories_text_background_light
+                }
             storyTextContainer.setBackgroundResource(textBackgroundRes)
 
             val storyTitle = view.storyTitle
@@ -85,6 +88,7 @@ class PlainTextWithButtonStoryPartDelegate(
 
             storyTitle.text = text.title
             storyText.text = text.text
+            storyText.isVisible = text.text.isNotBlank()
 
             storyTextContainer.isVisible = true
         } else {
@@ -95,11 +99,7 @@ class PlainTextWithButtonStoryPartDelegate(
     private fun setUpButton(story: Story?, view: View, button: StoryTemplate.Button?, position: Int) {
         val storyButton = view.storyButton
         if (button != null) {
-            val backgroundDrawable = GradientDrawable()
-            backgroundDrawable.setColor(COLOR_MASK or button.backgroundColor.toInt(16))
-            backgroundDrawable.cornerRadius = view.context.resources.getDimension(R.dimen.stories_default_corner_radius)
-
-            storyButton.background = backgroundDrawable
+            ViewCompat.setBackgroundTintList(storyButton, ColorStateList.valueOf(COLOR_MASK or button.backgroundColor.toInt(16)))
             storyButton.setTextColor(COLOR_MASK or button.textColor.toInt(16))
 
             storyButton.text = button.title

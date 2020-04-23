@@ -1,47 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="bold_text">
-        <item name="android:fontFamily">@font/roboto_bold</item>
-    </style>
-
-    <style name="regular_text">
-        <item name="android:fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="cv_text_title" parent="regular_text">
-        <item name="android:textSize">@dimen/text_size_title</item>
-    </style>
-
-    <style name="FilterItem">
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
-        <item name="android:minWidth">@dimen/min_ux_touchable_size</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="LanguageFilterItem" parent="FilterItem">
-        <item name="android:layout_marginBottom">@dimen/catalog_header_bottom_margin</item>
-        <item name="android:layout_marginRight">13dp</item>
-
-    </style>
-
-    <style name="TagFilterItem" parent="FilterItem">
-        <item name="android:layout_marginRight">@dimen/guideline_standard_padding</item>
-        <item name="android:padding">12dp</item>
-        <item name="android:background">@drawable/tag_background</item>
-    </style>
-
     <style name="CatalogItemTitle">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textAppearance">?textAppearanceSubtitle1</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text_color</item>
         <item name="android:layout_marginTop">@dimen/guideline_standard_padding</item>
         <item name="android:layout_marginLeft">@dimen/course_list_side_padding</item>
         <item name="android:layout_marginBottom">20dp</item>
@@ -66,7 +28,7 @@
         <item name="android:gravity">center_horizontal</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">17sp</item>
-        <item name="android:textColor">@color/white70percent</item>
+        <item name="android:textColor">@color/white_color_alpha_70</item>
         <item name="android:paddingLeft">0dp</item>
         <item name="android:paddingRight">0dp</item>
         <item name="android:minHeight">100dp</item>
@@ -78,30 +40,5 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:background">@drawable/onboarding_action_background</item>
         <item name="android:layout_marginBottom">@dimen/onboarding_bottom_margin</item>
-    </style>
-
-    <style name="LightRoundedButton">
-        <item name="android:textSize">@dimen/light_rounded_button_text_size</item>
-        <item name="android:background">@drawable/light_rounded_button_background</item>
-        <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
-        <item name="android:clickable">true</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-    
-    <style name="body1">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/color_body1</item>
-        <item name="android:letterSpacing">0.03</item>
-        <item name="android:lineSpacingExtra">7sp</item>
-    </style>
-    
-    <style name="body2_note">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/color_body2_note</item>
-        <item name="android:letterSpacing">0.02</item>
-        <item name="android:lineSpacingExtra">6sp</item>
     </style>
 </resources>

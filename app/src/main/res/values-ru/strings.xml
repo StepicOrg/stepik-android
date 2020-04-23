@@ -72,9 +72,6 @@
     <string name="wrong">Неправильно. Пожалуйста, попробуйте еще раз.</string>
     <string name="correct">Верно!</string>
     <string name="try_again">Попробовать снова</string>
-    <string name="step_only_online">Шаги можно проходить только онлайн. Чтобы начать решать,
-        включите интернет-соединение.
-    </string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
     <string name="terms_message_register">
         <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
@@ -530,6 +527,7 @@
     <string name="deadlines_section">Дедлайн: %s</string>
     <string name="deadlines_notification">Дедлайн по модулю %s в курсе %s наступает через %s</string>
     <string name="deadlines_edit_title">Редактирование расписания</string>
+    <string name="deadlines_edit_date_picker_title">Выберите новый дедлайн</string>
     <string name="deadlines_create_title">Выберите режим обучения</string>
 
     <string name="deadlines_learning_rate_hobby">Хобби</string>
@@ -745,7 +743,7 @@
     <string name="step_quiz_code_full_screen_run_code_tab">Запуск</string>
 
     <string name="step_quiz_code_input_data">Входные данные</string>
-    <string name="step_quiz_code_output_data">Выходные данные</string>
+    <string name="step_quiz_code_output_data">Результат выполнения</string>
     <string name="step_quiz_code_samples">примеры</string>
     <string name="step_quiz_code_run_code_action">Запустить код</string>
     <string name="step_quiz_code_empty_output">Пустой вывод</string>

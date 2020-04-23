@@ -5,9 +5,9 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp"
-    android:background="@drawable/adaptive_rating_item_background">
+    android:background="@drawable/bg_item_adaptive_rating">
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/icon"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
@@ -18,7 +18,8 @@
         android:layout_marginStart="-2dp"
         android:layout_marginLeft="-2dp"
         android:layout_marginEnd="14dp"
-        android:layout_marginRight="14dp" />
+        android:layout_marginRight="14dp"
+        app:srcCompat="@drawable/ic_crown" />
 
     <TextView
         android:id="@+id/rank"
@@ -29,13 +30,14 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:minWidth="16dp"
+        android:textAppearance="?textAppearanceSubtitle1"
+        android:alpha="?alphaEmphasisHigh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        app:fontFamily="@font/roboto_bold"
-        tools:ignore="MissingPrefix" />
+        tools:text="1" />
 
     <TextView
         android:id="@+id/exp"
@@ -43,20 +45,23 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:textAppearance="?textAppearanceBody2"
+        android:alpha="?alphaEmphasisMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:fontFamily="@font/roboto_light"
-        tools:ignore="MissingPrefix" />
+        tools:text="9000" />
 
     <TextView
         android:id="@+id/name"
         android:textColor="@color/adaptive_rating_item_text_color"
+        android:textAppearance="?textAppearanceBody2"
         android:layout_toEndOf="@id/rank"
         android:layout_toRightOf="@id/rank"
         android:layout_toStartOf="@id/exp"
         android:layout_toLeftOf="@id/exp"
         android:layout_centerVertical="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:text="Some name" />
 
 </RelativeLayout>

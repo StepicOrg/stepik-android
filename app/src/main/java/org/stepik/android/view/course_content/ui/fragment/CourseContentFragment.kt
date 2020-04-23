@@ -63,7 +63,6 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 import ru.nobird.android.view.base.ui.extension.argument
-import ru.nobird.android.view.base.ui.extension.setTextColor
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
@@ -187,7 +186,7 @@ class CourseContentFragment :
             itemAnimator = null
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
+                ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
             })
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -263,8 +262,6 @@ class CourseContentFragment :
                 analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS)
                 screenManager.showSettings(activity)
             }
-            setActionTextColor(ContextCompat.getColor(view.context, R.color.snack_action_color))
-            setTextColor(ContextCompat.getColor(view.context, R.color.white))
         }
     }
 

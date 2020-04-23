@@ -39,7 +39,7 @@ class CodeQuizInstructionDelegate(
             isNestedScrollingEnabled = false
 
             val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-            divider.setDrawable(AppCompatResources.getDrawable(context, R.drawable.bg_step_quiz_code_details_separator)!!)
+            divider.setDrawable(AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)!!)
             addItemDecoration(divider)
         }
 
@@ -53,7 +53,7 @@ class CodeQuizInstructionDelegate(
                 }
             }
         } else {
-            stepQuizCodeDetailsContent.visibility = View.VISIBLE
+            stepQuizCodeDetailsContent.isVisible = true
         }
     }
 

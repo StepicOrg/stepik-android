@@ -4,12 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?android:colorBackground">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:fillViewport="true">
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -61,14 +63,16 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp">
+        android:background="@color/transparent"
+        android:elevation="?appBarElevation">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/transparent"
             app:title="">
-            <androidx.appcompat.widget.AppCompatTextView
+            <TextView
                 android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,15 +80,15 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textAppearance="@style/StepikToolbarTextAppearance"/>
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <View
+    <include
         android:id="@+id/toolbarSeparator"
+        layout="@layout/view_divider_vertical"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="?dividerVerticalSize"
         android:layout_marginTop="?actionBarSize"
-        android:background="@color/grey04"
         android:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

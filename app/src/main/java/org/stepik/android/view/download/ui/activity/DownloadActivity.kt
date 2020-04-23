@@ -87,8 +87,8 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         downloadPresenter.fetchStorage()
         downloadPresenter.fetchDownloadedCourses()
 
-        downloadsOtherApps.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.custom_grey))
-        downloadsStepik.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.green01))
+        downloadsOtherApps.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_on_surface_alpha_12))
+        downloadsStepik.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_green))
         downloadsFree.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey04))
     }
 
@@ -123,7 +123,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         viewStateDelegate.addState<DownloadView.State.Idle>()
         viewStateDelegate.addState<DownloadView.State.Loading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<DownloadView.State.Empty>(emptyDownloading)
-        viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(downloadStorageContainer, downloadsRecyclerView)
+        viewStateDelegate.addState<DownloadView.State.DownloadedCoursesLoaded>(downloadStorageContainer, downloadsRecyclerView, downloadsStorageDivider)
     }
 
     override fun setState(state: DownloadView.State) {

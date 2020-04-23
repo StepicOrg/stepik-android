@@ -19,7 +19,7 @@
         android:id="@+id/topControllerPanel"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/transparent_black_30">
+        android:background="@color/black_alpha_30">
 
         <ImageView
             android:id="@+id/closeButton"
@@ -76,18 +76,18 @@
 
         <View
             android:id="@+id/centered_anchor"
-            android:layout_width="@dimen/play_pause_button_size"
-            android:layout_height="@dimen/play_pause_button_size"
+            android:layout_width="@dimen/video_player_play_button_size"
+            android:layout_height="@dimen/video_player_play_button_size"
             android:layout_centerInParent="true"
             android:visibility="invisible"/>
 
         <ImageView
             android:id="@id/exo_rew"
-            android:layout_width="@dimen/rewind_size"
-            android:layout_height="@dimen/rewind_size"
+            android:layout_width="@dimen/video_player_rewind_size"
+            android:layout_height="@dimen/video_player_rewind_size"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/margin_rewind"
-            android:layout_marginRight="@dimen/margin_rewind"
+            android:layout_marginEnd="@dimen/video_player_rewind_margin"
+            android:layout_marginRight="@dimen/video_player_rewind_margin"
             android:layout_toLeftOf="@+id/centered_anchor"
             android:layout_toStartOf="@+id/centered_anchor"
             android:padding="4dp"
@@ -96,26 +96,26 @@
 
         <ImageView
             android:id="@id/exo_play"
-            android:layout_width="@dimen/play_pause_button_size"
-            android:layout_height="@dimen/play_pause_button_size"
+            android:layout_width="@dimen/video_player_play_button_size"
+            android:layout_height="@dimen/video_player_play_button_size"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_play_circle_outline_white_72"/>
 
         <ImageView
             android:id="@id/exo_pause"
-            android:layout_width="@dimen/play_pause_button_size"
-            android:layout_height="@dimen/play_pause_button_size"
+            android:layout_width="@dimen/video_player_play_button_size"
+            android:layout_height="@dimen/video_player_play_button_size"
             android:layout_centerInParent="true"
             android:src="@drawable/ic_pause_circle_outline_white_72"/>
 
 
         <ImageView
             android:id="@id/exo_ffwd"
-            android:layout_width="@dimen/rewind_size"
-            android:layout_height="@dimen/rewind_size"
+            android:layout_width="@dimen/video_player_rewind_size"
+            android:layout_height="@dimen/video_player_rewind_size"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/margin_rewind"
-            android:layout_marginStart="@dimen/margin_rewind"
+            android:layout_marginLeft="@dimen/video_player_rewind_margin"
+            android:layout_marginStart="@dimen/video_player_rewind_margin"
             android:layout_toEndOf="@+id/centered_anchor"
             android:layout_toRightOf="@+id/centered_anchor"
             android:padding="4dp"
@@ -124,8 +124,8 @@
 
     <FrameLayout
         android:id="@+id/autoplay_controller_panel"
-        android:layout_width="@dimen/play_pause_button_size"
-        android:layout_height="@dimen/play_pause_button_size"
+        android:layout_width="@dimen/video_player_play_button_size"
+        android:layout_height="@dimen/video_player_play_button_size"
         android:background="?selectableItemBackgroundBorderless"
         android:layout_centerInParent="true">
 
@@ -155,48 +155,47 @@
             style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding" />
     </FrameLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/autoplayCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/Widget.AppTheme.Button.TextButton"
 
         android:layout_above="@id/bottom_controller_panel"
         android:layout_centerHorizontal="true"
 
-        android:text="@string/video_player_autoplay_cancel"
         android:textColor="@color/white"
-        style="@style/Adaptive.BorderlessButton" />
+        android:text="@string/video_player_autoplay_cancel" />
 
     <org.stepic.droid.ui.custom.BetterSwitch
         android:id="@+id/autoplaySwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:foreground="@drawable/selectable_item_rounded_background"
         android:layout_margin="8dp"
         android:padding="8dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/autoplay_controller_panel"
         app:switchPadding="8dp"
 
+        android:theme="@style/ThemeOverlay.Green"
         android:text="@string/setting_autoplay_short"
-        android:textColor="@color/white"
-        app:thumbTint="@color/color_switch_accent" />
+        android:textColor="@color/white" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_controller_panel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/transparent_black_30"
+        android:background="@color/black_alpha_30"
         android:padding="8dp">
         <org.stepic.droid.ui.custom_exo.AppCompatSeekTimeBar
             android:id="@+id/exo_progress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/seekbar_video_margin"
-            android:layout_marginLeft="@dimen/seekbar_video_margin"
-            android:layout_marginRight="@dimen/seekbar_video_margin"
-            android:layout_marginStart="@dimen/seekbar_video_margin"
+            android:layout_marginEnd="@dimen/video_player_seek_bar_margin"
+            android:layout_marginLeft="@dimen/video_player_seek_bar_margin"
+            android:layout_marginRight="@dimen/video_player_seek_bar_margin"
+            android:layout_marginStart="@dimen/video_player_seek_bar_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -209,7 +208,7 @@
             android:paddingRight="0dp"
             android:paddingStart="0dp"
             android:progressDrawable="@drawable/video_progressbar_layers"
-            android:thumb="@drawable/video_seekbar_thumb"
+            android:thumb="@drawable/ic_video_player_seek_bar_thumb"
             android:thumbOffset="0dp"
             tools:progress="20"
             tools:secondaryProgress="60"
@@ -242,16 +241,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toLeftOf="@id/exo_fullscreen_icon_container"
-            android:layout_marginRight="@dimen/seekbar_video_margin"
-            android:layout_marginEnd="@dimen/seekbar_video_margin"
+            android:layout_marginRight="@dimen/video_player_seek_bar_margin"
+            android:layout_marginEnd="@dimen/video_player_seek_bar_margin"
             tools:text="03:35"/>
 
         <FrameLayout
             android:id="@+id/exo_fullscreen_icon_container"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginEnd="@dimen/seekbar_video_margin"
-            android:layout_marginRight="@dimen/seekbar_video_margin"
+            android:layout_marginEnd="@dimen/video_player_seek_bar_margin"
+            android:layout_marginRight="@dimen/video_player_seek_bar_margin"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"

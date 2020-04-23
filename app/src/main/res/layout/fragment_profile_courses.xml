@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -32,23 +30,6 @@
             android:paddingBottom="5dp"
 
             style="@style/ProfileItemHeader" />
-        <!--
-            android:drawableEnd="@drawable/ic_nav_arrow_right"
-            android:drawableRight="@drawable/ic_nav_arrow_right"
-        -->
-
-    <!--
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/profileCoursesCount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            app:fontFamily="@font/roboto_light"
-            android:textSize="16sp"
-            android:textColor="@color/new_accent_color"
-
-            tools:text="9 courses" />
-    -->
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -96,9 +77,6 @@
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         layout="@layout/error_no_connection_with_button_small" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey04" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

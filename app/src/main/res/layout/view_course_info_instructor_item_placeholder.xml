@@ -32,7 +32,6 @@
         android:layout_height="8dp"
 
         android:layout_marginTop="12dp"
-        android:textColor="@color/new_accent_color"
         android:maxWidth="368dp"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintBottom_toBottomOf="parent"

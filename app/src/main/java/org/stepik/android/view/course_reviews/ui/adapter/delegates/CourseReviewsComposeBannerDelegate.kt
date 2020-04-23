@@ -2,6 +2,7 @@ package org.stepik.android.view.course_reviews.ui.adapter.delegates
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.empty_default.view.*
 import kotlinx.android.synthetic.main.view_course_review_compose_banner_item.view.*
@@ -25,6 +26,7 @@ class CourseReviewsComposeBannerDelegate(
         private val bannerEmpty = root.bannerEmpty
 
         init {
+            bannerText.setBackgroundColor(AppCompatResources.getColorStateList(bannerText.context, R.color.color_on_surface_alpha_12_selector).defaultColor)
             bannerButton.setOnClickListener { onCreateReviewClicked() }
             bannerEmpty.placeholderMessage.setText(R.string.course_reviews_empty)
         }

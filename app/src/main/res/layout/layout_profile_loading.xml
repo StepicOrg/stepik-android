@@ -116,10 +116,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey04" />
+    <include layout="@layout/view_divider_vertical" />
 
     <org.stepic.droid.ui.custom.LoadingView
         android:layout_width="120dp"
@@ -149,10 +146,10 @@
         android:layout_marginLeft="@dimen/profile_header_margin"
         android:layout_marginRight="@dimen/profile_header_margin" />
 
-    <View
+    <include
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey04"
+        android:layout_height="?dividerVerticalSize"
+        layout="@layout/view_divider_vertical"
         android:layout_marginTop="16dp" />
 
     <org.stepic.droid.ui.custom.LoadingView
@@ -183,10 +180,10 @@
         android:layout_marginLeft="@dimen/profile_header_margin"
         android:layout_marginRight="@dimen/profile_header_margin" />
 
-    <View
+    <include
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey04"
+        android:layout_height="?dividerVerticalSize"
+        layout="@layout/view_divider_vertical"
         android:layout_marginTop="16dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

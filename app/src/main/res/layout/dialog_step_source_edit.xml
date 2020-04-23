@@ -21,13 +21,10 @@
                 android:padding="4dp"
                 android:gravity="center"
                 android:text="@string/step_action_edit_description"
-                android:textSize="12sp"
-                android:textColor="@color/grey03" />
+                android:textAppearance="?textAppearanceCaption"
+                android:textColor="?android:textColorSecondary" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/step_quiz_separator" />
+            <include layout="@layout/view_divider_vertical" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/stepContentEditText"

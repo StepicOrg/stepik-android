@@ -19,46 +19,45 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintBottom_toTopOf="@id/stepQuizFeedbackBlocks">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator" />
+    <include layout="@layout/view_divider_vertical" />
 
     <FrameLayout
         android:id="@+id/stepQuizActions"
         android:layout_width="match_parent"
         android:visibility="gone"
+        tools:visibility="visible"
         android:layout_height="48dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/stepQuizActionChangeLang"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:background="?selectableItemBackground"
+            android:layout_height="wrap_content"
             android:lines="1"
             android:ellipsize="end"
 
-            android:textSize="16sp"
-            android:textColor="@color/color_step_quiz_code_lang"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical|start"
 
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
 
-            android:drawablePadding="12dp"
 
             android:layout_marginRight="96dp"
             android:layout_marginEnd="96dp"
 
-            tools:drawableEnd="@drawable/ic_arrow_bottom"
+            app:cornerRadius="0dp"
+            app:iconPadding="12dp"
+            app:icon="@drawable/ic_arrow_bottom"
+            app:iconGravity="end"
+
+            style="@style/Widget.AppTheme.Button.TextButton"
 
             tools:text="python3 dasjdlkas dadlj aldj akjsdlakj lkjasdkl jkdas" />
 
-        <View
+        <include
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/step_quiz_separator"
+            android:layout_height="?dividerVerticalSize"
+            layout="@layout/view_divider_vertical"
             android:layout_gravity="bottom" />
     </FrameLayout>
 
@@ -68,9 +67,6 @@
         android:layout_height="@dimen/embedded_code_editor_height"
         android:fillViewport="true" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

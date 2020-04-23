@@ -15,7 +15,8 @@
         android:textSize="10sp"
         app:fontFamily="@font/roboto_medium"
         android:drawablePadding="4dp"
-        tools:drawableTop="@drawable/ic_download_remove"
+        app:drawableTopCompat="@drawable/ic_download_remove"
+        app:drawableTint="?colorControlNormal"
         tools:text="150 MB" />
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
@@ -28,13 +29,14 @@
         style="@style/Widget.MaterialProgressBar.ProgressBar.NoPadding"
         android:visibility="gone" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/statusNotCached"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:contentDescription="@null"
         android:layout_gravity="center"
         app:srcCompat="@drawable/ic_download"
+        app:tint="?colorControlNormal"
         android:visibility="gone" />
 
     <FrameLayout
@@ -49,8 +51,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:mpb_useIntrinsicPadding="false"
-            app:mpb_progressTint="@color/new_accent_color"
-            app:mpb_progressBackgroundTint="@color/course_content_section_date_disabled"
+            app:mpb_progressTint="?colorSecondary"
+            app:mpb_progressBackgroundTint="@color/color_on_surface_alpha_12"
             app:mpb_showProgressBackground="true"
             android:indeterminate="false"
             android:indeterminateOnly="false"
@@ -58,11 +60,12 @@
             android:max="100"
             android:progress="63" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@null"
             android:layout_margin="6dp"
+            app:tint="?colorControlNormal"
             app:srcCompat="@drawable/ic_download_cancel" />
 
     </FrameLayout>
