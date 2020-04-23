@@ -70,14 +70,30 @@
             style="@style/SettingHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/setting_section_learning" />
+            android:text="@string/setting_section_appearance" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/nightModeSettingsButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_night_mode" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/fontSizeSettingsButton"
             style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/setting_font_size" />
+            android:text="@string/setting_font_size"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/SettingHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_section_learning" />
 
         <org.stepic.droid.ui.custom.BetterSwitch
             android:id="@+id/fragmentSettingsAutoplay"

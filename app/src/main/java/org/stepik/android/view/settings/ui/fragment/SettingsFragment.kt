@@ -24,6 +24,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.presentation.settings.SettingsPresenter
 import org.stepik.android.presentation.settings.SettingsView
 import org.stepik.android.view.font_size_settings.ui.dialog.ChooseFontSizeDialogFragment
+import org.stepik.android.view.settings.ui.dialog.NightModeSettingDialogFragment
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
@@ -133,6 +134,12 @@ class SettingsFragment :
             CoursesLangDialogFragment
                 .newInstance()
                 .showIfNotExists(requireFragmentManager(), CoursesLangDialogFragment.TAG)
+        }
+
+        nightModeSettingsButton.setOnClickListener {
+            NightModeSettingDialogFragment
+                .newInstance()
+                .showIfNotExists(requireFragmentManager(), NightModeSettingDialogFragment.TAG)
         }
 
         fontSizeSettingsButton.setOnClickListener {

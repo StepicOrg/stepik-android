@@ -3,6 +3,8 @@ package org.stepic.droid.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -103,6 +105,8 @@ public class SharedPreferenceHelper {
 
     private final static String LAST_SESSION_TIMESTAMP = "last_session_timestamp";
     private final static String RETENTION_NOTITICATION_TIMESTAMP = "retention_notification_timestamp";
+
+    private final static String NIGHT_MODE = "night_mode";
 
     private OAuthResponse cachedAuthStepikResponse = null;
 
@@ -266,6 +270,14 @@ public class SharedPreferenceHelper {
         } else {
             return lastClickNotificationRemind;
         }
+    }
+
+    public void setNightMode(int nightMode) {
+        put(PreferenceType.DEVICE_SPECIFIC, NIGHT_MODE, nightMode);
+    }
+
+    public int getNightMode() {
+        return getInt(PreferenceType.DEVICE_SPECIFIC, NIGHT_MODE, AppCompatDelegate.MODE_NIGHT_UNSPECIFIED);
     }
 
     public int getTimeNotificationCode() {
