@@ -110,8 +110,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/bg_shape_square"
-                app:backgroundTint="@color/color_run_code_background"
+                android:background="@drawable/bg_run_code"
 
                 android:text="@string/step_quiz_code_output_data"
                 android:textAppearance="?textAppearanceSubtitle1"
@@ -131,8 +130,7 @@
                 android:paddingRight="16dp"
                 android:paddingBottom="16dp"
 
-                android:background="@drawable/bg_shape_square"
-                app:backgroundTint="@color/color_run_code_background"
+                android:background="@drawable/bg_run_code"
 
                 android:textAppearance="?textAppearanceBody2"
                 android:textColor="@color/color_run_code_body"

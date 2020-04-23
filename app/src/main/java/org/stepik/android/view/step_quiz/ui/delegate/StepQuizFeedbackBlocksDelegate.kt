@@ -1,11 +1,13 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
+import android.graphics.PorterDuff
 import android.graphics.drawable.AnimationDrawable
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.view.ViewCompat
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
 import org.stepic.droid.R
@@ -62,8 +64,14 @@ class StepQuizFeedbackBlocksDelegate(
 
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
 
-        ViewCompat.setBackgroundTintList(
-            stepQuizFeedbackHint, AppCompatResources.getColorStateList(context, R.color.color_elevation_overlay_1dp))
+        stepQuizFeedbackHint.background = AppCompatResources
+            .getDrawable(context, R.drawable.bg_shape_rounded_bottom)
+            ?.mutate()
+            ?.let { DrawableCompat.wrap(it) }
+            ?.also {
+                DrawableCompat.setTint(it, ContextCompat.getColor(context, R.color.color_elevation_overlay_1dp))
+                DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
+            }
     }
 
     fun setState(state: StepQuizFeedbackState) {
