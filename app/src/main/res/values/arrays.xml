@@ -52,4 +52,10 @@
         <item>Russian</item>
         <item>English</item>
     </string-array>
+
+    <string-array name="night_modes">
+        <item>Light</item>
+        <item>Dark</item>
+        <item>System default</item>
+    </string-array>
 </resources>

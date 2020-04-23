@@ -825,10 +825,13 @@
 
     <!-- Settings -->
     <string name="setting_section_learning">Learning</string>
+    <string name="setting_section_appearance">Appearance</string>
     <string name="setting_section_other">Other</string>
 
     <string name="setting_autoplay">Auto-transition to next step on video end</string>
     <string name="setting_autoplay_short">Auto-transition to next step</string>
+
+    <string name="setting_night_mode">Theme</string>
 
     <string name="setting_font_size">Font size in steps</string>
     <string name="setting_font_size_dialog_title">Choose font size</string>

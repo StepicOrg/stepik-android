@@ -794,10 +794,13 @@
 
     <!-- Settings -->
     <string name="setting_section_learning">Обучение</string>
+    <string name="setting_section_appearance">Оформление</string>
     <string name="setting_section_other">Прочее</string>
 
     <string name="setting_autoplay">Автопереход на следующий шаг по окончании видео</string>
     <string name="setting_autoplay_short">Автопереход на следующий шаг</string>
+
+    <string name="setting_night_mode">Тема</string>
 
     <string name="setting_font_size">Размер шрифта в шагах</string>
     <string name="setting_font_size_dialog_title">Выберите размер шрифта</string>
