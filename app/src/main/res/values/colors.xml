@@ -14,18 +14,21 @@
     <color name="color_error">@color/color_red_500</color>
     <color name="color_error_alpha_12">@color/color_red_500_alpha_12</color>
 
-    <color name="color_on_primary">#ffffff</color>
-    <color name="color_on_secondary">#ffffff</color>
-    <color name="color_on_background">#000000</color>
+    <color name="color_on_primary">@color/white</color>
+    <color name="color_on_secondary">@color/white</color>
+    <color name="color_on_background">@color/black</color>
 
-    <color name="color_on_surface">#000000</color>
+    <color name="color_on_surface">@color/black</color>
     <color name="color_on_surface_alpha_12">#30000000</color>
+    <color name="color_on_surface_emphasis_medium">#99000000</color>
     <color name="color_elevation_overlay_1dp">#12000000</color>
     <color name="color_elevation_overlay_2dp">#17000000</color>
 
-    <color name="color_on_error">#ffffff</color>
+    <color name="color_on_error">@color/white</color>
 
     <color name="color_status_bar">@color/color_primary</color>
+
+    <color name="color_control_normal">@color/color_on_surface_emphasis_medium</color> <!-- Non selector color for SKD < 23 -->
     <color name="color_divider">@color/color_elevation_overlay_2dp</color>
 
     <color name="transparent">@android:color/transparent</color>
