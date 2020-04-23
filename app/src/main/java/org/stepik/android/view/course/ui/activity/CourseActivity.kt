@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.configuration.RemoteConfig
@@ -105,6 +106,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     @Inject
     internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
+    @Inject
+    internal lateinit var coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest
+
 //    @Inject
 //    internal lateinit var billing: Billing
 
@@ -145,7 +149,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
-                this, analytic, coursePresenter,
+                this, analytic, coursePresenter, coursePurchasePriceSplitTest,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },

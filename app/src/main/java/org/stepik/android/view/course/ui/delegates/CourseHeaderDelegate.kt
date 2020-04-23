@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.header_course.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.getAllQueryParameters
 import org.stepik.android.domain.course.model.CourseHeaderData
@@ -31,6 +32,7 @@ class CourseHeaderDelegate(
     private val courseActivity: Activity,
     private val analytic: Analytic,
     private val coursePresenter: CoursePresenter,
+    private val coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest,
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
@@ -145,6 +147,12 @@ class CourseHeaderDelegate(
                 courseProgressDelegate.setSolutionsCount(courseHeaderData.localSubmissionsCount)
             } else {
                 courseStatsDelegate.setStats(courseHeaderData.stats)
+            }
+
+            courseBuyInWebAction.text = if (coursePurchasePriceSplitTest.currentGroup.isPriceVisible && courseHeaderData.course.displayPrice != null) {
+                getString(R.string.course_payments_purchase_in_web_with_price, courseHeaderData.course.displayPrice)
+            } else {
+                getString(R.string.course_payments_purchase_in_web)
             }
 
             with(courseHeaderData.stats.enrollmentState) {

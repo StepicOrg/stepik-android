@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.comment.model
 
+import org.stepik.android.domain.latex.model.LatexData
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.Comment
@@ -10,6 +11,7 @@ import ru.nobird.android.core.model.Identifiable
 sealed class CommentItem {
     data class Data(
         val comment: Comment,
+        val textData: LatexData,
         val user: User,
         val voteStatus: VoteStatus,
         val isFocused: Boolean,

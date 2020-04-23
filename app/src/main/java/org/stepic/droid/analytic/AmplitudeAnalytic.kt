@@ -63,6 +63,16 @@ interface AmplitudeAnalytic {
         }
     }
 
+    object CoursePreview {
+        const val COURSE_PREVIEW_SCREEN_OPENED = "Course preview screen opened"
+
+        object Params {
+            const val COURSE = "course"
+            const val TITLE = "title"
+            const val IS_PAID = "is_paid"
+        }
+    }
+
     object Steps {
         const val SUBMISSION_MADE = "Submission made"
         const val STEP_OPENED = "Step opened"
