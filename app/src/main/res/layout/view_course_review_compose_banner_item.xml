@@ -10,8 +10,6 @@
         android:id="@+id/bannerText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:backgroundTint="@color/color_on_surface_alpha_12_selector"
-        android:background="@drawable/bg_shape_square"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
