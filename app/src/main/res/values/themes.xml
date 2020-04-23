@@ -113,6 +113,8 @@
     </style>
 
     <style name="ThemeOverlay.Dark" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="colorPrimary">@color/grey04</item>
+        <item name="colorOnPrimary">@color/color_brown_700</item>
         <item name="colorSurface">@color/color_overlay_dark_surface</item>
         <item name="android:textColorPrimary">@color/material_on_surface_emphasis_high_type</item>
         <item name="android:textColorSecondary">@color/material_on_surface_emphasis_medium</item>
