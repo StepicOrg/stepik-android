@@ -23,7 +23,6 @@ import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepic.droid.ui.util.snackbar
-import org.stepic.droid.util.resolveResourceIdAttribute
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission

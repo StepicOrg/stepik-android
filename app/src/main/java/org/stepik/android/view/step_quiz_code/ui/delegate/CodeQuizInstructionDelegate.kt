@@ -41,7 +41,6 @@ class CodeQuizInstructionDelegate(
             val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
             divider.setDrawable(AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)!!)
             addItemDecoration(divider)
-
         }
 
         if (isCollapseable) {
