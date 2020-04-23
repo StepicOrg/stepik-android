@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/ThemeOverlay.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -21,10 +22,8 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
 
-        android:textSize="14sp"
-        android:textColor="@color/white"
-        app:fontFamily="@font/roboto_medium"
-        android:letterSpacing="0.03"
+        android:textAppearance="?textAppearanceSubtitle2"
+
         android:text="@string/course_progress_current" />
 
     <org.stepic.droid.ui.custom.CircleProgressView
@@ -38,7 +37,8 @@
         app:layout_constraintTop_toTopOf="@id/courseProgressValue"
         app:layout_constraintBottom_toBottomOf="@id/courseProgressValue"
 
-        app:progressBackgroundColor="@color/white"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
+        app:progressBackgroundColor="?colorOnSurface"
         app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -46,10 +46,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:textSize="14sp"
-        android:textColor="@color/white"
-        app:fontFamily="@font/roboto_medium"
-        android:letterSpacing="0.03"
+        android:textAppearance="?textAppearanceSubtitle2"
 
         app:layout_constraintBaseline_toBaselineOf="@id/courseProgressTitle"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,10 +59,7 @@
         android:layout_height="wrap_content"
 
         android:text="@string/course_progress_solutions"
-        android:textSize="14sp"
-        android:textColor="@color/white"
-        app:fontFamily="@font/roboto_medium"
-        android:letterSpacing="0.03"
+        android:textAppearance="?textAppearanceSubtitle2"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/courseProgressTitle"
@@ -86,17 +80,17 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
 
-        android:textSize="14sp"
-        android:textColor="@color/white"
-        app:fontFamily="@font/roboto_medium"
-        android:letterSpacing="0.03"
+        android:textAppearance="?textAppearanceSubtitle2"
         android:gravity="center_vertical"
 
         app:drawableStartCompat="@drawable/ic_course_solutions"
         app:drawableLeftCompat="@drawable/ic_course_solutions"
+        app:drawableTint="?android:textColorPrimary"
         android:drawablePadding="8dp"
 
         app:layout_constraintBaseline_toBaselineOf="@id/courseSolutionsTitle"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

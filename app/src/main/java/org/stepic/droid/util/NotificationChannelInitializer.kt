@@ -36,7 +36,7 @@ object NotificationChannelInitializer {
         channel.description = context.getString(stepikChannel.visibleChannelDescriptionRes)
         channel.enableLights(true)
         channel.enableVibration(true)
-        channel.lightColor = ColorUtil.getColorArgb(R.color.dots_color, context)
+        channel.lightColor = context.resolveColorAttribute(R.attr.colorError)
         return channel
     }
 }

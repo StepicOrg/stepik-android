@@ -79,6 +79,7 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
         with(profileExternalLinksRecycler) {
             adapter = profileLinksAdapter
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            isNestedScrollingEnabled = false
         }
         setDataToPresenter()
     }

@@ -17,15 +17,15 @@
         android:orientation="vertical">
 
         <include layout="@layout/view_course_content_unit_placeholder" />
-        <include layout="@layout/view_list_divider_h" />
+        <include layout="@layout/view_divider_vertical" />
         <include layout="@layout/view_course_content_unit_placeholder" />
-        <include layout="@layout/view_list_divider_h" />
+        <include layout="@layout/view_divider_vertical" />
         <include layout="@layout/view_course_content_unit_placeholder" />
-        <include layout="@layout/view_list_divider_h" />
+        <include layout="@layout/view_divider_vertical" />
         <include layout="@layout/view_course_content_unit_placeholder" />
-        <include layout="@layout/view_list_divider_h" />
+        <include layout="@layout/view_divider_vertical" />
         <include layout="@layout/view_course_content_unit_placeholder" />
-        <include layout="@layout/view_list_divider_h" />
+        <include layout="@layout/view_divider_vertical" />
 
     </LinearLayout>
 

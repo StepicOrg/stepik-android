@@ -2,12 +2,12 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
 import biz.kasual.materialnumberpicker.MaterialNumberPicker
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.Theme
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.initForCodeLanguages
+import org.stepic.droid.util.resolveColorAttribute
 
 class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
     companion object {
@@ -27,17 +27,28 @@ class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val picker = MaterialNumberPicker(context)
-        picker.initForCodeLanguages(arguments?.getStringArray(LANGUAGES_KEY)!!)
+        val languageNames = arguments?.getStringArray(LANGUAGES_KEY) ?: emptyArray()
+        picker.minValue = 0
+        picker.maxValue = languageNames.size - 1
+        picker.displayedValues = languageNames
+        picker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+        picker.wrapSelectorWheel = false
+        picker.setBackgroundColor(0x0)
+        picker.textColor = requireContext().resolveColorAttribute(R.attr.colorOnSurface)
 
-        return MaterialDialog.Builder(requireContext())
-            .theme(Theme.LIGHT)
-            .title(R.string.choose_language)
-            .customView(picker, false)
-            .positiveText(R.string.choose_action)
-            .negativeText(R.string.cancel)
-            .onPositive { _, _ ->
+        try {
+            picker.setTextSize(50f) //Warning: reflection!
+        } catch (exception: Exception) {
+            //reflection failed -> ignore
+        }
+
+        return MaterialAlertDialogBuilder(context)
+            .setTitle(R.string.choose_language)
+            .setView(picker)
+            .setPositiveButton(R.string.choose_action) { _, _ ->
                 (parentFragment as Callback).onLanguageChosen(picker.displayedValues[picker.value])
             }
-            .build()
+            .setNegativeButton(R.string.cancel, null)
+            .create()
     }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AppTheme -->
+    <color name="color_primary">@color/grey04</color>
+    <color name="color_primary_variant">@color/grey03</color>
+    <color name="color_secondary">@color/color_violet_200</color>
+    <color name="color_secondary_alpha_12">@color/color_violet_200_alpha_12</color>
+    <color name="color_secondary_variant">@color/color_violet_200</color>
+
+    <color name="color_background">#121212</color>
+    <color name="color_surface">#121212</color>
+    <color name="color_error">@color/color_red_300</color>
+    <color name="color_error_alpha_12">@color/color_red_300_alpha_12</color>
+
+    <color name="color_on_primary">@color/black</color>
+    <color name="color_on_secondary">@color/black</color>
+    <color name="color_on_background">@color/white</color>
+
+    <color name="color_on_surface">@color/white</color>
+    <color name="color_on_surface_alpha_12">#30FFFFFF</color>
+    <color name="color_on_surface_emphasis_medium">#99FFFFFF</color>
+    <color name="color_elevation_overlay_1dp">#12FFFFFF</color>
+    <color name="color_elevation_overlay_2dp">#17FFFFFF</color>
+
+    <color name="color_on_error">@color/black</color>
+
+    <color name="color_status_bar">@color/color_background</color>
+
+    <!-- ThemeOverlay -->
+    <color name="color_overlay_brown">@color/color_brown_300</color>
+    <color name="color_overlay_green">@color/color_green_300</color>
+    <color name="color_overlay_green_alpha_12">@color/color_green_300_alpha_12</color>
+    <color name="color_overlay_violet">@color/color_violet_200</color>
+
+    <color name="color_overlay_dark_surface">@color/color_surface</color>
+</resources>

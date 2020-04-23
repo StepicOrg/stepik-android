@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/rel_layout"
@@ -12,11 +13,12 @@
         android:paddingRight="@dimen/padding_left_right_list_item"
         android:paddingStart="@dimen/padding_left_right_list_item">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/image_compound_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true" />
+            android:layout_centerVertical="true"
+            app:tint="@color/color_control_selector" />
 
         <me.zhanghai.android.materialprogressbar.MaterialProgressBar
             android:id="@+id/loadProgressbar"
@@ -36,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
+            android:textAppearance="?textAppearanceBody2"
             android:paddingStart="@dimen/padding_left_right_list_item"
             android:paddingLeft="@dimen/padding_left_right_list_item"
             android:layout_toRightOf="@id/image_compound_button"
@@ -44,12 +47,11 @@
 
     </RelativeLayout>
 
-    <View
+    <include
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="?dividerVerticalSize"
         android:layout_gravity="bottom"
-        android:background="@color/silver" />
-
+        layout="@layout/view_divider_vertical" />
 
     <FrameLayout
         android:id="@+id/rippleFrameLayoutInOption"
@@ -58,5 +60,5 @@
         android:clickable="true"
         android:focusable="false"
         android:focusableInTouchMode="false"
-        android:foreground="@drawable/non_radius_foreground" />
+        android:foreground="?selectableItemBackground" />
 </merge>

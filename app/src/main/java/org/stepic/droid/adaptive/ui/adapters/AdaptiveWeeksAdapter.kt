@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.LineData
@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.adaptive_item_week.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.model.AdaptiveWeekProgress
 import org.stepic.droid.util.defaultLocale
+import org.stepic.droid.util.resolveColorAttribute
 import java.util.ArrayList
 
 class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsViewHolder>() {
@@ -42,11 +43,11 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
         notifyItemChanged(0)
     }
 
-    override fun getItemViewType(position: Int) =
-            if (position == 0)
-                HEADER_VIEW_TYPE
-            else
-                ITEM_VIEW_TYPE
+    override fun getItemViewType(position: Int): Int =
+        if (position == 0)
+            HEADER_VIEW_TYPE
+        else
+            ITEM_VIEW_TYPE
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : StatsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -66,7 +67,7 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
             }
             is StatsViewHolder.StatsHeaderViewHolder -> {
                 header.chartData?.let { dataSet ->
-                    dataSet.color = ContextCompat.getColor(holder.root.context, R.color.new_accent_color)
+                    dataSet.color = holder.root.context.resolveColorAttribute(R.attr.colorSecondary)
                     dataSet.setDrawCircles(false)
                     dataSet.mode = LineDataSet.Mode.HORIZONTAL_BEZIER
                     dataSet.cubicIntensity = 0.2f
@@ -92,7 +93,7 @@ class AdaptiveWeeksAdapter : RecyclerView.Adapter<AdaptiveWeeksAdapter.StatsView
                     }
                 }
 
-                holder.chart.visibility = if (header.chartData == null) View.INVISIBLE else View.VISIBLE
+                holder.chart.isInvisible = header.chartData == null
 
                 holder.expTotal.text = header.total.toString()
                 holder.level.text = header.level.toString()

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="AppTheme" parent="Base.AppTheme.23" />
+
+    <style name="Base.AppTheme.23">
+        <item name="colorControlNormal">@color/color_control_normal</item>
+    </style>
+
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!--Material color attributes -->
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_variant</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorSecondaryVariant">@color/color_secondary_variant</item>
+
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorError">@color/color_error</item>
+
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnError">@color/color_on_error</item>
+
+        <!--Remap legacy AppCompat attributes to MaterialComponent attributes-->
+        <item name="colorPrimaryDark">?colorPrimaryVariant</item>
+        <item name="colorAccent">?colorSecondary</item>
+
+        <!--Text colors -->
+        <item name="android:textColorPrimary">@color/material_on_surface_emphasis_high_type</item>
+        <item name="android:textColorSecondary">@color/material_on_surface_emphasis_medium</item>
+        <item name="android:textColorLink">?colorSecondary</item>
+
+        <!--Material type attributes-->
+        <item name="textAppearanceButton">@style/TextAppearance.AppTheme.Button</item>
+        <item name="textAppearanceBody1">@style/TextAppearance.AppTheme.Body1</item>
+        <item name="textAppearanceBody2">@style/TextAppearance.AppTheme.Body2</item>
+        <item name="textAppearanceCaption">@style/TextAppearance.AppTheme.Caption</item>
+        <item name="textAppearanceSubtitle1">@style/TextAppearance.AppTheme.Subtitle1</item>
+        <item name="textAppearanceSubtitle2">@style/TextAppearance.AppTheme.Subtitle2</item>
+        <item name="textAppearanceHeadline1">@style/TextAppearance.AppTheme.Headline1</item>
+        <item name="textAppearanceHeadline2">@style/TextAppearance.AppTheme.Headline2</item>
+        <item name="textAppearanceHeadline3">@style/TextAppearance.AppTheme.Headline3</item>
+        <item name="textAppearanceHeadline5">@style/TextAppearance.AppTheme.Headline5</item>
+        <item name="textAppearanceHeadline6">@style/TextAppearance.AppTheme.Headline6</item>
+
+        <!--Material shape attributes-->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.AppTheme.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.AppTheme.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.AppTheme.LargeComponent</item>
+
+        <item name="alphaEmphasisHigh">@dimen/material_emphasis_high_type</item>
+        <item name="alphaEmphasisMedium">@dimen/material_emphasis_medium</item>
+        <item name="alphaEmphasisDisabled">@dimen/material_emphasis_disabled</item>
+
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/color_status_bar</item>
+
+        <!--Component styles-->
+        <item name="materialButtonStyle">@style/Widget.AppTheme.Button</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.AppTheme.Button.OutlinedButton</item>
+        <item name="materialCardViewStyle">@style/Widget.MaterialComponents.CardView</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog</item>
+
+        <item name="checkboxStyle">@style/Widget.MaterialComponents.CompoundButton.CheckBox</item>
+
+        <item name="popupMenuStyle">@style/Widget.MaterialComponents.PopupMenu</item>
+        <item name="android:contextPopupMenuStyle">@style/Widget.MaterialComponents.PopupMenu.ContextMenu</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.MaterialComponents.PopupMenu.Overflow</item>
+
+        <item name="appBarLayoutStyle">@style/Widget.MaterialComponents.AppBarLayout.Surface</item>
+        <item name="appBarElevation">@dimen/appbar_elevation</item>
+        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Surface</item>
+
+        <!-- Inner components parameters -->
+        <item name="dividerVertical">@drawable/bg_divider_vertical</item>
+        <item name="dividerVerticalSize">@dimen/divider_vertical_size</item>
+        <item name="cornerRadius">@dimen/corner_radius</item>
+
+        <item name="isNightMode">@bool/is_night_mode</item>
+
+        <item name="selectableItemBackgroundRounded">@drawable/selectable_item_rounded_background</item>
+    </style>
+
+    <style name="AppTheme.Translucent" parent="Base.AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowContentOverlay">@null</item>
+
+        <item name="android:windowIsFloating">false</item>
+
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <style name="AppTheme.Splash">
+        <item name="colorPrimaryDark">@color/black_alpha_30</item>
+        <item name="android:windowBackground">@drawable/branded_logo</item>
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
+    </style>
+
+    <style name="ThemeOverlay.AppTheme.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@color/color_background</item>
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+
+    <style name="ThemeOverlay.Dark" parent="ThemeOverlay.MaterialComponents.Dark">
+        <item name="colorPrimary">@color/grey04</item>
+        <item name="colorOnPrimary">@color/color_brown_700</item>
+        <item name="colorSurface">@color/color_overlay_dark_surface</item>
+        <item name="android:textColorPrimary">@color/material_on_surface_emphasis_high_type</item>
+        <item name="android:textColorSecondary">@color/material_on_surface_emphasis_medium</item>
+    </style>
+
+    <style name="ThemeOverlay.Brown" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorOnSecondary">@color/color_overlay_brown</item>
+        <item name="colorSecondary">@color/color_overlay_brown</item>
+    </style>
+
+    <style name="ThemeOverlay.Green" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorPrimary">@color/color_overlay_green</item>
+        <item name="colorOnSurface">@color/color_overlay_green</item>
+    </style>
+
+    <style name="ThemeOverlay.Secondary.Green" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorSecondary">@color/color_overlay_green</item>
+    </style>
+
+    <style name="ThemeOverlay.Violet" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorPrimary">@color/color_overlay_violet</item>
+        <item name="colorOnSurface">@color/color_overlay_violet</item>
+    </style>
+</resources>

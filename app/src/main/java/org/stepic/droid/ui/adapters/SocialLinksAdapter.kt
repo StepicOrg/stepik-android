@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.social_item.view.*
+import kotlinx.android.synthetic.main.item_social.view.*
 import org.stepic.droid.R
 import org.stepic.droid.social.SocialMedia
 import org.stepic.droid.ui.util.inflate
@@ -16,7 +16,7 @@ class SocialLinksAdapter(
 ) : RecyclerView.Adapter<SocialLinksAdapter.SocialViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SocialViewHolder =
-        SocialViewHolder(parent.inflate(R.layout.social_item, false))
+        SocialViewHolder(parent.inflate(R.layout.item_social, false))
 
     override fun getItemCount(): Int =
         socialLinks.size

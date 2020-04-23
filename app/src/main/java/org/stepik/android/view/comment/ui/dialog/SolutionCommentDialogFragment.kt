@@ -19,6 +19,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.model.DiscountingPolicyType
@@ -84,7 +85,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
         injectComponent()
     }
 
@@ -130,7 +131,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.text = getString(R.string.comment_solution_pattern, submission.id)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         val state =
             StepQuizView.State.AttemptLoaded(
@@ -213,7 +214,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
             }
     }
 }

@@ -3,7 +3,7 @@ package org.stepic.droid.core.presenters.contracts
 import org.stepic.droid.persistence.model.StorageLocation
 
 interface StoreManagementView {
-    fun setStorageOptions(options: List<StorageLocation>)
+    fun setStorageOptions(options: List<StorageLocation>, selectedOption: StorageLocation?)
     fun setUpClearCacheButton(cacheSize: Long)
 
     fun showLoading(isMove: Boolean = false)

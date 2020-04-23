@@ -28,10 +28,10 @@ import org.stepic.droid.code.highlight.syntaxhighlight.ParseResult
 import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
-import org.stepic.droid.util.DpPixelsHelper
 import org.stepic.droid.util.RxEmpty
 import org.stepic.droid.util.RxOptional
 import org.stepic.droid.util.substringOrNull
+import org.stepic.droid.util.toPx
 import org.stepic.droid.util.unwrapOptional
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -61,7 +61,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     @Inject
     lateinit var analytic: Analytic
 
-    private val LINE_NUMBERS_MARGIN_PX = DpPixelsHelper.convertDpToPixel(LINE_NUMBERS_MARGIN_DP).toInt()
+    private val LINE_NUMBERS_MARGIN_PX = LINE_NUMBERS_MARGIN_DP.toPx().toInt()
 
     private val highlightPublisher = PublishSubject.create<Editable>()
     private val spanPublisher = BehaviorSubject.create<List<ParseResult>>()

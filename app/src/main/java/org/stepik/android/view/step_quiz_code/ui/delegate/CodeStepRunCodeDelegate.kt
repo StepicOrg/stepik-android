@@ -7,7 +7,7 @@ import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import androidx.appcompat.widget.ListPopupWindow
-import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isGone
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_run_code.view.*
@@ -16,13 +16,12 @@ import org.stepic.droid.code.ui.CodeEditorLayout
 import org.stepic.droid.model.code.ProgrammingLanguage
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.PopupHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.presentation.step_quiz_code.StepQuizRunCodeView
-import org.stepik.android.view.step_quiz_code.model.CodeOutputColors
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.getDrawableCompat
-import ru.nobird.android.view.base.ui.extension.setTextColorRes
 import ru.nobird.android.view.base.ui.extension.snackbar
 
 class CodeStepRunCodeDelegate(
@@ -104,13 +103,7 @@ class CodeStepRunCodeDelegate(
 
         val popupWindow = ListPopupWindow(context)
 
-        popupWindow.setAdapter(
-            ArrayAdapter<String>(
-                context,
-                R.layout.run_code_spinner_item,
-                inputSamples
-            )
-        )
+        popupWindow.setAdapter(ArrayAdapter(context, R.layout.run_code_spinner_item, inputSamples))
 
         popupWindow.setOnItemClickListener { _, _, position, _ ->
             val sampleInput = samples[position].first()
@@ -123,11 +116,6 @@ class CodeStepRunCodeDelegate(
         popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
 
         runCodeInputSamplePicker.setOnClickListener { popupWindow.show() }
-        runCodeInputSamplePicker.supportCompoundDrawablesTintList =
-            ContextCompat.getColorStateList(context, R.color.color_step_quiz_code_samples)
-
-        runCodeAction.supportCompoundDrawablesTintList =
-            ContextCompat.getColorStateList(context, R.color.color_step_submit_button_text)
 
         runCodeAction.setOnClickListener {
             codeRunPresenter.createUserCodeRun(
@@ -143,6 +131,8 @@ class CodeStepRunCodeDelegate(
         evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_2), EVALUATION_FRAME_DURATION_MS)
         evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_3), EVALUATION_FRAME_DURATION_MS)
         evaluationDrawable.isOneShot = false
+
+        DrawableCompat.setTint(evaluationDrawable, context.resolveColorAttribute(R.attr.colorSecondary))
 
         runCodeFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
         evaluationDrawable.start()
@@ -168,7 +158,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun showNetworkError() {
-        runCodeScrollView.snackbar(messageRes = R.string.connectionProblems) { setTextColorRes(R.color.white) }
+        runCodeScrollView.snackbar(messageRes = R.string.connectionProblems)
     }
 
     override fun showRunCodePopup() {
@@ -186,7 +176,7 @@ class CodeStepRunCodeDelegate(
     }
 
     override fun showEmptyCodeError() {
-        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code) { setTextColorRes(R.color.white) }
+        runCodeScrollView.snackbar(messageRes = R.string.step_quiz_code_empty_code)
     }
 
     fun onDetach() {
@@ -194,13 +184,15 @@ class CodeStepRunCodeDelegate(
     }
 
     private fun resolveOutputText(userCodeRun: UserCodeRun) {
+        val isError = userCodeRun.status == UserCodeRun.Status.FAILURE
+        runCodeOutputDataTitle.isActivated = isError
+        runCodeOutputDataSample.isActivated = isError
+
         when (userCodeRun.status) {
             UserCodeRun.Status.SUCCESS -> {
-                setOutputTextColor(CodeOutputColors.STANDARD)
                 setOutputText(userCodeRun.stdout)
             }
             UserCodeRun.Status.FAILURE -> {
-                setOutputTextColor(CodeOutputColors.ERROR)
                 if (lang == ProgrammingLanguage.SQL.serverPrintableName) {
                     setOutputText(userCodeRun.stdout)
                 } else {
@@ -210,13 +202,6 @@ class CodeStepRunCodeDelegate(
             else ->
                 return
         }
-    }
-
-    private fun setOutputTextColor(codeOutputColors: CodeOutputColors) {
-        runCodeOutputDataTitle.setTextColor(ContextCompat.getColor(context, codeOutputColors.titleColor))
-        runCodeOutputDataSample.setTextColor(ContextCompat.getColor(context, codeOutputColors.bodyColor))
-        runCodeOutputDataTitle.setBackgroundColor(ContextCompat.getColor(context, codeOutputColors.backgroundColor))
-        runCodeOutputDataSample.setBackgroundColor(ContextCompat.getColor(context, codeOutputColors.backgroundColor))
     }
 
     private fun setOutputText(text: String?) {

@@ -4,8 +4,8 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -30,8 +30,8 @@ class WantMoveDataDialog : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         App.component().inject(this)
 
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(R.string.title_confirmation)
+        val builder = MaterialAlertDialogBuilder(requireContext())
+            .setTitle(R.string.title_confirmation)
             .setMessage(R.string.move_data_explanation)
             .setPositiveButton(R.string.yes) { _, _ ->
                 analytic.reportEvent(Analytic.Interaction.TRANSFER_DATA_YES)

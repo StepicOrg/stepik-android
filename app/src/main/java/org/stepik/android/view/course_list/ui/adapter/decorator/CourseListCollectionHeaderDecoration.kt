@@ -4,7 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.model.CollectionDescriptionColors
@@ -39,7 +39,7 @@ class CourseListCollectionHeaderDecoration(
 
             view.setPlaceholderText(headerText)
             view.setBackgroundResource(collectionDescriptionColors.backgroundResSquared)
-            view.setTextColor(ContextCompat.getColor(parent.context, collectionDescriptionColors.textColorRes))
+            view.setTextColor(AppCompatResources.getColorStateList(parent.context, collectionDescriptionColors.textColorRes))
 
             val widthSpec = View.MeasureSpec.makeMeasureSpec(parent.measuredWidth, View.MeasureSpec.EXACTLY)
             val heightSpec = View.MeasureSpec.makeMeasureSpec(parent.measuredHeight, View.MeasureSpec.UNSPECIFIED)

@@ -36,9 +36,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:contentDescription="@string/comment_action_create"
-        android:src="@drawable/ic_create_white_24dp"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        app:srcCompat="@drawable/ic_edit"
         app:useCompatPadding="true"
-        app:backgroundTint="@color/green01"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
         app:layout_anchorGravity="bottom|right|end" />
 

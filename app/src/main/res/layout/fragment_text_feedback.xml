@@ -58,10 +58,7 @@
                     android:scrollbars="vertical"/>
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/silver"/>
+            <include layout="@layout/view_divider_vertical" />
 
             <EditText
                 android:id="@+id/feedbackFormEditText"

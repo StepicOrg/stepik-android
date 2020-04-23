@@ -2,6 +2,7 @@
 <androidx.appcompat.widget.AppCompatTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:drawablePadding="8dp"
@@ -9,11 +10,9 @@
     android:paddingBottom="8dp"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:textSize="14sp"
+    android:textAppearance="?textAppearanceBody2"
     android:gravity="center_vertical"
-    android:textColor="@color/new_accent_color"
-    app:fontFamily="@font/roboto_medium"
     app:drawableLeftCompat="@drawable/ic_certificate"
     app:drawableStartCompat="@drawable/ic_certificate"
     android:background="?selectableItemBackground"
-    android:letterSpacing="0.02" />
+    tools:text="Certificate with distinction" />

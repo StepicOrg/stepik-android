@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/selectable_item_rounded_background"
+    android:background="?selectableItemBackgroundRounded"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/course_info_instructor_item_padding">
@@ -12,7 +12,9 @@
         android:id="@+id/instructorIconMask"
         android:layout_width="@dimen/course_info_instructor_icon_size"
         android:layout_height="@dimen/course_info_instructor_icon_size"
-        app:borderRadius="@dimen/course_widget_radius">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:borderRadius="?cornerRadius">
         <ImageView
             android:id="@+id/instructorIcon"
             android:layout_width="@dimen/course_info_instructor_icon_size"
@@ -22,34 +24,32 @@
 
     <TextView
         android:id="@+id/instructorTitle"
-        app:fontFamily="@font/roboto_medium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
+        android:textAppearance="?textAppearanceSubtitle2"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:gravity="start|center_vertical"
-        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/instructorIconMask"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/instructorIconMask"
         app:layout_constraintTop_toTopOf="@+id/instructorIconMask"
-        tools:ignore="missingPrefix" />
+        tools:text="Игорь Капырин" />
 
     <TextView
         android:id="@+id/instructorDescription"
-        app:fontFamily="@font/roboto_light"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
         android:layout_marginTop="12dp"
         android:lineSpacingExtra="4sp"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/instructorIconMask"
-        tools:ignore="missingPrefix" />
+        tools:text="Samsung AI Center" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

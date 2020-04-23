@@ -3,14 +3,12 @@ package org.stepic.droid.ui.adapters
 import android.content.Context
 import android.text.Spannable
 import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
+import android.text.style.BackgroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.search_query_item.view.*
 import org.stepic.droid.R
@@ -19,8 +17,9 @@ import org.stepic.droid.base.App
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.listeners.OnItemClickListener
+import org.stepic.droid.ui.util.inflate
+import org.stepic.droid.util.resolveColorAttribute
 import javax.inject.Inject
-
 
 class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQueriesAdapter.SearchQueryViewHolder>(), OnItemClickListener {
     @Inject
@@ -52,7 +51,7 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
 
     var searchView: SearchView? = null
 
-    private val querySpan = ForegroundColorSpan(ContextCompat.getColor(context, R.color.search_view_suggestions_prefix_color))
+    private val querySpan = BackgroundColorSpan(context.resolveColorAttribute(R.attr.colorControlHighlight))
 
     override fun onBindViewHolder(holder: SearchQueryViewHolder, p: Int) {
         val (query, source) = items[p]
@@ -61,10 +60,8 @@ class SearchQueriesAdapter(context: Context) : RecyclerView.Adapter<SearchQuerie
         holder.searchQuery.text = query
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchQueryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.search_query_item, parent, false)
-        return SearchQueryViewHolder(view, this)
-    }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchQueryViewHolder =
+        SearchQueryViewHolder(parent.inflate(R.layout.search_query_item, false), this)
 
     override fun onItemClick(position: Int) {
         if (position < 0 || position >= items.size) {

@@ -3,37 +3,34 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/share_item_padding"
         android:text="@string/share_title"
-        android:textColor="@color/stepic_weak_text"/>
+        android:textColor="?android:textColorSecondary" />
 
     <TextView
         android:id="@+id/share_certificate_add_linkedin"
         style="@style/BottomSheetShareItem"
         android:drawableLeft="@drawable/ic_linkedin"
         android:drawableStart="@drawable/ic_linkedin"
-        android:text="@string/add_to_linkedin"
-        />
+        android:text="@string/add_to_linkedin" />
 
     <TextView
         android:id="@+id/share_certificate_copy_link"
         style="@style/BottomSheetShareItem"
         android:drawableLeft="@drawable/ic_content_copy_material_24"
         android:drawableStart="@drawable/ic_content_copy_material_24"
-        android:text="@string/copy_link_title"
-        />
+        android:text="@string/copy_link_title" />
 
     <TextView
         android:id="@+id/share_certificate_all"
         style="@style/BottomSheetShareItem"
         android:drawableLeft="@drawable/ic_share_material_24px"
         android:drawableStart="@drawable/ic_share_material_24px"
-        android:text="@string/certificate_share_share_link"/>
+        android:text="@string/certificate_share_share_link" />
 
 </LinearLayout>

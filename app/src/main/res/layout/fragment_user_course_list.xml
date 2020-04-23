@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/courseListTitle"
-                app:fontFamily="@font/roboto_regular"
+                android:textAppearance="?textAppearanceSubtitle1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/course_list_side_padding"
@@ -47,15 +47,12 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:paddingBottom="@dimen/course_carousel_title_bottom_padding"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/course_carousel_title"
                 android:visibility="visible"
                 tools:ignore="MissingPrefix"
                 tools:text="@string/my_courses_title"/>
 
             <TextView
                 android:id="@+id/coursesCarouselCount"
-                app:fontFamily="@font/roboto_regular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/courseListTitle"
@@ -64,8 +61,8 @@
                 android:ellipsize="end"
                 android:lines="1"
                 android:padding="0dp"
-                android:textColor="@color/view_all_course_list_color"
-                android:textSize="16sp"
+                android:textAppearance="?textAppearanceBody2"
+                android:textColor="?android:textColorSecondary"
                 android:visibility="visible"
                 tools:ignore="MissingPrefix"
                 tools:text="10 courses"/>

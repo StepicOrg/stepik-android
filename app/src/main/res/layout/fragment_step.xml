@@ -16,11 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <View
+        <include
             android:id="@+id/stepContentSeparator"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/step_quiz_separator" />
+            layout="@layout/view_divider_vertical" />
 
         <include
             android:id="@+id/stepQuizError"
@@ -51,10 +49,7 @@
             android:id="@+id/stepDiscussions"
             layout="@layout/view_step_discussion" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/step_quiz_separator" />
+        <include layout="@layout/view_divider_vertical" />
 
         <include
             android:id="@+id/stepSolutions"

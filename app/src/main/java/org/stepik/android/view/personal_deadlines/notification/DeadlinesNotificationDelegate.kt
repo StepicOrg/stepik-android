@@ -9,8 +9,8 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesNotificationInteractor
 import org.stepik.android.view.course.ui.activity.CourseActivity
@@ -75,7 +75,7 @@ constructor(
         if (course == null || section == null) return
 
         val largeIcon = notificationHelper.getPictureByCourse(course)
-        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+        val colorArgb = context.resolveColorAttribute(R.attr.colorSecondary)
 
         val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 

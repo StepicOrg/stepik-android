@@ -12,7 +12,7 @@
         android:layout_width="@dimen/comment_user_image_size"
         android:layout_height="@dimen/comment_user_image_size"
         android:layout_margin="@dimen/comment_item_margin"
-        app:borderRadius="@dimen/course_image_radius"
+        app:borderRadius="?cornerRadius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <androidx.appcompat.widget.AppCompatImageView
@@ -28,6 +28,7 @@
         android:layout_height="wrap_content"
         android:background="?selectableItemBackgroundBorderless"
         app:srcCompat="@drawable/ic_more_without_padding"
+        app:tint="?colorControlNormal"
 
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
@@ -62,10 +63,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:textSize="16sp"
-        android:textColor="@color/new_accent_color"
-
-        app:fontFamily="@font/roboto_bold"
+        android:textAppearance="?textAppearanceSubtitle1"
 
         app:layout_constraintStart_toEndOf="@id/commentUserIconMask"
         app:layout_constraintTop_toBottomOf="@id/commentTags"
@@ -91,8 +89,8 @@
         app:layout_constraintTop_toBottomOf="@id/commentUserName"
         app:layout_constraintEnd_toEndOf="parent"
 
-        android:textSize="16sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody1"
+        android:textColor="?android:textColorSecondary"
         android:textIsSelectable="true"
 
         android:layout_marginTop="8dp"
@@ -116,6 +114,8 @@
         android:layout_marginLeft="@dimen/comment_item_margin"
         android:layout_marginRight="@dimen/comment_item_margin"
 
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         tools:drawableStart="@drawable/ic_step_quiz_wrong_wide"
 
         tools:text="Решение 31293193128392" />

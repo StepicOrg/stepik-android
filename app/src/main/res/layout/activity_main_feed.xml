@@ -5,16 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigationView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_navigation_height"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/white"
-        app:accentColor="@color/new_accent_color"
-        app:inactiveColor="@color/new_accent_color_alpha_40" />
-
+        app:labelVisibilityMode="labeled"
+        android:layout_alignParentBottom="true"
+        app:itemTextAppearanceInactive="@style/TextAppearance.AppTheme.Caption.Small"
+        app:itemIconTint="@color/color_bottom_navigation_tint"
+        app:itemTextColor="@color/color_bottom_navigation_tint"
+        app:menu="@menu/drawer_menu" />
 
     <FrameLayout
         android:id="@+id/frame"

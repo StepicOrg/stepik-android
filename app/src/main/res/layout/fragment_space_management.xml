@@ -1,125 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/old_cover"
     android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="50dp">
+        android:orientation="vertical">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="@dimen/settings_offset_horizontal"
+            android:textAppearance="?textAppearanceBody2"
+            android:textColor="?android:textColorSecondary"
             android:text="@string/clear_cache_explanation"/>
 
-        <androidx.cardview.widget.CardView
+        <include layout="@layout/view_divider_vertical" />
+
+        <LinearLayout
             android:id="@+id/clearCacheButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@color/white"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="@drawable/non_radius_foreground"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp">
+            android:background="?selectableItemBackground"
+            android:orientation="vertical"
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            android:paddingLeft="@dimen/settings_offset_horizontal"
+            android:paddingRight="@dimen/settings_offset_horizontal"
+            android:paddingTop="@dimen/settings_offset_vertical"
+            android:paddingBottom="@dimen/settings_offset_vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:gravity="center_vertical"
+                android:text="@string/clear_cache_title"
+                android:theme="@style/ThemeOverlay.Brown"
+                android:textAppearance="?textAppearanceButton" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/clearCacheLabel"
-                    android:layout_toStartOf="@+id/clearCacheLabel"
-                    android:gravity="center_vertical"
-                    android:text="@string/clear_cache_title"
-                    android:textSize="16sp"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/clearCacheLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textAppearance="?textAppearanceBody2"
+                android:textColor="?android:textColorSecondary"
+                tools:text="100MB" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/clearCacheLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:gravity="center_vertical"
-                    android:textColor="?colorAccent"
-                    android:textSize="16sp"
-                    tools:text="100MB"/>
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
+        <include layout="@layout/view_divider_vertical" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/notMountExplanation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="@dimen/settings_offset_horizontal"
+            android:textAppearance="?textAppearanceBody2"
+            android:textColor="?android:textColorSecondary"
             android:text="@string/notMountExplanation"
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/mountExplanation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
+            android:padding="@dimen/settings_offset_horizontal"
+            android:textAppearance="?textAppearanceBody2"
+            android:textColor="?android:textColorSecondary"
             android:text="@string/mountExplanation"
             android:visibility="gone"
             tools:visibility="visible"/>
 
-        <androidx.cardview.widget.CardView
+        <include layout="@layout/view_divider_vertical" />
+
+        <LinearLayout
             android:id="@+id/chooseStorageButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@color/white"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="@drawable/non_radius_foreground"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="0dp"
-            tools:visibility="visible">
+            android:background="?selectableItemBackground"
+            android:orientation="vertical"
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            android:paddingLeft="@dimen/settings_offset_horizontal"
+            android:paddingRight="@dimen/settings_offset_horizontal"
+            android:paddingTop="@dimen/settings_offset_vertical"
+            android:paddingBottom="@dimen/settings_offset_vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:gravity="center_vertical"
+                android:text="@string/choose_storage_title"
+                android:textAppearance="?textAppearanceBody1"
+                android:textSize="16sp"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_toLeftOf="@+id/userStorageInfo"
-                    android:layout_toStartOf="@+id/userStorageInfo"
-                    android:gravity="center_vertical"
-                    android:text="@string/choose_storage_title"
-                    android:textSize="16sp"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/userStorageInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textAppearance="?textAppearanceBody2"
+                android:textColor="?android:textColorSecondary"
+                tools:text="Default" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/userStorageInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:gravity="center_vertical"
-                    android:textColor="?colorAccent"
-                    android:textSize="16sp"
-                    tools:text="Default"/>
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
+        <include layout="@layout/view_divider_vertical" />
     </LinearLayout>
 </ScrollView>
