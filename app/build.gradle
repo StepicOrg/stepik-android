@@ -145,6 +145,9 @@ dependencies {
     implementation libraries.retrofit
     implementation libraries.retrofitGsonConverter
     implementation libraries.retrofitRxJavaAdapter
+    implementation (libraries.okhttp) {
+        force = true
+    }
     implementation libraries.jsoup
     debugImplementation libraries.stetho
     debugImplementation libraries.stethoOkHttp

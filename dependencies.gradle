@@ -42,6 +42,7 @@ ext.versions = [
         viewKit              : '1.0.1',
 
         retrofit             : '2.6.1',
+        okhttp               : '3.12.8',
         gson                 : '2.8.5',
         jsoup                : '1.12.1',
 
@@ -151,6 +152,7 @@ ext.libraries = [
         retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",
         retrofitRxJavaAdapter: "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
+        okhttp               : "com.squareup.okhttp3:okhttp:$versions.okhttp",
         gson                 : "com.google.code.gson:gson:$versions.gson",
         jsoup                : "org.jsoup:jsoup:$versions.jsoup",
         stetho               : "com.facebook.stetho:stetho:$versions.stetho",
