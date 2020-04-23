@@ -3,6 +3,7 @@ package org.stepic.droid.base
 import android.content.Context
 import android.os.Build
 import android.webkit.WebView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
@@ -23,6 +24,7 @@ import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.DaggerAppCoreComponent
 import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
@@ -70,6 +72,9 @@ class App : MultiDexApplication() {
     //don't use this field, it is just for init ASAP in background thread
     @Inject
     internal lateinit var codeParserContainer: ParserContainer
+
+    @Inject
+    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     override fun onCreate() {
         super.onCreate()
@@ -130,6 +135,7 @@ class App : MultiDexApplication() {
 
         Branch.getAutoInstance(this)
         initChannels()
+        initNightMode()
     }
 
     private fun initSSL() {
@@ -145,5 +151,9 @@ class App : MultiDexApplication() {
 
     private fun initChannels() {
         NotificationChannelInitializer.initNotificationChannels(this)
+    }
+
+    private fun initNightMode() {
+        AppCompatDelegate.setDefaultNightMode(sharedPreferenceHelper.nightMode)
     }
 }
