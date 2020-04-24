@@ -85,7 +85,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
         courseListTitleContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
+        courseListPlaceholderEmpty.setPlaceholderText(R.string.courses_carousel_my_courses_empty)
         courseListPlaceholderNoConnection.setOnClickListener {
             courseListPresenter.fetchUserCourses(forceUpdate = true)
         }

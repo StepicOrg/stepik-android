@@ -250,20 +250,26 @@ constructor(
         val newItems = oldCourseListState.courseListDataItems.mutate { removeAt(index) }
 
         val publishUserCourses =
-            if (newItems.size > 1) {
+            if (newItems.isNotEmpty()) {
                 UserCoursesLoaded.FirstCourse(newItems.first())
             } else {
                 UserCoursesLoaded.Empty
             }
 
+        val courseListViewState = if (newItems.isNotEmpty()) {
+            oldCourseListState.copy(
+                courseListDataItems = newItems,
+                courseListItems = newItems
+            )
+        } else {
+            CourseListView.State.Empty
+        }
+
         userCoursesLoadedPublisher.onNext(publishUserCourses)
 
         state = oldState.copy(
             userCourses = oldState.userCourses.drop(1),
-            courseListViewState = oldCourseListState.copy(
-                courseListDataItems = newItems,
-                courseListItems = newItems
-            )
+            courseListViewState = courseListViewState
         )
     }
 
