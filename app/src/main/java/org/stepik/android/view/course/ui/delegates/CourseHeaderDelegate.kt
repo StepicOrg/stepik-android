@@ -1,9 +1,12 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -191,12 +194,6 @@ class CourseHeaderDelegate(
     }
 
     fun onOptionsMenuCreated(menu: Menu) {
-        dropCourseMenuItem = menu.findItem(R.id.drop_course)
-        dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState == EnrollmentState.Enrolled
-
-        shareCourseMenuItem = menu.findItem(R.id.share_course)
-        shareCourseMenuItem?.isVisible = courseHeaderData != null
-
         favoriteCourseMenuItem = menu.findItem(R.id.favorite_course)
         favoriteCourseMenuItem?.isVisible = courseHeaderData != null
         favoriteCourseMenuItem?.title = if (courseHeaderData?.userCourse?.isFavorite == true) {
@@ -212,6 +209,15 @@ class CourseHeaderDelegate(
         } else {
             courseActivity.getString(R.string.course_add_to_archive)
         }
+
+        dropCourseMenuItem = menu.findItem(R.id.drop_course)
+        dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState == EnrollmentState.Enrolled
+        val dropCourseMenuItemSpan = SpannableString(dropCourseMenuItem?.title)
+        dropCourseMenuItemSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(courseActivity, R.color.color_red_500)), 0, dropCourseMenuItemSpan.length, 0)
+        dropCourseMenuItem?.title = dropCourseMenuItemSpan
+
+        shareCourseMenuItem = menu.findItem(R.id.share_course)
+        shareCourseMenuItem?.isVisible = courseHeaderData != null
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
         restorePurchaseCourseMenuItem?.isVisible = false // courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp

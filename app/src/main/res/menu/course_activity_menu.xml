@@ -2,14 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/drop_course"
-        android:title="@string/drop_course"/>
+        android:id="@+id/favorite_course"
+        android:title="@string/course_add_to_favorites" />
     <item
         android:id="@+id/archive_course"
         android:title="@string/course_add_to_archive"/>
     <item
-        android:id="@+id/favorite_course"
-        android:title="@string/course_add_to_favorites" />
+        android:id="@+id/drop_course"
+        android:title="@string/drop_course"/>
     <item
         android:id="@+id/share_course"
         android:title="@string/share_title"
