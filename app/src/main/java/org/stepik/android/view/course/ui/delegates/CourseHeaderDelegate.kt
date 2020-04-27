@@ -6,7 +6,6 @@ import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -22,6 +21,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.getAllQueryParameters
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.presentation.course.CoursePresenter
@@ -53,6 +53,8 @@ class CourseHeaderDelegate(
 
     private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
     private val courseProgressDelegate = CourseProgressDelegate(courseActivity.courseProgress, onSubmissionCountClicked, isLocalSubmissionsEnabled)
+
+    private val courseCollapsingToolbar = courseActivity.courseCollapsingToolbar
 
     private val viewStateDelegate = ViewStateDelegate<EnrollmentState>()
 
@@ -213,7 +215,7 @@ class CourseHeaderDelegate(
         dropCourseMenuItem = menu.findItem(R.id.drop_course)
         dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState == EnrollmentState.Enrolled
         val dropCourseMenuItemSpan = SpannableString(dropCourseMenuItem?.title)
-        dropCourseMenuItemSpan.setSpan(ForegroundColorSpan(ContextCompat.getColor(courseActivity, R.color.color_red_500)), 0, dropCourseMenuItemSpan.length, 0)
+        dropCourseMenuItemSpan.setSpan(ForegroundColorSpan(courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorError)), 0, dropCourseMenuItemSpan.length, 0)
         dropCourseMenuItem?.title = dropCourseMenuItemSpan
 
         shareCourseMenuItem = menu.findItem(R.id.share_course)
