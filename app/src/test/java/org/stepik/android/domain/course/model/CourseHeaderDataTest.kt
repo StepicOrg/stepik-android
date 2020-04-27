@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.stepic.droid.testUtils.assertThatObjectParcelable
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 
@@ -23,6 +24,15 @@ class CourseHeaderDataTest {
         val courseHeaderData = CourseHeaderData(
             courseId = 100,
             course = Course(id = 100),
+            userCourse = UserCourse(
+                id = 0,
+                user = 0,
+                course = 0,
+                isFavorite = false,
+                isPinned = false,
+                isArchived = false,
+                lastViewed = null
+            ),
             title = "title",
             cover = "cover",
             stats = CourseStats(
