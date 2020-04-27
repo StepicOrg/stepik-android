@@ -1,5 +1,6 @@
 package org.stepik.android.domain.course.interactor
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
@@ -7,6 +8,8 @@ import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
+import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
 import javax.inject.Inject
@@ -16,6 +19,7 @@ class CourseInteractor
 @Inject
 constructor(
     private val courseRepository: CourseRepository,
+    private val userCoursesRepository: UserCoursesRepository,
     private val solutionsInteractor: SolutionsInteractor,
     private val coursePublishSubject: BehaviorSubject<Course>,
     private val courseStatsInteractor: CourseStatsInteractor
@@ -40,14 +44,19 @@ constructor(
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
 
+    fun toggleUserCourse(userCourse: UserCourse): Completable =
+        userCoursesRepository.toggleUserCourse(userCourse)
+
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
         zip(
             courseStatsInteractor.getCourseStats(listOf(course)),
-            solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true)
-        ) { courseStats, localSubmissions ->
+            solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
+            userCoursesRepository.getUserCourse(course.id)
+        ) { courseStats, localSubmissions, userCourse ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
+                userCourse = userCourse,
                 title = course.title ?: "",
                 cover = course.cover ?: "",
 

@@ -4,14 +4,16 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourse
 
 interface UserCoursesRepository {
     fun getUserCourses(page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<UserCourse>>
+    fun toggleUserCourse(userCourse: UserCourse): Completable
 
     /***
      *  Cached purpose only
      */
+    fun getUserCourse(courseId: Long): Single<UserCourse>
     fun addUserCourse(userCourse: UserCourse): Completable
     fun removeUserCourse(courseId: Long): Completable
 }

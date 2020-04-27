@@ -5,6 +5,12 @@
         android:id="@+id/drop_course"
         android:title="@string/drop_course"/>
     <item
+        android:id="@+id/archive_course"
+        android:title="@string/course_add_to_archive"/>
+    <item
+        android:id="@+id/favorite_course"
+        android:title="@string/course_add_to_favorites" />
+    <item
         android:id="@+id/share_course"
         android:title="@string/share_title"
         android:icon="@drawable/ic_share_dark"

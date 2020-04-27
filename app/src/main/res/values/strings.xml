@@ -655,6 +655,11 @@
 
     <string name="course_purchase_link_chooser_title">Open with</string>
 
+    <string name="course_add_to_archive">Move to Archived</string>
+    <string name="course_add_to_favorites">Add to Favorites</string>
+
+    <string name="course_remove_from_archive">Remove from Archived</string>
+    <string name="course_remove_from_favorites">Remove from Favorites</string>
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
     <string name="video_player_control_notification_channel_description">Control panel of video player</string>

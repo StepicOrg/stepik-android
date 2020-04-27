@@ -12,7 +12,7 @@ import org.stepik.android.domain.personal_deadlines.repository.DeadlinesReposito
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
-import org.stepik.android.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException
 import retrofit2.Response

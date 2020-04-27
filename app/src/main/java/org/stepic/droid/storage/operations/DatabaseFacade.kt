@@ -23,6 +23,7 @@ import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
 import org.stepik.android.model.attempts.Attempt

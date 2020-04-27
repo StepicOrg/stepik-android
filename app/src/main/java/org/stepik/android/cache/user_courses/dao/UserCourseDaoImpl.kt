@@ -8,7 +8,7 @@ import org.stepic.droid.util.getBoolean
 import org.stepic.droid.util.getDate
 import org.stepic.droid.util.getLong
 import org.stepik.android.cache.user_courses.structure.DbStructureUserCourse
-import org.stepik.android.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourse
 import javax.inject.Inject
 
 class UserCourseDaoImpl

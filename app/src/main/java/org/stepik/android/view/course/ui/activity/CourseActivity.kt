@@ -310,6 +310,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             }
         }
         viewStateDelegate.switchState(state)
+        invalidateOptionsMenu()
     }
 
     override fun showEmptyAuthDialog(course: Course) {

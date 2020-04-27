@@ -44,6 +44,8 @@ class CourseHeaderDelegate(
 
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
+    private var favoriteCourseMenuItem: MenuItem? = null
+    private var archiveCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
     private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
@@ -195,6 +197,22 @@ class CourseHeaderDelegate(
         shareCourseMenuItem = menu.findItem(R.id.share_course)
         shareCourseMenuItem?.isVisible = courseHeaderData != null
 
+        favoriteCourseMenuItem = menu.findItem(R.id.favorite_course)
+        favoriteCourseMenuItem?.isVisible = courseHeaderData != null
+        favoriteCourseMenuItem?.title = if (courseHeaderData?.userCourse?.isFavorite == true) {
+            courseActivity.getString(R.string.course_remove_from_favorites)
+        } else {
+            courseActivity.getString(R.string.course_add_to_favorites)
+        }
+
+        archiveCourseMenuItem = menu.findItem(R.id.archive_course)
+        archiveCourseMenuItem?.isVisible = courseHeaderData != null
+        archiveCourseMenuItem?.title = if (courseHeaderData?.userCourse?.isArchived == true) {
+            courseActivity.getString(R.string.course_remove_from_archive)
+        } else {
+            courseActivity.getString(R.string.course_add_to_archive)
+        }
+
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
         restorePurchaseCourseMenuItem?.isVisible = false // courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp
     }
@@ -211,6 +229,14 @@ class CourseHeaderDelegate(
                         )
                     )
                 }
+                true
+            }
+            R.id.favorite_course -> {
+                coursePresenter.toggleFavorite()
+                true
+            }
+            R.id.archive_course -> {
+                coursePresenter.toggleArchive()
                 true
             }
             R.id.share_course -> {

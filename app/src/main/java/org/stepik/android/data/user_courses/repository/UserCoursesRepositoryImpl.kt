@@ -8,7 +8,7 @@ import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
-import org.stepik.android.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourse
 import javax.inject.Inject
 
 class UserCoursesRepositoryImpl
@@ -38,6 +38,14 @@ constructor(
                 }
         }
     }
+
+    override fun toggleUserCourse(userCourse: UserCourse): Completable =
+        userCoursesRemoteDataSource
+            .toggleUserCourses(userCourse.id, userCourse)
+            .doOnComplete { userCoursesCacheDataSource.saveUserCourses(listOf(userCourse)) }
+
+    override fun getUserCourse(courseId: Long): Single<UserCourse> =
+        userCoursesCacheDataSource.getUserCourse(courseId)
 
     override fun addUserCourse(userCourse: UserCourse): Completable =
         userCoursesCacheDataSource.saveUserCourses(listOf(userCourse))

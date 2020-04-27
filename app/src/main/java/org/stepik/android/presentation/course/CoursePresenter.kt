@@ -21,6 +21,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
@@ -366,6 +367,47 @@ constructor(
             ?: return
 
         view?.shareCourse(course)
+    }
+
+    /**
+     * User course operations
+     */
+
+    fun toggleFavorite() {
+        (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.userCourse
+            ?.let { it.copy(isFavorite = !it.isFavorite) }
+            ?.let(::toggleUserCourse)
+            ?: return
+    }
+
+    fun toggleArchive() {
+        (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.userCourse
+            ?.let { it.copy(isArchived = !it.isArchived) }
+            ?.let(::toggleUserCourse)
+            ?: return
+    }
+
+    private fun toggleUserCourse(userCourse: UserCourse) {
+        compositeDisposable += courseInteractor
+            .toggleUserCourse(userCourse = userCourse)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    val oldState = (state as? CourseView.State.CourseLoaded)
+                        ?: return@subscribeBy
+
+                    val courseHeaderData = oldState
+                        .courseHeaderData
+                        .copy(userCourse = userCourse)
+                    state = CourseView.State.CourseLoaded(courseHeaderData)
+                },
+                onError = emptyOnErrorStub
+            )
     }
 
     /**
