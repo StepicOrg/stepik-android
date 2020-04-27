@@ -631,6 +631,8 @@
     <string name="course_remove_from_archive">Убрать из архива</string>
     <string name="course_remove_from_favorites">Убрать из избранного</string>
 
+    <string name="course_action_error">Произошла ошибка при совершении операции</string>
+
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
     <string name="video_player_control_notification_channel_description">Панель с управлением фоновым воспроизведеинем плеера</string>

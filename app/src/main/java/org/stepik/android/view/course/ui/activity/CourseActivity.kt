@@ -363,6 +363,10 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         courseHeaderDelegate.showCourseShareTooltip()
     }
 
+    override fun showSaveUserCourseError() {
+        coursePager.snackbar(messageRes = R.string.course_action_error)
+    }
+
     /**
      * BillingView
      */

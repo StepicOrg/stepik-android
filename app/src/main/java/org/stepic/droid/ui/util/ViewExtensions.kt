@@ -95,7 +95,6 @@ fun View.snackbar(@StringRes messageRes: Int, length: Int = Snackbar.LENGTH_SHOR
 fun View.snackbar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
     Snackbar
         .make(this, message, length)
-        .setTextColor(ContextCompat.getColor(context, R.color.white))
         .show()
 }
 

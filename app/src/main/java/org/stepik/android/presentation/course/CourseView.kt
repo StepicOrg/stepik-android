@@ -20,6 +20,7 @@ interface CourseView : CourseContinueView {
 
     fun showEmptyAuthDialog(course: Course)
     fun showEnrollmentError(errorType: EnrollmentError)
+    fun showSaveUserCourseError()
 
     fun shareCourse(course: Course)
     fun showCourseShareTooltip()

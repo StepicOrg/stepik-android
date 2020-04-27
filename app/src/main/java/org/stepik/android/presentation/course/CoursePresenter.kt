@@ -406,7 +406,7 @@ constructor(
                         .copy(userCourse = userCourse)
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                 },
-                onError = emptyOnErrorStub
+                onError = { view?.showSaveUserCourseError() }
             )
     }
 
