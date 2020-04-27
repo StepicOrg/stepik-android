@@ -147,14 +147,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         viewStateDelegate.addState<ProfileView.State.EmptyLogin>(profileEmptyLogin)
         viewStateDelegate.addState<ProfileView.State.NetworkError>(profileNetworkError)
 
-        (activity as? AppCompatActivity)
-            ?.apply { setSupportActionBar(toolbar) }
-            ?.supportActionBar
-            ?.apply {
-                setDisplayHomeAsUpEnabled(activity is CloseButtonInToolbar)
-                setDisplayShowTitleEnabled(false)
-            }
-
         profileStatsDelegate = ProfileStatsDelegate(view, analytic)
 
         ViewCompat.setElevation(header, resources.getDimension(R.dimen.profile_header_elevation))
@@ -240,6 +232,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
     override fun onStart() {
         super.onStart()
         profilePresenter.attachView(this)
+        (activity as? AppCompatActivity)
+            ?.apply { setSupportActionBar(toolbar) }
+            ?.supportActionBar
+            ?.apply {
+                setDisplayHomeAsUpEnabled(activity is CloseButtonInToolbar)
+                setDisplayShowTitleEnabled(false)
+            }
     }
 
     override fun onStop() {

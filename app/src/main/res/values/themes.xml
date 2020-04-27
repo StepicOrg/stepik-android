@@ -127,6 +127,7 @@
 
     <style name="ThemeOverlay.Green" parent="ThemeOverlay.MaterialComponents">
         <item name="colorPrimary">@color/color_overlay_green</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
         <item name="colorOnSurface">@color/color_overlay_green</item>
     </style>
 
