@@ -174,7 +174,10 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     }
 
     private fun setSignUpButtonState() {
-        signUpButton.isEnabled = emailField.text.isNotBlank() && firstNameField.text.isNotBlank() && passwordField.text.isNotBlank()
+        signUpButton.isEnabled =
+            emailField.text.isNullOrBlank() == false &&
+            firstNameField.text.isNullOrBlank() == false &&
+            passwordField.text.isNullOrBlank() == false
     }
 
     private fun initTitle() {

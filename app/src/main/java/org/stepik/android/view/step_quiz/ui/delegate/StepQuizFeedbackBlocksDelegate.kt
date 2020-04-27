@@ -1,13 +1,16 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
+import android.graphics.PorterDuff
 import android.graphics.drawable.AnimationDrawable
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_step_quiz_feedback_block.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepic.droid.ui.util.setTextViewBackgroundWithoutResettingPadding
 import org.stepic.droid.util.getDrawableCompat
 import org.stepik.android.view.step_quiz.model.StepQuizFeedbackState
@@ -50,19 +53,25 @@ class StepQuizFeedbackBlocksDelegate(
         stepQuizFeedbackEvaluation.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
         evaluationDrawable.start()
 
-        stepQuizFeedbackCorrect.setCompoundDrawables(start = R.drawable.ic_step_quiz_correct)
         if (hasReview) {
             stepQuizFeedbackCorrect.text = context.getString(R.string.review_warning)
             stepQuizFeedbackCorrect.setOnClickListener { onReviewClicked() }
         } else {
             stepQuizFeedbackCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_correct).random()
         }
-        stepQuizFeedbackCorrect.setTextViewBackgroundWithoutResettingPadding(R.drawable.bg_step_quiz_feedback_correct)
+        // todo fix ripple
+        stepQuizFeedbackCorrect.setTextViewBackgroundWithoutResettingPadding(R.drawable.bg_shape_rounded)
 
-        stepQuizFeedbackWrong.setCompoundDrawables(start = R.drawable.ic_step_quiz_wrong)
         stepQuizFeedbackWrong.setText(R.string.step_quiz_feedback_wrong_not_last_try)
 
-        stepQuizFeedbackValidation.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
+        stepQuizFeedbackHint.background = AppCompatResources
+            .getDrawable(context, R.drawable.bg_shape_rounded_bottom)
+            ?.mutate()
+            ?.let { DrawableCompat.wrap(it) }
+            ?.also {
+                DrawableCompat.setTint(it, ContextCompat.getColor(context, R.color.color_elevation_overlay_1dp))
+                DrawableCompat.setTintMode(it, PorterDuff.Mode.SRC_IN)
+            }
     }
 
     fun setState(state: StepQuizFeedbackState) {
@@ -78,7 +87,7 @@ class StepQuizFeedbackBlocksDelegate(
                         else ->
                             resources.getStringArray(R.array.step_quiz_feedback_correct).random()
                     }
-                setHint(stepQuizFeedbackCorrect, R.drawable.bg_step_quiz_feedback_correct, R.drawable.bg_step_quiz_feedback_correct_with_hint, state.hint)
+                setHint(stepQuizFeedbackCorrect, state.hint)
             }
 
             is StepQuizFeedbackState.Wrong -> {
@@ -90,7 +99,7 @@ class StepQuizFeedbackBlocksDelegate(
                         R.string.step_quiz_feedback_wrong_not_last_try
                     }
                 stepQuizFeedbackWrong.setText(stringRes)
-                setHint(stepQuizFeedbackWrong, R.drawable.bg_step_quiz_feedback_wrong, R.drawable.bg_step_quiz_feedback_wrong_with_hint, state.hint)
+                setHint(stepQuizFeedbackWrong, state.hint)
             }
 
             is StepQuizFeedbackState.Validation ->
@@ -100,17 +109,16 @@ class StepQuizFeedbackBlocksDelegate(
 
     private fun setHint(
         targetView: TextView,
-        @DrawableRes backgroundRes: Int,
-        @DrawableRes hintedBackgroundRes: Int,
         hint: String?
     ) {
-        if (hint != null) {
-            targetView.setTextViewBackgroundWithoutResettingPadding(hintedBackgroundRes)
-            stepQuizFeedbackHint.setText(hint)
-            stepQuizFeedbackHint.visibility = View.VISIBLE
-        } else {
-            targetView.setTextViewBackgroundWithoutResettingPadding(backgroundRes)
-            stepQuizFeedbackHint.visibility = View.GONE
-        }
+        stepQuizFeedbackHint.isVisible = hint != null
+        stepQuizFeedbackHint.setText(hint)
+        val backgroundShape =
+            if (hint != null) {
+                R.drawable.bg_shape_rounded_top
+            } else {
+                R.drawable.bg_shape_rounded
+            }
+        targetView.setTextViewBackgroundWithoutResettingPadding(backgroundShape)
     }
 }

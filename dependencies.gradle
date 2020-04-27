@@ -1,13 +1,13 @@
 ext.versions = [
-        code                 : 2096,
-        name                 : '1.120',
+        code                 : 2103,
+        name                 : '1.121',
 
         minSdk               : 16,
         targetSdk            : 28,
         compileSdk           : 28,
         buildTools           : '28.0.3',
 
-        androidGradlePlugin  : '3.5.2',
+        androidGradlePlugin  : '3.6.2',
         kotlin               : '1.3.41',
         googleServicesVersion: '4.2.0',
         fabric               : '1.31.0',
@@ -28,8 +28,10 @@ ext.versions = [
         ktx                  : '1.1.0',
         recyclerview         : '1.0.0',
         viewPager            : '1.0.0',
+        viewPager2           : '1.0.0',
         cardView             : '1.0.0',
         constraintLayout     : '1.1.3',
+        material             : '1.1.0',
 
         archComponents       : '2.1.0',
         media                : '1.1.0',
@@ -40,6 +42,7 @@ ext.versions = [
         viewKit              : '1.0.1',
 
         retrofit             : '2.6.1',
+        okhttp               : '3.12.8',
         gson                 : '2.8.5',
         jsoup                : '1.12.1',
 
@@ -68,15 +71,11 @@ ext.versions = [
 
         timber               : '4.7.1',
 
-        materialDialog       : '2.1',
-        materialDialogCore   : '0.9.6.0',
         numberPicker         : '1.2.1',
-        datePicker           : '3.1.0',
         photoView            : '2.3.0',
         recyclerAnimators    : '2.1.0',
         materialProgress     : '1.4.2',
         circleImageView      : '2.1.0',
-        ahbottomnavigation   : '2.1.0',
         circleIndicator      : '1.2.2@aar',
         confetti             : '1.1.2',
         MPAndroidChart       : 'v3.0.3',
@@ -136,8 +135,10 @@ ext.libraries = [
         ktx                  : "androidx.core:core-ktx:$versions.ktx",
         recyclerview         : "androidx.recyclerview:recyclerview:$versions.recyclerview",
         viewPager            : "androidx.viewpager:viewpager:$versions.viewPager",
+        viewPager2           : "androidx.viewpager2:viewpager2:$versions.viewPager2",
         cardView             : "androidx.cardview:cardview:$versions.cardView",
         constraintLayout     : "androidx.constraintlayout:constraintlayout:$versions.constraintLayout",
+        material             : "com.google.android.material:material:$versions.material",
 
         archExtensions       : "androidx.lifecycle:lifecycle-extensions:$versions.archComponents",
         archViewModel        : "androidx.lifecycle:lifecycle-viewmodel:$versions.archComponents",
@@ -151,6 +152,7 @@ ext.libraries = [
         retrofit             : "com.squareup.retrofit2:retrofit:$versions.retrofit",
         retrofitGsonConverter: "com.squareup.retrofit2:converter-gson:$versions.retrofit",
         retrofitRxJavaAdapter: "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
+        okhttp               : "com.squareup.okhttp3:okhttp:$versions.okhttp",
         gson                 : "com.google.code.gson:gson:$versions.gson",
         jsoup                : "org.jsoup:jsoup:$versions.jsoup",
         stetho               : "com.facebook.stetho:stetho:$versions.stetho",
@@ -182,15 +184,11 @@ ext.libraries = [
         timber               : "com.jakewharton.timber:timber:$versions.timber",
 
         // Candidates for removal
-        materialDialog       : "com.github.javiersantos:MaterialStyledDialogs:$versions.materialDialog",
-        materialDialogCore   : "com.afollestad.material-dialogs:core:$versions.materialDialogCore",
         numberPicker         : "biz.kasual:materialnumberpicker:$versions.numberPicker",
-        datePicker           : "com.code-troopers.betterpickers:library:$versions.datePicker",
         photoView            : "com.github.chrisbanes:PhotoView:$versions.photoView",
         recyclerAnimators    : "jp.wasabeef:recyclerview-animators:$versions.recyclerAnimators",
         materialProgress     : "me.zhanghai.android.materialprogressbar:library:$versions.materialProgress",
         circleImageView      : "de.hdodenhof:circleimageview:$versions.circleImageView",
-        ahbottomnavigation   : "com.aurelhubert:ahbottomnavigation:$versions.ahbottomnavigation",
         circleIndicator      : "me.relex:circleindicator:$versions.circleIndicator",
         confetti             : "com.github.jinatonic.confetti:confetti:$versions.confetti",
         MPAndroidChart       : "com.github.PhilJay:MPAndroidChart:$versions.MPAndroidChart",

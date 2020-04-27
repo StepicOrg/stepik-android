@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/old_cover"
     android:scrollbarStyle="outsideOverlay">
 
     <LinearLayout
@@ -12,372 +10,211 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.cardview.widget.CardView
-            style="@style/SettingCardStyle"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fragment_settings_wifi_title"
+            style="@style/SettingHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            >
+            android:text="@string/video_title"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/fragment_settings_wifi_title"
-                    style="@style/SettingHeaderTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/video_title"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsExternalPlayerSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/open_in_external_player"
-                    android:text="@string/open_in_external_player"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsWifiEnableSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/wi_fi_setting"
-                    android:text="@string/wi_fi_setting"/>
-
-                <FrameLayout
-                    android:id="@+id/videoQualityView"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/video_quality"
-                        android:textSize="16sp"/>
-                </FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/videoPlayingQualityView"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/video_quality_playing"
-                        android:textSize="16sp"/>
-                </FrameLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/catalogContainer"
-            style="@style/SettingCardStyle"
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsExternalPlayerSwitch"
+            style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white">
+            android:contentDescription="@string/open_in_external_player"
+            android:text="@string/open_in_external_player"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/SettingHeaderTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/catalog_title"/>
-
-
-                <FrameLayout
-                    android:id="@+id/langWidgetActionButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/language_of_courses"
-                        android:textSize="16sp"/>
-                </FrameLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            style="@style/SettingCardStyle"
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsWifiEnableSwitch"
+            style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white">
+            android:contentDescription="@string/wi_fi_setting"
+            android:text="@string/wi_fi_setting"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/SettingHeaderTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/setting_section_learning" />
-
-                <FrameLayout
-                    android:id="@+id/fontSizeSettingsButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/setting_font_size"
-                        android:textSize="16sp"/>
-                </FrameLayout>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsAutoplay"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/setting_autoplay"
-                    android:text="@string/setting_autoplay"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsDiscountingPolicySwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/discounting_policy_title_settings"
-                    android:text="@string/discounting_policy_title_settings"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsKeepScreenOnSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/keep_screen_on_title_settings"
-                    android:text="@string/keep_screen_on_title_settings"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsAdaptiveMode"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/adaptive_mode_settings"
-                    android:text="@string/adaptive_mode_settings"/>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/notificationContainer"
-            style="@style/SettingCardStyle"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/videoQualityView"
+            style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white">
+            android:text="@string/video_quality" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/fragment_settings_notification_title"
-                    style="@style/SettingHeaderTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/notification_title"/>
-
-
-                <FrameLayout
-                    android:id="@+id/notificationActionButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/notification_settings_title"
-                        android:textSize="16sp"/>
-                </FrameLayout>
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            style="@style/SettingCardStyle"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/videoPlayingQualityView"
+            style="@style/SettingSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white">
+            android:text="@string/video_quality_playing"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <include layout="@layout/view_divider_vertical" />
 
-                <TextView
-                    android:id="@+id/fragment_settings_calendar_title"
-                    style="@style/SettingHeaderTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/calendar_title"/>
-
-                <org.stepic.droid.ui.custom.BetterSwitch
-                    android:id="@+id/fragmentSettingsCalendarWidgetSwitch"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/calendar_setting_description"
-                    android:text="@string/calendar_setting_description"/>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            style="@style/SettingCardStyle"
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/SettingHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white">
+            android:text="@string/catalog_title"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/SettingHeaderTextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/storage"/>
-
-                <FrameLayout
-                    android:id="@+id/downloadsSettingsButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/downloads"
-                        android:textSize="16sp"/>
-                </FrameLayout>
-
-
-                <FrameLayout
-                    android:id="@+id/storageManagementButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/space_management_title"
-                        android:textSize="16sp"/>
-                </FrameLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            style="@style/SettingCardStyle"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/langWidgetActionButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white">
+            style="@style/SettingSwitch"
+            android:text="@string/language_of_courses"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <include layout="@layout/view_divider_vertical" />
 
-            <TextView
-                style="@style/SettingHeaderTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setting_section_other" />
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/SettingHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_section_appearance" />
 
-                <FrameLayout
-                    android:id="@+id/feedbackSettingsButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/nightModeSettingsButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_night_mode" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/feedback_title"
-                        android:textSize="16sp"/>
-                </FrameLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fontSizeSettingsButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_font_size"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
-                <FrameLayout
-                    android:id="@+id/aboutSettingsButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
+        <include layout="@layout/view_divider_vertical" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_app_title"
-                        android:textSize="16sp"/>
-                </FrameLayout>
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/SettingHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_section_learning" />
 
-                <FrameLayout
-                    android:id="@+id/logoutSettingsButton"
-                    style="@style/SettingSwitch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/non_radius_foreground">
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsAutoplay"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/setting_autoplay"
+            android:text="@string/setting_autoplay"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/logout_title"
-                        android:textColor="@color/new_logout_color"
-                        android:textSize="16sp"/>
-                </FrameLayout>
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsDiscountingPolicySwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/discounting_policy_title_settings"
+            android:text="@string/discounting_policy_title_settings"/>
 
-            </LinearLayout>
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsKeepScreenOnSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/keep_screen_on_title_settings"
+            android:text="@string/keep_screen_on_title_settings"/>
 
-        </androidx.cardview.widget.CardView>
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsAdaptiveMode"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/adaptive_mode_settings"
+            android:text="@string/adaptive_mode_settings"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fragment_settings_notification_title"
+            style="@style/SettingHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notification_title"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/notificationActionButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notification_settings_title"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fragment_settings_calendar_title"
+            style="@style/SettingHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/calendar_title"/>
+
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsCalendarWidgetSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/calendar_setting_description"
+            android:text="@string/calendar_setting_description"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/SettingHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/storage"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/downloadsSettingsButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/downloads" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/storageManagementButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/space_management_title"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
+
+        <include layout="@layout/view_divider_vertical" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/SettingHeaderTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_section_other" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/feedbackSettingsButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/feedback_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/aboutSettingsButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/about_app_title" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/logoutSettingsButton"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/logout_title"
+            android:textColor="?colorError"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
     </LinearLayout>
 </ScrollView>

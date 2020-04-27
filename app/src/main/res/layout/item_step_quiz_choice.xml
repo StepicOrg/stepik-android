@@ -48,8 +48,8 @@
         android:background="@drawable/bg_step_quiz_choice_item_feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@color/new_accent_color"
-        android:fontFamily="@font/pt_mono"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
+        app:fontFamily="@font/pt_mono"
         android:padding="16dp" />
 </LinearLayout>

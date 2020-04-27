@@ -73,15 +73,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         return drawable;
     }
 
-    @Override
-    public int getDrawableTintForStep(boolean isViewed) {
-        if (isViewed) {
-            return R.color.viewed_step;
-        } else {
-            return R.color.unviewed_step;
-        }
-    }
-
     @NotNull
     @Override
     public QuizDelegate getQuizDelegate(Step step) {

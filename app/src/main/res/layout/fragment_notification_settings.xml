@@ -1,91 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/old_cover"
+    android:background="?android:colorBackground"
     android:scrollbarStyle="outsideOverlay">
 
-    <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        style="@style/SettingCardStyle"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/white">
+        android:orientation="vertical">
 
-        <LinearLayout
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fragment_settings_notification_title"
+            style="@style/SettingHeaderTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="@string/notification_title" />
 
-            <TextView
-                android:id="@+id/fragment_settings_notification_title"
-                style="@style/SettingHeaderTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/notification_title"/>
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsNotificationSoundSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/notification_learn_list"
+            android:text="@string/sound_title" />
 
-            <org.stepic.droid.ui.custom.BetterSwitch
-                android:id="@+id/fragmentSettingsNotificationSoundSwitch"
-                style="@style/SettingSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/notification_learn_list"
-                android:text="@string/sound_title"/>
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsNotificationVibrationSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/notification_learn_list"
+            android:text="@string/vibration_title" />
 
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsNotificationLearnSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/notification_learn_list"
+            android:text="@string/notification_learn_list" />
 
-            <org.stepic.droid.ui.custom.BetterSwitch
-                android:id="@+id/fragmentSettingsNotificationVibrationSwitch"
-                style="@style/SettingSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/notification_learn_list"
-                android:text="@string/vibration_title"/>
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsNotificationCommentSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/notification_comment_list"
+            android:text="@string/notification_comment_list" />
 
-            <org.stepic.droid.ui.custom.BetterSwitch
-                android:id="@+id/fragmentSettingsNotificationLearnSwitch"
-                style="@style/SettingSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/notification_learn_list"
-                android:text="@string/notification_learn_list"/>
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsNotificationReviewSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/reviews_title"
+            android:text="@string/reviews_title" />
 
-            <org.stepic.droid.ui.custom.BetterSwitch
-                android:id="@+id/fragmentSettingsNotificationCommentSwitch"
-                style="@style/SettingSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/notification_comment_list"
-                android:text="@string/notification_comment_list"
-                />
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsNotificationTeachingSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/teaching_title"
+            android:text="@string/teaching_title" />
 
-            <org.stepic.droid.ui.custom.BetterSwitch
-                android:id="@+id/fragmentSettingsNotificationReviewSwitch"
-                style="@style/SettingSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/reviews_title"
-                android:text="@string/reviews_title"/>
+        <org.stepic.droid.ui.custom.BetterSwitch
+            android:id="@+id/fragmentSettingsNotificationOtherSwitch"
+            style="@style/SettingSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/other_title"
+            android:text="@string/other_title"
+            android:layout_marginBottom="@dimen/settings_offset_vertical" />
 
-            <org.stepic.droid.ui.custom.BetterSwitch
-                android:id="@+id/fragmentSettingsNotificationTeachingSwitch"
-                style="@style/SettingSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/teaching_title"
-                android:text="@string/teaching_title"/>
-
-
-            <org.stepic.droid.ui.custom.BetterSwitch
-                android:id="@+id/fragmentSettingsNotificationOtherSwitch"
-                style="@style/SettingSwitch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/other_title"
-                android:text="@string/other_title"/>
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+    </LinearLayout>
 </ScrollView>

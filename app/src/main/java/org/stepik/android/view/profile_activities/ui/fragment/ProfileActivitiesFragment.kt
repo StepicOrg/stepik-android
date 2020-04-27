@@ -89,7 +89,7 @@ class ProfileActivitiesFragment : Fragment(R.layout.fragment_profile_activities)
                 @ColorRes
                 val streakTintColorRes =
                     if (isSolvedToday) {
-                        R.color.green01
+                        R.color.color_overlay_green
                     } else {
                         R.color.yellow1
                     }

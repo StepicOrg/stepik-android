@@ -6,10 +6,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <View
+    <include
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator"
+        android:layout_height="?dividerVerticalSize"
+        layout="@layout/view_divider_vertical"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -19,7 +19,8 @@
         android:id="@+id/stepAmountPassed"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:textSize="14sp"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         android:paddingLeft="24dp"
         android:paddingStart="24dp"
         android:paddingRight="24dp"
@@ -39,7 +40,8 @@
         android:id="@+id/stepSolvedPercentage"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
-        android:textSize="14sp"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         android:paddingLeft="24dp"
         android:paddingStart="24dp"
         android:paddingRight="24dp"
@@ -54,15 +56,13 @@
 
         tools:text="Correct submissions: 72%"/>
 
-    <View
+    <include
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator"
+        android:layout_height="?dividerVerticalSize"
+        layout="@layout/view_divider_vertical"
 
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

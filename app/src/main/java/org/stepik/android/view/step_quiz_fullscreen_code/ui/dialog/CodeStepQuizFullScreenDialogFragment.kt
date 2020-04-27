@@ -8,17 +8,13 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.RelativeLayout
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.button.MaterialButton
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
@@ -37,6 +33,7 @@ import org.stepic.droid.ui.dialogs.ChangeCodeLanguageDialog
 import org.stepic.droid.ui.dialogs.ProgrammingLanguageChooserDialogFragment
 import org.stepic.droid.ui.dialogs.ResetCodeDialogFragment
 import org.stepic.droid.ui.util.setOnKeyboardOpenListener
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepik.android.presentation.step_quiz_code.StepQuizCodeRunPresenter
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeLayoutDelegate
 import org.stepik.android.view.step_quiz_code.ui.delegate.CodeQuizInstructionDelegate
@@ -95,7 +92,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      * Run code views
      */
     private var runCodeActionSeparator: View? = null
-    private var runCodeAction: AppCompatTextView? = null
+    private var runCodeAction: MaterialButton? = null
 
     private var lang: String by argument()
     private var code: String by argument()
@@ -127,7 +124,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
 
         injectComponent()
         codeRunPresenter = ViewModelProviders
@@ -144,8 +141,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         centeredToolbarTitle.text = lessonTitle
         centeredToolbar.inflateMenu(R.menu.code_playground_menu)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
-        centeredToolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.new_primary_color))
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.setOnMenuItemClickListener { item ->
             if (item?.itemId == R.id.action_reset_code) {
                 val dialog = ResetCodeDialogFragment.newInstance()
@@ -236,13 +232,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     }
 
     private fun initViewPager(isShowRunCode: Boolean) {
-        val activity = activity
-            ?: return
-
-        val lightFont = ResourcesCompat.getFont(activity, R.font.roboto_light)
-        val regularFont = ResourcesCompat.getFont(activity, R.font.roboto_regular)
-
-        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(activity, isShowRunCode = isShowRunCode)
+        val pagerAdapter = CodeStepQuizFullScreenPagerAdapter(requireContext(), isShowRunCode = isShowRunCode)
 
         fullScreenCodeViewPager.adapter = pagerAdapter
         fullScreenCodeTabs.setupWithViewPager(fullScreenCodeViewPager)
@@ -253,27 +243,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
                 view?.hideKeyboard()
             }
         })
-        fullScreenCodeTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                (tab?.customView as? TextView)?.let {
-                    it.typeface = lightFont
-                }
-            }
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                (tab?.customView as? TextView)?.let {
-                    it.typeface = regularFont
-                }
-            }
-        })
-
-        for (i in 0 until fullScreenCodeTabs.tabCount) {
-            val tab = fullScreenCodeTabs.getTabAt(i)
-            tab?.customView = layoutInflater.inflate(R.layout.view_course_tab, null)
-        }
-
-        (fullScreenCodeTabs.getTabAt(fullScreenCodeTabs.selectedTabPosition)?.customView as? TextView)
-            ?.typeface = regularFont
 
         instructionsLayout = pagerAdapter.getViewAt(0)
         playgroundLayout = pagerAdapter.getViewAt(1)
@@ -291,7 +260,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
             }
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         runCodeDelegate?.let {
@@ -404,7 +373,6 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         codeSubmitButton.isVisible = needShow
         centeredToolbar.isVisible = needShow
         fullScreenCodeTabs.isVisible = needShow
-        fullScreenCodeSeparator.isVisible = needShow
         runCodeActionSeparator?.isVisible = needShow
         runCodeAction?.isVisible = needShow
     }

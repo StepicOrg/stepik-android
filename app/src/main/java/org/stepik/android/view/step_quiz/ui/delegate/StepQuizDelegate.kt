@@ -1,14 +1,14 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
-import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.core.view.updateMarginsRelative
+import com.google.android.material.button.MaterialButton
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.setCompoundDrawables
-import org.stepic.droid.ui.util.setTextViewBackgroundWithoutResettingPadding
+import org.stepic.droid.util.toPx
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Step
@@ -26,8 +26,8 @@ class StepQuizDelegate(
     private val stepQuizFormDelegate: StepQuizFormDelegate,
     private val stepQuizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate,
 
-    private val stepQuizActionButton: TextView,
-    private val stepRetryButton: View,
+    private val stepQuizActionButton: MaterialButton,
+    private val stepRetryButton: MaterialButton,
     private val stepQuizDiscountingPolicy: TextView,
 
     private val stepQuizPresenter: StepQuizPresenter,
@@ -71,13 +71,31 @@ class StepQuizDelegate(
         stepQuizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(step.block?.name, state))
         stepQuizFormDelegate.setState(state)
 
-        stepQuizActionButton.isEnabled = StepQuizFormResolver.isQuizActionEnabled(state)
-        stepQuizActionButton.text = resolveQuizActionButtonText(state)
-        stepQuizActionButton.setTextViewBackgroundWithoutResettingPadding(resolveQuizActionBackground(state))
-        stepQuizActionButton.setTextColor(ContextCompat.getColorStateList(context, resolveQuizActionTextColor(state)))
-        stepQuizActionButton.setCompoundDrawables(start = resolveQuizActionCompoundDrawable(state))
+        if (StepQuizFormResolver.canOnlyRetry(step, stepQuizLessonData, state)) {
+            stepQuizActionButton.isVisible = false
 
-        stepRetryButton.isVisible = StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state)
+            stepRetryButton.setText(R.string.step_quiz_action_button_try_again)
+            stepRetryButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                width = ViewGroup.LayoutParams.MATCH_PARENT
+                updateMargins(right = 0)
+                updateMarginsRelative(end = 0)
+            }
+        } else {
+            stepQuizActionButton.isVisible = true
+            stepQuizActionButton.isEnabled = StepQuizFormResolver.isQuizActionEnabled(state)
+            stepQuizActionButton.text = resolveQuizActionButtonText(state)
+
+            stepRetryButton.text = null
+            stepRetryButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                width = context.resources.getDimensionPixelOffset(R.dimen.step_submit_button_height)
+                updateMargins(right = 16.toPx())
+                updateMarginsRelative(end = 16.toPx())
+            }
+        }
+
+        stepRetryButton.isVisible =
+            StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state) ||
+            StepQuizFormResolver.canOnlyRetry(step, stepQuizLessonData, state)
 
         val isNeedShowDiscountingPolicy =
             state.restrictions.discountingPolicyType != DiscountingPolicyType.NoDiscount &&
@@ -111,30 +129,6 @@ class StepQuizDelegate(
                     context.getString(R.string.step_quiz_action_button_submit)
                 }
             }
-        }
-
-    @DrawableRes
-    private fun resolveQuizActionBackground(state: StepQuizView.State.AttemptLoaded): Int =
-        if (StepQuizFormResolver.canOnlyRetry(step, stepQuizLessonData, state)) {
-            R.drawable.bg_step_quiz_retry_button
-        } else {
-            R.drawable.bg_step_submit_button
-        }
-
-    @DrawableRes
-    private fun resolveQuizActionCompoundDrawable(state: StepQuizView.State.AttemptLoaded): Int =
-        if (StepQuizFormResolver.canOnlyRetry(step, stepQuizLessonData, state)) {
-            R.drawable.ic_step_quiz_retry
-        } else {
-            -1
-        }
-
-    @ColorRes
-    private fun resolveQuizActionTextColor(state: StepQuizView.State.AttemptLoaded): Int =
-        if (StepQuizFormResolver.canOnlyRetry(step, stepQuizLessonData, state)) {
-            R.color.color_step_quiz_retry_button
-        } else {
-            R.color.color_step_submit_button_text
         }
 
     private fun resolveQuizDiscountingPolicyText(state: StepQuizView.State.AttemptLoaded): String? =

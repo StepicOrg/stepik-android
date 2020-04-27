@@ -6,7 +6,7 @@
     android:id="@+id/error"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/new_cover"
+    android:background="?android:colorBackground"
     android:visibility="gone"
     tools:visibility="visible">
 
@@ -41,7 +41,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/tryAgain"
         style="@style/PlaceholderButton"
         android:layout_width="wrap_content"

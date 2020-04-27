@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -57,7 +58,6 @@ public class NotificationsFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        setHasOptionsMenu(true);
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Notifications.NOTIFICATION_SCREEN_OPENED);
         analytic.reportEvent(Analytic.Notification.NOTIFICATION_SCREEN_OPENED);
     }
@@ -102,12 +102,9 @@ public class NotificationsFragment extends FragmentBase {
 
     private void initToolbar() {
         ToolbarHelperKt.initCenteredToolbar(this, R.string.notification_title);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.notification_center_menu, menu);
-        menu.findItem(R.id.action_settings).setVisible(getSharedPreferenceHelper().getAuthResponseFromStore() != null);
+        final Toolbar toolbar = getView().findViewById(R.id.centeredToolbar);
+        toolbar.inflateMenu(R.menu.notification_center_menu);
+        toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
     }
 
     @Override

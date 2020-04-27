@@ -10,7 +10,6 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.ui.util.setCompoundDrawables
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -49,6 +48,5 @@ class UnsupportedStepQuizFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         stepQuizAction.setOnClickListener { screenManager.openStepInWeb(context, stepWrapper.step) }
-        stepQuizFeedback.setCompoundDrawables(start = R.drawable.ic_step_quiz_validation)
     }
 }

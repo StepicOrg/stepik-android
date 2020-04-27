@@ -3,10 +3,10 @@ package org.stepik.android.view.filter.ui.dialog
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.ArrayAdapter
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.model.StepikFilter
@@ -44,13 +44,9 @@ class CoursesLangDialogFragment : DialogFragment(), FiltersView {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog
-            .Builder(requireContext())
+        MaterialAlertDialogBuilder(context)
             .setTitle(R.string.language_of_courses)
-            .setSingleChoiceItems(
-                ArrayAdapter<String>(requireContext(), R.layout.simple_list_item_single_choice, resources.getStringArray(R.array.course_list_languages)),
-                -1
-            ) { _, which ->
+            .setSingleChoiceItems(resources.getStringArray(R.array.course_list_languages), -1) { _, which ->
                 val filters = EnumSet.noneOf(StepikFilter::class.java)
                 when (which) {
                     0 -> filters.add(StepikFilter.RUSSIAN)
@@ -68,7 +64,9 @@ class CoursesLangDialogFragment : DialogFragment(), FiltersView {
                 StepikFilter.ENGLISH in state.filters -> 1
                 else -> -1
             }
-            (dialog as AlertDialog).listView.setItemChecked(selection, true)
+            (dialog as? AlertDialog)
+                ?.listView
+                ?.setItemChecked(selection, true)
         }
     }
 

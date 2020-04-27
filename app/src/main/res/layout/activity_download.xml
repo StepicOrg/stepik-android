@@ -79,12 +79,12 @@
                 app:drawableStartCompat="@drawable/ic_download_marker"/>
         </RelativeLayout>
 
-        <View
+        <include
             android:id="@+id/downloadsStorageDivider"
+            layout="@layout/view_divider_vertical"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/downloadStorageContainer"
-            android:background="@color/grey04" />
+            android:layout_height="?dividerVerticalSize"
+            android:layout_below="@id/downloadStorageContainer" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/downloadsRecyclerView"
@@ -92,7 +92,6 @@
             android:layout_height="match_parent"
             android:layout_below="@id/downloadsStorageDivider"
             android:clipToPadding="false"
-            android:divider="@color/bpRed"
             android:scrollbarStyle="outsideOverlay"
             android:visibility="gone"/>
 

@@ -10,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
+import androidx.core.widget.ImageViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
@@ -20,14 +22,20 @@ import org.stepic.droid.core.presenters.contracts.SearchSuggestionsView
 import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.SearchQuerySource
 import org.stepic.droid.ui.adapters.SearchQueriesAdapter
+import org.stepic.droid.util.resolveResourceIdAttribute
 import javax.inject.Inject
 
 class AutoCompleteSearchView
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : SearchView(context, attrs, defStyleAttr), SearchSuggestionsView {
     private val searchQueriesAdapter = SearchQueriesAdapter(context)
-    private val closeIcon: ImageView = findViewById(R.id.search_close_btn)
+    private val closeIcon: ImageView = findViewById(androidx.appcompat.R.id.search_close_btn)
+    private val searchIcon: ImageView = findViewById(androidx.appcompat.R.id.search_mag_icon)
+
     private var focusCallback: FocusCallback? = null
+
+    private val colorControlNormal =
+        AppCompatResources.getColorStateList(context, context.resolveResourceIdAttribute(R.attr.colorControlNormal))
 
     var suggestionsOnTouchListener: OnTouchListener? = null
 
@@ -50,6 +58,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     init {
         maxWidth = 20000
         App.component().inject(this)
+
+        ImageViewCompat.setImageTintList(closeIcon, colorControlNormal)
+        ImageViewCompat.setImageTintList(searchIcon, colorControlNormal)
     }
 
     fun initSuggestions(rootView: ViewGroup) {
@@ -116,15 +127,15 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     override fun setSuggestions(suggestions: List<SearchQuery>, source: SearchQuerySource) {
         when (source) {
             SearchQuerySource.API ->
-                    searchQueriesAdapter.rawAPIItems = suggestions
+                searchQueriesAdapter.rawAPIItems = suggestions
             SearchQuerySource.DB ->
-                    searchQueriesAdapter.rawDBItems = suggestions
+                searchQueriesAdapter.rawDBItems = suggestions
         }
     }
 
-    private fun isEventInsideView(v: View, event: MotionEvent) =
-            event.x > 0 && event.y > 0
-            && event.x < v.width && event.y < v.height
+    private fun isEventInsideView(v: View, event: MotionEvent): Boolean =
+        event.x > 0 && event.y > 0 &&
+        event.x < v.width && event.y < v.height
 
     interface FocusCallback {
         fun onFocusChanged(hasFocus: Boolean)

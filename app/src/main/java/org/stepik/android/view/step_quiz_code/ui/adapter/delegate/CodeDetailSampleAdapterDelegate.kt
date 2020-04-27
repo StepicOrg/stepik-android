@@ -4,6 +4,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.widget.TextViewCompat
 import kotlinx.android.synthetic.main.item_step_quiz_code_detail_sample.view.*
 import org.stepic.droid.R
@@ -29,11 +30,15 @@ class CodeDetailSampleAdapterDelegate : AdapterDelegate<CodeDetail, DelegateView
 
             val inputCompoundDrawable = AppCompatResources
                 .getDrawable(context, R.drawable.ic_step_quiz_code_sample_input)
+                ?.mutate()
+                ?.also { DrawableCompat.setTintList(it, TextViewCompat.getCompoundDrawableTintList(input)) }
                 ?.let { GravityDrawable(it, Gravity.TOP, sampleHeight) }
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(input, inputCompoundDrawable, null, null, null)
 
             val outputCompoundDrawable = AppCompatResources
                 .getDrawable(context, R.drawable.ic_step_quiz_code_sample_output)
+                ?.mutate()
+                ?.also { DrawableCompat.setTintList(it, TextViewCompat.getCompoundDrawableTintList(input)) }
                 ?.let { GravityDrawable(it, Gravity.TOP, sampleHeight) }
             TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(output, outputCompoundDrawable, null, null, null)
         }

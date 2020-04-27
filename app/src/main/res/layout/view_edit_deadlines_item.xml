@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
-    android:paddingStart="?dialogPreferredPadding"
     android:paddingLeft="?dialogPreferredPadding"
-    android:paddingEnd="?dialogPreferredPadding"
     android:paddingRight="?dialogPreferredPadding"
 
     android:paddingTop="16dp"
@@ -15,17 +14,18 @@
 
     <TextView
         android:id="@+id/sectionTitle"
-        android:textSize="16sp"
-        android:textColor="@color/stepik_dark_web"
+        android:textAppearance="?textAppearanceBody1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:text="Section 1"/>
 
     <TextView
         android:id="@+id/deadline"
-        android:textSize="12sp"
-        android:textColor="@color/stepic_blue_ribbon"
+        android:textAppearance="?textAppearanceCaption"
+        android:theme="@style/ThemeOverlay.Violet"
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        tools:text="Дедлайн: 25 2309812938012391280" />
 
 </LinearLayout>

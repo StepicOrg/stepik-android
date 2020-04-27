@@ -2,30 +2,9 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="?android:colorBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <include layout="@layout/view_centered_toolbar"/>
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/notification_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
-            android:paddingLeft="@dimen/left_padding_tablayout_scrollable"
-            android:paddingStart="@dimen/left_padding_tablayout_scrollable"
-            app:tabIndicatorColor="@color/new_accent_color"
-            app:tabIndicatorHeight="@dimen/guideline_tab_indicator_height"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/tab_text_color"
-            app:tabTextColor="@color/tab_text_color_70percent"/>
-    </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -44,5 +23,23 @@
             android:layout_height="match_parent"/>
 
     </FrameLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/notification_appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="?appBarElevation">
+
+        <include layout="@layout/view_centered_toolbar"/>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/notification_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            app:tabContentStart="@dimen/left_padding_tablayout_scrollable"
+            app:tabMode="scrollable" />
+    </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

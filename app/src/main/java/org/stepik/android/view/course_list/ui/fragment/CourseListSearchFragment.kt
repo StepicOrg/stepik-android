@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -47,7 +46,7 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
         }
     }
 
-    lateinit var searchIcon: ImageView
+    private lateinit var searchIcon: ImageView
 
     private var query by argument<String>()
 
@@ -140,16 +139,12 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
         backIcon.isVisible = true
-        if (android.os.Build.VERSION.SDK_INT < 21) {
-            toolbarShadow.isVisible = true
-        }
         searchViewToolbar.isVisible = true
-        searchViewContainer.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        searchViewToolbar.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
         searchIcon.setImageResource(0)
         (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
         setupSearchView(searchViewToolbar)
         searchViewToolbar.setIconifiedByDefault(false)
+        searchViewToolbar.setBackgroundColor(0)
         backIcon.setOnClickListener {
             val hasFocus = searchViewToolbar.hasFocus()
             if (hasFocus) {

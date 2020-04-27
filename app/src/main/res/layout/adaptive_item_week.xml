@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<FrameLayout
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -15,21 +16,18 @@
             android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/stepic_regular_text"
-            app:fontFamily="@font/roboto_light"
-            tools:ignore="MissingPrefix"
+            android:textAppearance="?textAppearanceHeadline5"
             android:layout_gravity="start"
-            android:textSize="24sp"/>
+            tools:text="7777" />
 
         <TextView
             android:text="@string/adaptive_stats_exp_for_a_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/stepic_regular_text"
-            android:layout_gravity="start"
-            android:textSize="12sp"/>
+            android:textAppearance="?textAppearanceCaption"
+            android:textColor="?android:textColorSecondary"
+            android:layout_gravity="start" />
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -46,25 +44,24 @@
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/stepic_regular_text" />
+                android:textAppearance="?textAppearanceCaption"
+                tools:text="101010" />
             <TextView
                 android:id="@+id/end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/stepic_regular_text" />
+                android:textAppearance="?textAppearanceCaption"
+                tools:text="101010" />
         </LinearLayout>
-        <View
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_marginTop="7dp"
             android:layout_marginBottom="6dp"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
-            android:background="@drawable/right_bracket"
+            app:tint="?colorControlNormal"
+            app:srcCompat="@drawable/ic_adaptive_right_bracket"
             android:layout_gravity="center_vertical"
             android:layout_width="6dp"
             android:layout_height="match_parent" />
     </LinearLayout>
-
-
 </FrameLayout>

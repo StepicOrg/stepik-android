@@ -5,10 +5,10 @@ import android.os.Parcelable
 import java.io.File
 
 class StorageLocation(
-        val path: File,
-        val freeSpaceBytes: Long = path.freeSpace,
-        val totalSpaceBytes: Long = path.totalSpace,
-        val type: Type
+    val path: File,
+    val freeSpaceBytes: Long = path.freeSpace,
+    val totalSpaceBytes: Long = path.totalSpace,
+    val type: Type
 ) : Parcelable {
     enum class Type {
         APP_INTERNAL, // app's internal dir Context::getFilesDir, for this dir type relative paths should be used

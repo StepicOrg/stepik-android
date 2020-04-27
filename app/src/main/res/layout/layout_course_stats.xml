@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/ThemeOverlay.Dark"
     android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -35,11 +36,9 @@
         android:drawablePadding="4dp"
 
         app:drawableStartCompat="@drawable/ic_course_info_learners_count"
-        app:drawableTint="@color/white"
+        app:drawableTint="?android:textColorPrimary"
 
-        android:textSize="12sp"
-        android:textColor="@color/white"
-        app:fontFamily="@font/roboto_light"
+        android:textAppearance="?textAppearanceCaption"
         tools:text="999K"
         tools:ignore="MissingPrefix" />
 
@@ -55,9 +54,7 @@
         app:drawableStartCompat="@drawable/ic_verified"
 
         android:text="@string/course_verified"
-        android:textSize="12sp"
-        android:textColor="@color/white"
-        app:fontFamily="@font/roboto_light"
+        android:textAppearance="?textAppearanceCaption"
         tools:ignore="MissingPrefix" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -3,18 +3,10 @@ package org.stepic.droid.ui.activities
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.ShortcutManager
-import android.graphics.Color
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.MenuItem
 import androidx.annotation.IdRes
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
@@ -36,9 +28,10 @@ import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
-import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
+import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import timber.log.Timber
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
@@ -58,13 +51,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         const val reminderKey = "reminderKey"
         const val defaultIndex: Int = 0
-        private const val progressLogoutTag = "progressLogoutTag"
         private const val LOGGED_ACTION = "LOGGED_ACTION"
 
         private const val CATALOG_DEEPLINK = "catalog"
         private const val NOTIFICATIONS_DEEPLINK = "notifications"
-
-        private const val MAX_NOTIFICATION_BADGE_COUNT = 99
 
         const val HOME_INDEX: Int = 1
         const val CATALOG_INDEX: Int = 2
@@ -102,8 +92,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     @Inject
     internal lateinit var threadPoolExecutor: ThreadPoolExecutor
-
-    private lateinit var navigationAdapter: AHBottomNavigationAdapter
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -154,8 +142,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.componentManager()
-                .mainFeedComponent()
-                .inject(this)
+            .mainFeedComponent()
+            .inject(this)
 
         setContentView(R.layout.activity_main_feed)
 
@@ -212,9 +200,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         when (getFragmentIndexFromIntent(launchIntent)) {
-            CATALOG_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.catalog)
-            PROFILE_INDEX       -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.profile)
-            NOTIFICATIONS_INDEX -> navigationView.currentItem = navigationAdapter.getPositionByMenuId(R.id.notifications)
+            CATALOG_INDEX       -> navigationView.selectedItemId = R.id.catalog
+            PROFILE_INDEX       -> navigationView.selectedItemId = R.id.profile
+            NOTIFICATIONS_INDEX -> navigationView.selectedItemId = R.id.notifications
             else -> {
                 //do nothing
             }
@@ -222,19 +210,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     private fun initNavigation() {
-        navigationAdapter = AHBottomNavigationAdapter(this, R.menu.drawer_menu)
-        navigationAdapter.setupWithBottomNavigation(navigationView)
-
-        navigationView.titleState = AHBottomNavigation.TitleState.ALWAYS_SHOW
-        navigationView.setOnTabSelectedListener { position, wasSelected ->
-            val menuItem = navigationAdapter.getMenuItem(position)
-            if (wasSelected) {
-                onNavigationItemReselected(menuItem)
-            } else {
-                onNavigationItemSelected(menuItem)
-            }
-            true
-        }
+        navigationView.setOnNavigationItemSelectedListener(::onNavigationItemSelected)
+        navigationView.setOnNavigationItemReselectedListener(::onNavigationItemReselected)
     }
 
     private fun showCurrentFragment(@IdRes id: Int) {
@@ -252,12 +229,11 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onBackPressed() {
-        val homeTabPosition = navigationAdapter.getPositionByMenuId(R.id.home)
-        if (navigationView.currentItem == homeTabPosition) {
+        if (navigationView.selectedItemId == R.id.home) {
             finish()
             return
         } else {
-            navigationView.currentItem = homeTabPosition
+            navigationView.selectedItemId = R.id.home
         }
     }
 
@@ -338,9 +314,8 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
     //RootScreen methods
     override fun showCatalog() {
-        val catalogTabPosition = navigationAdapter.getPositionByMenuId(R.id.catalog)
-        if (navigationView.currentItem != catalogTabPosition) {
-            navigationView.currentItem = catalogTabPosition
+        if (navigationView.selectedItemId != R.id.catalog) {
+            navigationView.selectedItemId = R.id.catalog
         }
     }
 
@@ -352,30 +327,15 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         if (intent.action == LOGGED_ACTION) {
             intent.action = null
 
-            val streakTitle = SpannableString(getString(R.string.early_notification_title))
-            streakTitle.setSpan(ForegroundColorSpan(Color.BLACK), 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-            val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
-            streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-            val description = getString(R.string.early_notification_description)
-
             analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_SHOWN)
-            val dialog = MaterialStyledDialog.Builder(this)
-                    .setTitle(streakTitle)
-                    .setDescription(description)
-                    .setHeaderDrawable(R.drawable.dialog_background)
-                    .setPositiveText(R.string.ok)
-                    .setNegativeText(R.string.later_tatle)
-                    .setScrollable(true, 10) // number of lines lines
-                    .onPositive { _, _ ->
-                        analytic.reportEvent(Analytic.Streak.EARLY_DIALOG_POSITIVE)
-                        val dialogFragment = TimeIntervalPickerDialogFragment.newInstance()
-                        if (!dialogFragment.isAdded) {
-                            dialogFragment.show(supportFragmentManager, null)
-                        }
-                    }
-                    .build()
-            dialog.show()
+
+            StreakNotificationDialogFragment
+                .newInstance(
+                    title = getString(R.string.early_notification_title),
+                    message = getString(R.string.early_notification_description),
+                    positiveEvent = Analytic.Streak.EARLY_DIALOG_POSITIVE
+                )
+                .showIfNotExists(supportFragmentManager, StreakNotificationDialogFragment.TAG)
         }
     }
 
@@ -385,17 +345,15 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
     }
 
     override fun onBadgeShouldBeHidden() {
-        navigationView.setNotification("", navigationAdapter.getPositionByMenuId(R.id.notifications))
+        navigationView.removeBadge(R.id.notifications)
     }
 
     override fun onBadgeCountChanged(count: Int) {
-        navigationView.setNotification(getBadgeStringForCount(count), navigationAdapter.getPositionByMenuId(R.id.notifications))
+        val badge = navigationView.getOrCreateBadge(R.id.notifications)
+        badge.number = count
+        badge.maxCharacterCount = 3
+        badge.isVisible = true
+        // TODO 09.04.2020: Uncomment after stable release of Material Components 1.2.0
+//        badge.verticalOffset = 8
     }
-
-    private fun getBadgeStringForCount(count: Int) =
-            if (count > MAX_NOTIFICATION_BADGE_COUNT) {
-                getString(R.string.notification_badge_placeholder)
-            } else {
-                count.toString()
-            }
 }

@@ -13,7 +13,9 @@ import org.stepik.android.model.attempts.Attempt
 import javax.inject.Inject
 import kotlin.math.min
 
-class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
+class StepikRadioGroupAdapter(
+    private val group: StepikRadioGroup
+) {
     @Inject
     lateinit var analytic: Analytic
 
@@ -77,9 +79,9 @@ class StepikRadioGroupAdapter(private val group: StepikRadioGroup) {
     val reply: Reply
         get() {
             val selection = (0 until group.childCount)
-                    .map {
-                        (group.getChildAt(it) as StepikOptionView).isChecked
-                    }
+                .map {
+                    (group.getChildAt(it) as StepikOptionView).isChecked
+                }
             return Reply(choices = selection)
         }
 

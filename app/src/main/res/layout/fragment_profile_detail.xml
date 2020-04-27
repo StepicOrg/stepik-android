@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -26,6 +27,7 @@
             android:id="@+id/profileDetailsTitleArrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:tint="?colorControlNormal"
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="@dimen/profile_block_margin"
             android:layout_marginRight="@dimen/profile_block_margin" />
@@ -42,9 +44,6 @@
 
         style="@style/ProfileItemText" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey04" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

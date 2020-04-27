@@ -4,8 +4,8 @@
     <item android:id="@android:id/background">
         <shape>
             <gradient
-                android:startColor="@color/grey04"
-                android:endColor="@color/grey04"
+                android:startColor="@color/color_elevation_overlay_2dp"
+                android:endColor="@color/color_elevation_overlay_2dp"
                 android:angle="270"
                 />
         </shape>
@@ -15,10 +15,9 @@
         <clip>
             <shape>
                 <gradient
-                    android:startColor="@color/green01"
-                    android:endColor="@color/green01"
-                    android:angle="270"
-                    />
+                    android:startColor="@color/color_overlay_green"
+                    android:endColor="@color/color_overlay_green"
+                    android:angle="270" />
             </shape>
         </clip>
     </item>
@@ -26,8 +25,8 @@
         <clip>
             <shape>
                 <gradient
-                    android:startColor="@color/custom_grey"
-                    android:endColor="@color/custom_grey"
+                    android:startColor="@color/color_on_surface_alpha_12"
+                    android:endColor="@color/color_on_surface_alpha_12"
                     android:angle="270" />
             </shape>
         </clip>

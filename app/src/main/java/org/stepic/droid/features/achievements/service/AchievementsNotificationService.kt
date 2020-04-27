@@ -19,8 +19,8 @@ import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.model.AchievementNotification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.ui.util.toBitmap
-import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.glide.GlideSvgRequestFactory
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.toObject
 import org.stepik.android.domain.achievement.repository.AchievementRepository
 import javax.inject.Inject
@@ -85,7 +85,7 @@ class AchievementsNotificationService : JobIntentService() {
                     .setSmallIcon(R.drawable.ic_notification_icon_1)
                     .setLargeIcon(largeIcon)
                     .setContentIntent(pendingIntent)
-                    .setColor(ColorUtil.getColorArgb(R.color.stepic_brand_primary))
+                    .setColor(resolveColorAttribute(R.attr.colorSecondary))
                     .setAutoCancel(true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .build()

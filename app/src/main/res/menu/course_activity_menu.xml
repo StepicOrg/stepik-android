@@ -8,6 +8,7 @@
         android:id="@+id/share_course"
         android:title="@string/share_title"
         android:icon="@drawable/ic_share_dark"
+        app:iconTint="?colorControlNormal"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/restore_purchase"

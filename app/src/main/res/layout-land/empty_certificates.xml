@@ -6,7 +6,6 @@
     android:id="@+id/reportEmptyCertificates"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/new_cover"
     android:visibility="gone"
     tools:visibility="visible">
 
@@ -41,9 +40,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/goToCatalog"
-        style="@style/PlaceholderButton"
+        style="?materialButtonOutlinedStyle"
+        android:theme="@style/ThemeOverlay.Violet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/half_padding"

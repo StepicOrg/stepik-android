@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/achievementsContainer"
     android:orientation="vertical"
@@ -55,8 +54,6 @@
         android:layout_marginBottom="@dimen/profile_block_vertical_margin"
         android:visibility="gone" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/grey04" />
+    <include layout="@layout/view_divider_vertical" />
+
 </LinearLayout>

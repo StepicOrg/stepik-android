@@ -28,7 +28,7 @@
         android:manageSpaceActivity=".ui.activities.StoreManagementActivity"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/StepikTheme"
+        android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="allowBackup, supportsRtl"
         tools:targetApi="m">
@@ -37,7 +37,7 @@
             android:name="org.stepic.droid.ui.activities.SplashActivity"
             android:noHistory="true"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.BrandedLaunch" />
+            android:theme="@style/AppTheme.Splash" />
 
         <activity-alias
             android:name="org.stepic.droid.view.activities.SplashActivity"
@@ -68,12 +68,11 @@
 
         <activity
             android:name=".ui.activities.AnimatedOnboardingActivity"
-            android:theme="@style/StepikTheme.Onboarding" />
+            android:theme="@style/AppTheme.Onboarding" />
 
         <activity
             android:name="org.stepik.android.view.auth.ui.activity.SocialAuthActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -90,13 +89,11 @@
 
         <activity
             android:name="org.stepik.android.view.auth.ui.activity.RegistrationActivity"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name="org.stepik.android.view.auth.ui.activity.CredentialAuthActivity"
             android:launchMode="singleTop"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -143,8 +140,7 @@
 
         <activity
             android:name=".ui.activities.PhotoViewActivity"
-            android:theme="@style/StoryActivityTheme"
-             />
+            android:theme="@style/AppTheme.Translucent" />
 
         <activity
             android:name="org.stepik.android.view.settings.ui.activity.SettingsActivity" />
@@ -190,23 +186,20 @@
         </activity>
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveCourseActivity"
-            android:theme="@style/Adaptive" />
+            android:name=".adaptive.ui.activities.AdaptiveCourseActivity" />
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveOnboardingActivity"
-            android:theme="@style/Adaptive" />
+            android:name=".adaptive.ui.activities.AdaptiveOnboardingActivity" />
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveStatsActivity"
-            android:theme="@style/Adaptive.White" />
+            android:name=".adaptive.ui.activities.AdaptiveStatsActivity" />
 
         <activity
             android:name="org.stepik.android.view.achievement.ui.activity.AchievementsListActivity" />
 
         <activity
             android:name=".features.stories.ui.activity.StoriesActivity"
-            android:theme="@style/StoryActivityTheme" />
+            android:theme="@style/AppTheme.Translucent" />
 
         <activity
             android:name="org.stepik.android.view.course.ui.activity.CourseActivity">

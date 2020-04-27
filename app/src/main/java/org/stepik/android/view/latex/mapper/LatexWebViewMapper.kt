@@ -5,7 +5,6 @@ import org.stepik.android.view.latex.model.TextAttributes
 import org.stepik.android.view.latex.model.block.BaseStyleBlock
 import org.stepik.android.domain.latex.model.block.ContentBlock
 import org.stepik.android.view.latex.model.block.SelectionColorStyleBlock
-import org.stepik.android.view.latex.model.block.TextColorBlock
 import org.stepik.android.domain.latex.model.LatexData
 import javax.inject.Inject
 
@@ -25,9 +24,8 @@ constructor(
 
         val blocks =
             listOf(
-                BaseStyleBlock(fontPath),
-                SelectionColorStyleBlock(attributes.textColorHighlight),
-                TextColorBlock(attributes.textColor)
+                BaseStyleBlock(attributes.isNightMode, fontPath, attributes.textColor),
+                SelectionColorStyleBlock(attributes.textColorHighlight)
             )
 
         val header = webData.header + blocks.joinToString(separator = "", transform = ContentBlock::header)

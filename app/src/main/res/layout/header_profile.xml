@@ -1,157 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<com.google.android.material.card.MaterialCardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
-    <!-- background is required for elevation -->
+    app:cardElevation="?appBarElevation"
+    app:cardCornerRadius="0dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/profileCover"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:adjustViewBounds="true"
+        android:layout_height="wrap_content">
+        <!-- background is required for elevation -->
 
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/profileCover"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:adjustViewBounds="true"
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@drawable/fg_profile_cover"
-        app:layout_constraintTop_toTopOf="@id/profileCover"
-        app:layout_constraintBottom_toBottomOf="@id/profileCover" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/profileImage"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/fg_profile_cover"
+            app:layout_constraintTop_toTopOf="@id/profileCover"
+            app:layout_constraintBottom_toBottomOf="@id/profileCover" />
 
-        android:layout_marginTop="@dimen/profile_header_margin"
-        app:layout_goneMarginTop="?actionBarSize"
-        android:layout_marginStart="@dimen/profile_header_margin"
-        android:layout_marginLeft="@dimen/profile_header_margin"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profileImage"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileCover"
+            android:layout_marginTop="@dimen/profile_header_margin"
+            app:layout_goneMarginTop="?actionBarSize"
+            android:layout_marginStart="@dimen/profile_header_margin"
+            android:layout_marginLeft="@dimen/profile_header_margin"
 
-        tools:src="@drawable/dialog_background" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileCover"
 
-    <!-- Bottom constraint for profile image in case when there are only image & name -->
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profileImage"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/profile_header_margin" />
+            tools:src="@drawable/dialog_background" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/profileName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-        android:textColor="@color/new_accent_color"
-        app:fontFamily="@font/roboto_medium"
-        android:textSize="20sp"
-
-        app:layout_constraintTop_toTopOf="@id/profileImage"
-        app:layout_constraintStart_toEndOf="@id/profileImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/profileBio"
-
-        app:layout_constraintVertical_bias="0"
-
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginRight="@dimen/profile_header_margin"
-        android:layout_marginEnd="@dimen/profile_header_margin"
-
-        tools:text="Konstantin Konstantin"/>
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/profileBio"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
-        android:lineSpacingMultiplier="1.1"
-        android:letterSpacing="0.01"
-
-        app:layout_constraintTop_toBottomOf="@id/profileName"
-        app:layout_constraintStart_toEndOf="@id/profileImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/profileImage"
-
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginRight="@dimen/profile_header_margin"
-        android:layout_marginEnd="@dimen/profile_header_margin"
-        android:layout_marginTop="4dp"
-
-        tools:text="Konstantin Konstantin bio dslkdjaksdjajsl adklsj l jasl dj lkjadlksakdjas adslkdj alsjd lkjasdlk lkasj lkajsdask jlaslkd" />
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/profileStats"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-        app:layout_constraintTop_toBottomOf="@id/profileBio"
-        app:layout_constraintStart_toEndOf="@id/profileImage"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:orientation="vertical"
-        android:layout_marginTop="@dimen/profile_header_stats_margin"
-        android:layout_marginBottom="@dimen/profile_header_stats_margin"
-        android:layout_marginLeft="@dimen/profile_header_stats_margin"
-        android:layout_marginStart="@dimen/profile_header_stats_margin"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        >
+        <!-- Bottom constraint for profile image in case when there are only image & name -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileImage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="@dimen/profile_header_margin" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/profileKnowledgeRank"
-            android:layout_width="match_parent"
+            android:id="@+id/profileName"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/ProfileStat"
 
-            android:drawableStart="@drawable/ic_profile_knowledge"
-            android:drawableLeft="@drawable/ic_profile_knowledge"
-            tools:text="Knowledge 700" />
+            android:textAppearance="?textAppearanceHeadline6"
+
+            app:layout_constraintTop_toTopOf="@id/profileImage"
+            app:layout_constraintStart_toEndOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/profileBio"
+
+            app:layout_constraintVertical_bias="0"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="@dimen/profile_header_margin"
+            android:layout_marginEnd="@dimen/profile_header_margin"
+
+            tools:text="Konstantin Konstantin"/>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/profileReputationRank"
-            android:layout_width="match_parent"
+            android:id="@+id/profileBio"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/ProfileStat"
 
-            android:drawableStart="@drawable/ic_profile_reputation"
-            android:drawableLeft="@drawable/ic_profile_reputation"
-            tools:text="Reputation 25k" />
+            android:textAppearance="?textAppearanceCaption"
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/profileCertificatesIssued"
-            android:layout_width="match_parent"
+            app:layout_constraintTop_toBottomOf="@id/profileName"
+            app:layout_constraintStart_toEndOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/profileImage"
+
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginRight="@dimen/profile_header_margin"
+            android:layout_marginEnd="@dimen/profile_header_margin"
+            android:layout_marginTop="4dp"
+
+            tools:text="Konstantin Konstantin bio dslkdjaksdjajsl adklsj l jasl dj lkjadlksakdjas adslkdj alsjd lkjasdlk lkasj lkajsdask jlaslkd" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/profileStats"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/ProfileStat"
 
-            android:drawableStart="@drawable/ic_profile_reputation"
-            android:drawableLeft="@drawable/ic_profile_reputation"
-            tools:text="Reputation 25k" />
+            app:layout_constraintTop_toBottomOf="@id/profileBio"
+            app:layout_constraintStart_toEndOf="@id/profileImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/profile_header_stats_margin"
+            android:layout_marginBottom="@dimen/profile_header_stats_margin"
+            android:layout_marginLeft="@dimen/profile_header_stats_margin"
+            android:layout_marginStart="@dimen/profile_header_stats_margin"
+            android:layout_marginRight="16dp"
+            android:layout_marginEnd="16dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/profileCoursesPublished"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/ProfileStat"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/profileKnowledgeRank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ProfileStat"
 
-            android:drawableStart="@drawable/ic_profile_courses"
-            android:drawableLeft="@drawable/ic_profile_courses"
-            tools:text="Reputation 25k" />
+                android:drawableStart="@drawable/ic_profile_knowledge"
+                android:drawableLeft="@drawable/ic_profile_knowledge"
+                tools:text="Knowledge 700" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/profileReputationRank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ProfileStat"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                android:drawableStart="@drawable/ic_profile_reputation"
+                android:drawableLeft="@drawable/ic_profile_reputation"
+                tools:text="Reputation 25k" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/profileCertificatesIssued"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ProfileStat"
+
+                android:drawableStart="@drawable/ic_profile_reputation"
+                android:drawableLeft="@drawable/ic_profile_reputation"
+                tools:text="Reputation 25k" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/profileCoursesPublished"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/ProfileStat"
+
+                android:drawableStart="@drawable/ic_profile_courses"
+                android:drawableLeft="@drawable/ic_profile_courses"
+                tools:text="Reputation 25k" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

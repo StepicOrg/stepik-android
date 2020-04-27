@@ -51,7 +51,8 @@ class CodeStepQuizFormDelegate(
 
     init {
         viewStateDelegate.addState<CodeStepQuizFormState.Idle>()
-        viewStateDelegate.addState<CodeStepQuizFormState.NoLang>(stepQuizCodeLangChooserTitle, stepQuizCodeLangChooser)
+        viewStateDelegate.addState<CodeStepQuizFormState.NoLang>(stepQuizCodeLangChooserTitle, stepQuizCodeLangChooser,
+            containerView.stepQuizCodeLangChooserDividerTop, containerView.stepQuizCodeLangChooserDividerBottom)
         viewStateDelegate.addState<CodeStepQuizFormState.Lang>(codeLayout, stepQuizActions)
 
         /**

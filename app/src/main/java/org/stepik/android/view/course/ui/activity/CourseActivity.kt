@@ -5,15 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.error_course_not_found.*
@@ -23,6 +20,7 @@ import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.configuration.RemoteConfig
@@ -108,6 +106,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     @Inject
     internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
+    @Inject
+    internal lateinit var coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest
+
 //    @Inject
 //    internal lateinit var billing: Billing
 
@@ -148,7 +149,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
-                this, analytic, coursePresenter,
+                this, analytic, coursePresenter, coursePurchasePriceSplitTest,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
@@ -234,9 +235,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     private fun initViewPager(courseId: Long) {
-        val lightFont = ResourcesCompat.getFont(this, R.font.roboto_light)
-        val regularFont = ResourcesCompat.getFont(this, R.font.roboto_regular)
-
         coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
         val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
@@ -249,30 +247,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePager.addOnPageChangeListener(onPageChangeListener)
 
         courseTabs.setupWithViewPager(coursePager)
-        courseTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                (tab?.customView as? TextView)?.let {
-                    it.typeface = lightFont
-                }
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                (tab?.customView as? TextView)?.let {
-                    it.typeface = regularFont
-                }
-            }
-        })
-
-        for (i in 0 until courseTabs.tabCount) {
-            val tab = courseTabs.getTabAt(i)
-            tab?.customView = (layoutInflater.inflate(R.layout.view_course_tab, null) as TextView).also {
-                it.typeface = lightFont
-            }
-        }
-
-        (courseTabs.getTabAt(courseTabs.selectedTabPosition)?.customView as? TextView)
-            ?.typeface = regularFont
     }
 
     private fun initViewStateDelegate() {

@@ -12,7 +12,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.social.SocialMedia
 import org.stepic.droid.ui.adapters.SocialLinksAdapter
-import org.stepic.droid.util.ColorUtil
 
 class AboutAppFragment : FragmentBase() {
 
@@ -25,9 +24,6 @@ class AboutAppFragment : FragmentBase() {
             inflater.inflate(R.layout.fragment_about_app, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val activity = requireActivity()
-
-        activity.window.decorView.setBackgroundColor(ColorUtil.getColorArgb(R.color.old_cover, activity))
         super.onViewCreated(view, savedInstanceState)
 
         privacyPolicyView.setOnClickListener {

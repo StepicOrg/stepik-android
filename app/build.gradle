@@ -123,8 +123,10 @@ dependencies {
     implementation libraries.ktx
     implementation libraries.recyclerview
     implementation libraries.viewPager
+    implementation libraries.viewPager2
     implementation libraries.cardView
     implementation libraries.constraintLayout
+    implementation libraries.material
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel
@@ -143,6 +145,9 @@ dependencies {
     implementation libraries.retrofit
     implementation libraries.retrofitGsonConverter
     implementation libraries.retrofitRxJavaAdapter
+    implementation (libraries.okhttp) {
+        force = true
+    }
     implementation libraries.jsoup
     debugImplementation libraries.stetho
     debugImplementation libraries.stethoOkHttp
@@ -172,15 +177,11 @@ dependencies {
 
     implementation libraries.timber
 
-    implementation libraries.materialDialog
-    implementation libraries.materialDialogCore
     implementation libraries.numberPicker
-    implementation libraries.datePicker
     implementation libraries.photoView
     implementation libraries.recyclerAnimators
     implementation libraries.materialProgress
     implementation libraries.circleImageView
-    implementation libraries.ahbottomnavigation
     implementation libraries.circleIndicator
     implementation libraries.confetti
     implementation libraries.MPAndroidChart

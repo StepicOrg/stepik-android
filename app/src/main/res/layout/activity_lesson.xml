@@ -1,37 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp"
-        android:elevation="0dp">
+        android:elevation="?appBarElevation">
 
         <include layout="@layout/view_subtitled_toolbar" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lesson_toolbar_separator" />
+        <include layout="@layout/view_divider_vertical" />
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/lessonTab"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:clipToPadding="false"
             android:visibility="gone"
-            app:tabIndicatorColor="@color/new_accent_color"
-            app:tabIndicatorHeight="@dimen/guideline_tab_indicator_height"
+            android:theme="@style/ThemeOverlay.Brown"
             app:tabMode="scrollable" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/lesson_tabbar_separator" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

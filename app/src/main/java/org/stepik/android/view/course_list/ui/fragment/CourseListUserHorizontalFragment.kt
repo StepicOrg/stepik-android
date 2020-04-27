@@ -1,10 +1,7 @@
 package org.stepik.android.view.course_list.ui.fragment
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -65,11 +62,6 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
         courseListTitle.text = resources.getString(R.string.course_list_user_courses_title)
 
-        val iconDrawable = coursesViewAll.drawable
-            .let(DrawableCompat::wrap)
-            .let(Drawable::mutate)
-        DrawableCompat.setTint(iconDrawable, ContextCompat.getColor(requireContext(), R.color.view_all_course_list_color_dark))
-
         val courseListPadding = resources.getDimensionPixelOffset(R.dimen.course_list_padding)
         courseListCoursesRecycler.setPadding(
             courseListPadding,
@@ -93,7 +85,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
         courseListTitleContainer.setOnClickListener { screenManager.showUserCourses(requireContext()) }
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
-        courseListPlaceholderEmpty.setPlaceholderText(R.string.empty_courses_popular)
+        courseListPlaceholderEmpty.setPlaceholderText(R.string.courses_carousel_my_courses_empty)
         courseListPlaceholderNoConnection.setOnClickListener {
             courseListPresenter.fetchUserCourses(forceUpdate = true)
         }

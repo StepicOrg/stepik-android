@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<shape
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <corners android:radius="@dimen/course_widget_radius"/>
-    <stroke android:color="@color/placeholder_button_stroke_color" android:width="0.3dp" />
-    <solid android:color="@color/placeholder_button_pressed_color"/>
-</shape>

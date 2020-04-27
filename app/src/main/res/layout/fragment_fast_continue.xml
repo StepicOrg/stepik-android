@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/ThemeOverlay.Dark"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="0dp"
@@ -16,10 +17,11 @@
         android:id="@+id/fastContinueMask"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:borderRadius="@dimen/course_image_radius">
+        app:borderRadius="?cornerRadius">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="?colorSurface">
             <ImageView
                 android:src="@drawable/continue_learning_cover"
                 android:layout_height="0dp"
@@ -27,6 +29,7 @@
                 android:layout_margin="0dp"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/accessibility_last_step_cover"
+                android:alpha="0.2"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -37,23 +40,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_margin="0dp"
-                android:background="@drawable/bg_fast_continue_overlay"
+                android:background="?selectableItemBackgroundRounded"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/fastContinueAction"
-                style="@style/CourseWidgetView"
                 android:layout_width="0dp"
-                android:layout_height="@dimen/header_action_height"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/header_action_background_white"
+                app:cornerRadius="@dimen/header_action_radius"
                 android:paddingEnd="@dimen/half_padding"
                 android:paddingStart="@dimen/half_padding"
                 android:text="@string/continue_learning"
-                android:textSize="@dimen/header_action_text_size"
                 android:layout_marginRight="@dimen/header_action_horizontal_margin"
                 android:layout_marginEnd="@dimen/header_action_horizontal_margin"
                 android:layout_marginLeft="@dimen/header_action_horizontal_margin"
@@ -80,10 +81,7 @@
                 android:id="@+id/fastContinueCourseName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:fontFamily="@font/roboto_light"
-                android:gravity="start"
-                android:textSize="@dimen/course_item_titles_text_size"
-                android:textColor="@color/white"
+                android:textAppearance="?textAppearanceBody1"
                 android:ellipsize="end"
                 android:maxLines="1"
                 app:layout_constraintTop_toTopOf="@id/fastContinueCourseCover"
@@ -98,7 +96,8 @@
 
             <TextView
                 android:id="@+id/fastContinueCourseProgressText"
-                style="@style/FastContinueSubtextStyle"
+                android:textAppearance="?textAppearanceCaption"
+                android:textColor="?android:textColorSecondary"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toRightOf="@id/fastContinueCourseCover"
@@ -122,7 +121,8 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginLeft="0dp"
                 android:max="100"
-                app:mpb_progressTint="@color/stepic_brand_primary"
+                android:theme="@style/ThemeOverlay.Secondary.Green"
+                app:mpb_progressTint="?colorSecondary"
                 app:mpb_progressStyle="horizontal"
                 app:mpb_useIntrinsicPadding="false"
                 app:mpb_showProgressBackground="false"

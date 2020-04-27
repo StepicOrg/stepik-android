@@ -3,7 +3,6 @@ package org.stepik.android.view.course_list.ui.adapter.delegate
 import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -29,7 +28,7 @@ class CourseListItemAdapterDelegate(
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<CourseListItem>(root) {
         private val courseCoverImageTarget =
-            RoundedBitmapImageViewTarget(context.resources.getDimension(R.dimen.course_image_radius), root.courseItemImage)
+            RoundedBitmapImageViewTarget(context.resources.getDimension(R.dimen.corner_radius), root.courseItemImage)
 
         private val coursePlaceholder = BitmapFactory
             .decodeResource(context.resources, R.drawable.general_placeholder)
@@ -37,7 +36,7 @@ class CourseListItemAdapterDelegate(
                 RoundedBitmapDrawableFactory
                     .create(context.resources, bitmap)
                     .apply {
-                        cornerRadius = context.resources.getDimension(R.dimen.course_image_radius)
+                        cornerRadius = context.resources.getDimension(R.dimen.corner_radius)
                     }
             }
 
@@ -49,21 +48,8 @@ class CourseListItemAdapterDelegate(
         private val courseButtonSeparator = root.courseButtonSeparator
 
         init {
-            coursePropertiesDelegate.setTextColor(ContextCompat.getColor(context, R.color.new_accent_color))
-
-            root.setOnClickListener {
-                val dataItem = itemData as? CourseListItem.Data
-                    ?: return@setOnClickListener
-
-                dataItem.let(onItemClicked)
-            }
-
-            courseContinueButton.setOnClickListener {
-                val dataItem = itemData as? CourseListItem.Data
-                    ?: return@setOnClickListener
-
-                dataItem.let(onContinueCourseClicked)
-            }
+            root.setOnClickListener { (itemData as? CourseListItem.Data)?.let(onItemClicked) }
+            courseContinueButton.setOnClickListener { (itemData as? CourseListItem.Data)?.let(onContinueCourseClicked) }
         }
 
         override fun onBind(data: CourseListItem) {
@@ -88,7 +74,6 @@ class CourseListItemAdapterDelegate(
                 courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
             }
 
-            // todo add to CourseListItem field and resolve in domain layer
             adaptiveCourseMarker.isVisible = data.isAdaptive
 
             coursePropertiesDelegate.setStats(data)

@@ -2,7 +2,7 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_course_list.view.*
@@ -149,7 +149,7 @@ class CourseListAdapterDelegate(
 
             with(collectionColors) {
                 courseListDescription.setBackgroundResource(backgroundRes)
-                courseListDescription.setTextColor(ContextCompat.getColor(context, textColorRes))
+                courseListDescription.setTextColor(AppCompatResources.getColorStateList(context, textColorRes))
             }
 
             courseListCoursesRecycler.scrollToPosition(data.firstVisibleItemPosition ?: 0)

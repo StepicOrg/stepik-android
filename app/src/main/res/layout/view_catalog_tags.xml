@@ -16,7 +16,6 @@
         android:layout_below="@id/tagsTitle"
         android:layout_marginBottom="@dimen/catalog_header_bottom_margin"
         android:clipToPadding="false"
-        android:divider="@color/transparent"
         android:paddingEnd="0dp"
         android:paddingLeft="@dimen/course_list_side_padding"
         android:paddingRight="0dp"
@@ -26,9 +25,9 @@
 
 
     <include
-        layout="@layout/view_horizontal_line"
+        layout="@layout/view_divider_vertical"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="?dividerVerticalSize"
         android:layout_below="@id/tagsRecycler"/>
 
 </RelativeLayout>

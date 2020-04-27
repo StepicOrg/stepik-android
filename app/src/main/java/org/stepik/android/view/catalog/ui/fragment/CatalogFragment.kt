@@ -113,7 +113,6 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
         )
 
         catalogItemAdapter += OfflineAdapterDelegate { catalogPresenter.fetchCollections(forceUpdate = true) }
-
         catalogItemAdapter += LoadingAdapterDelegate()
 
         with(catalogRecyclerView) {
@@ -161,23 +160,18 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
                 searchEventLogged = true
             }
             searchIcon.setImageResource(0)
+            searchViewToolbar.setBackgroundColor(0)
             (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
-            searchViewContainer.setBackgroundResource(R.color.white)
-            searchViewToolbar.setBackgroundResource(R.color.white)
         } else {
             searchIcon.setImageResource(R.drawable.ic_action_search)
-            val margin = resources.getDimension(R.dimen.search_bar_margin).toInt()
-            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
-            searchViewContainer.setBackgroundResource(R.color.old_cover)
+            val margin = resources.getDimensionPixelOffset(R.dimen.search_bar_margin)
             searchViewToolbar.setBackgroundResource(R.drawable.bg_catalog_search_bar)
+            (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(margin, margin, margin, margin)
         }
     }
 
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
-        if (android.os.Build.VERSION.SDK_INT < 21) {
-            toolbarShadow.isVisible = true
-        }
         searchViewToolbar.isVisible = true
         searchViewToolbar.onActionViewExpanded()
         searchViewToolbar.clearFocus()

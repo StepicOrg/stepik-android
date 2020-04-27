@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -12,8 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:textSize="16sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody1"
 
         tools:text="Пример данных 1:" />
 
@@ -23,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
 
-        android:textSize="14sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
         app:fontFamily="@font/pt_mono"
 
         tools:text="77 1010" />

@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.AppCompatTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:drawablePadding="8dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp"
-    android:textSize="14sp"
-    android:textColor="@color/violet1"
-    app:fontFamily="@font/roboto_medium"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="8dp"
+    android:textAppearance="?textAppearanceSubtitle2"
+    android:theme="@style/ThemeOverlay.Violet"
+    android:textColor="?colorSecondary"
     android:background="?selectableItemBackground"
-    android:letterSpacing="0.02" />
+    tools:drawableStart="@drawable/ic_profile_web"
+    tools:text="Some link" />
