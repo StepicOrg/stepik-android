@@ -44,8 +44,8 @@ constructor(
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
 
-    fun toggleUserCourse(userCourse: UserCourse): Completable =
-        userCoursesRepository.toggleUserCourse(userCourse)
+    fun saveUserCourse(userCourse: UserCourse): Completable =
+        userCoursesRepository.saveUserCourse(userCourse)
 
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
         zip(

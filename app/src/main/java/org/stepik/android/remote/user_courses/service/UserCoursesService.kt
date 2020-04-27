@@ -15,5 +15,5 @@ interface UserCoursesService {
     fun getUserCourses(@Query("page") page: Int): Single<UserCoursesResponse>
 
     @PUT("api/user-courses/{id}")
-    fun toggleUserCourse(@Path("id") userCourseId: Long, @Body request: UserCoursesRequest): Completable
+    fun saveUserCourse(@Path("id") userCourseId: Long, @Body request: UserCoursesRequest): Completable
 }

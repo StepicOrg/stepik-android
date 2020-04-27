@@ -378,7 +378,7 @@ constructor(
             ?.courseHeaderData
             ?.userCourse
             ?.let { it.copy(isFavorite = !it.isFavorite) }
-            ?.let(::toggleUserCourse)
+            ?.let(::saveUserCourse)
             ?: return
     }
 
@@ -387,13 +387,13 @@ constructor(
             ?.courseHeaderData
             ?.userCourse
             ?.let { it.copy(isArchived = !it.isArchived) }
-            ?.let(::toggleUserCourse)
+            ?.let(::saveUserCourse)
             ?: return
     }
 
-    private fun toggleUserCourse(userCourse: UserCourse) {
+    private fun saveUserCourse(userCourse: UserCourse) {
         compositeDisposable += courseInteractor
-            .toggleUserCourse(userCourse = userCourse)
+            .saveUserCourse(userCourse = userCourse)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

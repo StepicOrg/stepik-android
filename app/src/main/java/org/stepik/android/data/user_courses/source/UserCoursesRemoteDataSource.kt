@@ -7,5 +7,5 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 
 interface UserCoursesRemoteDataSource {
     fun getUserCourses(page: Int): Single<PagedList<UserCourse>>
-    fun toggleUserCourses(userCourseId: Long, userCourse: UserCourse): Completable
+    fun saveUserCourse(userCourseId: Long, userCourse: UserCourse): Completable
 }

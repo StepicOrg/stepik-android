@@ -21,7 +21,7 @@ constructor(
             .getUserCourses(page)
             .map { it.toPagedList(UserCoursesResponse::userCourse) }
 
-    override fun toggleUserCourses(userCourseId: Long, userCourse: UserCourse): Completable =
+    override fun saveUserCourse(userCourseId: Long, userCourse: UserCourse): Completable =
         userCoursesService
-            .toggleUserCourse(userCourseId, UserCoursesRequest(userCourse))
+            .saveUserCourse(userCourseId, UserCoursesRequest(userCourse))
 }

@@ -8,7 +8,7 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 
 interface UserCoursesRepository {
     fun getUserCourses(page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<UserCourse>>
-    fun toggleUserCourse(userCourse: UserCourse): Completable
+    fun saveUserCourse(userCourse: UserCourse): Completable
 
     /***
      *  Cached purpose only

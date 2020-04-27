@@ -40,9 +40,9 @@ constructor(
         }
     }
 
-    override fun toggleUserCourse(userCourse: UserCourse): Completable =
+    override fun saveUserCourse(userCourse: UserCourse): Completable =
         userCoursesRemoteDataSource
-            .toggleUserCourses(userCourse.id, userCourse)
+            .saveUserCourse(userCourse.id, userCourse)
             .then(userCoursesCacheDataSource.saveUserCourses(listOf(userCourse)))
 
     override fun getUserCourse(courseId: Long): Single<UserCourse> =
