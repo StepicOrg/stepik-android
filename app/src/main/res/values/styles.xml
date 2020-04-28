@@ -28,7 +28,7 @@
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
 
-    <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
+    <style name="AppTheme.VideoPlayer.7" parent="AppTheme">
         <item name="colorAccent">@color/white</item>
         <item name="colorPrimary">@color/color_overlay_green</item>
         <item name="windowActionBar">false</item>
@@ -148,15 +148,6 @@
         <item name="android:gravity">center</item>
         <item name="fontFamily">sans-serif-black</item>
         <item name="android:fontFamily">sans-serif-black</item>
-    </style>
-
-    <style name="AdaptiveLevelDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowAnimationStyle">@style/AdaptiveLevelDialogTheme.Window</item>
-    </style>
-
-    <style name="AdaptiveLevelDialogTheme.Window" parent="@android:style/Animation.Activity">
-        <item name="android:windowEnterAnimation">@anim/adaptive_dialog_in</item>
-        <item name="android:windowExitAnimation">@anim/adaptive_dialog_out</item>
     </style>
 
     <style name="StepQuizFeedback">
