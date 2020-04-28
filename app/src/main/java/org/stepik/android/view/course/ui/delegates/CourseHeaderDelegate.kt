@@ -198,6 +198,7 @@ class CourseHeaderDelegate(
     fun onOptionsMenuCreated(menu: Menu) {
         favoriteCourseMenuItem = menu.findItem(R.id.favorite_course)
         favoriteCourseMenuItem?.isVisible = courseHeaderData != null
+        favoriteCourseMenuItem?.isEnabled = true
         favoriteCourseMenuItem?.title = if (courseHeaderData?.userCourse?.isFavorite == true) {
             courseActivity.getString(R.string.course_remove_from_favorites)
         } else {
@@ -206,6 +207,7 @@ class CourseHeaderDelegate(
 
         archiveCourseMenuItem = menu.findItem(R.id.archive_course)
         archiveCourseMenuItem?.isVisible = courseHeaderData != null
+        archiveCourseMenuItem?.isEnabled = true
         archiveCourseMenuItem?.title = if (courseHeaderData?.userCourse?.isArchived == true) {
             courseActivity.getString(R.string.course_remove_from_archive)
         } else {
@@ -240,10 +242,12 @@ class CourseHeaderDelegate(
                 true
             }
             R.id.favorite_course -> {
+                favoriteCourseMenuItem?.isEnabled = false
                 coursePresenter.toggleFavorite()
                 true
             }
             R.id.archive_course -> {
+                archiveCourseMenuItem?.isEnabled = false
                 coursePresenter.toggleArchive()
                 true
             }

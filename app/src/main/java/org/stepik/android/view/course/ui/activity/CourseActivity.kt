@@ -400,6 +400,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
                     R.string.course_remove_from_archive_failure
             }
         coursePager.snackbar(messageRes = errorMessage)
+        invalidateOptionsMenu()
     }
 
     /**
