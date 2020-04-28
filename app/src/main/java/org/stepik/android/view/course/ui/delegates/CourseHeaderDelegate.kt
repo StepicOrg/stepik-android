@@ -245,12 +245,10 @@ class CourseHeaderDelegate(
                 true
             }
             R.id.favorite_course -> {
-                favoriteCourseMenuItem?.isEnabled = false
                 coursePresenter.toggleFavorite()
                 true
             }
             R.id.archive_course -> {
-                archiveCourseMenuItem?.isEnabled = false
                 coursePresenter.toggleArchive()
                 true
             }

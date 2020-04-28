@@ -22,6 +22,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
@@ -389,21 +390,20 @@ constructor(
         val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
             ?: return
 
-        val isFavorite = !oldUserCourseHeader.userCourse.isFavorite
+        val userCourse = oldUserCourseHeader.userCourse.copy(isFavorite = !oldUserCourseHeader.userCourse.isFavorite)
 
         val newCourseHeaderData = oldCourseHeaderData.copy(
             userCourseHeader = oldUserCourseHeader.copy(
-                userCourse = oldUserCourseHeader.userCourse.copy(isFavorite = isFavorite),
                 isSending = true
             )
         )
 
-        val userCourseAction = if (isFavorite) {
+        val userCourseAction = if (userCourse.isFavorite) {
             UserCourseAction.ADD_FAVORITE
         } else {
             UserCourseAction.REMOVE_FAVORITE
         }
-        saveUserCourse(newCourseHeaderData, userCourseAction)
+        saveUserCourse(newCourseHeaderData, userCourse, userCourseAction)
     }
 
     fun toggleArchive() {
@@ -414,28 +414,23 @@ constructor(
         val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
             ?: return
 
-        val isArchived = !oldUserCourseHeader.userCourse.isArchived
+        val userCourse = oldUserCourseHeader.userCourse.copy(isArchived = !oldUserCourseHeader.userCourse.isArchived)
 
         val newCourseHeaderData = oldCourseHeaderData.copy(
             userCourseHeader = oldUserCourseHeader.copy(
-                userCourse = oldUserCourseHeader.userCourse.copy(isArchived = isArchived),
                 isSending = true
             )
         )
 
-        val userCourseAction = if (isArchived) {
+        val userCourseAction = if (userCourse.isArchived) {
             UserCourseAction.ADD_ARCHIVE
         } else {
             UserCourseAction.REMOVE_ARCHIVE
         }
-        saveUserCourse(newCourseHeaderData, userCourseAction)
+        saveUserCourse(newCourseHeaderData, userCourse, userCourseAction)
     }
 
-    private fun saveUserCourse(preparedCourseHeaderData: CourseHeaderData, userCourseAction: UserCourseAction) {
-        val userCourse = (preparedCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
-            ?.userCourse
-            ?: return
-
+    private fun saveUserCourse(preparedCourseHeaderData: CourseHeaderData, userCourse: UserCourse, userCourseAction: UserCourseAction) {
         state = CourseView.State.CourseLoaded(preparedCourseHeaderData)
 
         userCourseDisposable += courseInteractor
