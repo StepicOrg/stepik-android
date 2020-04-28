@@ -9,10 +9,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_reviews_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.ui.util.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course_reviews.model.CourseReview
@@ -35,15 +34,13 @@ class CourseReviewDataDelegate(
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
         private val reviewIcon = root.reviewIcon
+        private val reviewIconWrapper = reviewIcon.wrapWithGlide()
         private val reviewDate = root.reviewDate
         private val reviewName = root.reviewName
         private val reviewRating = root.reviewRating
         private val reviewText = root.reviewText
         private val reviewMenu = root.reviewMenu
         private val reviewMark = root.reviewMark
-
-        private val reviewIconTarget = RoundedBitmapImageViewTarget(
-            context.resources.getDimension(R.dimen.corner_radius), reviewIcon)
 
         private val reviewIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
@@ -64,12 +61,7 @@ class CourseReviewDataDelegate(
         override fun onBind(data: CourseReviewItem) {
             data as CourseReviewItem.Data
 
-            Glide.with(context)
-                .asBitmap()
-                .load(data.user.avatar ?: "")
-                .placeholder(reviewIconPlaceholder)
-                .centerCrop()
-                .into(reviewIconTarget)
+            reviewIconWrapper.setImagePath(data.user.avatar ?: "", reviewIconPlaceholder)
 
             reviewName.text = data.user.fullName
 
