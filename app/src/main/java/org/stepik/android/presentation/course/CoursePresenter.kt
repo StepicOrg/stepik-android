@@ -410,13 +410,13 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = {
+                onSuccess = {
                     val oldState = (state as? CourseView.State.CourseLoaded)
                         ?: return@subscribeBy
 
                     val courseHeaderData = oldState
                         .courseHeaderData
-                        .copy(userCourse = userCourse)
+                        .copy(userCourse = it.first())
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                     view?.showSaveUserCourseSuccess(userCourseAction)
                 },

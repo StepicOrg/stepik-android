@@ -1,9 +1,10 @@
 package org.stepik.android.domain.course.interactor
 
-import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
+import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
@@ -44,7 +45,7 @@ constructor(
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
 
-    fun saveUserCourse(userCourse: UserCourse): Completable =
+    fun saveUserCourse(userCourse: UserCourse): Single<PagedList<UserCourse>> =
         userCoursesRepository.saveUserCourse(userCourse)
 
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =

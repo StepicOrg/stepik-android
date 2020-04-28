@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.doCompletableOnSuccess
-import org.stepic.droid.util.then
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -40,10 +39,10 @@ constructor(
         }
     }
 
-    override fun saveUserCourse(userCourse: UserCourse): Completable =
+    override fun saveUserCourse(userCourse: UserCourse): Single<PagedList<UserCourse>> =
         userCoursesRemoteDataSource
             .saveUserCourse(userCourse.id, userCourse)
-            .then(userCoursesCacheDataSource.saveUserCourses(listOf(userCourse)))
+            .doCompletableOnSuccess(userCoursesCacheDataSource::saveUserCourses)
 
     override fun getUserCourse(courseId: Long): Single<UserCourse> =
         userCoursesCacheDataSource.getUserCourse(courseId)

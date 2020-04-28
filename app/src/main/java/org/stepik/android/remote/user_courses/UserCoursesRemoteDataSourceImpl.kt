@@ -1,6 +1,5 @@
 package org.stepik.android.remote.user_courses
 
-import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource
@@ -21,7 +20,8 @@ constructor(
             .getUserCourses(page)
             .map { it.toPagedList(UserCoursesResponse::userCourse) }
 
-    override fun saveUserCourse(userCourseId: Long, userCourse: UserCourse): Completable =
+    override fun saveUserCourse(userCourseId: Long, userCourse: UserCourse): Single<PagedList<UserCourse>> =
         userCoursesService
             .saveUserCourse(userCourseId, UserCoursesRequest(userCourse))
+            .map { it.toPagedList(UserCoursesResponse::userCourse) }
 }
