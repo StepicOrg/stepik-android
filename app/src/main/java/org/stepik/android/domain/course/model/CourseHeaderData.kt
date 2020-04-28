@@ -3,12 +3,12 @@ package org.stepik.android.domain.course.model
 import android.os.Parcel
 import android.os.Parcelable
 import org.stepik.android.model.Course
-import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourseHeader
 
 data class CourseHeaderData(
     val courseId: Long,
     val course: Course,
-    val userCourse: UserCourse,
+    val userCourseHeader: UserCourseHeader,
     val title: String,
     val cover: String,
 
@@ -18,7 +18,7 @@ data class CourseHeaderData(
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(courseId)
         parcel.writeParcelable(course, flags)
-        parcel.writeParcelable(userCourse, flags)
+        parcel.writeParcelable(userCourseHeader, flags)
         parcel.writeString(title)
         parcel.writeString(cover)
         parcel.writeParcelable(stats, flags)
@@ -32,7 +32,7 @@ data class CourseHeaderData(
             CourseHeaderData(
                 parcel.readLong(),
                 parcel.readParcelable(Course::class.java.classLoader)!!,
-                parcel.readParcelable(UserCourse::class.java.classLoader)!!,
+                parcel.readParcelable(UserCourseHeader::class.java.classLoader)!!,
                 parcel.readString()!!,
                 parcel.readString()!!,
                 parcel.readParcelable(CourseStats::class.java.classLoader)!!,

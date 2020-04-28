@@ -10,6 +10,7 @@ import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
@@ -52,12 +53,12 @@ constructor(
         zip(
             courseStatsInteractor.getCourseStats(listOf(course)),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            userCoursesRepository.getUserCourse(course.id)
-        ) { courseStats, localSubmissions, userCourse ->
+            obtainUserCourse(course.id)
+        ) { courseStats, localSubmissions, userCourseHeader ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
-                userCourse = userCourse,
+                userCourseHeader = userCourseHeader,
                 title = course.title ?: "",
                 cover = course.cover ?: "",
 
@@ -66,4 +67,10 @@ constructor(
             )
         }
             .toMaybe()
+
+    private fun obtainUserCourse(courseId: Long): Single<UserCourseHeader> =
+        userCoursesRepository
+            .getUserCourse(courseId)
+            .map { UserCourseHeader.Data(it) as UserCourseHeader }
+            .onErrorReturn { UserCourseHeader.Empty }
 }

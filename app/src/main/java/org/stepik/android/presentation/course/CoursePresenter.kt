@@ -22,6 +22,7 @@ import org.stepik.android.domain.notification.interactor.CourseNotificationInter
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
@@ -375,10 +376,13 @@ constructor(
      */
 
     fun toggleFavorite() {
-        val userCourse = (state as? CourseView.State.CourseLoaded)
+        val userCourseHeader = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.userCourse
-            ?.let { it.copy(isFavorite = !it.isFavorite) }
+            ?.userCourseHeader
+            ?: return
+
+        val userCourse = (userCourseHeader as? UserCourseHeader.Data)
+            ?.let { it.userCourse.copy(isFavorite = !it.userCourse.isFavorite) }
             ?: return
 
         val userCourseAction = if (userCourse.isFavorite) {
@@ -390,10 +394,13 @@ constructor(
     }
 
     fun toggleArchive() {
-        val userCourse = (state as? CourseView.State.CourseLoaded)
+        val userCourseHeader = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.userCourse
-            ?.let { it.copy(isArchived = !it.isArchived) }
+            ?.userCourseHeader
+            ?: return
+
+        val userCourse = (userCourseHeader as? UserCourseHeader.Data)
+            ?.let { it.userCourse.copy(isArchived = !it.userCourse.isArchived) }
             ?: return
 
         val userCourseAction = if (userCourse.isArchived) {
@@ -416,7 +423,7 @@ constructor(
 
                     val courseHeaderData = oldState
                         .courseHeaderData
-                        .copy(userCourse = it.first())
+                        .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it.first()))
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                     view?.showSaveUserCourseSuccess(userCourseAction)
                 },

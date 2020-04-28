@@ -24,6 +24,7 @@ import org.stepic.droid.util.getAllQueryParameters
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.routing.CourseScreenTab
@@ -196,19 +197,21 @@ class CourseHeaderDelegate(
     }
 
     fun onOptionsMenuCreated(menu: Menu) {
+        val userCourseHeader = (courseHeaderData?.userCourseHeader as? UserCourseHeader.Data)
+
         favoriteCourseMenuItem = menu.findItem(R.id.favorite_course)
-        favoriteCourseMenuItem?.isVisible = courseHeaderData != null
+        favoriteCourseMenuItem?.isVisible = userCourseHeader != null
         favoriteCourseMenuItem?.isEnabled = true
-        favoriteCourseMenuItem?.title = if (courseHeaderData?.userCourse?.isFavorite == true) {
+        favoriteCourseMenuItem?.title = if (userCourseHeader?.userCourse?.isFavorite == true) {
             courseActivity.getString(R.string.course_remove_from_favorites)
         } else {
             courseActivity.getString(R.string.course_add_to_favorites)
         }
 
         archiveCourseMenuItem = menu.findItem(R.id.archive_course)
-        archiveCourseMenuItem?.isVisible = courseHeaderData != null
+        archiveCourseMenuItem?.isVisible = userCourseHeader != null
         archiveCourseMenuItem?.isEnabled = true
-        archiveCourseMenuItem?.title = if (courseHeaderData?.userCourse?.isArchived == true) {
+        archiveCourseMenuItem?.title = if (userCourseHeader?.userCourse?.isArchived == true) {
             courseActivity.getString(R.string.course_remove_from_archive)
         } else {
             courseActivity.getString(R.string.course_add_to_archive)
