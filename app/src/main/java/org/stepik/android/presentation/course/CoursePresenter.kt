@@ -4,6 +4,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -85,7 +86,10 @@ constructor(
     override val delegates: List<PresenterDelegate<in CourseView>> =
         listOf(courseContinuePresenterDelegateImpl)
 
+    private val userCourseDisposable = CompositeDisposable()
+
     init {
+        compositeDisposable += userCourseDisposable
         subscriberForEnrollmentUpdates()
         subscribeForLocalSubmissionsUpdates()
     }
@@ -193,6 +197,9 @@ constructor(
                 )
             )
         )
+
+        userCourseDisposable.clear()
+
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -412,7 +419,7 @@ constructor(
     }
 
     private fun saveUserCourse(userCourse: UserCourse, userCourseAction: UserCourseAction) {
-        compositeDisposable += courseInteractor
+        userCourseDisposable += courseInteractor
             .saveUserCourse(userCourse = userCourse)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
