@@ -33,6 +33,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
@@ -363,8 +364,42 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         courseHeaderDelegate.showCourseShareTooltip()
     }
 
-    override fun showSaveUserCourseError() {
-        coursePager.snackbar(messageRes = R.string.course_action_error)
+    override fun showSaveUserCourseSuccess(userCourseAction: UserCourseAction) {
+        @StringRes
+        val successMessage =
+            when (userCourseAction) {
+                UserCourseAction.ADD_FAVORITE ->
+                    R.string.course_add_to_favorites_success
+
+                UserCourseAction.REMOVE_FAVORITE ->
+                    R.string.course_remove_from_favorites_success
+
+                UserCourseAction.ADD_ARCHIVE ->
+                    R.string.course_add_to_archive_success
+
+                UserCourseAction.REMOVE_ARCHIVE ->
+                    R.string.course_remove_from_archive_success
+            }
+        coursePager.snackbar(messageRes = successMessage)
+    }
+
+    override fun showSaveUserCourseError(userCourseAction: UserCourseAction) {
+        @StringRes
+        val errorMessage =
+            when (userCourseAction) {
+                UserCourseAction.ADD_FAVORITE ->
+                    R.string.course_add_to_favorites_failure
+
+                UserCourseAction.REMOVE_FAVORITE ->
+                    R.string.course_remove_from_favorites_failure
+
+                UserCourseAction.ADD_ARCHIVE ->
+                    R.string.course_add_to_archive_failure
+
+                UserCourseAction.REMOVE_ARCHIVE ->
+                    R.string.course_remove_from_archive_failure
+            }
+        coursePager.snackbar(messageRes = errorMessage)
     }
 
     /**

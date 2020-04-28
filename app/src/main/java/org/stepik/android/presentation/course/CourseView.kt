@@ -4,6 +4,7 @@ import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_continue.CourseContinueView
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
 
 interface CourseView : CourseContinueView {
     sealed class State {
@@ -20,7 +21,8 @@ interface CourseView : CourseContinueView {
 
     fun showEmptyAuthDialog(course: Course)
     fun showEnrollmentError(errorType: EnrollmentError)
-    fun showSaveUserCourseError()
+    fun showSaveUserCourseSuccess(userCourseAction: UserCourseAction)
+    fun showSaveUserCourseError(userCourseAction: UserCourseAction)
 
     fun shareCourse(course: Course)
     fun showCourseShareTooltip()

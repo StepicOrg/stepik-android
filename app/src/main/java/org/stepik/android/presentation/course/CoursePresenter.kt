@@ -28,6 +28,7 @@ import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
@@ -374,24 +375,36 @@ constructor(
      */
 
     fun toggleFavorite() {
-        (state as? CourseView.State.CourseLoaded)
+        val userCourse = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
             ?.userCourse
             ?.let { it.copy(isFavorite = !it.isFavorite) }
-            ?.let(::saveUserCourse)
             ?: return
+
+        val userCourseAction = if (userCourse.isFavorite) {
+            UserCourseAction.ADD_FAVORITE
+        } else {
+            UserCourseAction.REMOVE_FAVORITE
+        }
+        saveUserCourse(userCourse, userCourseAction)
     }
 
     fun toggleArchive() {
-        (state as? CourseView.State.CourseLoaded)
+        val userCourse = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
             ?.userCourse
             ?.let { it.copy(isArchived = !it.isArchived) }
-            ?.let(::saveUserCourse)
             ?: return
+
+        val userCourseAction = if (userCourse.isArchived) {
+            UserCourseAction.ADD_ARCHIVE
+        } else {
+            UserCourseAction.REMOVE_ARCHIVE
+        }
+        saveUserCourse(userCourse, userCourseAction)
     }
 
-    private fun saveUserCourse(userCourse: UserCourse) {
+    private fun saveUserCourse(userCourse: UserCourse, userCourseAction: UserCourseAction) {
         compositeDisposable += courseInteractor
             .saveUserCourse(userCourse = userCourse)
             .subscribeOn(backgroundScheduler)
@@ -405,8 +418,9 @@ constructor(
                         .courseHeaderData
                         .copy(userCourse = userCourse)
                     state = CourseView.State.CourseLoaded(courseHeaderData)
+                    view?.showSaveUserCourseSuccess(userCourseAction)
                 },
-                onError = { view?.showSaveUserCourseError() }
+                onError = { view?.showSaveUserCourseError(userCourseAction) }
             )
     }
 
