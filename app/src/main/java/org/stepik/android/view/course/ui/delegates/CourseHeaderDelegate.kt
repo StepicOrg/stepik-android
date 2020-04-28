@@ -201,7 +201,7 @@ class CourseHeaderDelegate(
 
         favoriteCourseMenuItem = menu.findItem(R.id.favorite_course)
         favoriteCourseMenuItem?.isVisible = userCourseHeader != null
-        favoriteCourseMenuItem?.isEnabled = true
+        favoriteCourseMenuItem?.isEnabled = userCourseHeader?.isSending == false
         favoriteCourseMenuItem?.title = if (userCourseHeader?.userCourse?.isFavorite == true) {
             courseActivity.getString(R.string.course_remove_from_favorites)
         } else {
@@ -210,7 +210,7 @@ class CourseHeaderDelegate(
 
         archiveCourseMenuItem = menu.findItem(R.id.archive_course)
         archiveCourseMenuItem?.isVisible = userCourseHeader != null
-        archiveCourseMenuItem?.isEnabled = true
+        archiveCourseMenuItem?.isEnabled = userCourseHeader?.isSending == false
         archiveCourseMenuItem?.title = if (userCourseHeader?.userCourse?.isArchived == true) {
             courseActivity.getString(R.string.course_remove_from_archive)
         } else {

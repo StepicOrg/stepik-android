@@ -22,7 +22,6 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
-import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
@@ -383,42 +382,62 @@ constructor(
      */
 
     fun toggleFavorite() {
-        val userCourseHeader = (state as? CourseView.State.CourseLoaded)
+        val oldCourseHeaderData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.userCourseHeader
             ?: return
 
-        val userCourse = (userCourseHeader as? UserCourseHeader.Data)
-            ?.let { it.userCourse.copy(isFavorite = !it.userCourse.isFavorite) }
+        val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
             ?: return
 
-        val userCourseAction = if (userCourse.isFavorite) {
+        val isFavorite = !oldUserCourseHeader.userCourse.isFavorite
+
+        val newCourseHeaderData = oldCourseHeaderData.copy(
+            userCourseHeader = oldUserCourseHeader.copy(
+                userCourse = oldUserCourseHeader.userCourse.copy(isFavorite = isFavorite),
+                isSending = true
+            )
+        )
+
+        val userCourseAction = if (isFavorite) {
             UserCourseAction.ADD_FAVORITE
         } else {
             UserCourseAction.REMOVE_FAVORITE
         }
-        saveUserCourse(userCourse, userCourseAction)
+        saveUserCourse(newCourseHeaderData, userCourseAction)
     }
 
     fun toggleArchive() {
-        val userCourseHeader = (state as? CourseView.State.CourseLoaded)
+        val oldCourseHeaderData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.userCourseHeader
             ?: return
 
-        val userCourse = (userCourseHeader as? UserCourseHeader.Data)
-            ?.let { it.userCourse.copy(isArchived = !it.userCourse.isArchived) }
+        val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
             ?: return
 
-        val userCourseAction = if (userCourse.isArchived) {
+        val isArchived = !oldUserCourseHeader.userCourse.isArchived
+
+        val newCourseHeaderData = oldCourseHeaderData.copy(
+            userCourseHeader = oldUserCourseHeader.copy(
+                userCourse = oldUserCourseHeader.userCourse.copy(isArchived = isArchived),
+                isSending = true
+            )
+        )
+
+        val userCourseAction = if (isArchived) {
             UserCourseAction.ADD_ARCHIVE
         } else {
             UserCourseAction.REMOVE_ARCHIVE
         }
-        saveUserCourse(userCourse, userCourseAction)
+        saveUserCourse(newCourseHeaderData, userCourseAction)
     }
 
-    private fun saveUserCourse(userCourse: UserCourse, userCourseAction: UserCourseAction) {
+    private fun saveUserCourse(preparedCourseHeaderData: CourseHeaderData, userCourseAction: UserCourseAction) {
+        val userCourse = (preparedCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
+            ?.userCourse
+            ?: return
+
+        state = CourseView.State.CourseLoaded(preparedCourseHeaderData)
+
         userCourseDisposable += courseInteractor
             .saveUserCourse(userCourse = userCourse)
             .subscribeOn(backgroundScheduler)
@@ -430,11 +449,25 @@ constructor(
 
                     val courseHeaderData = oldState
                         .courseHeaderData
-                        .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it.first()))
+                        .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it.first(), isSending = false))
+
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                     view?.showSaveUserCourseSuccess(userCourseAction)
                 },
-                onError = { view?.showSaveUserCourseError(userCourseAction) }
+                onError = {
+                    val oldState = (state as? CourseView.State.CourseLoaded)
+                        ?: return@subscribeBy
+
+                    val userCourseHeader = (oldState.courseHeaderData.userCourseHeader as? UserCourseHeader.Data)
+                        ?: return@subscribeBy
+
+                    val courseHeaderData = oldState
+                        .courseHeaderData
+                        .copy(userCourseHeader = userCourseHeader.copy(isSending = false))
+
+                    state = CourseView.State.CourseLoaded(courseHeaderData)
+                    view?.showSaveUserCourseError(userCourseAction)
+                }
             )
     }
 

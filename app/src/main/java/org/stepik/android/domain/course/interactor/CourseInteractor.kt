@@ -71,6 +71,6 @@ constructor(
     private fun obtainUserCourse(courseId: Long): Single<UserCourseHeader> =
         userCoursesRepository
             .getUserCourse(courseId)
-            .map { UserCourseHeader.Data(it) as UserCourseHeader }
+            .map { UserCourseHeader.Data(userCourse = it, isSending = false) as UserCourseHeader }
             .onErrorReturn { UserCourseHeader.Empty }
 }

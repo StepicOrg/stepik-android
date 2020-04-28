@@ -7,5 +7,5 @@ sealed class UserCourseHeader : Parcelable {
     @Parcelize
     object Empty : UserCourseHeader()
     @Parcelize
-    class Data(val userCourse: UserCourse) : UserCourseHeader()
+    data class Data(val userCourse: UserCourse, val isSending: Boolean) : UserCourseHeader()
 }
