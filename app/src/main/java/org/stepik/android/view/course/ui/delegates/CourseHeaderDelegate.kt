@@ -26,6 +26,7 @@ import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
@@ -43,8 +44,11 @@ class CourseHeaderDelegate(
     var courseHeaderData: CourseHeaderData? = null
         set(value) {
             field = value
+            userCourseHeader = (value?.userCourseHeader as? UserCourseHeader.Data)
             value?.let(::setCourseData)
         }
+
+    var userCourseHeader: UserCourseHeader.Data? = null
 
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
@@ -197,8 +201,6 @@ class CourseHeaderDelegate(
     }
 
     fun onOptionsMenuCreated(menu: Menu) {
-        val userCourseHeader = (courseHeaderData?.userCourseHeader as? UserCourseHeader.Data)
-
         favoriteCourseMenuItem = menu.findItem(R.id.favorite_course)
         favoriteCourseMenuItem?.isVisible = userCourseHeader != null
         favoriteCourseMenuItem?.isEnabled = userCourseHeader?.isSending == false
@@ -245,11 +247,25 @@ class CourseHeaderDelegate(
                 true
             }
             R.id.favorite_course -> {
-                coursePresenter.toggleFavorite()
+                userCourseHeader?.let {
+                    val action = if (it.userCourse.isFavorite) {
+                        UserCourseAction.REMOVE_FAVORITE
+                    } else {
+                        UserCourseAction.ADD_FAVORITE
+                    }
+                    coursePresenter.toggleUserCourse(action)
+                }
                 true
             }
             R.id.archive_course -> {
-                coursePresenter.toggleArchive()
+                userCourseHeader?.let {
+                    val action = if (it.userCourse.isArchived) {
+                        UserCourseAction.REMOVE_ARCHIVE
+                    } else {
+                        UserCourseAction.ADD_ARCHIVE
+                    }
+                    coursePresenter.toggleUserCourse(action)
+                }
                 true
             }
             R.id.share_course -> {

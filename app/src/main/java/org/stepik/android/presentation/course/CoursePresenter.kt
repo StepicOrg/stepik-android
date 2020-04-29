@@ -382,7 +382,7 @@ constructor(
      * User course operations
      */
 
-    fun toggleFavorite() {
+    fun toggleUserCourse(userCourseAction: UserCourseAction) {
         val oldCourseHeaderData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
             ?: return
@@ -390,43 +390,21 @@ constructor(
         val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
             ?: return
 
-        val userCourse = oldUserCourseHeader.userCourse.copy(isFavorite = !oldUserCourseHeader.userCourse.isFavorite)
+        val userCourse = when (userCourseAction) {
+            UserCourseAction.ADD_ARCHIVE ->
+                oldUserCourseHeader.userCourse.copy(isArchived = true)
 
-        val newCourseHeaderData = oldCourseHeaderData.copy(
-            userCourseHeader = oldUserCourseHeader.copy(
-                isSending = true
-            )
-        )
+            UserCourseAction.REMOVE_ARCHIVE ->
+                oldUserCourseHeader.userCourse.copy(isArchived = false)
 
-        val userCourseAction = if (userCourse.isFavorite) {
-            UserCourseAction.ADD_FAVORITE
-        } else {
-            UserCourseAction.REMOVE_FAVORITE
+            UserCourseAction.ADD_FAVORITE ->
+                oldUserCourseHeader.userCourse.copy(isFavorite = true)
+
+            UserCourseAction.REMOVE_FAVORITE ->
+                oldUserCourseHeader.userCourse.copy(isFavorite = false)
         }
-        saveUserCourse(newCourseHeaderData, userCourse, userCourseAction)
-    }
 
-    fun toggleArchive() {
-        val oldCourseHeaderData = (state as? CourseView.State.CourseLoaded)
-            ?.courseHeaderData
-            ?: return
-
-        val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
-            ?: return
-
-        val userCourse = oldUserCourseHeader.userCourse.copy(isArchived = !oldUserCourseHeader.userCourse.isArchived)
-
-        val newCourseHeaderData = oldCourseHeaderData.copy(
-            userCourseHeader = oldUserCourseHeader.copy(
-                isSending = true
-            )
-        )
-
-        val userCourseAction = if (userCourse.isArchived) {
-            UserCourseAction.ADD_ARCHIVE
-        } else {
-            UserCourseAction.REMOVE_ARCHIVE
-        }
+        val newCourseHeaderData = oldCourseHeaderData.copy(userCourseHeader = oldUserCourseHeader.copy(isSending = true))
         saveUserCourse(newCourseHeaderData, userCourse, userCourseAction)
     }
 
