@@ -1,6 +1,5 @@
 package org.stepic.droid.ui.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,10 +15,6 @@ import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.HomeStreakPresenter
 import org.stepic.droid.core.presenters.contracts.HomeStreakView
 import org.stepic.droid.ui.util.initCenteredToolbar
-import org.stepic.droid.util.commitNow
-import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
-import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
-import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
 import javax.inject.Inject
 
 class HomeFragment : FragmentBase(), HomeStreakView {
@@ -33,6 +28,7 @@ class HomeFragment : FragmentBase(), HomeStreakView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Home.HOME_SCREEN_OPENED)
         analytic.reportEvent(Analytic.Home.HOME_SCREEN_OPENED)
     }

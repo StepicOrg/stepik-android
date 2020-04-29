@@ -149,6 +149,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
 
         profileStatsDelegate = ProfileStatsDelegate(view, analytic)
 
+        (activity as? AppCompatActivity)
+            ?.apply { setSupportActionBar(toolbar) }
+            ?.supportActionBar
+            ?.apply {
+                setDisplayHomeAsUpEnabled(activity is CloseButtonInToolbar)
+                setDisplayShowTitleEnabled(false)
+            }
         ViewCompat.setElevation(header, resources.getDimension(R.dimen.profile_header_elevation))
         toolbar.navigationIcon?.let { DrawableCompat.setTintList(it, menuTintStateList) }
 
@@ -232,13 +239,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
     override fun onStart() {
         super.onStart()
         profilePresenter.attachView(this)
-        (activity as? AppCompatActivity)
-            ?.apply { setSupportActionBar(toolbar) }
-            ?.supportActionBar
-            ?.apply {
-                setDisplayHomeAsUpEnabled(activity is CloseButtonInToolbar)
-                setDisplayShowTitleEnabled(false)
-            }
     }
 
     override fun onStop() {
