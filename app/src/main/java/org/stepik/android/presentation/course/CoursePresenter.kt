@@ -4,6 +4,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -21,18 +22,22 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
+import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CoursePresenter
@@ -82,7 +87,10 @@ constructor(
     override val delegates: List<PresenterDelegate<in CourseView>> =
         listOf(courseContinuePresenterDelegateImpl)
 
+    private val userCourseDisposable = CompositeDisposable()
+
     init {
+        compositeDisposable += userCourseDisposable
         subscriberForEnrollmentUpdates()
         subscribeForLocalSubmissionsUpdates()
     }
@@ -190,6 +198,9 @@ constructor(
                 )
             )
         )
+
+        userCourseDisposable.clear()
+
         compositeDisposable += courseEnrollmentInteractor
             .enrollmentAction(headerData.courseId)
             .observeOn(mainScheduler)
@@ -366,6 +377,74 @@ constructor(
             ?: return
 
         view?.shareCourse(course)
+    }
+
+    /**
+     * User course operations
+     */
+
+    fun toggleUserCourse(userCourseAction: UserCourseAction) {
+        val oldCourseHeaderData = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?: return
+
+        val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
+            ?: return
+
+        val userCourse =
+            when (userCourseAction) {
+                UserCourseAction.ADD_ARCHIVE ->
+                    oldUserCourseHeader.userCourse.copy(isArchived = true)
+
+                UserCourseAction.REMOVE_ARCHIVE ->
+                    oldUserCourseHeader.userCourse.copy(isArchived = false)
+
+                UserCourseAction.ADD_FAVORITE ->
+                    oldUserCourseHeader.userCourse.copy(isFavorite = true)
+
+                UserCourseAction.REMOVE_FAVORITE ->
+                    oldUserCourseHeader.userCourse.copy(isFavorite = false)
+            }
+
+        val newCourseHeaderData = oldCourseHeaderData.copy(userCourseHeader = oldUserCourseHeader.copy(isSending = true))
+        saveUserCourse(newCourseHeaderData, userCourse, userCourseAction)
+    }
+
+    private fun saveUserCourse(preparedCourseHeaderData: CourseHeaderData, userCourse: UserCourse, userCourseAction: UserCourseAction) {
+        state = CourseView.State.CourseLoaded(preparedCourseHeaderData)
+
+        userCourseDisposable += courseInteractor
+            .saveUserCourse(userCourse = userCourse)
+            .delay(5, TimeUnit.SECONDS)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = {
+                    val oldState = (state as? CourseView.State.CourseLoaded)
+                        ?: return@subscribeBy
+
+                    val courseHeaderData = oldState
+                        .courseHeaderData
+                        .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it, isSending = false))
+
+                    state = CourseView.State.CourseLoaded(courseHeaderData)
+                    view?.showSaveUserCourseSuccess(userCourseAction)
+                },
+                onError = {
+                    val oldState = (state as? CourseView.State.CourseLoaded)
+                        ?: return@subscribeBy
+
+                    val userCourseHeader = (oldState.courseHeaderData.userCourseHeader as? UserCourseHeader.Data)
+                        ?: return@subscribeBy
+
+                    val courseHeaderData = oldState
+                        .courseHeaderData
+                        .copy(userCourseHeader = userCourseHeader.copy(isSending = false))
+
+                    state = CourseView.State.CourseLoaded(courseHeaderData)
+                    view?.showSaveUserCourseError(userCourseAction)
+                }
+            )
     }
 
     /**

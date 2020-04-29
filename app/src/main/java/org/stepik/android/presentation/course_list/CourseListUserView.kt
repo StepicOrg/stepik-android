@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.course_list
 
-import org.stepik.android.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.presentation.course_continue.CourseContinueView
 
 interface CourseListUserView : CourseContinueView {

@@ -18,7 +18,7 @@ import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.model.Course
-import org.stepik.android.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
@@ -285,15 +285,17 @@ constructor(
 
                     userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(enrolledCourseListItem))
                     state = oldState.copy(
-                        userCourses = listOf(UserCourse(
-                            id = 0,
-                            user = 0,
-                            course = enrolledCourseListItem.id,
-                            isFavorite = false,
-                            isPinned = false,
-                            isArchived = false,
-                            lastViewed = null
-                        )) + oldState.userCourses,
+                        userCourses = listOf(
+                            UserCourse(
+                                id = 0,
+                                user = 0,
+                                course = enrolledCourseListItem.id,
+                                isFavorite = false,
+                                isPinned = false,
+                                isArchived = false,
+                                lastViewed = null
+                            )
+                        ) + oldState.userCourses,
                         courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(oldState.courseListViewState, enrolledCourseListItem))
                 },
                 onError = emptyOnErrorStub
