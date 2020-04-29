@@ -422,7 +422,7 @@ constructor(
 
                     val courseHeaderData = oldState
                         .courseHeaderData
-                        .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it.first(), isSending = false))
+                        .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it, isSending = false))
 
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                     view?.showSaveUserCourseSuccess(userCourseAction)

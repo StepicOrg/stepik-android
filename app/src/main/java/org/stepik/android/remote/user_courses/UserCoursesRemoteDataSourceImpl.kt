@@ -1,7 +1,10 @@
 package org.stepik.android.remote.user_courses
 
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.first
+import org.stepic.droid.util.maybeFirst
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.remote.base.mapper.toPagedList
@@ -20,13 +23,15 @@ constructor(
             .getUserCourses(page)
             .map { it.toPagedList(UserCoursesResponse::userCourse) }
 
-    override fun getUserCourse(course: Long): Single<UserCourse> =
+    override fun getUserCourse(course: Long): Maybe<UserCourse> =
         userCoursesService
             .getUserCourse(course)
-            .map { it.userCourse.first() }
+            .map(UserCoursesResponse::userCourse)
+            .maybeFirst()
 
-    override fun saveUserCourse(userCourseId: Long, userCourse: UserCourse): Single<PagedList<UserCourse>> =
+    override fun saveUserCourse(userCourseId: Long, userCourse: UserCourse): Single<UserCourse> =
         userCoursesService
             .saveUserCourse(userCourseId, UserCoursesRequest(userCourse))
-            .map { it.toPagedList(UserCoursesResponse::userCourse) }
+            .map(UserCoursesResponse::userCourse)
+            .first()
 }

@@ -4,7 +4,6 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
-import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
@@ -46,14 +45,14 @@ constructor(
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
 
-    fun saveUserCourse(userCourse: UserCourse): Single<PagedList<UserCourse>> =
+    fun saveUserCourse(userCourse: UserCourse): Single<UserCourse> =
         userCoursesRepository.saveUserCourse(userCourse)
 
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
         zip(
             courseStatsInteractor.getCourseStats(listOf(course)),
             solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            obtainUserCourse(course.id)
+            obtainUserCourse(course)
         ) { courseStats, localSubmissions, userCourseHeader ->
             CourseHeaderData(
                 courseId = course.id,
@@ -68,9 +67,14 @@ constructor(
         }
             .toMaybe()
 
-    private fun obtainUserCourse(courseId: Long): Single<UserCourseHeader> =
-        userCoursesRepository
-            .getUserCourse(courseId)
-            .map { UserCourseHeader.Data(userCourse = it, isSending = false) as UserCourseHeader }
-            .onErrorReturn { UserCourseHeader.Empty }
+    private fun obtainUserCourse(course: Course): Single<UserCourseHeader> =
+        if (course.enrollment != 0L) {
+            userCoursesRepository
+                .getUserCourse(course.id)
+                .map { UserCourseHeader.Data(userCourse = it, isSending = false) as UserCourseHeader }
+                .onErrorReturn { UserCourseHeader.Empty }
+                .toSingle()
+        } else {
+            Single.just(UserCourseHeader.Empty)
+        }
 }
