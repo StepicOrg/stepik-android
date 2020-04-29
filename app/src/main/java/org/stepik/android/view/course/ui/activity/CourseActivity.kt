@@ -33,6 +33,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
@@ -310,6 +311,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             }
         }
         viewStateDelegate.switchState(state)
+        invalidateOptionsMenu()
     }
 
     override fun showEmptyAuthDialog(course: Course) {
@@ -360,6 +362,44 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun showCourseShareTooltip() {
         courseHeaderDelegate.showCourseShareTooltip()
+    }
+
+    override fun showSaveUserCourseSuccess(userCourseAction: UserCourseAction) {
+        @StringRes
+        val successMessage =
+            when (userCourseAction) {
+                UserCourseAction.ADD_FAVORITE ->
+                    R.string.course_action_favorites_add_success
+
+                UserCourseAction.REMOVE_FAVORITE ->
+                    R.string.course_action_favorites_remove_success
+
+                UserCourseAction.ADD_ARCHIVE ->
+                    R.string.course_action_archive_add_success
+
+                UserCourseAction.REMOVE_ARCHIVE ->
+                    R.string.course_action_archive_remove_success
+            }
+        coursePager.snackbar(messageRes = successMessage)
+    }
+
+    override fun showSaveUserCourseError(userCourseAction: UserCourseAction) {
+        @StringRes
+        val errorMessage =
+            when (userCourseAction) {
+                UserCourseAction.ADD_FAVORITE ->
+                    R.string.course_action_favorites_add_failure
+
+                UserCourseAction.REMOVE_FAVORITE ->
+                    R.string.course_action_favorites_remove_failure
+
+                UserCourseAction.ADD_ARCHIVE ->
+                    R.string.course_action_archive_add_failure
+
+                UserCourseAction.REMOVE_ARCHIVE ->
+                    R.string.course_action_archive_remove_failure
+            }
+        coursePager.snackbar(messageRes = errorMessage)
     }
 
     /**

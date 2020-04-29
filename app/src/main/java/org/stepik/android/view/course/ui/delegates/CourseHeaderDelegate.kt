@@ -1,6 +1,8 @@
 package org.stepik.android.view.course.ui.delegates
 
 import android.app.Activity
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -19,9 +21,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
 import org.stepic.droid.ui.util.PopupHelper
 import org.stepic.droid.util.getAllQueryParameters
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.presentation.course.CoursePresenter
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
@@ -39,8 +44,11 @@ class CourseHeaderDelegate(
     var courseHeaderData: CourseHeaderData? = null
         set(value) {
             field = value
+            userCourseHeader = (value?.userCourseHeader as? UserCourseHeader.Data)
             value?.let(::setCourseData)
         }
+
+    private var userCourseHeader: UserCourseHeader.Data? = null
 
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
@@ -48,6 +56,8 @@ class CourseHeaderDelegate(
 
     private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
     private val courseProgressDelegate = CourseProgressDelegate(courseActivity.courseProgress, onSubmissionCountClicked, isLocalSubmissionsEnabled)
+
+    private val courseCollapsingToolbar = courseActivity.courseCollapsingToolbar
 
     private val viewStateDelegate = ViewStateDelegate<EnrollmentState>()
 
@@ -189,8 +199,35 @@ class CourseHeaderDelegate(
     }
 
     fun onOptionsMenuCreated(menu: Menu) {
+        menu.findItem(R.id.favorite_course)
+            ?.let { favoriteCourseMenuItem ->
+                favoriteCourseMenuItem.isVisible = userCourseHeader != null
+                favoriteCourseMenuItem.isEnabled = userCourseHeader?.isSending == false
+                favoriteCourseMenuItem.title =
+                    if (userCourseHeader?.userCourse?.isFavorite == true) {
+                        courseActivity.getString(R.string.course_action_favorites_remove)
+                    } else {
+                        courseActivity.getString(R.string.course_action_favorites_add)
+                    }
+            }
+
+        menu.findItem(R.id.archive_course)
+            ?.let { archiveCourseMenuItem ->
+                archiveCourseMenuItem.isVisible = userCourseHeader != null
+                archiveCourseMenuItem.isEnabled = userCourseHeader?.isSending == false
+                archiveCourseMenuItem.title =
+                    if (userCourseHeader?.userCourse?.isArchived == true) {
+                        courseActivity.getString(R.string.course_action_archive_remove)
+                    } else {
+                        courseActivity.getString(R.string.course_action_archive_add)
+                    }
+            }
+
         dropCourseMenuItem = menu.findItem(R.id.drop_course)
         dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState == EnrollmentState.Enrolled
+        val dropCourseMenuItemSpan = SpannableString(dropCourseMenuItem?.title)
+        dropCourseMenuItemSpan.setSpan(ForegroundColorSpan(courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorError)), 0, dropCourseMenuItemSpan.length, 0)
+        dropCourseMenuItem?.title = dropCourseMenuItemSpan
 
         shareCourseMenuItem = menu.findItem(R.id.share_course)
         shareCourseMenuItem?.isVisible = courseHeaderData != null
@@ -210,6 +247,30 @@ class CourseHeaderDelegate(
                             AmplitudeAnalytic.Course.Params.COURSE to headerData.courseId
                         )
                     )
+                }
+                true
+            }
+            R.id.favorite_course -> {
+                userCourseHeader?.let {
+                    val action =
+                        if (it.userCourse.isFavorite) {
+                            UserCourseAction.REMOVE_FAVORITE
+                        } else {
+                            UserCourseAction.ADD_FAVORITE
+                        }
+                    coursePresenter.toggleUserCourse(action)
+                }
+                true
+            }
+            R.id.archive_course -> {
+                userCourseHeader?.let {
+                    val action =
+                        if (it.userCourse.isArchived) {
+                            UserCourseAction.REMOVE_ARCHIVE
+                        } else {
+                            UserCourseAction.ADD_ARCHIVE
+                        }
+                    coursePresenter.toggleUserCourse(action)
                 }
                 true
             }

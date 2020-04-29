@@ -1,9 +1,12 @@
-package org.stepik.android.model
+package org.stepik.android.domain.user_courses.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
-class UserCourse(
+@Parcelize
+data class UserCourse(
     @SerializedName("id")
     val id: Long = 0,
     @SerializedName("user")
@@ -18,4 +21,4 @@ class UserCourse(
     val isArchived: Boolean,
     @SerializedName("last_viewed")
     val lastViewed: Date?
-)
+) : Parcelable
