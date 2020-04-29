@@ -37,6 +37,7 @@ import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CoursePresenter
@@ -390,19 +391,20 @@ constructor(
         val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
             ?: return
 
-        val userCourse = when (userCourseAction) {
-            UserCourseAction.ADD_ARCHIVE ->
-                oldUserCourseHeader.userCourse.copy(isArchived = true)
+        val userCourse =
+            when (userCourseAction) {
+                UserCourseAction.ADD_ARCHIVE ->
+                    oldUserCourseHeader.userCourse.copy(isArchived = true)
 
-            UserCourseAction.REMOVE_ARCHIVE ->
-                oldUserCourseHeader.userCourse.copy(isArchived = false)
+                UserCourseAction.REMOVE_ARCHIVE ->
+                    oldUserCourseHeader.userCourse.copy(isArchived = false)
 
-            UserCourseAction.ADD_FAVORITE ->
-                oldUserCourseHeader.userCourse.copy(isFavorite = true)
+                UserCourseAction.ADD_FAVORITE ->
+                    oldUserCourseHeader.userCourse.copy(isFavorite = true)
 
-            UserCourseAction.REMOVE_FAVORITE ->
-                oldUserCourseHeader.userCourse.copy(isFavorite = false)
-        }
+                UserCourseAction.REMOVE_FAVORITE ->
+                    oldUserCourseHeader.userCourse.copy(isFavorite = false)
+            }
 
         val newCourseHeaderData = oldCourseHeaderData.copy(userCourseHeader = oldUserCourseHeader.copy(isSending = true))
         saveUserCourse(newCourseHeaderData, userCourse, userCourseAction)
@@ -413,6 +415,7 @@ constructor(
 
         userCourseDisposable += courseInteractor
             .saveUserCourse(userCourse = userCourse)
+            .delay(5, TimeUnit.SECONDS)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

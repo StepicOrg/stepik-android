@@ -369,16 +369,16 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         val successMessage =
             when (userCourseAction) {
                 UserCourseAction.ADD_FAVORITE ->
-                    R.string.course_add_to_favorites_success
+                    R.string.course_action_favorites_add_success
 
                 UserCourseAction.REMOVE_FAVORITE ->
-                    R.string.course_remove_from_favorites_success
+                    R.string.course_action_favorites_remove_success
 
                 UserCourseAction.ADD_ARCHIVE ->
-                    R.string.course_add_to_archive_success
+                    R.string.course_action_archive_add_success
 
                 UserCourseAction.REMOVE_ARCHIVE ->
-                    R.string.course_remove_from_archive_success
+                    R.string.course_action_archive_remove_success
             }
         coursePager.snackbar(messageRes = successMessage)
     }
@@ -388,16 +388,16 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         val errorMessage =
             when (userCourseAction) {
                 UserCourseAction.ADD_FAVORITE ->
-                    R.string.course_add_to_favorites_failure
+                    R.string.course_action_favorites_add_failure
 
                 UserCourseAction.REMOVE_FAVORITE ->
-                    R.string.course_remove_from_favorites_failure
+                    R.string.course_action_favorites_remove_failure
 
                 UserCourseAction.ADD_ARCHIVE ->
-                    R.string.course_add_to_archive_failure
+                    R.string.course_action_archive_add_failure
 
                 UserCourseAction.REMOVE_ARCHIVE ->
-                    R.string.course_remove_from_archive_failure
+                    R.string.course_action_archive_remove_failure
             }
         coursePager.snackbar(messageRes = errorMessage)
     }

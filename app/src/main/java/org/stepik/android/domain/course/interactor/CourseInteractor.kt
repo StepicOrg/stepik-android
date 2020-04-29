@@ -70,10 +70,10 @@ constructor(
     private fun obtainUserCourse(course: Course): Single<UserCourseHeader> =
         if (course.enrollment != 0L) {
             userCoursesRepository
-                .getUserCourse(course.id)
+                .getUserCourseByCourseId(course.id)
                 .map { UserCourseHeader.Data(userCourse = it, isSending = false) as UserCourseHeader }
-                .onErrorReturn { UserCourseHeader.Empty }
                 .toSingle()
+                .onErrorReturnItem(UserCourseHeader.Empty)
         } else {
             Single.just(UserCourseHeader.Empty)
         }

@@ -23,9 +23,9 @@ constructor(
             .getUserCourses(page)
             .map { it.toPagedList(UserCoursesResponse::userCourse) }
 
-    override fun getUserCourse(course: Long): Maybe<UserCourse> =
+    override fun getUserCourseByCourseId(courseId: Long): Maybe<UserCourse> =
         userCoursesService
-            .getUserCourse(course)
+            .getUserCourseByCourseId(courseId)
             .map(UserCoursesResponse::userCourse)
             .maybeFirst()
 

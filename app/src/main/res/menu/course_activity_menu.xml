@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/favorite_course"
-        android:title="@string/course_add_to_favorites" />
+        android:title="@string/course_action_favorites_add" />
     <item
         android:id="@+id/archive_course"
-        android:title="@string/course_add_to_archive"/>
+        android:title="@string/course_action_archive_add"/>
     <item
         android:id="@+id/drop_course"
         android:title="@string/drop_course"/>

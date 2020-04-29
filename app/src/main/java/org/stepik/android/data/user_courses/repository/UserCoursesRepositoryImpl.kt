@@ -45,8 +45,8 @@ constructor(
             .saveUserCourse(userCourse.id, userCourse)
             .doCompletableOnSuccess { userCoursesCacheDataSource.saveUserCourses(listOf(it)) }
 
-    override fun getUserCourse(courseId: Long): Maybe<UserCourse> =
-        userCoursesRemoteDataSource.getUserCourse(courseId)
+    override fun getUserCourseByCourseId(courseId: Long): Maybe<UserCourse> =
+        userCoursesRemoteDataSource.getUserCourseByCourseId(courseId)
 
     override fun addUserCourse(userCourse: UserCourse): Completable =
         userCoursesCacheDataSource.saveUserCourses(listOf(userCourse))

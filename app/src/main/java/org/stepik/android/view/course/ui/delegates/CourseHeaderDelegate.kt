@@ -48,12 +48,10 @@ class CourseHeaderDelegate(
             value?.let(::setCourseData)
         }
 
-    var userCourseHeader: UserCourseHeader.Data? = null
+    private var userCourseHeader: UserCourseHeader.Data? = null
 
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
-    private var favoriteCourseMenuItem: MenuItem? = null
-    private var archiveCourseMenuItem: MenuItem? = null
     private var restorePurchaseCourseMenuItem: MenuItem? = null
 
     private val courseStatsDelegate = CourseStatsDelegate(courseActivity.courseStats)
@@ -201,23 +199,29 @@ class CourseHeaderDelegate(
     }
 
     fun onOptionsMenuCreated(menu: Menu) {
-        favoriteCourseMenuItem = menu.findItem(R.id.favorite_course)
-        favoriteCourseMenuItem?.isVisible = userCourseHeader != null
-        favoriteCourseMenuItem?.isEnabled = userCourseHeader?.isSending == false
-        favoriteCourseMenuItem?.title = if (userCourseHeader?.userCourse?.isFavorite == true) {
-            courseActivity.getString(R.string.course_remove_from_favorites)
-        } else {
-            courseActivity.getString(R.string.course_add_to_favorites)
-        }
+        menu.findItem(R.id.favorite_course)
+            ?.let { favoriteCourseMenuItem ->
+                favoriteCourseMenuItem.isVisible = userCourseHeader != null
+                favoriteCourseMenuItem.isEnabled = userCourseHeader?.isSending == false
+                favoriteCourseMenuItem.title =
+                    if (userCourseHeader?.userCourse?.isFavorite == true) {
+                        courseActivity.getString(R.string.course_action_favorites_remove)
+                    } else {
+                        courseActivity.getString(R.string.course_action_favorites_add)
+                    }
+            }
 
-        archiveCourseMenuItem = menu.findItem(R.id.archive_course)
-        archiveCourseMenuItem?.isVisible = userCourseHeader != null
-        archiveCourseMenuItem?.isEnabled = userCourseHeader?.isSending == false
-        archiveCourseMenuItem?.title = if (userCourseHeader?.userCourse?.isArchived == true) {
-            courseActivity.getString(R.string.course_remove_from_archive)
-        } else {
-            courseActivity.getString(R.string.course_add_to_archive)
-        }
+        menu.findItem(R.id.archive_course)
+            ?.let { archiveCourseMenuItem ->
+                archiveCourseMenuItem.isVisible = userCourseHeader != null
+                archiveCourseMenuItem.isEnabled = userCourseHeader?.isSending == false
+                archiveCourseMenuItem.title =
+                    if (userCourseHeader?.userCourse?.isArchived == true) {
+                        courseActivity.getString(R.string.course_action_archive_remove)
+                    } else {
+                        courseActivity.getString(R.string.course_action_archive_add)
+                    }
+            }
 
         dropCourseMenuItem = menu.findItem(R.id.drop_course)
         dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState == EnrollmentState.Enrolled
@@ -248,22 +252,24 @@ class CourseHeaderDelegate(
             }
             R.id.favorite_course -> {
                 userCourseHeader?.let {
-                    val action = if (it.userCourse.isFavorite) {
-                        UserCourseAction.REMOVE_FAVORITE
-                    } else {
-                        UserCourseAction.ADD_FAVORITE
-                    }
+                    val action =
+                        if (it.userCourse.isFavorite) {
+                            UserCourseAction.REMOVE_FAVORITE
+                        } else {
+                            UserCourseAction.ADD_FAVORITE
+                        }
                     coursePresenter.toggleUserCourse(action)
                 }
                 true
             }
             R.id.archive_course -> {
                 userCourseHeader?.let {
-                    val action = if (it.userCourse.isArchived) {
-                        UserCourseAction.REMOVE_ARCHIVE
-                    } else {
-                        UserCourseAction.ADD_ARCHIVE
-                    }
+                    val action =
+                        if (it.userCourse.isArchived) {
+                            UserCourseAction.REMOVE_ARCHIVE
+                        } else {
+                            UserCourseAction.ADD_ARCHIVE
+                        }
                     coursePresenter.toggleUserCourse(action)
                 }
                 true
