@@ -20,6 +20,11 @@ constructor(
             .getUserCourses(page)
             .map { it.toPagedList(UserCoursesResponse::userCourse) }
 
+    override fun getUserCourse(course: Long): Single<UserCourse> =
+        userCoursesService
+            .getUserCourse(course)
+            .map { it.userCourse.first() }
+
     override fun saveUserCourse(userCourseId: Long, userCourse: UserCourse): Single<PagedList<UserCourse>> =
         userCoursesService
             .saveUserCourse(userCourseId, UserCoursesRequest(userCourse))

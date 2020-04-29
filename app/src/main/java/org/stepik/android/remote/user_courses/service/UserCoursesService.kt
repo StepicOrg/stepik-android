@@ -13,6 +13,9 @@ interface UserCoursesService {
     @GET("api/user-courses")
     fun getUserCourses(@Query("page") page: Int): Single<UserCoursesResponse>
 
+    @GET("api/user-courses")
+    fun getUserCourse(@Query("course") course: Long): Single<UserCoursesResponse>
+
     @PUT("api/user-courses/{id}")
     fun saveUserCourse(@Path("id") userCourseId: Long, @Body request: UserCoursesRequest): Single<UserCoursesResponse>
 }

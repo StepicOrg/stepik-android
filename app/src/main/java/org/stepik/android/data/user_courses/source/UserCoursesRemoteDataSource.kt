@@ -6,5 +6,6 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 
 interface UserCoursesRemoteDataSource {
     fun getUserCourses(page: Int): Single<PagedList<UserCourse>>
+    fun getUserCourse(course: Long): Single<UserCourse>
     fun saveUserCourse(userCourseId: Long, userCourse: UserCourse): Single<PagedList<UserCourse>>
 }
