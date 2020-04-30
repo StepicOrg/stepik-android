@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import org.stepic.droid.R
 import org.stepik.android.domain.base.PaginationDirection
-import ru.nobird.android.view.base.ui.extension.setTextColor
 
 fun View.setHeight(height: Int) {
     layoutParams.height = height
@@ -95,7 +94,6 @@ fun View.snackbar(@StringRes messageRes: Int, length: Int = Snackbar.LENGTH_SHOR
 fun View.snackbar(message: String, length: Int = Snackbar.LENGTH_SHORT) {
     Snackbar
         .make(this, message, length)
-        .setTextColor(ContextCompat.getColor(context, R.color.white))
         .show()
 }
 

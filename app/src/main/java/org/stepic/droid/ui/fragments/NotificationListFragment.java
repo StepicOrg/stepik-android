@@ -254,13 +254,9 @@ public class NotificationListFragment extends FragmentBase implements Notificati
     }
 
     private void showConnectionProblemMessage() {
-        SnackbarExtensionKt
-                .setTextColor(
-                        Snackbar.make(notificationRecyclerView,
-                                R.string.connectionProblems,
-                                Snackbar.LENGTH_SHORT),
-                        ColorUtil.INSTANCE.getColorArgb(R.color.white, requireContext()))
-                .show();
+        Snackbar.make(notificationRecyclerView,
+                R.string.connectionProblems,
+                Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

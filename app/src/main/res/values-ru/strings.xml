@@ -625,6 +625,20 @@
 
     <string name="course_purchase_link_chooser_title">Открыть в</string>
 
+    <string name="course_action_archive_add">Переместить в архив</string>
+    <string name="course_action_archive_add_success">Курс успешно перенесён в архив</string>
+    <string name="course_action_archive_add_failure">Не удалось переместить курс в архив</string>
+    <string name="course_action_archive_remove">Убрать из архива</string>
+    <string name="course_action_archive_remove_success">Курс успешно убран из архива</string>
+    <string name="course_action_archive_remove_failure">Не удалось убрать курс из архива</string>
+
+    <string name="course_action_favorites_add">Добавить в избранное</string>
+    <string name="course_action_favorites_add_success">Курс успешно добавлен в избранное</string>
+    <string name="course_action_favorites_add_failure">Не удалось добавить курс в избранное</string>
+    <string name="course_action_favorites_remove">Убрать из избранного</string>
+    <string name="course_action_favorites_remove_success">Курс успешно убран из избранного</string>
+    <string name="course_action_favorites_remove_failure">Не удалось убрать курс из избранного</string>
+
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
     <string name="video_player_control_notification_channel_description">Панель с управлением фоновым воспроизведеинем плеера</string>

@@ -655,6 +655,21 @@
 
     <string name="course_purchase_link_chooser_title">Open with</string>
 
+    <string name="course_action_archive_add">Move to Archived</string>
+    <string name="course_action_archive_remove">Remove from Archived</string>
+
+    <string name="course_action_archive_add_success">Course successfully moved to Archived</string>
+    <string name="course_action_archive_remove_success">Course successfully removed from Archived</string>
+    <string name="course_action_archive_add_failure">Failed to move course to Archived</string>
+    <string name="course_action_archive_remove_failure">Failed to remove course from Archived</string>
+
+    <string name="course_action_favorites_add">Add to Favorites</string>
+    <string name="course_action_favorites_remove">Remove from Favorites</string>
+
+    <string name="course_action_favorites_add_success">Course successfully added to Favorites</string>
+    <string name="course_action_favorites_remove_success">Course successfully removed from Favorites</string>
+    <string name="course_action_favorites_add_failure">Failed to add course to Favorites</string>
+    <string name="course_action_favorites_remove_failure">Failed to remove course from Favorites</string>
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
     <string name="video_player_control_notification_channel_description">Control panel of video player</string>

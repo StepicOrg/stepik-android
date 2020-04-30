@@ -10,7 +10,7 @@ import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
-import org.stepik.android.model.UserCourse
+import org.stepik.android.domain.user_courses.model.UserCourse
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.HttpURLConnection
