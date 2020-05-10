@@ -210,3 +210,7 @@
         color: #666;
         font-style: italic;
     }
+
+    blockquote > * {
+        margin: 0;
+    }
