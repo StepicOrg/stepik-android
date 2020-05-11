@@ -9,12 +9,12 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.view.*
 import kotlinx.android.synthetic.main.fragment_course_list.*
+import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
-import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.last_step.model.LastStep
@@ -59,9 +59,9 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        appBarLayout.isVisible = false
         courseListUserSkeleton.isVisible = true
 
-        initCenteredToolbar(R.string.course_list_user_courses_title, true)
         with(courseListCoursesRecycler) {
             layoutManager = WrapContentLinearLayoutManager(context)
             setOnPaginationListener { pageDirection ->
