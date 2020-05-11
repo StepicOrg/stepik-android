@@ -867,5 +867,9 @@
     <string name="course_list_popular_toolbar_title">Рекомендуемые</string>
     <string name="course_list_user_courses_title">Мои курсы</string>
 
+    <string name="course_list_user_all_courses_tab">Все курсы</string>
+    <string name="course_list_user_favorites_tab">Избранные</string>
+    <string name="course_list_user_archive_tab">Архив</string>
+
     <string name="ar_not_supported_alert">Устройство не поддерживает функции дополненной реальности</string>
 </resources>

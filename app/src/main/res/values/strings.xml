@@ -901,6 +901,10 @@
     <!-- Course list -->
     <string name="course_list_popular_toolbar_title">Popular</string>
     <string name="course_list_user_courses_title">My courses</string>
+    
+    <string name="course_list_user_all_courses_tab">All courses</string>
+    <string name="course_list_user_favorites_tab">Favorites</string>
+    <string name="course_list_user_archive_tab">Archive</string>
 
     <string name="ar_not_supported_alert">Device does not support AR functionality</string>
 </resources>
