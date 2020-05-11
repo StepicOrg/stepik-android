@@ -82,7 +82,7 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchUserCourses(forceUpdate: Boolean = false) {
+    fun fetchUserCourses(courseListUserQuery: CourseListUserQuery, forceUpdate: Boolean = false) {
         if (state != CourseListUserView.State.Idle && !forceUpdate) return
 
         paginationDisposable.clear()
@@ -90,7 +90,7 @@ constructor(
         state = CourseListUserView.State.Loading
 
         paginationDisposable += courseListUserInteractor
-            .getAllUserCourses(CourseListUserQuery(page = 1))
+            .getAllUserCourses(courseListUserQuery)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
