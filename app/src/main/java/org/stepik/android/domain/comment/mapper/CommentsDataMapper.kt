@@ -2,6 +2,7 @@ package org.stepik.android.domain.comment.mapper
 
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.latex.mapper.LatexTextMapper
+import org.stepik.android.domain.latex.model.LatexData
 import org.stepik.android.presentation.comment.model.CommentItem
 import javax.inject.Inject
 
@@ -45,9 +46,16 @@ constructor(
                             }
                     }
 
+                val latexData = latexTextMapper.mapToLatexText(comment.text ?: "")
+                val result = if (latexData is LatexData.Web) {
+                    latexData
+                } else {
+                    latexTextMapper.mapToLatexText(comment.text?.replace("\n", "<br>") ?: "")
+                }
+
                 CommentItem.Data(
                     comment = comment,
-                    textData = latexTextMapper.mapToLatexText(comment.text?.replace("\n", "<br>") ?: ""),
+                    textData = result,
                     user = user,
                     voteStatus = CommentItem.Data.VoteStatus.Resolved(vote),
                     isFocused = discussionId == comment.id,
