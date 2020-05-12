@@ -7,9 +7,10 @@ import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.model.CourseListUserQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.presentation.course_list.model.CourseListUserType
 
 interface UserCoursesRepository {
-    fun getUserCourses(courseListUserQuery: CourseListUserQuery = CourseListUserQuery(page = 1), sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<UserCourse>>
+    fun getUserCourses(courseListUserType: CourseListUserType = CourseListUserType.ALL, courseListUserQuery: CourseListUserQuery = CourseListUserQuery(page = 1), sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<UserCourse>>
     fun getUserCourseByCourseId(courseId: Long): Maybe<UserCourse>
     fun saveUserCourse(userCourse: UserCourse): Single<UserCourse>
 

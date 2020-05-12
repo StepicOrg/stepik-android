@@ -6,6 +6,7 @@ import org.stepic.droid.storage.dao.IDao
 import org.stepik.android.cache.user_courses.structure.DbStructureUserCourse
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.presentation.course_list.model.CourseListUserType
 import javax.inject.Inject
 
 class UserCoursesCacheDataSourceImpl
@@ -13,9 +14,19 @@ class UserCoursesCacheDataSourceImpl
 constructor(
     private val userCourseDao: IDao<UserCourse>
 ) : UserCoursesCacheDataSource {
-    override fun getUserCourses(): Single<List<UserCourse>> =
+    companion object {
+        private const val TRUE = "1"
+    }
+    override fun getUserCourses(courseListUserType: CourseListUserType): Single<List<UserCourse>> =
         Single.fromCallable {
-            userCourseDao.getAll()
+            when (courseListUserType) {
+                CourseListUserType.ALL ->
+                    userCourseDao.getAll()
+                CourseListUserType.FAVORITE ->
+                    userCourseDao.getAll(DbStructureUserCourse.Columns.IS_FAVORITE, TRUE)
+                CourseListUserType.ARCHIVED ->
+                    userCourseDao.getAll(DbStructureUserCourse.Columns.IS_ARCHIVED, TRUE)
+            }
         }
 
     override fun getUserCourse(courseId: Long): Single<UserCourse> =

@@ -11,6 +11,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.model.CourseListUserQuery
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.presentation.course_list.model.CourseListUserType
 import javax.inject.Inject
 
 class UserCoursesRepositoryImpl
@@ -19,13 +20,13 @@ constructor(
     private val userCoursesRemoteDataSource: UserCoursesRemoteDataSource,
     private val userCoursesCacheDataSource: UserCoursesCacheDataSource
 ) : UserCoursesRepository {
-    override fun getUserCourses(courseListUserQuery: CourseListUserQuery, sourceType: DataSourceType): Single<PagedList<UserCourse>> {
+    override fun getUserCourses(courseListUserType: CourseListUserType, courseListUserQuery: CourseListUserQuery, sourceType: DataSourceType): Single<PagedList<UserCourse>> {
         val remoteSource = userCoursesRemoteDataSource
             .getUserCourses(courseListUserQuery)
             .doCompletableOnSuccess(userCoursesCacheDataSource::saveUserCourses)
 
         val cacheSource = userCoursesCacheDataSource
-            .getUserCourses()
+            .getUserCourses(courseListUserType)
             .map { PagedList(it) }
 
         return when (sourceType) {

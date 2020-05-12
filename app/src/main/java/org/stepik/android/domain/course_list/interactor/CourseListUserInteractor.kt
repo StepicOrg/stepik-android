@@ -12,6 +12,7 @@ import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListUserQuery
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.presentation.course_list.model.CourseListUserType
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -38,10 +39,10 @@ constructor(
             }
         }
 
-    fun getAllUserCourses(courseListUserQuery: CourseListUserQuery): Single<List<UserCourse>> =
+    fun getAllUserCourses(courseListUserType: CourseListUserType, courseListUserQuery: CourseListUserQuery): Single<List<UserCourse>> =
         requireAuthorization then
         Observable.range(1, Int.MAX_VALUE)
-            .concatMapSingle { userCoursesRepository.getUserCourses(courseListUserQuery.copy(page = it), sourceType = DataSourceType.REMOTE) }
+            .concatMapSingle { userCoursesRepository.getUserCourses(courseListUserType, courseListUserQuery.copy(page = it), sourceType = DataSourceType.REMOTE) }
             .takeUntil { !it.hasNext }
             .reduce(emptyList()) { a, b -> a + b }
 

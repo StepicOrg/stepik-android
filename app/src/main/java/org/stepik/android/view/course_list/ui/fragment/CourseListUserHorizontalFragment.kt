@@ -91,7 +91,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListPlaceholderEmpty.setPlaceholderText(R.string.courses_carousel_my_courses_empty)
         courseListPlaceholderNoConnection.setOnClickListener {
-            courseListPresenter.fetchUserCourses(courseListUserType = CourseListUserType.ALL, forceUpdate = true)
+            courseListPresenter.fetchUserCourses(courseListUserType = CourseListUserType.ALL, courseListUserQuery = CourseListUserQuery(page = 1), forceUpdate = true)
         }
         courseListWrapperPlaceholderEmptyLogin.setOnClickListener {
             analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER)
@@ -128,7 +128,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListPlaceholderNoConnection)
         wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
 
-        courseListPresenter.fetchUserCourses(CourseListUserType.ALL)
+        courseListPresenter.fetchUserCourses(CourseListUserType.ALL, CourseListUserQuery(page = 1))
     }
 
     private fun injectComponent() {
