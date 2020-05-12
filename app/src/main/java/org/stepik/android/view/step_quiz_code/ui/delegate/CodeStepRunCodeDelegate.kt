@@ -6,6 +6,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.ListPopupWindow
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isGone
@@ -136,6 +137,9 @@ class CodeStepRunCodeDelegate(
 
         runCodeFeedback.setCompoundDrawablesWithIntrinsicBounds(evaluationDrawable, null, null, null)
         evaluationDrawable.start()
+
+        runCodeOutputDataTitle.setTextColor(AppCompatResources.getColorStateList(runCodeOutputDataTitle.context, R.color.color_run_code_title))
+        runCodeOutputDataSample.setTextColor(AppCompatResources.getColorStateList(runCodeOutputDataTitle.context, R.color.color_run_code_body))
     }
 
     override fun setState(state: StepQuizRunCodeView.State) {
