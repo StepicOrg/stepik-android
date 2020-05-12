@@ -118,11 +118,6 @@ class CardPresenter(
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribe(this::onSubmissionLoaded, this::onError)
-
-            val bundle = Bundle()
-            bundle.putString(Analytic.Steps.STEP_TYPE_KEY, card.step.getStepType())
-            analytic.reportEvent(Analytic.Steps.SUBMISSION_CREATED, bundle)
-            analytic.reportEvent(Analytic.Adaptive.ADAPTIVE_SUBMISSION_CREATED)
         }
     }
 
@@ -156,7 +151,8 @@ class CardPresenter(
                 analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.SUBMISSION_MADE, mapOf(
                         AmplitudeAnalytic.Steps.Params.TYPE to card.step.getStepType(),
                         AmplitudeAnalytic.Steps.Params.STEP to (card.step?.id?.toString() ?: "0"),
-                        AmplitudeAnalytic.Steps.Params.LOCAL to false
+                        AmplitudeAnalytic.Steps.Params.LOCAL to false,
+                        AmplitudeAnalytic.Steps.Params.IS_ADAPTIVE to true
                 ))
 
                 view?.setSubmission(it, true)

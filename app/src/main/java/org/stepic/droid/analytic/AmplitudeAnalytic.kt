@@ -88,6 +88,7 @@ interface AmplitudeAnalytic {
             const val NUMBER = "number"
             const val STEP = "step"
             const val LOCAL = "local"
+            const val IS_ADAPTIVE = "is_adaptive"
         }
     }
 
