@@ -37,7 +37,7 @@ constructor(
 
     private fun obtainCourseListItem(courses: PagedList<Course>): Single<PagedList<CourseListItem.Data>> =
         courseStatsInteractor
-            .getCourseStats(courses)
+            .getCourseStats(courses, resolveEnrollmentState = false)
             .map { courseStats ->
                 val list = courses.mapIndexed { index, course ->
                     CourseListItem.Data(
