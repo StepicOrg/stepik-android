@@ -23,36 +23,22 @@ constructor(
         private const val COOKIE_HEADER_SEPARATOR = ";"
     }
 
-    private fun tryGetCsrfFromOnePair(keyValueCookie: String): String? =
-        HttpCookie.parse(keyValueCookie).find { it.name == AppConstants.csrfTokenCookieName }?.value
-
-    fun getCsrfTokenFromCookies(cookies: String): String {
-        cookies.split(";").forEach {
-            val csrf =
-                tryGetCsrfFromOnePair(it)
-            if (csrf != null) return csrf
-        }
-        return ""
-    }
+    fun getCsrfTokenFromCookies(cookies: List<HttpCookie>): String =
+        cookies.find { it.name == AppConstants.csrfTokenCookieName }
+            ?.value
+            ?: ""
 
     fun removeCookiesCompat() {
         sharedPreferenceHelper.cookiesHeader = null
     }
 
     fun addCsrfTokenToRequest(request: Request): Request {
-        val cookies = sharedPreferenceHelper
-            .cookiesHeader
-            ?.split(COOKIE_SEPARATOR)
-            ?.flatMap { cookie ->
-                HttpCookie.parse(cookie).filter { !it.hasExpired() }
-            }
+        val cookies = getCookiesForBaseUrl()
             ?: return request
 
-        val csrftoken = cookies.find { it.name == AppConstants.csrfTokenCookieName }
-            ?.value
-            ?: ""
+        val csrftoken = getCsrfTokenFromCookies(cookies)
 
-        val header = cookies.joinToString(separator = COOKIE_HEADER_SEPARATOR) { it.toString() }
+        val header = getCookieHeader(cookies)
 
         return request.newBuilder()
             .addHeader(AppConstants.refererHeaderName, config.baseUrl)
@@ -61,7 +47,7 @@ constructor(
             .build()
     }
 
-    fun getCookiesForBaseUrl(): List<HttpCookie>? {
+    fun getFreshCookiesForBaseUrl(): List<HttpCookie>? {
         val lang = Locale.getDefault().language
         val response = emptyAuthService.getStepicForFun(lang).execute()
 
@@ -77,11 +63,27 @@ constructor(
         return cookieManager.cookieStore.get(myUri)
     }
 
-    fun updateCookieForBaseUrl() {
+    fun getCookiesForBaseUrl(): List<HttpCookie>? =
+        sharedPreferenceHelper
+            .cookiesHeader
+            ?.split(COOKIE_SEPARATOR)
+            ?.let(::getCookiesFromHeader)
+            ?.takeIf { it.isNotEmpty() }
+
+    fun fetchCookiesForBaseUrl(): List<HttpCookie> {
         val lang = Locale.getDefault().language
         val response = emptyAuthService.getStepicForFun(lang).execute()
+        val header = response.headers().values(AppConstants.setCookieHeaderName)
 
         sharedPreferenceHelper.cookiesHeader =
-            response.headers().values(AppConstants.setCookieHeaderName).joinToString(separator = COOKIE_SEPARATOR)
+            header.joinToString(separator = COOKIE_SEPARATOR)
+
+        return getCookiesFromHeader(header)
     }
+
+    private fun getCookiesFromHeader(header: List<String>): List<HttpCookie> =
+        header.flatMap { cookie -> HttpCookie.parse(cookie).filter { !it.hasExpired() } }
+
+    fun getCookieHeader(cookies: List<HttpCookie>): String =
+        cookies.joinToString(separator = COOKIE_HEADER_SEPARATOR) { it.toString() }
 }
