@@ -75,7 +75,7 @@ constructor(
         val courseIds = savedInstanceState.getLongArray(KEY_COURSES)
         if (courseIds != null) {
             if (state == ProfileCoursesView.State.Idle) {
-                state = ProfileCoursesView.State.SilentLoading
+                state = ProfileCoursesView.State.Loading
                 compositeDisposable += courseListInteractor
                     .getCourseListItems(*courseIds) // TODO Cache data source?
                     .subscribeOn(backgroundScheduler)
@@ -90,7 +90,7 @@ constructor(
 
     fun fetchCourses(forceUpdate: Boolean = false) {
         if (state == ProfileCoursesView.State.Idle || (forceUpdate && state is ProfileCoursesView.State.Error)) {
-            state = ProfileCoursesView.State.SilentLoading
+            state = ProfileCoursesView.State.Loading
             compositeDisposable += profileDataObservable
                 .firstElement()
                 .flatMapSingleElement { profileData ->

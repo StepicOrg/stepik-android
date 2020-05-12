@@ -7,13 +7,11 @@ import org.stepik.android.presentation.course_continue.CourseContinueView
 interface ProfileCoursesView : CourseContinueView {
     sealed class State {
         object Idle : State()
-        object SilentLoading : State()
+        object Loading : State()
         object Empty : State()
         object Error : State()
 
-        class Content(
-            val courseListDataItems: PagedList<CourseListItem.Data>
-        ) : State()
+        class Content(val courseListDataItems: PagedList<CourseListItem.Data>) : State()
     }
 
     fun setState(state: State)
