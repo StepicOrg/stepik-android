@@ -93,7 +93,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<ProfileCoursesView.State.Idle>()
-        viewStateDelegate.addState<ProfileCoursesView.State.SilentLoading>()
+        viewStateDelegate.addState<ProfileCoursesView.State.Loading>(view, profileCoursesPlaceholder)
         viewStateDelegate.addState<ProfileCoursesView.State.Empty>()
         viewStateDelegate.addState<ProfileCoursesView.State.Error>(view, profileCoursesLoadingError)
         viewStateDelegate.addState<ProfileCoursesView.State.Content>(view, profileCoursesRecycler)

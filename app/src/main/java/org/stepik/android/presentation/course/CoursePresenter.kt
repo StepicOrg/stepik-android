@@ -457,7 +457,7 @@ constructor(
         isCoursePreviewLogged = true
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.CoursePreview.COURSE_PREVIEW_SCREEN_OPENED, mapOf(
-            AmplitudeAnalytic.CoursePreview.Params.COURSE to course.enrollment,
+            AmplitudeAnalytic.CoursePreview.Params.COURSE to course.id,
             AmplitudeAnalytic.CoursePreview.Params.TITLE to course.title,
             AmplitudeAnalytic.CoursePreview.Params.IS_PAID to course.isPaid
         ))
