@@ -259,7 +259,7 @@ class CourseContentFragment :
     override fun showChangeDownloadNetworkType() {
         view?.snackbar(messageRes = R.string.allow_mobile_snack, length = Snackbar.LENGTH_LONG) {
             setAction(R.string.settings_title) {
-                analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS)
+                analytic.reportEvent(Analytic.DownloaderV2.CLICK_SETTINGS_SECTIONS)
                 screenManager.showSettings(activity)
             }
         }
@@ -308,6 +308,7 @@ class CourseContentFragment :
         dialog.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE)
         dialog.showIfNotExists(supportFragmentManager, LearningRateDialog.TAG)
 
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_OPENED, courseId.toString())
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.SCHEDULE_PRESSED)
     }
 
@@ -326,6 +327,8 @@ class CourseContentFragment :
         val dialog = EditDeadlinesDialog.newInstance(sections, record)
         dialog.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE)
         dialog.showIfNotExists(supportFragmentManager, EditDeadlinesDialog.TAG)
+
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_CHANGE_PRESSED, courseId.toString())
     }
 
     override fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>) {

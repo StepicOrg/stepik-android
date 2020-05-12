@@ -202,3 +202,7 @@
       content: url("file:///android_asset/web/images/cube-scan.svg");
       float: right;
     }
+
+    blockquote > * {
+        margin: 0;
+    }

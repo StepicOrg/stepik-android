@@ -156,9 +156,11 @@ constructor(
     private fun sendSubmissionEvent(step: Step, submission: Submission) {
         val params =
             mutableMapOf(
+                AmplitudeAnalytic.Steps.Params.SUBMISSION to submission.id,
                 AmplitudeAnalytic.Steps.Params.STEP to step.id,
                 AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
-                AmplitudeAnalytic.Steps.Params.LOCAL to true
+                AmplitudeAnalytic.Steps.Params.LOCAL to true,
+                AmplitudeAnalytic.Steps.Params.IS_ADAPTIVE to false
             )
 
         submission.reply?.language
