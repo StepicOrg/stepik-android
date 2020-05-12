@@ -77,6 +77,7 @@ constructor(
             }
         }
         amplitude.logEvent(eventName, properties)
+        YandexMetrica.reportEvent(eventName, params)
         Crashlytics.log("$eventName=$params")
     }
 
