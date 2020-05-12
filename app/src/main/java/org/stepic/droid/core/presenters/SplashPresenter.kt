@@ -146,7 +146,6 @@ constructor(
         val numberOfLaunches = sharedPreferenceHelper.incrementNumberOfLaunches()
         //after first increment it is 0, because of default value is -1.
         if (numberOfLaunches <= 0) {
-            analytic.reportEvent(Analytic.System.FIRST_LAUNCH_AFTER_INSTALL)
             analytic.reportAmplitudeEvent(AmplitudeAnalytic.Launch.FIRST_TIME)
         }
         if (numberOfLaunches < AppConstants.LAUNCHES_FOR_EXPERT_USER) {
