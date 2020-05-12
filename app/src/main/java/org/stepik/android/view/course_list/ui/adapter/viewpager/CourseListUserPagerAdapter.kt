@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import org.stepic.droid.R
-import org.stepik.android.domain.course_list.model.CourseListUserQuery
 import org.stepik.android.presentation.course_list.model.CourseListUserType
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserFragment
 

@@ -7,6 +7,7 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -31,7 +32,9 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.presentation.user_courses.model.UserCourseOperationResult
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import ru.nobird.android.presentation.base.PresenterBase
@@ -66,6 +69,9 @@ constructor(
 
     @SolutionsSentBus
     private val solutionsSentObservable: Observable<Unit>,
+
+    @UserCoursesOperationBus
+    private val userCoursesOperationPublisher: PublishSubject<UserCourseOperationResult>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -428,6 +434,7 @@ constructor(
                         .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it, isSending = false))
 
                     state = CourseView.State.CourseLoaded(courseHeaderData)
+                    userCoursesOperationPublisher.onNext(UserCourseOperationResult(it, userCourseAction))
                     view?.showSaveUserCourseSuccess(userCourseAction)
                 },
                 onError = {

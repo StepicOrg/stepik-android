@@ -15,17 +15,19 @@ import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.mutate
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.course_list.model.CourseListUserQuery
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
-import org.stepik.android.model.Course
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.presentation.course_list.model.CourseListUserType
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.presentation.user_courses.model.UserCourseOperationResult
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
+import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
 import retrofit2.HttpException
 import ru.nobird.android.presentation.base.PresenterBase
@@ -50,6 +52,8 @@ constructor(
     private val enrollmentUpdatesObservable: Observable<Course>,
     @UserCoursesUpdateBus
     private val userCoursesUpdateObservable: Observable<Course>,
+    @UserCoursesOperationBus
+    private val userCourseOperationObservable: Observable<UserCourseOperationResult>,
 
     viewContainer: PresenterViewContainer<CourseListUserView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
@@ -72,6 +76,7 @@ constructor(
     init {
         subscribeForEnrollmentUpdates()
         subscribeForContinueCourseUpdates()
+        subscribeForUserCourseOperationUpdates()
     }
 
     init {
@@ -236,6 +241,114 @@ constructor(
                 },
                 onError = emptyOnErrorStub
             )
+    }
+
+    private fun subscribeForUserCourseOperationUpdates() {
+        compositeDisposable += userCourseOperationObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { userCourseOperationResult ->
+                    val oldState = state as? CourseListUserView.State.Data
+                        ?: return@subscribeBy
+
+                    when (oldState.courseListUserType) {
+                        CourseListUserType.ALL -> {
+                            val userCoursesUpdatedList = oldState.userCourses.map {
+                                if (it.course == userCourseOperationResult.userCourse.course) {
+                                    userCourseOperationResult.userCourse
+                                } else {
+                                    it
+                                }
+                            }
+                            state = oldState.copy(userCourses = userCoursesUpdatedList)
+                        }
+                        CourseListUserType.FAVORITE -> {
+                            when (userCourseOperationResult.userCourseAction) {
+                                UserCourseAction.ADD_FAVORITE -> {
+                                    fetchUserCourseOperationItem(userCourseOperationResult)
+                                }
+
+                                UserCourseAction.REMOVE_FAVORITE -> {
+                                    val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content ?: return@subscribeBy
+                                    state = removeUserCourseOperation(oldState, oldCourseListState, userCourseOperationResult)
+                                }
+
+                                else ->
+                                    return@subscribeBy
+                            }
+                        }
+                        CourseListUserType.ARCHIVED ->
+                            when (userCourseOperationResult.userCourseAction) {
+                                UserCourseAction.ADD_ARCHIVE -> {
+                                    fetchUserCourseOperationItem(userCourseOperationResult)
+                                }
+
+                                UserCourseAction.REMOVE_ARCHIVE -> {
+                                    val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content ?: return@subscribeBy
+                                    state = removeUserCourseOperation(oldState, oldCourseListState, userCourseOperationResult)
+                                }
+
+                                else ->
+                                    return@subscribeBy
+                            }
+                    }
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun fetchUserCourseOperationItem(userCourseOperationResult: UserCourseOperationResult) {
+        compositeDisposable += courseListUserInteractor
+            .getUserCourse(userCourseOperationResult.userCourse.course)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { courseListItem ->
+                    val oldState = state as? CourseListUserView.State.Data
+                        ?: return@subscribeBy
+
+                    val userCoursesUpdate = listOf(userCourseOperationResult.userCourse) + oldState.userCourses
+                    val courseListState = courseListStateMapper.mapEnrolledCourseListItemState(oldState.courseListViewState, courseListItem)
+                    state = oldState.copy(
+                        userCourses = userCoursesUpdate,
+                        courseListViewState = courseListState
+                    )
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun removeUserCourseOperation(
+        oldState: CourseListUserView.State.Data,
+        oldCourseListState: CourseListView.State.Content,
+        userCourseOperationResult: UserCourseOperationResult
+    ): CourseListUserView.State.Data {
+        val userCoursesUpdate = oldState.userCourses.mapNotNull {
+            if (it.course == userCourseOperationResult.userCourse.course) {
+                null
+            } else {
+                it
+            }
+        }
+        val index = oldCourseListState.courseListDataItems
+            .indexOfFirst { it.course.id == userCourseOperationResult.userCourse.course }
+
+        val newItems = oldCourseListState.courseListDataItems.mutate { removeAt(index) }
+
+        val courseListViewState = if (newItems.isNotEmpty()) {
+            oldCourseListState.copy(
+                courseListDataItems = PagedList(newItems),
+                courseListItems = newItems
+            )
+        } else {
+            CourseListView.State.Empty
+        }
+
+        return oldState.copy(
+            userCourses = userCoursesUpdate,
+            courseListViewState = courseListViewState
+        )
     }
 
     private fun removeDroppedCourse(courseId: Long) {

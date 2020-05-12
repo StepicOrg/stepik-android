@@ -9,6 +9,7 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.user_courses.model.UserCourseOperationResult
 
 @Module
 abstract class CourseListBusModule {
@@ -51,5 +52,24 @@ abstract class CourseListBusModule {
             scheduler: Scheduler
         ): Observable<Course> =
             userCoursesUpdatePublisher.observeOn(scheduler)
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @UserCoursesOperationBus
+        internal fun provideUserCoursesOperationPublisher(): PublishSubject<UserCourseOperationResult> =
+            PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @UserCoursesOperationBus
+        internal fun provideUserCoursesOperationObservable(
+            @UserCoursesOperationBus
+            userCoursesOperationPublisher: PublishSubject<UserCourseOperationResult>,
+            @BackgroundScheduler
+            scheduler: Scheduler
+        ): Observable<UserCourseOperationResult> =
+            userCoursesOperationPublisher.observeOn(scheduler)
     }
 }

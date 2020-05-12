@@ -13,7 +13,8 @@ interface CourseListUserView : CourseContinueView {
         data class Data(
             val courseListUserType: CourseListUserType,
             val userCourses: List<UserCourse>,
-            val courseListViewState: CourseListView.State) : State()
+            val courseListViewState: CourseListView.State
+        ) : State()
     }
 
     fun setState(state: State)
