@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.profile
 
-import android.os.Bundle
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
