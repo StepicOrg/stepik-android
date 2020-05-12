@@ -114,7 +114,6 @@
 
                 android:text="@string/step_quiz_code_output_data"
                 android:textAppearance="?textAppearanceSubtitle1"
-                android:textColor="@color/color_run_code_title"
 
                 android:visibility="visible"
 
@@ -133,7 +132,6 @@
                 android:background="@drawable/bg_run_code"
 
                 android:textAppearance="?textAppearanceBody2"
-                android:textColor="@color/color_run_code_body"
                 app:fontFamily="@font/pt_mono"
 
                 android:visibility="visible"

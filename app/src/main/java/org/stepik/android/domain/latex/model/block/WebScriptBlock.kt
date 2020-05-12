@@ -13,5 +13,6 @@ class WebScriptBlock : ContentBlock {
         "<iframe" in content ||
         "<audio" in content ||
         "<table" in content ||
-        "<div" in content
+        "<div" in content ||
+        "<blockquote" in content
 }

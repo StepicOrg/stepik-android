@@ -12,6 +12,7 @@ class BaseStyleBlock(
     override val header: String = """
         <link rel="stylesheet" type="text/css" href="file:///android_asset/css/wysiwyg.css"/>
         <link rel="stylesheet" type="text/css" href="file:///android_asset/css/hljs${if (isNightMode) "-night" else ""}.css"/>
+        <link rel="stylesheet" type="text/css" href="file:///android_asset/css/base-style${if (isNightMode) "-night" else ""}.css"/>
         
         <style>
             @font-face {
