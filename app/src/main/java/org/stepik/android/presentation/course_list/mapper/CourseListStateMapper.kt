@@ -4,7 +4,9 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
 import javax.inject.Inject
 
@@ -95,7 +97,48 @@ constructor() {
         )
     }
 
-    fun mapEnrolledCourseListItemState(state: CourseListView.State, courseListItemEnrolled: CourseListItem.Data): CourseListView.State =
+    fun mapUserCourseRemoveState(oldState: CourseListUserView.State.Data, oldCourseListState: CourseListView.State.Content, courseId: Long): CourseListUserView.State.Data {
+        val userCoursesUpdate = oldState.userCourses.mapNotNull {
+            if (it.course == courseId) {
+                null
+            } else {
+                it
+            }
+        }
+        val index = oldCourseListState.courseListDataItems
+            .indexOfFirst { it.course.id == courseId }
+
+        val newItems = oldCourseListState.courseListDataItems.mutate { removeAt(index) }
+
+        val courseListViewState = if (newItems.isNotEmpty()) {
+            oldCourseListState.copy(
+                courseListDataItems = newItems,
+                courseListItems = newItems
+            )
+        } else {
+            CourseListView.State.Empty
+        }
+
+        return oldState.copy(
+            userCourses = userCoursesUpdate,
+            courseListViewState = courseListViewState
+        )
+    }
+
+    fun mapUserCourseAddState(
+        oldState: CourseListUserView.State.Data,
+        userCourse: UserCourse,
+        courseListItem: CourseListItem.Data
+    ): CourseListUserView.State.Data {
+        val userCoursesUpdated = listOf(userCourse) + oldState.userCourses
+        val courseListState = mapEnrolledCourseListItemState(oldState.courseListViewState, courseListItem)
+        return oldState.copy(
+            userCourses = userCoursesUpdated,
+            courseListViewState = courseListState
+        )
+    }
+
+    private fun mapEnrolledCourseListItemState(state: CourseListView.State, courseListItemEnrolled: CourseListItem.Data): CourseListView.State =
         when (state) {
             is CourseListView.State.Empty -> {
                 CourseListView.State.Content(

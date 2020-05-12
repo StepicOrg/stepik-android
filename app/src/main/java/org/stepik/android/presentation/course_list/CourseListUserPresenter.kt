@@ -12,7 +12,6 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.mapToLongArray
-import org.stepic.droid.util.mutate
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListUserQuery
@@ -273,7 +272,7 @@ constructor(
 
                                 UserCourseAction.REMOVE_FAVORITE -> {
                                     val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content ?: return@subscribeBy
-                                    state = removeUserCourseOperation(oldState, oldCourseListState, userCourseOperationResult)
+                                    state = courseListStateMapper.mapUserCourseRemoveState(oldState, oldCourseListState, userCourseOperationResult.userCourse.course)
                                 }
 
                                 else ->
@@ -288,7 +287,7 @@ constructor(
 
                                 UserCourseAction.REMOVE_ARCHIVE -> {
                                     val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content ?: return@subscribeBy
-                                    state = removeUserCourseOperation(oldState, oldCourseListState, userCourseOperationResult)
+                                    state = courseListStateMapper.mapUserCourseRemoveState(oldState, oldCourseListState, userCourseOperationResult.userCourse.course)
                                 }
 
                                 else ->
@@ -309,48 +308,10 @@ constructor(
                 onSuccess = { courseListItem ->
                     val oldState = state as? CourseListUserView.State.Data
                         ?: return@subscribeBy
-
-                    val userCoursesUpdate = listOf(userCourseOperationResult.userCourse) + oldState.userCourses
-                    val courseListState = courseListStateMapper.mapEnrolledCourseListItemState(oldState.courseListViewState, courseListItem)
-                    state = oldState.copy(
-                        userCourses = userCoursesUpdate,
-                        courseListViewState = courseListState
-                    )
+                    state = courseListStateMapper.mapUserCourseAddState(oldState, userCourseOperationResult.userCourse, courseListItem)
                 },
                 onError = emptyOnErrorStub
             )
-    }
-
-    private fun removeUserCourseOperation(
-        oldState: CourseListUserView.State.Data,
-        oldCourseListState: CourseListView.State.Content,
-        userCourseOperationResult: UserCourseOperationResult
-    ): CourseListUserView.State.Data {
-        val userCoursesUpdate = oldState.userCourses.mapNotNull {
-            if (it.course == userCourseOperationResult.userCourse.course) {
-                null
-            } else {
-                it
-            }
-        }
-        val index = oldCourseListState.courseListDataItems
-            .indexOfFirst { it.course.id == userCourseOperationResult.userCourse.course }
-
-        val newItems = oldCourseListState.courseListDataItems.mutate { removeAt(index) }
-
-        val courseListViewState = if (newItems.isNotEmpty()) {
-            oldCourseListState.copy(
-                courseListDataItems = PagedList(newItems),
-                courseListItems = newItems
-            )
-        } else {
-            CourseListView.State.Empty
-        }
-
-        return oldState.copy(
-            userCourses = userCoursesUpdate,
-            courseListViewState = courseListViewState
-        )
     }
 
     private fun removeDroppedCourse(courseId: Long) {
@@ -360,35 +321,17 @@ constructor(
         val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
             ?: return
 
-        val index = oldCourseListState.courseListDataItems
-            .indexOfFirst { it.course.id == courseId }
-            .takeIf { it > -1 }
-            ?: return
-
-        val newItems = oldCourseListState.courseListDataItems.mutate { removeAt(index) }
+        val resultState = courseListStateMapper.mapUserCourseRemoveState(oldState, oldCourseListState, courseId)
 
         val publishUserCourses =
-            if (newItems.isNotEmpty()) {
-                UserCoursesLoaded.FirstCourse(newItems.first())
+            if (resultState.courseListViewState is CourseListView.State.Content) {
+                UserCoursesLoaded.FirstCourse(resultState.courseListViewState.courseListDataItems.first())
             } else {
                 UserCoursesLoaded.Empty
             }
 
-        val courseListViewState = if (newItems.isNotEmpty()) {
-            oldCourseListState.copy(
-                courseListDataItems = newItems,
-                courseListItems = newItems
-            )
-        } else {
-            CourseListView.State.Empty
-        }
-
         userCoursesLoadedPublisher.onNext(publishUserCourses)
-
-        state = oldState.copy(
-            userCourses = oldState.userCourses.drop(1),
-            courseListViewState = courseListViewState
-        )
+        state = resultState
     }
 
     private fun fetchEnrolledCourse(courseId: Long) {
@@ -402,19 +345,16 @@ constructor(
                         ?: return@subscribeBy
 
                     userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(enrolledCourseListItem))
-                    state = oldState.copy(
-                        userCourses = listOf(
-                            UserCourse(
-                                id = 0,
-                                user = 0,
-                                course = enrolledCourseListItem.id,
-                                isFavorite = false,
-                                isPinned = false,
-                                isArchived = false,
-                                lastViewed = null
-                            )
-                        ) + oldState.userCourses,
-                        courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(oldState.courseListViewState, enrolledCourseListItem))
+                    val userCourse = UserCourse(
+                        id = 0,
+                        user = 0,
+                        course = enrolledCourseListItem.id,
+                        isFavorite = false,
+                        isPinned = false,
+                        isArchived = false,
+                        lastViewed = null
+                    )
+                    state = courseListStateMapper.mapUserCourseAddState(oldState, userCourse, enrolledCourseListItem)
                 },
                 onError = emptyOnErrorStub
             )
