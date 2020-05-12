@@ -23,6 +23,7 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.presentation.course_list.model.CourseListUserType
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -90,7 +91,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListPlaceholderEmpty.setPlaceholderText(R.string.courses_carousel_my_courses_empty)
         courseListPlaceholderNoConnection.setOnClickListener {
-            courseListPresenter.fetchUserCourses(courseListUserQuery = courseListUserQuery, forceUpdate = true)
+            courseListPresenter.fetchUserCourses(courseListUserType = CourseListUserType.ALL, forceUpdate = true)
         }
         courseListWrapperPlaceholderEmptyLogin.setOnClickListener {
             analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER)
@@ -127,7 +128,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListPlaceholderNoConnection)
         wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
 
-        courseListPresenter.fetchUserCourses(courseListUserQuery)
+        courseListPresenter.fetchUserCourses(CourseListUserType.ALL)
     }
 
     private fun injectComponent() {

@@ -23,6 +23,7 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
+import org.stepik.android.presentation.course_list.model.CourseListUserType
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
@@ -82,7 +83,7 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchUserCourses(courseListUserQuery: CourseListUserQuery, forceUpdate: Boolean = false) {
+    fun fetchUserCourses(courseListUserType: CourseListUserType, forceUpdate: Boolean = false) {
         if (state != CourseListUserView.State.Idle && !forceUpdate) return
 
         paginationDisposable.clear()
@@ -90,12 +91,13 @@ constructor(
         state = CourseListUserView.State.Loading
 
         paginationDisposable += courseListUserInteractor
-            .getAllUserCourses(courseListUserQuery)
+            .getAllUserCourses(courseListUserType.courseListUserQuery)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = {
                     state = CourseListUserView.State.Data(
+                        courseListUserType = courseListUserType,
                         userCourses = it,
                         courseListViewState = CourseListView.State.Idle
                     )
@@ -158,7 +160,7 @@ constructor(
                         }
                         else -> {
                             userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
-                            state = CourseListUserView.State.Data(oldState.userCourses, CourseListView.State.NetworkError)
+                            state = CourseListUserView.State.Data(oldState.courseListUserType, oldState.userCourses, CourseListView.State.NetworkError)
                         }
                     }
                 }
