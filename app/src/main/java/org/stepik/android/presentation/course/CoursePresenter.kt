@@ -32,7 +32,6 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
-import org.stepik.android.presentation.user_courses.model.UserCourseOperationResult
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.solutions.SolutionsBus
@@ -71,7 +70,7 @@ constructor(
     private val solutionsSentObservable: Observable<Unit>,
 
     @UserCoursesOperationBus
-    private val userCoursesOperationPublisher: PublishSubject<UserCourseOperationResult>,
+    private val userCoursesOperationPublisher: PublishSubject<UserCourse>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -434,7 +433,7 @@ constructor(
                         .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it, isSending = false))
 
                     state = CourseView.State.CourseLoaded(courseHeaderData)
-                    userCoursesOperationPublisher.onNext(UserCourseOperationResult(it, userCourseAction))
+                    userCoursesOperationPublisher.onNext(it)
                     view?.showSaveUserCourseSuccess(userCourseAction)
                 },
                 onError = {

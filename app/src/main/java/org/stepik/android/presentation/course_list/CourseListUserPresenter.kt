@@ -23,8 +23,6 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.presentation.course_list.model.CourseListUserType
-import org.stepik.android.presentation.user_courses.model.UserCourseAction
-import org.stepik.android.presentation.user_courses.model.UserCourseOperationResult
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
@@ -53,7 +51,7 @@ constructor(
     @UserCoursesUpdateBus
     private val userCoursesUpdateObservable: Observable<Course>,
     @UserCoursesOperationBus
-    private val userCourseOperationObservable: Observable<UserCourseOperationResult>,
+    private val userCourseOperationObservable: Observable<UserCourse>,
 
     viewContainer: PresenterViewContainer<CourseListUserView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
@@ -249,15 +247,15 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { userCourseOperationResult ->
+                onNext = { userCourse ->
                     val oldState = state as? CourseListUserView.State.Data
                         ?: return@subscribeBy
 
                     when (oldState.courseListUserType) {
                         CourseListUserType.ALL -> {
                             val userCoursesUpdatedList = oldState.userCourses.map {
-                                if (it.course == userCourseOperationResult.userCourse.course) {
-                                    userCourseOperationResult.userCourse
+                                if (it.course == userCourse.course) {
+                                    userCourse
                                 } else {
                                     it
                                 }
@@ -265,50 +263,37 @@ constructor(
                             state = oldState.copy(userCourses = userCoursesUpdatedList)
                         }
                         CourseListUserType.FAVORITE -> {
-                            when (userCourseOperationResult.userCourseAction) {
-                                UserCourseAction.ADD_FAVORITE -> {
-                                    fetchUserCourseOperationItem(userCourseOperationResult)
-                                }
-
-                                UserCourseAction.REMOVE_FAVORITE -> {
-                                    val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content ?: return@subscribeBy
-                                    state = courseListStateMapper.mapUserCourseRemoveState(oldState, oldCourseListState, userCourseOperationResult.userCourse.course)
-                                }
-
-                                else ->
-                                    return@subscribeBy
+                            if (userCourse.isFavorite) {
+                                fetchUserCourseOperationItem(userCourse)
+                            } else {
+                                val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content ?: return@subscribeBy
+                                state = courseListStateMapper.mapUserCourseRemoveState(oldState, oldCourseListState, userCourse.course)
                             }
                         }
-                        CourseListUserType.ARCHIVED ->
-                            when (userCourseOperationResult.userCourseAction) {
-                                UserCourseAction.ADD_ARCHIVE -> {
-                                    fetchUserCourseOperationItem(userCourseOperationResult)
-                                }
-
-                                UserCourseAction.REMOVE_ARCHIVE -> {
-                                    val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content ?: return@subscribeBy
-                                    state = courseListStateMapper.mapUserCourseRemoveState(oldState, oldCourseListState, userCourseOperationResult.userCourse.course)
-                                }
-
-                                else ->
-                                    return@subscribeBy
+                        CourseListUserType.ARCHIVED -> {
+                            if (userCourse.isArchived) {
+                                fetchUserCourseOperationItem(userCourse)
+                            } else {
+                                val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content ?: return@subscribeBy
+                                state = courseListStateMapper.mapUserCourseRemoveState(oldState, oldCourseListState, userCourse.course)
                             }
+                        }
                     }
                 },
                 onError = emptyOnErrorStub
             )
     }
 
-    private fun fetchUserCourseOperationItem(userCourseOperationResult: UserCourseOperationResult) {
+    private fun fetchUserCourseOperationItem(userCourse: UserCourse) {
         compositeDisposable += courseListUserInteractor
-            .getUserCourse(userCourseOperationResult.userCourse.course)
+            .getUserCourse(userCourse.course)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { courseListItem ->
                     val oldState = state as? CourseListUserView.State.Data
                         ?: return@subscribeBy
-                    state = courseListStateMapper.mapUserCourseAddState(oldState, userCourseOperationResult.userCourse, courseListItem)
+                    state = courseListStateMapper.mapUserCourseAddState(oldState, userCourse, courseListItem)
                 },
                 onError = emptyOnErrorStub
             )
