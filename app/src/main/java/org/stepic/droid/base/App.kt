@@ -115,6 +115,10 @@ class App : MultiDexApplication() {
         FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)
         VKSdk.initialize(this)
+        
+        // init AppMetrica SDK
+        YandexMetrica.activate(applicationContext, YandexMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build())
+        YandexMetrica.enableActivityAutoTracking(this)
 
         component = DaggerAppCoreComponent.builder()
                 .context(application)
@@ -128,10 +132,6 @@ class App : MultiDexApplication() {
 
 
         componentManager = ComponentManagerImpl(component)
-
-        // init AppMetrica SDK
-        YandexMetrica.activate(applicationContext, YandexMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build())
-        YandexMetrica.enableActivityAutoTracking(this)
 
         Branch.getAutoInstance(this)
         initChannels()
