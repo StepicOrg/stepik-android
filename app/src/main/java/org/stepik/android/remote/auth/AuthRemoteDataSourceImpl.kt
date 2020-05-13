@@ -97,7 +97,7 @@ constructor(
             var newRequest = chain.addUserAgent(userAgentProvider.provideUserAgent())
 
             val cookies =
-                cookieHelper.getCookiesForBaseUrl() ?: return@Interceptor chain.proceed(newRequest)
+                cookieHelper.getFreshCookiesForBaseUrl() ?: return@Interceptor chain.proceed(newRequest)
 
             var csrftoken: String? = null
             var sessionId: String? = null
