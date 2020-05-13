@@ -17,7 +17,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
-import org.stepik.android.domain.course_list.model.CourseListUserQuery
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -33,15 +33,15 @@ import javax.inject.Inject
 
 class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseListUserView {
     companion object {
-        fun newInstance(courseListUserType: CourseListUserType, courseListUserQuery: CourseListUserQuery): Fragment =
+        fun newInstance(courseListUserType: CourseListUserType, userCourseQuery: UserCourseQuery): Fragment =
             CourseListUserFragment().apply {
                 this.courseListUserType = courseListUserType
-                this.courseListUserQuery = courseListUserQuery
+                this.courseListUserQuery = userCourseQuery
             }
     }
 
     private var courseListUserType by argument<CourseListUserType>()
-    private var courseListUserQuery by argument<CourseListUserQuery>()
+    private var courseListUserQuery by argument<UserCourseQuery>()
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -82,10 +82,10 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListSwipeRefresh.setOnRefreshListener {
-            courseListPresenter.fetchUserCourses(courseListUserType = courseListUserType, courseListUserQuery = courseListUserQuery, forceUpdate = true)
+            courseListPresenter.fetchUserCourses(courseListUserType = courseListUserType, userCourseQuery = courseListUserQuery, forceUpdate = true)
         }
         courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener {
-            courseListPresenter.fetchUserCourses(courseListUserType = courseListUserType, courseListUserQuery = courseListUserQuery, forceUpdate = true)
+            courseListPresenter.fetchUserCourses(courseListUserType = courseListUserType, userCourseQuery = courseListUserQuery, forceUpdate = true)
         }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()

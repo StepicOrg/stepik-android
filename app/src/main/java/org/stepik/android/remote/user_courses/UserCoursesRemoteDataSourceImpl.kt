@@ -6,10 +6,10 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.first
 import org.stepic.droid.util.maybeFirst
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource
-import org.stepik.android.domain.course_list.model.CourseListUserQuery
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.remote.base.mapper.toPagedList
-import org.stepik.android.remote.course.mapper.CourseListUserQueryMapper
+import org.stepik.android.remote.course.mapper.UserQueryMapper
 import org.stepik.android.remote.user_courses.model.UserCoursesRequest
 import org.stepik.android.remote.user_courses.model.UserCoursesResponse
 import org.stepik.android.remote.user_courses.service.UserCoursesService
@@ -19,11 +19,11 @@ class UserCoursesRemoteDataSourceImpl
 @Inject
 constructor(
     private val userCoursesService: UserCoursesService,
-    private val courseListUserQueryMapper: CourseListUserQueryMapper
+    private val userQueryMapper: UserQueryMapper
 ) : UserCoursesRemoteDataSource {
-    override fun getUserCourses(courseListUserQuery: CourseListUserQuery): Single<PagedList<UserCourse>> =
+    override fun getUserCourses(userCourseQuery: UserCourseQuery): Single<PagedList<UserCourse>> =
         userCoursesService
-            .getUserCourses(courseListUserQueryMapper.mapToQueryMap(courseListUserQuery))
+            .getUserCourses(userQueryMapper.mapToQueryMap(userCourseQuery))
             .map { it.toPagedList(UserCoursesResponse::userCourse) }
 
     override fun getUserCourseByCourseId(courseId: Long): Maybe<UserCourse> =

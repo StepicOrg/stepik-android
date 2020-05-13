@@ -14,7 +14,7 @@ import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.course_list.model.CourseListUserQuery
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
@@ -88,7 +88,7 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchUserCourses(courseListUserType: CourseListUserType, courseListUserQuery: CourseListUserQuery, forceUpdate: Boolean = false) {
+    fun fetchUserCourses(courseListUserType: CourseListUserType, userCourseQuery: UserCourseQuery, forceUpdate: Boolean = false) {
         if (state != CourseListUserView.State.Idle && !forceUpdate) return
 
         paginationDisposable.clear()
@@ -96,14 +96,14 @@ constructor(
         state = CourseListUserView.State.Loading
 
         paginationDisposable += courseListUserInteractor
-            .getAllUserCourses(courseListUserType, courseListUserQuery)
+            .getAllUserCourses(userCourseQuery)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = {
                     state = CourseListUserView.State.Data(
                         courseListUserType = courseListUserType,
-                        courseListUserQuery = courseListUserQuery,
+                        userCourseQuery = userCourseQuery,
                         userCourses = it,
                         courseListViewState = CourseListView.State.Idle
                     )
@@ -166,7 +166,7 @@ constructor(
                         }
                         else -> {
                             userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
-                            state = CourseListUserView.State.Data(oldState.courseListUserType, oldState.courseListUserQuery, oldState.userCourses, CourseListView.State.NetworkError)
+                            state = CourseListUserView.State.Data(oldState.courseListUserType, oldState.userCourseQuery, oldState.userCourses, CourseListView.State.NetworkError)
                         }
                     }
                 }

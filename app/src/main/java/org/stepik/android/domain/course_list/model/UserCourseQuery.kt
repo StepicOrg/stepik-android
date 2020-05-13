@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class CourseListUserQuery(
+data class UserCourseQuery(
     val page: Int? = null,
     val isFavorite: Boolean? = null,
     val isArchived: Boolean? = null

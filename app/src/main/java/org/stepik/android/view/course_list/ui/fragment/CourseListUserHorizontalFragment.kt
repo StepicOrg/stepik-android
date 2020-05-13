@@ -16,7 +16,7 @@ import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
-import org.stepik.android.domain.course_list.model.CourseListUserQuery
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -37,7 +37,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
             CourseListUserHorizontalFragment()
     }
 
-    private val courseListUserQuery = CourseListUserQuery(page = 1)
+    private val courseListUserQuery = UserCourseQuery(page = 1)
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -91,7 +91,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         courseListPlaceholderEmpty.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListPlaceholderEmpty.setPlaceholderText(R.string.courses_carousel_my_courses_empty)
         courseListPlaceholderNoConnection.setOnClickListener {
-            courseListPresenter.fetchUserCourses(courseListUserType = CourseListUserType.ALL, courseListUserQuery = CourseListUserQuery(page = 1), forceUpdate = true)
+            courseListPresenter.fetchUserCourses(courseListUserType = CourseListUserType.ALL, userCourseQuery = UserCourseQuery(page = 1), forceUpdate = true)
         }
         courseListWrapperPlaceholderEmptyLogin.setOnClickListener {
             analytic.reportEvent(Analytic.Anonymous.AUTH_CENTER)
@@ -128,7 +128,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListPlaceholderNoConnection)
         wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
 
-        courseListPresenter.fetchUserCourses(CourseListUserType.ALL, CourseListUserQuery(page = 1))
+        courseListPresenter.fetchUserCourses(CourseListUserType.ALL, UserCourseQuery(page = 1, isArchived = false))
     }
 
     private fun injectComponent() {

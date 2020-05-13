@@ -9,10 +9,9 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.course_list.model.CourseListUserQuery
-import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
-import org.stepik.android.presentation.course_list.model.CourseListUserType
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -39,10 +38,10 @@ constructor(
             }
         }
 
-    fun getAllUserCourses(courseListUserType: CourseListUserType, courseListUserQuery: CourseListUserQuery): Single<List<UserCourse>> =
+    fun getAllUserCourses(userCourseQuery: UserCourseQuery): Single<List<UserCourse>> =
         requireAuthorization then
         Observable.range(1, Int.MAX_VALUE)
-            .concatMapSingle { userCoursesRepository.getUserCourses(courseListUserType, courseListUserQuery.copy(page = it), sourceType = DataSourceType.REMOTE) }
+            .concatMapSingle { userCoursesRepository.getUserCourses(userCourseQuery.copy(page = it), sourceType = DataSourceType.REMOTE) }
             .takeUntil { !it.hasNext }
             .reduce(emptyList()) { a, b -> a + b }
 
