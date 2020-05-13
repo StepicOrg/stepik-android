@@ -42,11 +42,7 @@ class CourseContinueViewDelegate(
     fun onCourseClicked(courseListItem: CourseListItem.Data) {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
         if (courseListItem.course.enrollment != 0L) {
-            if (courseListItem.isAdaptive) {
-                screenManager.continueAdaptiveCourse(activity, courseListItem.course)
-            } else {
-                screenManager.showCourseModules(activity, courseListItem.course)
-            }
+            screenManager.showCourseModules(activity, courseListItem.course)
         } else {
             screenManager.showCourseDescription(activity, courseListItem.course)
         }

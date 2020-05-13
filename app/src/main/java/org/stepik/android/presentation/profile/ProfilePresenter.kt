@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.profile
 
-import android.os.Bundle
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
@@ -107,9 +106,6 @@ constructor(
                 AmplitudeAnalytic.Profile.Params.STATE to state,
                 AmplitudeAnalytic.Profile.Params.ID to userId
             ))
-        analytic.reportEvent(Analytic.Profile.PROFILE_SCREEN_OPENED, Bundle().apply {
-            putString(Analytic.Profile.Params.STATE, state)
-        })
     }
 
     private fun subscribeForProfileUpdates(userId: Long) {
