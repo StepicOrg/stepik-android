@@ -3,6 +3,7 @@ package org.stepic.droid.preferences;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.gson.Gson;
@@ -67,6 +68,7 @@ public class SharedPreferenceHelper {
     private static final String STORAGE_LOCATION_PATH = "storage_location_path";
     private static final String STORAGE_LOCATION_TYPE = "storage_location_type";
 
+    private final String COOKIES_HEADER = "cookies_header";
     private final String ACCESS_TOKEN_TIMESTAMP = "access_token_timestamp";
     private final String AUTH_RESPONSE_JSON = "auth_response_json";
     private final String PROFILE_JSON = "profile_json";
@@ -201,7 +203,7 @@ public class SharedPreferenceHelper {
     public void incrementSubmissionsCount() {
         long submissionsCount = getLong(PreferenceType.DEVICE_SPECIFIC, SUBMISSIONS_COUNT, 0);
         put(PreferenceType.DEVICE_SPECIFIC, SUBMISSIONS_COUNT, submissionsCount + 1);
-        analytic.setSubmissionsCount(submissionsCount + 1);
+        analytic.setSubmissionsCount(submissionsCount, 1);
     }
 
     public void saveNewUserRemindTimestamp(long scheduleMillis) {
@@ -838,6 +840,15 @@ public class SharedPreferenceHelper {
 
     public void afterRunCodePopupShown() {
         put(PreferenceType.DEVICE_SPECIFIC, IS_RUN_CODE_POPUP_SHOWN, true);
+    }
+
+    public void setCookiesHeader(@Nullable String header) {
+        put(PreferenceType.LOGIN, COOKIES_HEADER, header);
+    }
+
+    @Nullable
+    public String getCookiesHeader() {
+        return getString(PreferenceType.LOGIN, COOKIES_HEADER);
     }
 
     private void put(PreferenceType type, String key, String value) {

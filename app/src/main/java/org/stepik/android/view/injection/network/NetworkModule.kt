@@ -1,6 +1,5 @@
 package org.stepik.android.view.injection.network
 
-import android.webkit.CookieManager
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -31,12 +30,6 @@ abstract class NetworkModule {
         @DebugInterceptors
         fun provideDebugInterceptors(): List<Interceptor> =
             DebugToolsHelper.getDebugInterceptors()
-
-        @Provides
-        @JvmStatic
-        @AppSingleton
-        internal fun provideCookieManager(): CookieManager =
-            CookieManager.getInstance()
 
         @Provides
         @JvmStatic

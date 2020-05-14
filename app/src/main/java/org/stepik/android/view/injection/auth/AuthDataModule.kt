@@ -120,7 +120,7 @@ abstract class AuthDataModule {
             val okHttpBuilder = OkHttpClient.Builder()
             okHttpBuilder.addNetworkInterceptor { chain ->
                 cookieHelper.removeCookiesCompat()
-                cookieHelper.updateCookieForBaseUrl()
+                cookieHelper.fetchCookiesForBaseUrl()
                 chain.proceed(
                     cookieHelper.addCsrfTokenToRequest(
                         chain.addUserAgent(userAgentProvider.provideUserAgent())

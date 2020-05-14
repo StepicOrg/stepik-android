@@ -1,7 +1,5 @@
 package org.stepic.droid.core
 
-import android.os.Build
-import android.webkit.CookieManager
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.notifications.badges.NotificationsBadgesLogoutPoster
@@ -26,7 +24,6 @@ constructor(
 
     fun logout(afterClearData: () -> Unit) {
         threadPoolExecutor.execute {
-            removeCookiesCompat()
             removalDownloadsInteractor.removeAllDownloads().blockingAwait()
             try {
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
@@ -39,15 +36,6 @@ constructor(
                 notificationsBadgesLogoutPoster.clearCounter()
                 afterClearData.invoke()
             }
-        }
-    }
-
-    private fun removeCookiesCompat() {
-        if (Build.VERSION.SDK_INT < 21) {
-            @Suppress("DEPRECATION")
-            CookieManager.getInstance().removeAllCookie()
-        } else {
-            CookieManager.getInstance().removeAllCookies(null)
         }
     }
 }

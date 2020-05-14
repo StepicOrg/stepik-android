@@ -271,6 +271,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates(Context context, long userId) {
+        analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES, userId + "");
         Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
         context.startActivity(intent);
     }

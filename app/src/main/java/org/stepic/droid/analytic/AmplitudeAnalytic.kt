@@ -83,11 +83,13 @@ interface AmplitudeAnalytic {
         const val STEP_SOLUTIONS_OPENED = "Step solutions opened"
 
         object Params {
+            const val SUBMISSION = "submission"
             const val TYPE = "type"
             const val LANGUAGE = "language"
             const val NUMBER = "number"
             const val STEP = "step"
             const val LOCAL = "local"
+            const val IS_ADAPTIVE = "is_adaptive"
         }
     }
 
