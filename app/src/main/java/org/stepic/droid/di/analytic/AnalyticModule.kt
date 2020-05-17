@@ -6,6 +6,7 @@ import dagger.multibindings.IntoSet
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.AnalyticImpl
 import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
+import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
 import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
 import org.stepic.droid.analytic.experiments.SplitTest
 import org.stepic.droid.di.AppSingleton
@@ -26,4 +27,9 @@ abstract class AnalyticModule {
     @Binds
     @IntoSet
     internal abstract fun bindCoursePurchasePriceSplitTest(coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest): SplitTest<*>
+
+    @AppSingleton
+    @Binds
+    @IntoSet
+    internal abstract fun bindCoursePurchaseWebviewSplitTest(coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest): SplitTest<*>
 }

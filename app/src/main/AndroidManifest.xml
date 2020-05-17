@@ -348,7 +348,7 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <activity android:name="org.stepik.android.view.course_purchase.PurchaseActivity" />
+        <activity android:name="org.stepik.android.view.course_purchase.CoursePurchaseActivity" />
 
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"

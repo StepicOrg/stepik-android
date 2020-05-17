@@ -103,7 +103,7 @@ public interface ScreenManager {
 
     void openSyllabusInWeb(Context context, long courseId);
 
-    void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams);
+    void openCoursePurchaseInWeb(Activity sourceActivity, long courseId, @Nullable Map<String, List<String>> queryParams);
 
     Intent getCertificateIntent();
 

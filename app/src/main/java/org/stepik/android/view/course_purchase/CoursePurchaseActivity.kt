@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.activity_purchase.*
@@ -13,13 +15,14 @@ import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepik.android.view.base.ui.extension.ExternalLinkWebViewClient
+import timber.log.Timber
 
-class PurchaseActivity : FragmentActivityBase() {
+class CoursePurchaseActivity : FragmentActivityBase() {
     companion object {
         private const val EXTRA_URL = "url"
 
         fun createIntent(context: Context, url: String): Intent =
-            Intent(context, PurchaseActivity::class.java)
+            Intent(context, CoursePurchaseActivity::class.java)
                 .putExtra(EXTRA_URL, url)
     }
 
@@ -38,6 +41,12 @@ class PurchaseActivity : FragmentActivityBase() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 loadProgressbarOnEmptyScreen.isVisible = false
                 webView.isVisible = true
+            }
+
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                // TODO Error view and retry
+                Timber.d("Request: $request")
+                Timber.d("Error: $error")
             }
         }
         webView.loadUrl(url)

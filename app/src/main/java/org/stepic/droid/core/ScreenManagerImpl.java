@@ -28,6 +28,7 @@ import org.stepic.droid.adaptive.ui.activities.AdaptiveOnboardingActivity;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveStatsActivity;
 import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
+import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
@@ -76,7 +77,7 @@ import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActiv
 import org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListTagActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
-import org.stepik.android.view.course_purchase.PurchaseActivity;
+import org.stepik.android.view.course_purchase.CoursePurchaseActivity;
 import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile.ui.activity.ProfileActivity;
@@ -91,7 +92,6 @@ import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
 import java.io.File;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -100,8 +100,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import timber.log.Timber;
-
 @AppSingleton
 public class ScreenManagerImpl implements ScreenManager {
     private final SharedPreferenceHelper sharedPreferences;
@@ -109,14 +107,16 @@ public class ScreenManagerImpl implements ScreenManager {
     private final UserPreferences userPreferences;
     private final Analytic analytic;
     private final Set<BranchDeepLinkRouter> deepLinkRouters;
+    private final CoursePurchaseWebviewSplitTest coursePurchaseWebviewSplitTest;
 
     @Inject
-    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences, Set<BranchDeepLinkRouter> deepLinkRouters) {
+    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences, Set<BranchDeepLinkRouter> deepLinkRouters, CoursePurchaseWebviewSplitTest coursePurchaseWebviewSplitTest) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.sharedPreferences = sharedPreferences;
         this.deepLinkRouters = deepLinkRouters;
+        this.coursePurchaseWebviewSplitTest = coursePurchaseWebviewSplitTest;
     }
 
     @Override
@@ -584,40 +584,26 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
-//        final String url = config.getBaseUrl() + "/course/" + courseId + "/" + CourseScreenTab.PAY.getPath();
-//        openCoursePurchaseInWebview(context, url, queryParams);
-        openCourseTabInWeb(context, courseId, CourseScreenTab.PAY.getPath(), queryParams);
+    public void openCoursePurchaseInWeb(Activity sourceActivity, long courseId, @Nullable Map<String, List<String>> queryParams) {
+        if (coursePurchaseWebviewSplitTest.getCurrentGroup().isInAppWebViewUsed()) {
+            final String url = config.getBaseUrl() + "/course/" + courseId + "/" + CourseScreenTab.PAY.getPath();
+            openCoursePurchaseInWebview(sourceActivity, url, queryParams);
+        } else {
+            openCourseTabInWeb(sourceActivity, courseId, CourseScreenTab.PAY.getPath(), queryParams);
+        }
     }
 
-    private void openCoursePurchaseInWebview(Context context, String url, @Nullable Map<String, List<String>> queryParams) {
-        final Uri.Builder uriBuilder = Uri
-                .parse(url)
-                .buildUpon()
-                .appendQueryParameter("from_mobile_app", "true");
-
-        if (queryParams != null) {
-            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
-        }
-
-        final Uri uri = uriBuilder.build();
-
-        Intent intent = PurchaseActivity.Companion.createIntent(context, uri.toString());
-        context.startActivity(intent);
+    private void openCoursePurchaseInWebview(Activity sourceActivity, String url, @Nullable Map<String, List<String>> queryParams) {
+        Uri uri = formCourseTabUri(url, queryParams);
+        Intent intent = CoursePurchaseActivity.Companion.createIntent(sourceActivity, uri.toString());
+        sourceActivity.startActivity(intent);
+        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
     }
 
     private void openCourseTabInWeb(Context context, long courseId, String tab, @Nullable Map<String, List<String>> queryParams) {
         final String url = config.getBaseUrl() + "/course/" + courseId + "/" + tab + "/";
-        final Uri.Builder uriBuilder = Uri
-                .parse(url)
-                .buildUpon()
-                .appendQueryParameter("from_mobile_app", "true");
 
-        if (queryParams != null) {
-            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
-        }
-
-        final Uri uri = uriBuilder.build();
+        final Uri uri = formCourseTabUri(url, queryParams);
         final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
 
         final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
@@ -638,6 +624,18 @@ public class ScreenManagerImpl implements ScreenManager {
 
             context.startActivity(chooserIntent);
         }
+    }
+
+    private Uri formCourseTabUri(String url, @Nullable Map<String, List<String>> queryParams) {
+        final Uri.Builder uriBuilder = Uri
+                .parse(url)
+                .buildUpon()
+                .appendQueryParameter("from_mobile_app", "true");
+
+        if (queryParams != null) {
+            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
+        }
+        return uriBuilder.build();
     }
 
     @Override
