@@ -12,13 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/progress_bar_on_empty_screen"/>
+        <include
+            layout="@layout/progress_bar_on_empty_screen"/>
 
         <WebView
             android:id="@+id/webView"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <include
+            layout="@layout/error_no_connection_with_button"/>
     </FrameLayout>
 
 </LinearLayout>
