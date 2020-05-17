@@ -76,6 +76,7 @@ import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActiv
 import org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListTagActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
+import org.stepik.android.view.course_purchase.PurchaseActivity;
 import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile.ui.activity.ProfileActivity;
@@ -90,6 +91,7 @@ import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
 import java.io.File;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +99,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
+
+import timber.log.Timber;
 
 @AppSingleton
 public class ScreenManagerImpl implements ScreenManager {
@@ -581,7 +585,25 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
+//        final String url = config.getBaseUrl() + "/course/" + courseId + "/" + CourseScreenTab.PAY.getPath();
+//        openCoursePurchaseInWebview(context, url, queryParams);
         openCourseTabInWeb(context, courseId, CourseScreenTab.PAY.getPath(), queryParams);
+    }
+
+    private void openCoursePurchaseInWebview(Context context, String url, @Nullable Map<String, List<String>> queryParams) {
+        final Uri.Builder uriBuilder = Uri
+                .parse(url)
+                .buildUpon()
+                .appendQueryParameter("from_mobile_app", "true");
+
+        if (queryParams != null) {
+            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
+        }
+
+        final Uri uri = uriBuilder.build();
+
+        Intent intent = PurchaseActivity.Companion.createIntent(context, uri.toString());
+        context.startActivity(intent);
     }
 
     private void openCourseTabInWeb(Context context, long courseId, String tab, @Nullable Map<String, List<String>> queryParams) {
@@ -596,7 +618,6 @@ public class ScreenManagerImpl implements ScreenManager {
         }
 
         final Uri uri = uriBuilder.build();
-
         final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
 
         final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
