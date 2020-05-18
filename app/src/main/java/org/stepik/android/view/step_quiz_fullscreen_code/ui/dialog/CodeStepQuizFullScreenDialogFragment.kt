@@ -178,7 +178,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
          *  Code play ground view binding
          */
         submitButtonSeparator = playgroundLayout.submitButtonSeparator
-        codeSubmitButton = playgroundLayout.codeSubmitButton
+        codeSubmitButton = playgroundLayout.stepQuizAction
         retryButton = playgroundLayout.stepQuizRetry
         codeLayout = playgroundLayout.codeStepLayout
 
