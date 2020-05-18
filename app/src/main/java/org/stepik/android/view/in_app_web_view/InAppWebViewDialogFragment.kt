@@ -1,5 +1,6 @@
 package org.stepik.android.view.in_app_web_view
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +9,9 @@ import android.view.ViewGroup
 import android.view.Window
 import android.webkit.WebView
 import androidx.fragment.app.DialogFragment
+import kotlinx.android.synthetic.main.dialog_in_app_web_view.*
+import kotlinx.android.synthetic.main.dialog_in_app_web_view.view.*
+import kotlinx.android.synthetic.main.dialog_in_app_web_view.view.containerView
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setTintedNavigationIcon
@@ -45,7 +49,18 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.dialog_in_app_web_view, container, false)
+        inflater
+            .inflate(R.layout.dialog_in_app_web_view, container, false)
+            .also { root ->
+                if (webView == null) {
+                    webView = WebView(requireContext().applicationContext).also {
+                        @SuppressLint("SetJavaScriptEnabled")
+                        it.settings.javaScriptEnabled = true
+                        it.loadUrl(url)
+                    }
+                }
+                webView?.let { root.containerView.addView(it) }
+            }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.text = title
@@ -54,7 +69,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     }
 
     override fun onDestroyView() {
-        (view as? ViewGroup)?.removeView(webView)
+        containerView.removeView(webView)
         super.onDestroyView()
     }
 
