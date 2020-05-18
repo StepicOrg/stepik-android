@@ -77,7 +77,6 @@ import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActiv
 import org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListTagActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
-import org.stepik.android.view.course_purchase.CoursePurchaseActivity;
 import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile.ui.activity.ProfileActivity;
@@ -595,9 +594,10 @@ public class ScreenManagerImpl implements ScreenManager {
 
     private void openCoursePurchaseInWebview(Activity sourceActivity, String url, @Nullable Map<String, List<String>> queryParams) {
         Uri uri = formCourseTabUri(url, queryParams);
-        Intent intent = CoursePurchaseActivity.Companion.createIntent(sourceActivity, uri.toString());
-        sourceActivity.startActivity(intent);
-        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+//
+//        Intent intent = InAppWebViewActivity.Companion.createIntent(sourceActivity, uri.toString());
+//        sourceActivity.startActivity(intent);
+//        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
     }
 
     private void openCourseTabInWeb(Context context, long courseId, String tab, @Nullable Map<String, List<String>> queryParams) {

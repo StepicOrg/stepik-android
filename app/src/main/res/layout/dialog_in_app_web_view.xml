@@ -9,6 +9,7 @@
     <include layout="@layout/view_centered_appbar"/>
 
     <FrameLayout
+        android:id="@+id/containerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -16,8 +17,8 @@
             layout="@layout/progress_bar_on_empty_screen"/>
 
         <WebView
-            android:id="@+id/webView"
-            android:visibility="gone"
+            android:id="@+id/webViewInApp"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
