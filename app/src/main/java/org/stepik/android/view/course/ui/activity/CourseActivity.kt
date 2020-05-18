@@ -21,6 +21,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
+import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.configuration.RemoteConfig
@@ -28,6 +29,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.resolvers.UriResolver
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
@@ -41,7 +43,9 @@ import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
+import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
@@ -109,6 +113,12 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     @Inject
     internal lateinit var coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest
+
+    @Inject
+    internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
+
+    @Inject
+    internal lateinit var uriResolver: UriResolver
 
 //    @Inject
 //    internal lateinit var billing: Billing
@@ -409,7 +419,14 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 //        uiCheckout
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
-        screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
+        if (coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
+            val url = "${config.baseUrl}/course/$courseId/${CourseScreenTab.PAY.path}/"
+            InAppWebViewDialogFragment
+                .newInstance(getString(R.string.course_purchase), uriResolver.resolveUriThroughUrl(url, queryParams).toString())
+                .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
+        } else {
+            screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
+        }
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

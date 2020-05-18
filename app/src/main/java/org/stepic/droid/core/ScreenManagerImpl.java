@@ -28,7 +28,6 @@ import org.stepic.droid.adaptive.ui.activities.AdaptiveOnboardingActivity;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveStatsActivity;
 import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
-import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
@@ -48,7 +47,7 @@ import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
-import org.stepic.droid.util.UriExtensionsKt;
+import org.stepic.droid.util.resolvers.UriResolver;
 import org.stepik.android.domain.auth.model.SocialAuthType;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
@@ -106,16 +105,16 @@ public class ScreenManagerImpl implements ScreenManager {
     private final UserPreferences userPreferences;
     private final Analytic analytic;
     private final Set<BranchDeepLinkRouter> deepLinkRouters;
-    private final CoursePurchaseWebviewSplitTest coursePurchaseWebviewSplitTest;
+    private final UriResolver uriResolver;
 
     @Inject
-    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences, Set<BranchDeepLinkRouter> deepLinkRouters, CoursePurchaseWebviewSplitTest coursePurchaseWebviewSplitTest) {
+    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences, Set<BranchDeepLinkRouter> deepLinkRouters, UriResolver uriResolver) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.sharedPreferences = sharedPreferences;
         this.deepLinkRouters = deepLinkRouters;
-        this.coursePurchaseWebviewSplitTest = coursePurchaseWebviewSplitTest;
+        this.uriResolver = uriResolver;
     }
 
     @Override
@@ -583,27 +582,14 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openCoursePurchaseInWeb(Activity sourceActivity, long courseId, @Nullable Map<String, List<String>> queryParams) {
-        if (coursePurchaseWebviewSplitTest.getCurrentGroup().isInAppWebViewUsed()) {
-            final String url = config.getBaseUrl() + "/course/" + courseId + "/" + CourseScreenTab.PAY.getPath();
-            openCoursePurchaseInWebview(sourceActivity, url, queryParams);
-        } else {
-            openCourseTabInWeb(sourceActivity, courseId, CourseScreenTab.PAY.getPath(), queryParams);
-        }
-    }
-
-    private void openCoursePurchaseInWebview(Activity sourceActivity, String url, @Nullable Map<String, List<String>> queryParams) {
-        Uri uri = formCourseTabUri(url, queryParams);
-//
-//        Intent intent = InAppWebViewActivity.Companion.createIntent(sourceActivity, uri.toString());
-//        sourceActivity.startActivity(intent);
-//        sourceActivity.overridePendingTransition(org.stepic.droid.R.anim.push_up, org.stepic.droid.R.anim.no_transition);
+    public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
+        openCourseTabInWeb(context, courseId, CourseScreenTab.PAY.getPath(), queryParams);
     }
 
     private void openCourseTabInWeb(Context context, long courseId, String tab, @Nullable Map<String, List<String>> queryParams) {
         final String url = config.getBaseUrl() + "/course/" + courseId + "/" + tab + "/";
 
-        final Uri uri = formCourseTabUri(url, queryParams);
+        final Uri uri = uriResolver.resolveUriThroughUrl(url, queryParams);
         final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
 
         final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
@@ -624,18 +610,6 @@ public class ScreenManagerImpl implements ScreenManager {
 
             context.startActivity(chooserIntent);
         }
-    }
-
-    private Uri formCourseTabUri(String url, @Nullable Map<String, List<String>> queryParams) {
-        final Uri.Builder uriBuilder = Uri
-                .parse(url)
-                .buildUpon()
-                .appendQueryParameter("from_mobile_app", "true");
-
-        if (queryParams != null) {
-            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
-        }
-        return uriBuilder.build();
     }
 
     @Override
