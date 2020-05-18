@@ -9,5 +9,4 @@ interface InAppWebViewView {
     }
 
     fun setState(state: State)
-//    fun startLoading(url: String)
 }
