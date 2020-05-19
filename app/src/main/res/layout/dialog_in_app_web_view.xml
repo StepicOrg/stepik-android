@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/view_centered_appbar"/>
-
     <FrameLayout
         android:id="@+id/containerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <include
             layout="@layout/progress_bar_on_empty_screen"/>
@@ -20,4 +20,6 @@
             layout="@layout/error_no_connection_with_button"/>
     </FrameLayout>
 
-</LinearLayout>
+    <include layout="@layout/view_centered_appbar"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

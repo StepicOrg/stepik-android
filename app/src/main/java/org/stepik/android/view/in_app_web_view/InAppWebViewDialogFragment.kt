@@ -16,7 +16,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.dialog_in_app_web_view.*
-import kotlinx.android.synthetic.main.dialog_in_app_web_view.view.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.progress_bar_on_empty_screen.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -81,12 +80,15 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater
             .inflate(R.layout.dialog_in_app_web_view, container, false)
-            .also { root ->
+            .also { _ ->
                 if (webView == null) {
                     webView = WebView(requireContext().applicationContext).also {
                         it.isVisible = false
                         @SuppressLint("SetJavaScriptEnabled")
                         it.settings.javaScriptEnabled = true
+                        it.settings.domStorageEnabled = true
+                        it.isSoundEffectsEnabled = false
+
                         it.webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 inAppWebViewPresenter.onSuccess()
@@ -98,7 +100,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
                         }
                     }
                 }
-                webView?.let { root.containerView.addView(it) }
+                webView?.let { containerView.addView(it) }
             }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
