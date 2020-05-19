@@ -10,6 +10,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mapToLongArray
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -18,6 +19,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import org.stepik.android.view.injection.profile.UserId
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -26,6 +28,8 @@ import javax.inject.Inject
 class ProfileCoursesPresenter
 @Inject
 constructor(
+    @UserId
+    private val userId: Long,
     private val profileDataObservable: Observable<ProfileData>,
     private val courseListInteractor: CourseListInteractor,
 
@@ -43,6 +47,7 @@ constructor(
 ) : PresenterBase<ProfileCoursesView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
     companion object {
         private const val KEY_COURSES = "courses"
+        private const val KEY_USER = "user"
     }
 
     override val delegates: List<PresenterDelegate<in ProfileCoursesView>> =
@@ -76,8 +81,8 @@ constructor(
         if (courseIds != null) {
             if (state == ProfileCoursesView.State.Idle) {
                 state = ProfileCoursesView.State.Loading
-                compositeDisposable += courseListInteractor
-                    .getCourseListItems(*courseIds) // TODO Cache data source?
+                compositeDisposable += courseListInteractor // TODO Cache data source?
+                    .getCourseListItems(*courseIds, courseViewSource = CourseViewSource.Query(CourseListQuery(teacher = userId, order = CourseListQuery.Order.POPULARITY_DESC)))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

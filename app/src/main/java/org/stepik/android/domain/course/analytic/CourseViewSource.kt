@@ -3,6 +3,7 @@ package org.stepik.android.domain.course.analytic
 import com.google.gson.Gson
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.search_result.model.SearchResultQuery
 import java.io.Serializable
 
 sealed class CourseViewSource : AnalyticEvent, Serializable {
@@ -11,7 +12,17 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
             "my_courses"
     }
 
-    class Search(query: String) : CourseViewSource() {
+    object Downloads : CourseViewSource() {
+        override val name: String =
+            "downloads"
+    }
+
+    object FastContinue : CourseViewSource() {
+        override val name: String =
+            "fast_continue"
+    }
+
+    class Search(query: SearchResultQuery) : CourseViewSource() {
         companion object {
             private const val PARAM_QUERY = "query"
         }
@@ -19,7 +30,7 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
         override val name: String = "search"
 
         override val params: Map<String, Any> =
-            mapOf(PARAM_QUERY to query)
+            mapOf(PARAM_QUERY to Gson().toJson(query))
     }
 
     class Collection(collectionId: Long) : CourseViewSource() {
@@ -42,17 +53,6 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
 
         override val params: Map<String, Any> =
             mapOf(PARAM_QUERY to Gson().toJson(query))
-    }
-
-    class Profile(profileId: Long) : CourseViewSource() {
-        companion object {
-            private const val PARAM_PROFILE = "profile"
-        }
-
-        override val name: String = "profile"
-
-        override val params: Map<String, Any> =
-            mapOf(PARAM_PROFILE to profileId)
     }
 
     class Story(storyId: Long) : CourseViewSource() {

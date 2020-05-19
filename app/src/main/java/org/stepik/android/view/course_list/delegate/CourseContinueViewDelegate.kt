@@ -42,9 +42,9 @@ class CourseContinueViewDelegate(
     fun onCourseClicked(courseListItem: CourseListItem.Data) {
         analytic.reportEvent(Analytic.Interaction.CLICK_COURSE)
         if (courseListItem.course.enrollment != 0L) {
-            screenManager.showCourseModules(activity, courseListItem.course)
+            screenManager.showCourseModules(activity, courseListItem.course, courseListItem.source)
         } else {
-            screenManager.showCourseDescription(activity, courseListItem.course)
+            screenManager.showCourseDescription(activity, courseListItem.course, courseListItem.source)
         }
     }
 }

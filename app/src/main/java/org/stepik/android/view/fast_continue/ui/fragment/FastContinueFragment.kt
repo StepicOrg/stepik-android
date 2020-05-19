@@ -21,6 +21,7 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -171,12 +172,12 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
         if (isAdaptive) {
             screenManager.continueAdaptiveCourse(activity, course)
         } else {
-            screenManager.showCourseModules(activity, course)
+            screenManager.showCourseModules(activity, course, CourseViewSource.FastContinue)
         }
     }
 
     override fun showSteps(course: Course, lastStep: LastStep) {
-        screenManager.continueCourse(activity, course.id, lastStep)
+        screenManager.continueCourse(activity, course.id, CourseViewSource.FastContinue, lastStep)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
