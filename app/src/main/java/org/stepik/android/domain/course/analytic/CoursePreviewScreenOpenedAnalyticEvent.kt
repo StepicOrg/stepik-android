@@ -5,7 +5,7 @@ import org.stepik.android.model.Course
 
 class CoursePreviewScreenOpenedAnalyticEvent(
     course: Course,
-    source: CourseSourceAnalyticData
+    source: CourseViewSource
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"

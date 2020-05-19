@@ -15,7 +15,7 @@ import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
 import org.stepic.droid.social.SocialMedia;
 import org.stepik.android.domain.auth.model.SocialAuthType;
-import org.stepik.android.domain.course.analytic.CourseSourceAnalyticData;
+import org.stepik.android.domain.course.analytic.CourseViewSource;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
@@ -72,11 +72,11 @@ public interface ScreenManager {
 
     void openRemindPassword(AppCompatActivity context);
 
-    void showCourseDescription(Context context, long courseId, @NotNull CourseSourceAnalyticData sourceAnalyticData);
-    void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseSourceAnalyticData sourceAnalyticData);
-    void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseSourceAnalyticData sourceAnalyticData, boolean autoEnroll);
-    void showCourseModules(Context context, @NotNull Course course, @NotNull CourseSourceAnalyticData sourceAnalyticData);
-    void showCourseScreen(Context context, @NotNull Course course, @NotNull CourseSourceAnalyticData sourceAnalyticData, boolean autoEnroll, CourseScreenTab tab);
+    void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource);
+    void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource);
+    void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll);
+    void showCourseModules(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource);
+    void showCourseScreen(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll, CourseScreenTab tab);
 
     void showStoreWithApp(Activity sourceActivity);
 
@@ -130,7 +130,7 @@ public interface ScreenManager {
 
     void continueAdaptiveCourse(Activity activity, Course course);
 
-    void continueCourse(Activity activity, long courseId, @NotNull CourseSourceAnalyticData sourceAnalyticData, @NotNull LastStep lastStep);
+    void continueCourse(Activity activity, long courseId, @NotNull CourseViewSource viewSource, @NotNull LastStep lastStep);
     void continueCourse(Activity activity, @NotNull LastStep lastStep);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);

@@ -12,7 +12,7 @@ import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
-import org.stepik.android.domain.course.analytic.CourseSourceAnalyticData
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesNotificationInteractor
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
@@ -80,7 +80,7 @@ constructor(
 
         val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 
-        val intent = CourseActivity.createIntent(context, course, source = CourseSourceAnalyticData.Notification)
+        val intent = CourseActivity.createIntent(context, course, source = CourseViewSource.Notification)
         intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 

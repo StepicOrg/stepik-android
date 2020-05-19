@@ -4,7 +4,7 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 class CourseCardSeenAnalyticEvent(
     courseId: Long,
-    source: CourseSourceAnalyticData
+    source: CourseViewSource
 ) : AnalyticEvent {
     companion object {
         private const val PARAM_COURSE = "course"

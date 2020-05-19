@@ -5,13 +5,13 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import java.io.Serializable
 
-sealed class CourseSourceAnalyticData : AnalyticEvent, Serializable {
-    object MyCourses : CourseSourceAnalyticData() {
+sealed class CourseViewSource : AnalyticEvent, Serializable {
+    object MyCourses : CourseViewSource() {
         override val name: String =
             "my_courses"
     }
 
-    class Search(query: String) : CourseSourceAnalyticData() {
+    class Search(query: String) : CourseViewSource() {
         companion object {
             private const val PARAM_QUERY = "query"
         }
@@ -22,7 +22,7 @@ sealed class CourseSourceAnalyticData : AnalyticEvent, Serializable {
             mapOf(PARAM_QUERY to query)
     }
 
-    class Collection(collectionId: Long) : CourseSourceAnalyticData() {
+    class Collection(collectionId: Long) : CourseViewSource() {
         companion object {
             private const val PARAM_COLLECTION = "collection"
         }
@@ -33,7 +33,7 @@ sealed class CourseSourceAnalyticData : AnalyticEvent, Serializable {
             mapOf(PARAM_COLLECTION to collectionId)
     }
 
-    class Query(query: CourseListQuery) : CourseSourceAnalyticData() {
+    class Query(query: CourseListQuery) : CourseViewSource() {
         companion object {
             private const val PARAM_QUERY = "query"
         }
@@ -44,7 +44,7 @@ sealed class CourseSourceAnalyticData : AnalyticEvent, Serializable {
             mapOf(PARAM_QUERY to Gson().toJson(query))
     }
 
-    class Profile(profileId: Long) : CourseSourceAnalyticData() {
+    class Profile(profileId: Long) : CourseViewSource() {
         companion object {
             private const val PARAM_PROFILE = "profile"
         }
@@ -55,7 +55,7 @@ sealed class CourseSourceAnalyticData : AnalyticEvent, Serializable {
             mapOf(PARAM_PROFILE to profileId)
     }
 
-    class Story(storyId: Long) : CourseSourceAnalyticData() {
+    class Story(storyId: Long) : CourseViewSource() {
         companion object {
             private const val PARAM_STORY = "story"
         }
@@ -66,7 +66,7 @@ sealed class CourseSourceAnalyticData : AnalyticEvent, Serializable {
             mapOf(PARAM_STORY to storyId)
     }
 
-    class DeepLink(url: String) : CourseSourceAnalyticData() {
+    class DeepLink(url: String) : CourseViewSource() {
         companion object {
             private const val PARAM_URL = "url"
         }
@@ -77,7 +77,7 @@ sealed class CourseSourceAnalyticData : AnalyticEvent, Serializable {
             mapOf(PARAM_URL to url)
     }
 
-    object Notification : CourseSourceAnalyticData() {
+    object Notification : CourseViewSource() {
         override val name: String =
             "notification"
     }
