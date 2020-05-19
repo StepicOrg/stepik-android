@@ -165,7 +165,7 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
 
     private fun handleContinueCourseClick(course: Course) {
         analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-        fastContinuePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
+        fastContinuePresenter.continueCourse(course, CourseViewSource.FastContinue, CourseContinueInteractionSource.HOME_WIDGET)
     }
 
     override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {

@@ -24,6 +24,7 @@ import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
@@ -88,21 +89,17 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
         }
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
+
+        val searchResultQuery = SearchResultQuery(page = 1, query = query)
         courseListSwipeRefresh.setOnRefreshListener {
             courseListPresenter.fetchCourses(
-                SearchResultQuery(
-                    page = 1,
-                    query = query
-                ),
+                searchResultQuery,
                 forceUpdate = true
             )
         }
         tryAgain.setOnClickListener {
             courseListPresenter.fetchCourses(
-                SearchResultQuery(
-                    page = 1,
-                    query = query
-                ),
+                searchResultQuery,
                 forceUpdate = true
             )
         }
@@ -124,16 +121,16 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
-                courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+                courseListPresenter
+                    .continueCourse(
+                        course = courseListItem.course,
+                        viewSource = CourseViewSource.Search(searchResultQuery),
+                        interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
+                    )
             }
         )
 
-        courseListPresenter.fetchCourses(
-            SearchResultQuery(
-                page = 1,
-                query = query
-            )
-        )
+        courseListPresenter.fetchCourses(searchResultQuery)
     }
 
     private fun setupSearchBar() {

@@ -106,7 +106,13 @@ class CourseListQueryAdapterDelegate(
             courseItemsRecyclerView = root.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
-                itemData?.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+                val courseListQuery = courseListQuery ?: return@CourseListViewDelegate
+                itemData
+                    ?.continueCourse(
+                        course = courseListItem.course,
+                        viewSource = CourseViewSource.Query(courseListQuery),
+                        interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
+                    )
             }
         )
 

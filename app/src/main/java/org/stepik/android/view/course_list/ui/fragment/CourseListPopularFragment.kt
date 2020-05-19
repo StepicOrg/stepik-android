@@ -128,7 +128,12 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
-                courseListQueryPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+                courseListQueryPresenter
+                    .continueCourse(
+                        course = courseListItem.course,
+                        viewSource = CourseViewSource.Query(courseListQuery),
+                        interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
+                    )
             }
         )
 
