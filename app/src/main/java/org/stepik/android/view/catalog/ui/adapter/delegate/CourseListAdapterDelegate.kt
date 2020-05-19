@@ -98,6 +98,7 @@ class CourseListAdapterDelegate(
         }
 
         private val delegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = courseContinueViewDelegate,
             courseListTitleContainer = root.courseListTitleContainer,
             courseItemsRecyclerView = root.courseListCoursesRecycler,

@@ -112,6 +112,7 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
 
         courseListViewDelegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,

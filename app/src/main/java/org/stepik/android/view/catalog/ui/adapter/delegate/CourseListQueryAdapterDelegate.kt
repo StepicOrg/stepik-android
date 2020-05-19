@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
@@ -29,6 +30,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseListQueryAdapterDelegate(
+    private val analytic: Analytic,
     private val screenManager: ScreenManager,
     private val courseContinueViewDelegate: CourseContinueViewDelegate
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
@@ -101,6 +103,7 @@ class CourseListQueryAdapterDelegate(
         }
 
         private val delegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = courseContinueViewDelegate,
             courseListTitleContainer = root.courseListTitleContainer,
             courseItemsRecyclerView = root.courseListCoursesRecycler,

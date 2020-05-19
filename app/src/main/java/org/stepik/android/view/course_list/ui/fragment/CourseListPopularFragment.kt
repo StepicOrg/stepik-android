@@ -119,6 +119,7 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
         courseListViewDelegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,

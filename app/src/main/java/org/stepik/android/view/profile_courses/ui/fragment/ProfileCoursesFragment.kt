@@ -77,6 +77,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
         coursesAdapter = DefaultDelegateAdapter()
 
         coursesAdapter += CourseListItemAdapterDelegate(
+            analytic,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = { courseListItem ->
                 profileCoursesPresenter

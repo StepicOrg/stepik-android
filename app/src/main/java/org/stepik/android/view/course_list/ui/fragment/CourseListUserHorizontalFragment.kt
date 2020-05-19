@@ -106,6 +106,7 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
         courseListViewDelegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,

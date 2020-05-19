@@ -82,6 +82,7 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
         val searchResultQuery = SearchResultQuery(page = 1, tagId = tag.id)
 
         courseListViewDelegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,
