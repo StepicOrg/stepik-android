@@ -18,6 +18,7 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.isARSupported
 import org.stepic.droid.util.isNightModeEnabled
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -97,8 +98,12 @@ constructor(
         updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT).withValue(coursesCount.toDouble())) }
     }
 
+    override fun report(analyticEvent: AnalyticEvent) {
+        reportAmplitudeEvent(analyticEvent.name, analyticEvent.params)
+    }
+
     override fun reportAmplitudeEvent(eventName: String) = reportAmplitudeEvent(eventName, null)
-    override fun reportAmplitudeEvent(eventName: String, params: MutableMap<String, Any>?) {
+    override fun reportAmplitudeEvent(eventName: String, params: Map<String, Any>?) {
         syncAmplitudeProperties()
         val properties = JSONObject()
         params?.let {
