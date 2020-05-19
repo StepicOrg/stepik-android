@@ -29,13 +29,13 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepic.droid.util.resolvers.UriResolver
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
@@ -118,7 +118,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
 
     @Inject
-    internal lateinit var uriResolver: UriResolver
+    internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
 //    @Inject
 //    internal lateinit var billing: Billing
@@ -420,9 +420,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
         if (coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
-            val url = "${config.baseUrl}/course/$courseId/${CourseScreenTab.PAY.path}/"
+            val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams).toString()
             InAppWebViewDialogFragment
-                .newInstance(getString(R.string.course_purchase), uriResolver.resolveUriThroughUrl(url, queryParams).toString())
+                .newInstance(getString(R.string.course_purchase), url)
                 .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
         } else {
             screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
