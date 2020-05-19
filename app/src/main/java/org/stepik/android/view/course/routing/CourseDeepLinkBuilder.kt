@@ -16,6 +16,6 @@ constructor(
         Uri.parse("${config.baseUrl}/$COURSE_PATH_SEGMENT/$courseId/${tab.path}")
             .buildUpon()
             .appendQueryParameters(queryParams ?: emptyMap())
-            .let(externalDeepLinkProcessor::processExternalDeepLing)
+            .let(externalDeepLinkProcessor::processExternalDeepLink)
             .build()
 }

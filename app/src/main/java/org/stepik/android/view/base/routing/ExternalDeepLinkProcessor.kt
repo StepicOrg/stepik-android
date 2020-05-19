@@ -10,7 +10,7 @@ constructor() {
         private const val PARAM_FROM_MOBILE_APP = "from_mobile_app"
     }
 
-    fun processExternalDeepLing(uriBuilder: Uri.Builder): Uri.Builder =
+    fun processExternalDeepLink(uriBuilder: Uri.Builder): Uri.Builder =
         uriBuilder
             .appendQueryParameter(PARAM_FROM_MOBILE_APP, "true")
 }
