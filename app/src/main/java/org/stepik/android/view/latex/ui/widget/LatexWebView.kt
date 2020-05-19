@@ -38,10 +38,6 @@ constructor(
         private const val ASSETS = "file:///android_asset/"
     }
 
-    init {
-        addJavascriptInterface(ModelViewerInterface(context), ModelViewerInterface.MODEL_VIEWER_INTERFACE)
-    }
-
     var attributes = TextAttributes.fromAttributeSet(context, attrs)
         set(value) {
             field = value
@@ -85,6 +81,7 @@ constructor(
         }
 
         addJavascriptInterface(OnScrollWebListener(), HorizontalScrollBlock.SCRIPT_NAME)
+        addJavascriptInterface(ModelViewerInterface(context), ModelViewerInterface.MODEL_VIEWER_INTERFACE)
         isSoundEffectsEnabled = false
     }
 
