@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
 import com.crashlytics.android.Crashlytics
@@ -19,6 +20,7 @@ import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.util.isARSupported
 import org.stepic.droid.util.isNightModeEnabled
 import org.stepik.android.domain.base.analytic.AnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticSource
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -99,6 +101,25 @@ constructor(
     }
 
     override fun report(analyticEvent: AnalyticEvent) {
+        if (AnalyticSource.YANDEX in analyticEvent.sources) {
+            YandexMetrica.reportEvent(analyticEvent.name, analyticEvent.params)
+        }
+
+        if (AnalyticSource.AMPLITUDE in analyticEvent.sources) {
+            syncAmplitudeProperties()
+            val properties = JSONObject()
+            for ((k, v) in analyticEvent.params.entries) {
+                properties.put(k, v)
+            }
+            amplitude.logEvent(analyticEvent.name, properties)
+            Crashlytics.log("${analyticEvent.name}=${analyticEvent.params}")
+        }
+
+        if (AnalyticSource.FIREBASE in analyticEvent.sources) {
+            val bundle = bundleOf(*analyticEvent.params.map { (a, b) -> a to b }.toTypedArray())
+            firebaseAnalytics.logEvent(analyticEvent.name, bundle)
+        }
+
         reportAmplitudeEvent(analyticEvent.name, analyticEvent.params)
     }
 
