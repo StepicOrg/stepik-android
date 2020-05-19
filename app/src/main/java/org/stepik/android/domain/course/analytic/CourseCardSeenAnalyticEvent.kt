@@ -18,5 +18,5 @@ class CourseCardSeenAnalyticEvent(
         mapOf(
             PARAM_COURSE to courseId,
             PARAM_SOURCE to source.name
-        ) + source.params
+        ) + source.params.mapKeys { "${PARAM_SOURCE}_$it" }
 }

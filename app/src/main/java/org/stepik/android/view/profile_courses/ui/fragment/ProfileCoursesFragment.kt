@@ -14,7 +14,9 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -77,7 +79,12 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
         coursesAdapter += CourseListItemAdapterDelegate(
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = { courseListItem ->
-                profileCoursesPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+                profileCoursesPresenter
+                    .continueCourse(
+                        course = courseListItem.course,
+                        viewSource = CourseViewSource.Query(CourseListQuery(teacher = userId)),
+                        interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
+                    )
             }
         )
     }
@@ -142,12 +149,12 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
         courseContinueViewDelegate.setBlockingLoading(isLoading)
     }
 
-    override fun showCourse(course: Course, isAdaptive: Boolean) {
-        courseContinueViewDelegate.showCourse(course, isAdaptive)
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
+        courseContinueViewDelegate.showCourse(course, source, isAdaptive)
     }
 
-    override fun showSteps(course: Course, lastStep: LastStep) {
-        courseContinueViewDelegate.showSteps(course, lastStep)
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        courseContinueViewDelegate.showSteps(course, source, lastStep)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

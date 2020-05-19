@@ -168,16 +168,16 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
         fastContinuePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
     }
 
-    override fun showCourse(course: Course, isAdaptive: Boolean) {
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
         if (isAdaptive) {
             screenManager.continueAdaptiveCourse(activity, course)
         } else {
-            screenManager.showCourseModules(activity, course, CourseViewSource.FastContinue)
+            screenManager.showCourseModules(activity, course, source)
         }
     }
 
-    override fun showSteps(course: Course, lastStep: LastStep) {
-        screenManager.continueCourse(activity, course.id, CourseViewSource.FastContinue, lastStep)
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        screenManager.continueCourse(activity, course.id, source, lastStep)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {

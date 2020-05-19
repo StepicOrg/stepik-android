@@ -47,7 +47,6 @@ constructor(
 ) : PresenterBase<ProfileCoursesView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
     companion object {
         private const val KEY_COURSES = "courses"
-        private const val KEY_USER = "user"
     }
 
     override val delegates: List<PresenterDelegate<in ProfileCoursesView>> =

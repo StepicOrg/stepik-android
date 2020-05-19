@@ -189,10 +189,14 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
         val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
+        val source = (intent.getSerializableExtra(EXTRA_SOURCE) as? CourseViewSource)
+            ?: intent.getCourseIdFromDeepLink()?.let { CourseViewSource.DeepLink(intent?.dataString ?: "") }
+            ?: CourseViewSource.Unknown
+
         if (course != null) {
-            coursePresenter.onCourse(course, forceUpdate)
+            coursePresenter.onCourse(course, source, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, forceUpdate)
+            coursePresenter.onCourseId(courseId, source, forceUpdate)
         }
     }
 
@@ -444,7 +448,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         super.onDestroy()
     }
 
-    override fun showCourse(course: Course, isAdaptive: Boolean) {
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
         if (isAdaptive) {
             screenManager.continueAdaptiveCourse(this, course)
         } else {
@@ -452,7 +456,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
     }
 
-    override fun showSteps(course: Course, lastStep: LastStep) {
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
         screenManager.continueCourse(this, lastStep)
     }
 

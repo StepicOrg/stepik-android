@@ -17,6 +17,7 @@ import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -149,12 +150,12 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
         courseListViewDelegate.setState(courseListState)
     }
 
-    override fun showCourse(course: Course, isAdaptive: Boolean) {
-        courseListViewDelegate.showCourse(course, isAdaptive)
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, source, isAdaptive)
     }
 
-    override fun showSteps(course: Course, lastStep: LastStep) {
-        courseListViewDelegate.showSteps(course, lastStep)
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, source, lastStep)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {
