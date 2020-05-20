@@ -48,6 +48,7 @@ import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
 import org.stepik.android.domain.auth.model.SocialAuthType;
+import org.stepik.android.domain.course.analytic.CourseViewSource;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
@@ -216,35 +217,35 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Context context, long courseId) {
-        Intent intent = CourseActivity.Companion.createIntent(context, courseId, CourseScreenTab.INFO);
+    public void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource) {
+        Intent intent = CourseActivity.Companion.createIntent(context, courseId, viewSource, CourseScreenTab.INFO);
         context.startActivity(intent);
     }
 
     @Override
-    public void showCourseDescription(Context context, @NotNull Course course) {
-        showCourseDescription(context, course, false);
+    public void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource) {
+        showCourseDescription(context, course, viewSource, false);
     }
 
     @Override
-    public void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll) {
-        showCourseScreen(context, course, autoEnroll, CourseScreenTab.INFO);
+    public void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll) {
+        showCourseScreen(context, course, viewSource, autoEnroll, CourseScreenTab.INFO);
     }
 
     @Override
-    public void showCourseModules(Context context, @NotNull Course course) {
-        showCourseScreen(context, course, false, CourseScreenTab.SYLLABUS);
+    public void showCourseModules(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource) {
+        showCourseScreen(context, course, viewSource, false, CourseScreenTab.SYLLABUS);
     }
 
     @Override
-    public void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
-        Intent intent = getIntentForDescription(context, course, autoEnroll, tab);
+    public void showCourseScreen(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll, CourseScreenTab tab) {
+        Intent intent = getIntentForDescription(context, course, viewSource, autoEnroll, tab);
         context.startActivity(intent);
     }
 
-    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course, @NotNull CourseViewSource courseViewSource, boolean autoEnroll, CourseScreenTab tab) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll, tab);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, courseViewSource, autoEnroll, tab);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -483,8 +484,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep) {
-        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, CourseScreenTab.SYLLABUS);
+    public void continueCourse(Activity activity, long courseId, @NotNull CourseViewSource viewSource, @NotNull LastStep lastStep) {
+        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, viewSource, CourseScreenTab.SYLLABUS);
         Intent stepsIntent = LessonActivity.Companion.createIntent(activity, lastStep);
         activity.startActivity(courseIntent);
         activity.startActivity(stepsIntent);

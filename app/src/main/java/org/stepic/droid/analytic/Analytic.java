@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepik.android.domain.base.analytic.AnalyticEvent;
 
 import java.util.Map;
 
@@ -443,6 +444,8 @@ public interface Analytic {
     void setTeachingCoursesCount(int coursesCount);
     void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
     void reportAmplitudeEvent(@NotNull String eventName);
+
+    void report(@NotNull AnalyticEvent analyticEvent);
 
     void setUserProperty(@NotNull String name, @NotNull String value);
 

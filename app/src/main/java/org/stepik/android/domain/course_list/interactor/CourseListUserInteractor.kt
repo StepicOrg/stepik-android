@@ -8,6 +8,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
@@ -45,10 +46,10 @@ constructor(
             .reduce(emptyList()) { a, b -> a + b }
 
     fun getCourseListItems(vararg courseId: Long): Single<PagedList<CourseListItem.Data>> =
-        courseListInteractor.getCourseListItems(*courseId)
+        courseListInteractor.getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses)
 
     fun getUserCourse(courseId: Long): Single<CourseListItem.Data> =
         courseListInteractor
-            .getCourseListItems(courseId)
+            .getCourseListItems(courseId, courseViewSource = CourseViewSource.MyCourses)
             .map { it.first() }
 }

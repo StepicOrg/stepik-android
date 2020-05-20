@@ -29,6 +29,7 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
@@ -54,20 +55,23 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         private const val EXTRA_COURSE_ID = "course_id"
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
         private const val EXTRA_TAB = "tab"
+        private const val EXTRA_SOURCE = "source"
 
         private const val NO_ID = -1L
 
         private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
-        fun createIntent(context: Context, course: Course, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE, course)
+                .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
-        fun createIntent(context: Context, courseId: Long, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
+                .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
         init {
@@ -185,10 +189,14 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
         val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
+        val source = (intent.getSerializableExtra(EXTRA_SOURCE) as? CourseViewSource)
+            ?: intent.getCourseIdFromDeepLink()?.let { CourseViewSource.DeepLink(intent?.dataString ?: "") }
+            ?: CourseViewSource.Unknown
+
         if (course != null) {
-            coursePresenter.onCourse(course, forceUpdate)
+            coursePresenter.onCourse(course, source, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, forceUpdate)
+            coursePresenter.onCourseId(courseId, source, forceUpdate)
         }
     }
 
@@ -440,7 +448,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         super.onDestroy()
     }
 
-    override fun showCourse(course: Course, isAdaptive: Boolean) {
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
         if (isAdaptive) {
             screenManager.continueAdaptiveCourse(this, course)
         } else {
@@ -448,7 +456,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
     }
 
-    override fun showSteps(course: Course, lastStep: LastStep) {
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
         screenManager.continueCourse(this, lastStep)
     }
 
