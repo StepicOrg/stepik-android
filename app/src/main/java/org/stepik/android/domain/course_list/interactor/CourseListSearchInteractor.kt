@@ -4,6 +4,7 @@ import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapToLongArray
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.domain.search_result.repository.SearchResultRepository
@@ -22,7 +23,7 @@ constructor(
             .getSearchResults(searchResultQuery.copy(lang = sharedPreferenceHelper.languageForFeatured))
             .flatMap { searchResult ->
                 courseListInteractor
-                    .getCourseListItems(*searchResult.mapToLongArray(SearchResult::course))
+                    .getCourseListItems(*searchResult.mapToLongArray(SearchResult::course), courseViewSource = CourseViewSource.Search(searchResultQuery))
                     .map { courseListItems ->
                         PagedList(
                             list = courseListItems,

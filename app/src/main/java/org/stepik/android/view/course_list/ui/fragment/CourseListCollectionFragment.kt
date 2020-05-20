@@ -15,6 +15,7 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.CollectionDescriptionColors
 import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseCollection
@@ -90,6 +91,7 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
 
         courseListViewDelegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,
@@ -99,7 +101,12 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
-                courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+                courseListPresenter
+                    .continueCourse(
+                        course = courseListItem.course,
+                        viewSource = CourseViewSource.Collection(courseCollection.id),
+                        interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
+                    )
             }
         )
 
@@ -118,12 +125,12 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
         courseListViewDelegate.setState(courseListState)
     }
 
-    override fun showCourse(course: Course, isAdaptive: Boolean) {
-        courseListViewDelegate.showCourse(course, isAdaptive)
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, source, isAdaptive)
     }
 
-    override fun showSteps(course: Course, lastStep: LastStep) {
-        courseListViewDelegate.showSteps(course, lastStep)
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, source, lastStep)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {

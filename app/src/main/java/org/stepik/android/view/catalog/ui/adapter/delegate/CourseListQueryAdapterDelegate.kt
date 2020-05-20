@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -28,6 +30,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseListQueryAdapterDelegate(
+    private val analytic: Analytic,
     private val screenManager: ScreenManager,
     private val courseContinueViewDelegate: CourseContinueViewDelegate
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
@@ -100,12 +103,19 @@ class CourseListQueryAdapterDelegate(
         }
 
         private val delegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = courseContinueViewDelegate,
             courseListTitleContainer = root.courseListTitleContainer,
             courseItemsRecyclerView = root.courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
-                itemData?.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+                val courseListQuery = courseListQuery ?: return@CourseListViewDelegate
+                itemData
+                    ?.continueCourse(
+                        course = courseListItem.course,
+                        viewSource = CourseViewSource.Query(courseListQuery),
+                        interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
+                    )
             }
         )
 
@@ -121,12 +131,12 @@ class CourseListQueryAdapterDelegate(
             delegate.showNetworkError()
         }
 
-        override fun showCourse(course: Course, isAdaptive: Boolean) {
-            delegate.showCourse(course, isAdaptive)
+        override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
+            delegate.showCourse(course, source, isAdaptive)
         }
 
-        override fun showSteps(course: Course, lastStep: LastStep) {
-            delegate.showSteps(course, lastStep)
+        override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+            delegate.showSteps(course, source, lastStep)
         }
 
         override fun setBlockingLoading(isLoading: Boolean) {

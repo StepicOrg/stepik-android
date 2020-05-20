@@ -8,6 +8,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.ContinueLearningInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.CourseContinueView
@@ -40,7 +41,7 @@ constructor(
         view.setBlockingLoading(isBlockingLoading)
     }
 
-    override fun continueCourse(course: Course, interactionSource: CourseContinueInteractionSource) {
+    override fun continueCourse(course: Course, viewSource: CourseViewSource, interactionSource: CourseContinueInteractionSource) {
         analytic.reportEvent(Analytic.Interaction.CLICK_CONTINUE_COURSE)
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Course.CONTINUE_PRESSED, mapOf(
@@ -49,7 +50,7 @@ constructor(
             ))
 
         if (adaptiveCoursesResolver.isAdaptive(course.id)) {
-            viewContainer.view?.showCourse(course, isAdaptive = true)
+            viewContainer.view?.showCourse(course, viewSource, isAdaptive = true)
         } else {
             isBlockingLoading = true
             compositeDisposable += continueLearningInteractor
@@ -58,8 +59,8 @@ constructor(
                 .observeOn(mainScheduler)
                 .doFinally { isBlockingLoading = false }
                 .subscribeBy(
-                    onSuccess = { viewContainer.view?.showSteps(course, it) },
-                    onError = { viewContainer.view?.showCourse(course, isAdaptive = false) }
+                    onSuccess = { viewContainer.view?.showSteps(course, viewSource, it) },
+                    onError = { viewContainer.view?.showCourse(course, viewSource, isAdaptive = false) }
                 )
         }
     }

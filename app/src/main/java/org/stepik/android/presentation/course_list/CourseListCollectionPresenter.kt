@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseCollection
@@ -71,7 +72,7 @@ constructor(
 
         state = CourseListCollectionView.State.Data(courseCollection, CourseListView.State.Loading)
         paginationDisposable += courseListInteractor
-            .getCourseListItems(*courseCollection.courses)
+            .getCourseListItems(*courseCollection.courses, courseViewSource = CourseViewSource.Collection(courseCollection.id))
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(

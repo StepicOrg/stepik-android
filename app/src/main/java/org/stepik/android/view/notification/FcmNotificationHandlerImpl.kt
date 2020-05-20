@@ -25,6 +25,7 @@ import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.course.routing.CourseScreenTab
@@ -250,9 +251,9 @@ constructor(
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(stepikNotification.htmlText)
             val intent =
                 if (courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                    CourseActivity.createIntent(applicationContext, courseId, tab = CourseScreenTab.SYLLABUS)
+                    CourseActivity.createIntent(applicationContext, courseId, tab = CourseScreenTab.SYLLABUS, source = CourseViewSource.Notification)
                 } else {
-                    CourseActivity.createIntent(applicationContext, relatedCourse, tab = CourseScreenTab.SYLLABUS)
+                    CourseActivity.createIntent(applicationContext, relatedCourse, tab = CourseScreenTab.SYLLABUS, source = CourseViewSource.Notification)
                 }
             intent.action = AppConstants.OPEN_NOTIFICATION_FOR_CHECK_COURSE
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -323,7 +324,7 @@ constructor(
             val modulePosition = HtmlHelper.parseModulePositionFromNotification(notification.htmlText)
 
             if (courseId != null && courseId >= 0 && modulePosition != null && modulePosition >= 0) {
-                val intent = CourseActivity.createIntent(context, courseId, tab = CourseScreenTab.SYLLABUS) // Intent(applicationContext, SectionActivity::class.java)
+                val intent = CourseActivity.createIntent(context, courseId, tab = CourseScreenTab.SYLLABUS, source = CourseViewSource.Notification) // Intent(applicationContext, SectionActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(intent)
                 return true
