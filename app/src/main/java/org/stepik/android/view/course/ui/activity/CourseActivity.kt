@@ -59,14 +59,14 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         private const val NO_ID = -1L
 
+        private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
+
         fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE, course)
                 .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
                 .putExtra(EXTRA_TAB, tab.ordinal)
-
-        private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
         fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
