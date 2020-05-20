@@ -72,6 +72,7 @@ import org.stepik.android.view.injection.fast_continue.FastContinueComponent
 import org.stepik.android.view.injection.feedback.FeedbackComponent
 import org.stepik.android.view.injection.filter.FilterComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
+import org.stepik.android.view.injection.in_app_web_view.InAppWebViewComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.network.NetworkModule
@@ -224,6 +225,8 @@ interface AppCoreComponent {
     fun courseListCollectionComponentBuilder(): CourseListCollectionComponent.Builder
 
     fun courseListUserComponentBuilder(): CourseListUserComponent.Builder
+
+    fun inAppWebViewComponentBuilder(): InAppWebViewComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 

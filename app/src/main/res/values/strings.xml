@@ -903,4 +903,6 @@
     <string name="course_list_user_courses_title">My courses</string>
 
     <string name="ar_not_supported_alert">Device does not support AR functionality</string>
+
+    <string name="course_purchase">Course purchase</string>
 </resources>

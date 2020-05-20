@@ -108,6 +108,7 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
         )
 
         catalogItemAdapter += CourseListQueryAdapterDelegate(
+            analytic = analytic,
             screenManager = screenManager,
             courseContinueViewDelegate = courseContinueViewDelegate
         )
