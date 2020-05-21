@@ -21,6 +21,7 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
+import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.last_step.model.LastStep
@@ -141,15 +142,14 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
         fastContinueCourseName.text = courseListItem.course.title
 
         val progress = courseListItem.courseStats.progress
-        val needShow = if (progress != null && progress.cost > 0) {
+        val needShow = if (progress != null && progress.cost > 0f) {
             val score = progress
                 .score
                 ?.toFloatOrNull()
-                ?.toLong()
-                ?: 0L
+                ?: 0f
 
-            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score, progress.cost)
-            fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
+            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score.toFixed(2), progress.cost)
+            fastContinueCourseProgress.progress = (score.toLong() * 100 / progress.cost).toInt()
             true
         } else {
             fastContinueCourseProgress.progress = 0

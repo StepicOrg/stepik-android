@@ -18,12 +18,13 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.widget.PopupWindowCompat
 import kotlinx.android.synthetic.main.tooltip_lesson_info.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.toFixed
 
 class LessonInfoTooltipDelegate(
     private val view: View
 ) {
     fun showLessonInfoTooltip(
-        stepScore: Long,
+        stepScore: Float,
         stepCost: Long,
         lessonTimeToCompleteInSeconds: Long,
         certificateThreshold: Long
@@ -36,7 +37,7 @@ class LessonInfoTooltipDelegate(
             .from(anchorView.context)
             .inflate(R.layout.tooltip_lesson_info, null)
 
-        if (stepScore > 0) {
+        if (stepScore > 0f) {
             popupView
                 .stepWorth
                 .setItem(stepScore, stepCost, R.string.lesson_info_points_with_score, R.plurals.points, R.drawable.ic_check_rounded)
@@ -98,14 +99,14 @@ class LessonInfoTooltipDelegate(
 
     // 'StepProgress.score' points out of 'StepProgress.cost' (for step)
     private fun AppCompatTextView.setItem(
-        stepScore: Long,
+        stepScore: Float,
         stepCost: Long,
         @StringRes stringRes: Int,
         @PluralsRes pluralRes: Int,
         @DrawableRes drawableRes: Int
     ) {
         setItemDrawable(drawableRes)
-        text = context.getString(stringRes, resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore), stepCost)
+        text = context.getString(stringRes, resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore.toFixed(2)), stepCost) // TODO Apply correct quantity
         visibility = View.VISIBLE
     }
 

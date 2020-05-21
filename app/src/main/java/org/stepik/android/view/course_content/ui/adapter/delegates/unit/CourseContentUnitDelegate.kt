@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.view_course_content_unit.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepic.droid.util.toFixed
 import org.stepik.android.view.course_content.model.CourseContentItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -81,13 +82,12 @@ class CourseContentUnitDelegate(
                     val score = progress
                         .score
                         ?.toFloatOrNull()
-                        ?.toLong()
-                        ?: 0L
+                        ?: 0f
 
                     unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
-                        score, progress.cost)
+                        score.toFixed(2), progress.cost)
 
-                    unitProgress.progress = score / progress.cost.toFloat()
+                    unitProgress.progress = score.toLong() / progress.cost.toFloat()
                     unitTextProgress.visibility = View.VISIBLE
                 } else {
                     unitProgress.progress = 0f

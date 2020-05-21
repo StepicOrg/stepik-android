@@ -29,6 +29,7 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
 import org.stepik.android.presentation.lesson.mapper.LessonStateMapper
 import org.stepik.android.view.injection.step_quiz.StepQuizBus
+import timber.log.Timber
 import javax.inject.Inject
 
 class LessonPresenter
@@ -219,12 +220,22 @@ constructor(
             ?.getOrNull(position)
             ?.stepProgress
 
-        // Because the score field in Progress is a String, GSON parses integers in the response as floating point numbers
-        val stepScore = stepProgress
+        val assignmentProgress = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?.stepItems
+            ?.getOrNull(position)
+            ?.assignmentProgress
             ?.score
             ?.toFloatOrNull()
-            ?.toLong()
-            ?: 0L
+            ?: 0f
+
+        Timber.d("Yo: $assignmentProgress")
+
+//        // Because the score field in Progress is a String, GSON parses integers in the response as floating point numbers
+//        val stepScore = stepProgress
+//            ?.score
+//            ?.toFloatOrNull()
+//            ?.toLong()
+//            ?: 0L
 
         val stepCost = stepProgress
             ?.cost
@@ -237,7 +248,10 @@ constructor(
             .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
-        view?.showLessonInfoTooltip(stepScore, stepCost, timeToComplete, -1)
+        Timber.d("Score from backend: ${stepProgress?.score}")
+        Timber.d("Score from backend as Float: ${stepProgress?.score?.toFloatOrNull()}")
+
+        view?.showLessonInfoTooltip(assignmentProgress, stepCost, timeToComplete, -1)
     }
 
     /**

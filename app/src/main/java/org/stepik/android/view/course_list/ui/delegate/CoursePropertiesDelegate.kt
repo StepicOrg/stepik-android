@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.safeDiv
+import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course_list.model.CourseListItem
 import java.util.Locale
@@ -56,8 +57,7 @@ class CoursePropertiesDelegate(
             val score = progress
                 .score
                 ?.toFloatOrNull()
-                ?.toLong()
-                ?: 0L
+                ?: 0f
 
             prepareViewForProgress(score, progress.cost)
             true
@@ -68,11 +68,11 @@ class CoursePropertiesDelegate(
         courseItemProgressTitle.isVisible = needShow
     }
 
-    private fun prepareViewForProgress(score: Long, cost: Long) {
-        courseItemProgress.progress = (score * 100 safeDiv cost) / 100f
+    private fun prepareViewForProgress(score: Float, cost: Long) {
+        courseItemProgress.progress = (score.toLong() * 100 safeDiv cost) / 100f
         courseItemProgressTitle.text = view
             .resources
-            .getString(R.string.course_content_text_progress, score, cost)
+            .getString(R.string.course_content_text_progress, score.toFixed(2), cost)
     }
 
     private fun setRating(courseStats: CourseStats) {
