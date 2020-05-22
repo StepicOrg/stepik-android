@@ -1,4 +1,4 @@
-package org.stepic.droid.util.glide;
+package org.stepik.android.view.injection.glide;
 
 import android.content.Context;
 import android.graphics.drawable.PictureDrawable;
@@ -9,9 +9,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Registry;
 import com.bumptech.glide.annotation.GlideModule;
 import com.bumptech.glide.module.AppGlideModule;
-import com.caverock.androidsvg.SVG;
 
 import org.stepic.droid.base.App;
+import org.stepik.android.view.glide.mapper.ImageResourceDecoder;
+import org.stepik.android.view.glide.mapper.ImageResourceTranscoder;
+import org.stepik.android.view.glide.mapper.RelativeUrlLoader;
+import org.stepik.android.view.glide.model.ImageResource;
 
 import java.io.InputStream;
 
@@ -31,8 +34,8 @@ public class GlideCustomModule extends AppGlideModule {
     public void registerComponents(@NonNull Context context, @NonNull Glide glide,
                                    @NonNull Registry registry) {
         registry.prepend(String.class, InputStream.class, relativeUrlLoaderFactory);
-        registry.register(SVG.class, PictureDrawable.class, new SvgDrawableTranscoder())
-            .append(InputStream.class, SVG.class, new SvgDecoder());
+        registry.register(ImageResource.class, PictureDrawable.class, new ImageResourceTranscoder())
+                .append(InputStream.class, ImageResource.class, new ImageResourceDecoder());
     }
 
     // Disable manifest parsing to avoid adding similar modules twice.

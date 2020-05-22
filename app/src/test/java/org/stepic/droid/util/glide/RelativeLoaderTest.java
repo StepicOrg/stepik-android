@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.stepic.droid.configuration.Config;
+import org.stepik.android.view.glide.mapper.RelativeUrlLoader;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

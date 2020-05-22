@@ -1,4 +1,4 @@
-package org.stepic.droid.util.glide
+package org.stepik.android.view.glide.mapper
 
 import android.graphics.BitmapFactory
 import com.bumptech.glide.load.Options
@@ -7,6 +7,7 @@ import com.bumptech.glide.load.engine.Resource
 import com.bumptech.glide.load.resource.SimpleResource
 import com.caverock.androidsvg.SVG
 import com.caverock.androidsvg.SVGParseException
+import org.stepik.android.view.glide.model.ImageResource
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.InputStream

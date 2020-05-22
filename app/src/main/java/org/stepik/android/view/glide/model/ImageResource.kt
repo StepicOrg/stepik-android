@@ -1,4 +1,4 @@
-package org.stepic.droid.util.glide
+package org.stepik.android.view.glide.model
 
 import android.graphics.Bitmap
 import com.caverock.androidsvg.SVG

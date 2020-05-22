@@ -1,4 +1,4 @@
-package org.stepic.droid.util.glide
+package org.stepik.android.view.glide.mapper
 
 import android.graphics.Picture
 import android.graphics.RectF
@@ -7,6 +7,7 @@ import com.bumptech.glide.load.Options
 import com.bumptech.glide.load.engine.Resource
 import com.bumptech.glide.load.resource.SimpleResource
 import com.bumptech.glide.load.resource.transcode.ResourceTranscoder
+import org.stepik.android.view.glide.model.ImageResource
 
 class ImageResourceTranscoder : ResourceTranscoder<ImageResource, PictureDrawable> {
     override fun transcode(
