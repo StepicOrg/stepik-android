@@ -30,7 +30,7 @@ import org.stepic.droid.ui.custom.StickyHeaderAdapter;
 import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
-import org.stepic.droid.util.glide.GlideSvgRequestFactory;
+import org.stepik.android.view.glide.model.GlideRequestFactory;
 import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
 import org.stepik.android.view.base.ui.extension.ColorExtensions;
 
@@ -259,7 +259,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         View checkViewUnread;
 
         private final RequestBuilder<PictureDrawable> svgRequestBuilder =
-                GlideSvgRequestFactory.create(context, placeholderUserIcon);
+                GlideRequestFactory.create(context, placeholderUserIcon);
 
         NotificationViewHolder(View itemView) {
             super(itemView);
