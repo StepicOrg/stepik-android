@@ -9,14 +9,17 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_course.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.doOnGlobalLayout
+import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class CourseListItemAdapterDelegate(
+    private val analytic: Analytic,
     private val onItemClicked: (CourseListItem.Data) -> Unit,
     private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
@@ -77,6 +80,8 @@ class CourseListItemAdapterDelegate(
             adaptiveCourseMarker.isVisible = data.isAdaptive
 
             coursePropertiesDelegate.setStats(data)
+
+            analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
         }
     }
 }

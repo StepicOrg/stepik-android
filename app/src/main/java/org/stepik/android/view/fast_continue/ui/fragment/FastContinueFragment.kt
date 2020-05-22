@@ -21,6 +21,7 @@ import org.stepic.droid.ui.activities.MainFeedActivity
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
@@ -164,19 +165,19 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
 
     private fun handleContinueCourseClick(course: Course) {
         analytic.reportEvent(Analytic.FastContinue.CONTINUE_CLICK)
-        fastContinuePresenter.continueCourse(course, CourseContinueInteractionSource.HOME_WIDGET)
+        fastContinuePresenter.continueCourse(course, CourseViewSource.FastContinue, CourseContinueInteractionSource.HOME_WIDGET)
     }
 
-    override fun showCourse(course: Course, isAdaptive: Boolean) {
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
         if (isAdaptive) {
             screenManager.continueAdaptiveCourse(activity, course)
         } else {
-            screenManager.showCourseModules(activity, course)
+            screenManager.showCourseModules(activity, course, source)
         }
     }
 
-    override fun showSteps(course: Course, lastStep: LastStep) {
-        screenManager.continueCourse(activity, course.id, lastStep)
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        screenManager.continueCourse(activity, course.id, source, lastStep)
     }
 
     override fun setBlockingLoading(isLoading: Boolean) {

@@ -4,7 +4,7 @@ import android.content.Intent
 import org.stepic.droid.util.HtmlHelper
 import org.stepic.droid.util.getPathSegmentParameter
 
-private const val COURSE_PATH_SEGMENT = "course"
+internal const val COURSE_PATH_SEGMENT = "course"
 
 fun Intent.getCourseIdFromDeepLink(): Long? {
     val data = this.data ?: return null

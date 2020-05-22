@@ -16,6 +16,7 @@ import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -78,7 +79,10 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
 
+        val searchResultQuery = SearchResultQuery(page = 1, tagId = tag.id)
+
         courseListViewDelegate = CourseListViewDelegate(
+            analytic = analytic,
             courseContinueViewDelegate = CourseContinueViewDelegate(
                 activity = requireActivity(),
                 analytic = analytic,
@@ -88,36 +92,30 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
             courseItemsRecyclerView = courseListCoursesRecycler,
             courseListViewStateDelegate = viewStateDelegate,
             onContinueCourseClicked = { courseListItem ->
-                courseListPresenter.continueCourse(course = courseListItem.course, interactionSource = CourseContinueInteractionSource.COURSE_WIDGET)
+                courseListPresenter
+                    .continueCourse(
+                        course = courseListItem.course,
+                        viewSource = CourseViewSource.Search(searchResultQuery),
+                        interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
+                    )
             }
         )
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListSwipeRefresh.setOnRefreshListener {
             courseListPresenter.fetchCourses(
-                SearchResultQuery(
-                    page = 1,
-                    tagId = tag.id
-                ),
+                searchResultQuery,
                 forceUpdate = true
             )
         }
         tryAgain.setOnClickListener {
             courseListPresenter.fetchCourses(
-                SearchResultQuery(
-                    page = 1,
-                    tagId = tag.id
-                ),
+                searchResultQuery,
                 forceUpdate = true
             )
         }
 
-        courseListPresenter.fetchCourses(
-            SearchResultQuery(
-                page = 1,
-                tagId = tag.id
-            )
-        )
+        courseListPresenter.fetchCourses(searchResultQuery)
     }
 
     private fun injectComponent() {

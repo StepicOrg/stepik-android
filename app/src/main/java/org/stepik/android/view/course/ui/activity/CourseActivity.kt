@@ -21,6 +21,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
+import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.configuration.RemoteConfig
@@ -28,12 +29,14 @@ import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
@@ -41,7 +44,9 @@ import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
+import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class CourseActivity : FragmentActivityBase(), CourseView {
@@ -50,20 +55,23 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         private const val EXTRA_COURSE_ID = "course_id"
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
         private const val EXTRA_TAB = "tab"
+        private const val EXTRA_SOURCE = "source"
 
         private const val NO_ID = -1L
 
         private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
-        fun createIntent(context: Context, course: Course, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE, course)
+                .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
-        fun createIntent(context: Context, courseId: Long, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
+                .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
         init {
@@ -109,6 +117,12 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     @Inject
     internal lateinit var coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest
+
+    @Inject
+    internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
+
+    @Inject
+    internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
 //    @Inject
 //    internal lateinit var billing: Billing
@@ -175,10 +189,14 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
         val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
+        val source = (intent.getSerializableExtra(EXTRA_SOURCE) as? CourseViewSource)
+            ?: intent.getCourseIdFromDeepLink()?.let { CourseViewSource.DeepLink(intent?.dataString ?: "") }
+            ?: CourseViewSource.Unknown
+
         if (course != null) {
-            coursePresenter.onCourse(course, forceUpdate)
+            coursePresenter.onCourse(course, source, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, forceUpdate)
+            coursePresenter.onCourseId(courseId, source, forceUpdate)
         }
     }
 
@@ -409,7 +427,14 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 //        uiCheckout
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
-        screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
+        if (coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
+            val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams).toString()
+            InAppWebViewDialogFragment
+                .newInstance(getString(R.string.course_purchase), url)
+                .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
+        } else {
+            screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
+        }
     }
 
 //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -423,7 +448,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         super.onDestroy()
     }
 
-    override fun showCourse(course: Course, isAdaptive: Boolean) {
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
         if (isAdaptive) {
             screenManager.continueAdaptiveCourse(this, course)
         } else {
@@ -431,7 +456,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         }
     }
 
-    override fun showSteps(course: Course, lastStep: LastStep) {
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
         screenManager.continueCourse(this, lastStep)
     }
 

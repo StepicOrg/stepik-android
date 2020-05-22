@@ -28,6 +28,7 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.TextUtil
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.download.DownloadPresenter
 import org.stepik.android.presentation.download.DownloadView
@@ -71,7 +72,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         initCenteredToolbar(R.string.downloads_title, showHomeButton = true)
 
         downloadedCoursesAdapter += DownloadedCoursesAdapterDelegate(
-            onItemClick = { screenManager.showCourseModules(this, it.course) },
+            onItemClick = { screenManager.showCourseModules(this, it.course, CourseViewSource.Downloads) },
             onItemRemoveClick = ::showRemoveCourseDialog
         )
 

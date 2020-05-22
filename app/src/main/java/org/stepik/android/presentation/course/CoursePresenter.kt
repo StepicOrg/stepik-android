@@ -15,6 +15,8 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.plus
+import org.stepik.android.domain.course.analytic.CoursePreviewScreenOpenedAnalyticEvent
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
@@ -88,6 +90,7 @@ constructor(
 //    private var uiCheckout: UiCheckout? = null
 
     private var isCoursePreviewLogged = false
+    private lateinit var viewSource: CourseViewSource
 
     override val delegates: List<PresenterDelegate<in CourseView>> =
         listOf(courseContinuePresenterDelegateImpl)
@@ -121,21 +124,22 @@ constructor(
     /**
      * Data initialization variants
      */
-
-    fun onCourseId(courseId: Long, forceUpdate: Boolean = false) {
-        observeCourseData(courseInteractor.getCourseHeaderData(courseId), forceUpdate)
+    fun onCourseId(courseId: Long, viewSource: CourseViewSource, forceUpdate: Boolean = false) {
+        observeCourseData(courseInteractor.getCourseHeaderData(courseId), viewSource, forceUpdate)
     }
 
-    fun onCourse(course: Course, forceUpdate: Boolean = false) {
-        observeCourseData(courseInteractor.getCourseHeaderData(course), forceUpdate)
+    fun onCourse(course: Course, viewSource: CourseViewSource, forceUpdate: Boolean = false) {
+        observeCourseData(courseInteractor.getCourseHeaderData(course), viewSource, forceUpdate)
     }
 
-    private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>, forceUpdate: Boolean) {
+    private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>, viewSource: CourseViewSource, forceUpdate: Boolean) {
         if (state != CourseView.State.Idle &&
             !((state == CourseView.State.NetworkError || state is CourseView.State.CourseLoaded) && forceUpdate)
         ) {
             return
         }
+
+        this.viewSource = viewSource
 
         state = CourseView.State.Loading
         compositeDisposable += courseDataSource
@@ -146,7 +150,7 @@ constructor(
                 onSuccess  = {
                     state = CourseView.State.CourseLoaded(it)
                     postCourseViewedNotification(it.courseId)
-                    logCoursePreviewOpenedEvent(it.course)
+                    logCoursePreviewOpenedEvent(it.course, viewSource)
                 },
                 onError    = { state = CourseView.State.NetworkError }
             )
@@ -354,7 +358,7 @@ constructor(
             ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
             ?: return
 
-        courseContinuePresenterDelegateImpl.continueCourse(headerData.course, CourseContinueInteractionSource.COURSE_SCREEN)
+        courseContinuePresenterDelegateImpl.continueCourse(headerData.course, viewSource, CourseContinueInteractionSource.COURSE_SCREEN)
     }
 
     /**
@@ -456,16 +460,11 @@ constructor(
     /**
      * Analytics
      */
-    private fun logCoursePreviewOpenedEvent(course: Course) {
+    private fun logCoursePreviewOpenedEvent(course: Course, source: CourseViewSource) {
         if (isCoursePreviewLogged) {
             return
         }
         isCoursePreviewLogged = true
-        analytic.reportAmplitudeEvent(
-            AmplitudeAnalytic.CoursePreview.COURSE_PREVIEW_SCREEN_OPENED, mapOf(
-            AmplitudeAnalytic.CoursePreview.Params.COURSE to course.id,
-            AmplitudeAnalytic.CoursePreview.Params.TITLE to course.title,
-            AmplitudeAnalytic.CoursePreview.Params.IS_PAID to course.isPaid
-        ))
+        analytic.report(CoursePreviewScreenOpenedAnalyticEvent(course, source))
     }
 }

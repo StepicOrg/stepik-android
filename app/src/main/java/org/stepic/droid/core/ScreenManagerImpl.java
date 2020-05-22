@@ -47,8 +47,8 @@ import org.stepic.droid.ui.activities.StoreManagementActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
-import org.stepic.droid.util.UriExtensionsKt;
 import org.stepik.android.domain.auth.model.SocialAuthType;
+import org.stepik.android.domain.course.analytic.CourseViewSource;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
@@ -70,6 +70,7 @@ import org.stepik.android.view.auth.ui.activity.RegistrationActivity;
 import org.stepik.android.view.auth.ui.activity.SocialAuthActivity;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity;
@@ -105,14 +106,21 @@ public class ScreenManagerImpl implements ScreenManager {
     private final UserPreferences userPreferences;
     private final Analytic analytic;
     private final Set<BranchDeepLinkRouter> deepLinkRouters;
+    private final CourseDeepLinkBuilder courseDeepLinkBuilder;
 
     @Inject
-    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences, Set<BranchDeepLinkRouter> deepLinkRouters) {
+    public ScreenManagerImpl(Config config,
+                             UserPreferences userPreferences,
+                             Analytic analytic,
+                             SharedPreferenceHelper sharedPreferences,
+                             Set<BranchDeepLinkRouter> deepLinkRouters,
+                             CourseDeepLinkBuilder courseDeepLinkBuilder) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.sharedPreferences = sharedPreferences;
         this.deepLinkRouters = deepLinkRouters;
+        this.courseDeepLinkBuilder = courseDeepLinkBuilder;
     }
 
     @Override
@@ -209,35 +217,35 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Context context, long courseId) {
-        Intent intent = CourseActivity.Companion.createIntent(context, courseId, CourseScreenTab.INFO);
+    public void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource) {
+        Intent intent = CourseActivity.Companion.createIntent(context, courseId, viewSource, CourseScreenTab.INFO);
         context.startActivity(intent);
     }
 
     @Override
-    public void showCourseDescription(Context context, @NotNull Course course) {
-        showCourseDescription(context, course, false);
+    public void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource) {
+        showCourseDescription(context, course, viewSource, false);
     }
 
     @Override
-    public void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll) {
-        showCourseScreen(context, course, autoEnroll, CourseScreenTab.INFO);
+    public void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll) {
+        showCourseScreen(context, course, viewSource, autoEnroll, CourseScreenTab.INFO);
     }
 
     @Override
-    public void showCourseModules(Context context, @NotNull Course course) {
-        showCourseScreen(context, course, false, CourseScreenTab.SYLLABUS);
+    public void showCourseModules(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource) {
+        showCourseScreen(context, course, viewSource, false, CourseScreenTab.SYLLABUS);
     }
 
     @Override
-    public void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
-        Intent intent = getIntentForDescription(context, course, autoEnroll, tab);
+    public void showCourseScreen(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll, CourseScreenTab tab) {
+        Intent intent = getIntentForDescription(context, course, viewSource, autoEnroll, tab);
         context.startActivity(intent);
     }
 
-    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course, @NotNull CourseViewSource courseViewSource, boolean autoEnroll, CourseScreenTab tab) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll, tab);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, courseViewSource, autoEnroll, tab);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -476,8 +484,8 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep) {
-        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, CourseScreenTab.SYLLABUS);
+    public void continueCourse(Activity activity, long courseId, @NotNull CourseViewSource viewSource, @NotNull LastStep lastStep) {
+        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, viewSource, CourseScreenTab.SYLLABUS);
         Intent stepsIntent = LessonActivity.Companion.createIntent(activity, lastStep);
         activity.startActivity(courseIntent);
         activity.startActivity(stepsIntent);
@@ -576,27 +584,16 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void openSyllabusInWeb(Context context, long courseId) {
-        openCourseTabInWeb(context, courseId, CourseScreenTab.SYLLABUS.getPath(), null);
+        openCourseTabInWeb(context, courseId, CourseScreenTab.SYLLABUS, null);
     }
 
     @Override
     public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
-        openCourseTabInWeb(context, courseId, CourseScreenTab.PAY.getPath(), queryParams);
+        openCourseTabInWeb(context, courseId, CourseScreenTab.PAY, queryParams);
     }
 
-    private void openCourseTabInWeb(Context context, long courseId, String tab, @Nullable Map<String, List<String>> queryParams) {
-        final String url = config.getBaseUrl() + "/course/" + courseId + "/" + tab + "/";
-        final Uri.Builder uriBuilder = Uri
-                .parse(url)
-                .buildUpon()
-                .appendQueryParameter("from_mobile_app", "true");
-
-        if (queryParams != null) {
-            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
-        }
-
-        final Uri uri = uriBuilder.build();
-
+    private void openCourseTabInWeb(Context context, long courseId, @NotNull CourseScreenTab tab, @Nullable Map<String, List<String>> queryParams) {
+        final Uri uri = courseDeepLinkBuilder.createCourseLink(courseId, tab, queryParams);
         final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
 
         final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);

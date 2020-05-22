@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -16,6 +17,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class CourseListViewDelegate(
+    analytic: Analytic,
     courseContinueViewDelegate: CourseContinueViewDelegate,
     courseListTitleContainer: View? = null,
     private val courseListSwipeRefresh: StepikSwipeRefreshLayout? = null,
@@ -29,6 +31,7 @@ class CourseListViewDelegate(
 
     init {
         courseItemAdapter += CourseListItemAdapterDelegate(
+            analytic,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
             onContinueCourseClicked = onContinueCourseClicked
         )

@@ -26,6 +26,7 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
@@ -163,7 +164,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         val course = courseFromExtra
         if (course != null) {
             intent.removeExtra(AppConstants.KEY_COURSE_BUNDLE)
-            screenManager.showCourseDescription(this, course, true)
+            screenManager.showCourseDescription(this, course, CourseViewSource.Auth, true)
         }
 
         if (savedInstanceState == null) {
