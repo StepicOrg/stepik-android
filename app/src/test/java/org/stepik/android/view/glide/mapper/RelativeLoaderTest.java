@@ -1,4 +1,4 @@
-package org.stepic.droid.util.glide;
+package org.stepik.android.view.glide.mapper;
 
 import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.stepic.droid.configuration.Config;
-import org.stepik.android.view.glide.mapper.RelativeUrlLoader;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
