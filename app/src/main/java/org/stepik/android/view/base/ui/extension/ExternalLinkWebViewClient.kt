@@ -1,6 +1,7 @@
 package org.stepik.android.view.base.ui.extension
 
 import android.annotation.TargetApi
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,6 +9,7 @@ import android.os.Build
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.stepic.droid.BuildConfig
 
 open class ExternalLinkWebViewClient(
     private val context: Context
@@ -25,6 +27,14 @@ open class ExternalLinkWebViewClient(
     }
 
     private fun openExternalLink(uri: Uri) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.`package` = BuildConfig.APPLICATION_ID
+
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            intent.`package` = null
+            context.startActivity(intent)
+        }
     }
 }
