@@ -1,5 +1,6 @@
 package org.stepik.android.view.lesson.ui.delegate
 
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.Gravity
@@ -40,7 +41,7 @@ class LessonInfoTooltipDelegate(
         if (stepScore > 0f) {
             popupView
                 .stepWorth
-                .setItem(stepScore, stepCost, R.string.lesson_info_points_with_score, R.plurals.points, R.drawable.ic_check_rounded)
+                .setItem(stepScore, stepCost, R.string.lesson_info_points_with_score, R.string.lesson_info_points_with_score_fraction, R.plurals.points, R.drawable.ic_check_rounded)
         } else {
             popupView
                 .stepWorth
@@ -102,13 +103,21 @@ class LessonInfoTooltipDelegate(
         stepScore: Float,
         stepCost: Long,
         @StringRes stringRes: Int,
+        @StringRes fractionRes: Int,
         @PluralsRes pluralRes: Int,
         @DrawableRes drawableRes: Int
     ) {
         setItemDrawable(drawableRes)
-        text = context.getString(stringRes, resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore.toFixed(2)), stepCost) // TODO Apply correct quantity
+        text = resolveQuantityString(context, stepScore, stepCost, stringRes, fractionRes, pluralRes)
         visibility = View.VISIBLE
     }
+
+    private fun resolveQuantityString(context: Context, stepScore: Float, stepCost: Long, @StringRes stringRes: Int, @StringRes fractionRes: Int, @PluralsRes pluralRes: Int): String =
+        if (stepScore.toLong() == 0L) {
+            context.getString(fractionRes, stepScore.toFixed(2), stepCost)
+        } else {
+            context.getString(stringRes, context.resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore.toFixed(2)), stepCost)
+        }
 
     private fun AppCompatTextView.setItemDrawable(@DrawableRes drawableRes: Int) {
         val iconDrawable = AppCompatResources
