@@ -66,10 +66,6 @@ public interface ScreenManager {
 
     void openStepInWeb(Context context, Step step);
 
-    void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId);
-
-    void openSubmissionInWeb(Context context, long stepId, long submissionId);
-
     void openRemindPassword(AppCompatActivity context);
 
     void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource);
