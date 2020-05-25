@@ -114,9 +114,9 @@ class LessonInfoTooltipDelegate(
 
     private fun resolveQuantityString(context: Context, stepScore: Float, stepCost: Long, @StringRes stringRes: Int, @StringRes fractionRes: Int, @PluralsRes pluralRes: Int): String =
         if (stepScore.toLong() == 0L) {
-            context.getString(fractionRes, stepScore.toFixed(2), stepCost)
+            context.getString(fractionRes, stepScore.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), stepCost)
         } else {
-            context.getString(stringRes, context.resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore.toFixed(2)), stepCost)
+            context.getString(stringRes, context.resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore.toFixed(context.resources.getInteger(R.integer.score_decimal_count))), stepCost)
         }
 
     private fun AppCompatTextView.setItemDrawable(@DrawableRes drawableRes: Int) {
