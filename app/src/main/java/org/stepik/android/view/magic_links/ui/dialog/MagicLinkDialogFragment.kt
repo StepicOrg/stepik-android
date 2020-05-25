@@ -1,6 +1,8 @@
 package org.stepik.android.view.magic_links.ui.dialog
 
 import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -58,10 +60,20 @@ class MagicLinkDialogFragment : DialogFragment(), MagicLinkView {
             .inject(this)
     }
 
+    override fun onStart() {
+        super.onStart()
+        magicLinkPresenter.attachView(this)
+    }
+
     override fun setState(state: MagicLinkView.State) {
         if (state is MagicLinkView.State.Success) {
-            // action view open
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(state.url)))
             dismiss()
         }
+    }
+
+    override fun onStop() {
+        magicLinkPresenter.detachView(this)
+        super.onStop()
     }
 }

@@ -6,6 +6,7 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.magic_links.interactor.MagicLinkInteractor
+import org.stepik.android.presentation.catalog.TagsView
 import org.stepik.android.presentation.in_app_web_view.InAppWebViewView
 import ru.nobird.android.presentation.base.PresenterBase
 import javax.inject.Inject
@@ -29,6 +30,7 @@ constructor(
     fun onData(url: String) {
         if (state != MagicLinkView.State.Idle) return
 
+        state = MagicLinkView.State.Loading
         compositeDisposable += magicLinkInteractor
             .createMagicLink(url)
             .observeOn(mainScheduler)
