@@ -38,6 +38,8 @@ import org.stepik.android.model.user.User
 import org.stepik.android.presentation.profile.ProfilePresenter
 import org.stepik.android.presentation.profile.ProfileView
 import org.stepik.android.view.base.ui.extension.ColorExtensions
+import org.stepik.android.view.glide.ui.extension.GlideImageViewWrapper
+import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.profile.ui.activity.ProfileActivity
 import org.stepik.android.view.profile.ui.animation.ProfileHeaderAnimationDelegate
@@ -87,6 +89,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
 
     private lateinit var profileStatsDelegate: ProfileStatsDelegate
     private lateinit var headerAnimationDelegate: ProfileHeaderAnimationDelegate
+
+    private lateinit var profileImageWrapper: GlideImageViewWrapper
 
     private var shareMenuItem: MenuItem? = null
     private var isShareMenuItemVisible: Boolean = false
@@ -179,6 +183,8 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         tryAgain.setOnClickListener { profilePresenter.onData(userId, forceUpdate = true) }
         authAction.setOnClickListener { screenManager.showLaunchScreen(context, true, MainFeedActivity.PROFILE_INDEX) }
 
+        profileImageWrapper = profileImage.wrapWithGlide()
+
         if (savedInstanceState == null) {
             childFragmentManager.commitNow {
                 add(R.id.container, ProfileNotificationFragment.newInstance(userId))
@@ -252,11 +258,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
         when (state) {
             is ProfileView.State.Content -> {
                 with(state.profileData) {
-                    Glide
-                        .with(this@ProfileFragment)
-                        .load(user.avatar)
-                        .placeholder(R.drawable.general_placeholder)
-                        .into(profileImage)
+                    profileImageWrapper
+                        .setImagePath(
+                            user.avatar ?: "",
+                            AppCompatResources.getDrawable(requireContext(), R.drawable.general_placeholder)
+                        )
 
                     profileName.text = user.fullName
                     profileBio.text = user.shortBio

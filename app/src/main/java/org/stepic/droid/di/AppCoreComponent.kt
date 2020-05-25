@@ -45,7 +45,7 @@ import org.stepic.droid.ui.dialogs.VideoQualityDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog
 import org.stepic.droid.ui.fragments.StoreManagementFragment
-import org.stepic.droid.util.glide.GlideCustomModule
+import org.stepik.android.view.injection.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
