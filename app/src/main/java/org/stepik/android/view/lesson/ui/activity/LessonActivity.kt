@@ -40,11 +40,14 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
+import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
@@ -80,6 +83,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     @Inject
     internal lateinit var stepTypeResolver: StepTypeResolver
+
+    @Inject
+    internal lateinit var courseDeepLinkBuilder: CourseDeepLinkBuilder
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -249,7 +255,14 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     }
                 } else {
                     if (state.stepsState is LessonView.StepsState.Exam) {
-                        errorLessonIsExamAction.setOnClickListener { screenManager.openSyllabusInWeb(this, state.stepsState.courseId) }
+                        errorLessonIsExamAction.setOnClickListener {
+                            val url = courseDeepLinkBuilder
+                                .createCourseLink(state.stepsState.courseId, CourseScreenTab.SYLLABUS)
+
+                            MagicLinkDialogFragment
+                                .newInstance(url)
+                                .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
+                        }
                     }
                     stepsAdapter.items = emptyList()
                 }
