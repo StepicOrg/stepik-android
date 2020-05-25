@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.view_course_review_summary_item.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.safeDiv
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
@@ -43,7 +44,7 @@ class CourseReviewSummaryDelegate : AdapterDelegate<CourseReviewItem, DelegateVi
 
                 distribution.forEachIndexed { index: Int, l: Long ->
                     val (progress, value) = summaryDistribution[index]
-                    progress.progress = (l * 100 / count).toInt()
+                    progress.progress = (l * 100 safeDiv count).toInt()
                     value.text = l.toString()
                 }
             }
