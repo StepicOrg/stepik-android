@@ -4,7 +4,6 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
@@ -125,20 +124,24 @@ constructor() {
         )
     }
 
-    fun mapUserCourseAddState(
-        oldState: CourseListUserView.State.Data,
-        userCourse: UserCourse,
-        courseListItem: CourseListItem.Data
-    ): CourseListUserView.State.Data {
-        val userCoursesUpdated = listOf(userCourse) + oldState.userCourses
-        val courseListState = mapEnrolledCourseListItemState(oldState.courseListViewState, courseListItem)
-        return oldState.copy(
-            userCourses = userCoursesUpdated,
-            courseListViewState = courseListState
-        )
+    fun mapRemoveCourseListItemState(state: CourseListView.State, courseId: Long): CourseListView.State {
+        if (state !is CourseListView.State.Content) {
+            return state
+        }
+        val newDataItems = state.courseListDataItems.filterNot { it.course.id == courseId }
+        val newItems = state.courseListItems.filterNot { it is CourseListItem.Data && it.course.id == courseId }
+
+        return if (newDataItems.isEmpty()) {
+            CourseListView.State.Empty
+        } else {
+            state.copy(
+                courseListDataItems = PagedList(newDataItems),
+                courseListItems = newItems
+            )
+        }
     }
 
-    private fun mapEnrolledCourseListItemState(state: CourseListView.State, courseListItemEnrolled: CourseListItem.Data): CourseListView.State =
+    fun mapEnrolledCourseListItemState(insertionIndex: Int, state: CourseListView.State, courseListItemEnrolled: CourseListItem.Data): CourseListView.State =
         when (state) {
             is CourseListView.State.Empty -> {
                 CourseListView.State.Content(
@@ -149,12 +152,12 @@ constructor() {
             is CourseListView.State.Content -> {
                 CourseListView.State.Content(
                     courseListDataItems = PagedList(
-                        listOf(courseListItemEnrolled) + state.courseListDataItems,
+                        state.courseListDataItems.mutate { add(insertionIndex, courseListItemEnrolled) },
                         state.courseListDataItems.page,
                         state.courseListDataItems.hasNext,
                         state.courseListDataItems.hasPrev
                     ),
-                    courseListItems = listOf(courseListItemEnrolled) + state.courseListItems
+                    courseListItems = state.courseListItems.mutate { add(insertionIndex, courseListItemEnrolled) }
                 )
             }
             else ->
