@@ -49,8 +49,8 @@
         <item quantity="other">%d course reviews</item>
     </plurals>
     <plurals name="points">
-        <item quantity="one">%d point</item>
-        <item quantity="other">%d points</item>
+        <item quantity="one">%s point</item>
+        <item quantity="other">%s points</item>
     </plurals>
     <plurals name="submissions">
         <item quantity="one">%d submission</item>

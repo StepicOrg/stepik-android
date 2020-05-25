@@ -2,12 +2,12 @@ package org.stepik.android.view.base.ui.extension
 
 import android.annotation.TargetApi
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 
 open class ExternalLinkWebViewClient(
     private val context: Context
@@ -25,6 +25,6 @@ open class ExternalLinkWebViewClient(
     }
 
     private fun openExternalLink(uri: Uri) {
-        context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        InternalDeeplinkRouter.openInternalDeeplink(context, uri)
     }
 }

@@ -4,6 +4,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_progress.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.toFixed
 import org.stepik.android.model.Progress
 
 class CourseProgressDelegate(
@@ -32,14 +33,13 @@ class CourseProgressDelegate(
             val score = progress
                 .score
                 ?.toFloatOrNull()
-                ?.toLong()
-                ?: 0L
+                ?: 0f
 
             val cost = progress.cost
 
             courseProgressCircle.progress = (score * 100 / cost) / 100f
             courseProgressValue.text =
-                context.getString(R.string.course_content_text_progress_points, score, cost)
+                context.getString(R.string.course_content_text_progress_points, score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), cost)
         }
     }
 

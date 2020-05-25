@@ -75,10 +75,10 @@
         <item quantity="other">%d отзывов о курсах</item>
     </plurals>
     <plurals name="points">
-        <item quantity="one">%d балл</item>
-        <item quantity="few">%d балла</item>
-        <item quantity="many">%d баллов</item>
-        <item quantity="other">%d баллов</item>
+        <item quantity="one">%s балл</item>
+        <item quantity="few">%s балла</item>
+        <item quantity="many">%s баллов</item>
+        <item quantity="other">%s баллов</item>
     </plurals>
     <plurals name="submissions">
         <item quantity="one">%d попытка</item>

@@ -1,5 +1,6 @@
 package org.stepik.android.view.lesson.ui.delegate
 
+import android.content.Context
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.view.Gravity
@@ -18,12 +19,13 @@ import androidx.core.view.doOnPreDraw
 import androidx.core.widget.PopupWindowCompat
 import kotlinx.android.synthetic.main.tooltip_lesson_info.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.toFixed
 
 class LessonInfoTooltipDelegate(
     private val view: View
 ) {
     fun showLessonInfoTooltip(
-        stepScore: Long,
+        stepScore: Float,
         stepCost: Long,
         lessonTimeToCompleteInSeconds: Long,
         certificateThreshold: Long
@@ -36,10 +38,10 @@ class LessonInfoTooltipDelegate(
             .from(anchorView.context)
             .inflate(R.layout.tooltip_lesson_info, null)
 
-        if (stepScore > 0) {
+        if (stepScore > 0f) {
             popupView
                 .stepWorth
-                .setItem(stepScore, stepCost, R.string.lesson_info_points_with_score, R.plurals.points, R.drawable.ic_check_rounded)
+                .setItem(stepScore, stepCost, R.string.lesson_info_points_with_score, R.string.lesson_info_points_with_score_fraction, R.plurals.points, R.drawable.ic_check_rounded)
         } else {
             popupView
                 .stepWorth
@@ -98,16 +100,24 @@ class LessonInfoTooltipDelegate(
 
     // 'StepProgress.score' points out of 'StepProgress.cost' (for step)
     private fun AppCompatTextView.setItem(
-        stepScore: Long,
+        stepScore: Float,
         stepCost: Long,
         @StringRes stringRes: Int,
+        @StringRes fractionRes: Int,
         @PluralsRes pluralRes: Int,
         @DrawableRes drawableRes: Int
     ) {
         setItemDrawable(drawableRes)
-        text = context.getString(stringRes, resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore), stepCost)
+        text = resolveQuantityString(context, stepScore, stepCost, stringRes, fractionRes, pluralRes)
         visibility = View.VISIBLE
     }
+
+    private fun resolveQuantityString(context: Context, stepScore: Float, stepCost: Long, @StringRes stringRes: Int, @StringRes fractionRes: Int, @PluralsRes pluralRes: Int): String =
+        if (stepScore.toLong() == 0L) {
+            context.getString(fractionRes, stepScore.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), stepCost)
+        } else {
+            context.getString(stringRes, context.resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore.toFixed(context.resources.getInteger(R.integer.score_decimal_count))), stepCost)
+        }
 
     private fun AppCompatTextView.setItemDrawable(@DrawableRes drawableRes: Int) {
         val iconDrawable = AppCompatResources
