@@ -69,10 +69,10 @@ class CoursePropertiesDelegate(
     }
 
     private fun prepareViewForProgress(score: Float, cost: Long) {
-        courseItemProgress.progress = (score.toLong() * 100 safeDiv cost) / 100f
+        courseItemProgress.progress = (score * 100 safeDiv cost) / 100f
         courseItemProgressTitle.text = view
             .resources
-            .getString(R.string.course_content_text_progress, score.toFixed(2), cost)
+            .getString(R.string.course_content_text_progress, score.toFixed(view.resources.getInteger(R.integer.score_decimal_count)), cost)
     }
 
     private fun setRating(courseStats: CourseStats) {

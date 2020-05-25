@@ -90,9 +90,9 @@ class CourseContentSectionDelegate(
                         ?.toFloatOrNull()
                         ?: 0f
 
-                    sectionProgress.progress = score.toLong() / progress.cost.toFloat()
+                    sectionProgress.progress = score / progress.cost.toFloat()
                     sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
-                        score.toFixed(2), progress.cost)
+                        score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), progress.cost)
                     sectionTextProgress.visibility = View.VISIBLE
                 } else {
                     sectionProgress.progress = 0f

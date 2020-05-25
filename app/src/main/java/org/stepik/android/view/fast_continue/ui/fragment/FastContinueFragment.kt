@@ -148,8 +148,8 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
                 ?.toFloatOrNull()
                 ?: 0f
 
-            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score.toFixed(2), progress.cost)
-            fastContinueCourseProgress.progress = (score.toLong() * 100 / progress.cost).toInt()
+            fastContinueCourseProgressText.text = getString(R.string.course_current_progress, score.toFixed(resources.getInteger(R.integer.score_decimal_count)), progress.cost)
+            fastContinueCourseProgress.progress = (score * 100 / progress.cost).toInt()
             true
         } else {
             fastContinueCourseProgress.progress = 0

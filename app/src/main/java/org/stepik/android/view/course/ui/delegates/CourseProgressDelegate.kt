@@ -37,9 +37,9 @@ class CourseProgressDelegate(
 
             val cost = progress.cost
 
-            courseProgressCircle.progress = (score.toLong() * 100 / cost) / 100f
+            courseProgressCircle.progress = (score * 100 / cost) / 100f
             courseProgressValue.text =
-                context.getString(R.string.course_content_text_progress_points, score.toFixed(2), cost)
+                context.getString(R.string.course_content_text_progress_points, score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), cost)
         }
     }
 

@@ -85,9 +85,9 @@ class CourseContentUnitDelegate(
                         ?: 0f
 
                     unitTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
-                        score.toFixed(2), progress.cost)
+                        score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), progress.cost)
 
-                    unitProgress.progress = score.toLong() / progress.cost.toFloat()
+                    unitProgress.progress = score / progress.cost.toFloat()
                     unitTextProgress.visibility = View.VISIBLE
                 } else {
                     unitProgress.progress = 0f
