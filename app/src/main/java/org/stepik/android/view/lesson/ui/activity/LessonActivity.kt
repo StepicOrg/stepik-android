@@ -281,7 +281,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         lessonPresenter.onStepOpened(position)
     }
 
-    override fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
+    override fun showLessonInfoTooltip(stepScore: Float, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
         lessonInfoTooltipDelegate
             .showLessonInfoTooltip(stepScore, stepCost, lessonTimeToComplete, certificateThreshold)
     }
