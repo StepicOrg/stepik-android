@@ -430,7 +430,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         if (coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
             val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams).toString()
             InAppWebViewDialogFragment
-                .newInstance(getString(R.string.course_purchase), url)
+                .newInstance(getString(R.string.course_purchase), url, isProvideAuth = true)
                 .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
         } else {
             screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)

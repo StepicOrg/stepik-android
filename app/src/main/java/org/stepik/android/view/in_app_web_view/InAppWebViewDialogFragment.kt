@@ -33,10 +33,11 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     companion object {
         const val TAG = "InAppWebViewDialogFragment"
 
-        fun newInstance(title: String, url: String): InAppWebViewDialogFragment =
+        fun newInstance(title: String, url: String, isProvideAuth: Boolean = false): InAppWebViewDialogFragment =
             InAppWebViewDialogFragment().apply {
                 this.title = title
                 this.url = url
+                this.isProvideAuth = isProvideAuth
             }
     }
 
@@ -47,6 +48,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
 
     private var title: String by argument()
     private var url: String by argument()
+    private var isProvideAuth: Boolean by argument()
 
     private var webView: WebView? = null
 
@@ -107,7 +109,8 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<InAppWebViewView.State.Idle>()
-        viewStateDelegate.addState<InAppWebViewView.State.Loading>(loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<InAppWebViewView.State.WebLoading>(loadProgressbarOnEmptyScreen)
+        viewStateDelegate.addState<InAppWebViewView.State.LinkLoading>(loadProgressbarOnEmptyScreen)
         viewStateDelegate.addState<InAppWebViewView.State.Error>(error)
         viewStateDelegate.addState<InAppWebViewView.State.Success>(webView as View)
 
@@ -115,20 +118,13 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
-        tryAgain.setOnClickListener {
-            inAppWebViewPresenter.startLoading(forceUpdate = true)
-        }
-        inAppWebViewPresenter.startLoading()
+        tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
+
+        setDataToPresenter()
     }
 
-    override fun onDestroyView() {
-        containerView.removeView(webView)
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        webView = null
-        super.onDestroy()
+    private fun setDataToPresenter(forceUpdate: Boolean = true) {
+        inAppWebViewPresenter.onData(url, isProvideAuth, forceUpdate)
     }
 
     override fun onStart() {
@@ -142,15 +138,25 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         inAppWebViewPresenter.attachView(this)
     }
 
+    override fun setState(state: InAppWebViewView.State) {
+        viewStateDelegate.switchState(state)
+        if (state is InAppWebViewView.State.WebLoading) {
+            webView?.loadUrl(state.url)
+        }
+    }
+
     override fun onStop() {
         inAppWebViewPresenter.detachView(this)
         super.onStop()
     }
 
-    override fun setState(state: InAppWebViewView.State) {
-        viewStateDelegate.switchState(state)
-        if (state == InAppWebViewView.State.Loading) {
-            webView?.loadUrl(url)
-        }
+    override fun onDestroyView() {
+        containerView.removeView(webView)
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        webView = null
+        super.onDestroy()
     }
 }
