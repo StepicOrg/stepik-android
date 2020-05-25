@@ -219,12 +219,13 @@ constructor(
             ?.getOrNull(position)
             ?.stepProgress
 
-        // Because the score field in Progress is a String, GSON parses integers in the response as floating point numbers
-        val stepScore = stepProgress
+        val assignmentProgress = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?.stepItems
+            ?.getOrNull(position)
+            ?.assignmentProgress
             ?.score
             ?.toFloatOrNull()
-            ?.toLong()
-            ?: 0L
+            ?: 0f
 
         val stepCost = stepProgress
             ?.cost
@@ -237,7 +238,7 @@ constructor(
             .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
-        view?.showLessonInfoTooltip(stepScore, stepCost, timeToComplete, -1)
+        view?.showLessonInfoTooltip(assignmentProgress, stepCost, timeToComplete, -1)
     }
 
     /**

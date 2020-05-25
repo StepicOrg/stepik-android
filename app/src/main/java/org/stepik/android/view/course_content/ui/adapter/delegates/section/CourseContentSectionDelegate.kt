@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.view_course_content_section.view.*
 import org.stepic.droid.R
 import org.stepic.droid.persistence.model.DownloadProgress
 import org.stepic.droid.ui.util.StartSnapHelper
+import org.stepic.droid.util.toFixed
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.ui.adapter.CourseContentTimelineAdapter
 import org.stepik.android.view.course_content.ui.adapter.decorators.CourseContentTimelineDecorator
@@ -87,12 +88,11 @@ class CourseContentSectionDelegate(
                     val score = progress
                         .score
                         ?.toFloatOrNull()
-                        ?.toLong()
-                        ?: 0L
+                        ?: 0f
 
                     sectionProgress.progress = score / progress.cost.toFloat()
                     sectionTextProgress.text = context.resources.getString(R.string.course_content_text_progress_points,
-                        score, progress.cost)
+                        score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), progress.cost)
                     sectionTextProgress.visibility = View.VISIBLE
                 } else {
                     sectionProgress.progress = 0f
