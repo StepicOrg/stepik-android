@@ -1,19 +1,18 @@
 package org.stepic.droid.ui.activities
 
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.PictureDrawable
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.transition.Transition
 import com.github.chrisbanes.photoview.PhotoViewAttacher
 import kotlinx.android.synthetic.main.fragment_photo_view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepik.android.view.glide.model.GlideRequestFactory
 import kotlin.math.abs
 import kotlin.math.min
 
@@ -26,11 +25,12 @@ class PhotoViewActivity : FragmentActivityBase() {
     private var screenHeight: Int = 0
     private var dismissPathLength: Int = 0
 
-    private val target = object : CustomTarget<Bitmap>() {
-        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+    private val target = object : CustomTarget<PictureDrawable>() {
+        override fun onResourceReady(resource: PictureDrawable, transition: Transition<in PictureDrawable>?) {
             internetProblemRootView.isVisible = false
-            zoomableImageView.setImageBitmap(resource)
+            zoomableImageView.setImageDrawable(resource)
             photoViewAttacher.update()
+//            Timber.d("resource ready")
         }
 
         override fun onLoadCleared(placeholder: Drawable?) {
@@ -95,11 +95,11 @@ class PhotoViewActivity : FragmentActivityBase() {
         }
 
     private fun loadImage(url: String) {
-        Glide.with(this)
-            .asBitmap()
+        GlideRequestFactory
+            .create(this, null)
             .load(url)
             .fitCenter()
-            .into<Target<Bitmap>>(target)
+            .into(target)
     }
 
     private fun setUpToolbar() {

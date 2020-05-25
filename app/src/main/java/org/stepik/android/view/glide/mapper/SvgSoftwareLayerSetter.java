@@ -1,4 +1,4 @@
-package org.stepic.droid.util.glide;
+package org.stepik.android.view.glide.mapper;
 
 
 import android.annotation.TargetApi;

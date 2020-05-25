@@ -7,7 +7,7 @@ import kotlinx.android.synthetic.main.view_achievement_tile.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import org.stepik.android.domain.achievement.model.AchievementItem
-import org.stepic.droid.ui.util.wrapWithGlide
+import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepik.android.view.achievement.ui.view.AchievementCircleProgressView
 import org.stepik.android.view.achievement.ui.view.VectorRatingBar
 

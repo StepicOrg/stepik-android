@@ -11,7 +11,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.dialog_achievement_details.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.ui.util.wrapWithGlide
+import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
 import ru.nobird.android.view.base.ui.extension.argument
