@@ -4,9 +4,11 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.presentation.course_list.model.CourseListUserType
 import javax.inject.Inject
 
 class CourseListStateMapper
@@ -15,7 +17,7 @@ constructor() {
     fun mapToLoadMoreState(courseListState: CourseListView.State.Content): CourseListView.State =
         CourseListView.State.Content(
             courseListDataItems = courseListState.courseListDataItems,
-            courseListItems = courseListState.courseListItems + CourseListItem.PlaceHolder
+            courseListItems = courseListState.courseListItems + CourseListItem.PlaceHolder()
         )
 
     fun mapFromLoadMoreToSuccess(state: CourseListView.State, items: PagedList<CourseListItem.Data>): CourseListView.State {
@@ -25,7 +27,7 @@ constructor() {
 
         return CourseListView.State.Content(
             courseListDataItems = state.courseListDataItems + items,
-            courseListItems = state.courseListItems.dropLastWhile(CourseListItem.PlaceHolder::equals) + items
+            courseListItems = state.courseListItems.dropLastWhile { it is CourseListItem.PlaceHolder } + items
         )
     }
 
@@ -35,7 +37,7 @@ constructor() {
         }
         return CourseListView.State.Content(
             courseListDataItems = state.courseListDataItems,
-            courseListItems = state.courseListItems.dropLastWhile(CourseListItem.PlaceHolder::equals)
+            courseListItems = state.courseListItems.dropLastWhile { it is CourseListItem.PlaceHolder }
         )
     }
 
@@ -60,7 +62,7 @@ constructor() {
                 state.courseListDataItems.hasPrev
             ),
             courseListItems = if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
-                courseListItems + CourseListItem.PlaceHolder
+                courseListItems + CourseListItem.PlaceHolder()
             } else {
                 courseListItems
             }
@@ -80,7 +82,7 @@ constructor() {
         }
 
         val courseListItems = if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
-            courseListDataItems + CourseListItem.PlaceHolder
+            courseListDataItems + CourseListItem.PlaceHolder()
         } else {
             courseListDataItems
         }
@@ -157,10 +159,79 @@ constructor() {
                         state.courseListDataItems.hasNext,
                         state.courseListDataItems.hasPrev
                     ),
-                    courseListItems = state.courseListItems.mutate { add(insertionIndex, courseListItemEnrolled) }
+                    courseListItems = state.courseListItems.mutate {
+                        if (this[insertionIndex] is CourseListItem.PlaceHolder) {
+                            set(insertionIndex, courseListItemEnrolled)
+                        } else {
+                            add(insertionIndex, courseListItemEnrolled)
+                        }
+                    }
                 )
             }
             else ->
                 state
         }
+
+    fun mapUserCourseOperationToState(userCourse: UserCourse, oldState: CourseListUserView.State.Data): CourseListUserView.State.Data {
+        val isUserCourseFromThisList =
+            oldState.courseListUserType == CourseListUserType.ALL && !userCourse.isArchived ||
+                    oldState.courseListUserType == CourseListUserType.FAVORITE && userCourse.isFavorite ||
+                    oldState.courseListUserType == CourseListUserType.ARCHIVED && userCourse.isArchived
+
+        val comparator = Comparator<UserCourse> { s1, s2 ->
+            val result = (s1.lastViewed?.time ?: 0).compareTo(s2.lastViewed?.time ?: 0)
+            val value = if (result == 0) {
+                s1.id.compareTo(s2.id)
+            } else {
+                result
+            }
+            -value
+        }
+
+        val index = oldState.userCourses.binarySearch(userCourse, comparator)
+
+        return if (index > 0) {
+            if (isUserCourseFromThisList) {
+                val userCourses = oldState.userCourses.mutate { set(index, userCourse) }
+                oldState.copy(
+                    userCourses = userCourses
+                )
+            } else {
+                val userCourses = oldState.userCourses.mutate { removeAt(index) }
+                val courseListViewState = mapRemoveCourseListItemState(oldState.courseListViewState, userCourse.course)
+                oldState.copy(
+                    userCourses = userCourses,
+                    courseListViewState = courseListViewState
+                )
+            }
+        } else {
+            val userCourses = oldState.userCourses.mutate { add(-(index + 1), userCourse) }
+            if (isUserCourseFromThisList) {
+                val courseListViewState = insertCourseListItemPlaceHolder(-(index + 1), userCourse.course, oldState.courseListViewState)
+                oldState.copy(
+                    userCourses = userCourses,
+                    courseListViewState = courseListViewState
+                )
+            } else {
+                oldState.copy(
+                    userCourses = userCourses
+                )
+            }
+        }
+    }
+
+    private fun insertCourseListItemPlaceHolder(insertionIndex: Int, courseId: Long, courseListViewState: CourseListView.State): CourseListView.State {
+        if (courseListViewState is CourseListView.State.Empty) {
+            CourseListView.State.Content(
+                courseListDataItems = PagedList(emptyList()),
+                courseListItems = listOf(CourseListItem.PlaceHolder(courseId = courseId))
+            )
+        }
+        if (courseListViewState !is CourseListView.State.Content) {
+            return courseListViewState
+        }
+        return courseListViewState.copy(
+            courseListItems = courseListViewState.courseListItems.mutate { add(insertionIndex, CourseListItem.PlaceHolder(courseId)) }
+        )
+    }
 }

@@ -75,7 +75,8 @@ constructor(
     init {
         subscribeForEnrollmentUpdates()
         subscribeForContinueCourseUpdates()
-        subscribeForUserCourseOperationUpdates()
+//        subscribeForUserCourseOperationUpdates()
+        subscribeForUserCourseOperationUpdatesNew()
     }
 
     init {
@@ -297,6 +298,46 @@ constructor(
                             }
                         }
                     }
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun subscribeForUserCourseOperationUpdatesNew() {
+        compositeDisposable += userCourseOperationObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { userCourse ->
+                    val oldState = state as? CourseListUserView.State.Data
+                        ?: return@subscribeBy
+                    state = courseListStateMapper.mapUserCourseOperationToState(userCourse, oldState)
+                    fetchPlaceHolders()
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun fetchPlaceHolders() {
+        val oldState = (state as? CourseListUserView.State.Data) ?: return
+
+        val oldCourseListState = (oldState.courseListViewState as? CourseListView.State.Content) ?: return
+
+        val indexOf = oldCourseListState.courseListItems.indexOfFirst { it is CourseListItem.PlaceHolder && it.courseId != -1L }
+
+        val courseId = (oldCourseListState.courseListItems[indexOf] as? CourseListItem.PlaceHolder)?.courseId ?: return
+
+        compositeDisposable += courseListUserInteractor
+            .getUserCourse(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { courseListItem ->
+                    val oldCourseUserState = state as? CourseListUserView.State.Data
+                        ?: return@subscribeBy
+                    state = oldCourseUserState.copy(
+                        courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(indexOf, oldState.courseListViewState, courseListItem)
+                    )
                 },
                 onError = emptyOnErrorStub
             )
