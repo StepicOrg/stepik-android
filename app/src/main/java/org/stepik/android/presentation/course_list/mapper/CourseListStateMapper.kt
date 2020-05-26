@@ -8,7 +8,6 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
-import org.stepik.android.presentation.course_list.model.CourseListUserType
 import javax.inject.Inject
 
 class CourseListStateMapper
@@ -174,9 +173,10 @@ constructor() {
 
     fun mapUserCourseOperationToState(userCourse: UserCourse, oldState: CourseListUserView.State.Data): CourseListUserView.State.Data {
         val isUserCourseFromThisList =
-            oldState.courseListUserType == CourseListUserType.ALL && !userCourse.isArchived ||
-                    oldState.courseListUserType == CourseListUserType.FAVORITE && userCourse.isFavorite ||
-                    oldState.courseListUserType == CourseListUserType.ARCHIVED && userCourse.isArchived
+            with(oldState.userCourseQuery) {
+                (isFavorite == null || isFavorite == userCourse.isFavorite) &&
+                        (isArchived == null || isArchived == userCourse.isArchived)
+            }
 
         val comparator = Comparator<UserCourse> { s1, s2 ->
             val result = (s1.lastViewed?.time ?: 0).compareTo(s2.lastViewed?.time ?: 0)

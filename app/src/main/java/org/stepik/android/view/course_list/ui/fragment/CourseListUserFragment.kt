@@ -25,7 +25,6 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListUserPresenter
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
-import org.stepik.android.presentation.course_list.model.CourseListUserType
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -34,14 +33,12 @@ import javax.inject.Inject
 
 class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseListUserView {
     companion object {
-        fun newInstance(courseListUserType: CourseListUserType, userCourseQuery: UserCourseQuery): Fragment =
+        fun newInstance(userCourseQuery: UserCourseQuery): Fragment =
             CourseListUserFragment().apply {
-                this.courseListUserType = courseListUserType
                 this.courseListUserQuery = userCourseQuery
             }
     }
 
-    private var courseListUserType by argument<CourseListUserType>()
     private var courseListUserQuery by argument<UserCourseQuery>()
 
     @Inject
@@ -83,10 +80,10 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
         courseListSwipeRefresh.setOnRefreshListener {
-            courseListPresenter.fetchUserCourses(courseListUserType = courseListUserType, userCourseQuery = courseListUserQuery, forceUpdate = true)
+            setDataToPresenter(forceUpdate = true)
         }
         courseListCoursesLoadingErrorVertical.tryAgain.setOnClickListener {
-            courseListPresenter.fetchUserCourses(courseListUserType = courseListUserType, userCourseQuery = courseListUserQuery, forceUpdate = true)
+            setDataToPresenter(forceUpdate = true)
         }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
@@ -121,7 +118,8 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
         wrapperViewStateDelegate.addState<CourseListUserView.State.Loading>(courseListUserSkeleton)
         wrapperViewStateDelegate.addState<CourseListUserView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
         wrapperViewStateDelegate.addState<CourseListUserView.State.Data>()
-        courseListPresenter.fetchUserCourses(courseListUserType, courseListUserQuery)
+
+        setDataToPresenter()
     }
 
     private fun injectComponent() {
@@ -129,6 +127,10 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
             .courseListUserComponentBuilder()
             .build()
             .inject(this)
+    }
+
+    private fun setDataToPresenter(forceUpdate: Boolean = false) {
+        courseListPresenter.fetchUserCourses(courseListUserQuery, forceUpdate)
     }
 
     override fun setState(state: CourseListUserView.State) {

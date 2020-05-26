@@ -3,7 +3,6 @@ package org.stepik.android.presentation.course_list
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.presentation.course_continue.CourseContinueView
-import org.stepik.android.presentation.course_list.model.CourseListUserType
 
 interface CourseListUserView : CourseContinueView {
     sealed class State {
@@ -12,7 +11,6 @@ interface CourseListUserView : CourseContinueView {
         object NetworkError : State()
         object EmptyLogin : State()
         data class Data(
-            val courseListUserType: CourseListUserType,
             val userCourseQuery: UserCourseQuery,
             val userCourses: List<UserCourse>,
             val courseListViewState: CourseListView.State

@@ -22,7 +22,6 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
-import org.stepik.android.presentation.course_list.model.CourseListUserType
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
@@ -86,7 +85,7 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchUserCourses(courseListUserType: CourseListUserType, userCourseQuery: UserCourseQuery, forceUpdate: Boolean = false) {
+    fun fetchUserCourses(userCourseQuery: UserCourseQuery, forceUpdate: Boolean = false) {
         if (state != CourseListUserView.State.Idle && !forceUpdate) return
 
         paginationDisposable.clear()
@@ -100,7 +99,6 @@ constructor(
             .subscribeBy(
                 onSuccess = {
                     state = CourseListUserView.State.Data(
-                        courseListUserType = courseListUserType,
                         userCourseQuery = userCourseQuery,
                         userCourses = it,
                         courseListViewState = CourseListView.State.Idle
@@ -164,7 +162,7 @@ constructor(
                         }
                         else -> {
                             userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
-                            state = CourseListUserView.State.Data(oldState.courseListUserType, oldState.userCourseQuery, oldState.userCourses, CourseListView.State.NetworkError)
+                            state = oldState.copy(courseListViewState = CourseListView.State.NetworkError)
                         }
                     }
                 }
