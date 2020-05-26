@@ -1,10 +1,10 @@
-package org.stepik.android.remote.course.mapper
+package org.stepik.android.remote.user_courses.mapper
 
 import org.stepic.droid.util.putNullable
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import javax.inject.Inject
 
-class UserQueryMapper
+class UserCourseQueryMapper
 @Inject
 constructor() {
     companion object {
