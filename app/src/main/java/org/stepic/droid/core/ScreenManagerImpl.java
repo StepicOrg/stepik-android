@@ -4,11 +4,9 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -92,9 +90,6 @@ import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
 import java.io.File;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -554,66 +549,6 @@ public class ScreenManagerImpl implements ScreenManager {
         String url = config.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
-    }
-
-    @Override
-    public void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId) {
-        String url =
-                config.getBaseUrl() +
-                        "/lesson/" + step.getLesson() +
-                        "/step/" + step.getPosition() +
-                        "/?from_mobile_app=true" +
-                        "&discussion=" + discussionId +
-                        "&thread=" + discussionThread.getThread()
-                ;
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
-
-    @Override
-    public void openSubmissionInWeb(Context context, long stepId, long submissionId) {
-        String url =
-                config.getBaseUrl() +
-                        "/submissions/" + stepId +
-                        "/" + submissionId +
-                        "/?from_mobile_app=true"
-                ;
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
-
-    @Override
-    public void openSyllabusInWeb(Context context, long courseId) {
-        openCourseTabInWeb(context, courseId, CourseScreenTab.SYLLABUS, null);
-    }
-
-    @Override
-    public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
-        openCourseTabInWeb(context, courseId, CourseScreenTab.PAY, queryParams);
-    }
-
-    private void openCourseTabInWeb(Context context, long courseId, @NotNull CourseScreenTab tab, @Nullable Map<String, List<String>> queryParams) {
-        final Uri uri = courseDeepLinkBuilder.createCourseLink(courseId, tab, queryParams);
-        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
-
-        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
-        final ArrayList<Intent> activityIntents = new ArrayList<>();
-
-        for (final ResolveInfo resolveInfo : resolveInfoList) {
-            final String packageName = resolveInfo.activityInfo.packageName;
-            if (!packageName.startsWith("org.stepic.droid") && !packageName.startsWith("org.stepik.android")) {
-                final Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
-                newIntent.setPackage(packageName);
-                activityIntents.add(newIntent);
-            }
-        }
-
-        if (!activityIntents.isEmpty()) {
-            final Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), context.getString(R.string.course_purchase_link_chooser_title));
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, activityIntents.toArray(new Parcelable[] {}));
-
-            context.startActivity(chooserIntent);
-        }
     }
 
     @Override

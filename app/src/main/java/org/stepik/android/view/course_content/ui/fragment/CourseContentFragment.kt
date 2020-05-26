@@ -50,6 +50,7 @@ import org.stepik.android.model.Unit
 import org.stepik.android.presentation.course_calendar.model.CalendarError
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course_calendar.ui.ChooseCalendarDialog
 import org.stepik.android.view.course_calendar.ui.ExplainCalendarPermissionDialog
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -89,6 +90,9 @@ class CourseContentFragment :
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var courseDeepLinkBuilder: CourseDeepLinkBuilder
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -138,7 +142,7 @@ class CourseContentFragment :
             contentAdapter =
                 CourseContentAdapter(
                     sectionClickListener =
-                        CourseContentSectionClickListenerImpl(context, courseContentPresenter, screenManager, childFragmentManager, analytic),
+                        CourseContentSectionClickListenerImpl(courseContentPresenter, courseDeepLinkBuilder, childFragmentManager, analytic),
                     unitClickListener =
                         CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager, childFragmentManager, analytic),
                     controlBarClickListener = object : CourseContentControlBarClickListener {

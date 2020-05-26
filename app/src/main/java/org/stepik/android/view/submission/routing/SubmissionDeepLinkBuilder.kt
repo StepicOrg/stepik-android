@@ -1,21 +1,19 @@
-package org.stepik.android.view.course.routing
+package org.stepik.android.view.submission.routing
 
 import android.net.Uri
 import org.stepic.droid.configuration.Config
-import org.stepic.droid.util.appendQueryParameters
 import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor
 import javax.inject.Inject
 
-class CourseDeepLinkBuilder
+class SubmissionDeepLinkBuilder
 @Inject
 constructor(
     private val config: Config,
     private val externalDeepLinkProcessor: ExternalDeepLinkProcessor
 ) {
-    fun createCourseLink(courseId: Long, tab: CourseScreenTab, queryParams: Map<String, List<String>>? = null): String =
-        Uri.parse("${config.baseUrl}/$COURSE_PATH_SEGMENT/$courseId/${tab.path}")
+    fun createSubmissionLink(stepId: Long, submissionId: Long): String =
+        Uri.parse("${config.baseUrl}/submissions/$stepId/$submissionId")
             .buildUpon()
-            .appendQueryParameters(queryParams ?: emptyMap())
             .let(externalDeepLinkProcessor::processExternalDeepLink)
             .build()
             .toString()
