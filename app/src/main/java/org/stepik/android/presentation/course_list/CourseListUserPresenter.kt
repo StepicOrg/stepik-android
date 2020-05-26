@@ -12,7 +12,6 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.mapToLongArray
-import org.stepic.droid.util.mutate
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -75,8 +74,7 @@ constructor(
     init {
         subscribeForEnrollmentUpdates()
         subscribeForContinueCourseUpdates()
-//        subscribeForUserCourseOperationUpdates()
-        subscribeForUserCourseOperationUpdatesNew()
+        subscribeForUserCourseOperationUpdates()
     }
 
     init {
@@ -252,65 +250,6 @@ constructor(
                 onNext = { userCourse ->
                     val oldState = state as? CourseListUserView.State.Data
                         ?: return@subscribeBy
-
-                    val isUserCourseFromThisList =
-                        oldState.courseListUserType == CourseListUserType.ALL && !userCourse.isArchived ||
-                            oldState.courseListUserType == CourseListUserType.FAVORITE && userCourse.isFavorite ||
-                            oldState.courseListUserType == CourseListUserType.ARCHIVED && userCourse.isArchived
-
-                    val comparator = Comparator<UserCourse> { s1, s2 ->
-                        val result = (s1.lastViewed?.time ?: 0).compareTo(s2.lastViewed?.time ?: 0)
-                        val value = if (result == 0) {
-                            s1.id.compareTo(s2.id)
-                        } else {
-                            result
-                        }
-                        -value
-                    }
-
-                    val index = oldState.userCourses.binarySearch(userCourse, comparator)
-
-                    // TODO Transfer to mapper
-                    if (index > 0) {
-                        if (isUserCourseFromThisList) {
-                            val userCoursesUpdated = oldState.userCourses.mutate { set(index, userCourse) }
-                            state = oldState.copy(
-                                userCourses = userCoursesUpdated
-                            )
-                        } else {
-                            val updated = oldState.userCourses.mutate { removeAt(index) }
-                            val courseListViewState = courseListStateMapper.mapRemoveCourseListItemState(oldState.courseListViewState, userCourse.course)
-                            state = oldState.copy(
-                                userCourses = updated,
-                                courseListViewState = courseListViewState
-                            )
-                        }
-                    } else {
-                        if (isUserCourseFromThisList) {
-                            val updated = oldState.userCourses.mutate { add(-(index + 1), userCourse) }
-                            val needFetch = needFetch(userCourse.course, -(index + 1), oldState.courseListViewState)
-                            if (needFetch) {
-                                fetchUserCourseOperationItem(-(index + 1), userCourse, updated)
-                            } else {
-                                state = oldState.copy(
-                                    userCourses = updated
-                                )
-                            }
-                        }
-                    }
-                },
-                onError = emptyOnErrorStub
-            )
-    }
-
-    private fun subscribeForUserCourseOperationUpdatesNew() {
-        compositeDisposable += userCourseOperationObservable
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onNext = { userCourse ->
-                    val oldState = state as? CourseListUserView.State.Data
-                        ?: return@subscribeBy
                     state = courseListStateMapper.mapUserCourseOperationToState(userCourse, oldState)
                     fetchPlaceHolders()
                 },
@@ -337,35 +276,6 @@ constructor(
                         ?: return@subscribeBy
                     state = oldCourseUserState.copy(
                         courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(indexOf, oldState.courseListViewState, courseListItem)
-                    )
-                },
-                onError = emptyOnErrorStub
-            )
-    }
-
-    private fun needFetch(courseId: Long, insertionIndex: Int, courseListViewState: CourseListView.State): Boolean {
-        if (courseListViewState is CourseListView.State.Empty) {
-            return true
-        }
-        val state = (courseListViewState as? CourseListView.State.Content) ?: return false
-
-        val indexOf = state.courseListDataItems.indexOfFirst { it.course.id == courseId }
-
-        return indexOf <= 0 && insertionIndex < state.courseListDataItems.size
-    }
-
-    private fun fetchUserCourseOperationItem(insertionIndex: Int, userCourse: UserCourse, updatedUserCourses: List<UserCourse>) {
-        compositeDisposable += courseListUserInteractor
-            .getUserCourse(userCourse.course)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { courseListItem ->
-                    val oldState = state as? CourseListUserView.State.Data
-                        ?: return@subscribeBy
-                    state = oldState.copy(
-                        userCourses = updatedUserCourses,
-                        courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(insertionIndex, oldState.courseListViewState, courseListItem)
                     )
                 },
                 onError = emptyOnErrorStub
