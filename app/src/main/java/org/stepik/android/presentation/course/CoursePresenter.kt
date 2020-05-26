@@ -7,7 +7,6 @@ import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
@@ -24,6 +23,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
+import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.model.Course
@@ -57,6 +57,7 @@ constructor(
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
     private val solutionsInteractor: SolutionsInteractor,
+    private val userCoursesInteractor: UserCoursesInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
 
@@ -70,7 +71,7 @@ constructor(
     private val solutionsSentObservable: Observable<Unit>,
 
     @UserCoursesOperationBus
-    private val userCoursesOperationPublisher: PublishSubject<UserCourse>,
+    private val userCourseOperationObservable: Observable<UserCourse>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -99,6 +100,7 @@ constructor(
         compositeDisposable += userCourseDisposable
         subscriberForEnrollmentUpdates()
         subscribeForLocalSubmissionsUpdates()
+        subscribeForUserCoursesUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -420,23 +422,12 @@ constructor(
     private fun saveUserCourse(preparedCourseHeaderData: CourseHeaderData, userCourse: UserCourse, userCourseAction: UserCourseAction) {
         state = CourseView.State.CourseLoaded(preparedCourseHeaderData)
 
-        userCourseDisposable += courseInteractor
+        userCourseDisposable += userCoursesInteractor
             .saveUserCourse(userCourse = userCourse)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = {
-                    val oldState = (state as? CourseView.State.CourseLoaded)
-                        ?: return@subscribeBy
-
-                    val courseHeaderData = oldState
-                        .courseHeaderData
-                        .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it, isSending = false))
-
-                    state = CourseView.State.CourseLoaded(courseHeaderData)
-                    userCoursesOperationPublisher.onNext(it)
-                    view?.showSaveUserCourseSuccess(userCourseAction)
-                },
+                onSuccess = { view?.showSaveUserCourseSuccess(userCourseAction) },
                 onError = {
                     val oldState = (state as? CourseView.State.CourseLoaded)
                         ?: return@subscribeBy
@@ -451,6 +442,25 @@ constructor(
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                     view?.showSaveUserCourseError(userCourseAction)
                 }
+            )
+    }
+
+    private fun subscribeForUserCoursesUpdates() {
+        compositeDisposable += userCourseOperationObservable
+            .filter { it.course == courseId }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { userCourse ->
+                    val courseHeaderData = (state as? CourseView.State.CourseLoaded)
+                        ?.courseHeaderData
+                        ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
+                        ?: return@subscribeBy
+
+                    state =
+                        CourseView.State.CourseLoaded(courseHeaderData.copy(userCourseHeader = UserCourseHeader.Data(userCourse, isSending = false)))
+                },
+                onError = emptyOnErrorStub
             )
     }
 
