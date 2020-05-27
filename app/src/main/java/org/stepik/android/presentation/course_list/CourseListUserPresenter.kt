@@ -148,9 +148,7 @@ constructor(
                         )
                     } else {
                         userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
-                        (state as CourseListUserView.State.Data).copy(
-                            courseListViewState = CourseListView.State.Empty
-                        )
+                        oldState.copy(courseListViewState = CourseListView.State.Empty)
                     }
                     synchronizeDeadlines()
                 },
@@ -230,7 +228,6 @@ constructor(
             .subscribeBy(
                 onNext = { enrollmentCourseUpdate ->
                     if (enrollmentCourseUpdate.enrollment == 0L) {
-                        analytic.reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, enrollmentCourseUpdate.id.toString())
                         removeDroppedCourse(enrollmentCourseUpdate.id)
                     } else {
                         fetchEnrolledCourse(enrollmentCourseUpdate.id)
