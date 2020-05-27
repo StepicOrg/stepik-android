@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
@@ -52,6 +53,7 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView,
@@ -116,6 +118,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             } else {
                 overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
             }
+
+            // handle wrong deeplink interceptions
+            intent.data?.let { uri -> screenManager.redirectToWebBrowserIfNeeded(this, uri) }
         }
 
         injectComponent()

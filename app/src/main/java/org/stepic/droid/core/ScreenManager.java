@@ -3,6 +3,7 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -101,6 +102,15 @@ public interface ScreenManager {
     Intent getCertificateIntent();
 
     Intent getOpenInWebIntent(String path);
+
+    /**
+     * Redirects to external web browser in case if app intercepts wrong deeplink (if uri contains `from_mobile_app=true` query param)
+     * @param context - activity context
+     * @param uri - Intent::data
+     */
+    void redirectToWebBrowserIfNeeded(@NotNull Context context, @NotNull Uri uri);
+
+    void openLinkInWebBrowser(@NotNull Context context, @NotNull Uri uri);
 
     void openProfile(@NonNull Context context, long userId);
 

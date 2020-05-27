@@ -623,7 +623,7 @@
     <string name="course_purchase_billing_no_purchases_to_restore">У вас нет неактивированных покупок этого курса</string>
     <string name="course_purchase_already_owned">Вы уже владеете этим курсом</string>
 
-    <string name="course_purchase_link_chooser_title">Открыть в</string>
+    <string name="routing_external_app_chooser_title">Открыть в</string>
 
     <string name="course_action_archive_add">Переместить в архив</string>
     <string name="course_action_archive_add_success">Курс успешно перенесён в архив</string>

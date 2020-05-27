@@ -653,7 +653,7 @@
     <string name="course_purchase_billing_no_purchases_to_restore">You don\'t have purchases of this course that can be restored</string>
     <string name="course_purchase_already_owned">You\'ve already purchased this course</string>
 
-    <string name="course_purchase_link_chooser_title">Open with</string>
+    <string name="routing_external_app_chooser_title">Open with</string>
 
     <string name="course_action_archive_add">Move to Archived</string>
     <string name="course_action_archive_remove">Remove from Archived</string>

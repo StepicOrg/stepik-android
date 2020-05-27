@@ -149,6 +149,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         if (savedInstanceState == null && deepLinkCourseId != null) {
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_COURSE_DETAIL_LINK, deepLinkCourseId.toString())
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL)
+
+            // handle wrong deeplink interceptions
+            intent.data?.let { uri -> screenManager.redirectToWebBrowserIfNeeded(this, uri) }
         }
 
         if (course != null) {

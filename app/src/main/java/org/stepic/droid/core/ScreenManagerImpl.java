@@ -4,9 +4,11 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -66,9 +68,9 @@ import org.stepik.android.view.auth.model.AutoAuth;
 import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity;
 import org.stepik.android.view.auth.ui.activity.RegistrationActivity;
 import org.stepik.android.view.auth.ui.activity.SocialAuthActivity;
+import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
-import org.stepik.android.view.course.routing.CourseDeepLinkBuilder;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity;
@@ -90,6 +92,8 @@ import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -101,21 +105,18 @@ public class ScreenManagerImpl implements ScreenManager {
     private final UserPreferences userPreferences;
     private final Analytic analytic;
     private final Set<BranchDeepLinkRouter> deepLinkRouters;
-    private final CourseDeepLinkBuilder courseDeepLinkBuilder;
 
     @Inject
     public ScreenManagerImpl(Config config,
                              UserPreferences userPreferences,
                              Analytic analytic,
                              SharedPreferenceHelper sharedPreferences,
-                             Set<BranchDeepLinkRouter> deepLinkRouters,
-                             CourseDeepLinkBuilder courseDeepLinkBuilder) {
+                             Set<BranchDeepLinkRouter> deepLinkRouters) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.sharedPreferences = sharedPreferences;
         this.deepLinkRouters = deepLinkRouters;
-        this.courseDeepLinkBuilder = courseDeepLinkBuilder;
     }
 
     @Override
@@ -402,6 +403,38 @@ public class ScreenManagerImpl implements ScreenManager {
         final Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(path));
         return intent;
+    }
+
+    @Override
+    public void redirectToWebBrowserIfNeeded(@NotNull Context context, @NotNull Uri uri) {
+        if (uri.getBooleanQueryParameter(ExternalDeepLinkProcessor.PARAM_FROM_MOBILE_APP, false)) {
+            openLinkInWebBrowser(context, uri);
+        }
+    }
+
+    @Override
+    public void openLinkInWebBrowser(@NotNull Context context, @NotNull Uri uri) {
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
+
+        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
+        final ArrayList<Intent> activityIntents = new ArrayList<>();
+
+        final String appPackageName = context.getApplicationContext().getPackageName();
+        for (final ResolveInfo resolveInfo : resolveInfoList) {
+            final String packageName = resolveInfo.activityInfo.packageName;
+            if (!packageName.equals(appPackageName)) {
+                final Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
+                newIntent.setPackage(packageName);
+                activityIntents.add(newIntent);
+            }
+        }
+
+        if (!activityIntents.isEmpty()) {
+            final Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), context.getString(R.string.routing_external_app_chooser_title));
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, activityIntents.toArray(new Parcelable[] {}));
+
+            context.startActivity(chooserIntent);
+        }
     }
 
     @Override
