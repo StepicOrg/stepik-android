@@ -1,5 +1,6 @@
 package org.stepik.android.view.step_quiz.ui.delegate
 
+import android.os.Build
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.isVisible
@@ -78,7 +79,9 @@ class StepQuizDelegate(
             stepRetryButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 width = ViewGroup.LayoutParams.MATCH_PARENT
                 updateMargins(right = 0)
-                updateMarginsRelative(end = 0)
+                if (Build.VERSION.SDK_INT >= 17) {
+                    updateMarginsRelative(end = 0)
+                }
             }
         } else {
             stepQuizActionButton.isVisible = true
@@ -89,7 +92,9 @@ class StepQuizDelegate(
             stepRetryButton.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 width = context.resources.getDimensionPixelOffset(R.dimen.step_submit_button_height)
                 updateMargins(right = 16.toPx())
-                updateMarginsRelative(end = 16.toPx())
+                if (Build.VERSION.SDK_INT >= 17) {
+                    updateMarginsRelative(end = 16.toPx())
+                }
             }
         }
 

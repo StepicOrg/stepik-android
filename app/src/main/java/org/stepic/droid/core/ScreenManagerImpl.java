@@ -68,9 +68,9 @@ import org.stepik.android.view.auth.model.AutoAuth;
 import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity;
 import org.stepik.android.view.auth.ui.activity.RegistrationActivity;
 import org.stepik.android.view.auth.ui.activity.SocialAuthActivity;
+import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
-import org.stepik.android.view.course.routing.CourseDeepLinkBuilder;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity;
@@ -94,7 +94,6 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -106,21 +105,18 @@ public class ScreenManagerImpl implements ScreenManager {
     private final UserPreferences userPreferences;
     private final Analytic analytic;
     private final Set<BranchDeepLinkRouter> deepLinkRouters;
-    private final CourseDeepLinkBuilder courseDeepLinkBuilder;
 
     @Inject
     public ScreenManagerImpl(Config config,
                              UserPreferences userPreferences,
                              Analytic analytic,
                              SharedPreferenceHelper sharedPreferences,
-                             Set<BranchDeepLinkRouter> deepLinkRouters,
-                             CourseDeepLinkBuilder courseDeepLinkBuilder) {
+                             Set<BranchDeepLinkRouter> deepLinkRouters) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
         this.sharedPreferences = sharedPreferences;
         this.deepLinkRouters = deepLinkRouters;
-        this.courseDeepLinkBuilder = courseDeepLinkBuilder;
     }
 
     @Override
@@ -410,6 +406,38 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void redirectToWebBrowserIfNeeded(@NotNull Context context, @NotNull Uri uri) {
+        if (uri.getBooleanQueryParameter(ExternalDeepLinkProcessor.PARAM_FROM_MOBILE_APP, false)) {
+            openLinkInWebBrowser(context, uri);
+        }
+    }
+
+    @Override
+    public void openLinkInWebBrowser(@NotNull Context context, @NotNull Uri uri) {
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
+
+        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
+        final ArrayList<Intent> activityIntents = new ArrayList<>();
+
+        final String appPackageName = context.getApplicationContext().getPackageName();
+        for (final ResolveInfo resolveInfo : resolveInfoList) {
+            final String packageName = resolveInfo.activityInfo.packageName;
+            if (!packageName.equals(appPackageName)) {
+                final Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
+                newIntent.setPackage(packageName);
+                activityIntents.add(newIntent);
+            }
+        }
+
+        if (!activityIntents.isEmpty()) {
+            final Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), context.getString(R.string.routing_external_app_chooser_title));
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, activityIntents.toArray(new Parcelable[] {}));
+
+            context.startActivity(chooserIntent);
+        }
+    }
+
+    @Override
     public void openProfile(@NonNull Context context, long userId) {
         context.startActivity(ProfileActivity.Companion.createIntent(context, userId));
     }
@@ -554,66 +582,6 @@ public class ScreenManagerImpl implements ScreenManager {
         String url = config.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";
         final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
         context.startActivity(intent);
-    }
-
-    @Override
-    public void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId) {
-        String url =
-                config.getBaseUrl() +
-                        "/lesson/" + step.getLesson() +
-                        "/step/" + step.getPosition() +
-                        "/?from_mobile_app=true" +
-                        "&discussion=" + discussionId +
-                        "&thread=" + discussionThread.getThread()
-                ;
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
-
-    @Override
-    public void openSubmissionInWeb(Context context, long stepId, long submissionId) {
-        String url =
-                config.getBaseUrl() +
-                        "/submissions/" + stepId +
-                        "/" + submissionId +
-                        "/?from_mobile_app=true"
-                ;
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
-
-    @Override
-    public void openSyllabusInWeb(Context context, long courseId) {
-        openCourseTabInWeb(context, courseId, CourseScreenTab.SYLLABUS, null);
-    }
-
-    @Override
-    public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
-        openCourseTabInWeb(context, courseId, CourseScreenTab.PAY, queryParams);
-    }
-
-    private void openCourseTabInWeb(Context context, long courseId, @NotNull CourseScreenTab tab, @Nullable Map<String, List<String>> queryParams) {
-        final Uri uri = courseDeepLinkBuilder.createCourseLink(courseId, tab, queryParams);
-        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
-
-        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
-        final ArrayList<Intent> activityIntents = new ArrayList<>();
-
-        for (final ResolveInfo resolveInfo : resolveInfoList) {
-            final String packageName = resolveInfo.activityInfo.packageName;
-            if (!packageName.startsWith("org.stepic.droid") && !packageName.startsWith("org.stepik.android")) {
-                final Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
-                newIntent.setPackage(packageName);
-                activityIntents.add(newIntent);
-            }
-        }
-
-        if (!activityIntents.isEmpty()) {
-            final Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), context.getString(R.string.course_purchase_link_chooser_title));
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, activityIntents.toArray(new Parcelable[] {}));
-
-            context.startActivity(chooserIntent);
-        }
     }
 
     @Override

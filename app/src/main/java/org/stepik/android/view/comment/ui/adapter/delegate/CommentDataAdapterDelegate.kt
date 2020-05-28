@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.layout_comment_actions.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.wrapWithGlide
+import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.UserRole

@@ -3,6 +3,7 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,10 +67,6 @@ public interface ScreenManager {
 
     void openStepInWeb(Context context, Step step);
 
-    void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId);
-
-    void openSubmissionInWeb(Context context, long stepId, long submissionId);
-
     void openRemindPassword(AppCompatActivity context);
 
     void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource);
@@ -102,13 +99,18 @@ public interface ScreenManager {
 
     void showCertificates(Context context, long userId);
 
-    void openSyllabusInWeb(Context context, long courseId);
-
-    void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams);
-
     Intent getCertificateIntent();
 
     Intent getOpenInWebIntent(String path);
+
+    /**
+     * Redirects to external web browser in case if app intercepts wrong deeplink (if uri contains `from_mobile_app=true` query param)
+     * @param context - activity context
+     * @param uri - Intent::data
+     */
+    void redirectToWebBrowserIfNeeded(@NotNull Context context, @NotNull Uri uri);
+
+    void openLinkInWebBrowser(@NotNull Context context, @NotNull Uri uri);
 
     void openProfile(@NonNull Context context, long userId);
 

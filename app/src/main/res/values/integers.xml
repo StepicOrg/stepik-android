@@ -18,4 +18,5 @@
     <integer name="achievements_to_display">3</integer>
 
     <integer name="highlighted_element_elevation">2</integer>
+    <integer name="score_decimal_count">2</integer>
 </resources>

@@ -40,11 +40,14 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
+import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
@@ -82,6 +85,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     internal lateinit var stepTypeResolver: StepTypeResolver
 
     @Inject
+    internal lateinit var courseDeepLinkBuilder: CourseDeepLinkBuilder
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var lessonPresenter: LessonPresenter
@@ -110,6 +116,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             } else {
                 overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
             }
+
+            // handle wrong deeplink interceptions
+            intent.data?.let { uri -> screenManager.redirectToWebBrowserIfNeeded(this, uri) }
         }
 
         injectComponent()
@@ -249,7 +258,14 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     }
                 } else {
                     if (state.stepsState is LessonView.StepsState.Exam) {
-                        errorLessonIsExamAction.setOnClickListener { screenManager.openSyllabusInWeb(this, state.stepsState.courseId) }
+                        errorLessonIsExamAction.setOnClickListener {
+                            val url = courseDeepLinkBuilder
+                                .createCourseLink(state.stepsState.courseId, CourseScreenTab.SYLLABUS)
+
+                            MagicLinkDialogFragment
+                                .newInstance(url)
+                                .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
+                        }
                     }
                     stepsAdapter.items = emptyList()
                 }
@@ -281,7 +297,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         lessonPresenter.onStepOpened(position)
     }
 
-    override fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
+    override fun showLessonInfoTooltip(stepScore: Float, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
         lessonInfoTooltipDelegate
             .showLessonInfoTooltip(stepScore, stepCost, lessonTimeToComplete, certificateThreshold)
     }

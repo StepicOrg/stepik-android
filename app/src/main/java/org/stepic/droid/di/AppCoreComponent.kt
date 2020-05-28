@@ -45,7 +45,7 @@ import org.stepic.droid.ui.dialogs.VideoQualityDialog
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.dialogs.WantMoveDataDialog
 import org.stepic.droid.ui.fragments.StoreManagementFragment
-import org.stepic.droid.util.glide.GlideCustomModule
+import org.stepik.android.view.injection.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
@@ -74,6 +74,7 @@ import org.stepik.android.view.injection.filter.FilterComponent
 import org.stepik.android.view.injection.font_size_settings.FontSizeComponent
 import org.stepik.android.view.injection.in_app_web_view.InAppWebViewComponent
 import org.stepik.android.view.injection.lesson.LessonComponent
+import org.stepik.android.view.injection.magic_links.MagicLinksComponent
 import org.stepik.android.view.injection.network.NetworkDataModule
 import org.stepik.android.view.injection.network.NetworkModule
 import org.stepik.android.view.injection.notification.NotificationDataModule
@@ -227,6 +228,8 @@ interface AppCoreComponent {
     fun courseListUserComponentBuilder(): CourseListUserComponent.Builder
 
     fun inAppWebViewComponentBuilder(): InAppWebViewComponent.Builder
+
+    fun magicLinksComponentBuilder(): MagicLinksComponent.Builder
 
     fun inject(someActivity: FragmentActivityBase)
 
