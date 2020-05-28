@@ -127,6 +127,7 @@ dependencies {
     implementation libraries.cardView
     implementation libraries.constraintLayout
     implementation libraries.material
+    implementation libraries.flexbox
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel
