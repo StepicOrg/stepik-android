@@ -45,6 +45,7 @@ import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
 import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -148,6 +149,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         if (savedInstanceState == null && deepLinkCourseId != null) {
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_COURSE_DETAIL_LINK, deepLinkCourseId.toString())
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL)
+
+            // handle wrong deeplink interceptions
+            intent.data?.let { uri -> screenManager.redirectToWebBrowserIfNeeded(this, uri) }
         }
 
         if (course != null) {
@@ -427,13 +431,15 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 //        uiCheckout
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
+        val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams)
         if (coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
-            val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams).toString()
             InAppWebViewDialogFragment
-                .newInstance(getString(R.string.course_purchase), url)
+                .newInstance(getString(R.string.course_purchase), url, isProvideAuth = true)
                 .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
         } else {
-            screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
+            MagicLinkDialogFragment
+                .newInstance(url)
+                .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
         }
     }
 

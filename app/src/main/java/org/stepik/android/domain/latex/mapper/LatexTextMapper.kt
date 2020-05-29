@@ -1,8 +1,12 @@
 package org.stepik.android.domain.latex.mapper
 
+import android.text.style.URLSpan
 import androidx.core.text.HtmlCompat
+import androidx.core.text.getSpans
+import androidx.core.text.toSpannable
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.util.resolvers.text.OlLiTagHandler
+import org.stepik.android.domain.base.InternalDeeplinkURLSpan
 import org.stepik.android.domain.latex.model.block.ContentBlock
 import org.stepik.android.domain.latex.model.block.HighlightScriptBlock
 import org.stepik.android.domain.latex.model.block.HorizontalScrollBlock
@@ -51,7 +55,21 @@ constructor(
         val primary = primaryBlocks.filter { it.isEnabled(content) }
 
         return if (primary.isEmpty()) {
-            LatexData.Text(HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY, null, tagHandler).trimEnd(Char::isWhitespace))
+            val spanned = HtmlCompat
+                .fromHtml(content, HtmlCompat.FROM_HTML_MODE_LEGACY, null, tagHandler)
+                .trimEnd(Char::isWhitespace)
+                .toSpannable()
+
+            for (span in spanned.getSpans<URLSpan>()) {
+                val start = spanned.getSpanStart(span)
+                val end = spanned.getSpanEnd(span)
+                val flags = spanned.getSpanFlags(span)
+
+                spanned.removeSpan(span)
+                spanned.setSpan(InternalDeeplinkURLSpan(span.url), start, end, flags)
+            }
+
+            LatexData.Text(spanned)
         } else {
             val blocks = primary + regularBlocks.filter { it.isEnabled(content) }
 

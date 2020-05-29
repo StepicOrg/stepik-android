@@ -28,6 +28,8 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -39,7 +41,9 @@ import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFo
 import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_sql.ui.delegate.SqlStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
+import org.stepik.android.view.submission.routing.SubmissionDeepLinkBuilder
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class SolutionCommentDialogFragment : DialogFragment() {
@@ -65,6 +69,12 @@ class SolutionCommentDialogFragment : DialogFragment() {
 
     @Inject
     lateinit var screenManager: ScreenManager
+
+    @Inject
+    lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
+
+    @Inject
+    lateinit var submissionDeepLinkBuilder: SubmissionDeepLinkBuilder
 
     private var step: Step by argument()
     private var attempt: Attempt by argument()
@@ -152,11 +162,16 @@ class SolutionCommentDialogFragment : DialogFragment() {
         } else {
             stepQuizAction.setOnClickListener {
                 val discussionThread = this.discussionThread
-                if (discussionThread != null) {
-                    screenManager.openDiscussionInWeb(context, step, discussionThread, discussionId)
-                } else {
-                    screenManager.openSubmissionInWeb(context, step.id, submission.id)
-                }
+                val url =
+                    if (discussionThread != null) {
+                        stepDeepLinkBuilder.createStepLink(step, discussionThread, discussionId)
+                    } else {
+                        submissionDeepLinkBuilder.createSubmissionLink(step.id, submission.id)
+                    }
+
+                MagicLinkDialogFragment
+                    .newInstance(url)
+                    .showIfNotExists(childFragmentManager, MagicLinkDialogFragment.TAG)
             }
             stepQuizAction.setText(R.string.step_quiz_unsupported_solution_action)
             stepQuizAction.updateLayoutParams<ViewGroup.MarginLayoutParams> {

@@ -6,7 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import kotlinx.android.synthetic.main.view_course_info_instructor_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.wrapWithGlide
+import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepik.android.model.user.User
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder

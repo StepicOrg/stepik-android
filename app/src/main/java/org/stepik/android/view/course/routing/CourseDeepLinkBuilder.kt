@@ -12,10 +12,11 @@ constructor(
     private val config: Config,
     private val externalDeepLinkProcessor: ExternalDeepLinkProcessor
 ) {
-    fun createCourseLink(courseId: Long, tab: CourseScreenTab, queryParams: Map<String, List<String>>?): Uri =
+    fun createCourseLink(courseId: Long, tab: CourseScreenTab, queryParams: Map<String, List<String>>? = null): String =
         Uri.parse("${config.baseUrl}/$COURSE_PATH_SEGMENT/$courseId/${tab.path}")
             .buildUpon()
             .appendQueryParameters(queryParams ?: emptyMap())
             .let(externalDeepLinkProcessor::processExternalDeepLink)
             .build()
+            .toString()
 }

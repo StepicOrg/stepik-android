@@ -1,4 +1,4 @@
-package org.stepic.droid.util.glide;
+package org.stepik.android.view.glide.mapper;
 
 import com.bumptech.glide.load.Options;
 import com.bumptech.glide.load.model.GlideUrl;

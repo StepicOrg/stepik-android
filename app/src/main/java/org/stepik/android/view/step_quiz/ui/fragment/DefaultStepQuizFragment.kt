@@ -18,14 +18,18 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
+import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
@@ -34,6 +38,9 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
 
     @Inject
     internal lateinit var stepWrapper: StepPersistentWrapper
@@ -94,7 +101,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
                     StepQuizFeedbackBlocksDelegate(
                         stepQuizFeedbackBlocks,
                         stepWrapper.step.actions?.doReview != null
-                    ) { screenManager.openStepInWeb(requireContext(), stepWrapper.step) },
+                    ) { openStepInWeb(stepWrapper.step) },
                 stepQuizActionButton = stepQuizAction,
                 stepRetryButton = stepQuizRetry,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
@@ -130,5 +137,11 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
 
     override fun showNetworkError() {
         view?.snackbar(messageRes = R.string.no_connection)
+    }
+
+    private fun openStepInWeb(step: Step) {
+        MagicLinkDialogFragment
+            .newInstance(stepDeepLinkBuilder.createStepLink(step))
+            .showIfNotExists(childFragmentManager, MagicLinkDialogFragment.TAG)
     }
 }
