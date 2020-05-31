@@ -25,15 +25,6 @@ class CoursePropertiesDelegate(
     private val courseRatingImage = view.courseRatingImage
     private val courseRatingText = view.courseRatingText
 
-    fun setTextColor(@ColorInt color: Int) {
-        learnersCountText.setTextColor(color)
-        learnersCountImage.setColorFilter(color)
-        courseRatingText.setTextColor(color)
-        courseRatingImage.setColorFilter(color)
-        courseItemProgress.backgroundPaintColor = color
-        courseItemProgressTitle.setTextColor(color)
-    }
-
     fun setStats(courseListItem: CourseListItem.Data) {
         setLearnersCount(courseListItem.course.learnersCount)
         setProgress(courseListItem.courseStats)
