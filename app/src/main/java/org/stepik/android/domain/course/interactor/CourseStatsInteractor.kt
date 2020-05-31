@@ -47,9 +47,12 @@ constructor(
             }
         }
 
+    /**
+     * Load course reviews for not enrolled [courses]
+     */
     private fun resolveCourseReview(courses: List<Course>): Single<List<CourseReviewSummary>> =
         courseReviewRepository
-            .getCourseReviewSummaries(courseReviewSummaryIds = *courses.mapToLongArray { it.reviewSummary }, sourceType = DataSourceType.REMOTE)
+            .getCourseReviewSummaries(courseReviewSummaryIds = *courses.filter { it.enrollment == 0L }.mapToLongArray { it.reviewSummary }, sourceType = DataSourceType.REMOTE)
             .onErrorReturnItem(emptyList())
 
     private fun resolveCourseProgress(courses: List<Course>): Single<List<Progress>> =
