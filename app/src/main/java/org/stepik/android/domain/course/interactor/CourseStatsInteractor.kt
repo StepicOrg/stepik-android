@@ -26,10 +26,10 @@ constructor(
     private val progressRepository: ProgressRepository
 ) {
 
-    fun getCourseStats(courses: List<Course>, resolveEnrollmentState: Boolean = true): Single<List<CourseStats>> =
+    fun getCourseStats(courses: List<Course>, sourceType: DataSourceType = DataSourceType.REMOTE, resolveEnrollmentState: Boolean = true): Single<List<CourseStats>> =
         zip(
-            resolveCourseReview(courses),
-            resolveCourseProgress(courses),
+            resolveCourseReview(courses, sourceType),
+            resolveCourseProgress(courses, sourceType),
             resolveCoursesEnrollmentStates(courses, resolveEnrollmentState)
         ) { courseReviews, courseProgresses, enrollmentStates ->
             val reviewsMap = courseReviews.associateBy(CourseReviewSummary::course)
@@ -50,14 +50,14 @@ constructor(
     /**
      * Load course reviews for not enrolled [courses]
      */
-    private fun resolveCourseReview(courses: List<Course>): Single<List<CourseReviewSummary>> =
+    private fun resolveCourseReview(courses: List<Course>, sourceType: DataSourceType): Single<List<CourseReviewSummary>> =
         courseReviewRepository
-            .getCourseReviewSummaries(courseReviewSummaryIds = *courses.filter { it.enrollment == 0L }.mapToLongArray { it.reviewSummary }, sourceType = DataSourceType.REMOTE)
+            .getCourseReviewSummaries(courseReviewSummaryIds = *courses.filter { it.enrollment == 0L }.mapToLongArray { it.reviewSummary }, sourceType = sourceType)
             .onErrorReturnItem(emptyList())
 
-    private fun resolveCourseProgress(courses: List<Course>): Single<List<Progress>> =
+    private fun resolveCourseProgress(courses: List<Course>, sourceType: DataSourceType): Single<List<Progress>> =
         progressRepository
-            .getProgresses(progressIds = *courses.mapNotNull(Progressable::progress).toTypedArray())
+            .getProgresses(progressIds = *courses.mapNotNull(Progressable::progress).toTypedArray(), primarySourceType = sourceType)
 
     private fun resolveCoursesEnrollmentStates(courses: List<Course>, resolveEnrollmentState: Boolean): Single<List<Pair<Long, EnrollmentState>>> =
         courses

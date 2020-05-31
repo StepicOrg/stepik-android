@@ -39,15 +39,15 @@ constructor(
             }
         }
 
-    fun getAllUserCourses(userCourseQuery: UserCourseQuery): Single<List<UserCourse>> =
+    fun getAllUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<UserCourse>> =
         requireAuthorization then
         Observable.range(1, Int.MAX_VALUE)
-            .concatMapSingle { userCoursesRepository.getUserCourses(userCourseQuery.copy(page = it), sourceType = DataSourceType.REMOTE) }
+            .concatMapSingle { userCoursesRepository.getUserCourses(userCourseQuery.copy(page = it), sourceType = sourceType) }
             .takeUntil { !it.hasNext }
             .reduce(emptyList()) { a, b -> a + b }
 
-    fun getCourseListItems(vararg courseId: Long): Single<PagedList<CourseListItem.Data>> =
-        courseListInteractor.getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses)
+    fun getCourseListItems(vararg courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CourseListItem.Data>> =
+        courseListInteractor.getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
 
     fun getUserCourse(courseId: Long): Single<CourseListItem.Data> =
         courseListInteractor
