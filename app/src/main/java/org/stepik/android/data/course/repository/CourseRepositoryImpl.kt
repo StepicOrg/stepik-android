@@ -36,6 +36,8 @@ constructor(
     }
 
     override fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType): Single<PagedList<Course>> {
+        if (courseIds.isEmpty()) return Single.just(PagedList(emptyList()))
+
         val remoteSource = courseRemoteDataSource
             .getCourses(*courseIds)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
