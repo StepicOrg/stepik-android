@@ -7,10 +7,14 @@
     android:layout_height="36dp"
     android:minWidth="120dp"
     android:textSize="16sp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     app:fontFamily="@font/roboto_regular"
     android:gravity="center"
     android:lineSpacingExtra="16sp"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
     android:background="@drawable/bg_step_quiz_fill_blanks_item"
-    android:letterSpacing="0.01" />
+    android:letterSpacing="0.01"
+    android:drawablePadding="12dp"
+    app:drawableEndCompat="@drawable/ic_arrow_bottom"/>

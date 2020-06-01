@@ -14,14 +14,18 @@ class FillBlanksItemInputAdapterDelegate : AdapterDelegate<FillBlanksItem, Deleg
         data is FillBlanksItem.Input
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<FillBlanksItem> =
-        ViewHolder(createView(parent, R.layout.item_step_quiz_fill_blanks_text))
+        ViewHolder(createView(parent, R.layout.item_step_quiz_fill_blanks_input))
 
     private inner class ViewHolder(root: View) : DelegateViewHolder<FillBlanksItem>(root) {
         private val stepQuizFillBlanksText = root.stepQuizFillBlanksText
 
+        init {
+            stepQuizFillBlanksText.setOnClickListener {  }
+        }
+
         override fun onBind(data: FillBlanksItem) {
             data as FillBlanksItem.Input
-            stepQuizFillBlanksText.text = data.text
+            stepQuizFillBlanksText.text = "Input here"
         }
     }
 }
