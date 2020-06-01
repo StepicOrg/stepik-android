@@ -56,6 +56,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_ADMIN, hardQuizDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_SQL, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_LINUX_CODE, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_FILL_BLANKS, simpleQuestionDrawable);
     }
 
     @Override
