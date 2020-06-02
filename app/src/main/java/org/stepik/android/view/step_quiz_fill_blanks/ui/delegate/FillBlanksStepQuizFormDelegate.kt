@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.layout_step_quiz_fill_blanks.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.mutate
 import org.stepik.android.model.Reply
+import org.stepik.android.model.Submission
 import org.stepik.android.model.feedback.BlanksFeedback
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -82,16 +83,29 @@ class FillBlanksStepQuizFormDelegate(
                         item
                     is FillBlanksItem.Input -> {
                         val index = counter++
-                        item.copy(text = blanks[index], correct = (submission.feedback as? BlanksFeedback)?.blanksFeedback?.getOrNull(index))
+                        item.copy(text = blanks[index], correct = fetchCorrectness(index, submission))
                     }
                     is FillBlanksItem.Select -> {
                         val index = counter++
-                        item.copy(text = blanks[index], correct = (submission.feedback as? BlanksFeedback)?.blanksFeedback?.getOrNull(index))
+                        item.copy(text = blanks[index], correct = fetchCorrectness(index, submission))
                     }
                 }
             }
         } ?: fillBlanksItems
     }
+
+    private fun fetchCorrectness(index: Int, submission: Submission): Boolean? =
+        (submission.feedback as? BlanksFeedback)
+            ?.blanksFeedback
+            ?.getOrNull(index)
+            ?: when (submission.status) {
+                Submission.Status.CORRECT ->
+                    true
+                Submission.Status.WRONG ->
+                    false
+                else ->
+                    null
+            }
 
     override fun createReply(): ReplyResult =
         ReplyResult.Success(Reply(
