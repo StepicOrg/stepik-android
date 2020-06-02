@@ -216,7 +216,7 @@ constructor(
                     state = newState
 
                     if (isNeedLoadCourse) {
-                        fetchPlaceHolders(course.id)
+                        fetchPlaceholder(course.id)
                     }
                 },
                 onError = emptyOnErrorStub
@@ -235,34 +235,20 @@ constructor(
                     val oldState = state as? CourseListUserView.State.Data
                         ?: return@subscribeBy
                     state = courseListStateMapper.mapUserCourseOperationToState(userCourse, oldState)
-                    fetchPlaceHolders()
+//                    fetchPlaceHolders()
                 },
                 onError = emptyOnErrorStub
             )
     }
 
-    private fun fetchPlaceHolders(vararg courseIds: Long) {
-        val oldState = (state as? CourseListUserView.State.Data) ?: return
-
-        val oldCourseListState = (oldState.courseListViewState as? CourseListView.State.Content) ?: return
-
-        val indexOf = oldCourseListState.courseListItems.indexOfFirst { it is CourseListItem.PlaceHolder && it.courseId != -1L }
-
-        val courseId = (oldCourseListState.courseListItems[indexOf] as? CourseListItem.PlaceHolder)?.courseId ?: return
-
+    private fun fetchPlaceholder(courseId: Long) {
         compositeDisposable += courseListUserInteractor
             .getUserCourse(courseId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { courseListItem ->
-                    val oldCourseUserState = state as? CourseListUserView.State.Data
-                        ?: return@subscribeBy
-                    state = oldCourseUserState.copy(
-                        courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(indexOf, oldState.courseListViewState, courseListItem)
-                    )
-                },
-                onError = emptyOnErrorStub
+                onSuccess = { state = courseListUserStateMapper.mergeWithPlaceholderSuccess(state, it) },
+                onError = { state = courseListUserStateMapper.mergeWithDroppedCourse(state, courseId) }
             )
     }
 
@@ -294,7 +280,7 @@ constructor(
 
                         state = newState
                         if (isNeedLoadCourse) {
-                            fetchPlaceHolders(course.id)
+                            fetchPlaceholder(course.id)
                         }
                     }
                 },

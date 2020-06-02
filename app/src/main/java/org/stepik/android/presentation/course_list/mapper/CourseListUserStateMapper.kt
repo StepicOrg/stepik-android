@@ -9,6 +9,8 @@ import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.slice
 import org.stepic.droid.util.filterNot
+import org.stepic.droid.util.insert
+import org.stepic.droid.util.transform
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
@@ -24,6 +26,9 @@ constructor() {
         private const val PAGE_SIZE = 20
     }
 
+    /**
+     * Fetch courses
+     */
     fun mapToFetchCoursesSuccess(state: CourseListUserView.State, items: PagedList<CourseListItem.Data>, isNewItems: Boolean): CourseListUserView.State {
         val courseListViewState = (state as? CourseListUserView.State.Data)
             ?.courseListViewState
@@ -152,6 +157,9 @@ constructor() {
             .mapToLongArray(UserCourse::course)
     }
 
+    /**
+     * Continue course
+     */
     fun mergeWithCourseContinue(state: CourseListUserView.State, courseId: Long) : Pair<CourseListUserView.State, Boolean> {
         val userCourses = (state as? CourseListUserView.State.Data)
             ?.userCourses
@@ -195,6 +203,9 @@ constructor() {
         }
     }
 
+    /**
+     * Enrollments
+     */
     fun mergeWithEnrolledCourse(state: CourseListUserView.State, courseId: Long): Pair<CourseListUserView.State, Boolean> =
         if (state is CourseListUserView.State.Data &&
             with(state.userCourseQuery) { isFavorite != true && isArchived != true } // in this case course do not match userCourseQuery
@@ -252,6 +263,52 @@ constructor() {
                 }
 
             state.copy(userCourses = userCourses, courseListViewState = courseListViewState)
+        } else {
+            state
+        }
+
+    /**
+     * Course placeholders
+     */
+    fun mergeWithPlaceholderSuccess(state: CourseListUserView.State, courseListItem: CourseListItem.Data) : CourseListUserView.State =
+        if (state is CourseListUserView.State.Data &&
+            state.courseListViewState is CourseListView.State.Content) {
+            val listState = state.courseListViewState
+            /**
+             * Нам нужно вставить в courseListDataItems, но так как courseListDataItems не содержит плейсхолдеров
+             * то нам нужно понять куда вставить в courseListDataItems.
+             * Для этого мы находим предшесвующий вставляемуму элемент и вставляем после него.
+             */
+            var previousCourseId = -1L
+
+            val courseListItems = listState
+                .courseListItems
+                .map { item ->
+                    if (item is CourseListItem.PlaceHolder && item.courseId == courseListItem.course.id) {
+                        courseListItem
+                    } else {
+                        if (item is CourseListItem.Data) {
+                            previousCourseId = item.course.id
+                        }
+                        item
+                    }
+                }
+
+            val indexOfPreviousCourseItem =
+                if (previousCourseId == -1L) {
+                    -1
+                } else {
+                    listState.courseListDataItems.indexOfFirst { it.course.id == previousCourseId }
+                }
+
+            val courseListDataItems =
+                if (indexOfPreviousCourseItem == -1) {
+                    listState.courseListDataItems
+                } else {
+                    listState.courseListDataItems.transform { insert(indexOfPreviousCourseItem + 1, courseListItem) }
+                }
+
+            state.copy(courseListViewState = listState.copy(courseListDataItems, courseListItems))
         } else {
             state
         }
