@@ -1,9 +1,11 @@
 package org.stepik.android.view.step_quiz_fill_blanks.ui.fragment
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet_dialog_fill_blanks_input.*
@@ -39,6 +41,10 @@ class FillBlanksInputBottomSheetDialogFragment : BottomSheetDialogFragment() {
             text = savedInstanceState.getString(ARG_TEXT) ?: return
         }
         fillBlanksInputField.setText(text)
+        fillBlanksInputField.post {
+            fillBlanksInputField.requestFocus()
+            (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(fillBlanksInputField, InputMethodManager.SHOW_IMPLICIT)
+        }
     }
 
     override fun onPause() {
