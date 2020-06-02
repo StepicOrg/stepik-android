@@ -7,20 +7,23 @@ sealed class FillBlanksItem : Identifiable<Int> {
         override val id: Int,
         val text: String,
         val options: List<String>,
-        val isEnabled: Boolean
+        val isEnabled: Boolean,
+        val correct: Boolean? = null
     ) : FillBlanksItem()
 
     data class Input(
         override val id: Int,
         val text: String,
         val options: List<String>,
-        val isEnabled: Boolean
+        val isEnabled: Boolean,
+        val correct: Boolean? = null
     ) : FillBlanksItem()
 
     data class Select(
         override val id: Int,
         val text: String,
         val options: List<String>,
-        val isEnabled: Boolean
+        val isEnabled: Boolean,
+        val correct: Boolean? = null
     ) : FillBlanksItem()
 }
