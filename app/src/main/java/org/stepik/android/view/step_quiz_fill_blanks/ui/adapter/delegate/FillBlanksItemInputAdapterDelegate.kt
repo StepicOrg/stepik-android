@@ -8,8 +8,9 @@ import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
-// TODO Handle text input
-class FillBlanksItemInputAdapterDelegate : AdapterDelegate<FillBlanksItem, DelegateViewHolder<FillBlanksItem>>() {
+class FillBlanksItemInputAdapterDelegate(
+    private val onDialog: (Int, String) -> Unit
+) : AdapterDelegate<FillBlanksItem, DelegateViewHolder<FillBlanksItem>>() {
     override fun isForViewType(position: Int, data: FillBlanksItem): Boolean =
         data is FillBlanksItem.Input
 
@@ -20,12 +21,12 @@ class FillBlanksItemInputAdapterDelegate : AdapterDelegate<FillBlanksItem, Deleg
         private val stepQuizFillBlanksText = root.stepQuizFillBlanksText
 
         init {
-            stepQuizFillBlanksText.setOnClickListener {  }
+            stepQuizFillBlanksText.setOnClickListener { onDialog(adapterPosition, (itemData as FillBlanksItem.Input).text) }
         }
 
         override fun onBind(data: FillBlanksItem) {
             data as FillBlanksItem.Input
-            stepQuizFillBlanksText.text = "Input here"
+            stepQuizFillBlanksText.text = data.text
         }
     }
 }
