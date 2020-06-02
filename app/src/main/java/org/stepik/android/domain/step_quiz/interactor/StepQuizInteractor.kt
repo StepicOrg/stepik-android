@@ -131,7 +131,8 @@ constructor(
             AppConstants.TYPE_FREE_ANSWER,
             AppConstants.TYPE_CODE,
             AppConstants.TYPE_SORTING,
-            AppConstants.TYPE_MATCHING ->
+            AppConstants.TYPE_MATCHING,
+            AppConstants.TYPE_FILL_BLANKS ->
                 false
 
             else ->
