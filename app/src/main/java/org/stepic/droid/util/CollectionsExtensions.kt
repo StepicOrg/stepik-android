@@ -26,6 +26,12 @@ inline fun <T> Array<T>.mapToLongArray(transform: (T) -> Long): LongArray {
     return array
 }
 
+fun <T> List<T>.takeLazy(n: Int): List<T> =
+    subList(0, minOf(size, n))
+
+
+fun <T> List<T>.slice(from: Int = 0, to: Int = size): List<T> =
+    subList(from.coerceAtLeast(0), to.coerceAtMost(size))
 
 fun LongArray?.isNullOrEmpty(): Boolean =
     this == null || this.isEmpty()

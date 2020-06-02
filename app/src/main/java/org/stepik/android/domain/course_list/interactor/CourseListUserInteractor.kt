@@ -46,8 +46,10 @@ constructor(
             .takeUntil { !it.hasNext }
             .reduce(emptyList()) { a, b -> a + b }
 
-    fun getCourseListItems(vararg courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<CourseListItem.Data>> =
-        courseListInteractor.getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
+    fun getCourseListItems(vararg courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<Pair<PagedList<CourseListItem.Data>, DataSourceType>> =
+        courseListInteractor
+            .getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
+            .map { it to sourceType }
 
     fun getUserCourse(courseId: Long): Single<CourseListItem.Data> =
         courseListInteractor

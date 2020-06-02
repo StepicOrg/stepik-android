@@ -2,6 +2,7 @@ package org.stepik.android.presentation.course_list
 
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -9,9 +10,10 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.mapToLongArray
+import org.stepic.droid.util.takeLazy
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -22,6 +24,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
+import org.stepik.android.presentation.course_list.mapper.CourseListUserStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
@@ -37,12 +40,14 @@ class CourseListUserPresenter
 constructor(
     private val analytic: Analytic,
     private val courseListStateMapper: CourseListStateMapper,
+    private val courseListUserStateMapper: CourseListUserStateMapper,
     private val courseListUserInteractor: CourseListUserInteractor,
     private val deadlinesSynchronizationInteractor: DeadlinesSynchronizationInteractor,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
     private val mainScheduler: Scheduler,
+
     @UserCoursesLoadedBus
     private val userCoursesLoadedPublisher: PublishSubject<UserCoursesLoaded>,
     @EnrollmentCourseUpdates
@@ -71,13 +76,11 @@ constructor(
     private val paginationDisposable = CompositeDisposable()
 
     init {
+        compositeDisposable += paginationDisposable
+
         subscribeForEnrollmentUpdates()
         subscribeForContinueCourseUpdates()
         subscribeForUserCourseOperationUpdates()
-    }
-
-    init {
-        compositeDisposable += paginationDisposable
     }
 
     override fun attachView(view: CourseListUserView) {
@@ -93,7 +96,7 @@ constructor(
         state = CourseListUserView.State.Loading
 
         paginationDisposable += courseListUserInteractor
-            .getAllUserCourses(userCourseQuery)
+            .getAllUserCourses(userCourseQuery, sourceType = DataSourceType.REMOTE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -103,16 +106,18 @@ constructor(
                         userCourses = it,
                         courseListViewState = CourseListView.State.Idle
                     )
-                    analytic.setCoursesCount(it.size)
+                    analytic.setCoursesCount(it.size) // todo fix analytics
                     fetchCourses()
+                    synchronizeDeadlines()
                 },
                 onError = {
                     userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
-                    state = if (it is HttpException && it.code() == 401) {
-                        CourseListUserView.State.EmptyLogin
-                    } else {
-                        CourseListUserView.State.NetworkError
-                    }
+                    state =
+                        if (it is HttpException && it.code() == 401) {
+                            CourseListUserView.State.EmptyLogin
+                        } else {
+                            CourseListUserView.State.NetworkError
+                        }
                 }
             )
     }
@@ -121,47 +126,46 @@ constructor(
         val oldState = state as? CourseListUserView.State.Data
             ?: return
 
-        paginationDisposable.clear()
+        paginationDisposable.clear() // todo ??
 
-        val ids = oldState.userCourses.take(PAGE_SIZE).mapToLongArray(UserCourse::course)
+        val ids = oldState
+            .userCourses
+            .takeLazy(PAGE_SIZE)
+            .mapToLongArray(UserCourse::course)
 
         state = oldState.copy(courseListViewState = CourseListView.State.Loading)
 
-        paginationDisposable += courseListUserInteractor
-            .getCourseListItems(*ids)
+        paginationDisposable += Single
+            .concat(
+                courseListUserInteractor
+                    .getCourseListItems(*ids, sourceType = DataSourceType.CACHE),
+                courseListUserInteractor
+                    .getCourseListItems(*ids, sourceType = DataSourceType.REMOTE)
+            )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = {
-                    state = if (it.isNotEmpty()) {
-                        userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(it.first()))
-                        oldState.copy(
-                            courseListViewState = CourseListView.State.Content(
-                                courseListDataItems = PagedList(
-                                    list = it,
-                                    page = 1,
-                                    hasNext = oldState.userCourses.size > PAGE_SIZE,
-                                    hasPrev = false
-                                ),
-                                courseListItems = it
-                            )
-                        )
-                    } else {
-                        userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
-                        oldState.copy(courseListViewState = CourseListView.State.Empty)
+                onNext = { (items, sourceType) ->
+                    val newState = courseListUserStateMapper.mapToFetchCoursesSuccess(state, items, sourceType == DataSourceType.CACHE)
+                    if (newState is CourseListUserView.State.Data) {
+                        val userCourseLoaded = (newState.courseListViewState as? CourseListView.State.Content)
+                            ?.courseListDataItems
+                            ?.firstOrNull()
+                            ?.let(UserCoursesLoaded::FirstCourse)
+                            ?: UserCoursesLoaded.Empty
+
+                        userCoursesLoadedPublisher.onNext(userCourseLoaded)
                     }
-                    synchronizeDeadlines()
+                    state = newState
                 },
                 onError = {
-                    when (val oldCourseListState = (state as? CourseListUserView.State.Data)?.courseListViewState) {
-                        is CourseListView.State.Content -> {
-                            state = (state as CourseListUserView.State.Data).copy(courseListViewState = oldCourseListState)
+                    val newState = courseListUserStateMapper.mapToFetchCoursesError(state)
+                    when ((newState as? CourseListUserView.State.Data)?.courseListViewState) {
+                        is CourseListView.State.Content ->
                             view?.showNetworkError()
-                        }
-                        else -> {
+
+                        else ->
                             userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
-                            state = oldState.copy(courseListViewState = CourseListView.State.NetworkError)
-                        }
                     }
                 }
             )
@@ -174,27 +178,25 @@ constructor(
         val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
             ?: return
 
-        if (oldCourseListState.courseListItems.last() is CourseListItem.PlaceHolder || !oldCourseListState.courseListDataItems.hasNext) {
-            return
-        }
-
-        val ids = oldState
-            .userCourses
-            .drop(oldState.courseListViewState.courseListDataItems.size)
-            .take(PAGE_SIZE)
-            .mapToLongArray(UserCourse::course)
+        val ids = courseListUserStateMapper.getNextPageCourseIds(oldState.userCourses, oldCourseListState)
+            ?: return
 
         state = oldState.copy(courseListViewState = courseListStateMapper.mapToLoadMoreState(oldCourseListState))
-        paginationDisposable += courseListUserInteractor
-            .getCourseListItems(*ids)
+        paginationDisposable += Single
+            .concat(
+                courseListUserInteractor
+                    .getCourseListItems(*ids, sourceType = DataSourceType.CACHE),
+                courseListUserInteractor
+                    .getCourseListItems(*ids, sourceType = DataSourceType.REMOTE)
+            )
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = {
-                    state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(oldCourseListState, it))
+                onNext = { (items, sourceType) ->
+                    state = courseListUserStateMapper.mapToFetchCoursesSuccess(state, items, sourceType == DataSourceType.CACHE)
                 },
                 onError = {
-                    state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToError(oldCourseListState))
+                    state = courseListUserStateMapper.mapToFetchCoursesError(state)
                     view?.showNetworkError()
                 }
             )
@@ -221,22 +223,9 @@ constructor(
             )
     }
 
-    private fun subscribeForEnrollmentUpdates() {
-        compositeDisposable += enrollmentUpdatesObservable
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onNext = { enrollmentCourseUpdate ->
-                    if (enrollmentCourseUpdate.enrollment == 0L) {
-                        removeDroppedCourse(enrollmentCourseUpdate.id)
-                    } else {
-                        fetchEnrolledCourse(enrollmentCourseUpdate.id)
-                    }
-                },
-                onError = emptyOnErrorStub
-            )
-    }
-
+    /**
+     * User Course operations
+     */
     private fun subscribeForUserCourseOperationUpdates() {
         compositeDisposable += userCourseOperationObservable
             .subscribeOn(backgroundScheduler)
@@ -272,6 +261,25 @@ constructor(
                     state = oldCourseUserState.copy(
                         courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(indexOf, oldState.courseListViewState, courseListItem)
                     )
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    /**
+     * Enrollments
+     */
+    private fun subscribeForEnrollmentUpdates() {
+        compositeDisposable += enrollmentUpdatesObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { enrollmentCourseUpdate ->
+                    if (enrollmentCourseUpdate.enrollment == 0L) {
+                        removeDroppedCourse(enrollmentCourseUpdate.id)
+                    } else {
+                        fetchEnrolledCourse(enrollmentCourseUpdate.id)
+                    }
                 },
                 onError = emptyOnErrorStub
             )
