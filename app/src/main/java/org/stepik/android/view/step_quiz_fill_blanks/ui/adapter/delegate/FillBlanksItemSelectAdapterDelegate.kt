@@ -29,6 +29,7 @@ class FillBlanksItemSelectAdapterDelegate(
 
         override fun onBind(data: FillBlanksItem) {
             data as FillBlanksItem.Select
+            itemView.isEnabled = data.isEnabled
             stepQuizFillBlanksText.text = data.text
         }
 
