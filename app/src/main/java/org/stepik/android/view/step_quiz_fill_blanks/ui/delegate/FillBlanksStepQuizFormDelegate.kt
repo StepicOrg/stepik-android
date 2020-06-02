@@ -20,6 +20,7 @@ import org.stepik.android.view.step_quiz_fill_blanks.ui.mapper.FillBlanksItemMap
 import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 
 class FillBlanksStepQuizFormDelegate(
     containerView: View,
@@ -64,12 +65,33 @@ class FillBlanksStepQuizFormDelegate(
             .showIfNotExists(fragmentManager, FillBlanksInputBottomSheetDialogFragment.TAG)
     }
 
-    // TODO Update mapping
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
         val fillBlanksItems = fillBlanksItemMapper
             .mapToFillBlanksItems(state.attempt, StepQuizFormResolver.isQuizEnabled(state))
 
-        itemsAdapter.items = fillBlanksItems
+        val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
+            ?.submission
+
+        Timber.d("Submission: $submission")
+        Timber.d("Feedback: ${submission?.feedback}")
+
+        val reply = submission?.reply
+
+        itemsAdapter.items = reply?.blanks?.let { blanks ->
+            var counter = 0
+            fillBlanksItems.map { item ->
+                when (item) {
+                    is FillBlanksItem.Text ->
+                        item
+                    is FillBlanksItem.Input -> {
+                        item.copy(text = blanks[counter++])
+                    }
+                    is FillBlanksItem.Select -> {
+                        item.copy(text = blanks[counter++])
+                    }
+                }
+            }
+        } ?: fillBlanksItems
     }
 
     override fun createReply(): ReplyResult =
