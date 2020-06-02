@@ -3,8 +3,11 @@ package org.stepik.android.view.step_quiz_fill_blanks.ui.adapter.delegate
 import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
 import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_text.view.*
 import org.stepic.droid.R
+import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -39,17 +42,18 @@ class FillBlanksItemInputAdapterDelegate(
             data as FillBlanksItem.Input
             itemView.isEnabled = data.isEnabled
             stepQuizFillBlanksText.text = data.text
-            val layer = when (data.correct) {
+            val (@IdRes layer, @DrawableRes icon) = when (data.correct) {
                 true ->
-                    R.id.correct_layer
+                    R.id.correct_layer to R.drawable.ic_step_quiz_correct
 
                 false ->
-                    R.id.incorrect_layer
+                    R.id.incorrect_layer to R.drawable.ic_step_quiz_wrong
 
                 else ->
-                    R.id.checked_layer
+                    R.id.checked_layer to -1
             }
             layerListDrawableDelegate.showLayer(layer)
+            stepQuizFillBlanksText.setCompoundDrawables(start = icon)
         }
     }
 }
