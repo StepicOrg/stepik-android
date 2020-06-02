@@ -25,7 +25,6 @@ class FillBlanksStepQuizFormDelegate(
     containerView: View,
     private val fragmentManager: FragmentManager
 ) : StepQuizFormDelegate {
-    private val context = containerView.context
     private val quizDescription = containerView.stepQuizDescription
     private val itemsAdapter = DefaultDelegateAdapter<FillBlanksItem>()
     private val fillBlanksItemMapper = FillBlanksItemMapper()
@@ -34,8 +33,8 @@ class FillBlanksStepQuizFormDelegate(
         quizDescription.setText(R.string.step_quiz_fill_blanks_description)
 
         itemsAdapter += FillBlanksItemTextAdapterDelegate()
-        itemsAdapter += FillBlanksItemInputAdapterDelegate(onDialog = ::inputItemAction)
-        itemsAdapter += FillBlanksItemSelectAdapterDelegate()
+        itemsAdapter += FillBlanksItemInputAdapterDelegate(onItemClicked = ::inputItemAction)
+        itemsAdapter += FillBlanksItemSelectAdapterDelegate(onItemClicked = ::selectItemAction)
 
         with(containerView.fillBlanksRecycler) {
             adapter = itemsAdapter
@@ -50,6 +49,13 @@ class FillBlanksStepQuizFormDelegate(
             set(index, inputItem.copy(text = text))
         }
         itemsAdapter.notifyItemChanged(index)
+    }
+
+    private fun selectItemAction(index: Int, text: String) {
+        itemsAdapter.items = itemsAdapter.items.mutate {
+            val selectItem = get(index) as FillBlanksItem.Select
+            set(index, selectItem.copy(text = text))
+        }
     }
 
     private fun inputItemAction(index: Int, text: String) {

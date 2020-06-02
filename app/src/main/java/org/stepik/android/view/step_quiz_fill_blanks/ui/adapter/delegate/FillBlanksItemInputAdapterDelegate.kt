@@ -9,7 +9,7 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class FillBlanksItemInputAdapterDelegate(
-    private val onDialog: (Int, String) -> Unit
+    private val onItemClicked: (Int, String) -> Unit
 ) : AdapterDelegate<FillBlanksItem, DelegateViewHolder<FillBlanksItem>>() {
     override fun isForViewType(position: Int, data: FillBlanksItem): Boolean =
         data is FillBlanksItem.Input
@@ -21,7 +21,7 @@ class FillBlanksItemInputAdapterDelegate(
         private val stepQuizFillBlanksText = root.stepQuizFillBlanksText
 
         init {
-            stepQuizFillBlanksText.setOnClickListener { onDialog(adapterPosition, (itemData as FillBlanksItem.Input).text) }
+            stepQuizFillBlanksText.setOnClickListener { onItemClicked(adapterPosition, (itemData as FillBlanksItem.Input).text) }
         }
 
         override fun onBind(data: FillBlanksItem) {
