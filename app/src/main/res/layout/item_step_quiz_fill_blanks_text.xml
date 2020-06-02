@@ -5,10 +5,8 @@
     android:id="@+id/stepQuizFillBlanksText"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:gravity="center_vertical"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
-    android:textSize="16sp"
-    android:lineSpacingExtra="16sp"
-    app:fontFamily="@font/roboto_regular"
-    android:letterSpacing="0.01" />
+    android:gravity="center_vertical"
+    android:textAppearance="?textAppearanceBody1"
+    app:fontFamily="@font/roboto_regular" />
