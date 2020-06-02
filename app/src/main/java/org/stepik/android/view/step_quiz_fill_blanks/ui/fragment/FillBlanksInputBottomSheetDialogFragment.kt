@@ -9,7 +9,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.bottom_sheet_dialog_fill_blanks_input.*
 import org.stepic.droid.R
 import ru.nobird.android.view.base.ui.extension.argument
-import timber.log.Timber
 
 class FillBlanksInputBottomSheetDialogFragment : BottomSheetDialogFragment() {
     companion object {
@@ -43,7 +42,6 @@ class FillBlanksInputBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     override fun onPause() {
-        Timber.d("Check: ${parentFragment as? Callback}")
         (parentFragment as? Callback)
             ?.onSyncInputItemWithParent(index, fillBlanksInputField.text.toString())
         super.onPause()
