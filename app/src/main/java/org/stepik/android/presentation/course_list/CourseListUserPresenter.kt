@@ -15,7 +15,6 @@ import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.takeLazy
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
-import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
@@ -232,10 +231,12 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { userCourse ->
-                    val oldState = state as? CourseListUserView.State.Data
-                        ?: return@subscribeBy
-                    state = courseListStateMapper.mapUserCourseOperationToState(userCourse, oldState)
-//                    fetchPlaceHolders()
+                    val (newState, isNeedLoadCourse) =
+                        courseListUserStateMapper.mergeWithUserCourse(state, userCourse)
+                    state = newState
+                    if (isNeedLoadCourse) {
+                        fetchPlaceholder(userCourse.course)
+                    }
                 },
                 onError = emptyOnErrorStub
             )

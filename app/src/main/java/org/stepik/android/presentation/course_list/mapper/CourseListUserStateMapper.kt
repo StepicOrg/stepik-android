@@ -160,7 +160,7 @@ constructor() {
     /**
      * Continue course
      */
-    fun mergeWithCourseContinue(state: CourseListUserView.State, courseId: Long) : Pair<CourseListUserView.State, Boolean> {
+    fun mergeWithCourseContinue(state: CourseListUserView.State, courseId: Long): Pair<CourseListUserView.State, Boolean> {
         val userCourses = (state as? CourseListUserView.State.Data)
             ?.userCourses
             ?: return state to false
@@ -270,7 +270,7 @@ constructor() {
     /**
      * Course placeholders
      */
-    fun mergeWithPlaceholderSuccess(state: CourseListUserView.State, courseListItem: CourseListItem.Data) : CourseListUserView.State =
+    fun mergeWithPlaceholderSuccess(state: CourseListUserView.State, courseListItem: CourseListItem.Data): CourseListUserView.State =
         if (state is CourseListUserView.State.Data &&
             state.courseListViewState is CourseListView.State.Content) {
             val listState = state.courseListViewState
@@ -313,13 +313,22 @@ constructor() {
             state
         }
 
-    private fun mergeWithUserCourse(state: CourseListUserView.State.Data, userCourse: UserCourse) : CourseListUserView.State {
-//        val isUserCourseMatchQuery = userCourse.isMatchQuery()
-
-
-
-        return state
-    }
+    fun mergeWithUserCourse(state: CourseListUserView.State, userCourse: UserCourse): Pair<CourseListUserView.State, Boolean> =
+        if (state is CourseListUserView.State.Data) {
+            if (userCourse.isMatchQuery(state.userCourseQuery)) {
+                /*
+                - понять куда его вставить
+                - обновить user courses
+                - если грузится страница, куда его нужно вставить, то
+                - если грузится первая страница
+                 */
+                state to true
+            } else {
+                mergeWithDroppedCourse(state, userCourse.course) to false
+            }
+        } else {
+            state to false
+        }
 
     /**
      * Merges
