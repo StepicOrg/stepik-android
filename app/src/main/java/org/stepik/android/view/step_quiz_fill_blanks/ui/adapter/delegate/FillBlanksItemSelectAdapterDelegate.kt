@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.ListPopupWindow
-import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_text.view.*
+import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_select.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate

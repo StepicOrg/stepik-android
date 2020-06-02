@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
-import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_text.view.*
+import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_input.view.*
 import org.stepic.droid.R
 import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate

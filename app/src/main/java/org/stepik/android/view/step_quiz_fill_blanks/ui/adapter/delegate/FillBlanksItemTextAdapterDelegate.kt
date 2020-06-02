@@ -20,7 +20,7 @@ class FillBlanksItemTextAdapterDelegate : AdapterDelegate<FillBlanksItem, Delega
 
         override fun onBind(data: FillBlanksItem) {
             data as FillBlanksItem.Text
-            stepQuizFillBlanksText.text = data.text
+            stepQuizFillBlanksText.setText(data.text)
         }
     }
 }
