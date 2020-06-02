@@ -151,23 +151,46 @@ constructor() {
             .mapToLongArray(UserCourse::course)
     }
 
-    fun mergeWithCourseContinue(state: CourseListUserView.State, courseId: Long) : CourseListUserView.State {
+    fun mergeWithCourseContinue(state: CourseListUserView.State, courseId: Long) : Pair<CourseListUserView.State, Boolean> {
         val userCourses = (state as? CourseListUserView.State.Data)
             ?.userCourses
-            ?: return state
+            ?: return state to false
 
         val index = userCourses.indexOfFirst { it.course == courseId }
-        return if (index > 0) {
+        var isNeedLoadCourse = false
+        return if (index > 0) { // if index == 0 we do not need to update state
             val newUserCourses = userCourses.mutate { add(0, removeAt(index).copy(lastViewed = Date(DateTimeHelper.nowUtc()))) }
 
-            val listState = (state.courseListViewState as? CourseListView.State.Content)
-                ?.let {
+            val newCourseListViewState =
+                with(state.courseListViewState) {
+                    if (this is CourseListView.State.Content) {
+                        val courseListDataIndex =
+                            courseListDataItems.indexOfFirst { it.course.id == courseId }
 
+                        val newCourseListDataItems =
+                            if (courseListDataIndex > 0) {
+                                PagedList(courseListDataItems.mutate { add(0, removeAt(courseListDataIndex)) }, hasNext = courseListDataItems.hasNext)
+                            } else {
+                                courseListDataItems
+                            }
+
+                        val newCourseListItems =
+                            if (index in courseListItems.indices) {
+                                courseListItems.mutate { add(0, removeAt(index)) }
+                            } else {
+                                isNeedLoadCourse = true
+                                listOf(CourseListItem.PlaceHolder(courseId)) + courseListItems
+                            }
+
+                        copy(newCourseListDataItems, newCourseListItems)
+                    } else {
+                        this
+                    }
                 }
 
-            state.copy(userCourses = newUserCourses)
+            state.copy(userCourses = newUserCourses, courseListViewState = newCourseListViewState) to isNeedLoadCourse
         } else {
-            state
+            state to isNeedLoadCourse
         }
     }
 

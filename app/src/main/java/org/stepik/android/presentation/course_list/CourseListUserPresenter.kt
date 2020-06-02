@@ -202,22 +202,22 @@ constructor(
             )
     }
 
+    /**
+     * Continue course
+     */
     private fun subscribeForContinueCourseUpdates() {
         compositeDisposable += userCoursesUpdateObservable
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { continuedCourse ->
-                    val oldState = state as? CourseListUserView.State.Data
-                        ?: return@subscribeBy
+                    val (newState, isNeedLoadCourse) =
+                        courseListUserStateMapper.mergeWithCourseContinue(state, continuedCourse.id)
+                    state = newState
 
-                    state = oldState.copy(
-                        courseListViewState = courseListStateMapper.mapToContinueCourseUpdateState(oldState.courseListViewState, continuedCourse).apply {
-                            if (this is CourseListView.State.Content) {
-                                userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(courseListDataItems.first()))
-                            }
-                        }
-                    )
+                    if (isNeedLoadCourse) {
+                        fetchPlaceHolders(continuedCourse.id)
+                    }
                 },
                 onError = emptyOnErrorStub
             )
@@ -241,7 +241,7 @@ constructor(
             )
     }
 
-    private fun fetchPlaceHolders() {
+    private fun fetchPlaceHolders(vararg courseIds: Long) {
         val oldState = (state as? CourseListUserView.State.Data) ?: return
 
         val oldCourseListState = (oldState.courseListViewState as? CourseListView.State.Content) ?: return
