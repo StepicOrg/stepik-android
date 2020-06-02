@@ -8,6 +8,7 @@ import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.slice
+import org.stepic.droid.util.filterNot
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
@@ -193,6 +194,67 @@ constructor() {
             state to isNeedLoadCourse
         }
     }
+
+    fun mergeWithEnrolledCourse(state: CourseListUserView.State, courseId: Long): Pair<CourseListUserView.State, Boolean> =
+        if (state is CourseListUserView.State.Data &&
+            with(state.userCourseQuery) { isFavorite != true && isArchived != true } // in this case course do not match userCourseQuery
+        ) {
+            val userCourse = listOf(UserCourse(user = 0, course = courseId, lastViewed = Date(DateTimeHelper.nowUtc())))
+            val coursePlaceholder = listOf(CourseListItem.PlaceHolder(courseId))
+            val isNeedLoadCourse =
+                state.courseListViewState == CourseListView.State.Empty ||
+                state.courseListViewState is CourseListView.State.Content
+
+            val (userCourses, courseListViewState) =
+                when (state.courseListViewState) {
+                    CourseListView.State.Empty ->
+                        userCourse to CourseListView.State.Content(PagedList(emptyList()), coursePlaceholder)
+
+                    is CourseListView.State.Content ->
+                        Pair(
+                            userCourse + state.userCourses,
+                            state.courseListViewState.copy(courseListItems = coursePlaceholder + state.courseListViewState.courseListItems)
+                        )
+
+                    else ->
+                        state.userCourses to state.courseListViewState
+                }
+
+            state.copy(userCourses = userCourses, courseListViewState = courseListViewState) to isNeedLoadCourse
+        } else {
+            state to false
+        }
+
+    fun mergeWithDroppedCourse(state: CourseListUserView.State, courseId: Long): CourseListUserView.State =
+        if (state is CourseListUserView.State.Data) {
+            val userCourses = state.userCourses.filterNot { it.course == courseId }
+
+            val courseListViewState =
+                when (state.courseListViewState) {
+                    is CourseListView.State.Content ->
+                        if (userCourses.isEmpty()) {
+                            CourseListView.State.Empty
+                        } else {
+                            state.courseListViewState.copy(
+                                state.courseListViewState.courseListDataItems
+                                    .filterNot { it.course.id == courseId },
+
+                                state.courseListViewState.courseListItems
+                                    .filterNot {
+                                        it is CourseListItem.Data && it.course.id == courseId ||
+                                        it is CourseListItem.PlaceHolder && it.courseId == courseId
+                                    }
+                            )
+                        }
+
+                    else ->
+                        state.courseListViewState
+                }
+
+            state.copy(userCourses = userCourses, courseListViewState = courseListViewState)
+        } else {
+            state
+        }
 
     private fun mergeWithUserCourse(state: CourseListUserView.State.Data, userCourse: UserCourse) : CourseListUserView.State {
 //        val isUserCourseMatchQuery = userCourse.isMatchQuery()

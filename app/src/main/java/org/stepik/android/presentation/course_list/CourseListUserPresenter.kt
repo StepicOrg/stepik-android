@@ -210,13 +210,13 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { continuedCourse ->
+                onNext = { course ->
                     val (newState, isNeedLoadCourse) =
-                        courseListUserStateMapper.mergeWithCourseContinue(state, continuedCourse.id)
+                        courseListUserStateMapper.mergeWithCourseContinue(state, course.id)
                     state = newState
 
                     if (isNeedLoadCourse) {
-                        fetchPlaceHolders(continuedCourse.id)
+                        fetchPlaceHolders(course.id)
                     }
                 },
                 onError = emptyOnErrorStub
@@ -274,61 +274,29 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext = { enrollmentCourseUpdate ->
-                    if (enrollmentCourseUpdate.enrollment == 0L) {
-                        removeDroppedCourse(enrollmentCourseUpdate.id)
+                onNext = { course ->
+                    if (course.enrollment == 0L) {
+                        val newState = courseListUserStateMapper.mergeWithDroppedCourse(state, course.id)
+                        state = newState
+
+                        if (newState is CourseListUserView.State.Data) {
+                            val publishUserCourses =
+                                if (newState.courseListViewState is CourseListView.State.Content) {
+                                    UserCoursesLoaded.FirstCourse(newState.courseListViewState.courseListDataItems.first())
+                                } else {
+                                    UserCoursesLoaded.Empty
+                                }
+                            userCoursesLoadedPublisher.onNext(publishUserCourses)
+                        }
                     } else {
-                        fetchEnrolledCourse(enrollmentCourseUpdate.id)
+                        val (newState, isNeedLoadCourse) =
+                            courseListUserStateMapper.mergeWithEnrolledCourse(state, course.id)
+
+                        state = newState
+                        if (isNeedLoadCourse) {
+                            fetchPlaceHolders(course.id)
+                        }
                     }
-                },
-                onError = emptyOnErrorStub
-            )
-    }
-
-    private fun removeDroppedCourse(courseId: Long) {
-        val oldState = state as? CourseListUserView.State.Data
-            ?: return
-
-        val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
-            ?: return
-
-        val resultState = courseListStateMapper.mapUserCourseRemoveState(oldState, oldCourseListState, courseId)
-
-        val publishUserCourses =
-            if (resultState.courseListViewState is CourseListView.State.Content) {
-                UserCoursesLoaded.FirstCourse(resultState.courseListViewState.courseListDataItems.first())
-            } else {
-                UserCoursesLoaded.Empty
-            }
-
-        userCoursesLoadedPublisher.onNext(publishUserCourses)
-        state = resultState
-    }
-
-    private fun fetchEnrolledCourse(courseId: Long) {
-        compositeDisposable += courseListUserInteractor
-            .getUserCourse(courseId)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { enrolledCourseListItem ->
-                    val oldState = state as? CourseListUserView.State.Data
-                        ?: return@subscribeBy
-
-                    userCoursesLoadedPublisher.onNext(UserCoursesLoaded.FirstCourse(enrolledCourseListItem))
-                    val userCourse = UserCourse(
-                        id = 0,
-                        user = 0,
-                        course = enrolledCourseListItem.id,
-                        isFavorite = false,
-                        isPinned = false,
-                        isArchived = false,
-                        lastViewed = null
-                    )
-                    state = oldState.copy(
-                        userCourses = listOf(userCourse) + oldState.userCourses,
-                        courseListViewState = courseListStateMapper.mapEnrolledCourseListItemState(0, oldState.courseListViewState, enrolledCourseListItem)
-                    )
                 },
                 onError = emptyOnErrorStub
             )
