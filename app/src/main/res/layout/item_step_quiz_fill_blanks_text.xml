@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.stepik.android.view.latex.ui.widget.LatexView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/stepQuizFillBlanksText"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
     android:layout_marginBottom="4dp"
     android:gravity="center_vertical"
-    android:textAppearance="?textAppearanceBody1"
-    app:fontFamily="@font/roboto_regular" />
+    android:textAppearance="?textAppearanceBody1" />
