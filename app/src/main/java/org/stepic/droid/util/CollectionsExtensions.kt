@@ -26,6 +26,24 @@ inline fun <T> Array<T>.mapToLongArray(transform: (T) -> Long): LongArray {
     return array
 }
 
+fun <T> List<T>.takeLazy(n: Int): List<T> =
+    subList(0, minOf(size, n))
+
+
+fun <T> List<T>.slice(from: Int = 0, to: Int = size): List<T> =
+    subList(from.coerceAtLeast(0), to.coerceAtMost(size))
+
+/**
+ * Creates new list from current with inserted [item] at [pos]
+ */
+// todo: write test
+fun <T> List<T>.insert(pos: Int = 0, item: T): List<T> {
+    val list = mutableListOf<T>()
+    list.addAll(this.slice(to = pos))
+    list.add(item)
+    list.addAll(this.slice(from = pos))
+    return list
+}
 
 fun LongArray?.isNullOrEmpty(): Boolean =
     this == null || this.isEmpty()

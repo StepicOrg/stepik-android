@@ -49,8 +49,8 @@ class CourseListViewDelegate(
         when (state) {
             is CourseListView.State.Loading -> {
                 courseItemAdapter.items = listOf(
-                    CourseListItem.PlaceHolder,
-                    CourseListItem.PlaceHolder
+                    CourseListItem.PlaceHolder(),
+                    CourseListItem.PlaceHolder()
                 )
             }
 
@@ -68,8 +68,7 @@ class CourseListViewDelegate(
                  */
                 val size = state.courseListItems.size
                 if (size > 2 &&
-                    (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL &&
-                    state.courseListItems.last() is CourseListItem.PlaceHolder) {
+                    (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL) {
                     courseItemAdapter.notifyItemChanged(size - 2)
                     courseItemAdapter.notifyItemChanged(size - 3)
                 }
