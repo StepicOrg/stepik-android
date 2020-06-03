@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.course_list.mapper
 
-import androidx.annotation.VisibleForTesting
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.plus
@@ -13,6 +12,7 @@ import org.stepic.droid.util.insert
 import org.stepic.droid.util.transform
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
+import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
@@ -210,28 +210,7 @@ constructor() {
         if (state is CourseListUserView.State.Data &&
             with(state.userCourseQuery) { isFavorite != true && isArchived != true } // in this case course do not match userCourseQuery
         ) {
-            val userCourse = listOf(UserCourse(user = 0, course = courseId, lastViewed = Date(DateTimeHelper.nowUtc())))
-            val coursePlaceholder = listOf(CourseListItem.PlaceHolder(courseId))
-            val isNeedLoadCourse =
-                state.courseListViewState == CourseListView.State.Empty ||
-                state.courseListViewState is CourseListView.State.Content
-
-            val (userCourses, courseListViewState) =
-                when (state.courseListViewState) {
-                    CourseListView.State.Empty ->
-                        userCourse to CourseListView.State.Content(PagedList(emptyList()), coursePlaceholder)
-
-                    is CourseListView.State.Content ->
-                        Pair(
-                            userCourse + state.userCourses,
-                            state.courseListViewState.copy(courseListItems = coursePlaceholder + state.courseListViewState.courseListItems)
-                        )
-
-                    else ->
-                        state.userCourses to state.courseListViewState
-                }
-
-            state.copy(userCourses = userCourses, courseListViewState = courseListViewState) to isNeedLoadCourse
+            addUserCourseToTop(state, UserCourse(user = 0, course = courseId, lastViewed = Date(DateTimeHelper.nowUtc())))
         } else {
             state to false
         }
@@ -319,13 +298,27 @@ constructor() {
                 /*
                 - понять куда его вставить
                 - обновить user courses
-                - если грузится страница, куда его нужно вставить, то
-                - если грузится первая страница
+
+
+                Варианты:
+                1) Помещать элементы в начало списка
+                   - нужно при паблишинге сортировать по дате
+                   - при обновлении списка элемент уедет вниз
+                2) При вхождении в видимую область помещать элемент на свое место, иначе в конец списка
+                   - проблемы аналогично верхним (но так как обычно не больше 2х страниц, то скорее всего у большинства всё будет ок)
+                   - если мы помещаем элемент в конец списка, то нарушается порядок и потом непонятно куда класть следующий
+                3) Помещать элемент на свое место и подгружать при попадании в область видимости
+                   - элемент на своем месте
+                   - нарушается предикат, что user courses 1 к 1 соотвествуют courseListItems, так как теперь могут быть разрывы
+
+                   победил вариант 1, так как все варианты с trade off, но первый проще всего сделать
                  */
 
-
-
-                state to true
+                if (state.userCourses.any { it.course == userCourse.course }) { // если такой уже есть, то ничего не трогаем
+                    state to false
+                } else {
+                    addUserCourseToTop(state, userCourse)
+                }
             } else {
                 mergeWithRemovedCourse(state, userCourse.course) to false
             }
@@ -333,45 +326,43 @@ constructor() {
             state to false
         }
 
-    /**
-     * Merges
-     */
-    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    fun mergeUserCourses(userCourses: List<UserCourse>, newUserCourses: List<UserCourse>, userCourseQuery: UserCourseQuery): Pair<List<UserCourse>, Set<Long>> {
-        val newUserCoursesMap = newUserCourses
-            .associateByTo(hashMapOf(), UserCourse::course) // O(n)
+    private fun addUserCourseToTop(state: CourseListUserView.State.Data, userCourse: UserCourse): Pair<CourseListUserView.State, Boolean> {
+        val userCourseWrapper = listOf(userCourse)
+        val coursePlaceholder = listOf(CourseListItem.PlaceHolder(userCourse.course))
+        val isNeedLoadCourse =
+            state.courseListViewState == CourseListView.State.Empty ||
+                    state.courseListViewState is CourseListView.State.Content
 
-        val items = arrayListOf<UserCourse>()
+        val (userCourses, courseListViewState) =
+            when (state.courseListViewState) {
+                CourseListView.State.Empty ->
+                    userCourseWrapper to CourseListView.State.Content(PagedList(emptyList()), coursePlaceholder)
 
-        var index = 0
-        var newIndex = 0
+                is CourseListView.State.Content ->
+                    Pair(
+                        userCourseWrapper + state.userCourses,
+                        state.courseListViewState.copy(courseListItems = coursePlaceholder + state.courseListViewState.courseListItems)
+                    )
 
-        while (index < userCourses.size || newIndex < newUserCourses.size) {
-            val item = userCourses.getOrNull(index)
-            val newItem = newUserCourses.getOrNull(newIndex)
-
-            if (item != null && (newItem == null || item.time > newItem.time)) {
-                val referenceItem = newUserCoursesMap.remove(item.course)
-
-                if (
-                    referenceItem != null && referenceItem.isMatchQuery(userCourseQuery) || // if new item is not matches query we should skip it
-                    referenceItem == null
-                ) {
-                    items += referenceItem?.takeIf { it.time > item.time } ?: item // take one with greater time
-                }
-
-                index++
-            } else if (newItem != null) {
-                if (newItem.isMatchQuery(userCourseQuery) && newItem.course in newUserCoursesMap) {
-                    items += newItem
-                }
-
-                newIndex++
+                else ->
+                    state.userCourses to state.courseListViewState
             }
-        }
 
-        return items to newUserCoursesMap.keys
+        return state.copy(userCourses = userCourses, courseListViewState = courseListViewState) to isNeedLoadCourse
     }
+
+    fun getLatestCourseToPublish(state: CourseListUserView.State.Data): UserCoursesLoaded =
+        if (state.courseListViewState is CourseListView.State.Content) {
+            val userCoursesMap =
+                state.userCourses.associateBy(UserCourse::course)
+
+            state.courseListViewState.courseListDataItems
+                .maxBy { userCoursesMap[it.course.id]?.time ?: 0L }
+                ?.let(UserCoursesLoaded::FirstCourse)
+                ?: UserCoursesLoaded.Empty
+        } else {
+            UserCoursesLoaded.Empty
+        }
 
     private val UserCourse.time: Long
         get() = lastViewed?.time ?: 0

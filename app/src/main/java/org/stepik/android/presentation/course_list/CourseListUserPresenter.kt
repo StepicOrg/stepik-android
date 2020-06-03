@@ -280,13 +280,8 @@ constructor(
             ?.takeIf { it.userCourseQuery.isMainTab() } // only for main tab
             ?: return
 
-        val publishUserCourses =
-            if (oldState.courseListViewState is CourseListView.State.Content) {
-                UserCoursesLoaded.FirstCourse(oldState.courseListViewState.courseListDataItems.first())
-            } else {
-                UserCoursesLoaded.Empty
-            }
-        userCoursesLoadedPublisher.onNext(publishUserCourses)
+        userCoursesLoadedPublisher
+            .onNext(courseListUserStateMapper.getLatestCourseToPublish(oldState))
     }
 
     private fun synchronizeDeadlines() {
