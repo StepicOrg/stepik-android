@@ -105,12 +105,16 @@ constructor(
                         userCourses = it,
                         courseListViewState = CourseListView.State.Idle
                     )
-                    analytic.setCoursesCount(it.size) // todo fix analytics
+                    if (userCourseQuery.isMainTab()) {
+                        analytic.setCoursesCount(it.size)
+                        synchronizeDeadlines()
+                    }
                     fetchCourses()
-                    synchronizeDeadlines()
                 },
                 onError = {
-                    userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
+                    if (userCourseQuery.isMainTab()) {
+                        userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
+                    }
                     state =
                         if (it is HttpException && it.code() == 401) {
                             CourseListUserView.State.EmptyLogin
@@ -125,7 +129,7 @@ constructor(
         val oldState = state as? CourseListUserView.State.Data
             ?: return
 
-        paginationDisposable.clear() // todo ??
+        paginationDisposable.clear()
 
         val ids = oldState
             .userCourses
@@ -145,27 +149,13 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onNext = { (items, sourceType) ->
-                    val newState = courseListUserStateMapper.mapToFetchCoursesSuccess(state, items, sourceType == DataSourceType.CACHE)
-                    if (newState is CourseListUserView.State.Data) {
-                        val userCourseLoaded = (newState.courseListViewState as? CourseListView.State.Content)
-                            ?.courseListDataItems
-                            ?.firstOrNull()
-                            ?.let(UserCoursesLoaded::FirstCourse)
-                            ?: UserCoursesLoaded.Empty
-
-                        userCoursesLoadedPublisher.onNext(userCourseLoaded)
-                    }
-                    state = newState
+                    state = courseListUserStateMapper.mapToFetchCoursesSuccess(state, items, sourceType == DataSourceType.CACHE)
+                    publishUserCoursesLoaded()
                 },
                 onError = {
-                    val newState = courseListUserStateMapper.mapToFetchCoursesError(state)
-                    when ((newState as? CourseListUserView.State.Data)?.courseListViewState) {
-                        is CourseListView.State.Content ->
-                            view?.showNetworkError()
-
-                        else ->
-                            userCoursesLoadedPublisher.onNext(UserCoursesLoaded.Empty)
-                    }
+                    state = courseListUserStateMapper.mapToFetchCoursesError(state)
+                    publishUserCoursesLoaded()
+                    view?.showNetworkError()
                 }
             )
     }
@@ -242,17 +232,6 @@ constructor(
             )
     }
 
-    private fun fetchPlaceholder(courseId: Long) {
-        compositeDisposable += courseListUserInteractor
-            .getUserCourse(courseId, sourceType = DataSourceType.CACHE)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { state = courseListUserStateMapper.mergeWithPlaceholderSuccess(state, it) },
-                onError = { state = courseListUserStateMapper.mergeWithDroppedCourse(state, courseId) }
-            )
-    }
-
     /**
      * Enrollments
      */
@@ -263,18 +242,8 @@ constructor(
             .subscribeBy(
                 onNext = { course ->
                     if (course.enrollment == 0L) {
-                        val newState = courseListUserStateMapper.mergeWithDroppedCourse(state, course.id)
-                        state = newState
-
-                        if (newState is CourseListUserView.State.Data) {
-                            val publishUserCourses =
-                                if (newState.courseListViewState is CourseListView.State.Content) {
-                                    UserCoursesLoaded.FirstCourse(newState.courseListViewState.courseListDataItems.first())
-                                } else {
-                                    UserCoursesLoaded.Empty
-                                }
-                            userCoursesLoadedPublisher.onNext(publishUserCourses)
-                        }
+                        state = courseListUserStateMapper.mergeWithRemovedCourse(state, course.id)
+                        publishUserCoursesLoaded()
                     } else {
                         val (newState, isNeedLoadCourse) =
                             courseListUserStateMapper.mergeWithEnrolledCourse(state, course.id)
@@ -289,6 +258,37 @@ constructor(
             )
     }
 
+    /**
+     * Placeholders
+     */
+    private fun fetchPlaceholder(courseId: Long) {
+        compositeDisposable += courseListUserInteractor
+            .getUserCourse(courseId, sourceType = DataSourceType.CACHE)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = {
+                    state = courseListUserStateMapper.mergeWithPlaceholderSuccess(state, it)
+                    publishUserCoursesLoaded() // as we can load top element
+                },
+                onError = { state = courseListUserStateMapper.mergeWithRemovedCourse(state, courseId) }
+            )
+    }
+
+    private fun publishUserCoursesLoaded() {
+        val oldState = (state as? CourseListUserView.State.Data)
+            ?.takeIf { it.userCourseQuery.isMainTab() } // only for main tab
+            ?: return
+
+        val publishUserCourses =
+            if (oldState.courseListViewState is CourseListView.State.Content) {
+                UserCoursesLoaded.FirstCourse(oldState.courseListViewState.courseListDataItems.first())
+            } else {
+                UserCoursesLoaded.Empty
+            }
+        userCoursesLoadedPublisher.onNext(publishUserCourses)
+    }
+
     private fun synchronizeDeadlines() {
         compositeDisposable += deadlinesSynchronizationInteractor
             .syncPersonalDeadlines()
@@ -296,4 +296,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(onError = emptyOnErrorStub)
     }
+
+    private fun UserCourseQuery.isMainTab(): Boolean =
+        isArchived == false && isFavorite == null
 }

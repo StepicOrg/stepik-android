@@ -236,7 +236,7 @@ constructor() {
             state to false
         }
 
-    fun mergeWithDroppedCourse(state: CourseListUserView.State, courseId: Long): CourseListUserView.State =
+    fun mergeWithRemovedCourse(state: CourseListUserView.State, courseId: Long): CourseListUserView.State =
         if (state is CourseListUserView.State.Data) {
             val userCourses = state.userCourses.filterNot { it.course == courseId }
 
@@ -322,9 +322,12 @@ constructor() {
                 - если грузится страница, куда его нужно вставить, то
                 - если грузится первая страница
                  */
+
+
+
                 state to true
             } else {
-                mergeWithDroppedCourse(state, userCourse.course) to false
+                mergeWithRemovedCourse(state, userCourse.course) to false
             }
         } else {
             state to false
