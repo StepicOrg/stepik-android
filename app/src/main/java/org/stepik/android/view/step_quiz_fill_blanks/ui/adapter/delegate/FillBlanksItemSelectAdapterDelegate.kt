@@ -1,16 +1,19 @@
 package org.stepik.android.view.step_quiz_fill_blanks.ui.adapter.delegate
 
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ArrayAdapter
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.ListPopupWindow
+import androidx.core.graphics.drawable.DrawableCompat
 import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_select.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.view.step_quiz_choice.ui.delegate.LayerListDrawableDelegate
 import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -46,19 +49,30 @@ class FillBlanksItemSelectAdapterDelegate(
             data as FillBlanksItem.Select
             itemView.isEnabled = data.isEnabled
             stepQuizFillBlanksText.text = data.text
-            val (@IdRes layer, @DrawableRes icon) = when (data.correct) {
+            val (@IdRes layer, @DrawableRes statusIconRes, @ColorRes arrowColorRes) = when (data.correct) {
                 true ->
-                    R.id.correct_layer to R.drawable.ic_step_quiz_correct
+                    Triple(R.id.correct_layer, R.drawable.ic_step_quiz_correct, R.color.color_correct_arrow_down)
 
                 false ->
-                    R.id.incorrect_layer to R.drawable.ic_step_quiz_wrong
+                    Triple(R.id.incorrect_layer, R.drawable.ic_step_quiz_wrong, R.color.color_wrong_arrow_down)
 
                 else ->
-                    R.id.checked_layer to -1
+                    Triple(R.id.checked_layer, null, R.color.color_enabled_arrow_down)
             }
+
             layerListDrawableDelegate.showLayer(layer)
-            stepQuizFillBlanksText.setCompoundDrawables(start = icon, end = R.drawable.ic_arrow_bottom)
+            val iconDrawable = statusIconRes?.let { AppCompatResources.getDrawable(context, it) }
+            val arrowDrawable = prepareArrowIcon(arrowColorRes)
+
+            stepQuizFillBlanksText.setCompoundDrawablesWithIntrinsicBounds(iconDrawable, null, arrowDrawable, null)
         }
+
+        private fun prepareArrowIcon(arrowColorRes: Int): Drawable? =
+            AppCompatResources
+                .getDrawable(context, R.drawable.ic_arrow_bottom)
+                ?.let(DrawableCompat::wrap)
+                ?.let(Drawable::mutate)
+                ?.also { DrawableCompat.setTintList(it, AppCompatResources.getColorStateList(context, arrowColorRes))  }
 
         private fun showOptions(view: View) {
             val options = (itemData as? FillBlanksItem.Select)
