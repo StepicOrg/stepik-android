@@ -30,7 +30,7 @@ constructor(
     fun getCourseListItems(
         vararg courseId: Long,
         courseViewSource: CourseViewSource,
-        sourceType: DataSourceType = DataSourceType.CACHE
+        sourceType: DataSourceType = DataSourceType.REMOTE
     ): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(
             coursesSource = courseRepository.getCourses(*courseId, primarySourceType = sourceType),
