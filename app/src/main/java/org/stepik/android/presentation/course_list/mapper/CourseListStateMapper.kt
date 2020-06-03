@@ -1,12 +1,9 @@
 package org.stepik.android.presentation.course_list.mapper
 
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
 import javax.inject.Inject
 

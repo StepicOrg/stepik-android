@@ -2,7 +2,6 @@ package org.stepik.android.view.course_list.ui.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
