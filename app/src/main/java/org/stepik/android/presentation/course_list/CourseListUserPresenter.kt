@@ -244,7 +244,7 @@ constructor(
 
     private fun fetchPlaceholder(courseId: Long) {
         compositeDisposable += courseListUserInteractor
-            .getUserCourse(courseId)
+            .getUserCourse(courseId, sourceType = DataSourceType.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

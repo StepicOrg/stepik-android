@@ -51,8 +51,8 @@ constructor(
             .getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
             .map { it to sourceType }
 
-    fun getUserCourse(courseId: Long): Single<CourseListItem.Data> =
+    fun getUserCourse(courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<CourseListItem.Data> =
         courseListInteractor
-            .getCourseListItems(courseId, courseViewSource = CourseViewSource.MyCourses)
+            .getCourseListItems(courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
             .map { it.first() }
 }
