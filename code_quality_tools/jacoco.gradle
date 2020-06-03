@@ -45,7 +45,7 @@ project.afterEvaluate {
                                    '**/*MembersInjector*.*', // Dagger auto-generated code.
                                    '**/*_Provide*Factory*.*'] // Dagger auto-generated code.
 
-                classDirectories = fileTree(
+                classDirectories.from = fileTree(
                         dir: "${project.buildDir}/intermediates/javac/${sourcePath}",
                         excludes: excludes
                 ) + fileTree(
@@ -59,9 +59,9 @@ project.afterEvaluate {
                         "src/$buildTypeName/java"
                 ]
 
-                additionalSourceDirs = files(coverageSourceDirs)
-                sourceDirectories = files(coverageSourceDirs)
-                executionData = files("${project.buildDir}/jacoco/${testTaskName}.exec")
+                additionalSourceDirs.from = files(coverageSourceDirs)
+                sourceDirectories.from = files(coverageSourceDirs)
+                executionData.from = files("${project.buildDir}/jacoco/${testTaskName}.exec")
 
                 reports {
                     xml.enabled = true

@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class CourseEnrollmentInteractor
 @Inject
 constructor(
+    private val analytic: Analytic,
     private val enrollmentRepository: EnrollmentRepository,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
 
@@ -59,6 +61,7 @@ constructor(
         requireAuthorization then
         enrollmentRepository
             .removeEnrollment(courseId)
+            .doOnComplete { analytic.reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId.toString()) }
             .andThen(deadlinesRepository.removeDeadlineRecordByCourseId(courseId).onErrorComplete())
             .andThen(userCoursesRepository.removeUserCourse(courseId))
             .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())

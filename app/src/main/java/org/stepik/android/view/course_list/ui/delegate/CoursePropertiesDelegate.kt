@@ -2,7 +2,6 @@ package org.stepik.android.view.course_list.ui.delegate
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
@@ -24,15 +23,6 @@ class CoursePropertiesDelegate(
 
     private val courseRatingImage = view.courseRatingImage
     private val courseRatingText = view.courseRatingText
-
-    fun setTextColor(@ColorInt color: Int) {
-        learnersCountText.setTextColor(color)
-        learnersCountImage.setColorFilter(color)
-        courseRatingText.setTextColor(color)
-        courseRatingImage.setColorFilter(color)
-        courseItemProgress.backgroundPaintColor = color
-        courseItemProgressTitle.setTextColor(color)
-    }
 
     fun setStats(courseListItem: CourseListItem.Data) {
         setLearnersCount(courseListItem.course.learnersCount)

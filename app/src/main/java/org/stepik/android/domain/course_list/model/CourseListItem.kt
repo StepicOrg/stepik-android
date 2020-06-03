@@ -16,5 +16,5 @@ sealed class CourseListItem {
             get() = course.id
     }
 
-    object PlaceHolder : CourseListItem()
+    class PlaceHolder(val courseId: Long = -1) : CourseListItem()
 }

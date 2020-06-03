@@ -10,8 +10,9 @@ import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
-import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -38,18 +39,20 @@ constructor(
             }
         }
 
-    fun getAllUserCourses(): Single<List<UserCourse>> =
+    fun getAllUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<UserCourse>> =
         requireAuthorization then
         Observable.range(1, Int.MAX_VALUE)
-            .concatMapSingle { userCoursesRepository.getUserCourses(page = it, sourceType = DataSourceType.REMOTE) }
+            .concatMapSingle { userCoursesRepository.getUserCourses(userCourseQuery.copy(page = it), sourceType = sourceType) }
             .takeUntil { !it.hasNext }
             .reduce(emptyList()) { a, b -> a + b }
 
-    fun getCourseListItems(vararg courseId: Long): Single<PagedList<CourseListItem.Data>> =
-        courseListInteractor.getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses)
-
-    fun getUserCourse(courseId: Long): Single<CourseListItem.Data> =
+    fun getCourseListItems(vararg courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<Pair<PagedList<CourseListItem.Data>, DataSourceType>> =
         courseListInteractor
-            .getCourseListItems(courseId, courseViewSource = CourseViewSource.MyCourses)
+            .getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
+            .map { it to sourceType }
+
+    fun getUserCourse(courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<CourseListItem.Data> =
+        courseListInteractor
+            .getCourseListItems(courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
             .map { it.first() }
 }

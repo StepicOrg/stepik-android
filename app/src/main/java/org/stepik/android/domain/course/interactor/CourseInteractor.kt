@@ -8,7 +8,6 @@ import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
-import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
@@ -44,9 +43,6 @@ constructor(
             .onErrorReturnItem(course)
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
-
-    fun saveUserCourse(userCourse: UserCourse): Single<UserCourse> =
-        userCoursesRepository.saveUserCourse(userCourse)
 
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
         zip(
