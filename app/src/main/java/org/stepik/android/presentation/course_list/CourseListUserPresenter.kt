@@ -20,6 +20,7 @@ import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesSynchronizationInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
+import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
@@ -56,6 +57,8 @@ constructor(
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
 
+    private val progressObservable: Observable<Progress>,
+
     viewContainer: PresenterViewContainer<CourseListUserView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
 ) : PresenterBase<CourseListUserView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
@@ -80,6 +83,7 @@ constructor(
         subscribeForEnrollmentUpdates()
         subscribeForContinueCourseUpdates()
         subscribeForUserCourseOperationUpdates()
+        subscribeForProgressesUpdates()
     }
 
     override fun attachView(view: CourseListUserView) {
@@ -272,6 +276,22 @@ constructor(
                     publishUserCoursesLoaded() // as we can load top element
                 },
                 onError = { state = courseListUserStateMapper.mergeWithRemovedCourse(state, courseId) }
+            )
+    }
+
+    /**
+     * Progresses
+     */
+    private fun subscribeForProgressesUpdates() {
+        compositeDisposable += progressObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { progress ->
+                    val oldState = (state as? CourseListUserView.State.Data) ?: return@subscribeBy
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mergeWithCourseProgress(oldState.courseListViewState, progress))
+                },
+                onError = emptyOnErrorStub
             )
     }
 

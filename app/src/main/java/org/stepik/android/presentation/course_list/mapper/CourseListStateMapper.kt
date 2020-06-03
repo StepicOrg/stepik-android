@@ -1,9 +1,11 @@
 package org.stepik.android.presentation.course_list.mapper
 
 import org.stepic.droid.util.PagedList
+import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.model.Course
+import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_list.CourseListView
 import javax.inject.Inject
 
@@ -64,4 +66,31 @@ constructor() {
             }
         )
     }
+
+    fun mergeWithCourseProgress(state: CourseListView.State, progress: Progress): CourseListView.State {
+        if (state !is CourseListView.State.Content) {
+            return state
+        }
+
+        val courseListItems = state.courseListItems.map { mergeCourseItemWithProgress(it, progress) }
+        val courseListDataItems = state.courseListDataItems.mapPaged { mergeCourseDataItemWithProgress(it, progress) }
+
+        return state.copy(courseListDataItems, courseListItems)
+    }
+
+    private fun mergeCourseItemWithProgress(item: CourseListItem, progress: Progress): CourseListItem =
+        when (item) {
+            is CourseListItem.PlaceHolder ->
+                item
+
+            is CourseListItem.Data ->
+                mergeCourseDataItemWithProgress(item, progress)
+        }
+
+    private fun mergeCourseDataItemWithProgress(item: CourseListItem.Data, progress: Progress): CourseListItem.Data =
+        if (item.course.progress == progress.id && progress.id != null) {
+            item.copy(courseStats = item.courseStats.copy(progress = progress))
+        } else {
+            item
+        }
 }
