@@ -22,7 +22,7 @@ import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 
 class FillBlanksStepQuizFormDelegate(
-    containerView: View,
+    private val containerView: View,
     private val fragmentManager: FragmentManager
 ) : StepQuizFormDelegate {
     private val quizDescription = containerView.stepQuizDescription
@@ -37,6 +37,7 @@ class FillBlanksStepQuizFormDelegate(
         itemsAdapter += FillBlanksItemSelectAdapterDelegate(onItemClicked = ::selectItemAction)
 
         with(containerView.fillBlanksRecycler) {
+            itemAnimator = null
             adapter = itemsAdapter
             isNestedScrollingEnabled = false
             layoutManager = FlexboxLayoutManager(context)
@@ -69,6 +70,7 @@ class FillBlanksStepQuizFormDelegate(
             ?.submission
 
         itemsAdapter.items = fillBlanksItemMapper.mapToFillBlanksItems(state.attempt, submission, StepQuizFormResolver.isQuizEnabled(state))
+        containerView.post { containerView.fillBlanksRecycler.requestLayout() }
     }
 
     override fun createReply(): ReplyResult =
