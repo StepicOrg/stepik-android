@@ -2,6 +2,7 @@ package org.stepik.android.view.step_quiz_fill_blanks.ui.adapter.delegate
 
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.flexbox.FlexboxLayoutManager
 import kotlinx.android.synthetic.main.item_step_quiz_fill_blanks_text.view.*
 import org.stepic.droid.R
 import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
@@ -20,6 +21,9 @@ class FillBlanksItemTextAdapterDelegate : AdapterDelegate<FillBlanksItem, Delega
 
         override fun onBind(data: FillBlanksItem) {
             data as FillBlanksItem.Text
+            val layoutParams = itemView.layoutParams as FlexboxLayoutManager.LayoutParams
+            layoutParams.isWrapBefore = data.isWrapBefore
+            itemView.layoutParams = layoutParams
             stepQuizFillBlanksText.setText(data.text)
         }
     }

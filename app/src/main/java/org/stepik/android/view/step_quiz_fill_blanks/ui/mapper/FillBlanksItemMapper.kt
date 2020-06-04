@@ -10,32 +10,54 @@ class FillBlanksItemMapper {
         private const val TEXT = "text"
         private const val INPUT = "input"
         private const val SELECT = "select"
+
+        private const val BREAK_TAG = "<br>"
     }
     fun mapToFillBlanksItems(attempt: Attempt, submission: Submission?, isEnabled: Boolean): List<FillBlanksItem> {
+        var index = 0
         var blanksCounter = 0
         return attempt
             .dataset
             ?.components
-            ?.mapIndexed { index, component ->
+            ?.map { component ->
                 when (component.type) {
-                    TEXT ->
-                        FillBlanksItem.Text(index, component.text ?: "", component.options ?: emptyList(), isEnabled)
+                    TEXT -> {
+                        val result = generateTextComponents(index, component.text ?: "", component.options ?: emptyList(), isEnabled)
+                        index = result.first
+                        result.second
+                    }
 
                     INPUT -> {
                         val blankIndex = blanksCounter++
-                        FillBlanksItem.Input(index, submission?.reply?.blanks?.getOrNull(blankIndex) ?: component.text ?: "", component.options ?: emptyList(), isEnabled, mapCorrect(blankIndex, submission))
+                        listOf(FillBlanksItem.Input(index++, submission?.reply?.blanks?.getOrNull(blankIndex) ?: component.text ?: "", component.options ?: emptyList(), isEnabled, mapCorrect(blankIndex, submission)))
                     }
 
                     SELECT -> {
                         val blankIndex = blanksCounter++
-                        FillBlanksItem.Select(index, submission?.reply?.blanks?.getOrNull(blankIndex) ?: component.text ?: "", component.options ?: emptyList(), isEnabled, mapCorrect(blankIndex, submission))
+                        listOf(FillBlanksItem.Select(index++, submission?.reply?.blanks?.getOrNull(blankIndex) ?: component.text ?: "", component.options ?: emptyList(), isEnabled, mapCorrect(blankIndex, submission)))
                     }
 
                     else ->
                         throw IllegalArgumentException("Component type not supported")
                 }
             }
+            ?.flatten()
             ?: emptyList()
+    }
+
+    private fun generateTextComponents(currentIndex: Int, componentText: String, componentOptions: List<String>, isEnabled: Boolean): Pair<Int, List<FillBlanksItem.Text>> {
+        val textItems = componentText.split(BREAK_TAG)
+        val components =  textItems.mapIndexed { index, text ->
+            FillBlanksItem.Text(
+                id = currentIndex + index,
+                text = text,
+                options = componentOptions,
+                isEnabled = isEnabled,
+                isWrapBefore = index > 0 // We add app:layout_wrapBefore="true" after each <br> tag
+            )
+        }
+        val nextIndex = currentIndex + components.size
+        return nextIndex to components
     }
 
     private fun mapCorrect(index: Int, submission: Submission?): Boolean? =

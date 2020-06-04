@@ -8,7 +8,8 @@ sealed class FillBlanksItem : Identifiable<Int> {
         val text: String,
         val options: List<String>,
         val isEnabled: Boolean,
-        val correct: Boolean? = null
+        val correct: Boolean? = null,
+        val isWrapBefore: Boolean = false
     ) : FillBlanksItem()
 
     data class Input(
