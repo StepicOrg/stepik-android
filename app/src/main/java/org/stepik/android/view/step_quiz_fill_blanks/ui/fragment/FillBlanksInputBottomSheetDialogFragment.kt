@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -30,6 +31,11 @@ class FillBlanksInputBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private var index: Int by argument()
     private var text: String by argument()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_BottomSheetDialog)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.bottom_sheet_dialog_fill_blanks_input, container, false)
 
@@ -40,7 +46,13 @@ class FillBlanksInputBottomSheetDialogFragment : BottomSheetDialogFragment() {
             index = savedInstanceState.getInt(ARG_INDEX)
             text = savedInstanceState.getString(ARG_TEXT) ?: return
         }
-        fillBlanksInputField.setText(text)
+        fillBlanksInputField.append(text)
+        fillBlanksInputField.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                super.dismiss()
+            }
+            false
+        }
         fillBlanksInputField.post {
             fillBlanksInputField.requestFocus()
             (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(fillBlanksInputField, InputMethodManager.SHOW_IMPLICIT)
