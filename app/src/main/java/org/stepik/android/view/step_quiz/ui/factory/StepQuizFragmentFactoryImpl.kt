@@ -5,6 +5,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.view.step_quiz_choice.ui.fragment.ChoiceStepQuizFragment
 import org.stepik.android.view.step_quiz_code.ui.fragment.CodeStepQuizFragment
+import org.stepik.android.view.step_quiz_fill_blanks.ui.fragment.FillBlanksStepQuizFragment
 import org.stepik.android.view.step_quiz_matching.ui.fragment.MatchingStepQuizFragment
 import org.stepik.android.view.step_quiz_sorting.ui.fragment.SortingStepQuizFragment
 import org.stepik.android.view.step_quiz_sql.ui.fragment.SqlStepQuizFragment
@@ -40,6 +41,9 @@ constructor() : StepQuizFragmentFactory {
 
             AppConstants.TYPE_SQL ->
                 SqlStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+
+            AppConstants.TYPE_FILL_BLANKS ->
+                FillBlanksStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
 
             else ->
                 UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper.step.id)

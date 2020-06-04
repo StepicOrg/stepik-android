@@ -197,6 +197,9 @@
     <dimen name="step_quiz_fullscreen_code_layout_bottom_padding">80dp</dimen>
     <dimen name="step_quiz_full_screen_code_layout_drop_down_width">156dp</dimen>
 
+    <!-- Fill blanks quiz -->
+    <dimen name="step_quiz_fill_blanks_item_radius">18dp</dimen>
+
     <!-- Comments -->
     <dimen name="comment_user_image_size">36dp</dimen>
     <dimen name="comment_item_text_line">22sp</dimen>
