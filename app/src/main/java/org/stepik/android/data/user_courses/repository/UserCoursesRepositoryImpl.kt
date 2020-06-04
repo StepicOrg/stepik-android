@@ -8,8 +8,9 @@ import org.stepic.droid.util.doCompletableOnSuccess
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
-import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import javax.inject.Inject
 
 class UserCoursesRepositoryImpl
@@ -18,13 +19,13 @@ constructor(
     private val userCoursesRemoteDataSource: UserCoursesRemoteDataSource,
     private val userCoursesCacheDataSource: UserCoursesCacheDataSource
 ) : UserCoursesRepository {
-    override fun getUserCourses(page: Int, sourceType: DataSourceType): Single<PagedList<UserCourse>> {
+    override fun getUserCourses(userCourseQuery: UserCourseQuery, sourceType: DataSourceType): Single<PagedList<UserCourse>> {
         val remoteSource = userCoursesRemoteDataSource
-            .getUserCourses(page)
+            .getUserCourses(userCourseQuery)
             .doCompletableOnSuccess(userCoursesCacheDataSource::saveUserCourses)
 
         val cacheSource = userCoursesCacheDataSource
-            .getUserCourses()
+            .getUserCourses(userCourseQuery)
             .map { PagedList(it) }
 
         return when (sourceType) {
@@ -32,7 +33,7 @@ constructor(
                 cacheSource
 
             DataSourceType.REMOTE ->
-                if (page == 1) {
+                if (userCourseQuery.page == 1) {
                     remoteSource.onErrorResumeNext(cacheSource)
                 } else {
                     remoteSource

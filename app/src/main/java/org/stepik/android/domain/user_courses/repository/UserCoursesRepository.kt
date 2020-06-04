@@ -5,10 +5,11 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 
 interface UserCoursesRepository {
-    fun getUserCourses(page: Int = 1, sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<UserCourse>>
+    fun getUserCourses(userCourseQuery: UserCourseQuery = UserCourseQuery(page = 1, isArchived = false), sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<UserCourse>>
     fun getUserCourseByCourseId(courseId: Long): Maybe<UserCourse>
     fun saveUserCourse(userCourse: UserCourse): Single<UserCourse>
 

@@ -23,6 +23,7 @@ import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
+import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.model.Course
@@ -33,12 +34,12 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CoursePresenter
@@ -56,6 +57,7 @@ constructor(
     private val courseEnrollmentInteractor: CourseEnrollmentInteractor,
     private val courseIndexingInteractor: CourseIndexingInteractor,
     private val solutionsInteractor: SolutionsInteractor,
+    private val userCoursesInteractor: UserCoursesInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
 
@@ -67,6 +69,9 @@ constructor(
 
     @SolutionsSentBus
     private val solutionsSentObservable: Observable<Unit>,
+
+    @UserCoursesOperationBus
+    private val userCourseOperationObservable: Observable<UserCourse>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -95,6 +100,7 @@ constructor(
         compositeDisposable += userCourseDisposable
         subscriberForEnrollmentUpdates()
         subscribeForLocalSubmissionsUpdates()
+        subscribeForUserCoursesUpdates()
     }
 
     override fun attachView(view: CourseView) {
@@ -416,23 +422,12 @@ constructor(
     private fun saveUserCourse(preparedCourseHeaderData: CourseHeaderData, userCourse: UserCourse, userCourseAction: UserCourseAction) {
         state = CourseView.State.CourseLoaded(preparedCourseHeaderData)
 
-        userCourseDisposable += courseInteractor
+        userCourseDisposable += userCoursesInteractor
             .saveUserCourse(userCourse = userCourse)
-            .delay(5, TimeUnit.SECONDS)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = {
-                    val oldState = (state as? CourseView.State.CourseLoaded)
-                        ?: return@subscribeBy
-
-                    val courseHeaderData = oldState
-                        .courseHeaderData
-                        .copy(userCourseHeader = UserCourseHeader.Data(userCourse = it, isSending = false))
-
-                    state = CourseView.State.CourseLoaded(courseHeaderData)
-                    view?.showSaveUserCourseSuccess(userCourseAction)
-                },
+                onSuccess = { view?.showSaveUserCourseSuccess(userCourseAction) },
                 onError = {
                     val oldState = (state as? CourseView.State.CourseLoaded)
                         ?: return@subscribeBy
@@ -447,6 +442,25 @@ constructor(
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                     view?.showSaveUserCourseError(userCourseAction)
                 }
+            )
+    }
+
+    private fun subscribeForUserCoursesUpdates() {
+        compositeDisposable += userCourseOperationObservable
+            .filter { it.course == courseId }
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { userCourse ->
+                    val courseHeaderData = (state as? CourseView.State.CourseLoaded)
+                        ?.courseHeaderData
+                        ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
+                        ?: return@subscribeBy
+
+                    state =
+                        CourseView.State.CourseLoaded(courseHeaderData.copy(userCourseHeader = UserCourseHeader.Data(userCourse, isSending = false)))
+                },
+                onError = emptyOnErrorStub
             )
     }
 

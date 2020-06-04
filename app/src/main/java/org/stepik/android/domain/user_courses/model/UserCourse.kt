@@ -14,11 +14,11 @@ data class UserCourse(
     @SerializedName("course")
     val course: Long,
     @SerializedName("is_favorite")
-    val isFavorite: Boolean,
+    val isFavorite: Boolean = false,
     @SerializedName("is_pinned")
-    val isPinned: Boolean,
+    val isPinned: Boolean = false,
     @SerializedName("is_archived")
-    val isArchived: Boolean,
+    val isArchived: Boolean = false,
     @SerializedName("last_viewed")
     val lastViewed: Date?
 ) : Parcelable

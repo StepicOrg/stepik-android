@@ -8,10 +8,11 @@ import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface UserCoursesService {
     @GET("api/user-courses")
-    fun getUserCourses(@Query("page") page: Int): Single<UserCoursesResponse>
+    fun getUserCourses(@QueryMap query: Map<String, String>): Single<UserCoursesResponse>
 
     @GET("api/user-courses")
     fun getUserCourseByCourseId(@Query("course") course: Long): Single<UserCoursesResponse>
