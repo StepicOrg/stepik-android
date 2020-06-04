@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/stepQuizFillBlanksText"
+    android:layout_width="wrap_content"
+    android:layout_height="36dp"
+    android:layout_margin="4dp"
+    android:background="@drawable/bg_step_quiz_fill_blanks_item"
+    android:drawablePadding="12dp"
+    android:ellipsize="end"
+    android:gravity="center"
+    android:lines="1"
+    android:maxWidth="180dp"
+    android:maxLines="1"
+    android:minWidth="120dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:singleLine="true"
+    android:textAppearance="?textAppearanceBody1" />

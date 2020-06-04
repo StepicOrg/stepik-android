@@ -21,6 +21,8 @@ data class Reply(
     val language: String? = null,
     @SerializedName("code")
     val code: String? = null,
+    @SerializedName("blanks")
+    val blanks: List<String>? = null,
 
     @SerializedName("solve_sql")
     val solveSql: String? = null,
@@ -36,6 +38,7 @@ data class Reply(
         parcel.writeList(ordering)
         parcel.writeString(language)
         parcel.writeString(code)
+        parcel.writeStringList(blanks)
         parcel.writeString(solveSql)
         parcel.writeTypedList(tableChoices)
     }
@@ -53,6 +56,7 @@ data class Reply(
                 parcel.readArrayList(Int::class.java.classLoader) as? List<Int>,
                 parcel.readString(),
                 parcel.readString(),
+                parcel.createStringArrayList(),
                 parcel.readString(),
                 parcel.createTypedArrayList(TableChoiceAnswer)
             )
