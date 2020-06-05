@@ -145,4 +145,9 @@
         <item name="colorPrimary">@color/color_overlay_violet</item>
         <item name="colorOnSurface">@color/color_overlay_violet</item>
     </style>
+
+    <style name="ThemeOverlay.Yellow" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorPrimary">@color/color_overlay_yellow</item>
+        <item name="colorOnSurface">@color/color_overlay_yellow</item>
+    </style>
 </resources>

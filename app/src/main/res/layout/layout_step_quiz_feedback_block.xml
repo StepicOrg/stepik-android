@@ -31,6 +31,16 @@
         app:drawableStartCompat="@drawable/ic_step_quiz_correct" />
 
     <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/stepQuizFeedbackPartiallyCorrect"
+        style="@style/StepQuizFeedback"
+
+        android:background="@drawable/bg_shape_rounded"
+        app:backgroundTint="@color/color_overlay_yellow_alpha_12"
+        android:theme="@style/ThemeOverlay.Yellow"
+
+        app:drawableStartCompat="@drawable/ic_step_quiz_partially_correct" />
+
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/stepQuizFeedbackEvaluation"
         style="@style/StepQuizFeedback.Info"
 

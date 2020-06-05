@@ -30,6 +30,7 @@ class StepQuizFeedbackBlocksDelegate(
 
     private val stepQuizFeedbackEvaluation = containerView.stepQuizFeedbackEvaluation
     private val stepQuizFeedbackCorrect = containerView.stepQuizFeedbackCorrect
+    private val stepQuizFeedbackPartiallyCorrect = containerView.stepQuizFeedbackPartiallyCorrect
     private val stepQuizFeedbackWrong = containerView.stepQuizFeedbackWrong
     private val stepQuizFeedbackValidation = containerView.stepQuizFeedbackValidation
 
@@ -41,6 +42,7 @@ class StepQuizFeedbackBlocksDelegate(
         viewStateDelegate.addState<StepQuizFeedbackState.Idle>()
         viewStateDelegate.addState<StepQuizFeedbackState.Evaluation>(containerView, stepQuizFeedbackEvaluation)
         viewStateDelegate.addState<StepQuizFeedbackState.Correct>(containerView, stepQuizFeedbackCorrect, stepQuizFeedbackHint)
+        viewStateDelegate.addState<StepQuizFeedbackState.PartiallyCorrect>(containerView, stepQuizFeedbackPartiallyCorrect, stepQuizFeedbackHint)
         viewStateDelegate.addState<StepQuizFeedbackState.Wrong>(containerView, stepQuizFeedbackWrong, stepQuizFeedbackHint)
         viewStateDelegate.addState<StepQuizFeedbackState.Validation>(containerView, stepQuizFeedbackValidation)
 
@@ -88,6 +90,11 @@ class StepQuizFeedbackBlocksDelegate(
                             resources.getStringArray(R.array.step_quiz_feedback_correct).random()
                     }
                 setHint(stepQuizFeedbackCorrect, state.hint)
+            }
+
+            is StepQuizFeedbackState.PartiallyCorrect -> {
+                stepQuizFeedbackPartiallyCorrect.text = resources.getStringArray(R.array.step_quiz_feedback_partially_correct).random()
+                setHint(stepQuizFeedbackPartiallyCorrect, state.hint)
             }
 
             is StepQuizFeedbackState.Wrong -> {

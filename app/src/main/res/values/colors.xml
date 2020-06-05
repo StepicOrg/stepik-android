@@ -39,6 +39,8 @@
     <color name="color_overlay_green">@color/color_green_400</color>
     <color name="color_overlay_green_alpha_12">@color/color_green_400_alpha_12</color>
     <color name="color_overlay_violet">@color/color_violet_300</color>
+    <color name="color_overlay_yellow">@color/color_yellow_500</color>
+    <color name="color_overlay_yellow_alpha_12">@color/color_yellow_500_alpha_12</color>
 
     <color name="color_overlay_dark_surface">@color/color_brown_700</color>
 
@@ -63,6 +65,11 @@
     <color name="color_red_500_alpha_12">#30FF3329</color>
     <color name="color_red_300">#FF7965</color>
     <color name="color_red_300_alpha_12">#30FF7965</color>
+
+    <color name="color_yellow_500">#FFEB3B</color>
+    <color name="color_yellow_500_alpha_12">#1FFFEB3B</color>
+    <color name="color_yellow_300">#FFF176</color>
+    <color name="color_yellow_300_alpha_12">#1FFFF176</color>
 
     <!-- stepic brand book-->
     <color name="correct_answer_background">@color/color_overlay_green_alpha_12</color>
