@@ -64,12 +64,4 @@ class FillBlanksItemMapper {
         (submission?.feedback as? BlanksFeedback)
             ?.blanksFeedback
             ?.getOrNull(index)
-            ?: when (submission?.status) {
-                Submission.Status.CORRECT ->
-                    true
-                Submission.Status.WRONG ->
-                    false
-                else ->
-                    null
-            }
 }
