@@ -20,7 +20,6 @@ import org.stepik.android.view.step_quiz_fill_blanks.ui.mapper.FillBlanksItemMap
 import org.stepik.android.view.step_quiz_fill_blanks.ui.model.FillBlanksItem
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import timber.log.Timber
 
 class FillBlanksStepQuizFormDelegate(
     private val containerView: View,
@@ -69,9 +68,6 @@ class FillBlanksStepQuizFormDelegate(
     override fun setState(state: StepQuizView.State.AttemptLoaded) {
         val submission = (state.submissionState as? StepQuizView.SubmissionState.Loaded)
             ?.submission
-
-        Timber.d("Submission reply: ${submission?.reply}")
-        Timber.d("Submission _reply: ${submission?._reply}")
 
         itemsAdapter.items = fillBlanksItemMapper.mapToFillBlanksItems(state.attempt, submission, StepQuizFormResolver.isQuizEnabled(state))
         containerView.post { containerView.fillBlanksRecycler.requestLayout() }
