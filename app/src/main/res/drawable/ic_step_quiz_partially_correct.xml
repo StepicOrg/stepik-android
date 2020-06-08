@@ -7,6 +7,6 @@
         android:pathData="M13,1L6.8825,6.8075C6.6117,7.0641 6.1728,7.0641 5.9025,6.8079C5.9025,6.8079 3.9675,4.9708 3,4.0523"
         android:strokeWidth="2"
         android:fillColor="#00000000"
-        android:strokeColor="#FFEB3B"
+        android:strokeColor="@color/color_overlay_yellow"
         android:fillType="evenOdd"/>
 </vector>

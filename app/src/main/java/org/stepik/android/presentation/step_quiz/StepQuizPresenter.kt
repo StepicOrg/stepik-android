@@ -71,17 +71,8 @@ constructor(
     private fun getSubmissionState(attemptId: Long): Single<StepQuizView.SubmissionState> =
         stepQuizInteractor
             .getSubmission(attemptId)
-            .map { StepQuizView.SubmissionState.Loaded(processPartiallyCorrect(it)) as StepQuizView.SubmissionState }
+            .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
             .toSingle(StepQuizView.SubmissionState.Empty())
-
-    private fun processPartiallyCorrect(submission: Submission): Submission {
-        val isPartial = submission.status == Submission.Status.CORRECT && (submission.score?.toFloatOrNull() ?: 0f) < 1f
-        return if (isPartial) {
-            submission.copy(status = Submission.Status.PARTIALLY_CORRECT)
-        } else {
-            submission
-        }
-    }
 
     /**
      * Attempts
