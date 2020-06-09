@@ -17,7 +17,16 @@ class SubmissionRemoteDataSourceImpl
 constructor(
     private val submissionService: SubmissionService
 ) : SubmissionRemoteDataSource {
-    private val submissionMapper = Function(SubmissionResponse::submissions)
+    private val submissionMapper = Function { response: SubmissionResponse ->
+        response.submissions.map { submission ->
+            val isPartial = submission.status == Submission.Status.CORRECT && (submission.score?.toFloatOrNull() ?: 0f) < 1f
+            if (isPartial) {
+                submission.copy(status = Submission.Status.PARTIALLY_CORRECT, _reply = submission.reply)
+            } else {
+                submission
+            }
+        }
+    }
 
     override fun createSubmission(submission: Submission): Single<Submission> =
         submissionService.createNewSubmission(SubmissionRequest(submission))
