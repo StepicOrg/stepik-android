@@ -42,6 +42,15 @@
         <item>Well done!</item>
     </string-array>
 
+    <string-array name="step_quiz_feedback_partially_correct">
+        <item>Almost correct! Keep trying.</item>
+        <item>You\'re close to the correct answer. Let\'s try again!</item>
+        <item>Your answer is almost correct. Try to improve your result!</item>
+        <item>Partially correct, great! You can do better, try again!</item>
+        <item>Partially correct. Try to improve your score!</item>
+        <item>You\'re almost right, keep going!</item>
+    </string-array>
+
     <string-array name="step_content_font_size">
         <item>Small</item>
         <item>Medium</item>

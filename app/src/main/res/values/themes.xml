@@ -104,6 +104,11 @@
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/black</item>
     </style>
 
+    <style name="ThemeOverlay.AppTheme.BottomSheetDialog" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
     <style name="ThemeOverlay.AppTheme.Dialog.Fullscreen" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
@@ -139,5 +144,10 @@
     <style name="ThemeOverlay.Violet" parent="ThemeOverlay.MaterialComponents">
         <item name="colorPrimary">@color/color_overlay_violet</item>
         <item name="colorOnSurface">@color/color_overlay_violet</item>
+    </style>
+
+    <style name="ThemeOverlay.Yellow" parent="ThemeOverlay.MaterialComponents">
+        <item name="colorPrimary">@color/color_overlay_yellow</item>
+        <item name="colorOnSurface">@color/color_overlay_yellow</item>
     </style>
 </resources>
