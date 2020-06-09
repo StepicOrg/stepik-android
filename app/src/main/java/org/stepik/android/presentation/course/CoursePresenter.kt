@@ -359,20 +359,9 @@ constructor(
             .subscribeBy(
                 onSuccess = { course ->
                     if (course.enrollment > 0L) {
-                        updateEnrollment(course)
+                        courseEnrollmentInteractor.publishEnrollment(course)
                     }
                 },
-                onError = emptyOnErrorStub
-            )
-    }
-
-    private fun updateEnrollment(course: Course) {
-        userCourseDisposable += courseEnrollmentInteractor
-            .publishEnrollment(course)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {},
                 onError = emptyOnErrorStub
             )
     }

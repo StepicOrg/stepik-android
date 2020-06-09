@@ -49,8 +49,9 @@ constructor(
             }
         }
 
-    fun publishEnrollment(course: Course): Completable =
-        Completable.fromAction { enrollmentSubject.onNext(course) }
+    fun publishEnrollment(course: Course) {
+        enrollmentSubject.onNext(course)
+    }
 
     fun fetchCourse(courseId: Long): Single<Course> =
         requireAuthorization then

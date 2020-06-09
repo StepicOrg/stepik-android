@@ -2,6 +2,7 @@ package org.stepik.android.view.in_app_web_view
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -57,7 +58,6 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = object : Dialog(requireContext(), theme) {
             override fun onBackPressed() {
-                (activity as? Callback)?.onDismissed()
                 dismiss()
             }
         }
@@ -120,10 +120,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         viewStateDelegate.addState<InAppWebViewView.State.Success>(webView as View)
 
         centeredToolbarTitle.text = title
-        centeredToolbar.setNavigationOnClickListener {
-            (activity as? Callback)?.onDismissed()
-            dismiss()
-        }
+        centeredToolbar.setNavigationOnClickListener { dismiss() }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
@@ -166,6 +163,11 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     override fun onDestroy() {
         webView = null
         super.onDestroy()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        (activity as? Callback)?.onDismissed()
+        super.onDismiss(dialog)
     }
 
     interface Callback {
