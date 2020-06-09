@@ -107,7 +107,7 @@ constructor(
                     state = CourseListUserView.State.Data(
                         userCourseQuery = userCourseQuery,
                         userCourses = it,
-                        courseListViewState = CourseListView.State.Idle
+                        courseListViewState = CourseListView.State.Loading
                     )
                     if (userCourseQuery.isMainTab()) {
                         analytic.setCoursesCount(it.size)
@@ -139,8 +139,6 @@ constructor(
             .userCourses
             .takeLazy(PAGE_SIZE)
             .mapToLongArray(UserCourse::course)
-
-        state = oldState.copy(courseListViewState = CourseListView.State.Loading)
 
         paginationDisposable += Single
             .concat(

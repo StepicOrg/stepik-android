@@ -1,7 +1,9 @@
 package org.stepik.android.view.step_quiz_fill_blanks.ui.adapter.delegate
 
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -80,7 +82,7 @@ class FillBlanksItemSelectAdapterDelegate(
                 ?: return
 
             val popupWindow = ListPopupWindow(context)
-            popupWindow.setAdapter(ArrayAdapter(context, R.layout.run_code_spinner_item, options))
+            popupWindow.setAdapter(ArrayAdapter(context, R.layout.item_fill_blanks_select_spinner, options))
 
             popupWindow.setOnItemClickListener { _, _, position, _ ->
                 val text = options[position]
@@ -89,7 +91,11 @@ class FillBlanksItemSelectAdapterDelegate(
             }
 
             popupWindow.anchorView = view
-            popupWindow.width = context.resources.getDimensionPixelSize(R.dimen.step_quiz_full_screen_code_layout_drop_down_width)
+            val displayMetrics = DisplayMetrics()
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            val calculatedWidth = displayMetrics.widthPixels - context.resources.getDimensionPixelSize(R.dimen.step_quiz_fill_blanks_select_popup_margin)
+            popupWindow.width = minOf(calculatedWidth, context.resources.getDimensionPixelSize(R.dimen.step_quiz_fill_blanks_select_popup_max_width))
             popupWindow.height = WindowManager.LayoutParams.WRAP_CONTENT
 
             popupWindow.show()

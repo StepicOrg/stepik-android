@@ -88,7 +88,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         setRetainInstance(true);
         int position = getArguments().getInt(categoryPositionKey);
         notificationCategory = NotificationCategory.values()[position];
-        adapter = new NotificationAdapter(getContext(), notificationListPresenter, notificationCategory);
+        adapter = new NotificationAdapter(notificationListPresenter, notificationCategory);
     }
 
     @Override
