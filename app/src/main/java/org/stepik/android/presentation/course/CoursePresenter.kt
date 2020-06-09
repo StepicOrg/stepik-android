@@ -40,7 +40,6 @@ import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePresenter
@@ -347,13 +346,11 @@ constructor(
 //            )
 //    }
 
-    // TODO Remove logs
-
     fun handleCoursePurchasePressed() {
-        Timber.d("Flag: $isNeedCheckCourseEnrollment")
         if (!isNeedCheckCourseEnrollment) {
             return
         }
+
         isNeedCheckCourseEnrollment = false
         userCourseDisposable += courseEnrollmentInteractor
             .fetchCourse(courseId)
@@ -362,15 +359,10 @@ constructor(
             .subscribeBy(
                 onSuccess = { course ->
                     if (course.enrollment > 0L) {
-                        Timber.d("Enrolled, must update")
                         updateEnrollment(course)
-                    } else {
-                        Timber.d("Not enrolled")
                     }
                 },
-                onError = {
-                    Timber.d("Error checking enrollment: $it")
-                }
+                onError = emptyOnErrorStub
             )
     }
 
@@ -380,12 +372,8 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = {
-                    Timber.d("Enrollment update published")
-                },
-                onError = {
-                    Timber.d("Error enrolling: $it")
-                }
+                onComplete = {},
+                onError = emptyOnErrorStub
             )
     }
 

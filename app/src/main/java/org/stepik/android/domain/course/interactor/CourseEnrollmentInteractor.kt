@@ -50,10 +50,7 @@ constructor(
         }
 
     fun publishEnrollment(course: Course): Completable =
-        requireAuthorization then
-        enrollmentRepository.addEnrollment(course.id)
-            .andThen(addUserCourse(course.id))
-            .andThen { enrollmentSubject.onNext(course) }
+        Completable.fromAction { enrollmentSubject.onNext(course) }
 
     fun fetchCourse(courseId: Long): Single<Course> =
         requireAuthorization then
