@@ -13,6 +13,9 @@ class StepQuizFeedbackMapper {
                 Submission.Status.CORRECT ->
                     StepQuizFeedbackState.Correct(formatHint(stepBlockName, state.submissionState.submission))
 
+                Submission.Status.PARTIALLY_CORRECT ->
+                    StepQuizFeedbackState.PartiallyCorrect(formatHint(stepBlockName, state.submissionState.submission))
+
                 Submission.Status.WRONG ->
                     StepQuizFeedbackState.Wrong(formatHint(stepBlockName, state.submissionState.submission))
 

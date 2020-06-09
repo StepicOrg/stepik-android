@@ -28,11 +28,7 @@
                 android:id="@+id/courseListUserSkeleton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingRight="8dp"
-                android:paddingEnd="8dp"
+                android:layout_margin="8dp"
                 android:visibility="gone"
                 layout="@layout/item_course_loading_skeleton_container" />
 
@@ -41,12 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:paddingTop="8dp"
-                android:paddingLeft="8dp"
-                android:paddingStart="8dp"
-                android:paddingRight="8dp"
-                android:paddingEnd="8dp"
-                android:paddingBottom="8dp" />
+                android:padding="8dp" />
         </FrameLayout>
     </org.stepic.droid.ui.custom.StepikSwipeRefreshLayout>
 

@@ -40,6 +40,9 @@ data class Submission(
         @SerializedName("correct")
         CORRECT("correct"),
 
+        @SerializedName("partially_correct")
+        PARTIALLY_CORRECT("partially_correct"),
+
         @SerializedName("wrong")
         WRONG("wrong"),
 

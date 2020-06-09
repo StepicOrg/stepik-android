@@ -119,8 +119,6 @@ constructor(
             val bundle = bundleOf(*analyticEvent.params.map { (a, b) -> a to b }.toTypedArray())
             firebaseAnalytics.logEvent(analyticEvent.name, bundle)
         }
-
-        reportAmplitudeEvent(analyticEvent.name, analyticEvent.params)
     }
 
     override fun reportAmplitudeEvent(eventName: String) = reportAmplitudeEvent(eventName, null)

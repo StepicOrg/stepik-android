@@ -1,9 +1,6 @@
 package org.stepic.droid.ui.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
-import android.net.Uri;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewKt;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
@@ -30,7 +22,6 @@ import org.stepic.droid.ui.custom.StickyHeaderAdapter;
 import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.DateTimeHelper;
-import org.stepik.android.view.glide.model.GlideRequestFactory;
 import org.stepic.droid.util.resolvers.text.NotificationTextResolver;
 import org.stepik.android.view.base.ui.extension.ColorExtensions;
 
@@ -55,29 +46,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private final int headerCount;
 
 
-    private Context context;
     private NotificationListPresenter notificationListPresenter;
     private List<Notification> notifications = new ArrayList<>();
     private boolean isNeedShowFooter;
-    private View.OnClickListener markAllReadListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            markAllAsRead();
-        }
-    };
+    private View.OnClickListener markAllReadListener = v -> markAllAsRead();
     private boolean isNeedEnableMarkButton = true;
 
-    private final Drawable placeholderUserIcon;
-
-    public NotificationAdapter(Context context, NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory) {
-        this.context = context;
+    public NotificationAdapter(NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory) {
         this.notificationListPresenter = notificationListPresenter;
         if (notificationCategory != NotificationCategory.all) {
             headerCount = 0;
         } else {
             headerCount = 1;
         }
-        this.placeholderUserIcon = ContextCompat.getDrawable(context, R.drawable.general_placeholder);
     }
 
     public int getNotificationsCount() {
@@ -225,7 +206,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         }
     }
 
-    abstract class GenericViewHolder extends RecyclerView.ViewHolder {
+    static abstract class GenericViewHolder extends RecyclerView.ViewHolder {
 
         public GenericViewHolder(View itemView) {
             super(itemView);
@@ -258,28 +239,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @BindView(R.id.check_view_unread)
         View checkViewUnread;
 
-        private final RequestBuilder<PictureDrawable> svgRequestBuilder =
-                GlideRequestFactory.create(context, placeholderUserIcon);
-
         NotificationViewHolder(View itemView) {
             super(itemView);
             App.Companion.component().inject(this);
             notificationBody.setMovementMethod(LinkMovementMethod.getInstance());
 
             //for checking notification
-            View.OnClickListener rootClick = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NotificationAdapter.this.onClick(getAdapterPosition(), true);
-                }
-            };
+            View.OnClickListener rootClick = v -> NotificationAdapter.this.onClick(getAdapterPosition(), true);
 
-            View.OnClickListener onlyCheckView = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    NotificationAdapter.this.onClick(getAdapterPosition(), false);
-                }
-            };
+            View.OnClickListener onlyCheckView = v -> NotificationAdapter.this.onClick(getAdapterPosition(), false);
 
             notificationRoot.setOnClickListener(rootClick);
             notificationBody.setOnClickListener(rootClick);
@@ -324,28 +292,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 case comments:
                     notificationIcon.setImageResource(R.drawable.general_placeholder);
                     break;
-            }
-        }
-
-        // avatars in notifications is no longer supported
-        private void setCommentNotificationIcon(Notification notification) {
-            final String userAvatarUrl = notification.getUserAvatarUrl();
-            if (userAvatarUrl != null) {
-                if (userAvatarUrl.endsWith(AppConstants.SVG_EXTENSION)) {
-                    final Uri avatarUri =  Uri.parse(userAvatarUrl);
-                    svgRequestBuilder
-                            .diskCacheStrategy(DiskCacheStrategy.DATA)
-                            .load(avatarUri)
-                            .into(notificationIcon);
-                } else {
-                    Glide.with(context.getApplicationContext())
-                            .asBitmap()
-                            .load(userAvatarUrl)
-                            .placeholder(placeholderUserIcon)
-                            .into(notificationIcon);
-                }
-            } else {
-                notificationIcon.setImageDrawable(placeholderUserIcon);
             }
         }
 

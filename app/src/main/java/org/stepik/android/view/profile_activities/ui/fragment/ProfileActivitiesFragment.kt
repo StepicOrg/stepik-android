@@ -91,7 +91,7 @@ class ProfileActivitiesFragment : Fragment(R.layout.fragment_profile_activities)
                     if (isSolvedToday) {
                         R.color.color_overlay_green
                     } else {
-                        R.color.yellow1
+                        R.color.color_overlay_yellow
                     }
 
                 currentStreak.supportCompoundDrawablesTintList = ColorStateList

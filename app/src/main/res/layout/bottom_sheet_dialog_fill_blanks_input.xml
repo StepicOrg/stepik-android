@@ -29,6 +29,7 @@
         android:maxLines="1"
         android:lines="1"
         android:singleLine="true"
+        android:imeOptions="actionDone"
 
         android:layout_margin="16dp"
         tools:targetApi="lollipop" />
