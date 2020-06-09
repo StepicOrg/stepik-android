@@ -3,7 +3,9 @@ package org.stepik.android.view.injection.course_collection
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import org.stepik.android.cache.course_collection.CourseCollectionCacheDataSourceImpl
 import org.stepik.android.data.course_collection.repository.CourseCollectionRepositoryImpl
+import org.stepik.android.data.course_collection.source.CourseCollectionCacheDataSource
 import org.stepik.android.data.course_collection.source.CourseCollectionRemoteDataSource
 import org.stepik.android.domain.course_collection.repository.CourseCollectionRepository
 import org.stepik.android.remote.course_collection.CourseCollectionRemoteDataSourceImpl
@@ -22,6 +24,11 @@ abstract class CourseCollectionDataModule {
     internal abstract fun bindCourseCollectionRemoteDataSource(
         courseCollectionRemoteDataSourceImpl: CourseCollectionRemoteDataSourceImpl
     ): CourseCollectionRemoteDataSource
+
+    @Binds
+    internal abstract fun bindCourseCollectionCacheDataSource(
+        courseCollectionCacheDataSourceImpl: CourseCollectionCacheDataSourceImpl
+    ): CourseCollectionCacheDataSource
 
     @Module
     companion object {
