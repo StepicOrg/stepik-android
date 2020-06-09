@@ -224,7 +224,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
     override fun onResume() {
         super.onResume()
-        coursePresenter.handleCoursePurchasePressed()
+        if (!coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
+            coursePresenter.handleCoursePurchasePressed()
+        }
         coursePager.addOnPageChangeListener(analyticsOnPageChangeListener)
         if (!hasSavedInstanceState) {
             setCurrentTab()

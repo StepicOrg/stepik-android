@@ -56,11 +56,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     private lateinit var viewStateDelegate: ViewStateDelegate<InAppWebViewView.State>
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = object : Dialog(requireContext(), theme) {
-            override fun onBackPressed() {
-                dismiss()
-            }
-        }
+        val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
