@@ -55,7 +55,12 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     private lateinit var viewStateDelegate: ViewStateDelegate<InAppWebViewView.State>
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog = super.onCreateDialog(savedInstanceState)
+        val dialog = object : Dialog(requireContext(), theme) {
+            override fun onBackPressed() {
+                (activity as? Callback)?.onDismissed()
+                dismiss()
+            }
+        }
         dialog.setCanceledOnTouchOutside(false)
         dialog.setCancelable(false)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -115,7 +120,10 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         viewStateDelegate.addState<InAppWebViewView.State.Success>(webView as View)
 
         centeredToolbarTitle.text = title
-        centeredToolbar.setNavigationOnClickListener { dismiss() }
+        centeredToolbar.setNavigationOnClickListener {
+            (activity as? Callback)?.onDismissed()
+            dismiss()
+        }
         centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
@@ -158,5 +166,9 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     override fun onDestroy() {
         webView = null
         super.onDestroy()
+    }
+
+    interface Callback {
+        fun onDismissed()
     }
 }

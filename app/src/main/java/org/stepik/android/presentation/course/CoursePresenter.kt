@@ -40,6 +40,7 @@ import org.stepik.android.view.injection.solutions.SolutionsSentBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
+import timber.log.Timber
 import javax.inject.Inject
 
 class CoursePresenter
@@ -89,6 +90,7 @@ constructor(
 //    private var uiCheckout: UiCheckout? = null
 
     private var isCoursePreviewLogged = false
+    private var isNeedCheckCourseEnrollment = false
     private lateinit var viewSource: CourseViewSource
 
     override val delegates: List<PresenterDelegate<in CourseView>> =
@@ -345,7 +347,50 @@ constructor(
 //            )
 //    }
 
+    // TODO Remove logs
+
+    fun handleCoursePurchasePressed() {
+        Timber.d("Flag: $isNeedCheckCourseEnrollment")
+        if (!isNeedCheckCourseEnrollment) {
+            return
+        }
+        isNeedCheckCourseEnrollment = false
+        userCourseDisposable += courseEnrollmentInteractor
+            .fetchCourse(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { course ->
+                    if (course.enrollment > 0L) {
+                        Timber.d("Enrolled, must update")
+                        updateEnrollment(course)
+                    } else {
+                        Timber.d("Not enrolled")
+                    }
+                },
+                onError = {
+                    Timber.d("Error checking enrollment: $it")
+                }
+            )
+    }
+
+    private fun updateEnrollment(course: Course) {
+        userCourseDisposable += courseEnrollmentInteractor
+            .publishEnrollment(course)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    Timber.d("Enrollment update published")
+                },
+                onError = {
+                    Timber.d("Error enrolling: $it")
+                }
+            )
+    }
+
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
+        isNeedCheckCourseEnrollment = true
         view?.openCoursePurchaseInWeb(courseId, queryParams)
     }
 

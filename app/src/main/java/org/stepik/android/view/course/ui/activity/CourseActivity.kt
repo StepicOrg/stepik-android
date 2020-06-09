@@ -50,7 +50,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CourseActivity : FragmentActivityBase(), CourseView {
+class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFragment.Callback {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
@@ -472,5 +472,9 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         } else {
             ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
         }
+    }
+
+    override fun onDismissed() {
+        coursePresenter.handleCoursePurchasePressed()
     }
 }
