@@ -29,6 +29,15 @@
         <item>Всё получилось!</item>
     </string-array>
 
+    <string-array name="step_quiz_feedback_partially_correct">
+        <item>Почти верно. Так держать!</item>
+        <item>Вы близки к верному ответу! Попробуйте улучшить результат.</item>
+        <item>Ваш ответ почти верен. Попробуете улучшить результат?</item>
+        <item>Почти верно, отлично! Может быть, попробуете ещё?</item>
+        <item>Почти верно. Попробуйте получить полный балл!</item>
+        <item>Вы близки к верному ответу, так держать. Попробуете ещё?</item>
+    </string-array>
+
     <string-array name="step_content_font_size">
         <item>Маленький</item>
         <item>Средний</item>

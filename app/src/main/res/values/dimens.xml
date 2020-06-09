@@ -199,6 +199,8 @@
 
     <!-- Fill blanks quiz -->
     <dimen name="step_quiz_fill_blanks_item_radius">18dp</dimen>
+    <dimen name="step_quiz_fill_blanks_select_popup_margin">32dp</dimen>
+    <dimen name="step_quiz_fill_blanks_select_popup_max_width">320dp</dimen>
 
     <!-- Comments -->
     <dimen name="comment_user_image_size">36dp</dimen>

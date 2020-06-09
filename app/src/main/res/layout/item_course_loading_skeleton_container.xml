@@ -3,15 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/guideline_standard_padding"
-    android:paddingLeft="-8dp"
-    android:paddingStart="-8dp"
-    android:paddingRight="-8dp"
-    android:paddingEnd="-8dp"
+    android:layout_marginTop="8dp"
     android:orientation="vertical">
 
-    <include layout="@layout/course_loading_item"/>
+    <include layout="@layout/item_course_list_skeleton"/>
 
-    <include layout="@layout/course_loading_item"/>
+    <include layout="@layout/item_course_list_skeleton"/>
 
 </LinearLayout>

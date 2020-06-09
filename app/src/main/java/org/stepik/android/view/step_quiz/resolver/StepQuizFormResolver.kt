@@ -18,7 +18,7 @@ object StepQuizFormResolver {
 
     fun canMoveToNextStep(step: Step, stepQuizLessonData: StepQuizLessonData, state: StepQuizView.State.AttemptLoaded): Boolean =
         isQuizActionEnabled(state) &&
-        (state.submissionState as? StepQuizView.SubmissionState.Loaded)?.submission?.status == Submission.Status.CORRECT &&
+        isCorrect((state.submissionState as? StepQuizView.SubmissionState.Loaded)?.submission?.status) &&
         step.position < stepQuizLessonData.stepCount
 
     fun canOnlyRetry(step: Step, stepQuizLessonData: StepQuizLessonData, state: StepQuizView.State.AttemptLoaded): Boolean =
@@ -28,5 +28,9 @@ object StepQuizFormResolver {
 
     fun isSubmissionInTerminalState(state: StepQuizView.State.AttemptLoaded): Boolean =
         state.submissionState is StepQuizView.SubmissionState.Loaded &&
-        state.submissionState.submission.status.let { it == Submission.Status.CORRECT || it == Submission.Status.WRONG }
+        state.submissionState.submission.status.let { it == Submission.Status.CORRECT || it == Submission.Status.PARTIALLY_CORRECT || it == Submission.Status.WRONG }
+
+    private fun isCorrect(submissionStatus: Submission.Status?) =
+        submissionStatus == Submission.Status.PARTIALLY_CORRECT ||
+        submissionStatus == Submission.Status.CORRECT
 }
