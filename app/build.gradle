@@ -4,7 +4,7 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.fabric'
 apply from: '../code_quality_tools/jacoco.gradle'
-apply from: '../code_quality_tools/findbugs.gradle'
+//apply from: '../code_quality_tools/findbugs.gradle'
 apply from: '../code_quality_tools/checkstyle.gradle'
 apply from: '../code_quality_tools/pmd.gradle'
 apply from: '../code_quality_tools/ktlint.gradle'
@@ -127,6 +127,7 @@ dependencies {
     implementation libraries.cardView
     implementation libraries.constraintLayout
     implementation libraries.material
+    implementation libraries.flexbox
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel

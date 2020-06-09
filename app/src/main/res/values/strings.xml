@@ -764,6 +764,7 @@
     <string name="step_quiz_choice_description_single">Choose one option</string>
     <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
     <string name="step_quiz_sql_description">Enter an SQL query</string>
+    <string name="step_quiz_fill_blanks_description">Fill in the blanks</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
     <string name="step_quiz_text_invalid_number_reply">The answer must be a number</string>
@@ -902,6 +903,10 @@
     <!-- Course list -->
     <string name="course_list_popular_toolbar_title">Popular</string>
     <string name="course_list_user_courses_title">My courses</string>
+    
+    <string name="course_list_user_all_courses_tab">All courses</string>
+    <string name="course_list_user_favorites_tab">Favorites</string>
+    <string name="course_list_user_archive_tab">Archive</string>
 
     <string name="ar_not_supported_alert">Device does not support AR functionality</string>
 

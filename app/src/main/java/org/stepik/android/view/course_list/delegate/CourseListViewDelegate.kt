@@ -45,14 +45,17 @@ class CourseListViewDelegate(
                 state is CourseListView.State.Empty ||
                 state is CourseListView.State.NetworkError)
 
-        courseListViewStateDelegate.switchState(state)
         when (state) {
-            is CourseListView.State.Loading -> {
-                courseItemAdapter.items = listOf(
-                    CourseListItem.PlaceHolder,
-                    CourseListItem.PlaceHolder
-                )
+            is CourseListView.State.Idle -> {
+                courseItemAdapter.items = emptyList()
+                courseItemAdapter.notifyDataSetChanged()
             }
+
+            is CourseListView.State.Loading ->
+                courseItemAdapter.items = listOf(
+                    CourseListItem.PlaceHolder(),
+                    CourseListItem.PlaceHolder()
+                )
 
             is CourseListView.State.Content -> {
                 courseItemAdapter.items = state.courseListItems
@@ -68,13 +71,16 @@ class CourseListViewDelegate(
                  */
                 val size = state.courseListItems.size
                 if (size > 2 &&
-                    (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL &&
-                    state.courseListItems.last() is CourseListItem.PlaceHolder) {
+                    (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL) {
                     courseItemAdapter.notifyItemChanged(size - 2)
                     courseItemAdapter.notifyItemChanged(size - 3)
                 }
             }
+
+            else ->
+                courseItemAdapter.items = emptyList()
         }
+        courseListViewStateDelegate.switchState(state)
     }
 
     override fun showNetworkError() {

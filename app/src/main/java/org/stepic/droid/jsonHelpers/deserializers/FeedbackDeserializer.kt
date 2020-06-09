@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
+import org.stepik.android.model.feedback.BlanksFeedback
 import org.stepik.android.model.feedback.ChoiceFeedback
 import org.stepik.android.model.feedback.Feedback
 import org.stepik.android.model.feedback.StringFeedback
@@ -21,7 +22,11 @@ class FeedbackDeserializer : JsonDeserializer<Feedback> {
                 StringFeedback()
             }
         } else {
-            context.deserialize<ChoiceFeedback>(json, ChoiceFeedback::class.java)
+            if (json.has("options_feedback")) {
+                context.deserialize<ChoiceFeedback>(json, ChoiceFeedback::class.java)
+            } else {
+                context.deserialize<BlanksFeedback>(json, BlanksFeedback::class.java)
+            }
         }
     }
 }

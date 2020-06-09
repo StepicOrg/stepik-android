@@ -21,6 +21,7 @@ interface CourseView : CourseContinueView {
 
     fun showEmptyAuthDialog(course: Course)
     fun showEnrollmentError(errorType: EnrollmentError)
+
     fun showSaveUserCourseSuccess(userCourseAction: UserCourseAction)
     fun showSaveUserCourseError(userCourseAction: UserCourseAction)
 
