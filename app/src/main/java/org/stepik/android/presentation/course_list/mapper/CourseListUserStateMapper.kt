@@ -21,7 +21,9 @@ import javax.inject.Inject
 
 class CourseListUserStateMapper
 @Inject
-constructor() {
+constructor(
+    private val courseListStateMapper: CourseListStateMapper
+) {
     companion object {
         private const val PAGE_SIZE = 20
     }
@@ -98,17 +100,7 @@ constructor() {
                         }
                     } else {
                         // тут мы просто обновляем элементы новыми с REMOTE порядок должен быть и так верным
-                        courseListViewState
-                            .copy(
-                                courseListViewState.courseListDataItems.mapPaged { item -> itemsMap[item.course.id] ?: item },
-                                courseListViewState.courseListItems.map { item ->
-                                    if (item is CourseListItem.Data) {
-                                        itemsMap[item.course.id] ?: item
-                                    } else {
-                                        item
-                                    }
-                                }
-                            )
+                        courseListStateMapper.mergeWithUpdatedItems(courseListViewState, itemsMap)
                     }
                 }
 
