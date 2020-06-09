@@ -79,11 +79,11 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = {
-                    state = if (it.isNotEmpty()) {
+                onNext = { (items, source) ->
+                    state = if (items.isNotEmpty()) {
                         CourseListView.State.Content(
-                            courseListDataItems = it,
-                            courseListItems = it
+                            courseListDataItems = items,
+                            courseListItems = items
                         )
                     } else {
                         CourseListView.State.Empty
@@ -120,8 +120,8 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = {
-                    state = courseListStateMapper.mapFromLoadMoreToSuccess(state, it)
+                onNext = { (items, source) ->
+                    state = courseListStateMapper.mapFromLoadMoreToSuccess(state, items)
                 },
                 onError = {
                     state = courseListStateMapper.mapFromLoadMoreToError(state)
