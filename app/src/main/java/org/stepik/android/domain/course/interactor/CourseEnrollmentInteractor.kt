@@ -49,6 +49,14 @@ constructor(
             }
         }
 
+    fun publishEnrollment(course: Course) {
+        enrollmentSubject.onNext(course)
+    }
+
+    fun fetchCourse(courseId: Long): Single<Course> =
+        requireAuthorization then
+        courseRepository.getCourse(courseId, canUseCache = false).toSingle()
+
     fun enrollCourse(courseId: Long): Single<Course> =
         requireAuthorization then
         enrollmentRepository

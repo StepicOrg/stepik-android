@@ -89,6 +89,7 @@ constructor(
 //    private var uiCheckout: UiCheckout? = null
 
     private var isCoursePreviewLogged = false
+    private var isNeedCheckCourseEnrollment = false
     private lateinit var viewSource: CourseViewSource
 
     override val delegates: List<PresenterDelegate<in CourseView>> =
@@ -345,7 +346,28 @@ constructor(
 //            )
 //    }
 
+    fun handleCoursePurchasePressed() {
+        if (!isNeedCheckCourseEnrollment) {
+            return
+        }
+
+        isNeedCheckCourseEnrollment = false
+        userCourseDisposable += courseEnrollmentInteractor
+            .fetchCourse(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { course ->
+                    if (course.enrollment > 0L) {
+                        courseEnrollmentInteractor.publishEnrollment(course)
+                    }
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
+        isNeedCheckCourseEnrollment = true
         view?.openCoursePurchaseInWeb(courseId, queryParams)
     }
 
