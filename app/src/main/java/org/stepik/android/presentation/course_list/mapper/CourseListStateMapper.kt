@@ -29,6 +29,24 @@ constructor() {
         )
     }
 
+    fun mergeWithUpdatedItems(state: CourseListView.State, itemsMap: Map<Long, CourseListItem.Data>): CourseListView.State {
+        if (state !is CourseListView.State.Content) {
+            return state
+        }
+
+        return state
+            .copy(
+                state.courseListDataItems.mapPaged { item -> itemsMap[item.course.id] ?: item },
+                state.courseListItems.map { item ->
+                    if (item is CourseListItem.Data) {
+                        itemsMap[item.course.id] ?: item
+                    } else {
+                        item
+                    }
+                }
+            )
+    }
+
     fun mapFromLoadMoreToError(state: CourseListView.State): CourseListView.State {
         if (state !is CourseListView.State.Content) {
             return state
@@ -44,26 +62,19 @@ constructor() {
             return state
         }
 
-        val courseListItems = state.courseListDataItems.map {
-            if (it.course.id == enrolledCourse.id) it.copy(
-                course = enrolledCourse
-            ) else it
-        }
+        val courseListItems =
+            state.courseListDataItems.mapPaged {
+                if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
+            }
 
         return CourseListView.State.Content(
-            courseListDataItems = PagedList(
-                state.courseListDataItems.map {
-                    if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
-                },
-                state.courseListDataItems.page,
-                state.courseListDataItems.hasNext,
-                state.courseListDataItems.hasPrev
-            ),
-            courseListItems = if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
-                courseListItems + CourseListItem.PlaceHolder()
-            } else {
-                courseListItems
-            }
+            courseListDataItems = courseListItems,
+            courseListItems =
+                if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
+                    courseListItems + CourseListItem.PlaceHolder()
+                } else {
+                    courseListItems
+                }
         )
     }
 

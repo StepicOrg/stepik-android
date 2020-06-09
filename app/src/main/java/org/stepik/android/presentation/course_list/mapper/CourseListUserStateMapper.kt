@@ -3,7 +3,6 @@ package org.stepik.android.presentation.course_list.mapper
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.plus
-import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.mapToLongArray
 import org.stepic.droid.util.mutate
 import org.stepic.droid.util.slice
@@ -21,7 +20,9 @@ import javax.inject.Inject
 
 class CourseListUserStateMapper
 @Inject
-constructor() {
+constructor(
+    private val courseListStateMapper: CourseListStateMapper
+) {
     companion object {
         private const val PAGE_SIZE = 20
     }
@@ -98,17 +99,7 @@ constructor() {
                         }
                     } else {
                         // тут мы просто обновляем элементы новыми с REMOTE порядок должен быть и так верным
-                        courseListViewState
-                            .copy(
-                                courseListViewState.courseListDataItems.mapPaged { item -> itemsMap[item.course.id] ?: item },
-                                courseListViewState.courseListItems.map { item ->
-                                    if (item is CourseListItem.Data) {
-                                        itemsMap[item.course.id] ?: item
-                                    } else {
-                                        item
-                                    }
-                                }
-                            )
+                        courseListStateMapper.mergeWithUpdatedItems(courseListViewState, itemsMap)
                     }
                 }
 

@@ -9,6 +9,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.interactor.CourseListSearchInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.search_result.model.SearchResultQuery
@@ -79,15 +80,20 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = {
-                    state = if (it.isNotEmpty()) {
-                        CourseListView.State.Content(
-                            courseListDataItems = it,
-                            courseListItems = it
-                        )
-                    } else {
-                        CourseListView.State.Empty
-                    }
+                onNext = { (items, source) ->
+                    state =
+                        if (source == DataSourceType.CACHE) {
+                            if (items.isNotEmpty()) {
+                                CourseListView.State.Content(
+                                    courseListDataItems = items,
+                                    courseListItems = items
+                                )
+                            } else {
+                                CourseListView.State.Empty
+                            }
+                        } else {
+                            courseListStateMapper.mergeWithUpdatedItems(state, items.associateBy { it.course.id })
+                        }
                 },
                 onError = {
                     when (oldState) {
@@ -120,8 +126,13 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = {
-                    state = courseListStateMapper.mapFromLoadMoreToSuccess(state, it)
+                onNext = { (items, source) ->
+                    state =
+                        if (source == DataSourceType.CACHE) {
+                            courseListStateMapper.mapFromLoadMoreToSuccess(state, items)
+                        } else {
+                            courseListStateMapper.mergeWithUpdatedItems(state, items.associateBy { it.course.id })
+                        }
                 },
                 onError = {
                     state = courseListStateMapper.mapFromLoadMoreToError(state)
