@@ -19,6 +19,6 @@ object DbStructureCourseCollection {
             "${Columns.TITLE} TEXT," +
             "${Columns.LANGUAGE} TEXT," +
             "${Columns.COURSES} TEXT," +
-            "${Columns.DESCRIPTION} TEXT"+
+            "${Columns.DESCRIPTION} TEXT" +
         ")"
 }
