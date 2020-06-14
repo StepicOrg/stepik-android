@@ -3,9 +3,9 @@ package org.stepic.droid.adaptive.ui.adapters
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
 import androidx.annotation.StringRes
+import androidx.core.widget.doOnTextChanged
 import kotlinx.android.synthetic.main.adaptive_quiz_card_view.view.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.animations.CardAnimations
@@ -16,23 +16,24 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.core.presenters.CardPresenter
 import org.stepic.droid.core.presenters.contracts.CardView
-import org.stepic.droid.ui.custom.LatexSupportableWebView
 import org.stepic.droid.ui.quiz.QuizDelegate
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.model.adaptive.Reaction
+import org.stepik.android.view.base.ui.extension.ExternalLinkWebViewClient
+import org.stepik.android.view.latex.ui.widget.LatexView
 import javax.inject.Inject
 import kotlin.math.max
 
 class QuizCardViewHolder(
     private val root: View
-): ContainerView.ViewHolder(root), CardView {
+) : ContainerView.ViewHolder(root), CardView {
     private val curtain = root.curtain
     private val answersProgress = root.answersProgress
     private val titleView = root.title
-    val question: LatexSupportableWebView = root.question
+    val question: LatexView = root.question
     val quizViewContainer: ViewGroup = root.quizViewContainer
     val separatorAnswers: View = root.separatorAnswers
 
@@ -62,11 +63,15 @@ class QuizCardViewHolder(
     init {
         App.component().inject(this)
 
-        question.webViewClient = object : WebViewClient() {
-            override fun onPageFinished(view: WebView?, url: String?) = onCardLoaded()
+        question.webViewClient = object : ExternalLinkWebViewClient(root.context) {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                onCardLoaded()
+            }
         }
-        question.setOnWebViewClickListener { screenManager.openImage(root.context, it) }
-        question.setLayerType(View.LAYER_TYPE_NONE, null)
+        question.textView.doOnTextChanged { _, _, _, _ ->
+            onCardLoaded()
+        }
+        question.webView.setLayerType(View.LAYER_TYPE_NONE, null)
 
         nextButton.setOnClickListener { container.swipeDown() }
         actionButton.setOnClickListener { presenter?.createSubmission() }
@@ -140,7 +145,7 @@ class QuizCardViewHolder(
     override fun setSubmission(submission: Submission, animate: Boolean) {
         resetSupplementalActions()
         quizDelegate.setSubmission(submission)
-        when(submission.status) {
+        when (submission.status) {
             Submission.Status.CORRECT -> {
                 quizDelegate.isEnabled = false
                 actionButton.visibility = View.GONE

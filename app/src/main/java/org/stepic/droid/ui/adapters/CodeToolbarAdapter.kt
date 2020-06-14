@@ -9,12 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.code.data.AutocompleteState
 import org.stepic.droid.model.code.symbolsForLanguage
-import org.stepic.droid.ui.listeners.OnItemClickListener
+import org.stepic.droid.util.resolveColorAttribute
 import kotlin.math.abs
 
 class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -27,9 +26,8 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
         fun onSymbolClick(symbol: String, offset: Int = 0)
     }
 
-    private val autocompletePrefixBackgroundSpan by lazy {
-        BackgroundColorSpan(ContextCompat.getColor(context, R.color.code_toolbar_autocomplete_prefix_background))
-    }
+    private val autocompletePrefixBackgroundSpan =
+        BackgroundColorSpan(context.resolveColorAttribute(R.attr.colorControlHighlight))
 
     private var recyclerView: RecyclerView? = null
     private var items: MutableList<Spannable?> = ArrayList()
@@ -46,15 +44,12 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
         }
 
     var onSymbolClickListener: OnSymbolClickListener? = null
-    private val onItemClickListener: OnItemClickListener = object : OnItemClickListener {
-        override fun onItemClick(position: Int) {
-            items[position]?.toString()?.let { word ->
-                if (autocomplete.prefix.isNotEmpty() && word.startsWith(autocomplete.prefix, ignoreCase = true)) {
-                    onSymbolClickListener?.onSymbolClick("$word ", autocomplete.prefix.length)
-                } else {
-                    onSymbolClickListener?.onSymbolClick(word)
-                }
-            }
+    private val onItemClickListener: (CharSequence) -> Unit = { symbol ->
+        val word = symbol.toString()
+        if (autocomplete.prefix.isNotEmpty() && word.startsWith(autocomplete.prefix, ignoreCase = true)) {
+            onSymbolClickListener?.onSymbolClick("$word ", autocomplete.prefix.length)
+        } else {
+            onSymbolClickListener?.onSymbolClick(word)
         }
     }
 
@@ -99,8 +94,14 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
         when (getItemViewType(position)) {
             ELEMENT_VIEW_TYPE ->
                 if (holder is CodeToolbarItem) {
-                    items[position]?.let { holder.bindData(it) }
+                    items[position]?.let { holder.bind(it) }
                 }
+        }
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        if (holder is CodeToolbarItem) {
+            holder.unbind()
         }
     }
 
@@ -139,18 +140,25 @@ class CodeToolbarAdapter(private val context: Context) : RecyclerView.Adapter<Re
         notifyItemRangeChanged(offset, changed)
     }
 
-    private class CodeToolbarItem(itemView: View, onItemClickListener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
+    private class CodeToolbarItem(itemView: View, onItemClickListener: (symbol: CharSequence) -> Unit) : RecyclerView.ViewHolder(itemView) {
         private val codeToolbarSymbol = itemView.findViewById<TextView>(R.id.codeToolbarSymbol)
+
+        private var itemData: Spannable? = null
 
         init {
             itemView.setOnClickListener {
-                onItemClickListener.onItemClick(adapterPosition)
+                itemData?.let(onItemClickListener)
             }
             codeToolbarSymbol.typeface = Typeface.MONOSPACE
         }
 
-        fun bindData(symbol: Spannable) {
+        fun bind(symbol: Spannable) {
+            itemData = symbol
             codeToolbarSymbol.text = symbol
+        }
+
+        fun unbind() {
+            itemData = null
         }
     }
 

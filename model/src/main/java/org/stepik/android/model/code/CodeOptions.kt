@@ -3,7 +3,13 @@ package org.stepik.android.model.code
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.*
+import org.stepik.android.model.util.ParcelableStringList
+import org.stepik.android.model.util.readBoolean
+import org.stepik.android.model.util.readMap
+import org.stepik.android.model.util.readMapCustomString
+import org.stepik.android.model.util.writeBoolean
+import org.stepik.android.model.util.writeMap
+import org.stepik.android.model.util.writeMapCustomString
 
 data class CodeOptions(
     @SerializedName("limits")
@@ -15,7 +21,9 @@ data class CodeOptions(
     @SerializedName("execution_memory_limit")
     val executionMemoryLimit: Int,
     @SerializedName("samples")
-    val samples: List<ParcelableStringList>
+    val samples: List<ParcelableStringList>,
+    @SerializedName("is_run_user_code_allowed")
+    val isRunUserCodeAllowed: Boolean
 ) : Parcelable {
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeMapCustomString(limits, flags)
@@ -25,6 +33,7 @@ data class CodeOptions(
 
         parcel.writeInt(executionMemoryLimit)
         parcel.writeTypedList(samples)
+        parcel.writeBoolean(isRunUserCodeAllowed)
     }
 
     override fun describeContents(): Int = 0
@@ -38,7 +47,8 @@ data class CodeOptions(
                 parcel.readMap(Parcel::readString, Parcel::readString),
 
                 parcel.readInt(),
-                mutableListOf<ParcelableStringList>().apply { parcel.readTypedList(this, ParcelableStringList) }
+                mutableListOf<ParcelableStringList>().apply { parcel.readTypedList(this, ParcelableStringList) },
+                parcel.readBoolean()
             )
 
         override fun newArray(size: Int): Array<CodeOptions?> =

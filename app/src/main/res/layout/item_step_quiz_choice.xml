@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="4dp"
@@ -21,18 +23,33 @@
             android:layout_gravity="center_vertical|end"
             app:srcCompat="@drawable/ic_step_quiz_choice_correct"/>
 
-        <org.stepic.droid.ui.custom.ProgressLatexView
+        <org.stepik.android.view.latex.ui.widget.LatexView
             android:id="@+id/itemChoiceLatex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:textSize="16sp"
-            android:layout_marginRight="24dp" />
+            android:textIsSelectable="true"
+            android:layout_marginRight="24dp">
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+                android:id="@+id/itemChoiceLatexProgress"
+                style="@style/Widget.MaterialProgressBar.ProgressBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </org.stepik.android.view.latex.ui.widget.LatexView>
     </org.stepik.android.view.step_quiz_choice.ui.view.QuizItemView>
 
-    <org.stepic.droid.ui.custom.LatexSupportableEnhancedFrameLayout
+    <org.stepik.android.view.latex.ui.widget.LatexView
         android:id="@+id/itemChoiceFeedback"
+        android:background="@drawable/bg_step_quiz_choice_item_feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
+        app:fontFamily="@font/pt_mono"
         android:padding="16dp" />
 </LinearLayout>

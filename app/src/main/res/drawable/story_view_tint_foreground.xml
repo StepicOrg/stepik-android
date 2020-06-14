@@ -9,5 +9,5 @@
         android:angle="270"
         android:type="linear"
         android:startColor="#00000000"
-        android:endColor="@color/new_accent_color_opacity_50" />
+        android:endColor="@color/new_accent_color_alpha_50" />
 </shape>

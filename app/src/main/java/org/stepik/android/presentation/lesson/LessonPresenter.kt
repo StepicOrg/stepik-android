@@ -10,7 +10,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
-import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.app_rating.interactor.AppRatingInteractor
 import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
 import org.stepik.android.domain.last_step.model.LastStep
@@ -18,6 +17,7 @@ import org.stepik.android.domain.lesson.interactor.LessonContentInteractor
 import org.stepik.android.domain.lesson.interactor.LessonInteractor
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.LessonDeepLinkData
+import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.interactor.StepIndexingInteractor
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
@@ -137,31 +137,37 @@ constructor(
         val stepIds = oldState.lessonData.lesson.steps
         val unit = oldState.lessonData.unit
 
-        if (stepIds.isEmpty()) {
-            state = oldState.copy(stepsState = LessonView.StepsState.EmptySteps)
-        } else {
-            state = oldState.copy(stepsState = LessonView.StepsState.Loading)
+        when {
+            oldState.lessonData.section?.isExam == true ->
+                state = oldState.copy(stepsState = LessonView.StepsState.Exam(oldState.lessonData.section.course))
 
-            compositeDisposable += lessonContentInteractor
-                .getStepItems(unit, *stepIds)
-                .observeOn(mainScheduler)
-                .subscribeOn(backgroundScheduler)
-                .subscribeBy(
-                    onSuccess = { stepItems ->
-                        val stepsState =
-                            if (stepItems.isEmpty() && stepIds.isNotEmpty()) {
-                                LessonView.StepsState.AccessDenied
-                            } else {
-                                LessonView.StepsState.Loaded(stepItems)
-                            }
-                        state = oldState.copy(stepsState = stepsState)
-                        view?.showStepAtPosition(oldState.lessonData.stepPosition)
-                        handleDiscussionId()
-                    },
-                    onError = {
-                        state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
-                    }
-                )
+            stepIds.isEmpty() ->
+                state = oldState.copy(stepsState = LessonView.StepsState.EmptySteps)
+
+            else -> {
+                state = oldState.copy(stepsState = LessonView.StepsState.Loading)
+
+                compositeDisposable += lessonContentInteractor
+                    .getStepItems(unit, *stepIds)
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+                    .subscribeBy(
+                        onSuccess = { stepItems ->
+                            val stepsState =
+                                if (stepItems.isEmpty() && stepIds.isNotEmpty()) {
+                                    LessonView.StepsState.AccessDenied
+                                } else {
+                                    LessonView.StepsState.Loaded(stepItems)
+                                }
+                            state = oldState.copy(stepsState = stepsState)
+                            view?.showStepAtPosition(oldState.lessonData.stepPosition)
+                            handleDiscussionId()
+                        },
+                        onError = {
+                            state = oldState.copy(stepsState = LessonView.StepsState.NetworkError)
+                        }
+                    )
+            }
         }
     }
 
@@ -213,12 +219,13 @@ constructor(
             ?.getOrNull(position)
             ?.stepProgress
 
-        // Because the score field in Progress is a String, GSON parses integers in the response as floating point numbers
-        val stepScore = stepProgress
+        val assignmentProgress = (state.stepsState as? LessonView.StepsState.Loaded)
+            ?.stepItems
+            ?.getOrNull(position)
+            ?.assignmentProgress
             ?.score
             ?.toFloatOrNull()
-            ?.toLong()
-            ?: 0L
+            ?: 0f
 
         val stepCost = stepProgress
             ?.cost
@@ -231,7 +238,7 @@ constructor(
             .takeIf { it > 60 }
             ?: state.lessonData.lesson.steps.size * 60L
 
-        view?.showLessonInfoTooltip(stepScore, stepCost, timeToComplete, -1)
+        view?.showLessonInfoTooltip(assignmentProgress, stepCost, timeToComplete, -1)
     }
 
     /**
@@ -279,13 +286,7 @@ constructor(
          * Analytic
          */
         val step = stepItem.stepWrapper.step
-        analytic.reportEventWithName(Analytic.Steps.STEP_OPENED, step.getStepType())
-        analytic.reportAmplitudeEvent(
-            AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
-                AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
-                AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
-                AmplitudeAnalytic.Steps.Params.STEP to step.id
-            ))
+        analytic.reportStepEvent(Analytic.Steps.STEP_OPENED, AmplitudeAnalytic.Steps.STEP_OPENED, step)
     }
 
     /**

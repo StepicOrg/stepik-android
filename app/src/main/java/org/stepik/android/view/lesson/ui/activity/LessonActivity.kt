@@ -2,27 +2,22 @@ package org.stepik.android.view.lesson.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
-import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
+import kotlinx.android.synthetic.main.error_lesson_is_exam.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
-import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -45,19 +40,25 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
-import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
+import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.lesson.routing.getLessonDeepLinkData
 import org.stepik.android.view.lesson.ui.delegate.LessonInfoTooltipDelegate
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.hideKeyboard
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class LessonActivity : FragmentActivityBase(), LessonView,
-    NextMoveable, RateAppDialog.Companion.Callback, TimeIntervalPickerDialogFragment.Companion.Callback {
+    NextMoveable,
+    RateAppDialog.Companion.Callback,
+    TimeIntervalPickerDialogFragment.Companion.Callback,
+    StreakNotificationDialogFragment.Callback {
     companion object {
         private const val EXTRA_SECTION = "section"
         private const val EXTRA_UNIT = "unit"
@@ -82,6 +83,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     @Inject
     internal lateinit var stepTypeResolver: StepTypeResolver
+
+    @Inject
+    internal lateinit var courseDeepLinkBuilder: CourseDeepLinkBuilder
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -112,6 +116,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             } else {
                 overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start)
             }
+
+            // handle wrong deeplink interceptions
+            intent.data?.let { uri -> screenManager.redirectToWebBrowserIfNeeded(this, uri) }
         }
 
         injectComponent()
@@ -135,6 +142,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         viewStepStateDelegate.addState<LessonView.StepsState.NetworkError>(errorNoConnection)
         viewStepStateDelegate.addState<LessonView.StepsState.EmptySteps>(emptyLesson)
         viewStepStateDelegate.addState<LessonView.StepsState.AccessDenied>(lessonNotFound)
+        viewStepStateDelegate.addState<LessonView.StepsState.Exam>(lessonIsExam)
         viewStepStateDelegate.addState<LessonView.StepsState.Loaded>(lessonPager, lessonTab)
 
         lessonInfoTooltipDelegate = LessonInfoTooltipDelegate(centeredToolbar)
@@ -143,13 +151,17 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         goToCatalog.setOnClickListener { screenManager.showCatalog(this); finish() }
         authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
 
-        stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)
+        stepsAdapter = StepFragmentAdapter(lessonTab.context, supportFragmentManager, stepTypeResolver)
         lessonPager.adapter = stepsAdapter
         lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonPager, stepsAdapter))
         lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 currentFocus?.hideKeyboard()
                 lessonPresenter.onStepOpened(position)
+                centeredToolbarSubtitle.text = getString(
+                    R.string.lesson_step_counter, position + 1,
+                    stepsAdapter.items.size
+                )
                 invalidateOptionsMenu()
             }
         })
@@ -228,6 +240,13 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             is LessonView.State.LessonLoaded -> {
                 viewStepStateDelegate.switchState(state.stepsState)
                 centeredToolbarTitle.text = state.lessonData.lesson.title
+                if (centeredToolbarSubtitle.text.isEmpty()) {
+                    centeredToolbarSubtitle.text = getString(
+                        R.string.lesson_step_counter, state.lessonData.stepPosition + 1,
+                        state.lessonData.lesson.steps.size
+                    )
+                    centeredToolbarSubtitle.isVisible = true
+                }
 
                 stepsAdapter.lessonData = state.lessonData
                 if (state.stepsState is LessonView.StepsState.Loaded) {
@@ -238,6 +257,16 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                         intent.removeExtra(EXTRA_AUTOPLAY)
                     }
                 } else {
+                    if (state.stepsState is LessonView.StepsState.Exam) {
+                        errorLessonIsExamAction.setOnClickListener {
+                            val url = courseDeepLinkBuilder
+                                .createCourseLink(state.stepsState.courseId, CourseScreenTab.SYLLABUS)
+
+                            MagicLinkDialogFragment
+                                .newInstance(url)
+                                .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
+                        }
+                    }
                     stepsAdapter.items = emptyList()
                 }
 
@@ -256,8 +285,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 .getDrawable(this, stepsAdapter.getTabDrawable(i))
                 ?.mutate()
 
-            val tintColor = ContextCompat
-                .getColor(this, stepsAdapter.getTabTint(i))
+            val tintColor = stepsAdapter.getTabTint(i)
 
             lessonTab.getTabAt(i)?.icon = tabIcon
             tabIcon?.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
@@ -269,7 +297,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         lessonPresenter.onStepOpened(position)
     }
 
-    override fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
+    override fun showLessonInfoTooltip(stepScore: Float, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {
         lessonInfoTooltipDelegate
             .showLessonInfoTooltip(stepScore, stepCost, lessonTimeToComplete, certificateThreshold)
     }
@@ -314,41 +342,24 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     override fun showStreakDialog(streakDays: Int) {
-        val streakTitle = SpannableString(getString(R.string.streak_dialog_title))
-        streakTitle.setSpan(
-            ForegroundColorSpan(Color.BLACK),
-            0,
-            streakTitle.length,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-        val typefaceSpan = TypefaceSpanCompat(ResourcesCompat.getFont(this, R.font.roboto_bold))
-        streakTitle.setSpan(typefaceSpan, 0, streakTitle.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        val description = if (streakDays > 0) {
-            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, streakDays.toString())
-            resources.getQuantityString(R.plurals.streak_description, streakDays, streakDays)
-        } else {
-            analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, streakDays.toString())
-            getString(R.string.streak_description_not_positive)
-        }
+        val description =
+            if (streakDays > 0) {
+                analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_UNDEFINED_STREAKS, streakDays.toString())
+                resources.getQuantityString(R.plurals.streak_description, streakDays, streakDays)
+            } else {
+                analytic.reportEvent(Analytic.Streak.SHOW_DIALOG_POSITIVE_STREAKS, streakDays.toString())
+                getString(R.string.streak_description_not_positive)
+            }
 
         analytic.reportEvent(Analytic.Streak.SHOWN_MATERIAL_DIALOG)
-        val dialog = MaterialStyledDialog.Builder(this)
-                .setTitle(streakTitle)
-                .setDescription(description)
-                .setHeaderDrawable(R.drawable.dialog_background)
-                .setPositiveText(R.string.ok)
-                .setNegativeText(R.string.later_tatle)
-                .setScrollable(true, 10) // number of lines lines
-                .onPositive { _, _ ->
-                    analytic.reportEvent(Analytic.Streak.POSITIVE_MATERIAL_DIALOG)
-                    TimeIntervalPickerDialogFragment
-                        .newInstance()
-                        .showIfNotExists(supportFragmentManager, TimeIntervalPickerDialogFragment.TAG)
-                }
-                .onNegative { _, _ -> onStreakDialogCancelled() }
-                .build()
-        dialog.show()
+
+        StreakNotificationDialogFragment
+            .newInstance(
+                title = getString(R.string.streak_dialog_title),
+                message = description,
+                positiveEvent = Analytic.Streak.POSITIVE_MATERIAL_DIALOG
+            )
+            .showIfNotExists(supportFragmentManager, StreakNotificationDialogFragment.TAG)
     }
 
     override fun onClickLater(starNumber: Int) {
@@ -393,7 +404,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         )
     }
 
-    private fun onStreakDialogCancelled() {
+    override fun onStreakNotificationDialogCancelled() {
         analytic.reportEvent(Analytic.Streak.NEGATIVE_MATERIAL_DIALOG)
         lessonPager.snackbar(messageRes = R.string.streak_notification_canceled, length = Snackbar.LENGTH_LONG)
     }

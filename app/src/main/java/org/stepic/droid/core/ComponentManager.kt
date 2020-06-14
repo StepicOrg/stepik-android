@@ -2,11 +2,13 @@ package org.stepic.droid.core
 
 import androidx.annotation.MainThread
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
-import org.stepic.droid.di.course_general.CourseGeneralComponent
-import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
+import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.profile.ProfileComponent
+import org.stepik.android.view.injection.step.StepComponent
 
 // TODO: 16.03.17 make more generic solution, for every component handling
 interface ComponentManager {
@@ -14,18 +16,11 @@ interface ComponentManager {
 
     fun releaseMainFeedComponent()
 
-    fun loginComponent(tag: String): LoginComponent
-
-    fun releaseLoginComponent(tag: String)
-
     @MainThread
     fun splashComponent(): SplashComponent
 
     @MainThread
     fun releaseSplashComponent()
-
-    @MainThread
-    fun courseGeneralComponent(): CourseGeneralComponent
 
     @MainThread
     fun adaptiveCourseComponent(courseId: Long): AdaptiveCourseComponent
@@ -39,4 +34,16 @@ interface ComponentManager {
 
     @MainThread
     fun releaseCourseComponent(courseId: Long)
+
+    @MainThread
+    fun profileComponent(userId: Long): ProfileComponent
+
+    /**
+     * Steps
+     */
+    @MainThread
+    fun stepParentComponent(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): StepComponent
+
+    @MainThread
+    fun stepComponent(stepId: Long): StepComponent
 }

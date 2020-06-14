@@ -3,18 +3,18 @@ package org.stepik.android.remote.comment
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.functions.Function
-import org.stepic.droid.web.StepicRestLoggedService
 import org.stepik.android.data.comment.source.CommentRemoteDataSource
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.remote.comment.model.CommentRequest
 import org.stepik.android.remote.comment.model.CommentResponse
+import org.stepik.android.remote.comment.service.CommentService
 import javax.inject.Inject
 
 class CommentRemoteDataSourceImpl
 @Inject
 constructor(
-    private val loggedService: StepicRestLoggedService
+    private val commentService: CommentService
 ) : CommentRemoteDataSource {
     private val commentResponseMapper = Function { response: CommentResponse ->
         CommentsData(
@@ -31,22 +31,22 @@ constructor(
             Single
                 .just(CommentsData())
         } else {
-            loggedService
+            commentService
                 .getComments(commentIds)
                 .map(commentResponseMapper)
         }
 
     override fun createComment(comment: Comment): Single<CommentsData> =
-        loggedService
+        commentService
             .createComment(CommentRequest(comment))
             .map(commentResponseMapper)
 
     override fun saveComment(comment: Comment): Single<CommentsData> =
-        loggedService
+        commentService
             .saveComment(comment.id, CommentRequest(comment))
             .map(commentResponseMapper)
 
     override fun removeComment(commentId: Long): Completable =
-        loggedService
+        commentService
             .removeComment(commentId)
 }

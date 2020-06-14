@@ -5,9 +5,8 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
-import java.util.*
 
-class Course(
+data class Course(
     @SerializedName("id")
     val id: Long,
     @SerializedName("title")
@@ -78,6 +77,8 @@ class Course(
     val certificateLink: String? = null,
     @SerializedName("is_certificate_auto_issued")
     val isCertificateAutoIssued: Boolean = false,
+    @SerializedName("is_certificate_issued")
+    val isCertificateIssued: Boolean = false,
 
     @SerializedName("last_deadline")
     val lastDeadline: String? = null,
@@ -118,25 +119,8 @@ class Course(
     @SerializedName("display_price")
     val displayPrice: String? = null,
     @SerializedName("price_tier")
-    val priceTier: String? = null,
-
-    var progressObject: Progress? = null,
-    var rating: Double = 0.0
-): Progressable, Parcelable {
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Course
-
-        if (id != other.id) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return id.hashCode()
-    }
+    val priceTier: String? = null
+) : Progressable, Parcelable {
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
@@ -178,6 +162,7 @@ class Course(
         parcel.writeLong(certificateRegularThreshold)
         parcel.writeString(certificateLink)
         parcel.writeBoolean(isCertificateAutoIssued)
+        parcel.writeBoolean(isCertificateIssued)
 
         parcel.writeString(lastDeadline)
         parcel.writeString(beginDate)
@@ -200,9 +185,6 @@ class Course(
         parcel.writeString(currencyCode)
         parcel.writeString(displayPrice)
         parcel.writeString(priceTier)
-
-        parcel.writeParcelable(progressObject, flags)
-        parcel.writeDouble(rating)
     }
 
     override fun describeContents(): Int = 0
@@ -245,6 +227,7 @@ class Course(
                 parcel.readLong(),
                 parcel.readString(),
                 parcel.readBoolean(),
+                parcel.readBoolean(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
@@ -261,10 +244,7 @@ class Course(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
-                parcel.readString(),
-
-                parcel.readParcelable(Progress::class.java.classLoader),
-                parcel.readDouble()
+                parcel.readString()
             )
 
         override fun newArray(size: Int): Array<Course?> = arrayOfNulls(size)

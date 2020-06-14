@@ -5,15 +5,22 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.yandex.metrica.YandexMetrica
+import com.yandex.metrica.profile.Attribute
+import com.yandex.metrica.profile.UserProfile
 import org.json.JSONObject
 import org.stepic.droid.base.App
 import org.stepic.droid.configuration.Config
 import org.stepic.droid.di.AppSingleton
+import org.stepic.droid.util.isARSupported
+import org.stepic.droid.util.isNightModeEnabled
+import org.stepik.android.domain.base.analytic.AnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticSource
 import java.util.HashMap
 import javax.inject.Inject
 
@@ -24,16 +31,35 @@ constructor(
     context: Context,
     config: Config
 ) : Analytic {
+    private companion object {
+        inline fun updateYandexUserProfile(mutation: UserProfile.Builder.() -> Unit) {
+            val userProfile = UserProfile.newBuilder()
+                .apply(mutation)
+                .build()
+            YandexMetrica.reportUserProfile(userProfile)
+        }
+    }
+
     private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
     private val amplitude = Amplitude.getInstance()
             .initialize(context, config.amplitudeApiKey)
             .enableForegroundTracking(App.application)
 
     init {
+        val isNotificationsEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
+
         amplitude.identify(Identify()
                 .set(AmplitudeAnalytic.Properties.APPLICATION_ID, context.packageName)
-                .set(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (NotificationManagerCompat.from(context).areNotificationsEnabled()) "granted" else "not_granted")
+                .set(AmplitudeAnalytic.Properties.PUSH_PERMISSION, if (isNotificationsEnabled) "granted" else "not_granted")
+                .set(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED, context.isNightModeEnabled().toString())
+                .set(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED, context.isARSupported().toString())
         )
+
+        updateYandexUserProfile {
+            apply(Attribute.notificationsEnabled().withValue(isNotificationsEnabled))
+            apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_NIGHT_MODE_ENABLED).withValue(context.isNightModeEnabled()))
+            apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.IS_AR_SUPPORTED).withValue(context.isARSupported()))
+        }
     }
 
     // Amplitude properties
@@ -43,23 +69,60 @@ constructor(
 
     override fun setUserId(userId: String) {
         firebaseAnalytics.setUserId(userId)
+        Crashlytics.setUserIdentifier(userId)
+        YandexMetrica.setUserProfileID(userId)
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STEPIK_ID, userId))
     }
 
-    override fun setCoursesCount(coursesCount: Int) =
+    override fun setCoursesCount(coursesCount: Int) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.COURSES_COUNT, coursesCount))
+        updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.COURSES_COUNT).withValue(coursesCount.toDouble())) }
+    }
 
-    override fun setSubmissionsCount(submissionsCount: Long) =
-        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT, submissionsCount))
+    override fun setSubmissionsCount(submissionsCount: Long, delta: Long) {
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT, submissionsCount + delta))
+        updateYandexUserProfile { apply(Attribute.customCounter(AmplitudeAnalytic.Properties.SUBMISSIONS_COUNT).withDelta(delta.toDouble())) }
+    }
 
-    override fun setScreenOrientation(orientation: Int) =
-        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"))
+    override fun setScreenOrientation(orientation: Int) {
+        val orientationName = if (orientation == Configuration.ORIENTATION_PORTRAIT) "portrait" else "landscape"
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION, orientationName))
+        updateYandexUserProfile { apply(Attribute.customString(AmplitudeAnalytic.Properties.SCREEN_ORIENTATION).withValue(orientationName))  }
+    }
 
-    override fun setStreaksNotificationsEnabled(isEnabled: Boolean) =
+    override fun setStreaksNotificationsEnabled(isEnabled: Boolean) {
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED, if (isEnabled) "enabled" else "disabled"))
+        updateYandexUserProfile { apply(Attribute.customBoolean(AmplitudeAnalytic.Properties.STREAKS_NOTIFICATIONS_ENABLED).withValue(isEnabled)) }
+    }
+
+    override fun setTeachingCoursesCount(coursesCount: Int) {
+        amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT, coursesCount))
+        updateYandexUserProfile { apply(Attribute.customNumber(AmplitudeAnalytic.Properties.TEACHING_COURSES_COUNT).withValue(coursesCount.toDouble())) }
+    }
+
+    override fun report(analyticEvent: AnalyticEvent) {
+        if (AnalyticSource.YANDEX in analyticEvent.sources) {
+            YandexMetrica.reportEvent(analyticEvent.name, analyticEvent.params)
+        }
+
+        if (AnalyticSource.AMPLITUDE in analyticEvent.sources) {
+            syncAmplitudeProperties()
+            val properties = JSONObject()
+            for ((k, v) in analyticEvent.params.entries) {
+                properties.put(k, v)
+            }
+            amplitude.logEvent(analyticEvent.name, properties)
+            Crashlytics.log("${analyticEvent.name}=${analyticEvent.params}")
+        }
+
+        if (AnalyticSource.FIREBASE in analyticEvent.sources) {
+            val bundle = bundleOf(*analyticEvent.params.map { (a, b) -> a to b }.toTypedArray())
+            firebaseAnalytics.logEvent(analyticEvent.name, bundle)
+        }
+    }
 
     override fun reportAmplitudeEvent(eventName: String) = reportAmplitudeEvent(eventName, null)
-    override fun reportAmplitudeEvent(eventName: String, params: MutableMap<String, Any>?) {
+    override fun reportAmplitudeEvent(eventName: String, params: Map<String, Any>?) {
         syncAmplitudeProperties()
         val properties = JSONObject()
         params?.let {
@@ -68,6 +131,8 @@ constructor(
             }
         }
         amplitude.logEvent(eventName, properties)
+        YandexMetrica.reportEvent(eventName, params)
+        Crashlytics.log("$eventName=$params")
     }
 
     override fun setUserProperty(name: String, value: String) =

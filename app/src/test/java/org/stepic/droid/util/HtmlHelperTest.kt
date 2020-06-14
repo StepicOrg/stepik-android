@@ -74,12 +74,6 @@ class HtmlHelperTest{
         assertEquals(correctId, HtmlHelper.parseIdFromSlug(correctSlug))
     }
 
-    @Test
-    fun trimTrailingWhitespace(){
-        val source = "J\n\n\nK\n\nR"
-        assertEquals(source, HtmlHelper.trimTrailingWhitespace(source))
-    }
-
     //fixme init yandexmetrica with context, move to instrumental?
 //    @Test
 //    fun testParseIdIncorrectSlug(){

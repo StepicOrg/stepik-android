@@ -21,7 +21,8 @@ class CodeOptionsTest {
                 executionMemoryLimit = 120,
                 executionTimeLimit = 5,
                 codeTemplates = hashMapOf("java" to "public static etc"),
-                samples = listOf(sample1, sample2)
+                samples = listOf(sample1, sample2),
+                isRunUserCodeAllowed = true
         )
 
         codeOptions.assertThatObjectParcelable<CodeOptions>()
@@ -35,7 +36,8 @@ class CodeOptionsTest {
                 executionTimeLimit = 0,
                 executionMemoryLimit = 0,
                 codeTemplates = emptyMap(),
-                samples = emptyList()
+                samples = emptyList(),
+                isRunUserCodeAllowed = false
         )
 
         codeOptions.assertThatObjectParcelable<CodeOptions>()

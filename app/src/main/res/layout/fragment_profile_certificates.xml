@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/certificatesContainer"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/profileCertificatesTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?selectableItemBackground"
+
+        android:text="@string/certificates_title"
+        android:gravity="center_vertical"
+
+        android:paddingLeft="@dimen/profile_block_margin"
+        android:paddingStart="@dimen/profile_block_margin"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:drawableEnd="@drawable/ic_nav_arrow_right"
+        android:drawableRight="@drawable/ic_nav_arrow_right"
+
+        style="@style/ProfileItemHeader" />
+
+    <include
+        android:id="@+id/profileCertificatesLoading"
+        android:visibility="gone"
+        layout="@layout/profile_details_loading_view" />
+
+    <include
+        android:id="@+id/certificatesLoadingError"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        layout="@layout/error_no_connection_with_button_small" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/profileCertificatesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        android:visibility="gone" />
+
+    <include layout="@layout/view_divider_vertical" />
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -2,6 +2,7 @@ package org.stepik.android.view.injection.course
 
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import org.stepik.android.cache.course.source.CourseCacheDataSourceImpl
 import org.stepik.android.cache.course.source.CourseReviewSummaryCacheDataSourceImpl
 import org.stepik.android.cache.course.source.EnrollmentCacheDataSourceImpl
@@ -17,9 +18,14 @@ import org.stepik.android.data.course.source.EnrollmentRemoteDataSource
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
+import org.stepik.android.remote.course.service.CourseReviewSummaryService
+import org.stepik.android.remote.course.service.CourseService
+import org.stepik.android.remote.course.service.EnrollmentService
 import org.stepik.android.remote.course.source.CourseRemoteDataSourceImpl
 import org.stepik.android.remote.course.source.CourseReviewSummaryRemoteDataSourceImpl
 import org.stepik.android.remote.course.source.EnrollmentRemoteDataSourceImpl
+import org.stepik.android.view.injection.base.Authorized
+import retrofit2.Retrofit
 
 @Module
 abstract class CourseDataModule {
@@ -67,4 +73,22 @@ abstract class CourseDataModule {
     internal abstract fun bindCourseReviewCacheDataSource(
         courseReviewSummaryCacheDataSourceImpl: CourseReviewSummaryCacheDataSourceImpl
     ): CourseReviewSummaryCacheDataSource
+
+    @Module
+    companion object {
+        @Provides
+        @JvmStatic
+        internal fun provideCourseService(@Authorized retrofit: Retrofit): CourseService =
+            retrofit.create(CourseService::class.java)
+
+        @Provides
+        @JvmStatic
+        internal fun provideEnrollmentService(@Authorized retrofit: Retrofit): EnrollmentService =
+            retrofit.create(EnrollmentService::class.java)
+
+        @Provides
+        @JvmStatic
+        internal fun provideCourseReviewSummaryService(@Authorized retrofit: Retrofit): CourseReviewSummaryService =
+            retrofit.create(CourseReviewSummaryService::class.java)
+    }
 }

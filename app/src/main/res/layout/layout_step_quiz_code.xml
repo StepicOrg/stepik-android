@@ -21,7 +21,7 @@
 
     <FrameLayout
         android:id="@+id/stepQuizCodeDetails"
-        android:background="@drawable/bg_step_quiz_code_details"
+        android:background="@color/color_elevation_overlay_2dp"
         android:layout_width="match_parent"
         android:layout_height="48dp">
         <androidx.appcompat.widget.AppCompatImageView
@@ -30,6 +30,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginStart="16dp"
             android:layout_gravity="center_vertical"
+            app:tint="?colorControlNormal"
             app:srcCompat="@drawable/ic_step_quiz_code_details" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -38,8 +39,7 @@
             android:gravity="center_vertical|start"
 
             android:text="@string/step_quiz_code_details"
-            android:textColor="@color/new_accent_color"
-            android:textSize="16sp"
+            android:textAppearance="?textAppearanceBody1"
 
             android:layout_marginStart="48dp"
             android:layout_marginLeft="48dp"
@@ -51,20 +51,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center_vertical"
+            app:tint="?colorControlNormal"
             android:layout_marginEnd="16dp"
             android:layout_marginRight="16dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:duplicateParentState="true"
+            android:background="?selectableItemBackground" />
     </FrameLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator" />
+    <include layout="@layout/view_divider_vertical" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stepQuizCodeDetailsContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/new_primary_color"
+        android:background="@color/color_elevation_overlay_2dp"
         tools:listitem="@layout/item_step_quiz_code_detail_sample"
         android:visibility="gone" />
 
@@ -74,8 +78,7 @@
         android:layout_height="48dp"
 
         android:text="@string/step_quiz_code_lang_chooser"
-        android:textSize="16sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody1"
         android:gravity="center_vertical|start"
 
         android:drawablePadding="18dp"
@@ -84,51 +87,57 @@
         android:paddingRight="16dp"
         android:paddingEnd="16dp"
 
-        tools:drawableStart="@drawable/ic_step_quiz_code_lang" />
+        app:drawableTint="?colorControlNormal"
+        app:drawableStartCompat="@drawable/ic_step_quiz_code_lang" />
+
+    <include layout="@layout/view_divider_vertical"
+        android:id="@+id/stepQuizCodeLangChooserDividerTop" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/stepQuizCodeLangChooser"
         android:layout_width="match_parent"
         android:layout_height="192dp"
-        android:background="@drawable/bg_step_quiz_code_lang_chooser"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:clipToPadding="false"
         tools:listitem="@layout/item_step_quiz_code_lang" />
 
+    <include layout="@layout/view_divider_vertical"
+        android:id="@+id/stepQuizCodeLangChooserDividerBottom" />
+
     <FrameLayout
         android:id="@+id/stepQuizActions"
         android:layout_width="match_parent"
         android:layout_height="48dp">
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/stepQuizActionChangeLang"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:background="?selectableItemBackground"
+            android:layout_height="wrap_content"
             android:lines="1"
             android:ellipsize="end"
 
-            android:textSize="16sp"
-            android:textColor="@color/color_step_quiz_code_lang"
-            android:gravity="center_vertical"
             android:layout_gravity="center_vertical|start"
 
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
 
-            android:drawablePadding="12dp"
 
             android:layout_marginRight="96dp"
             android:layout_marginEnd="96dp"
 
-            tools:drawableEnd="@drawable/ic_arrow_bottom"
+            app:cornerRadius="0dp"
+            app:iconPadding="12dp"
+            app:icon="@drawable/ic_arrow_bottom"
+            app:iconGravity="end"
+
+            style="@style/Widget.AppTheme.Button.TextButton"
 
             tools:text="python3 dasjdlkas dadlj aldj akjsdlakj lkjasdkl jkdas" />
 
-        <View
+        <include
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/step_quiz_separator"
+            android:layout_height="?dividerVerticalSize"
+            layout="@layout/view_divider_vertical"
             android:layout_gravity="bottom" />
     </FrameLayout>
 
@@ -139,10 +148,6 @@
         android:layout_height="@dimen/embedded_code_editor_height"
         android:fillViewport="true" />
 
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/step_quiz_separator" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -12,8 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:textSize="16sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody1"
 
         tools:text="Пример данных 1:" />
 
@@ -23,11 +22,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
 
-        android:textSize="14sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody2"
         app:fontFamily="@font/pt_mono"
 
         android:drawablePadding="16dp"
+        app:drawableTint="?colorControlNormal"
         tools:drawableStart="@drawable/ic_step_quiz_code_sample_input"
 
         tools:text="77 1010" />
@@ -38,11 +37,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
 
-        android:textSize="14sp"
-        android:textColor="@color/new_accent_color"
+        android:textAppearance="?textAppearanceBody2"
         app:fontFamily="@font/pt_mono"
 
         android:drawablePadding="16dp"
+        app:drawableTint="?colorControlNormal"
         tools:drawableStart="@drawable/ic_step_quiz_code_sample_output"
 
         tools:text="77777777 1010101010101010" />

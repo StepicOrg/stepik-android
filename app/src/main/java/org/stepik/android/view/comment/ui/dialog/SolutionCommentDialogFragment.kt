@@ -19,6 +19,7 @@ import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setCompoundDrawables
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.model.DiscountingPolicyType
@@ -27,6 +28,8 @@ import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
@@ -38,7 +41,9 @@ import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFo
 import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_sql.ui.delegate.SqlStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
+import org.stepik.android.view.submission.routing.SubmissionDeepLinkBuilder
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class SolutionCommentDialogFragment : DialogFragment() {
@@ -65,6 +70,12 @@ class SolutionCommentDialogFragment : DialogFragment() {
     @Inject
     lateinit var screenManager: ScreenManager
 
+    @Inject
+    lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
+
+    @Inject
+    lateinit var submissionDeepLinkBuilder: SubmissionDeepLinkBuilder
+
     private var step: Step by argument()
     private var attempt: Attempt by argument()
     private var submission: Submission by argument()
@@ -84,7 +95,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
         injectComponent()
     }
 
@@ -130,7 +141,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         centeredToolbarTitle.text = getString(R.string.comment_solution_pattern, submission.id)
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
 
         val state =
             StepQuizView.State.AttemptLoaded(
@@ -151,11 +162,16 @@ class SolutionCommentDialogFragment : DialogFragment() {
         } else {
             stepQuizAction.setOnClickListener {
                 val discussionThread = this.discussionThread
-                if (discussionThread != null) {
-                    screenManager.openDiscussionInWeb(context, step, discussionThread, discussionId)
-                } else {
-                    screenManager.openSubmissionInWeb(context, step.id, submission.id)
-                }
+                val url =
+                    if (discussionThread != null) {
+                        stepDeepLinkBuilder.createStepLink(step, discussionThread, discussionId)
+                    } else {
+                        submissionDeepLinkBuilder.createSubmissionLink(step.id, submission.id)
+                    }
+
+                MagicLinkDialogFragment
+                    .newInstance(url)
+                    .showIfNotExists(childFragmentManager, MagicLinkDialogFragment.TAG)
             }
             stepQuizAction.setText(R.string.step_quiz_unsupported_solution_action)
             stepQuizAction.updateLayoutParams<ViewGroup.MarginLayoutParams> {
@@ -213,7 +229,7 @@ class SolutionCommentDialogFragment : DialogFragment() {
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
             }
     }
 }

@@ -73,7 +73,9 @@ constructor(
             SELECT ?, ?, ?, ?, ?, ?, ?, ?
             WHERE NOT EXISTS (
                 SELECT * FROM ${DbStructureAttempt.TABLE_NAME} 
-                WHERE ${DbStructureAttempt.Columns.ID} > ?
+                WHERE ${DbStructureAttempt.Columns.ID} > ? 
+                AND ${DbStructureAttempt.Columns.STEP} = ? 
+                AND ${DbStructureAttempt.Columns.USER} = ?
             )
         """.trimIndent(),
             arrayOf(
@@ -85,7 +87,9 @@ constructor(
                 persistentObject.status,
                 persistentObject.time?.time ?: -1,
                 persistentObject.timeLeft,
-                persistentObject.id
+                persistentObject.id,
+                persistentObject.step,
+                persistentObject.user
             )
         )
     }

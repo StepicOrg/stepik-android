@@ -56,6 +56,7 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_ADMIN, hardQuizDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_SQL, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_LINUX_CODE, simpleQuestionDrawable);
+        mapFromTypeToDrawableRes.put(AppConstants.TYPE_FILL_BLANKS, simpleQuestionDrawable);
     }
 
     @Override
@@ -71,15 +72,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         }
 
         return drawable;
-    }
-
-    @Override
-    public int getDrawableTintForStep(boolean isViewed) {
-        if (isViewed) {
-            return R.color.viewed_step;
-        } else {
-            return R.color.unviewed_step;
-        }
     }
 
     @NotNull

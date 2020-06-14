@@ -10,7 +10,6 @@
         android:id="@+id/bannerText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_violet_1_12"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -18,24 +17,18 @@
         app:layout_constraintBottom_toTopOf="@id/bannerButton"
 
         android:padding="@dimen/course_review_item_margin"
+        android:textAppearance="?textAppearanceBody2"
+        android:theme="@style/ThemeOverlay.Violet"
 
-        android:textColor="@color/color_violet_1"
         android:text="@string/course_reviews_compose_banner_review_description" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/bannerButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:text="@string/course_reviews_action_create"
-
-        android:foreground="@null"
-
-        style="?android:attr/buttonStyleSmall"
-
-        android:layout_margin="16dp"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        app:backgroundTint="@color/color_violet_1" />
+        android:theme="@style/ThemeOverlay.Violet"
+        android:layout_margin="16dp" />
 
     <include
         android:id="@+id/bannerEmpty"

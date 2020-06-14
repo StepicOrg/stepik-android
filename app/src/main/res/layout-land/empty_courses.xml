@@ -42,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/empty_courses_button"
         style="@style/PlaceholderButton"
         android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
         app:layout_constraintStart_toStartOf="@+id/empty_courses_text"
         app:layout_constraintTop_toBottomOf="@+id/empty_courses_text" />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <Button
         android:id="@+id/empty_courses_anonymous_button"
         style="@style/PlaceholderButton"
         android:layout_width="wrap_content"

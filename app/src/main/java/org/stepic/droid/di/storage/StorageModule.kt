@@ -23,8 +23,6 @@ import org.stepic.droid.storage.dao.AdaptiveExpDaoImpl
 import org.stepic.droid.storage.dao.AssignmentDaoImpl
 import org.stepic.droid.storage.dao.BlockDaoImpl
 import org.stepic.droid.storage.dao.CourseDaoImpl
-import org.stepic.droid.storage.dao.CourseListDao
-import org.stepic.droid.storage.dao.CourseListDaoImpl
 import org.stepic.droid.storage.dao.CourseReviewSummaryDaoImpl
 import org.stepic.droid.storage.dao.CourseReviewsDaoImpl
 import org.stepic.droid.storage.dao.IDao
@@ -45,15 +43,18 @@ import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
+import org.stepik.android.cache.course_collection.dao.CourseCollectionDaoImpl
+import org.stepik.android.cache.discussion_thread.dao.DiscussionThreadDaoImpl
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.download.dao.DownloadedCoursesDaoImpl
-import org.stepik.android.cache.discussion_thread.dao.DiscussionThreadDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDaoImpl
+import org.stepik.android.cache.social_profile.dao.SocialProfileDaoImpl
 import org.stepik.android.cache.submission.dao.SubmissionDaoImpl
 import org.stepik.android.cache.user.dao.UserDaoImpl
+import org.stepik.android.cache.user_courses.dao.UserCourseDaoImpl
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.cache.video.dao.VideoDaoImpl
 import org.stepik.android.cache.video.dao.VideoEntityDaoImpl
@@ -64,17 +65,9 @@ import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.model.Assignment
-import org.stepik.android.model.Certificate
-import org.stepik.android.model.Course
-import org.stepik.android.model.CourseReviewSummary
-import org.stepik.android.model.Lesson
-import org.stepik.android.model.Progress
-import org.stepik.android.model.Section
-import org.stepik.android.model.Step
-import org.stepik.android.model.Submission
+import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.model.*
 import org.stepik.android.model.Unit
-import org.stepik.android.model.ViewAssignment
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
@@ -166,10 +159,6 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun bindCourseListDao(courseListDaoImpl: CourseListDaoImpl): CourseListDao
-
-    @StorageSingleton
-    @Binds
     internal abstract fun bindCourseDao(courseDaoImpl: CourseDaoImpl): IDao<Course>
 
     @StorageSingleton
@@ -214,11 +203,23 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun bindAttmptDao(attemptDaoImpl: AttemptDaoImpl): IDao<Attempt>
+    internal abstract fun bindAttemptDao(attemptDaoImpl: AttemptDaoImpl): IDao<Attempt>
 
     @StorageSingleton
     @Binds
     internal abstract fun bindDownloadeCoursesDao(downloadedCoursesDaoImpl: DownloadedCoursesDaoImpl): DownloadedCoursesDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindSocialProfileDao(socialProfileDaoImpl: SocialProfileDaoImpl): IDao<SocialProfile>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindUserCourseDao(userCourseDao: UserCourseDaoImpl): IDao<UserCourse>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindCourseCollectionDao(courseCollectionDaoImpl: CourseCollectionDaoImpl): IDao<CourseCollection>
 
     @Module
     companion object {

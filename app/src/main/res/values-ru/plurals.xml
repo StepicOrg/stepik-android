@@ -75,10 +75,10 @@
         <item quantity="other">%d отзывов о курсах</item>
     </plurals>
     <plurals name="points">
-        <item quantity="one">%d балл</item>
-        <item quantity="few">%d балла</item>
-        <item quantity="many">%d баллов</item>
-        <item quantity="other">%d баллов</item>
+        <item quantity="one">%s балл</item>
+        <item quantity="few">%s балла</item>
+        <item quantity="many">%s баллов</item>
+        <item quantity="other">%s баллов</item>
     </plurals>
     <plurals name="submissions">
         <item quantity="one">%d попытка</item>
@@ -91,5 +91,26 @@
         <item quantity="few">%d ответа</item>
         <item quantity="many">%d ответов</item>
         <item quantity="other">%d ответов</item>
+    </plurals>
+
+    <plurals name="certificates_issued">
+        <item quantity="one">%d сертификат выдан</item>
+        <item quantity="few">%d сертификата выдано</item>
+        <item quantity="many">%d сертификатов выдано</item>
+        <item quantity="other">%d сертификатов выдано</item>
+    </plurals>
+
+    <plurals name="courses_published">
+        <item quantity="one">%d курс опубликован</item>
+        <item quantity="few">%d курса опубликовано</item>
+        <item quantity="many">%d курсов опубликовано</item>
+        <item quantity="other">%d курсов опубликовано</item>
+    </plurals>
+
+    <plurals name="submit_solutions">
+        <item quantity="one">Отправить %d решение</item>
+        <item quantity="few">Отправить %d решения</item>
+        <item quantity="many">Отправить %d решений</item>
+        <item quantity="other">Отправить %d решений</item>
     </plurals>
 </resources>

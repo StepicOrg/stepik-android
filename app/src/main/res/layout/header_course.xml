@@ -2,188 +2,87 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/courseHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/fast_continue_learning_opacity"
     android:gravity="center_horizontal"
+    android:paddingTop="8dp"
     app:layout_collapseMode="pin">
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/courseContinueAction"
-        style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
         android:minWidth="200dp"
-        android:background="@drawable/header_action_background_white"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/continue_learning"
-        android:textSize="@dimen/header_action_text_size"
         android:layout_marginTop="?actionBarSize" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/courseEnrollAction"
-        style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
         android:minWidth="200dp"
-        android:background="@drawable/header_action_background_green"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/course_item_join"
-        android:textSize="@dimen/header_action_text_size"
-        android:textColor="@color/white"
         android:layout_marginTop="?actionBarSize" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/courseBuyInAppAction"
-        style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
         android:minWidth="200dp"
-        android:background="@drawable/header_action_background_green"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/course_payments_purchase_in_app"
-        android:textSize="@dimen/header_action_text_size"
-        android:textColor="@color/white"
         android:layout_marginTop="?actionBarSize" />
 
-    <TextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/courseBuyInWebAction"
-        style="@style/CourseWidgetView"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Green"
+        app:cornerRadius="@dimen/header_action_radius"
         android:minWidth="200dp"
-        android:background="@drawable/header_action_background_green"
-        android:paddingEnd="@dimen/guideline_standard_padding"
-        android:paddingStart="@dimen/guideline_standard_padding"
         android:text="@string/course_payments_purchase_in_web"
-        android:textSize="@dimen/header_action_text_size"
-        android:textColor="@color/white"
         android:layout_marginTop="?actionBarSize" />
 
     <org.stepic.droid.ui.custom.LoadingView
         android:id="@+id/courseEnrollmentProgress"
-        android:alpha="@dimen/loading_view_dark_alpha"
-        style="@style/CourseWidgetView"
         android:layout_width="200dp"
-        android:layout_height="@dimen/header_action_height"
+        android:layout_height="48dp"
         app:radius="@dimen/header_action_radius"
         android:paddingEnd="@dimen/guideline_standard_padding"
         android:paddingStart="@dimen/guideline_standard_padding"
         android:layout_marginTop="?actionBarSize" />
 
-    <LinearLayout
+    <include
+        android:id="@+id/courseStats"
+        layout="@layout/layout_course_stats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_vertical">
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp" />
 
-        <org.stepic.droid.features.achievements.ui.custom.VectorRatingBar
-            android:id="@+id/courseRating"
-            app:backgroundIcon="@drawable/ic_progress_star_white"
-            app:secondaryIcon="@drawable/ic_progress_star_white"
-            app:progressIcon="@drawable/ic_progress_star_green_filled"
-            app:itemsGap="2dp"
-            android:layout_width="wrap_content"
-            android:layout_height="11dp"
-
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"/>
-
-        <TextView
-            android:id="@+id/courseLearnersCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-
-            android:drawablePadding="2dp"
-
-            android:textSize="12sp"
-            android:textColor="@color/white"
-            app:fontFamily="@font/roboto_light"
-            tools:text="999K"
-            tools:ignore="MissingPrefix" />
-
-        <org.stepic.droid.ui.custom.CircleProgressView
-            android:id="@+id/courseProgress"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginStart="6dp"
-            app:progressBackgroundColor="@color/white"
-            app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
-
-        <TextView
-            android:id="@+id/courseProgressText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-
-            android:layout_marginLeft="2dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginEnd="6dp"
-
-            android:textSize="12sp"
-            android:textColor="@color/white"
-            app:fontFamily="@font/roboto_light"
-            tools:ignore="MissingPrefix"
-            tools:text="77%"/>
-
-        <TextView
-            android:id="@+id/courseFeatured"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:drawablePadding="4dp"
-
-            android:text="@string/course_verified"
-            android:textSize="12sp"
-            android:textColor="@color/white"
-            app:fontFamily="@font/roboto_light"
-            tools:ignore="MissingPrefix" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/courseInfo"
+    <include
+        android:id="@+id/courseProgressSeparator"
+        android:layout_marginTop="24dp"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/course_info_height_expanded"
-        android:orientation="horizontal"
+        android:layout_height="?dividerVerticalSize"
+        layout="@layout/view_divider_vertical" />
+
+    <include
+        android:id="@+id/courseProgress"
+        layout="@layout/layout_course_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="@dimen/course_info_margin_expanded"
-        android:gravity="center"
-        android:layout_gravity="center">
-
-        <ImageView
-            android:id="@+id/courseCoverSmall"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="@null"/>
-
-        <TextView
-            android:id="@+id/courseTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textColor="@color/white"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
+        android:layout_marginBottom="16dp" />
 </LinearLayout>

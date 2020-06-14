@@ -22,5 +22,6 @@ enum class CourseInfoType(
     TIME_TO_COMPLETE(R.drawable.ic_course_info_time_to_complete, R.string.course_info_time_to_complete),
     LANGUAGE(R.drawable.ic_course_info_language, R.string.course_info_language),
     CERTIFICATE(R.drawable.ic_course_info_certificate, R.string.course_info_certificate),
-    CERTIFICATE_DETAILS(R.drawable.ic_course_info_details, R.string.course_info_certificate_detail)
+    CERTIFICATE_DETAILS(R.drawable.ic_course_info_details, R.string.course_info_certificate_detail),
+    LEARNERS_COUNT(R.drawable.ic_course_info_learners_count, R.string.course_info_learners_count)
 }

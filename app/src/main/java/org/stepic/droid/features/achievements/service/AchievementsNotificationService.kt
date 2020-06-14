@@ -13,16 +13,16 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
-import org.stepic.droid.features.achievements.repository.AchievementsRepository
-import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity
-import org.stepic.droid.features.achievements.util.AchievementResourceResolver
-import org.stepic.droid.model.AchievementFlatItem
+import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity
+import org.stepik.android.view.achievement.ui.resolver.AchievementResourceResolver
+import org.stepik.android.domain.achievement.model.AchievementItem
 import org.stepic.droid.model.AchievementNotification
 import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.ui.util.toBitmap
-import org.stepic.droid.util.ColorUtil
-import org.stepic.droid.util.glide.GlideSvgRequestFactory
+import org.stepik.android.view.glide.model.GlideRequestFactory
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepic.droid.util.toObject
+import org.stepik.android.domain.achievement.repository.AchievementRepository
 import javax.inject.Inject
 
 class AchievementsNotificationService : JobIntentService() {
@@ -41,7 +41,7 @@ class AchievementsNotificationService : JobIntentService() {
     internal lateinit var analytic: Analytic
 
     @Inject
-    internal lateinit var achievementsRepository: AchievementsRepository
+    internal lateinit var achievementRepository: AchievementRepository
 
     @Inject
     internal lateinit var notificationManager: NotificationManager
@@ -58,7 +58,7 @@ class AchievementsNotificationService : JobIntentService() {
             val rawMessage = intent.getStringExtra(EXTRA_RAW_MESSAGE) ?: return
             val achievementNotification = rawMessage.toObject<AchievementNotification>()
 
-            val achievement = achievementsRepository
+            val achievement = achievementRepository
                     .getAchievement(achievementNotification.user, achievementNotification.kind)
                     .blockingGet()
 
@@ -85,7 +85,7 @@ class AchievementsNotificationService : JobIntentService() {
                     .setSmallIcon(R.drawable.ic_notification_icon_1)
                     .setLargeIcon(largeIcon)
                     .setContentIntent(pendingIntent)
-                    .setColor(ColorUtil.getColorArgb(R.color.stepic_brand_primary))
+                    .setColor(resolveColorAttribute(R.attr.colorSecondary))
                     .setAutoCancel(true)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                     .build()
@@ -94,12 +94,12 @@ class AchievementsNotificationService : JobIntentService() {
         } catch (e: Exception) {}
     }
 
-    private fun getAchievementImageBitmap(achievement: AchievementFlatItem): Bitmap {
+    private fun getAchievementImageBitmap(achievement: AchievementItem): Bitmap {
         val iconSize = resources.getDimension(R.dimen.notification_large_icon_size).toInt()
-        return GlideSvgRequestFactory.create(this, null)
+        return GlideRequestFactory.create(this, null)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .load(Uri.parse(achievementResourceResolver.resolveAchievementIcon(achievement)))
-                .placeholder(R.drawable.general_placeholder)
+                .load(Uri.parse(achievementResourceResolver.resolveAchievementIcon(achievement, iconSize)))
+                .placeholder(R.drawable.ic_achievement_empty)
                 .submit(iconSize, iconSize)
                 .get()
                 .toBitmap(iconSize, iconSize)

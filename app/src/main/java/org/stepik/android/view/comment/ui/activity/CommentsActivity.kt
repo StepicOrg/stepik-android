@@ -32,6 +32,7 @@ import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsPresenter
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
+import org.stepik.android.view.base.ui.extension.setTintList
 import org.stepik.android.view.comment.model.DiscussionOrderItem
 import org.stepik.android.view.comment.ui.adapter.decorator.CommentItemDecoration
 import org.stepik.android.view.comment.ui.adapter.delegate.CommentDataAdapterDelegate
@@ -85,7 +86,7 @@ class CommentsActivity :
     private var isMenuOrderGroupVisible: Boolean = false
     private var menuDiscussionOrderItem: DiscussionOrderItem = DiscussionOrderItem.LAST_DISCUSSION
 
-    private val commentPlaceholders = List(10) { CommentItem.Placeholder }
+    private val commentPlaceholders = List(5) { CommentItem.Placeholder }
 
     private val step by lazy { intent.getParcelableExtra<Step>(EXTRA_STEP) }
     private val discussionThread by lazy { intent.getParcelableExtra<DiscussionThread>(EXTRA_DISCUSSION_THREAD) }
@@ -109,8 +110,9 @@ class CommentsActivity :
                 },
             showHomeButton = true
         )
-        centeredToolbar.overflowIcon =
-            AppCompatResources.getDrawable(this, R.drawable.ic_comments_ordering)
+        centeredToolbar.overflowIcon = AppCompatResources
+            .getDrawable(this, R.drawable.ic_comments_ordering)
+            ?.setTintList(this, R.attr.colorControlNormal)
 
         commentsAdapter = DefaultDelegateAdapter()
         commentsAdapter += CommentPlaceholderAdapterDelegate()
@@ -148,7 +150,7 @@ class CommentsActivity :
             layoutManager = LinearLayoutManager(context)
 
             addItemDecoration(CommentItemDecoration(
-                separatorColor = ContextCompat.getColor(context, R.color.grey04),
+                separatorColor = ContextCompat.getColor(context, R.color.color_divider),
                 bigSeparatorBounds =
                     CommentItemDecoration.SeparatorBounds(
                         size = resources.getDimensionPixelSize(R.dimen.comment_item_separator_big),

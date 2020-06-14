@@ -2,7 +2,7 @@ package org.stepik.android.remote.auth.service
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepic.droid.web.UserRegistrationRequest
+import org.stepik.android.remote.auth.model.UserRegistrationRequest
 import org.stepik.android.remote.auth.model.OAuthResponse
 import retrofit2.Call
 import retrofit2.http.Body

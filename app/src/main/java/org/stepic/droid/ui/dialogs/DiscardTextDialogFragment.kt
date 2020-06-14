@@ -3,9 +3,10 @@ package org.stepic.droid.ui.dialogs
 import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
+import org.stepic.droid.util.resolveAttribute
 
 class DiscardTextDialogFragment : DialogFragment() {
     companion object {
@@ -16,7 +17,7 @@ class DiscardTextDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog =
-        AlertDialog.Builder(requireContext())
+        MaterialAlertDialogBuilder(context)
             .setTitle(R.string.title_confirmation)
             .setMessage(R.string.are_you_sure_remove_comment_text)
             .setPositiveButton(R.string.delete_label) { _, _ ->
@@ -29,11 +30,12 @@ class DiscardTextDialogFragment : DialogFragment() {
             .create()
             .apply {
                 setOnShowListener {
-                    getButton(AlertDialog.BUTTON_POSITIVE)
-                        .setTextColor(ContextCompat.getColor(context, R.color.new_red_color))
+                    val colorError = context
+                        .resolveAttribute(R.attr.colorError)
+                        ?.data
+                        ?: return@setOnShowListener
 
-                    getButton(AlertDialog.BUTTON_NEGATIVE)
-                        .setTextColor(ContextCompat.getColor(context, R.color.new_accent_color))
+                    getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(colorError)
                 }
             }
 

@@ -7,17 +7,25 @@ import kotlinx.android.synthetic.main.activity_onboarding.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.DeferredAuthSplitTest
+import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.activities.contracts.OnNextClickedListener
 import org.stepic.droid.ui.adapters.OnboardingAdapter
 import org.stepic.droid.ui.custom.OnboardingPageTransformer
 import org.stepic.droid.ui.fragments.OnboardingFragment
+import javax.inject.Inject
 
 class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener {
+
+    @Inject
+    lateinit var deferredAuthSplitsTest: DeferredAuthSplitTest
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         setContentView(R.layout.activity_onboarding)
+        App.component().inject(this)
         initViewPager()
         initClose()
     }
@@ -95,7 +103,11 @@ class AnimatedOnboardingActivity : FragmentActivityBase(), OnNextClickedListener
 
     private fun openLaunchScreen() {
         sharedPreferenceHelper.afterOnboardingPassed()
-        screenManager.showLaunchFromSplash(this)
+        if (deferredAuthSplitsTest.currentGroup.isDeferredAuth && !deferredAuthSplitsTest.currentGroup.isCanDismissLaunch) {
+            screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
+        } else {
+            screenManager.showLaunchFromSplash(this)
+        }
         finish()
     }
 

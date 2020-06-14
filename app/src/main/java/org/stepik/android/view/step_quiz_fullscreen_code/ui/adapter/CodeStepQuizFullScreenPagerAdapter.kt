@@ -9,13 +9,23 @@ import androidx.viewpager.widget.PagerAdapter
 import org.stepic.droid.R
 
 class CodeStepQuizFullScreenPagerAdapter(
-    private val context: Context
+    private val context: Context,
+    isShowRunCode: Boolean
 ) : PagerAdapter() {
 
-    private val layouts = listOf(
-        inflateLayout(R.layout.layout_step_quiz_code_fullscreen_instruction,  R.string.step_quiz_code_full_screen_instruction_tab),
-        inflateLayout(R.layout.layout_step_quiz_code_fullscreen_playground, R.string.step_quiz_code_full_screen_code_tab)
-    )
+    private val layouts: List<Pair<View, String>>
+    init {
+        val result = listOf(
+            inflateLayout(R.layout.layout_step_quiz_code_fullscreen_instruction,  R.string.step_quiz_code_full_screen_instruction_tab),
+            inflateLayout(R.layout.layout_step_quiz_code_fullscreen_playground, R.string.step_quiz_code_full_screen_code_tab)
+        )
+
+        layouts = if (isShowRunCode) {
+            result + listOf(inflateLayout(R.layout.layout_step_quiz_code_fullscreen_run_code, R.string.step_quiz_code_full_screen_run_code_tab))
+        } else {
+            result
+        }
+    }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = layouts[position].first

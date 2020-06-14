@@ -31,10 +31,7 @@
                 android:rating="0"
                 android:stepSize="1" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/silver"/>
+            <include layout="@layout/view_divider_vertical" />
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/courseReviewEditText"

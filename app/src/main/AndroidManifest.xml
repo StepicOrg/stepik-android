@@ -28,14 +28,16 @@
         android:manageSpaceActivity=".ui.activities.StoreManagementActivity"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="false"
-        android:theme="@style/StepikTheme"
-        tools:replace="allowBackup, supportsRtl">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:replace="allowBackup, supportsRtl"
+        tools:targetApi="m">
 
         <activity
             android:name="org.stepic.droid.ui.activities.SplashActivity"
             android:noHistory="true"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.BrandedLaunch" />
+            android:theme="@style/AppTheme.Splash" />
 
         <activity-alias
             android:name="org.stepic.droid.view.activities.SplashActivity"
@@ -66,12 +68,11 @@
 
         <activity
             android:name=".ui.activities.AnimatedOnboardingActivity"
-            android:theme="@style/StepikTheme.Onboarding" />
+            android:theme="@style/AppTheme.Onboarding" />
 
         <activity
-            android:name="org.stepic.droid.ui.activities.LaunchActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration">
+            android:name="org.stepik.android.view.auth.ui.activity.SocialAuthActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -87,14 +88,12 @@
         </activity>
 
         <activity
-            android:name="org.stepic.droid.ui.activities.RegisterActivity"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"
+            android:name="org.stepik.android.view.auth.ui.activity.RegistrationActivity"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name="org.stepic.droid.ui.activities.LoginActivity"
+            android:name="org.stepik.android.view.auth.ui.activity.CredentialAuthActivity"
             android:launchMode="singleTop"
-            android:theme="@style/StepikTheme.LoginLaunchRegistration"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
@@ -123,18 +122,7 @@
 
             <meta-data
                 android:name="android.app.default_searchable"
-                android:value=".ui.activities.CourseSearchResultActivity" />
-        </activity>
-
-         <activity
-            android:name=".ui.activities.CourseSearchResultActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+                android:value="org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity" />
         </activity>
 
         <activity
@@ -151,34 +139,11 @@
             android:name="org.stepik.android.view.comment.ui.activity.CommentsActivity" />
 
         <activity
-            android:name=".ui.activities.ProfileActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden">
-            <!-- Parent activity meta-data to support 4.0 and lower -->
-            <intent-filter
-                android:autoVerify="true"
-                tools:ignore="UnusedAttribute">
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="https" />
-                <data android:scheme="http" />
-                <data android:host="@string/secondary_host_name" />
-                <data android:host="@string/host_name" />
-                <data android:pathPattern="/users/.*" />
-                <data android:pathPattern="/users/.*/" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".ui.activities.CourseListActivity" />
-
-        <activity
             android:name=".ui.activities.PhotoViewActivity"
-            android:theme="@style/AppTheme.PhotoView" />
+            android:theme="@style/AppTheme.Translucent" />
 
         <activity
-            android:name=".ui.activities.SettingsActivity" />
+            android:name="org.stepik.android.view.settings.ui.activity.SettingsActivity" />
 
         <activity
             android:name=".ui.activities.NotificationSettingsActivity"
@@ -203,44 +168,38 @@
         <activity
             android:name=".ui.activities.AboutAppActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.SettingsActivity">
+            android:parentActivityName="org.stepik.android.view.settings.ui.activity.SettingsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activities.SettingsActivity" />
+                android:value="org.stepik.android.view.settings.ui.activity.SettingsActivity" />
         </activity>
 
         <activity
             android:name=".ui.activities.StoreManagementActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".ui.activities.SettingsActivity">
+            android:parentActivityName="org.stepik.android.view.settings.ui.activity.SettingsActivity">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activities.MainFeedActivity" />
         </activity>
 
-        <activity android:name=".ui.activities.TagActivity" />
+        <activity
+            android:name=".adaptive.ui.activities.AdaptiveCourseActivity" />
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveCourseActivity"
-            android:theme="@style/Adaptive" />
+            android:name=".adaptive.ui.activities.AdaptiveOnboardingActivity" />
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveOnboardingActivity"
-            android:theme="@style/Adaptive" />
+            android:name=".adaptive.ui.activities.AdaptiveStatsActivity" />
 
         <activity
-            android:name=".adaptive.ui.activities.AdaptiveStatsActivity"
-            android:theme="@style/Adaptive.White" />
-
-        <activity
-            android:name=".features.achievements.ui.activity.AchievementsListActivity" />
+            android:name="org.stepik.android.view.achievement.ui.activity.AchievementsListActivity" />
 
         <activity
             android:name=".features.stories.ui.activity.StoriesActivity"
-            android:theme="@style/StoryActivityTheme"
-            android:screenOrientation="portrait" />
+            android:theme="@style/AppTheme.Translucent" />
 
         <activity
             android:name="org.stepik.android.view.course.ui.activity.CourseActivity">
@@ -342,6 +301,53 @@
         <activity
             android:name="org.stepik.android.view.download.ui.activity.DownloadActivity" />
 
+        <activity
+            android:name="org.stepik.android.view.profile.ui.activity.ProfileActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <intent-filter
+                android:autoVerify="true"
+                tools:ignore="UnusedAttribute">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:scheme="http" />
+                <data android:host="@string/secondary_host_name" />
+                <data android:host="@string/host_name" />
+                <data android:pathPattern="/users/.*" />
+                <data android:pathPattern="/users/.*/" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="org.stepik.android.view.solutions.ui.activity.SolutionsActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListTagActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListUserActivity" />
+
+        <activity
+            android:name="org.stepik.android.view.course_list.ui.activity.CourseListSearchActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+
         <receiver
             android:name="org.stepic.droid.receivers.DownloadClickReceiver"
             android:exported="true">
@@ -427,13 +433,6 @@
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Branch install referrer tracking -->
-        <receiver android:name="io.branch.referral.InstallListener" android:exported="true">
-            <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 

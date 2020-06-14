@@ -6,15 +6,14 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
-import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
-import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.view_course_reviews_item.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
+import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.course_reviews.model.CourseReviewItem
 import org.stepik.android.model.user.User
@@ -35,6 +34,7 @@ class CourseReviewDataDelegate(
 
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseReviewItem>(root) {
         private val reviewIcon = root.reviewIcon
+        private val reviewIconWrapper = reviewIcon.wrapWithGlide()
         private val reviewDate = root.reviewDate
         private val reviewName = root.reviewName
         private val reviewRating = root.reviewRating
@@ -42,13 +42,10 @@ class CourseReviewDataDelegate(
         private val reviewMenu = root.reviewMenu
         private val reviewMark = root.reviewMark
 
-        private val reviewIconTarget = RoundedBitmapImageViewTarget(
-            context.resources.getDimension(R.dimen.course_image_radius), reviewIcon)
-
         private val reviewIconPlaceholder = with(context.resources) {
             val coursePlaceholderBitmap = BitmapFactory.decodeResource(this, R.drawable.general_placeholder)
             val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(this, coursePlaceholderBitmap)
-            circularBitmapDrawable.cornerRadius = getDimension(R.dimen.course_image_radius)
+            circularBitmapDrawable.cornerRadius = getDimension(R.dimen.corner_radius)
             circularBitmapDrawable
         }
 
@@ -64,12 +61,7 @@ class CourseReviewDataDelegate(
         override fun onBind(data: CourseReviewItem) {
             data as CourseReviewItem.Data
 
-            Glide.with(context)
-                .asBitmap()
-                .load(data.user.avatar ?: "")
-                .placeholder(reviewIconPlaceholder)
-                .centerCrop()
-                .into(reviewIconTarget)
+            reviewIconWrapper.setImagePath(data.user.avatar ?: "", reviewIconPlaceholder)
 
             reviewName.text = data.user.fullName
 
@@ -97,7 +89,7 @@ class CourseReviewDataDelegate(
                 .findItem(R.id.course_review_menu_remove)
                 ?.let { menuItem ->
                     val title = SpannableString(menuItem.title)
-                    title.setSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.new_red_color)), 0, title.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+                    title.setSpan(ForegroundColorSpan(context.resolveColorAttribute(R.attr.colorError)), 0, title.length, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
                     menuItem.title = title
                 }
 

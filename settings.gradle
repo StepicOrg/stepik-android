@@ -1,1 +1,1 @@
-include ':app', ':androidsvg', ':model', ':ktlint_rules'
+include ':app', ':androidsvg', ':model', ':billing'

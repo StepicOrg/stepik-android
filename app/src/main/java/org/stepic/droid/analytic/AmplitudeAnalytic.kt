@@ -9,6 +9,9 @@ interface AmplitudeAnalytic {
         const val APPLICATION_ID = "application_id"
         const val PUSH_PERMISSION = "push_permission"
         const val STREAKS_NOTIFICATIONS_ENABLED = "streaks_notifications_enabled"
+        const val TEACHING_COURSES_COUNT = "teaching_courses_count"
+        const val IS_NIGHT_MODE_ENABLED = "is_night_mode_enabled"
+        const val IS_AR_SUPPORTED = "is_ar_supported"
     }
 
     object Launch {
@@ -43,6 +46,7 @@ interface AmplitudeAnalytic {
         const val JOINED = "Course joined"
         const val UNSUBSCRIBED = "Course unsubscribed"
         const val CONTINUE_PRESSED = "Continue course pressed"
+        const val BUY_COURSE_PRESSED = "Buy course pressed"
 
         object Params {
             const val COURSE = "course"
@@ -59,6 +63,16 @@ interface AmplitudeAnalytic {
         }
     }
 
+    object CoursePreview {
+        const val COURSE_PREVIEW_SCREEN_OPENED = "Course preview screen opened"
+
+        object Params {
+            const val COURSE = "course"
+            const val TITLE = "title"
+            const val IS_PAID = "is_paid"
+        }
+    }
+
     object Steps {
         const val SUBMISSION_MADE = "Submission made"
         const val STEP_OPENED = "Step opened"
@@ -66,11 +80,16 @@ interface AmplitudeAnalytic {
         const val STEP_EDIT_OPENED = "Step edit opened"
         const val STEP_EDIT_COMPLETED = "Step edit completed"
 
+        const val STEP_SOLUTIONS_OPENED = "Step solutions opened"
+
         object Params {
+            const val SUBMISSION = "submission"
             const val TYPE = "type"
             const val LANGUAGE = "language"
             const val NUMBER = "number"
             const val STEP = "step"
+            const val LOCAL = "local"
+            const val IS_ADAPTIVE = "is_adaptive"
         }
     }
 
@@ -78,13 +97,31 @@ interface AmplitudeAnalytic {
         const val STARTED = "Download started"
         const val CANCELLED = "Download cancelled"
         const val DELETED = "Download deleted"
+        const val SCREEN_OPENED = "Downloads screen opened"
+        const val DELETE_CONFIRMATION_INTERACTED = "Delete downloads confirmation interacted"
 
         const val PARAM_CONTENT = "content"
+        const val PARAM_SOURCE = "source"
+        const val PARAM_RESULT = "result"
 
         object Values {
+            /**
+             *  Content
+             */
             const val COURSE = "course"
             const val SECTION = "section"
             const val LESSON = "lesson"
+
+            /**
+             *  Source
+             */
+            const val SYLLABUS = "syllabus"
+            const val DOWNLOADS = "downloads"
+            /**
+             *  Result
+             */
+            const val YES = "yes"
+            const val NO = "no"
         }
     }
 
@@ -191,13 +228,59 @@ interface AmplitudeAnalytic {
 
     object Profile {
         const val PROFILE_SCREEN_OPENED = "Profile screen opened"
+        const val PROFILE_STAT_CLICKED = "Profile stat clicked"
 
         object Params {
             const val STATE = "state"
+            const val TYPE = "type"
+            const val ID = "id"
+        }
+
+        object Values {
+            /**
+             * State
+             */
+            const val SELF = "self"
+            const val OTHER = "other"
+
+            /**
+             * Type
+             */
+            const val REPUTATION = "reputation"
+            const val KNOWLEDGE = "knowledge"
         }
     }
 
     object Notifications {
         const val NOTIFICATION_SCREEN_OPENED = "Notifications screen opened"
+    }
+
+    object LocalSubmissions {
+        const val LOCAL_SUBMISSIONS_SCREEN_OPENED = "Local submissions screen opened"
+        const val LOCAL_SUBMISSION_ITEM_CLICKED = "Local submission item clicked"
+        const val LOCAL_SUBMISSION_MADE = "Local submission made"
+
+        object Params {
+            /**
+             *  Submission item clicked
+             */
+            const val STEP_ID = "step_id"
+
+            /**
+             *  Local submission made
+             */
+            const val TYPE = "type"
+            const val LANGUAGE = "language"
+            const val NUMBER = "number"
+            const val STEP = "step"
+        }
+    }
+
+    object RunCode {
+        const val RUN_CODE_LAUNCHED = "Run code launched"
+
+        object Params {
+            const val STEP_ID = "step_id"
+        }
     }
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/profileDetailsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:text="@string/profile_detail_title"
+            android:layout_marginTop="@dimen/profile_block_vertical_margin"
+            android:layout_marginLeft="@dimen/profile_block_margin"
+            android:layout_marginRight="@dimen/profile_block_margin"
+            android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+            style="@style/ProfileItemHeader" />
+
+        <org.stepic.droid.ui.custom.ArrowImageView
+            android:id="@+id/profileDetailsTitleArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tint="?colorControlNormal"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/profile_block_margin"
+            android:layout_marginRight="@dimen/profile_block_margin" />
+
+    </FrameLayout>
+
+    <org.stepik.android.view.latex.ui.widget.LatexView
+        android:id="@+id/profileDetails"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+
+        style="@style/ProfileItemText" />
+
+    <include layout="@layout/view_divider_vertical" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

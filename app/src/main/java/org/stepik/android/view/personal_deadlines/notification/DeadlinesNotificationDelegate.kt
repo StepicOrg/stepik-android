@@ -8,15 +8,12 @@ import androidx.core.app.TaskStackBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.notifications.model.StepikNotificationChannel
-import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.web.Api
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.cache.personal_deadlines.model.DeadlineEntity
-import org.stepik.android.data.personal_deadlines.source.DeadlinesCacheDataSource
-import org.stepik.android.model.Course
-import org.stepik.android.model.Section
+import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.personal_deadlines.interactor.DeadlinesNotificationInteractor
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
 import org.stepik.android.view.notification.StepikNotificationManager
@@ -27,9 +24,7 @@ class DeadlinesNotificationDelegate
 @Inject
 constructor(
     private val context: Context,
-    private val deadlinesCacheDataSource: DeadlinesCacheDataSource,
-    private val api: Api,
-    private val databaseFacade: DatabaseFacade,
+    private val deadlinesNotificationInteractor: DeadlinesNotificationInteractor,
     private val notificationHelper: NotificationHelper,
     stepikNotificationManager: StepikNotificationManager
 ) : NotificationDelegate("show_deadlines_notification", stepikNotificationManager) {
@@ -41,8 +36,8 @@ constructor(
 
     override fun onNeedShowNotification() {
         val now = DateTimeHelper.nowUtc()
-        deadlinesCacheDataSource
-            .getDeadlineRecordsForTimestamp(longArrayOf(now + OFFSET_12HOURS, now + OFFSET_36HOURS))
+        deadlinesNotificationInteractor
+            .getDeadlineRecordsForTimestamp(now)
             .map { it.sortedBy(DeadlineEntity::deadline).distinctBy(DeadlineEntity::courseId) }
             .doOnSuccess { deadlines ->
                 deadlines.forEach { showPersonalDeadlineNotification(it) }
@@ -57,10 +52,7 @@ constructor(
 
     fun scheduleDeadlinesNotifications() {
         val now = DateTimeHelper.nowUtc()
-        val timestamp = deadlinesCacheDataSource
-                .getClosestDeadlineTimestamp()
-                .onErrorReturnItem(0)
-                .blockingGet()
+        val timestamp = deadlinesNotificationInteractor.getClosestDeadlineTimestamp()
         scheduleDeadlinesNotificationAt(now, timestamp)
     }
 
@@ -78,17 +70,17 @@ constructor(
     }
 
     private fun showPersonalDeadlineNotification(deadline: DeadlineEntity) {
-        val course = getCourse(deadline.courseId)
-        val section = getSection(deadline.sectionId)
+        val course = deadlinesNotificationInteractor.getCourse(deadline.courseId)
+        val section = deadlinesNotificationInteractor.getSection(deadline.sectionId)
 
         if (course == null || section == null) return
 
         val largeIcon = notificationHelper.getPictureByCourse(course)
-        val colorArgb = ColorUtil.getColorArgb(R.color.stepic_brand_primary)
+        val colorArgb = context.resolveColorAttribute(R.attr.colorSecondary)
 
         val hoursDiff = (deadline.deadline.time - DateTimeHelper.nowUtc()) / AppConstants.MILLIS_IN_1HOUR + 1
 
-        val intent = CourseActivity.createIntent(context, course)
+        val intent = CourseActivity.createIntent(context, course, source = CourseViewSource.Notification)
         intent.putExtra(Analytic.Deadlines.Params.BEFORE_DEADLINE, hoursDiff)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
@@ -116,22 +108,5 @@ constructor(
                 .setNumber(1)
 
         showNotification(deadline.sectionId, notification.build())
-    }
-
-    private fun getCourse(courseId: Long?): Course? {
-        if (courseId == null) return null
-        var course: Course? = databaseFacade.getCourseById(courseId)
-        if (course == null) {
-            course = api.getCourse(courseId).execute()?.body()?.courses?.firstOrNull()
-        }
-        return course
-    }
-
-    private fun getSection(sectionId: Long): Section? {
-        var section: Section? = databaseFacade.getSectionById(sectionId)
-        if (section == null) {
-            section = api.getSections(longArrayOf(sectionId)).execute()?.body()?.sections?.firstOrNull()
-        }
-        return section
     }
 }

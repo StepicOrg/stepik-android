@@ -17,6 +17,8 @@ import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_step.*
 import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
+import org.stepic.droid.analytic.AmplitudeAnalytic
+import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -25,14 +27,17 @@ import org.stepic.droid.ui.dialogs.StepShareDialogFragment
 import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
+import org.stepik.android.view.injection.step.StepComponent
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.step.ui.delegate.StepDiscussionsDelegate
 import org.stepik.android.view.step.ui.delegate.StepNavigationDelegate
+import org.stepik.android.view.step.ui.delegate.StepSolutionStatsDelegate
 import org.stepik.android.view.step_content.ui.factory.StepContentFragmentFactory
 import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
@@ -56,6 +61,9 @@ class StepFragment : Fragment(), StepView,
     }
 
     @Inject
+    internal lateinit var analytic: Analytic
+
+    @Inject
     internal lateinit var screenManager: ScreenManager
 
     @Inject
@@ -67,11 +75,13 @@ class StepFragment : Fragment(), StepView,
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var stepPresenter: StepPresenter
-
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonData: LessonData by argument()
 
+    private lateinit var stepComponent: StepComponent
+    private lateinit var stepPresenter: StepPresenter
+
+    private lateinit var stepSolutionStatsDelegate: StepSolutionStatsDelegate
     private lateinit var stepNavigationDelegate: StepNavigationDelegate
     private lateinit var stepDiscussionsDelegate: StepDiscussionsDelegate
 
@@ -79,26 +89,32 @@ class StepFragment : Fragment(), StepView,
         LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        injectComponent()
+
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        injectComponent()
 
         stepPresenter = ViewModelProviders.of(this, viewModelFactory).get(StepPresenter::class.java)
         stepPresenter.onLessonData(stepWrapper, lessonData)
     }
 
     private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
-            .inject(this)
+        stepComponent = App
+            .componentManager()
+            .stepParentComponent(stepWrapper, lessonData)
+        stepComponent.inject(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_step, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        stepSolutionStatsDelegate = StepSolutionStatsDelegate(
+            stepSolutionStats,
+            stepWrapper.step,
+            stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+        )
+
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
 
         stepDiscussionsDelegate = StepDiscussionsDelegate(view) { discussionThread ->
@@ -130,7 +146,7 @@ class StepFragment : Fragment(), StepView,
 
         if (childFragmentManager.findFragmentByTag(STEP_CONTENT_FRAGMENT_TAG) == null) {
             val stepContentFragment =
-                stepContentFragmentFactory.createStepContentFragment(stepWrapper, lessonData)
+                stepContentFragmentFactory.createStepContentFragment(stepWrapper)
 
             childFragmentManager
                 .beginTransaction()
@@ -148,7 +164,7 @@ class StepFragment : Fragment(), StepView,
             val isQuizFragmentEmpty = childFragmentManager.findFragmentByTag(STEP_QUIZ_FRAGMENT_TAG) == null
 
             if (isQuizFragmentEmpty || isNeedReload) {
-                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper, lessonData)
+                val quizFragment = stepQuizFragmentFactory.createStepQuizFragment(stepWrapper)
 
                 childFragmentManager.commitNow {
                     if (isQuizFragmentEmpty) {
@@ -212,6 +228,9 @@ class StepFragment : Fragment(), StepView,
         SubmissionsDialogFragment
             .newInstance(stepWrapper.step)
             .showIfNotExists(supportFragmentManager, SubmissionsDialogFragment.TAG)
+
+        analytic
+            .reportStepEvent(AmplitudeAnalytic.Steps.STEP_SOLUTIONS_OPENED, AmplitudeAnalytic.Steps.STEP_SOLUTIONS_OPENED, stepWrapper.step)
     }
 
     override fun setState(state: StepView.State) {

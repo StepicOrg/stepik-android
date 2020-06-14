@@ -62,6 +62,7 @@
 
     <string name="download_error">An error occurred while downloading video %s</string>
     <string name="download_error_insufficient_storage">: insufficient storage</string>
+    <string name="download_error_system_manager">A system\'s download manager error occurred while downloading content. If an error persists, please, contact support.</string>
 
     <string name="sync_problem">There was a problem syncing the data, please try again later
     </string>
@@ -85,10 +86,6 @@
     <string name="correct">Correct!</string>
     <string name="wrong">Wrong. Please, try again.</string>
     <string name="try_again">Try again</string>
-    <string name="step_only_online">Steps are only available online. Connect to the Internet and
-        start
-        completing the assignments.
-    </string>
     <string name="correct_free_response">Your answer was saved.</string>
     <string name="review_warning">This is a peer-review assignment. Tap to open in web and receive
         the points.
@@ -147,7 +144,7 @@
         taken by
         the video tutorials. Deleting all downloaded videos can take a few minutes.
     </string>
-    <string name="storage">Storage</string>
+    <string name="storage">Downloaded content</string>
     <string name="notMountExplanation">The SD card is not plugged into the device. To save videos
         to the SD card, plug it into the phone and restart the App.
     </string>
@@ -176,7 +173,7 @@
     <string name="fail_delete_comment">Sorry, you cannot delete this comment</string>
     <string name="share_title">Share</string>
 
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
 
     <string name="last_discussion">Last discussion</string>
     <string name="most_liked_discussion">Most liked</string>
@@ -201,6 +198,8 @@
     </string>
     <string name="certificate_regular_with_substitution">Certificate for completing %s</string>
     <string name="certificate_result_with_substitution">Result: %s%%</string>
+    <string name="certificate_issuing">Issuing</string>
+    <string name="certificate_not_issuing">Not issuing</string>
     <string name="copy_link_title">Copy Link</string>
     <string name="link_copied_title">Link Copied</string>
     <string name="certificate_share_share_link">Share via…</string>
@@ -217,8 +216,6 @@
     <string name="cant_show_next_step">Sorry, the next lesson is not available</string>
     <string name="cant_show_previous_step">Sorry, the previous lesson is not available</string>
     <string name="previous_lesson">Previous lesson</string>
-    <string name="language_ru_filter">Russian</string>
-    <string name="language_en_filter">English</string>
     <string name="lesson_not_found_or_not_access">The lesson does not exist or you don\'t have
         permission to view it
     </string>
@@ -294,7 +291,7 @@
     </plurals>
     <string name="choose_notification_time_interval">Change notification interval</string>
     <string name="notification_time">Notification time: %s</string>
-    <string name="notification_about_learning">Notifications about learning</string>
+    <string name="notification_about_learning">Notify about streaks</string>
     <string name="time_to_learn_notification_title">Time to learn!</string>
     <string name="streak_description_not_positive">Correct! Solve assignments every day to improve
         your record. You can also turn on reminders!
@@ -372,8 +369,6 @@
     <!--Profile screen-->
     <string name="short_bio_and_info">Short bio &amp; Info</string>
     <string name="profile_user_id" translatable="false">User ID: %d</string>
-    <string name="profile_self_state" translatable="false">self</string>
-    <string name="profile_other_state" translatable="false">other</string>
 
     <!--Home screen-->
     <string name="catalog_title">Catalog</string>
@@ -396,8 +391,6 @@
 
 
     <string name="notification_settings_title">Notification Settings</string>
-
-    <string name="manage_notification_settings">Manage notifications</string>
 
     <string name="course_item_join">Join course</string>
 
@@ -429,7 +422,7 @@
     <string name="reset_code_dialog_title">Are you sure?</string>
     <string name="reset_code_dialog_explanation">Your code will be lost</string>
     <string name="change_code_dialog_explanation">After changing programming language your current code will be lost</string>
-    <string name="code_playground_title">Code</string>
+    <string name="code_playground_title" translatable="false">Code</string>
     <string name="code_playground_language" translatable="false">Code</string>
     <string name="code_playground_language_title">Language</string>
 
@@ -454,7 +447,7 @@
         <item quantity="one">%d course</item>
         <item quantity="other">%d courses</item>
     </plurals>
-    <string name="course_current_progress">Current progress: %d/%d points</string>
+    <string name="course_current_progress">Current progress: %s/%d points</string>
     <string name="home_streak_counter_text"><![CDATA[Your current Streak is <b>%s</b>!]]></string>
 
     <string name="notification_badge_placeholder" translatable="false">99+</string>
@@ -481,8 +474,8 @@
     <string name="adaptive_reaction_easy">EASY</string>
     <string name="adaptive_reaction_hard">HARD</string>
     <string name="adaptive_retry">Retry</string>
-    <string name="adaptive_correct">CORRECT</string>
-    <string name="adaptive_wrong">WRONG</string>
+    <string name="adaptive_correct">Correct</string>
+    <string name="adaptive_wrong">Wrong</string>
     <string name="adaptive_attempt_button">Solve</string>
     <string name="adaptive_course_completed">Congratulations!\n\nYou have successfully completed the course!</string>
     <string name="adaptive_course_not_supported">This course is not supported in adaptive mode</string>
@@ -553,6 +546,7 @@
     <string name="deadlines_section">Deadline: %s</string>
     <string name="deadlines_notification">Deadline for section %s in course %s comes in %s</string>
     <string name="deadlines_edit_title">Edit schedule</string>
+    <string name="deadlines_edit_date_picker_title">Select new deadline</string>
     <string name="deadlines_create_title">Choose learning mode</string>
     
     <string name="deadlines_learning_rate_hobby">Hobby</string>
@@ -574,12 +568,16 @@
     <string name="achievement_notification_message">Congratulations! Obtained a new level of achievement «%s», check your profile.</string>
 
     <!-- Course -->
+    <string name="course_title">Course</string>
     <string name="course_verified">Verified</string>
     <string name="course_share_description">Share link with your friends to take this course together!</string>
 
     <string name="course_tab_info">Info</string>
     <string name="course_tab_reviews">Reviews</string>
     <string name="course_tab_modules">Modules</string>
+
+    <string name="course_progress_current">Current progress</string>
+    <string name="course_progress_solutions">Solution to submit</string>
 
     <string name="course_info_organization_prefix">by %s</string>
     <string name="course_info_about">About</string>
@@ -590,6 +588,7 @@
     <string name="course_info_language">Language</string>
     <string name="course_info_certificate">Certificate</string>
     <string name="course_info_certificate_detail">Certificate details</string>
+    <string name="course_info_learners_count">Learners count</string>
 
     <string name="course_info_certificate_regular">Certificate condition: %s</string>
     <string name="course_info_certificate_distinction">With distinction: %s</string>
@@ -617,8 +616,8 @@
     <string name="course_content_unit_title" translatable="false">%d.%d %s</string>
     <string name="course_content_time_to_complete" translatable="false">&#8776; %s</string>
     <string name="course_content_time_to_complete_hours_unit">%d h</string>
-    <string name="course_content_text_progress" translatable="false">%d/%d</string>
-    <string name="course_content_text_progress_points">%d/%d points</string>
+    <string name="course_content_text_progress" translatable="false">%s/%d</string>
+    <string name="course_content_text_progress_points">%s/%d points</string>
 
     <string name="course_content_timeline_begin_date">Begin date</string>
     <string name="course_content_timeline_end_date">End date</string>
@@ -645,6 +644,7 @@
     <string name="course_restore_purchase">Restore purchase</string>
     <string name="course_payments_purchase_in_app">Buy for %s</string>
     <string name="course_payments_purchase_in_web">Buy in web version</string>
+    <string name="course_payments_purchase_in_web_with_price">Buy for %s</string>
 
     <string name="course_purchase_server_error">An error occurred while processing your purchase, try to restore purchase and contact support if the error persists</string>
     <string name="course_purchase_billing_error">An error occurred while processing your purchase</string>
@@ -653,8 +653,23 @@
     <string name="course_purchase_billing_no_purchases_to_restore">You don\'t have purchases of this course that can be restored</string>
     <string name="course_purchase_already_owned">You\'ve already purchased this course</string>
 
-    <string name="course_purchase_link_chooser_title">Open with</string>
+    <string name="routing_external_app_chooser_title">Open with</string>
 
+    <string name="course_action_archive_add">Move to Archived</string>
+    <string name="course_action_archive_remove">Remove from Archived</string>
+
+    <string name="course_action_archive_add_success">Course successfully moved to Archived</string>
+    <string name="course_action_archive_remove_success">Course successfully removed from Archived</string>
+    <string name="course_action_archive_add_failure">Failed to move course to Archived</string>
+    <string name="course_action_archive_remove_failure">Failed to remove course from Archived</string>
+
+    <string name="course_action_favorites_add">Add to Favorites</string>
+    <string name="course_action_favorites_remove">Remove from Favorites</string>
+
+    <string name="course_action_favorites_add_success">Course successfully added to Favorites</string>
+    <string name="course_action_favorites_remove_success">Course successfully removed from Favorites</string>
+    <string name="course_action_favorites_add_failure">Failed to add course to Favorites</string>
+    <string name="course_action_favorites_remove_failure">Failed to remove course from Favorites</string>
 
     <string name="video_player_control_notification_channel_name">Video player controls</string>
     <string name="video_player_control_notification_channel_description">Control panel of video player</string>
@@ -699,12 +714,20 @@
     <string name="lesson_menu_info">Info</string>
 
     <string name="lesson_info_points_with_score">You got %s out of %s for step</string>
+    <string name="lesson_info_points_with_score_fraction">You got %s points out of %s for step</string>
     <string name="lesson_info_points">You will get %s for step</string>
     <string name="lesson_info_time_to_complete">&#8776;%s for lesson</string>
     <string name="lesson_info_certificate_threshold">%s until certificate</string>
     <string name="lesson_info_distinction_certificate_threshold">%s until certificate with distinction</string>
 
+    <string name="lesson_error_exam_description">This lesson is a part of an exam module, you can only solve it in the web version.</string>
+    <string name="lesson_error_exam_action">Open the web version</string>
+
+    <string name="lesson_step_counter">Step %d out of %d</string>
+
     <!-- Step -->
+    <string name="step_amount_passed">Passed:&#160;</string>
+    <string name="step_correct_submissions_percentage">Correct submissions:&#160;</string>
     <string name="step_navigation_next">Next lesson</string>
     <string name="step_navigation_prev">Previous lesson</string>
     <string name="step_discussion_show">Show discussions (%d)</string>
@@ -712,6 +735,7 @@
 
     <string name="step_solutions_show">Show solutions (%d)</string>
     <string name="step_solutions_empty">No solutions</string>
+    <string name="step_solutions_write_first">Leave a solution</string>
 
     <string name="step_action_edit_content">Edit content</string>
     <string name="step_action_edit_hint">Step text</string>
@@ -740,6 +764,7 @@
     <string name="step_quiz_choice_description_single">Choose one option</string>
     <string name="step_quiz_choice_description_multiple">Choose one or multiple options</string>
     <string name="step_quiz_sql_description">Enter an SQL query</string>
+    <string name="step_quiz_fill_blanks_description">Fill in the blanks</string>
 
     <string name="step_quiz_text_empty_reply">An answer cannot be empty</string>
     <string name="step_quiz_text_invalid_number_reply">The answer must be a number</string>
@@ -763,6 +788,18 @@
 
     <string name="step_quiz_code_full_screen_instruction_tab">Instruction</string>
     <string name="step_quiz_code_full_screen_code_tab">Code</string>
+    <string name="step_quiz_code_full_screen_run_code_tab">Run</string>
+
+    <string name="step_quiz_code_input_data">Input data</string>
+    <string name="step_quiz_code_output_data">Output data</string>
+    <string name="step_quiz_code_samples">samples</string>
+    <string name="step_quiz_code_run_code_action">Run code</string>
+    <string name="step_quiz_code_empty_output">Empty output</string>
+    <string name="step_quiz_code_spinner_item">Sample %d: %s</string>
+    <string name="step_quiz_code_input_data_hint">Enter input data…</string>
+    <string name="step_quiz_code_run_code_tooltip">Before sending your solution, you can run your code with test input data!</string>
+    <string name="step_quiz_code_empty_code">Code field cannot be empty</string>
+    <string name="step_quiz_code_input_not_supported">Current quiz type does not support input data</string>
 
     <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
@@ -781,6 +818,7 @@
     <string name="comment_solution_pattern">Solution %d</string>
 
     <string name="comment_disabled">Comments disabled</string>
+    <string name="solution_disabled">Solutions disabled</string>
 
     <string name="comments_title">Comments</string>
     <string name="solutions_title">Solutions</string>
@@ -789,6 +827,7 @@
     <string name="comment_tag_pinned">Pinned</string>
     <string name="comment_tag_course_team">Course Team</string>
     <string name="comment_tag_staff">Stepik Team</string>
+    <string name="comment_tag_moderator">Course Moderator</string>
 
     <string name="relative_date_pattern">%s ago</string>
     <string name="relative_date_now">now</string>
@@ -803,17 +842,73 @@
 
     <!-- Settings -->
     <string name="setting_section_learning">Learning</string>
+    <string name="setting_section_appearance">Appearance</string>
+    <string name="setting_section_other">Other</string>
 
     <string name="setting_autoplay">Auto-transition to next step on video end</string>
     <string name="setting_autoplay_short">Auto-transition to next step</string>
+
+    <string name="setting_night_mode">Theme</string>
 
     <string name="setting_font_size">Font size in steps</string>
     <string name="setting_font_size_dialog_title">Choose font size</string>
 
     <!-- Downloads -->
     <string name="downloads_title">Downloaded courses</string>
+    <string name="downloads_remove_task_error">Failed to remove item</string>
+    <string name="downloads_is_used_by_stepik">&#160;is used by Stepik</string>
+    <string name="downloads_free_space">%s free</string>
+    <string name="downloads_stepik" translatable="false">Stepik</string>
+    <string name="downloads_other_apps">Other apps</string>
 
     <!-- Submissions -->
     <string name="submissions_title">Submissions</string>
     <string name="submissions_select_title">Choose submission</string>
+
+    <!-- Profile -->
+    <string name="profile_stat_knowledge">Knowledge</string>
+    <string name="profile_stat_reputation">Reputation</string>
+    <string name="profile_stat_certificates">issued</string>
+    <string name="profile_stat_courses">published</string>
+    <string name="profile_stat_top">" %d | Top %d"</string>
+
+    <string name="profile_detail_title">Details</string>
+
+    <string name="profile_activities_title">Activity</string>
+    <string name="profile_activities_current_streak_start">Solve today to start a streak</string>
+    <string name="profile_activities_current_streak_continue">Solve today to continue the streak</string>
+    <string name="profile_activities_current_streak_active">You’re on a streak</string>
+    <string name="profile_activities_max_streak">Max streak</string>
+
+    <string name="profile_external_links_title">External links</string>
+    <string name="profile_notifcation_title">Notifications</string>
+    <string name="profile_settings_menu_item">Settings</string>
+
+    <string name="profile_courses_title">Courses</string>
+
+    <!-- Solutions -->
+    <string name="solutions_toolbar_title">Solutions to submit</string>
+    <string name="solutions_information_block">You can edit your solutions before submission</string>
+    <string name="solutions_section_placeholder" translatable="false">%d&#160;%s</string>
+    <string name="solutions_lesson_placeholder" translatable="false">%d&#46;%d&#160;%s</string>
+    <string name="solutions_selected">%d&#160;selected</string>
+    <string name="solutions_delete_dialog_title">Delete solution?</string>
+    <string name="solutions_delete_dialog_description">This item will be deleted from your device</string>
+    <string name="solutions_submission_step_position">Step %d – %s</string>
+    <string name="solutions_submit_all">Submit all solutions</string>
+    <string name="solutions_submit_in_progress">Submission in progress</string>
+    <string name="solutions_submission_correctly">Problem solved correctly</string>
+    <string name="solutions_submission_incorrectly">Problem solved incorrectly</string>
+
+    <!-- Course list -->
+    <string name="course_list_popular_toolbar_title">Popular</string>
+    <string name="course_list_user_courses_title">My courses</string>
+    
+    <string name="course_list_user_all_courses_tab">All courses</string>
+    <string name="course_list_user_favorites_tab">Favorites</string>
+    <string name="course_list_user_archive_tab">Archive</string>
+
+    <string name="ar_not_supported_alert">Device does not support AR functionality</string>
+
+    <string name="course_purchase">Course purchase</string>
 </resources>

@@ -13,6 +13,7 @@ import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPl
 import com.facebook.soloader.SoLoader
 import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.gu.toolargetool.TooLargeTool
 import okhttp3.Interceptor
 
 object DebugToolsHelper {
@@ -20,6 +21,7 @@ object DebugToolsHelper {
 
     fun initDebugTools(app: Application) {
         Stetho.initializeWithDefaults(app)
+        TooLargeTool.startLogging(app)
 
         if (FlipperUtils.shouldEnableFlipper(app)) {
             SoLoader.init(app, false)

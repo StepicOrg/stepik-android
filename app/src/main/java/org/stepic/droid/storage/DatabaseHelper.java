@@ -19,6 +19,12 @@ import org.stepic.droid.storage.migration.MigrationFrom44To45;
 import org.stepic.droid.storage.migration.MigrationFrom45To46;
 import org.stepic.droid.storage.migration.MigrationFrom46To47;
 import org.stepic.droid.storage.migration.MigrationFrom47To48;
+import org.stepic.droid.storage.migration.MigrationFrom48To49;
+import org.stepic.droid.storage.migration.MigrationFrom49To50;
+import org.stepic.droid.storage.migration.MigrationFrom50To51;
+import org.stepic.droid.storage.migration.MigrationFrom51To52;
+import org.stepic.droid.storage.migration.MigrationFrom52To53;
+import org.stepic.droid.storage.migration.MigrationFrom53To54;
 import org.stepic.droid.storage.structure.DatabaseInfo;
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
@@ -126,6 +132,12 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom45To46(db);
         upgradeFrom46To47(db);
         upgradeFrom47To48(db);
+        upgradeFrom48To49(db);
+        upgradeFrom49To50(db);
+        upgradeFrom50To51(db);
+        upgradeFrom51To52(db);
+        upgradeFrom52To53(db);
+        upgradeFrom53To54(db);
     }
 
 
@@ -360,6 +372,54 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 48) {
             upgradeFrom47To48(db);
         }
+
+        if (oldVersion < 49) {
+            upgradeFrom48To49(db);
+        }
+
+        if (oldVersion < 50) {
+            upgradeFrom49To50(db);
+        }
+
+        if (oldVersion < 51) {
+            upgradeFrom50To51(db);
+        }
+
+        if (oldVersion < 52) {
+            upgradeFrom51To52(db);
+        }
+
+        if (oldVersion < 53) {
+            upgradeFrom52To53(db);
+        }
+
+        if (oldVersion < 54) {
+            upgradeFrom53To54(db);
+        }
+    }
+
+    private void upgradeFrom53To54(SQLiteDatabase db) {
+        MigrationFrom53To54.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom52To53(SQLiteDatabase db) {
+        MigrationFrom52To53.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom51To52(SQLiteDatabase db) {
+        MigrationFrom51To52.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom50To51(SQLiteDatabase db) {
+        MigrationFrom50To51.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom49To50(SQLiteDatabase db) {
+        MigrationFrom49To50.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom48To49(SQLiteDatabase db) {
+        MigrationFrom48To49.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom47To48(SQLiteDatabase db) {

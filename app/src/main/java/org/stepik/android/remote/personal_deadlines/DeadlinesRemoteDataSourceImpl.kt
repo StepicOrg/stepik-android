@@ -6,7 +6,6 @@ import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.toMaybe
-import org.stepic.droid.web.storage.RemoteStorageService
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.data.personal_deadlines.getKindOfRecord
 import org.stepik.android.data.personal_deadlines.getKindStartsWithOfRecord
@@ -14,6 +13,7 @@ import org.stepik.android.data.personal_deadlines.source.DeadlinesRemoteDataSour
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.remote.base.concatAllPages
 import org.stepik.android.remote.personal_deadlines.mapper.DeadlinesMapper
+import org.stepik.android.remote.remote_storage.service.RemoteStorageService
 import javax.inject.Inject
 
 class DeadlinesRemoteDataSourceImpl

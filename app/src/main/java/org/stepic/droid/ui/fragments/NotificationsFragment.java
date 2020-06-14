@@ -11,6 +11,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -25,6 +26,7 @@ import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.base.FragmentBase;
 import org.stepic.droid.model.NotificationCategory;
+import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.util.ToolbarHelperKt;
 
 import butterknife.BindView;
@@ -56,7 +58,6 @@ public class NotificationsFragment extends FragmentBase {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        setHasOptionsMenu(true);
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Notifications.NOTIFICATION_SCREEN_OPENED);
         analytic.reportEvent(Analytic.Notification.NOTIFICATION_SCREEN_OPENED);
     }
@@ -71,8 +72,10 @@ public class NotificationsFragment extends FragmentBase {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getSharedPreferenceHelper().getAuthResponseFromStore() == null) {
-            authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity()));
+//            authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity()));
+            authUserButton.setOnClickListener(v -> getScreenManager().showLaunchScreen(getActivity(), true, MainFeedActivity.NOTIFICATIONS_INDEX));
 //            toolbar.setVisibility(View.GONE); // FIXME: 15.08.17 hide, when it is needed
+            initToolbar();
             tabLayout.setVisibility(View.GONE);
             needAuthRootView.setVisibility(View.VISIBLE);
             viewPager.setVisibility(View.GONE);
@@ -99,11 +102,9 @@ public class NotificationsFragment extends FragmentBase {
 
     private void initToolbar() {
         ToolbarHelperKt.initCenteredToolbar(this, R.string.notification_title);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.notification_center_menu, menu);
+        final Toolbar toolbar = getView().findViewById(R.id.centeredToolbar);
+        toolbar.inflateMenu(R.menu.notification_center_menu);
+        toolbar.setOnMenuItemClickListener(this::onOptionsItemSelected);
     }
 
     @Override

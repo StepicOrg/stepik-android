@@ -1,21 +1,26 @@
 package org.stepic.droid.core
 
+import android.content.Context
 import androidx.annotation.WorkerThread
 import com.google.firebase.iid.FirebaseInstanceId
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.web.Api
+import org.stepic.droid.util.DeviceInfoUtil
+import org.stepik.android.domain.device.repository.DeviceRepository
+import org.stepik.android.remote.device.model.DeviceRequest
+import retrofit2.HttpException
 import javax.inject.Inject
 
 @AppSingleton
 class StepikDevicePosterImpl
 @Inject
 constructor(
-        private val firebaseInstanceId: FirebaseInstanceId,
-        private val api: Api,
-        private val sharedPreferencesHelper: SharedPreferenceHelper,
-        private val analytic: Analytic
+    private val context: Context,
+    private val firebaseInstanceId: FirebaseInstanceId,
+    private val deviceRepository: DeviceRepository,
+    private val sharedPreferencesHelper: SharedPreferenceHelper,
+    private val analytic: Analytic
 ) : StepikDevicePoster {
 
     @WorkerThread
@@ -24,32 +29,37 @@ constructor(
         try {
             sharedPreferencesHelper.authResponseFromStore!! //for logged user only work
             val token = tokenNullable!!
-            val response = api.registerDevice(token).execute()
-            if (!response.isSuccessful) { //400 -- device already registered
-                if (response.code() == 400) {
+
+            try {
+                deviceRepository.registerDevice(createDeviceRequest(token)).blockingAwait()
+            } catch (e: HttpException) {
+                if (e.code() == 400) {
                     renewDeviceRegistration(token)
                 } else {
-                    throw Exception("response was failed. it is ok. code: " + response.code())
+                    throw Exception("response was failed. it is ok.", e)
                 }
             }
-            sharedPreferencesHelper.setIsGcmTokenOk(true)
 
+            sharedPreferencesHelper.setIsGcmTokenOk(true)
             analytic.reportEvent(Analytic.Notification.TOKEN_UPDATED)
         } catch (e: Exception) {
             analytic.reportEvent(Analytic.Notification.TOKEN_UPDATE_FAILED)
+            analytic.reportError(Analytic.Notification.TOKEN_UPDATE_FAILED, e)
             sharedPreferencesHelper.setIsGcmTokenOk(false)
         }
     }
 
     private fun renewDeviceRegistration(token: String) {
-        val deviceId = api.getDevicesByRegistrationId(token).execute()?.body()?.devices?.firstOrNull()?.id
+        val deviceId = deviceRepository.getDevicesByRegistrationId(token).blockingGet().firstOrNull()?.id
         if (deviceId != null) {
-            val response = api.renewDeviceRegistration(deviceId, token).execute()
-            if (!response.isSuccessful) {
-                throw Exception("Can't renew device registration for device: $deviceId")
-            }
+            deviceRepository.renewDeviceRegistration(deviceId, createDeviceRequest(token)).blockingAwait()
         } else {
             throw Exception("Can't get device id for token: $token")
         }
+    }
+
+    private fun createDeviceRequest(token: String): DeviceRequest {
+        val description = DeviceInfoUtil.getShortInfo(context)
+        return DeviceRequest(token = token, description = description)
     }
 }

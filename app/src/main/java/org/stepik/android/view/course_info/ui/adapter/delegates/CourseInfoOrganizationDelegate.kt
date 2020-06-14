@@ -4,9 +4,9 @@ import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.view_course_info_organization.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.model.user.User
 import org.stepik.android.view.course_info.model.CourseInfoItem
 import org.stepik.android.view.course_info.ui.adapter.CourseInfoAdapter
@@ -22,7 +22,7 @@ class CourseInfoOrganizationDelegate(
         data is CourseInfoItem.OrganizationBlock
 
     inner class ViewHolder(root: View) : CourseInfoAdapter.ViewHolder(root) {
-        private val titleColorSpan = ForegroundColorSpan(ContextCompat.getColor(root.context, R.color.course_info_organization_span))
+        private val titleColorSpan = ForegroundColorSpan(context.resolveColorAttribute(R.attr.colorSecondary))
         private val organizationTitle = root.organizationTitle
 
         init {

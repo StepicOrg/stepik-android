@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="@dimen/arrow_profile_width"
-    android:height="@dimen/arrow_profile_height"
+    android:width="@dimen/profile_arrow_width"
+    android:height="@dimen/profile_arrow_height"
     android:viewportHeight="24"
     android:viewportWidth="48">
     <path
         android:name="arrow_top"
         android:pathData="@string/arrow_top_path"
-        android:strokeColor="@color/arrow_color"
+        android:strokeColor="#000000"
         android:strokeWidth="@integer/arrow_stroke"/>
 </vector>

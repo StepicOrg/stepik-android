@@ -44,6 +44,7 @@ object DbStructureCourse {
         const val CERTIFICATE_REGULAR_THRESHOLD = "certificate_regular_threshold"
         const val CERTIFICATE_LINK = "certificate_link"
         const val IS_CERTIFICATE_AUTO_ISSUED = "is_certificate_auto_issued"
+        const val IS_CERTIFICATE_ISSUED = "is_certificate_issued"
 
         const val LAST_DEADLINE = "last_deadline"
         const val BEGIN_DATE = "begin_date"

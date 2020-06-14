@@ -26,39 +26,34 @@ import org.stepic.droid.R;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveCourseActivity;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveOnboardingActivity;
 import org.stepic.droid.adaptive.ui.activities.AdaptiveStatsActivity;
+import org.stepic.droid.analytic.AmplitudeAnalytic;
 import org.stepic.droid.analytic.Analytic;
 import org.stepic.droid.base.App;
 import org.stepic.droid.configuration.Config;
 import org.stepic.droid.di.AppSingleton;
-import org.stepic.droid.features.achievements.ui.activity.AchievementsListActivity;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.preferences.SharedPreferenceHelper;
 import org.stepic.droid.preferences.UserPreferences;
 import org.stepic.droid.social.SocialMedia;
 import org.stepic.droid.ui.activities.AboutAppActivity;
 import org.stepic.droid.ui.activities.AnimatedOnboardingActivity;
-import org.stepic.droid.ui.activities.CourseListActivity;
 import org.stepic.droid.ui.activities.FeedbackActivity;
-import org.stepic.droid.ui.activities.LaunchActivity;
-import org.stepic.droid.ui.activities.LoginActivity;
 import org.stepic.droid.ui.activities.MainFeedActivity;
 import org.stepic.droid.ui.activities.NotificationSettingsActivity;
 import org.stepic.droid.ui.activities.PhotoViewActivity;
-import org.stepic.droid.ui.activities.ProfileActivity;
-import org.stepic.droid.ui.activities.RegisterActivity;
-import org.stepic.droid.ui.activities.SettingsActivity;
 import org.stepic.droid.ui.activities.SplashActivity;
 import org.stepic.droid.ui.activities.StoreManagementActivity;
-import org.stepic.droid.ui.activities.TagActivity;
 import org.stepic.droid.ui.dialogs.RemindPasswordDialogFragment;
 import org.stepic.droid.util.AppConstants;
 import org.stepic.droid.util.IntentExtensionsKt;
-import org.stepic.droid.util.UriExtensionsKt;
+import org.stepik.android.domain.auth.model.SocialAuthType;
+import org.stepik.android.domain.course.analytic.CourseViewSource;
+import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
+import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
@@ -67,17 +62,31 @@ import org.stepik.android.model.Unit;
 import org.stepik.android.model.Video;
 import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
+import org.stepik.android.remote.auth.model.TokenType;
+import org.stepik.android.view.achievement.ui.activity.AchievementsListActivity;
+import org.stepik.android.view.auth.model.AutoAuth;
+import org.stepik.android.view.auth.ui.activity.CredentialAuthActivity;
+import org.stepik.android.view.auth.ui.activity.RegistrationActivity;
+import org.stepik.android.view.auth.ui.activity.SocialAuthActivity;
+import org.stepik.android.view.base.routing.ExternalDeepLinkProcessor;
 import org.stepik.android.view.certificate.ui.activity.CertificatesActivity;
 import org.stepik.android.view.comment.ui.activity.CommentsActivity;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.course.ui.activity.CourseActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListTagActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
 import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
+import org.stepik.android.view.profile.ui.activity.ProfileActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditInfoActivity;
 import org.stepik.android.view.profile_edit.ui.activity.ProfileEditPasswordActivity;
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkRouter;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
+import org.stepik.android.view.settings.ui.activity.SettingsActivity;
+import org.stepik.android.view.solutions.ui.activity.SolutionsActivity;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity;
 
@@ -85,7 +94,6 @@ import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -99,7 +107,11 @@ public class ScreenManagerImpl implements ScreenManager {
     private final Set<BranchDeepLinkRouter> deepLinkRouters;
 
     @Inject
-    public ScreenManagerImpl(Config config, UserPreferences userPreferences, Analytic analytic, SharedPreferenceHelper sharedPreferences, Set<BranchDeepLinkRouter> deepLinkRouters) {
+    public ScreenManagerImpl(Config config,
+                             UserPreferences userPreferences,
+                             Analytic analytic,
+                             SharedPreferenceHelper sharedPreferences,
+                             Set<BranchDeepLinkRouter> deepLinkRouters) {
         this.config = config;
         this.userPreferences = userPreferences;
         this.analytic = analytic;
@@ -110,7 +122,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchFromSplash(Activity activity) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(activity, LaunchActivity.class);
+        Intent launchIntent = SocialAuthActivity.Companion.createIntent(activity, null, false);
         activity.startActivity(launchIntent);
     }
 
@@ -122,8 +134,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreenAfterLogout(Context context) {
         analytic.reportEvent(Analytic.Interaction.SHOW_LAUNCH_SCREEN_AFTER_LOGOUT);
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
-        launchIntent.putExtra(LaunchActivity.WAS_LOGOUT_KEY, true);
+        Intent launchIntent = SocialAuthActivity.Companion.createIntent(context, null, true);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
     }
@@ -131,9 +142,7 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreen(FragmentActivity activity, @NotNull Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(activity, LaunchActivity.class);
-        launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Intent launchIntent = SocialAuthActivity.Companion.createIntent(activity, course, false);
         activity.startActivity(launchIntent);
     }
 
@@ -141,7 +150,7 @@ public class ScreenManagerImpl implements ScreenManager {
     public void openImage(Context context, String path) {
         analytic.reportEvent(Analytic.Interaction.USER_OPEN_IMAGE);
         Intent intent = new Intent(context, PhotoViewActivity.class);
-        intent.putExtra(PhotoViewActivity.pathKey, path);
+        intent.putExtra(PhotoViewActivity.EXTRA_PATH, path);
         context.startActivity(intent);
     }
 
@@ -153,19 +162,6 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors descriptionColors) {
-        Intent intent = new Intent(activity, CourseListActivity.class);
-        intent.putExtra(CourseListActivity.COURSE_LIST_INFO_KEY, info);
-        intent.putExtra(CourseListActivity.COURSE_DESCRIPTION_COLORS, (Parcelable) descriptionColors);
-        activity.startActivity(intent);
-    }
-
-    @Override
-    public void showListOfTag(Activity activity, @NotNull Tag tag) {
-        TagActivity.Companion.launch(activity, tag);
-    }
-
-    @Override
     public void showOnboarding(@NotNull Activity activity) {
         Intent intent = new Intent(activity, AnimatedOnboardingActivity.class);
         activity.startActivity(intent);
@@ -174,36 +170,22 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showLaunchScreen(Context context, boolean fromMainFeed, int index) {
         analytic.reportEvent(Analytic.Screens.SHOW_LAUNCH);
-        Intent launchIntent = new Intent(context, LaunchActivity.class);
-        if (fromMainFeed) {
-            launchIntent.putExtra(AppConstants.FROM_MAIN_FEED_FLAG, true);
-            launchIntent.putExtra(MainFeedActivity.CURRENT_INDEX_KEY, index);
-        }
+        Intent launchIntent = SocialAuthActivity.Companion.createIntent(context, fromMainFeed, index);
         launchIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); //app context -- new task
         context.startActivity(launchIntent);
     }
 
-
     @Override
     public void showRegistration(Activity sourceActivity, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_REGISTRATION);
-        Intent launchIntent = new Intent(sourceActivity, RegisterActivity.class);
-        if (course != null) {
-            launchIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
-        }
+        Intent launchIntent = RegistrationActivity.Companion.createIntent(sourceActivity, course);
         sourceActivity.startActivity(launchIntent);
     }
 
     @Override
-    public void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email) {
+    public void showLogin(Activity sourceActivity, @Nullable String email, @Nullable String password, AutoAuth autoAuth, @Nullable Course course) {
         analytic.reportEvent(Analytic.Screens.SHOW_LOGIN);
-        Intent loginIntent = new Intent(sourceActivity, LoginActivity.class);
-        if (course != null) {
-            loginIntent.putExtra(AppConstants.KEY_COURSE_BUNDLE, course);
-        }
-        if (email != null) {
-            loginIntent.putExtra(AppConstants.KEY_EMAIL_BUNDLE, email);
-        }
+        Intent loginIntent = CredentialAuthActivity.Companion.createIntent(sourceActivity, email, password, autoAuth, course);
         sourceActivity.startActivity(loginIntent);
     }
 
@@ -231,37 +213,35 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showCourseDescription(Context context, long courseId) {
-        Intent intent = CourseActivity.Companion.createIntent(context, courseId, CourseScreenTab.INFO);
+    public void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource) {
+        Intent intent = CourseActivity.Companion.createIntent(context, courseId, viewSource, CourseScreenTab.INFO);
         context.startActivity(intent);
     }
 
     @Override
-    public void showCourseDescription(Context context, @NotNull Course course) {
-        showCourseDescription(context, course, false);
+    public void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource) {
+        showCourseDescription(context, course, viewSource, false);
     }
 
     @Override
-    public void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll) {
-        showCourseScreen(context, course, autoEnroll, CourseScreenTab.INFO);
+    public void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll) {
+        showCourseScreen(context, course, viewSource, autoEnroll, CourseScreenTab.INFO);
     }
 
     @Override
-    public void showCourseModules(Context context, @NotNull Course course) {
-        showCourseScreen(context, course, false, CourseScreenTab.SYLLABUS);
+    public void showCourseModules(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource) {
+        showCourseScreen(context, course, viewSource, false, CourseScreenTab.SYLLABUS);
     }
 
     @Override
-    public void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
-        Intent intent = getIntentForDescription(context, course, autoEnroll, tab);
+    public void showCourseScreen(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll, CourseScreenTab tab) {
+        Intent intent = getIntentForDescription(context, course, viewSource, autoEnroll, tab);
         context.startActivity(intent);
     }
 
-    private Intent getIntentForDescription(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab) {
+    private Intent getIntentForDescription(Context context, @NotNull Course course, @NotNull CourseViewSource courseViewSource, boolean autoEnroll, CourseScreenTab tab) {
         analytic.reportEvent(Analytic.Screens.SHOW_COURSE_DESCRIPTION);
-        Intent intent = CourseActivity.Companion.createIntent(context, course, autoEnroll, tab);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        Intent intent = CourseActivity.Companion.createIntent(context, course, courseViewSource, autoEnroll, tab);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -295,12 +275,14 @@ public class ScreenManagerImpl implements ScreenManager {
 
     @Override
     public void showCertificates(Context context, long userId) {
+        analytic.reportEvent(Analytic.Screens.USER_OPEN_CERTIFICATES, userId + "");
         Intent intent = CertificatesActivity.Companion.createIntent(context, userId);
         context.startActivity(intent);
     }
 
     @Override
     public void showDownloads(Context context) {
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Downloads.SCREEN_OPENED);
         Intent intent = DownloadActivity.Companion.createIntent(context);
         if (!(context instanceof Activity)) {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -424,18 +406,40 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openProfile(Activity activity) {
-        final Intent intent = new Intent(activity, ProfileActivity.class);
-        activity.startActivity(intent);
+    public void redirectToWebBrowserIfNeeded(@NotNull Context context, @NotNull Uri uri) {
+        if (uri.getBooleanQueryParameter(ExternalDeepLinkProcessor.PARAM_FROM_MOBILE_APP, false)) {
+            openLinkInWebBrowser(context, uri);
+        }
     }
 
     @Override
-    public void openProfile(Activity activity, long userId) {
-        final Intent intent = new Intent(activity, ProfileActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putLong(ProfileActivity.optionalUserIdKey, userId);
-        intent.putExtras(bundle);
-        activity.startActivity(intent);
+    public void openLinkInWebBrowser(@NotNull Context context, @NotNull Uri uri) {
+        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
+
+        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
+        final ArrayList<Intent> activityIntents = new ArrayList<>();
+
+        final String appPackageName = context.getApplicationContext().getPackageName();
+        for (final ResolveInfo resolveInfo : resolveInfoList) {
+            final String packageName = resolveInfo.activityInfo.packageName;
+            if (!packageName.equals(appPackageName)) {
+                final Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
+                newIntent.setPackage(packageName);
+                activityIntents.add(newIntent);
+            }
+        }
+
+        if (!activityIntents.isEmpty()) {
+            final Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), context.getString(R.string.routing_external_app_chooser_title));
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, activityIntents.toArray(new Parcelable[] {}));
+
+            context.startActivity(chooserIntent);
+        }
+    }
+
+    @Override
+    public void openProfile(@NonNull Context context, long userId) {
+        context.startActivity(ProfileActivity.Companion.createIntent(context, userId));
     }
 
     @Override
@@ -508,18 +512,11 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep) {
+    public void continueCourse(Activity activity, long courseId, @NotNull CourseViewSource viewSource, @NotNull LastStep lastStep) {
+        Intent courseIntent = CourseActivity.Companion.createIntent(activity, courseId, viewSource, CourseScreenTab.SYLLABUS);
         Intent stepsIntent = LessonActivity.Companion.createIntent(activity, lastStep);
-
-        Intent courseIntent = CourseActivity.Companion.createIntent(activity,
-                courseId, CourseScreenTab.SYLLABUS);
-
-        TaskStackBuilder.create(activity)
-                .addNextIntent(new Intent(activity, MainFeedActivity.class)
-                        .setAction(AppConstants.INTERNAL_STEPIK_ACTION))
-                .addNextIntent(courseIntent)
-                .addNextIntent(stepsIntent)
-                .startActivities();
+        activity.startActivity(courseIntent);
+        activity.startActivity(stepsIntent);
     }
 
     @Override
@@ -588,77 +585,6 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId) {
-        String url =
-                config.getBaseUrl() +
-                        "/lesson/" + step.getLesson() +
-                        "/step/" + step.getPosition() +
-                        "/?from_mobile_app=true" +
-                        "&discussion=" + discussionId +
-                        "&thread=" + discussionThread.getThread()
-                ;
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
-
-    @Override
-    public void openSubmissionInWeb(Context context, long stepId, long submissionId) {
-        String url =
-                config.getBaseUrl() +
-                        "/submissions/" + stepId +
-                        "/" + submissionId +
-                        "/?from_mobile_app=true"
-                ;
-        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
-
-    @Override
-    public void openSyllabusInWeb(Context context, long courseId) {
-        openCourseTabInWeb(context, courseId, CourseScreenTab.SYLLABUS.getPath(), null);
-    }
-
-    @Override
-    public void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams) {
-        openCourseTabInWeb(context, courseId, CourseScreenTab.PAY.getPath(), queryParams);
-    }
-
-    private void openCourseTabInWeb(Context context, long courseId, String tab, @Nullable Map<String, List<String>> queryParams) {
-        final String url = config.getBaseUrl() + "/course/" + courseId + "/" + tab + "/";
-        final Uri.Builder uriBuilder = Uri
-                .parse(url)
-                .buildUpon()
-                .appendQueryParameter("from_mobile_app", "true");
-
-        if (queryParams != null) {
-            UriExtensionsKt.Uri_Builder_appendAllQueryParameters(uriBuilder, queryParams);
-        }
-
-        final Uri uri = uriBuilder.build();
-
-        final Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(config.getBaseUrl()));
-
-        final List<ResolveInfo> resolveInfoList = context.getPackageManager().queryIntentActivities(browserIntent, 0);
-        final ArrayList<Intent> activityIntents = new ArrayList<>();
-
-        for (final ResolveInfo resolveInfo : resolveInfoList) {
-            final String packageName = resolveInfo.activityInfo.packageName;
-            if (!packageName.startsWith("org.stepic.droid") && !packageName.startsWith("org.stepik.android")) {
-                final Intent newIntent = new Intent(Intent.ACTION_VIEW, uri);
-                newIntent.setPackage(packageName);
-                activityIntents.add(newIntent);
-            }
-        }
-
-        if (!activityIntents.isEmpty()) {
-            final Intent chooserIntent = Intent.createChooser(activityIntents.remove(0), context.getString(R.string.course_purchase_link_chooser_title));
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, activityIntents.toArray(new Parcelable[] {}));
-
-            context.startActivity(chooserIntent);
-        }
-    }
-
-    @Override
     public void openRemindPassword(AppCompatActivity context) {
         analytic.reportEvent(Analytic.Screens.REMIND_PASSWORD);
         DialogFragment dialogFragment = RemindPasswordDialogFragment.newInstance();
@@ -711,8 +637,54 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void openSocialMediaLink(Context context, String link) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+        context.startActivity(browserIntent);
+    }
+
+    @Override
     public void openSocialMediaLink(Context context, SocialMedia socialLink) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(socialLink.getLink()));
         context.startActivity(browserIntent);
+    }
+
+    @Override
+    public void loginWithSocial(FragmentActivity activity, SocialAuthType type) {
+        String socialIdentifier = type.getIdentifier();
+        String url = config.getBaseUrl() + "/accounts/" + socialIdentifier + "/login?next=/oauth2/authorize/?" + Uri.encode("client_id=" + config.getOAuthClientId(TokenType.SOCIAL) + "&response_type=code");
+        Uri uri = Uri.parse(url);
+        final Intent intent = new Intent(Intent.ACTION_VIEW).setData(uri);
+        activity.startActivity(intent);
+    }
+
+    @Override
+    public void showCachedAttempts(@NotNull Context context, long courseId) {
+        analytic.reportAmplitudeEvent(AmplitudeAnalytic.LocalSubmissions.LOCAL_SUBMISSIONS_SCREEN_OPENED);
+        Intent intent = SolutionsActivity.Companion.createIntent(context, courseId);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery) {
+        Intent intent = CourseListQueryActivity.Companion.createIntent(context, courseListTitle, courseListQuery);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesCollection(Context context, CourseCollection courseCollection, CollectionDescriptionColors collectionDescriptionColors) {
+        Intent intent = CourseListCollectionActivity.Companion.createIntent(context, courseCollection, collectionDescriptionColors);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showUserCourses(Context context) {
+        Intent intent = CourseListUserActivity.Companion.createIntent(context);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showCoursesByTag(Context context, Tag tag) {
+        Intent intent = CourseListTagActivity.Companion.createIntent(context, tag);
+        context.startActivity(intent);
     }
 }

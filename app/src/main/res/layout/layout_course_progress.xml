@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/ThemeOverlay.Dark"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseProgressTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintEnd_toStartOf="@id/courseProgressCircle"
+
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+
+        android:textAppearance="?textAppearanceSubtitle2"
+
+        android:text="@string/course_progress_current" />
+
+    <org.stepic.droid.ui.custom.CircleProgressView
+        android:id="@+id/courseProgressCircle"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+
+        app:layout_constraintEnd_toStartOf="@id/courseProgressValue"
+        app:layout_constraintTop_toTopOf="@id/courseProgressValue"
+        app:layout_constraintBottom_toBottomOf="@id/courseProgressValue"
+
+        android:theme="@style/ThemeOverlay.Secondary.Green"
+        app:progressBackgroundColor="?colorOnSurface"
+        app:progressBarStroke="@dimen/course_item_progress_bar_size"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseProgressValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textAppearance="?textAppearanceSubtitle2"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/courseProgressTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="21/50 баллов"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseSolutionsTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:text="@string/course_progress_solutions"
+        android:textAppearance="?textAppearanceSubtitle2"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/courseProgressTitle"
+        app:layout_constraintEnd_toStartOf="@id/courseSolutionsValue"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseSolutionsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_transparent_button"
+
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+
+        android:textAppearance="?textAppearanceSubtitle2"
+        android:gravity="center_vertical"
+
+        app:drawableStartCompat="@drawable/ic_course_solutions"
+        app:drawableLeftCompat="@drawable/ic_course_solutions"
+        app:drawableTint="?android:textColorPrimary"
+        android:drawablePadding="8dp"
+
+        app:layout_constraintBaseline_toBaselineOf="@id/courseSolutionsTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:text="8" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

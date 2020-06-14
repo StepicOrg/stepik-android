@@ -10,8 +10,6 @@ import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import io.branch.referral.Branch
-import io.branch.referral.BranchError
-import org.json.JSONObject
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -79,16 +77,26 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
 
     override fun onStart() {
         super.onStart()
-        Branch.getInstance().initSession({ referringParams: JSONObject?, error: BranchError? ->
-            if (error == null && referringParams != null && referringParams.has(BranchParams.FIELD_CAMPAIGN)) {
-                analytics.reportAmplitudeEvent(AmplitudeAnalytic.Branch.LINK_OPENED, mapOf(
-                    AmplitudeAnalytic.Branch.PARAM_CAMPAIGN to referringParams[BranchParams.FIELD_CAMPAIGN],
-                    AmplitudeAnalytic.Branch.IS_FIRST_SESSION to referringParams.optBoolean(BranchParams.IS_FIRST_SESSION, false)
-                ))
-            }
 
-            splashPresenter.onSplashCreated(referringParams)
-        }, intent?.data, this)
+        val uri = intent?.data
+        if (uri == null) {
+            splashPresenter.onSplashCreated()
+        } else {
+            Branch
+                .sessionBuilder(this)
+                .withCallback { referringParams, error ->
+                    if (error == null && referringParams != null && referringParams.has(BranchParams.FIELD_CAMPAIGN)) {
+                        analytics.reportAmplitudeEvent(AmplitudeAnalytic.Branch.LINK_OPENED, mapOf(
+                            AmplitudeAnalytic.Branch.PARAM_CAMPAIGN to referringParams[BranchParams.FIELD_CAMPAIGN],
+                            AmplitudeAnalytic.Branch.IS_FIRST_SESSION to referringParams.optBoolean(BranchParams.IS_FIRST_SESSION, false)
+                        ))
+                    }
+
+                    splashPresenter.onSplashCreated(referringParams)
+                }
+                .withData(uri)
+                .init()
+        }
     }
 
     override fun onDestroy() {
@@ -107,6 +115,10 @@ class SplashActivity : BackToExitActivityBase(), SplashView {
     override fun onShowHome() {
         screenManager.showMainFeedFromSplash(this)
         finish()
+    }
+
+    override fun onShowCatalog() {
+        screenManager.showMainFeed(this, MainFeedActivity.CATALOG_INDEX)
     }
 
     override fun onShowOnboarding() {

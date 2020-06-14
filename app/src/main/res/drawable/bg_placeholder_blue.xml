@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:state_pressed="true">
-        <shape android:shape="rectangle">
-            <corners android:radius="8dp" />
-            <solid android:color="#33000000" />
-        </shape>
-    </item>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape
             android:shape="rectangle">
@@ -17,7 +10,7 @@
                 android:type="linear"/>
 
             <corners android:radius="@dimen/placeholder_radius"/>
-
         </shape>
     </item>
-</selector>
+    <item android:drawable="@drawable/selectable_item_rounded_background" />
+</layer-list>

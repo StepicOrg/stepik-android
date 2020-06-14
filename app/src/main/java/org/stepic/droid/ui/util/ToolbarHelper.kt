@@ -1,10 +1,15 @@
 package org.stepic.droid.ui.util
 
+import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
+import org.stepic.droid.R
+import org.stepik.android.view.base.ui.extension.setTintList
 
 
 //Fragment's functions:
@@ -70,6 +75,16 @@ private fun AppCompatActivity.initCenteredToolbarBase(
 
     if (homeIndicatorRes != -1) {
         //is not default
-        actionBar.setHomeAsUpIndicator(homeIndicatorRes)
+        val homeIndicatorDrawable = AppCompatResources
+            .getDrawable(actionBar.themedContext, homeIndicatorRes)
+            ?.setTintList(actionBar.themedContext, R.attr.colorControlNormal)
+
+        actionBar.setHomeAsUpIndicator(homeIndicatorDrawable)
     }
+}
+
+fun Toolbar.setTintedNavigationIcon(@DrawableRes iconRes: Int, @AttrRes tintRes: Int = R.attr.colorControlNormal) {
+    this.navigationIcon = AppCompatResources
+        .getDrawable(context, iconRes)
+        ?.setTintList(context, tintRes)
 }

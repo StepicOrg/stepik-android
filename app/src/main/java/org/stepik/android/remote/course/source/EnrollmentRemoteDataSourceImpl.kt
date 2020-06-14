@@ -1,20 +1,20 @@
 package org.stepik.android.remote.course.source
 
 import io.reactivex.Completable
-import org.stepic.droid.web.Api
 import org.stepik.android.data.course.source.EnrollmentRemoteDataSource
 import org.stepik.android.model.Enrollment
 import org.stepik.android.remote.course.model.EnrollmentRequest
+import org.stepik.android.remote.course.service.EnrollmentService
 import javax.inject.Inject
 
 class EnrollmentRemoteDataSourceImpl
 @Inject
 constructor(
-    private val api: Api
+    private val enrollmentService: EnrollmentService
 ) : EnrollmentRemoteDataSource {
     override fun addEnrollment(courseId: Long): Completable =
-        api.joinCourse(EnrollmentRequest(Enrollment(courseId)))
+        enrollmentService.joinCourse(EnrollmentRequest(Enrollment(courseId)))
 
     override fun removeEnrollment(courseId: Long): Completable =
-        api.dropCourse(courseId)
+        enrollmentService.dropCourse(courseId)
 }

@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.view_step_navigation.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.domain.step.model.StepNavigationDirection
 
 class StepNavigationDelegate(
@@ -18,9 +17,6 @@ class StepNavigationDelegate(
 
     init {
         containerView.isVisible = false
-
-        nextButton.setCompoundDrawables(end = R.drawable.ic_step_navigation_next)
-        prevButton.setCompoundDrawables(start = R.drawable.ic_step_navigation_prev)
 
         prevButton.setOnClickListener { onDirectionClicked(StepNavigationDirection.PREV) }
         nextButton.setOnClickListener { onDirectionClicked(StepNavigationDirection.NEXT) }

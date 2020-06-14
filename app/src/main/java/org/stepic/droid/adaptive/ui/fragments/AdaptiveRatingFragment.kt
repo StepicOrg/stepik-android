@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.fragment_adaptive_rating.*
 import org.stepic.droid.R
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
-import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentBase
 import org.stepic.droid.core.presenters.AdaptiveRatingPresenter
@@ -46,11 +45,10 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
         val context = requireContext()
 
         super.onViewCreated(view, savedInstanceState)
-        error.setBackgroundColor(ContextCompat.getColor(context, android.R.color.transparent))
         recycler.layoutManager = LinearLayoutManager(context)
 
         val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.list_divider_h)!!)
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)!!)
         recycler.addItemDecoration(divider)
 
         val spinnerAdapter = ArrayAdapter<CharSequence>(context, R.layout.adaptive_item_rating_period, context.resources.getStringArray(R.array.adaptive_rating_periods))
@@ -66,13 +64,6 @@ class AdaptiveRatingFragment: FragmentBase(), AdaptiveRatingView {
         }
 
         tryAgain.setOnClickListener { adaptiveRatingPresenter.retry() }
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (isVisibleToUser) {
-            analytic.reportAmplitudeEvent(AmplitudeAnalytic.Adaptive.RATING_OPENED, mapOf(AmplitudeAnalytic.Adaptive.Params.COURSE to courseId.toString()))
-        }
     }
 
     override fun onLoading() {

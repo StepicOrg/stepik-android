@@ -15,25 +15,27 @@ import android.os.Build
 import android.util.AttributeSet
 import android.view.View
 import org.stepic.droid.R
-import org.stepic.droid.util.ColorUtil
+import org.stepic.droid.util.resolveColorAttribute
+import org.stepic.droid.util.resolveFloatAttribute
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 
 class LoadingView
 @JvmOverloads
 constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : View(context, attrs, defStyleAttr) {
 
-    private val baseColorDefault = ColorUtil.getColorArgb(R.color.loading_view_base_color)
-    private val deepColorDefault = ColorUtil.getColorArgb(R.color.loading_view_deep_color)
+    private val baseColorDefault = context.resolveColorAttribute(R.attr.colorControlHighlight)
+    private val deepColorDefault = ColorExtensions.colorWithAlphaMul(baseColorDefault, context.resolveFloatAttribute(R.attr.alphaEmphasisDisabled))
     private val durationDefault = 1500L
     private val intervalDefault = 0L
 
     private val animator: ValueAnimator =
-            ValueAnimator.ofFloat(0f, 1f).apply {
-                addUpdateListener {
-                    frame = it.animatedFraction
-                    postInvalidate()
-                }
+        ValueAnimator.ofFloat(0f, 1f).apply {
+            addUpdateListener {
+                frame = it.animatedFraction
+                postInvalidate()
             }
+        }
 
     private var frame = 0f
     private var radius: Float = 0f

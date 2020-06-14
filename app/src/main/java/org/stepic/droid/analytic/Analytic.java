@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.stepik.android.domain.base.analytic.AnalyticEvent;
 
 import java.util.Map;
 
@@ -16,7 +17,6 @@ public interface Analytic {
         String REACTION_HARD_AFTER_CORRECT = "reaction_hard_after_correct_answer";
 
         String ADAPTIVE_MODE_DISABLED = "adaptive_mode_disabled";
-        String ADAPTIVE_SUBMISSION_CREATED = "adaptive_submission_created";
     }
 
     interface Onboarding {
@@ -34,9 +34,6 @@ public interface Analytic {
         String TOOLBAR_SELECTED_SYMBOL = "symbol";
         String TOOLBAR_SELECTED_LANGUAGE_SYMBOL = "language_symbol";
 
-        String CODE_FULLSCREEN_PRESSED = "code_fullscreen_pressed";
-        String CODE_RESET_PRESSED = "code_reset_pressed";
-        String CHOOSE_NULL = "code_choose_null";
         String CODE_EDITOR_ERROR = "code_editor_error";
     }
 
@@ -46,14 +43,6 @@ public interface Analytic {
         String SEARCH_OPENED = "search_opened";
         String SEARCH_SUBMITTED = "search_submitted";
         String SEARCH_SUGGESTION_CLICKED = "search_suggestion_clicked";
-    }
-
-    interface CoursesCarousel {
-        String EMPTY_ENROLLED_SHOWN = "courses_carousel_empty_enrolled";
-        String EMPTY_ENROLLED_CLICK = "courses_carousel_empty_enrolled_clicked";
-
-        String NO_INTERNET_SHOWN = "courses_carousel_no_internet";
-        String NO_INTERNET_CLICK = "courses_carousel_no_internet_click";
     }
 
     interface FastContinue {
@@ -87,8 +76,6 @@ public interface Analytic {
     }
 
     interface Login {
-        String FAIL_LOGIN = "fail_login";
-
         String REQUEST_LOGIN_WITH_INTERACTION_TYPE = "click_sign_in_with_interaction_type";
 
         String TAP_ON_FIELDS = "tap_on_fields_login";
@@ -97,11 +84,6 @@ public interface Analytic {
         String FACEBOOK_ERROR = "facebook_error";
         String GOOGLE_FAILED_STATUS = "google_sign_in_failed";
         String GOOGLE_AUTH_CODE_NULL = "google_auth_code_null";
-    }
-
-    interface System {
-        String BOOT_COMPLETED = "boot_completed";
-        String FIRST_LAUNCH_AFTER_INSTALL = "first_launch_after_install";
     }
 
     interface Preferences {
@@ -113,34 +95,17 @@ public interface Analytic {
         String CLICK_SIGN_UP = "click sign up";
         String CLICK_SIGN_IN_ON_SIGN_IN_SCREEN = "click sign in on sign in on sign-in screen";
         String CLICK_SIGN_IN_NEXT_ON_SIGN_IN_SCREEN = "click_sign_in_next_sign_in_screen";
-        String CLICK_DELETE_SECTION = "Click delete section from cache";
-        String CLICK_CACHE_SECTION = "Click cache section";
-        String CLICK_CACHE_LESSON = "Click cache unit";
-        String CLICK_DELETE_LESSON = "Click delete unit from cache";
         String CLICK_CLEAR_CACHE = "Click clear cache button";
         String CLICK_YES_LOGOUT = "Click accept logout";
         String CANCEL_VIDEO_QUALITY = "Cancel video quality dialog";
         String CANCEL_VIDEO_QUALITY_DETAILED = "cancel_detailed_video";
-        String YES_CLEAR_VIDEOS = "clear videos from downloads";
         String DELETE_COMMENT_TRIAL = "comment: delete comment trial";
-        String PULL_TO_REFRESH_COURSE = "Pull from top to refreshWhenOnConnectionProblem course";
         String CANCEL_CHOOSE_STORE_CLICK = "storage: cancel choice";
         String AUTH_FROM_DIALOG_FOR_UNAUTHORIZED_USER = "Auth: yes from auth dialog";
         String TRANSFER_DATA_YES = "storage: transfer data";
-        String CLICK_CANCEL_SECTION = "click cancel section";
-        String CLICK_CANCEL_LESSON = "click cancel unit";
         String SUCCESS_LOGIN = "success login";
         String CLICK_REGISTER_BUTTON = "click_register_register_screen";
-        String CLICK_FIND_COURSE_EMPTY_SCREEN = "click_find_courses_empty_screen";
-        String CLICK_NEXT_LESSON_IN_STEPS = "click_next_lesson_in_steps";
-        String CLICK_PREVIOUS_LESSON_IN_STEPS = "click_previous_lesson_in_steps";
         String CLICK_SIGN_IN_SOCIAL = "social_login";
-        String CLICK_AUTH_FROM_STEPS = "click_auth_from_steps";
-        String SHARE_STEP_CLICK = "share_step_click";
-        String CLICK_TRY_STEP_AGAIN = "step_try_again";
-        String CLICK_TRY_STEP_AGAIN_AFTER_CORRECT = "step_try_again_after_correct";
-        String NO_DISCOUNTING_DIALOG = "discounting_dialog_no";
-        String YES_DISCOUNTING_DIALOG = "discounting_dialog_yes";
         String CLICK_SETTINGS_FROM_NOTIFICATION = "click_settings_from_notification";
         String START_SPLASH = "user_start_splash_new";
         String START_SPLASH_EXPERT = "user_start_splash_expert";
@@ -148,17 +113,6 @@ public interface Analytic {
         String CLICK_PRIVACY_POLICY = "click_privacy_policy";
         String CLICK_TERMS_OF_SERVICE = "click_terms_of_service";
         String CLICK_SOCIAL_NETWORK = "settings_click_social_network";
-
-
-        String INVITE_DIALOG_SHOWN = "invite_dialog_shown";
-        String INVITE_DIALOG_DISMISSED = "invite_dialog_dismissed";
-        String INVITE_DIALOG_BROKEN = "invite_dialog_broken";
-        String SHARE_COURSE_SECTION = "share_course_from_section";
-
-        interface InviteDialogDismissType {
-            String LEAVE = "leave";
-            String SHARE = "share";
-        }
 
         String CLICK_CONTINUE_COURSE = "click_continue_course";
         String CLICK_COURSE = "click_course";
@@ -183,7 +137,6 @@ public interface Analytic {
         String SHOW_LOGIN = "Screen manager: show login";
         String SHOW_MAIN_FEED = "Screen manager: show main feed";
         String SHOW_COURSE_DESCRIPTION = "Screen manager: show course description";
-        String SHOW_TEXT_FEEDBACK = "show text feedback";
         String OPEN_STORE = "Open google play, estimation";
         String TRY_OPEN_VIDEO = "video is tried to show";
         String SHOW_SETTINGS = "show settings";
@@ -192,8 +145,6 @@ public interface Analytic {
         String OPEN_COMMENT_NOT_AVAILABLE = "comment: not available";
         String OPEN_COMMENT = "comments: open oldList";
         String OPEN_WRITE_COMMENT = "comments: open write form";
-        String SHOW_SECTIONS = "Screen manager: show section";
-        String SHOW_UNITS = "Screen manager: show units-lessons screen";
         String SHOW_STEP = "Screen manager: show steps of lesson";
         String OPEN_STEP_IN_WEB = "Screen manager: open Step in Web";
         String REMIND_PASSWORD = "Screen manager: remind password";
@@ -208,7 +159,6 @@ public interface Analytic {
         String USER_OPEN_SETTINGS = "main_choice_settings";
         String USER_LOGOUT = "main_choice_logout";
         String USER_OPEN_ABOUT_APP = "main_choice_about";
-        String SHOW_SECTIONS_JOINED = "show_sections_joined";
         String USER_OPEN_PROFILE = "main_choice_profile";
     }
 
@@ -246,44 +196,21 @@ public interface Analytic {
         String NOT_PLAYER = "NotPlayer";
         String CANT_UPDATE_TOKEN = "cant update token";
         String NOTIFICATION_ERROR_PARSE = "notification error parse";
-        String DELETE_SERVICE_ERROR = "DeleteService nullptr";
-        String FAIL_TO_MOVE = "storage: fail to move";
-        String REGISTRATION_IMPORTANT_ERROR = "registration important error";
-        String NOTIFICATION_NOT_POSTED_ON_CLICK = "notification is not posted";
-        String NULL_SECTION = "Null section is not expected";
-        String LESSON_IN_STORE_STATE_NULL = "lesson was null in store state manager";
-        String LOAD_SERVICE = "Load Service";
-        String CANT_CREATE_NOMEDIA = "can't create .nomedia";
-        String ILLEGAL_STATE_NEXT_LESSON = "cant_show_next_lesson";
-        String ILLEGAL_STATE_PREVIOUS_LESSON = "cant_show_previous_lesson";
-        String FAIL_PUSH_STEP_VIEW = "fail_push_step_view";
-        String DOWNLOAD_FAILED = "download_failed";
-        String DOWNLOADED_FILE_NOT_EXISTS = "downloaded_file_not_exists";
-        String STREAK_ON_STEP_SOLVED = "streak_on_step_solved";
         String GOOGLE_SERVICES_TOO_OLD = "google_services_too_old";
         String FAIL_REFRESH_TOKEN_ONLINE = "fail_refresh_token_online";
         String FAIL_REFRESH_TOKEN_ONLINE_EXTENDED = "fail_refresh_token_online_extended";
-        String COOKIE_MANAGER_ERROR = "cookie_manager_error";
         String FAIL_REFRESH_TOKEN_INLINE_GETTING = "fail_refresh_token_online_get";
-        String COOKIE_WAS_EMPTY = "cookie_was_empty";
-        String FAIL_LOGOUT_WHEN_REFRESH = "refresh_fail_logout_social";
-        String UNPREDICTABLE_LOGIN_RESULT = "login_successful_was_not_correct";
-        String LESSON_ACCESS_DENIED = "lesson_access_denied";
-        String SEARCH_COURSE_UNSUCCESSFUL = "search_course_unsuccessful";
         String CHOICES_ARE_SMALLER = "choices_are_smaller";
         String PREVIOUS_VIEW_NOT_DETACHED = "previous_view_not_detached";
         String UNEXPECTED_VIEW = "unexpected_view";
-        String ILLEGAL_STATE_VIDEO_STEP = "illegal_state_video_step";
         String ILLEGAL_STATE_VIDEO_STEP_PLAY = "illegal_state_video_step_play";
-        String NO_VIDEO_ON_STEP_SHOWING = "illegal_state_video_no_video";
         String CANT_PARSE_QUALITY = "cant_parse_quality";
-        String JOIN_FAILED = "error_join_failed"; //#Apps-580
-        String UNIT_CACHED_LESSON_NO = "error_unit_cached_lesson_not";
         String FEATURED_EMPTY = "error_featured_empty";
-        String TEMPLATE_WAS_NULL = "error_code_template_null";
         String COURSE_COLLECTION_EMPTY = "course_collection_empty";
-        String FEEDBACK_BROKEN = "feedback_broken";
-        String CANT_RESTORE_VIDEO_FILE = "cant_restore_video_file";
+
+        String REGISTRATION_FAILED = "registration_failed";
+        String SOCIAL_AUTH_FAILED = "social_auth_failed";
+        String CREDENTIAL_AUTH_FAILED = "credential_auth_failed";
     }
 
     interface Web {
@@ -328,23 +255,14 @@ public interface Analytic {
         String NOTIFICATION_SCREEN_OPENED = "notification_screen_opened";
     }
 
-    interface Feedback {
-        String FEEDBACK_SENT = "feedback_sent";
-    }
-
     interface Comments {
         String CLICK_SEND_COMMENTS = "comments: click send comment";
         String COMMENTS_SENT_SUCCESSFULLY = "comments: comment was sent successfully";
         String DELETE_COMMENT_CONFIRMATION = "comment: delete comment confirmed";
         String ORDER_TREND = "order_trend";
-        String SHOW_CONFIRM_DISCARD_TEXT_DIALOG = "comment_discard_dialog_show";
-        String SHOW_CONFIRM_DISCARD_TEXT_DIALOG_SUCCESS = "comment_discard_ok";
-        String OPEN_FROM_OPTION_MENU = "comment_open_from_option_menu";
-        String OPEN_FROM_STEP_UI = "comment_open_from_step_ui";
     }
 
     interface Steps {
-        String SUBMISSION_CREATED = "submission_created";
         String STEP_TYPE_KEY = "type";
         String CORRECT_SUBMISSION_FILL = "submission_correct_fill"; // it can be existing submission, use in chain.
         String WRONG_SUBMISSION_FILL = "submission_wrong_fill";
@@ -356,11 +274,6 @@ public interface Analytic {
         String STEP_OPENED = "step_opened";
         String STEP_EDIT_OPENED = "step_edit_opened";
         String STEP_EDIT_COMPLETED = "step_edit_completed";
-
-        //(message = "remove it, when click_send_submission will collect enough data")
-        @Deprecated
-        String CLICK_SEND_SUBMISSION_STEP_TYPE = "step_click_send";
-        String CODE_LANGUAGE_KEY = "language";
     }
 
     interface Calendar {
@@ -376,10 +289,7 @@ public interface Analytic {
 
     interface DeepLink {
         String USER_OPEN_LINK_GENERAL = "open_deep_link";
-        String USER_OPEN_SYLLABUS_LINK = "open_syllabus_by_link";
         String USER_OPEN_COURSE_DETAIL_LINK = "open_detail_course_link";
-        String USER_OPEN_STEPS_LINK = "open_step_link";
-        String ANONYMOUS_OPEN_STEPS_LINK = "open_step_link_anonymous";
     }
 
     interface Certificate {
@@ -391,24 +301,9 @@ public interface Analytic {
         String OPEN_CERTIFICATE_FROM_NOTIFICATION_CENTER = "certificate_notification_center";
     }
 
-    interface Exam {
-        String START_EXAM = "exam_start";
-    }
-
     interface Profile {
-        String CLICK_INSTRUCTOR = "profile_click_instructor";
-        String CLICK_USER_IN_COMMENT = "profile_click_in_comment";
-        String SHOW_LOCAL = "profile_show_my";
         String OPEN_BY_LINK = "profile_open_by_link";
-        String CLICK_IMAGE = "profile_click_avatar";
-        String CLICK_STREAK_VALUE = "profile_click_streak";
-        String CLICK_FULL_NAME = "profile_click_full_name";
         String OPEN_SCREEN_OVERALL = "profile_open_screen_overall";
-        String PROFILE_SCREEN_OPENED = "profile_screen_opened";
-
-        interface Params {
-            String STATE = "state";
-        }
     }
 
     interface Streak {
@@ -454,21 +349,6 @@ public interface Analytic {
         String SUCCESS_LOGIN_AND_ENROLL = "success_login_insta_enroll";
     }
 
-    interface Downloading {
-        String DOWNLOAD_MANAGER_IS_NOT_ENABLED = "download_manager_is_not_enabled";
-
-        String SHOW_SNACK_PREFS_SECTIONS = "downloading_show_snack_prefs_sections";
-        String SHOW_SNACK_INTERNET_SECTIONS = "downloading_show_snack_internet_sections";
-        String CLICK_SETTINGS_SECTIONS = "downloading_click_settings_sections";
-        String CLICK_RETRY_SECTIONS = "downloading_click_retry_sections";
-
-        String SHOW_SNACK_PREFS_UNITS = "downloading_show_snack_prefs_units";
-        String SHOW_SNACK_INTERNET_UNITS = "downloading_show_snack_internet_units";
-        String CLICK_SETTINGS_UNITS = "downloading_click_settings_units";
-        String CLICK_RETRY_UNITS = "downloading_click_retry_units";
-
-    }
-
     interface SmartLock {
         String READ_CREDENTIAL_WITHOUT_INTERACTION = "smartlock_read_without_interaction";
         String DISABLED_LOGIN = "smartlock_disabled_login";
@@ -488,17 +368,7 @@ public interface Analytic {
         String FETCHED_UNSUCCESSFUL = "remote_fetched_unsuccessful";
     }
 
-    interface CourseDetailScreen {
-        String ANONYMOUS = "course_detail_anonymous";
-        String ENROLLED = "course_detail_enrolled";
-        String NOT_ENROLLED = "course_detail_not_enrolled";
-    }
-
     interface Deadlines {
-        String PERSONAL_DEADLINES_WIDGET_SHOWN = "personal_deadlines_widget_shown";
-        String PERSONAL_DEADLINES_WIDGET_CLICKED = "personal_deadlines_widget_clicked";
-        String PERSONAL_DEADLINES_WIDGET_HIDDEN = "personal_deadlines_widget_hidden";
-
         interface Params {
             String COURSE = "course";
             String HOURS = "hours";
@@ -533,6 +403,8 @@ public interface Analytic {
 
         String FILE_TRANSFER_ERROR = "downloader_v2_file_transfer_error";
 
+        String CLICK_SETTINGS_SECTIONS = "downloading_click_settings_sections";
+
         interface Params {
             String DOWNLOAD_STATUS = "status";
         }
@@ -547,17 +419,8 @@ public interface Analytic {
         }
     }
 
-    interface Home {
-        String HOME_SCREEN_OPENED = "home_screen_opened";
-    }
-
-    interface Catalog {
-        String CATALOG_SCREEN_OPENED = "catalog_screen_opened";
-    }
-
     interface Traces {
         String COURSE_CONTENT_LOADING = "course_content_loading";
-        String MY_COURSES_LOADING = "my_courses_loading";
     }
 
     void reportEvent(String eventName, Bundle bundle);
@@ -575,11 +438,14 @@ public interface Analytic {
     void setUserId(@NotNull String userId);
 
     void setCoursesCount(int coursesCount);
-    void setSubmissionsCount(long submissionsCount);
+    void setSubmissionsCount(long submissionsCount, long delta);
     void setScreenOrientation(int orientation);
     void setStreaksNotificationsEnabled(boolean isEnabled);
+    void setTeachingCoursesCount(int coursesCount);
     void reportAmplitudeEvent(@NotNull String eventName, @Nullable Map<String, Object> params);
     void reportAmplitudeEvent(@NotNull String eventName);
+
+    void report(@NotNull AnalyticEvent analyticEvent);
 
     void setUserProperty(@NotNull String name, @NotNull String value);
 

@@ -13,6 +13,7 @@ data class Dataset(
     val rows: List<String>? = null,
     val columns: List<String>? = null,
     val description: String? = null,
+    val components: List<Component>? = null,
 
     @SerializedName("is_multiple_choice")
     val isMultipleChoice: Boolean = false,
@@ -28,6 +29,7 @@ data class Dataset(
         parcel.writeStringList(rows)
         parcel.writeStringList(columns)
         parcel.writeString(description)
+        parcel.writeTypedList(components)
         parcel.writeBoolean(isMultipleChoice)
         parcel.writeBoolean(isCheckbox)
         parcel.writeBoolean(isHtmlEnabled)
@@ -44,6 +46,7 @@ data class Dataset(
                 parcel.createStringArrayList(),
                 parcel.createStringArrayList(),
                 parcel.readString(),
+                parcel.createTypedArrayList(Component),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean()

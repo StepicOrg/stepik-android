@@ -20,12 +20,13 @@ object DbStructureAttempt {
     const val TABLE_SCHEMA =
         "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
             "${Columns.ID} LONG," +
-            "${Columns.STEP} LONG PRIMARY KEY," +
+            "${Columns.STEP} LONG," +
             "${Columns.USER} LONG," +
             "${Columns.DATASET} TEXT," +
             "${Columns.DATASET_URL} TEXT," +
             "${Columns.STATUS} TEXT," +
             "${Columns.TIME} LONG," +
-            "${Columns.TIME_LEFT} TEXT" +
+            "${Columns.TIME_LEFT} TEXT," +
+            "PRIMARY KEY (${Columns.STEP}, ${Columns.USER})" +
         ")"
 }

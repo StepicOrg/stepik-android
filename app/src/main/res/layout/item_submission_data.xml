@@ -12,7 +12,7 @@
         android:layout_width="@dimen/comment_user_image_size"
         android:layout_height="@dimen/comment_user_image_size"
         android:layout_margin="@dimen/comment_item_margin"
-        app:borderRadius="@dimen/course_image_radius"
+        app:borderRadius="?cornerRadius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <androidx.appcompat.widget.AppCompatImageView
@@ -27,10 +27,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
-        android:textSize="16sp"
-        android:textColor="@color/new_accent_color"
-
-        app:fontFamily="@font/roboto_bold"
+        android:textAppearance="?textAppearanceSubtitle1"
 
         app:layout_constraintStart_toEndOf="@id/submissionUserIconMask"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,6 +49,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_comment_item_solution"
+
+        android:textAppearance="?textAppearanceBody2"
+        android:textColor="?android:textColorSecondary"
 
         app:layout_constraintStart_toEndOf="@id/submissionUserIconMask"
         app:layout_constraintTop_toBottomOf="@id/submissionUserName"
@@ -80,9 +80,8 @@
         app:layout_constraintEnd_toStartOf="@id/submissionSelect"
         app:layout_constraintTop_toBottomOf="@id/submissionSolution"
 
-        android:alpha="0.7"
-        android:textColor="@color/new_accent_color"
-        android:textSize="12sp"
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorSecondary"
         android:gravity="start|center_vertical"
 
         android:layout_marginLeft="@dimen/comment_item_margin"
@@ -99,6 +98,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_nav_arrow_right"
+        app:tint="?colorControlNormal"
 
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"

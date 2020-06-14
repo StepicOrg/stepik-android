@@ -1,8 +1,11 @@
 package org.stepik.android.model.user
 
-import java.util.*
+import com.google.gson.annotations.SerializedName
+import java.util.ArrayList
 
 data class UserActivity(
-        val id: Long = -1,
-        val pins: ArrayList<Long>
+    @SerializedName("id")
+    val id: Long = -1,
+    @SerializedName("pins")
+    val pins: ArrayList<Long>
 )

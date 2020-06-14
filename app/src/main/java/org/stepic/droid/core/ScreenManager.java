@@ -3,6 +3,7 @@ package org.stepic.droid.core;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +14,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.stepic.droid.model.CertificateViewItem;
 import org.stepic.droid.model.CollectionDescriptionColors;
-import org.stepic.droid.model.CoursesCarouselInfo;
 import org.stepic.droid.social.SocialMedia;
+import org.stepik.android.domain.auth.model.SocialAuthType;
+import org.stepik.android.domain.course.analytic.CourseViewSource;
+import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
 import org.stepik.android.model.Course;
+import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
 import org.stepik.android.model.Section;
 import org.stepik.android.model.Step;
@@ -25,6 +29,7 @@ import org.stepik.android.model.Tag;
 import org.stepik.android.model.Unit;
 import org.stepik.android.model.comments.DiscussionThread;
 import org.stepik.android.model.user.Profile;
+import org.stepik.android.view.auth.model.AutoAuth;
 import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
@@ -44,7 +49,7 @@ public interface ScreenManager {
 
     void showRegistration(Activity sourceActivity, @Nullable Course course);
 
-    void showLogin(Activity sourceActivity, @Nullable Course course, @Nullable String email);
+    void showLogin(Activity sourceActivity, @Nullable String email, @Nullable String password, AutoAuth autoAuth, @Nullable Course course);
 
     void showMainFeedAfterLogin(Activity sourceActivity, @Nullable Course course);
 
@@ -62,17 +67,13 @@ public interface ScreenManager {
 
     void openStepInWeb(Context context, Step step);
 
-    void openDiscussionInWeb(Context context, @NonNull Step step, @NonNull DiscussionThread discussionThread, long discussionId);
-
-    void openSubmissionInWeb(Context context, long stepId, long submissionId);
-
     void openRemindPassword(AppCompatActivity context);
 
-    void showCourseDescription(Context context, long courseId);
-    void showCourseDescription(Context context, @NotNull Course course);
-    void showCourseDescription(Context context, @NotNull Course course, boolean autoEnroll);
-    void showCourseModules(Context context, @NotNull Course course);
-    void showCourseScreen(Context context, @NotNull Course course, boolean autoEnroll, CourseScreenTab tab);
+    void showCourseDescription(Context context, long courseId, @NotNull CourseViewSource viewSource);
+    void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource);
+    void showCourseDescription(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll);
+    void showCourseModules(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource);
+    void showCourseScreen(Context context, @NotNull Course course, @NotNull CourseViewSource viewSource, boolean autoEnroll, CourseScreenTab tab);
 
     void showStoreWithApp(Activity sourceActivity);
 
@@ -98,17 +99,20 @@ public interface ScreenManager {
 
     void showCertificates(Context context, long userId);
 
-    void openSyllabusInWeb(Context context, long courseId);
-
-    void openCoursePurchaseInWeb(Context context, long courseId, @Nullable Map<String, List<String>> queryParams);
-
     Intent getCertificateIntent();
 
     Intent getOpenInWebIntent(String path);
 
-    void openProfile(Activity activity);
+    /**
+     * Redirects to external web browser in case if app intercepts wrong deeplink (if uri contains `from_mobile_app=true` query param)
+     * @param context - activity context
+     * @param uri - Intent::data
+     */
+    void redirectToWebBrowserIfNeeded(@NotNull Context context, @NotNull Uri uri);
 
-    void openProfile(Activity activity, long userId);
+    void openLinkInWebBrowser(@NotNull Context context, @NotNull Uri uri);
+
+    void openProfile(@NonNull Context context, long userId);
 
     void openFeedbackActivity(Activity activity);
 
@@ -128,7 +132,7 @@ public interface ScreenManager {
 
     void continueAdaptiveCourse(Activity activity, Course course);
 
-    void continueCourse(Activity activity, long courseId, @NotNull LastStep lastStep);
+    void continueCourse(Activity activity, long courseId, @NotNull CourseViewSource viewSource, @NotNull LastStep lastStep);
     void continueCourse(Activity activity, @NotNull LastStep lastStep);
 
     void showLaunchScreen(FragmentActivity activity, @NotNull Course course);
@@ -136,11 +140,6 @@ public interface ScreenManager {
     void openImage(Context context, String path);
 
     void showAdaptiveStats(Context context, long courseId);
-
-
-    void showCoursesList(Activity activity, @NotNull CoursesCarouselInfo info, @Nullable CollectionDescriptionColors collectionDescriptionColors);
-
-    void showListOfTag(Activity activity, @NotNull Tag tag);
 
     void showOnboarding(@NotNull Activity activity);
 
@@ -154,5 +153,15 @@ public interface ScreenManager {
 
     void openTextFeedBack(Context context, SupportEmailData supportEmailData);
 
+    void openSocialMediaLink(Context context, String link);
     void openSocialMediaLink(Context context, SocialMedia socialLink);
+
+    void loginWithSocial(FragmentActivity activity, SocialAuthType type);
+
+    void showCachedAttempts(@NotNull Context context, long courseId);
+
+    void showCoursesByQuery(Context context, String courseListTitle, CourseListQuery courseListQuery);
+    void showCoursesCollection(Context context, CourseCollection courseCollection, CollectionDescriptionColors collectionDescriptionColors);
+    void showUserCourses(Context context);
+    void showCoursesByTag(Context context, Tag tag);
 }

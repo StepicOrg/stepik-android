@@ -1,47 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-    android:background="@color/white"
-             android:orientation="vertical">
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="horizontal"
-        android:padding="8dp"
-        >
+        android:padding="8dp">
 
         <LinearLayout
             android:layout_width="@dimen/feedback_button_length"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/feedbackBadButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/feedback_bad_color"
-                android:drawableLeft="@drawable/ic_thumb_down_white_24dp"
-                android:drawablePadding="@dimen/drawable_padding"
-                android:drawableStart="@drawable/ic_thumb_down_white_24dp"
-                android:gravity="center"
-                android:padding="@dimen/button_padding"
-                android:text="@string/feedback_bad"
-                />
+                app:icon="@drawable/ic_comment_dislike"
+                app:iconGravity="textStart"
+                app:backgroundTint="?colorError"
+                android:text="@string/feedback_bad" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="@string/feedback_bad_description"
-                android:textSize="@dimen/feedback_textsize"/>
+                android:textAppearance="?textAppearanceBody1"
+                android:text="@string/feedback_bad_description" />
 
         </LinearLayout>
 
@@ -57,25 +50,19 @@
                 android:id="@+id/feedbackGoodButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/feedback_good_color"
-                android:drawableLeft="@drawable/ic_thumb_up_white_24dp"
-                android:drawablePadding="@dimen/drawable_padding"
-                android:drawableStart="@drawable/ic_thumb_up_white_24dp"
-                android:gravity="center"
-                android:padding="@dimen/button_padding"
-                android:text="@string/feedback_good"
-                />
+                app:icon="@drawable/ic_comment_like"
+                app:iconGravity="textStart"
+                android:theme="@style/ThemeOverlay.Green"
+                android:text="@string/feedback_good" />
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:padding="8dp"
-                android:text="@string/feedback_good_description"
-                android:textSize="@dimen/feedback_textsize"/>
+                android:textAppearance="?textAppearanceBody1"
+                android:text="@string/feedback_good_description" />
         </LinearLayout>
     </LinearLayout>
-
-
 </FrameLayout>

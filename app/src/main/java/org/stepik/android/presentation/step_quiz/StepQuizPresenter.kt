@@ -18,6 +18,7 @@ import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
+import java.util.Calendar
 import javax.inject.Inject
 
 class StepQuizPresenter
@@ -110,6 +111,8 @@ constructor(
      * Submissions
      */
     fun createSubmission(step: Step, reply: Reply) {
+        syncReplyState(reply)
+
         val oldState = (state as? StepQuizView.State.AttemptLoaded)
             ?: return
 
@@ -130,8 +133,11 @@ constructor(
 
                     val params =
                         mutableMapOf(
+                            AmplitudeAnalytic.Steps.Params.SUBMISSION to newSubmission.id,
                             AmplitudeAnalytic.Steps.Params.STEP to step.id,
-                            AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType()
+                            AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
+                            AmplitudeAnalytic.Steps.Params.LOCAL to false,
+                            AmplitudeAnalytic.Steps.Params.IS_ADAPTIVE to false
                         )
                     newSubmission.reply?.language
                         ?.let { lang ->
@@ -153,7 +159,7 @@ constructor(
             ?.id
             ?: 0
 
-        val submission = Submission(id = submissionId, attempt = oldState.attempt.id, _reply = reply, status = Submission.Status.LOCAL)
+        val submission = Submission(id = submissionId, attempt = oldState.attempt.id, _reply = reply, status = Submission.Status.LOCAL, time = Calendar.getInstance().time)
         state = oldState.copy(submissionState = StepQuizView.SubmissionState.Loaded(submission))
 
         compositeDisposable += stepQuizInteractor

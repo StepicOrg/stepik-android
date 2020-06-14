@@ -98,7 +98,9 @@ constructor(
                     courseReviewItems.isNotEmpty()
                 }
             }
-            .map(CourseReviewsView.State::CourseReviewsCache)
+            .map { reviews ->
+                CourseReviewsView.State.CourseReviews(reviews, DataSourceType.CACHE)
+            }
 
     private fun fetchReviewsFromRemote(): Single<CourseReviewsView.State> =
         courseReviewsInteractor
@@ -107,27 +109,27 @@ constructor(
                 if (reviews.isEmpty()) {
                     CourseReviewsView.State.EmptyContent
                 } else {
-                    CourseReviewsView.State.CourseReviewsRemote(reviews)
+                    CourseReviewsView.State.CourseReviews(reviews, DataSourceType.REMOTE)
                 }
             }
 
     /**
      * Pagination handling
      */
-    fun fetchNextPageFromRemote() {
-        val oldState = state
-
-        val oldItems = (oldState as? CourseReviewsView.State.CourseReviewsRemote)?.courseReviewItems
-            ?: (oldState as? CourseReviewsView.State.CourseReviewsCache)?.courseReviewItems
+    fun fetchNextPageFromRemote(isFromOnResume: Boolean = false) {
+        if (isFromOnResume && (state as? CourseReviewsView.State.CourseReviews)?.source != DataSourceType.CACHE) {
+            return
+        }
+        val oldState = state as? CourseReviewsView.State.CourseReviews
             ?: return
 
         val currentItems =
             when {
-                oldState is CourseReviewsView.State.CourseReviewsRemote
-                        && oldState.courseReviewItems.hasNext ->
+                oldState.source == DataSourceType.REMOTE &&
+                        oldState.courseReviewItems.hasNext ->
                     oldState.courseReviewItems
 
-                oldState is CourseReviewsView.State.CourseReviewsCache ->
+                oldState.source == DataSourceType.CACHE ->
                     emptyList<CourseReviewItem>()
 
                 else -> return
@@ -138,15 +140,15 @@ constructor(
             ?.plus(1)
             ?: 1
 
-        state = CourseReviewsView.State.CourseReviewsRemoteLoading(oldItems)
+        state = CourseReviewsView.State.CourseReviewsLoading(oldState.courseReviewItems)
         paginationDisposable += courseReviewsInteractor
             .getCourseReviewItems(courseId, page = nextPage, sourceType = DataSourceType.REMOTE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = {
-                    state = CourseReviewsView.State.CourseReviewsRemote(currentItems.concatWithPagedList(it))
-                    if (oldState is CourseReviewsView.State.CourseReviewsCache) {
+                    state = CourseReviewsView.State.CourseReviews(currentItems.concatWithPagedList(it), source = DataSourceType.REMOTE)
+                    if (oldState.source == DataSourceType.CACHE) {
                         fetchNextPageFromRemote() // load 2 page from remote after going online
                     }
                 },
@@ -173,19 +175,18 @@ constructor(
                         if (reviews.isEmpty()) {
                             CourseReviewsView.State.EmptyContent
                         } else {
-                            CourseReviewsView.State.CourseReviewsRemote(reviews)
+                            CourseReviewsView.State.CourseReviews(reviews, source = DataSourceType.REMOTE)
                         }
                 },
                 onError = {
                     when (oldState) {
-                        is CourseReviewsView.State.CourseReviewsCache,
-                        is CourseReviewsView.State.CourseReviewsRemote -> {
+                        is CourseReviewsView.State.CourseReviews -> {
                             state = oldState
                             view?.showNetworkError()
                         }
 
-                        is CourseReviewsView.State.CourseReviewsRemoteLoading ->
-                            state = CourseReviewsView.State.CourseReviewsRemote(oldState.courseReviewItems)
+                        is CourseReviewsView.State.CourseReviewsLoading ->
+                            state = CourseReviewsView.State.CourseReviews(oldState.courseReviewItems, source = DataSourceType.REMOTE)
 
                         else ->
                             state = CourseReviewsView.State.NetworkError

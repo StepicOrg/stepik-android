@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/achievementsContainer"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/achievementsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?selectableItemBackground"
+
+        android:text="@string/achievements_title"
+        android:gravity="center_vertical"
+
+        android:paddingLeft="@dimen/profile_block_margin"
+        android:paddingStart="@dimen/profile_block_margin"
+        android:paddingRight="16dp"
+        android:paddingEnd="16dp"
+
+        android:paddingTop="11dp"
+        android:paddingBottom="11dp"
+        android:drawableEnd="@drawable/ic_nav_arrow_right"
+        android:drawableRight="@drawable/ic_nav_arrow_right"
+
+        style="@style/ProfileItemHeader" />
+
+    <LinearLayout
+        android:id="@+id/achievementsLoadingPlaceholder"
+        android:baselineAligned="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        android:orientation="horizontal" />
+
+    <include
+        android:id="@+id/achievementsLoadingError"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        layout="@layout/error_no_connection_with_button_small" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/achievementsTilesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/profile_block_margin"
+        android:layout_marginRight="@dimen/profile_block_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin"
+        android:visibility="gone" />
+
+    <include layout="@layout/view_divider_vertical" />
+
+</LinearLayout>

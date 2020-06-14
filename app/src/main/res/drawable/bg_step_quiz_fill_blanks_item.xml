@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/checked_layer">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/step_quiz_choice_checked" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/step_quiz_choice_checked_border" />
+            <corners android:radius="@dimen/step_quiz_fill_blanks_item_radius" />
+        </shape>
+    </item>
+
+    <item android:drawable="@drawable/bg_step_quiz_fill_blanks_ripple" />
+
+    <item android:id="@+id/correct_layer">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/step_quiz_choice_correct" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/step_quiz_choice_correct_border" />
+            <corners android:radius="@dimen/step_quiz_fill_blanks_item_radius" />
+        </shape>
+    </item>
+
+    <item android:id="@+id/incorrect_layer">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/step_quiz_choice_wrong" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/step_quiz_choice_wrong_border" />
+            <corners android:radius="@dimen/step_quiz_fill_blanks_item_radius" />
+        </shape>
+    </item>
+</layer-list>

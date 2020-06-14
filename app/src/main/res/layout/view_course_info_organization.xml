@@ -2,7 +2,6 @@
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,11 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="24dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:contentDescription="@null"
             app:srcCompat="@drawable/ic_course_info_instructors"
+            app:tint="?colorOnSurface"
+            android:alpha="?alphaEmphasisHigh"
             android:layout_gravity="start|center_vertical" />
 
         <TextView
@@ -30,17 +31,9 @@
             android:layout_gravity="start|center_vertical"
             android:gravity="start|center_vertical"
 
-            android:textSize="14sp"
-
-            app:fontFamily="@font/roboto_light"
-            tools:ignore="missingPrefix" />
+            android:textAppearance="?textAppearanceBody1" />
     </FrameLayout>
 
-    <View
-        android:id="@+id/courseInfoOrganizationSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/course_appbar_separator"
-        android:alpha="0.5" />
+    <include layout="@layout/view_divider_vertical" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -6,49 +6,59 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.base.App;
+import org.stepic.droid.di.qualifiers.BackgroundScheduler;
+import org.stepic.droid.di.qualifiers.MainScheduler;
 import org.stepic.droid.util.ProgressHelper;
-import org.stepic.droid.web.Api;
+import org.stepik.android.domain.auth.repository.AuthRepository;
 
 import javax.inject.Inject;
 
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import io.reactivex.Scheduler;
+import io.reactivex.disposables.CompositeDisposable;
 import kotlin.text.StringsKt;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import ru.nobird.android.view.base.ui.extension.ViewExtensionsKt;
 
 public class RemindPasswordDialogFragment extends DialogFragment {
 
     private static final String ERROR_TEXT_KEY = "Error_Text_Key";
 
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+
     @Inject
-    Api api;
+    AuthRepository authRepository;
+
+    @Inject
+    @MainScheduler
+    Scheduler mainScheduler;
+
+    @Inject
+    @BackgroundScheduler
+    Scheduler backgroundScheduler;
 
     public static RemindPasswordDialogFragment newInstance() {
         return new RemindPasswordDialogFragment();
     }
 
     private TextInputLayout emailTextWrapper;
-    private LoadingProgressDialog progressLogin;
+    private Dialog progressLogin;
     private View rootView;
 
     @BindString(R.string.email_wrong)
@@ -61,15 +71,18 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         App.Companion.component().inject(this);
 
         @SuppressLint("InflateParams") //it is dialog and it shoud not have any parent
-        View v = ((LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.view_remind_password, null, false);
+        View v = LayoutInflater.from(requireContext()).inflate(R.layout.view_remind_password, null, false);
         emailTextWrapper = v.findViewById(R.id.emailViewWrapper);
         rootView = v.findViewById(R.id.root_view_dialog);
         rootView.requestFocus();
 
-        progressLogin = new LoadingProgressDialog(getContext());
+        progressLogin = new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.loading)
+                .setView(R.layout.dialog_progress)
+                .setCancelable(false)
+                .create();
 
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireContext());
         builder.setTitle(R.string.remind_password)
                 .setView(v)
                 .setPositiveButton(R.string.send, (dialog, which) -> {})
@@ -82,24 +95,18 @@ public class RemindPasswordDialogFragment extends DialogFragment {
         });
 
         if (emailTextWrapper.getEditText() != null) {
-            emailTextWrapper.getEditText().setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    boolean handled = false;
-                    if (actionId == EditorInfo.IME_ACTION_SEND) {
-                        sendEmail(alertDialog);
-                        handled = true;
-                    }
-                    return handled;
+            emailTextWrapper.getEditText().setOnEditorActionListener((v1, actionId, event) -> {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    sendEmail(alertDialog);
+                    handled = true;
                 }
+                return handled;
             });
 
-            emailTextWrapper.getEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                @Override
-                public void onFocusChange(View v, boolean hasFocus) {
-                    if (hasFocus) {
-                        hideError(emailTextWrapper);
-                    }
+            emailTextWrapper.getEditText().setOnFocusChangeListener((v12, hasFocus) -> {
+                if (hasFocus) {
+                    hideError(emailTextWrapper);
                 }
             });
         }
@@ -118,7 +125,11 @@ public class RemindPasswordDialogFragment extends DialogFragment {
 
     private void sendEmail(final AlertDialog alertDialog) {
         ProgressHelper.activate(progressLogin);
-        safetyHideKeypad(emailTextWrapper.getEditText());
+
+        final EditText editText = emailTextWrapper.getEditText();
+        if (editText != null) {
+            ViewExtensionsKt.hideKeyboard(editText);
+        }
         String email;
         try {
             email = emailTextWrapper.getEditText().getText().toString().trim();
@@ -126,10 +137,10 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             ProgressHelper.dismiss(progressLogin);
             return;
         }
-        if (!email.isEmpty()) {
-            api.remindPassword(email).enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> response) {
+        compositeDisposable.add(authRepository.remindPassword(email)
+                .observeOn(mainScheduler)
+                .subscribeOn(backgroundScheduler)
+                .subscribe((response) -> {
                     ProgressHelper.dismiss(progressLogin);
                     okhttp3.Response rawResponse = response.raw();
                     if (rawResponse.priorResponse() != null && rawResponse.priorResponse().code() == 302) {
@@ -145,21 +156,17 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                             Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                         }
                     }
-
-                }
-
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
+                }, (error) -> {
                     ProgressHelper.dismiss(progressLogin);
 
                     final Context context = getContext();
                     if (context != null) {
                         Toast.makeText(context, R.string.connectionProblems, Toast.LENGTH_SHORT).show();
                     }
-                }
-            });
-        }
+                })
+        );
     }
+
     private void bindEmailChangeToButton(final Button button) {
         EditText email = emailTextWrapper.getEditText();
         if (email != null) {
@@ -192,6 +199,12 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onStop() {
+        compositeDisposable.clear();
+        super.onStop();
+    }
+
+    @Override
     public void onDestroyView() {
         if (emailTextWrapper != null && emailTextWrapper.getEditText() != null) {
             emailTextWrapper.getEditText().setOnFocusChangeListener(null);
@@ -213,12 +226,4 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             textInputLayout.setError(errorText);
         }
     }
-
-    private void safetyHideKeypad(TextView view) {
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) App.Companion.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
 }

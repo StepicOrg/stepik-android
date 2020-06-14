@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
-    android:foreground="@drawable/card_foreground"
-    app:cardBackgroundColor="@color/white"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -19,13 +16,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingEnd="@dimen/padding_text_in_cv"
-            android:paddingLeft="@dimen/padding_text_in_cv"
-            android:paddingRight="@dimen/padding_text_in_cv"
-            android:paddingStart="@dimen/padding_text_in_cv"
-            android:paddingTop="@dimen/padding_text_in_cv">
+            android:paddingEnd="@dimen/certificate_item_padding"
+            android:paddingLeft="@dimen/certificate_item_padding"
+            android:paddingRight="@dimen/certificate_item_padding"
+            android:paddingStart="@dimen/certificate_item_padding"
+            android:paddingTop="@dimen/certificate_item_padding">
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/certificate_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,10 +32,10 @@
                 android:ellipsize="end"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:textSize="@dimen/text_size_title"
+                android:textAppearance="?textAppearanceHeadline5"
                 tools:text="Программирование на Python"/>
 
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/certificate_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,11 +45,11 @@
                 android:layout_toStartOf="@+id/certificate_icon"
                 android:paddingEnd="8dp"
                 android:paddingRight="8dp"
-                android:textColor="@color/stepic_weak_text"
-                android:textSize="14sp"
+                android:textAppearance="?textAppearanceBody1"
+                android:alpha="?alphaEmphasisMedium"
                 tools:text="Сертификат с отличием за курс Безопасность в интернете"/>
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/certificate_icon"
                 android:layout_width="@dimen/certificate_image_size"
                 android:layout_height="@dimen/certificate_image_size"
@@ -63,7 +60,7 @@
 
         <Button
             android:id="@+id/certificate_share_button"
-            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            style="@style/Widget.AppTheme.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -71,15 +68,11 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/abc_btn_borderless_material"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
             android:text="@string/share_title"
-            android:textColor="@color/stepic_blue_ribbon"/>
+            android:theme="@style/ThemeOverlay.Violet" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/certificate_grade"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,11 +82,10 @@
             android:layout_alignParentStart="true"
             android:layout_toLeftOf="@+id/certificate_share_button"
             android:layout_toStartOf="@+id/certificate_share_button"
-            android:paddingEnd="@dimen/padding_text_in_cv"
-            android:paddingLeft="@dimen/padding_text_in_cv"
-            android:paddingRight="@dimen/padding_text_in_cv"
-            android:paddingStart="@dimen/padding_text_in_cv"
-            android:textSize="14sp"
+            android:textAppearance="?textAppearanceBody1"
+            android:alpha="?alphaEmphasisMedium"
+            android:paddingLeft="@dimen/certificate_item_padding"
+            android:paddingRight="@dimen/certificate_item_padding"
             tools:text="Результат: 100%"/>
     </RelativeLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

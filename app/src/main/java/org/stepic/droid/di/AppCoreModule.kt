@@ -28,8 +28,6 @@ import org.stepic.droid.configuration.Config
 import org.stepic.droid.configuration.ConfigImpl
 import org.stepic.droid.core.DefaultFilter
 import org.stepic.droid.core.DefaultFilterImpl
-import org.stepic.droid.core.FilterApplicator
-import org.stepic.droid.core.FilterApplicatorImpl
 import org.stepic.droid.core.LessonSessionManager
 import org.stepic.droid.core.LocalLessonSessionManagerImpl
 import org.stepic.droid.core.ScreenManager
@@ -48,16 +46,13 @@ import org.stepic.droid.notifications.NotificationTimeChecker
 import org.stepic.droid.notifications.NotificationTimeCheckerImpl
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.social.SocialManager
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepic.droid.util.resolvers.StepTypeResolverImpl
 import org.stepic.droid.util.resolvers.text.TextResolver
 import org.stepic.droid.util.resolvers.text.TextResolverImpl
-import org.stepic.droid.web.Api
-import org.stepic.droid.web.ApiImpl
-import org.stepic.droid.web.UserAgentProvider
-import org.stepic.droid.web.UserAgentProviderImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
+import org.stepik.android.remote.base.UserAgentProvider
+import org.stepik.android.remote.base.UserAgentProviderImpl
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -89,10 +84,6 @@ abstract class AppCoreModule {
     @AppSingleton
     internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
 
-    @Binds
-    @AppSingleton
-    internal abstract fun provideIApi(api: ApiImpl): Api
-
     @AppSingleton
     @Binds
     internal abstract fun provideLessonSessionManager(localLessonSessionManager: LocalLessonSessionManagerImpl): LessonSessionManager
@@ -108,10 +99,6 @@ abstract class AppCoreModule {
     @Binds
     @AppSingleton
     internal abstract fun provideDefaultFilter(defaultFilter: DefaultFilterImpl): DefaultFilter
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideFilterApplicator(filterApplicator: FilterApplicatorImpl): FilterApplicator
 
     @Binds
     @AppSingleton
@@ -158,13 +145,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideSystemAlarmManager(context: Context): AlarmManager {
             return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        }
-
-        @AppSingleton
-        @Provides
-        @JvmStatic
-        internal fun provideSocialManager(): SocialManager {
-            return SocialManager()
         }
 
         //it is good for many short lived, which should do async

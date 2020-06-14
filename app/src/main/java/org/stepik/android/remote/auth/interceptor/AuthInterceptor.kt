@@ -1,7 +1,6 @@
 package org.stepik.android.remote.auth.interceptor
 
 import android.content.Context
-import android.webkit.CookieManager
 import com.facebook.login.LoginManager
 import com.vk.sdk.VKSdk
 import okhttp3.Interceptor
@@ -14,12 +13,12 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.addUserAgent
-import org.stepic.droid.web.FailRefreshException
-import org.stepic.droid.web.UserAgentProvider
+import org.stepik.android.remote.auth.exception.FailRefreshException
 import org.stepik.android.remote.auth.model.OAuthResponse
 import org.stepik.android.remote.auth.service.EmptyAuthService
 import org.stepik.android.remote.auth.service.OAuthService
 import org.stepik.android.remote.base.CookieHelper
+import org.stepik.android.remote.base.UserAgentProvider
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import org.stepik.android.view.injection.qualifiers.AuthService
 import org.stepik.android.view.injection.qualifiers.SocialAuthService
@@ -56,25 +55,19 @@ constructor(
         try {
             authLock.readLock().lock()
             var response = sharedPreference.authResponseFromStore
-            val urlForCookies = request.url().toString()
 
             if (response == null) {
                 // it is Anonymous, we can log it.
-                val cookieManager = CookieManager.getInstance()
-                var cookies = cookieManager.getCookie(config.baseUrl) // if token is expired or doesn't exist -> manager return null
-                Timber.d("set cookie for url $urlForCookies is $cookies")
+                val cookies = cookieHelper.getCookiesForBaseUrl()
+                    ?: cookieHelper.fetchCookiesForBaseUrl() // if token is expired or doesn't exist -> manager return null
 
-                if (cookies == null) {
-                    cookieHelper.updateCookieForBaseUrl()
-                    cookies = CookieManager.getInstance().getCookie(urlForCookies)
-                }
-
-                if (cookies != null) {
+                if (cookies.isNotEmpty()) {
+                    val cookieHeader = cookieHelper.getCookieHeader(cookies)
                     val csrfTokenFromCookies = cookieHelper.getCsrfTokenFromCookies(cookies)
                     if (sharedPreference.profile == null) {
                         val stepicProfileResponse = emptyAuthService.getUserProfileWithCookie(
                             config.baseUrl,
-                            cookies,
+                            cookieHeader,
                             csrfTokenFromCookies
                         ).execute().body()
                         if (stepicProfileResponse != null) {
@@ -85,7 +78,7 @@ constructor(
 
                     request = request
                         .newBuilder()
-                        .addHeader(AppConstants.cookieHeaderName, cookies)
+                        .addHeader(AppConstants.cookieHeaderName, cookieHeader)
                         .addHeader(AppConstants.refererHeaderName, config.baseUrl)
                         .addHeader(AppConstants.csrfTokenHeaderName, csrfTokenFromCookies)
                         .build()
@@ -127,8 +120,16 @@ constructor(
                                     analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_INLINE_GETTING, ex)
                                 }
                             }
-                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE_EXTENDED, FailRefreshException(extendedMessage))
-                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE, FailRefreshException(message))
+                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE_EXTENDED,
+                                FailRefreshException(
+                                    extendedMessage
+                                )
+                            )
+                            analytic.reportError(Analytic.Error.FAIL_REFRESH_TOKEN_ONLINE,
+                                FailRefreshException(
+                                    message
+                                )
+                            )
                             analytic.reportEvent(Analytic.Web.UPDATE_TOKEN_FAILED)
                             return chain.proceed(request)
                         }
@@ -143,17 +144,7 @@ constructor(
             if (response != null) {
                 request = request.newBuilder().addHeader(AppConstants.authorizationHeaderName, getAuthHeaderValueForLogged()).build()
             }
-            val originalResponse = chain.proceed(request)
-            val setCookieHeaders = originalResponse.headers(AppConstants.setCookieHeaderName)
-            if (setCookieHeaders.isNotEmpty()) {
-                for (value in setCookieHeaders) {
-                    Timber.d("save for url $urlForCookies,  cookie $value")
-                    if (value != null) {
-                        CookieManager.getInstance().setCookie(urlForCookies, value) // set-cookie is not empty
-                    }
-                }
-            }
-            return originalResponse
+            return chain.proceed(request)
         } finally {
             authLock.readLock().unlock()
         }

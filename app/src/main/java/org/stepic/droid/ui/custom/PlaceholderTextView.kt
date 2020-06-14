@@ -8,10 +8,10 @@ import android.util.LruCache
 import android.util.TypedValue
 import android.view.Gravity
 import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.ResourcesCompat
 import org.stepic.droid.R
 import org.stepic.droid.base.App
-import org.stepic.droid.util.ColorUtil
 import org.stepic.droid.util.TextUtil
 import org.stepik.android.view.base.ui.span.TypefaceSpanCompat
 
@@ -36,7 +36,7 @@ constructor(
 
         val defaultLineSpacingMultiplier = 1.0f
         setLineSpacing(resources.getDimension(R.dimen.placeholder_line_spacing_extra), defaultLineSpacingMultiplier)
-        setTextColor(ColorUtil.getColorArgb(R.color.placeholder_text_color, this.context))
+        setTextColor(AppCompatResources.getColorStateList(context, R.color.placeholder_text_color))
 
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PlaceholderTextView)
         try {

@@ -5,66 +5,74 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
-import com.google.android.material.tabs.TabLayout
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
-import org.solovyev.android.checkout.Billing
-import org.solovyev.android.checkout.Checkout
-import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
+import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
+import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.UnauthorizedDialogFragment
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseIdFromDeepLink
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.course.ui.adapter.CoursePagerAdapter
 import org.stepik.android.view.course.ui.delegates.CourseHeaderDelegate
+import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
+import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CourseActivity : FragmentActivityBase(), CourseView {
+class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFragment.Callback {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
         private const val EXTRA_AUTO_ENROLL = "auto_enroll"
         private const val EXTRA_TAB = "tab"
+        private const val EXTRA_SOURCE = "source"
 
         private const val NO_ID = -1L
 
         private const val UNAUTHORIZED_DIALOG_TAG = "unauthorized_dialog"
 
-        fun createIntent(context: Context, course: Course, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        fun createIntent(context: Context, course: Course, source: CourseViewSource, autoEnroll: Boolean = false, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE, course)
+                .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_AUTO_ENROLL, autoEnroll)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
-        fun createIntent(context: Context, courseId: Long, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
+        fun createIntent(context: Context, courseId: Long, source: CourseViewSource, tab: CourseScreenTab = CourseScreenTab.INFO): Intent =
             Intent(context, CourseActivity::class.java)
                 .putExtra(EXTRA_COURSE_ID, courseId)
+                .putExtra(EXTRA_SOURCE, source)
                 .putExtra(EXTRA_TAB, tab.ordinal)
 
         init {
@@ -73,6 +81,18 @@ class CourseActivity : FragmentActivityBase(), CourseView {
     }
 
     private var courseId: Long = NO_ID
+    private val analyticsOnPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
+        override fun onPageSelected(page: Int) {
+            if (coursePagerAdapter.getItem(page) is CourseContentFragment) {
+                analytic
+                    .reportAmplitudeEvent(
+                        AmplitudeAnalytic.CourseReview.SCREEN_OPENED,
+                        mapOf(AmplitudeAnalytic.CourseReview.Params.COURSE to courseId.toString())
+                    )
+            }
+        }
+    }
+    private lateinit var coursePagerAdapter: CoursePagerAdapter
     private lateinit var coursePresenter: CoursePresenter
     private lateinit var courseHeaderDelegate: CourseHeaderDelegate
 
@@ -88,13 +108,27 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     private var isInSwipeableViewState = false
 
+    private var hasSavedInstanceState: Boolean = false
+
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    internal lateinit var billing: Billing
+    internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
-    private lateinit var uiCheckout: UiCheckout
+    @Inject
+    internal lateinit var coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest
+
+    @Inject
+    internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
+
+    @Inject
+    internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
+
+//    @Inject
+//    internal lateinit var billing: Billing
+
+//    private lateinit var uiCheckout: UiCheckout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,6 +149,13 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         if (savedInstanceState == null && deepLinkCourseId != null) {
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_COURSE_DETAIL_LINK, deepLinkCourseId.toString())
             analytic.reportEvent(Analytic.DeepLink.USER_OPEN_LINK_GENERAL)
+
+            // handle wrong deeplink interceptions
+            intent.data?.let { uri -> screenManager.redirectToWebBrowserIfNeeded(this, uri) }
+        }
+
+        if (course != null) {
+            courseToolbarTitle.text = course.title
         }
 
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
@@ -125,28 +166,21 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
         injectComponent(courseId)
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
-        courseHeaderDelegate = CourseHeaderDelegate(this, analytic, coursePresenter)
+        courseHeaderDelegate =
+            CourseHeaderDelegate(
+                this, analytic, coursePresenter, coursePurchasePriceSplitTest,
+                onSubmissionCountClicked = {
+                    screenManager.showCachedAttempts(this, courseId)
+                },
+                isLocalSubmissionsEnabled = firebaseRemoteConfig.getBoolean(RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED)
+            )
 
-        uiCheckout = Checkout.forActivity(this, billing)
-
+//        uiCheckout = Checkout.forActivity(this, billing)
         initViewPager(courseId)
         initViewStateDelegate()
 
-        if (savedInstanceState == null) {
-            val tab = CourseScreenTab
-                .values()
-                .getOrNull(intent.getIntExtra(EXTRA_TAB, -1))
-                ?: intent.getCourseTabFromDeepLink()
+        hasSavedInstanceState = savedInstanceState != null
 
-            coursePager.currentItem =
-                when (tab) {
-                    CourseScreenTab.REVIEWS -> 1
-                    CourseScreenTab.SYLLABUS -> 2
-                    else -> 0
-                }
-        } else {
-            coursePresenter.onRestoreInstanceState(savedInstanceState)
-        }
         setDataToPresenter()
 
         courseSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
@@ -159,16 +193,22 @@ class CourseActivity : FragmentActivityBase(), CourseView {
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
         val course: Course? = intent.getParcelableExtra(EXTRA_COURSE)
+        val source = (intent.getSerializableExtra(EXTRA_SOURCE) as? CourseViewSource)
+            ?: intent.getCourseIdFromDeepLink()?.let { CourseViewSource.DeepLink(intent?.dataString ?: "") }
+            ?: CourseViewSource.Unknown
+
         if (course != null) {
-            coursePresenter.onCourse(course, forceUpdate)
+            coursePresenter.onCourse(course, source, forceUpdate)
         } else {
-            coursePresenter.onCourseId(courseId, forceUpdate)
+            coursePresenter.onCourseId(courseId, source, forceUpdate)
         }
     }
 
     private fun injectComponent(courseId: Long) {
         App.componentManager()
             .courseComponent(courseId)
+            .coursePresentationComponentBuilder()
+            .build()
             .inject(this)
     }
 
@@ -182,53 +222,57 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePresenter.attachView(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
+            coursePresenter.handleCoursePurchasePressed()
+        }
+        coursePager.addOnPageChangeListener(analyticsOnPageChangeListener)
+        if (!hasSavedInstanceState) {
+            setCurrentTab()
+        }
+    }
+
+    override fun onPause() {
+        coursePager.removeOnPageChangeListener(analyticsOnPageChangeListener)
+        super.onPause()
+    }
+
     override fun onStop() {
         coursePresenter.detachView(this)
         super.onStop()
     }
 
-    private fun initViewPager(courseId: Long) {
-        val lightFont = ResourcesCompat.getFont(this, R.font.roboto_light)
-        val regularFont = ResourcesCompat.getFont(this, R.font.roboto_regular)
+    private fun setCurrentTab() {
+        val tab = CourseScreenTab
+            .values()
+            .getOrNull(intent.getIntExtra(EXTRA_TAB, -1))
+            ?: intent.getCourseTabFromDeepLink()
 
-        val coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
+        coursePager.currentItem =
+            when (tab) {
+                CourseScreenTab.REVIEWS -> 1
+                CourseScreenTab.SYLLABUS -> 2
+                else -> 0
+            }
+        if (coursePager.currentItem == 0) {
+            analyticsOnPageChangeListener.onPageSelected(0)
+        }
+    }
+
+    private fun initViewPager(courseId: Long) {
+        coursePagerAdapter = CoursePagerAdapter(courseId, this, supportFragmentManager)
         coursePager.adapter = coursePagerAdapter
-        coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(coursePager, coursePagerAdapter))
-        coursePager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        val onPageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
             override fun onPageScrollStateChanged(scrollState: Int) {
                 viewPagerScrollState = scrollState
                 resolveSwipeRefreshState()
             }
-
-            override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {}
-            override fun onPageSelected(p0: Int) {}
-        })
+        }
+        coursePager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(coursePager, coursePagerAdapter))
+        coursePager.addOnPageChangeListener(onPageChangeListener)
 
         courseTabs.setupWithViewPager(coursePager)
-        courseTabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                (tab?.customView as? TextView)?.let {
-                    it.typeface = lightFont
-                }
-            }
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                (tab?.customView as? TextView)?.let {
-                    it.typeface = regularFont
-                }
-            }
-        })
-
-        for (i in 0 until courseTabs.tabCount) {
-            val tab = courseTabs.getTabAt(i)
-            tab?.customView = (layoutInflater.inflate(R.layout.view_course_tab, null) as TextView).also {
-                it.typeface = lightFont
-            }
-        }
-
-        (courseTabs.getTabAt(courseTabs.selectedTabPosition)?.customView as? TextView)
-            ?.typeface = regularFont
     }
 
     private fun initViewStateDelegate() {
@@ -292,6 +336,7 @@ class CourseActivity : FragmentActivityBase(), CourseView {
             }
         }
         viewStateDelegate.switchState(state)
+        invalidateOptionsMenu()
     }
 
     override fun showEmptyAuthDialog(course: Course) {
@@ -336,18 +381,6 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         coursePager.snackbar(messageRes = errorMessage)
     }
 
-    override fun showContinueLearningError() {
-        coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
-    }
-
-    override fun continueCourse(lastStep: LastStep) {
-        screenManager.continueCourse(this, lastStep)
-    }
-
-    override fun continueAdaptiveCourse(course: Course) {
-        screenManager.continueAdaptiveCourse(this, course)
-    }
-
     override fun shareCourse(course: Course) {
         startActivity(shareHelper.getIntentForCourseSharing(course))
     }
@@ -356,29 +389,95 @@ class CourseActivity : FragmentActivityBase(), CourseView {
         courseHeaderDelegate.showCourseShareTooltip()
     }
 
+    override fun showSaveUserCourseSuccess(userCourseAction: UserCourseAction) {
+        @StringRes
+        val successMessage =
+            when (userCourseAction) {
+                UserCourseAction.ADD_FAVORITE ->
+                    R.string.course_action_favorites_add_success
+
+                UserCourseAction.REMOVE_FAVORITE ->
+                    R.string.course_action_favorites_remove_success
+
+                UserCourseAction.ADD_ARCHIVE ->
+                    R.string.course_action_archive_add_success
+
+                UserCourseAction.REMOVE_ARCHIVE ->
+                    R.string.course_action_archive_remove_success
+            }
+        coursePager.snackbar(messageRes = successMessage)
+    }
+
+    override fun showSaveUserCourseError(userCourseAction: UserCourseAction) {
+        @StringRes
+        val errorMessage =
+            when (userCourseAction) {
+                UserCourseAction.ADD_FAVORITE ->
+                    R.string.course_action_favorites_add_failure
+
+                UserCourseAction.REMOVE_FAVORITE ->
+                    R.string.course_action_favorites_remove_failure
+
+                UserCourseAction.ADD_ARCHIVE ->
+                    R.string.course_action_archive_add_failure
+
+                UserCourseAction.REMOVE_ARCHIVE ->
+                    R.string.course_action_archive_remove_failure
+            }
+        coursePager.snackbar(messageRes = errorMessage)
+    }
+
     /**
      * BillingView
      */
-    override fun createUiCheckout(): UiCheckout =
-        uiCheckout
+//    override fun createUiCheckout(): UiCheckout =
+//        uiCheckout
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
-        screenManager.openCoursePurchaseInWeb(this, courseId, queryParams)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        coursePresenter.onSaveInstanceState(outState)
-        super.onSaveInstanceState(outState)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data)
+        val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams)
+        if (coursePurchaseWebviewSplitTest.currentGroup.isInAppWebViewUsed) {
+            InAppWebViewDialogFragment
+                .newInstance(getString(R.string.course_purchase), url, isProvideAuth = true)
+                .showIfNotExists(supportFragmentManager, InAppWebViewDialogFragment.TAG)
+        } else {
+            MagicLinkDialogFragment
+                .newInstance(url)
+                .showIfNotExists(supportFragmentManager, MagicLinkDialogFragment.TAG)
         }
     }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
+//            super.onActivityResult(requestCode, resultCode, data)
+//        }
+//    }
 
     override fun onDestroy() {
         releaseComponent(courseId)
         super.onDestroy()
+    }
+
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
+        if (isAdaptive) {
+            screenManager.continueAdaptiveCourse(this, course)
+        } else {
+            coursePager.snackbar(messageRes = R.string.course_error_continue_learning)
+        }
+    }
+
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        screenManager.continueCourse(this, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        if (isLoading) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        } else {
+            ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+        }
+    }
+
+    override fun onDismissed() {
+        coursePresenter.handleCoursePurchasePressed()
     }
 }

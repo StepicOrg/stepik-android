@@ -50,6 +50,7 @@ import org.stepik.android.model.Unit
 import org.stepik.android.presentation.course_calendar.model.CalendarError
 import org.stepik.android.presentation.course_content.CourseContentPresenter
 import org.stepik.android.presentation.course_content.CourseContentView
+import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course_calendar.ui.ChooseCalendarDialog
 import org.stepik.android.view.course_calendar.ui.ExplainCalendarPermissionDialog
 import org.stepik.android.view.course_content.model.CourseContentItem
@@ -63,7 +64,6 @@ import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.ui.listener.FragmentViewPagerScrollStateListener
 import ru.nobird.android.view.base.ui.extension.argument
-import ru.nobird.android.view.base.ui.extension.setTextColor
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
@@ -90,6 +90,9 @@ class CourseContentFragment :
 
     @Inject
     internal lateinit var screenManager: ScreenManager
+
+    @Inject
+    internal lateinit var courseDeepLinkBuilder: CourseDeepLinkBuilder
 
     @Inject
     internal lateinit var analytic: Analytic
@@ -139,7 +142,7 @@ class CourseContentFragment :
             contentAdapter =
                 CourseContentAdapter(
                     sectionClickListener =
-                        CourseContentSectionClickListenerImpl(context, courseContentPresenter, screenManager, childFragmentManager, analytic),
+                        CourseContentSectionClickListenerImpl(courseContentPresenter, courseDeepLinkBuilder, childFragmentManager, analytic),
                     unitClickListener =
                         CourseContentUnitClickListenerImpl(activity, courseContentPresenter, screenManager, childFragmentManager, analytic),
                     controlBarClickListener = object : CourseContentControlBarClickListener {
@@ -187,7 +190,7 @@ class CourseContentFragment :
             itemAnimator = null
 
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-                ContextCompat.getDrawable(context, R.drawable.list_divider_h)?.let(::setDrawable)
+                ContextCompat.getDrawable(context, R.drawable.bg_divider_vertical)?.let(::setDrawable)
             })
 
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -260,11 +263,9 @@ class CourseContentFragment :
     override fun showChangeDownloadNetworkType() {
         view?.snackbar(messageRes = R.string.allow_mobile_snack, length = Snackbar.LENGTH_LONG) {
             setAction(R.string.settings_title) {
-                analytic.reportEvent(Analytic.Downloading.CLICK_SETTINGS_SECTIONS)
+                analytic.reportEvent(Analytic.DownloaderV2.CLICK_SETTINGS_SECTIONS)
                 screenManager.showSettings(activity)
             }
-            setActionTextColor(ContextCompat.getColor(view.context, R.color.snack_action_color))
-            setTextColor(ContextCompat.getColor(view.context, R.color.white))
         }
     }
 
@@ -311,6 +312,7 @@ class CourseContentFragment :
         dialog.setTargetFragment(this, LearningRateDialog.LEARNING_RATE_REQUEST_CODE)
         dialog.showIfNotExists(supportFragmentManager, LearningRateDialog.TAG)
 
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_MODE_OPENED, courseId.toString())
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Deadlines.SCHEDULE_PRESSED)
     }
 
@@ -329,6 +331,8 @@ class CourseContentFragment :
         val dialog = EditDeadlinesDialog.newInstance(sections, record)
         dialog.setTargetFragment(this, EditDeadlinesDialog.EDIT_DEADLINES_REQUEST_CODE)
         dialog.showIfNotExists(supportFragmentManager, EditDeadlinesDialog.TAG)
+
+        analytic.reportEvent(Analytic.Deadlines.PERSONAL_DEADLINE_CHANGE_PRESSED, courseId.toString())
     }
 
     override fun showCalendarChoiceDialog(calendarItems: List<CalendarItem>) {
@@ -462,7 +466,8 @@ class CourseContentFragment :
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Downloads.DELETED,
             mapOf(
-                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.COURSE,
+                AmplitudeAnalytic.Downloads.PARAM_SOURCE to AmplitudeAnalytic.Downloads.Values.SYLLABUS
             )
         )
         courseContentPresenter.removeCourseDownloadTask(course)
@@ -472,7 +477,8 @@ class CourseContentFragment :
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Downloads.DELETED,
             mapOf(
-                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.SECTION
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.SECTION,
+                AmplitudeAnalytic.Downloads.PARAM_SOURCE to AmplitudeAnalytic.Downloads.Values.SYLLABUS
             )
         )
         courseContentPresenter.removeSectionDownloadTask(section)
@@ -482,7 +488,8 @@ class CourseContentFragment :
         analytic.reportAmplitudeEvent(
             AmplitudeAnalytic.Downloads.DELETED,
             mapOf(
-                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON
+                AmplitudeAnalytic.Downloads.PARAM_CONTENT to AmplitudeAnalytic.Downloads.Values.LESSON,
+                AmplitudeAnalytic.Downloads.PARAM_SOURCE to AmplitudeAnalytic.Downloads.Values.SYLLABUS
             )
         )
         courseContentPresenter.removeUnitDownloadTask(unit)

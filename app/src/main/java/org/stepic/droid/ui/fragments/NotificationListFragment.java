@@ -29,6 +29,7 @@ import org.stepic.droid.ui.custom.StickyHeaderDecoration;
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment;
 import org.stepic.droid.util.ColorUtil;
 import org.stepic.droid.util.ProgressHelper;
+import org.stepik.android.view.notification.FcmNotificationHandler;
 
 import java.util.List;
 
@@ -54,6 +55,9 @@ public class NotificationListFragment extends FragmentBase implements Notificati
 
     @Inject
     NotificationListPresenter notificationListPresenter;
+
+    @Inject
+    FcmNotificationHandler fcmNotificationHandler;
 
     NotificationCategory notificationCategory;
 
@@ -84,7 +88,7 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         setRetainInstance(true);
         int position = getArguments().getInt(categoryPositionKey);
         notificationCategory = NotificationCategory.values()[position];
-        adapter = new NotificationAdapter(getContext(), notificationListPresenter, notificationCategory);
+        adapter = new NotificationAdapter(notificationListPresenter, notificationCategory);
     }
 
     @Override
@@ -244,14 +248,15 @@ public class NotificationListFragment extends FragmentBase implements Notificati
         showConnectionProblemMessage();
     }
 
+    @Override
+    public void openNotification(@NotNull Notification notification) {
+        fcmNotificationHandler.tryOpenNotificationInstantly(requireContext(), notification);
+    }
+
     private void showConnectionProblemMessage() {
-        SnackbarExtensionKt
-                .setTextColor(
-                        Snackbar.make(notificationRecyclerView,
-                                R.string.connectionProblems,
-                                Snackbar.LENGTH_SHORT),
-                        ColorUtil.INSTANCE.getColorArgb(R.color.white, requireContext()))
-                .show();
+        Snackbar.make(notificationRecyclerView,
+                R.string.connectionProblems,
+                Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

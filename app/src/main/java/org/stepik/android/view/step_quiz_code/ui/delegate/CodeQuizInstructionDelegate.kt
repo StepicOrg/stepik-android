@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.layout_step_quiz_code.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.StepikAnimUtils
+import org.stepic.droid.model.code.ProgrammingLanguage
+import org.stepic.droid.ui.util.collapse
+import org.stepic.droid.ui.util.expand
 import org.stepik.android.model.Step
 import org.stepik.android.view.step_quiz_code.mapper.CodeStepQuizDetailsMapper
 import org.stepik.android.view.step_quiz_code.model.CodeDetail
@@ -37,7 +39,7 @@ class CodeQuizInstructionDelegate(
             isNestedScrollingEnabled = false
 
             val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-            divider.setDrawable(AppCompatResources.getDrawable(context, R.drawable.bg_step_quiz_code_details_separator)!!)
+            divider.setDrawable(AppCompatResources.getDrawable(context, R.drawable.bg_divider_vertical)!!)
             addItemDecoration(divider)
         }
 
@@ -45,18 +47,22 @@ class CodeQuizInstructionDelegate(
             stepQuizCodeDetails.setOnClickListener {
                 stepQuizCodeDetailsArrow.changeState()
                 if (stepQuizCodeDetailsArrow.isExpanded()) {
-                    StepikAnimUtils.expand(stepQuizCodeDetailsContent)
+                    stepQuizCodeDetailsContent.expand()
                 } else {
-                    StepikAnimUtils.collapse(stepQuizCodeDetailsContent)
+                    stepQuizCodeDetailsContent.collapse()
                 }
             }
         } else {
-            stepQuizCodeDetailsContent.visibility = View.VISIBLE
+            stepQuizCodeDetailsContent.isVisible = true
         }
     }
 
     fun setCodeDetailsData(step: Step, lang: String?) {
-        stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
-        stepQuizCodeDetails.isVisible = stepQuizCodeDetailsAdapter.items.isNotEmpty()
+        if (lang == ProgrammingLanguage.SQL.serverPrintableName) {
+            stepQuizCodeDetails.isVisible = false
+        } else {
+            stepQuizCodeDetailsAdapter.items = codeStepQuizDetailsMapper.mapToCodeDetails(step, lang)
+            stepQuizCodeDetails.isVisible = stepQuizCodeDetailsAdapter.items.isNotEmpty()
+        }
     }
 }

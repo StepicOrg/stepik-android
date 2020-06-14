@@ -4,9 +4,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.fragment_step.view.*
 import kotlinx.android.synthetic.main.view_step_discussion.view.*
-import org.stepic.droid.R
-import org.stepic.droid.ui.util.setCompoundDrawables
 import org.stepik.android.model.comments.DiscussionThread
+import org.stepik.android.view.comment.model.DiscussionThreadContainer
 
 class StepDiscussionsDelegate(
     containerView: View,
@@ -33,7 +32,7 @@ class StepDiscussionsDelegate(
 
         init {
             containerView.isVisible = false
-            containerView.setOnClickListener { discussionThread?.let(onDiscussionThreadClicked) }
+            stepDiscussions.setOnClickListener { discussionThread?.let(onDiscussionThreadClicked) }
         }
 
         fun setDiscussionThread(discussionThread: DiscussionThread?) {
@@ -42,33 +41,33 @@ class StepDiscussionsDelegate(
             val discussionProxy = discussionThread?.discussionProxy
             val discussionsCount = discussionThread?.discussionsCount ?: 0
 
-            if (discussionThread?.thread == DiscussionThread.THREAD_DEFAULT) {
-                stepDiscussions.text =
-                    when {
-                        discussionProxy == null ->
-                            containerView.context.getString(R.string.comment_disabled)
+            when (discussionThread?.thread) {
+                DiscussionThread.THREAD_DEFAULT ->
+                    setDiscussionThreadData(discussionProxy, discussionsCount, DiscussionThreadContainer.DEFAULT)
 
-                        discussionsCount > 0 ->
-                            containerView.context.getString(R.string.step_discussion_show, discussionsCount)
+                DiscussionThread.THREAD_SOLUTIONS ->
+                    setDiscussionThreadData(discussionProxy, discussionsCount, DiscussionThreadContainer.SOLUTIONS)
 
-                        else ->
-                            containerView.context.getString(R.string.step_discussion_write_first)
-                    }
-
-                stepDiscussions
-                    .setCompoundDrawables(start = if (discussionProxy != null) R.drawable.ic_step_discussion else -1)
-
-                containerView.isEnabled = discussionProxy != null
-                containerView.isVisible = true
-            } else {
-                if (discussionThread != null && discussionsCount > 0) {
-                    stepDiscussions.text = containerView.context.getString(R.string.step_solutions_show, discussionsCount)
-                    stepDiscussions.setCompoundDrawables(start = R.drawable.ic_step_solutions)
-                    containerView.isVisible = true
-                } else {
+                else ->
                     containerView.isVisible = false
-                }
             }
+        }
+
+        private fun setDiscussionThreadData(discussionProxy: String?, discussionsCount: Int, discussionThreadContainer: DiscussionThreadContainer) {
+            stepDiscussions.text =
+                when {
+                    discussionProxy == null ->
+                        containerView.context.getString(discussionThreadContainer.disabledStringRes)
+
+                    discussionsCount > 0 ->
+                        containerView.context.getString(discussionThreadContainer.showStringRes, discussionsCount)
+
+                    else ->
+                        containerView.context.getString(discussionThreadContainer.writeFirstStringRes)
+                }
+            stepDiscussions.setIconResource(if (discussionProxy != null) discussionThreadContainer.containerDrawable else -1)
+            stepDiscussions.isEnabled = discussionProxy != null
+            containerView.isVisible = true
         }
     }
 }

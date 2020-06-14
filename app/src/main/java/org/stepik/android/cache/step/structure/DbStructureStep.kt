@@ -26,5 +26,6 @@ object DbStructureStep {
         const val PEER_REVIEW = "has_peer_review"
         const val HAS_SUBMISSION_RESTRICTION = "has_submission_restriction"
         const val MAX_SUBMISSION_COUNT = "max_submission_count"
+        const val CORRECT_RATIO = "correct_ratio"
     }
 }

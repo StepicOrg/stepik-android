@@ -1,63 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/stepContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.core.widget.NestedScrollView
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    android:fillViewport="true">
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-        <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/stepContentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <include
+            android:id="@+id/stepContentSeparator"
+            layout="@layout/view_divider_vertical" />
+
+        <include
+            android:id="@+id/stepQuizError"
+            android:visibility="gone"
+            layout="@layout/view_step_quiz_error"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:id="@+id/stepQuizContainer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <include
+            android:id="@+id/stepNavigation"
+            layout="@layout/view_step_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_margin="16dp" />
 
-            <FrameLayout
-                android:id="@+id/stepContentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <include
+            android:id="@+id/stepSolutionStats"
+            layout="@layout/view_step_solution_stats" />
 
-            <View
-                android:id="@+id/stepContentSeparator"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/step_quiz_separator" />
+        <include
+            android:id="@+id/stepDiscussions"
+            layout="@layout/view_step_discussion" />
 
-            <include
-                android:id="@+id/stepQuizError"
-                android:visibility="gone"
-                layout="@layout/view_step_quiz_error"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+        <include layout="@layout/view_divider_vertical" />
 
-            <FrameLayout
-                android:id="@+id/stepQuizContainer"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+        <include
+            android:id="@+id/stepSolutions"
+            layout="@layout/view_step_discussion" />
 
-            <include
-                android:id="@+id/stepNavigation"
-                layout="@layout/view_step_navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp" />
-
-            <include
-                android:id="@+id/stepDiscussions"
-                layout="@layout/view_step_discussion" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/step_quiz_separator" />
-
-            <include
-                android:id="@+id/stepSolutions"
-                layout="@layout/view_step_discussion" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.core.widget.NestedScrollView>
-</FrameLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.core.widget.NestedScrollView>

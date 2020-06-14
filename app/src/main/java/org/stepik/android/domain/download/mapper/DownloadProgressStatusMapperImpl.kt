@@ -33,6 +33,7 @@ constructor(
         val linksMap = mutableMapOf<String, String>()
 
         var hasItemsInProgress = false
+        var hasItemsInCriticalSection = false
 
         persistentItems.forEach { item ->
             when (item.status) {
@@ -58,6 +59,8 @@ constructor(
                         bytesDownloaded += record.bytesDownloaded
                         bytesTotal += max(record.bytesDownloaded, record.bytesTotal) // total could be 0
                         hasItemsInProgress = true
+                        hasItemsInCriticalSection =
+                            hasItemsInCriticalSection || item.status == PersistentItem.Status.FILE_TRANSFER
                     }
                 }
 
@@ -68,16 +71,17 @@ constructor(
         }
 
         return when {
-            hasItemsInProgress -> {
+            hasItemsInCriticalSection ->
+                DownloadProgress.Status.Pending
+
+            hasItemsInProgress ->
                 DownloadProgress.Status.Cached(bytesDownloaded)
-            }
 
             bytesTotal == 0L ->
                 DownloadProgress.Status.NotCached
 
-            else -> {
+            else ->
                 DownloadProgress.Status.Cached(bytesTotal)
-            }
         }
     }
 }

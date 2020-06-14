@@ -26,6 +26,7 @@ interface LessonView {
         object Loading : StepsState()
         object NetworkError : StepsState()
         object EmptySteps : StepsState()
+        class Exam(val courseId: Long) : StepsState()
         object AccessDenied : StepsState()
         class Loaded(
             val stepItems: List<StepItem>
@@ -39,7 +40,7 @@ interface LessonView {
      */
     fun showStepAtPosition(position: Int)
 
-    fun showLessonInfoTooltip(stepScore: Long, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
+    fun showLessonInfoTooltip(stepScore: Float, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long)
 
     fun showComments(step: Step, discussionId: Long, discussionThread: DiscussionThread?)
 

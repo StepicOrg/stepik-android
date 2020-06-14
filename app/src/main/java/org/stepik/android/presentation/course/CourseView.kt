@@ -1,12 +1,12 @@
 package org.stepik.android.presentation.course
 
 import org.stepik.android.domain.course.model.CourseHeaderData
-import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.billing.BillingView
 import org.stepik.android.presentation.course.model.EnrollmentError
+import org.stepik.android.presentation.course_continue.CourseContinueView
+import org.stepik.android.presentation.user_courses.model.UserCourseAction
 
-interface CourseView : BillingView {
+interface CourseView : CourseContinueView {
     sealed class State {
         object Idle : State()
         object Loading : State()
@@ -21,10 +21,9 @@ interface CourseView : BillingView {
 
     fun showEmptyAuthDialog(course: Course)
     fun showEnrollmentError(errorType: EnrollmentError)
-    fun showContinueLearningError()
 
-    fun continueCourse(lastStep: LastStep)
-    fun continueAdaptiveCourse(course: Course)
+    fun showSaveUserCourseSuccess(userCourseAction: UserCourseAction)
+    fun showSaveUserCourseError(userCourseAction: UserCourseAction)
 
     fun shareCourse(course: Course)
     fun showCourseShareTooltip()

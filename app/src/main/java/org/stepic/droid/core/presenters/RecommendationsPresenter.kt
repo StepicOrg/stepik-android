@@ -27,10 +27,13 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
-import org.stepic.droid.web.Api
-import org.stepic.droid.web.model.adaptive.RecommendationsResponse
+import org.stepik.android.domain.rating.repository.RatingRepository
+import org.stepik.android.domain.recommendation.repository.RecommendationRepository
+import org.stepik.android.domain.step.analytic.reportStepEvent
+import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.domain.view_assignment.interactor.ViewAssignmentReportInteractor
 import org.stepik.android.model.adaptive.Reaction
+import org.stepik.android.model.adaptive.Recommendation
 import org.stepik.android.model.adaptive.RecommendationReaction
 import retrofit2.HttpException
 import java.util.ArrayDeque
@@ -42,7 +45,9 @@ class RecommendationsPresenter
 constructor(
     @CourseId
     private val courseId: Long,
-    private val api: Api,
+    private val recommendationRepository: RecommendationRepository,
+    private val unitRepository: UnitRepository,
+    private val ratingRepository: RatingRepository,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
@@ -145,9 +150,8 @@ constructor(
                 .subscribe(this::onRecommendation, this::onError))
     }
 
-    private fun onRecommendation(response: RecommendationsResponse) {
-        val recommendations = response.recommendations
-        if (recommendations == null || recommendations.isEmpty()) {
+    private fun onRecommendation(recommendations: List<Recommendation>) {
+        if (recommendations.isEmpty()) {
             isCourseCompleted = true
             view?.onCourseCompleted()
         } else {
@@ -213,11 +217,11 @@ constructor(
         adapter.destroy()
     }
 
-    private fun createReactionObservable(lesson: Long, reaction: Reaction, cacheSize: Int): Observable<RecommendationsResponse> {
-        val responseObservable = api.getNextRecommendations(courseId, CARDS_IN_CACHE).toObservable()
+    private fun createReactionObservable(lesson: Long, reaction: Reaction, cacheSize: Int): Observable<List<Recommendation>> {
+        val responseObservable = recommendationRepository.getNextRecommendations(courseId, CARDS_IN_CACHE).toObservable()
 
         if (lesson != 0L) {
-            val reactionCompletable = api
+            val reactionCompletable = recommendationRepository
                     .createReaction(RecommendationReaction(lesson, reaction, sharedPreferenceHelper.profile?.id ?: 0))
             return if (cacheSize <= MIN_CARDS_IN_CACHE) {
                 reactionCompletable.andThen(responseObservable)
@@ -231,16 +235,12 @@ constructor(
     private fun reportView(card: Card) {
         val step = card.step ?: return
 
-        analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.STEP_OPENED, mapOf(
-                AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
-                AmplitudeAnalytic.Steps.Params.NUMBER to step.position,
-                AmplitudeAnalytic.Steps.Params.STEP to step.id
-        ))
+        analytic.reportStepEvent(Analytic.Steps.STEP_OPENED, AmplitudeAnalytic.Steps.STEP_OPENED, step)
 
-        compositeDisposable += api
-            .getUnits(courseId, card.lessonId)
-            .flatMapCompletable { response ->
-                val unit = response.units?.firstOrNull()
+        compositeDisposable += unitRepository
+            .getUnitsByCourseAndLessonId(courseId, card.lessonId)
+            .flatMapCompletable { units ->
+                val unit = units.firstOrNull()
 
                 val assignments = databaseFacade
                     .getAssignments(unit?.assignments ?: longArrayOf())
@@ -272,10 +272,10 @@ constructor(
 
     private fun fetchExpFromAPI() {
         compositeDisposable.add(
-            api.restoreRating(courseId)
+            ratingRepository.restoreRating(courseId)
                     .subscribeOn(backgroundScheduler)
                     .map {
-                        databaseFacade.syncExp(courseId, it.exp)
+                        databaseFacade.syncExp(courseId, exp)
                     }
                     .observeOn(mainScheduler)
                     .subscribe({
@@ -306,5 +306,5 @@ constructor(
     }
 
     private fun syncRating() = Single.fromCallable { databaseFacade.getExpForCourse(courseId) }
-            .flatMap { localExp -> api.putRating(courseId, localExp).toSingle { localExp } }
+            .flatMap { localExp -> ratingRepository.putRating(courseId, localExp).toSingle { localExp } }
 }

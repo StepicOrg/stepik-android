@@ -49,6 +49,7 @@
 
     <string name="download_error">Ошибка при загрузке видео %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
+    <string name="download_error_system_manager">При загрузке контента произошла ошибка системного загрузчика. Если ошибка повторяется, пожалуйста, обратитесь в поддержку.</string>
 
     <string name="sync_problem">Возникли проблемы с синхронизацией данных, пожалуйста, повторите
         попытку позже
@@ -71,9 +72,6 @@
     <string name="wrong">Неправильно. Пожалуйста, попробуйте еще раз.</string>
     <string name="correct">Верно!</string>
     <string name="try_again">Попробовать снова</string>
-    <string name="step_only_online">Шаги можно проходить только онлайн. Чтобы начать решать,
-        включите интернет-соединение.
-    </string>
     <string name="correct_free_response">Ваше решение сохранено.</string>
     <string name="terms_message_register">
         <![CDATA[Регистрируясь, Вы соглашаетесь с <a href="https://stepik.org/page/terms/?from_mobile_app=true">Условиями использования</a> и <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Политикой конфиденциальности</a>]]></string>
@@ -125,7 +123,7 @@
         занимают видео-уроки. Удаление всех загруженных видео может занять несколько минут.
     </string>
     <string name="empty">Пусто</string>
-    <string name="storage">Память</string>
+    <string name="storage">Загруженный контент</string>
     <string name="notMountExplanation">Карта памяти не установлена на устройство. Для того, чтобы
         сохранять видео на карту памяти, вставьте ее в телефон и перезапустите приложение.
     </string>
@@ -178,6 +176,8 @@
     <string name="certificate_distinction_with_substitution">Сертификат с отличием за курс %s
     </string>
     <string name="certificate_result_with_substitution">Результат: %s%%</string>
+    <string name="certificate_issuing">Выдается</string>
+    <string name="certificate_not_issuing">Не выдается</string>
     <string name="copy_link_title">Копировать ссылку</string>
     <string name="link_copied_title">Ссылка скопирована</string>
     <string name="certificate_share_share_link">Поделиться…</string>
@@ -195,8 +195,6 @@
     <string name="cant_show_next_step">Извините, следующий урок недоступен</string>
     <string name="previous_lesson">Предыдущий урок</string>
     <string name="cant_show_previous_step">Извините, предыдущий урок недоступен</string>
-    <string name="language_en_filter">Английский</string>
-    <string name="language_ru_filter">Русский</string>
     <string name="lesson_not_found_or_not_access">Урок не существует или у Вас нет прав на его
         просмотр
     </string>
@@ -289,7 +287,7 @@
     <string name="later_tatle">Позже</string>
     <string name="choose_notification_time_interval">Измените время напоминания</string>
     <string name="notification_time">Время напоминания: %s</string>
-    <string name="notification_about_learning">Уведомления о занятиях</string>
+    <string name="notification_about_learning">Напоминать о занятиях</string>
     <string name="time_to_learn_notification_title">Время учиться!</string>
     <plurals name="streak_notification_message_call_to_action">
         <item quantity="one">Вы молодец! Вы решаете уже %d день без перерыва. Не останавливайтесь,
@@ -385,8 +383,6 @@
 
     <string name="notification_settings_title">Настройки уведомлений</string>
 
-    <string name="manage_notification_settings">Управлять уведомлениями</string>
-
     <string name="course_item_join">Поступить на курс</string>
 
     <string name="learners_count">Количество студентов</string>
@@ -437,7 +433,7 @@
         <item quantity="many">%d курсов</item>
         <item quantity="other">%d курсов</item>
     </plurals>
-    <string name="course_current_progress">Текущий прогресс %d/%d баллов</string>
+    <string name="course_current_progress">Текущий прогресс %s/%d баллов</string>
     <string name="home_streak_counter_text"><![CDATA[Вы решаете <b>%s</b> подряд!]]></string>
     <string name="registration_remind_message">Завершите регистрацию и получите доступ к неограниченному числу бесплатных курсов!</string>
 
@@ -531,6 +527,7 @@
     <string name="deadlines_section">Дедлайн: %s</string>
     <string name="deadlines_notification">Дедлайн по модулю %s в курсе %s наступает через %s</string>
     <string name="deadlines_edit_title">Редактирование расписания</string>
+    <string name="deadlines_edit_date_picker_title">Выберите новый дедлайн</string>
     <string name="deadlines_create_title">Выберите режим обучения</string>
 
     <string name="deadlines_learning_rate_hobby">Хобби</string>
@@ -552,12 +549,16 @@
     <string name="achievement_notification_message">Поздравляем! Вы получили новый уровень достижения «%s», проверьте свой профиль.</string>
 
     <!-- Course -->
+    <string name="course_title">Курс</string>
     <string name="course_verified">Проверенный</string>
     <string name="course_share_description">Поделитесь ссылкой с друзьями, чтобы проходить курс вместе!</string>
 
     <string name="course_tab_info">Инфо</string>
     <string name="course_tab_reviews">Отзывы</string>
     <string name="course_tab_modules">Модули</string>
+
+    <string name="course_progress_current">Текущий прогресс</string>
+    <string name="course_progress_solutions">Неотправленные решения</string>
 
     <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
@@ -568,6 +569,7 @@
     <string name="course_info_language">Язык</string>
     <string name="course_info_certificate">Сертификат</string>
     <string name="course_info_certificate_detail">Подробнее о сертификате</string>
+    <string name="course_info_learners_count">Число записавшихся на курс</string>
 
     <string name="course_info_certificate_regular">Условие получения сертификата: %s</string>
     <string name="course_info_certificate_distinction">С отличием: %s</string>
@@ -586,7 +588,7 @@
     <string name="course_reviews_compose_banner_review_motivation">Поделитесь своим мнением</string>
 
     <string name="course_content_time_to_complete_hours_unit">%d ч</string>
-    <string name="course_content_text_progress_points">%d/%d баллов</string>
+    <string name="course_content_text_progress_points">%s/%d баллов</string>
 
     <string name="course_content_timeline_begin_date">Дата начала</string>
     <string name="course_content_timeline_end_date">Дата закрытия</string>
@@ -612,6 +614,7 @@
     <string name="course_restore_purchase">Восстановить покупку</string>
     <string name="course_payments_purchase_in_app">Купить за %s</string>
     <string name="course_payments_purchase_in_web">Купить в веб версии</string>
+    <string name="course_payments_purchase_in_web_with_price">Купить за %s</string>
 
     <string name="course_purchase_server_error">При обработке платежа произошла ошибка, попробуйте восстановить покупку и свяжитесь с поддержкой, если ошибка не будет устранена</string>
     <string name="course_purchase_billing_error">При обработке платежа произошла ошибка</string>
@@ -620,7 +623,21 @@
     <string name="course_purchase_billing_no_purchases_to_restore">У вас нет неактивированных покупок этого курса</string>
     <string name="course_purchase_already_owned">Вы уже владеете этим курсом</string>
 
-    <string name="course_purchase_link_chooser_title">Открыть в</string>
+    <string name="routing_external_app_chooser_title">Открыть в</string>
+
+    <string name="course_action_archive_add">Переместить в архив</string>
+    <string name="course_action_archive_add_success">Курс успешно перенесён в архив</string>
+    <string name="course_action_archive_add_failure">Не удалось переместить курс в архив</string>
+    <string name="course_action_archive_remove">Убрать из архива</string>
+    <string name="course_action_archive_remove_success">Курс успешно убран из архива</string>
+    <string name="course_action_archive_remove_failure">Не удалось убрать курс из архива</string>
+
+    <string name="course_action_favorites_add">Добавить в избранное</string>
+    <string name="course_action_favorites_add_success">Курс успешно добавлен в избранное</string>
+    <string name="course_action_favorites_add_failure">Не удалось добавить курс в избранное</string>
+    <string name="course_action_favorites_remove">Убрать из избранного</string>
+    <string name="course_action_favorites_remove_success">Курс успешно убран из избранного</string>
+    <string name="course_action_favorites_remove_failure">Не удалось убрать курс из избранного</string>
 
 
     <string name="video_player_control_notification_channel_name">Управление видео плеером</string>
@@ -665,12 +682,20 @@
     <string name="lesson_menu_info">Инфо</string>
 
     <string name="lesson_info_points_with_score">Вы получили %s из %s за шаг</string>
+    <string name="lesson_info_points_with_score_fraction">Вы получили %s балла из %s за шаг</string>
     <string name="lesson_info_points">Вы получите %s за шаг</string>
     <string name="lesson_info_time_to_complete">&#8776;%s на урок</string>
     <string name="lesson_info_certificate_threshold">%s до сертификата</string>
     <string name="lesson_info_distinction_certificate_threshold">%s до сертификата с отличием</string>
 
+    <string name="lesson_error_exam_description">Этот урок - часть экзаменационного модуля, который доступен только в веб версии.</string>
+    <string name="lesson_error_exam_action">Открыть в веб версии</string>
+
+    <string name="lesson_step_counter">Шаг %d из %d</string>
+
     <!-- Step -->
+    <string name="step_amount_passed">Решило:&#160;</string>
+    <string name="step_correct_submissions_percentage">Успешных решений:&#160;</string>
     <string name="step_navigation_next">Следующий урок</string>
     <string name="step_navigation_prev">Предыдущий урок</string>
     <string name="step_discussion_show">Открыть комментарии (%d)</string>
@@ -678,6 +703,7 @@
 
     <string name="step_solutions_show">Форум решений (%d)</string>
     <string name="step_solutions_empty">Решений пока нет</string>
+    <string name="step_solutions_write_first">Поделиться решением</string>
 
     <string name="step_action_edit_content">Изменить текст шага</string>
     <string name="step_action_edit_hint">Текст шага</string>
@@ -706,6 +732,7 @@
     <string name="step_quiz_choice_description_single">Выберите один элемент</string>
     <string name="step_quiz_choice_description_multiple">Выберите один или несколько элементов</string>
     <string name="step_quiz_sql_description">Введите SQL запрос</string>
+    <string name="step_quiz_fill_blanks_description">Заполните пропуски</string>
 
     <string name="step_quiz_text_empty_reply">Ответ не может быть пустым</string>
     <string name="step_quiz_text_invalid_number_reply">Ответ должен быть числом</string>
@@ -729,6 +756,18 @@
 
     <string name="step_quiz_code_full_screen_instruction_tab">Условия</string>
     <string name="step_quiz_code_full_screen_code_tab">Код</string>
+    <string name="step_quiz_code_full_screen_run_code_tab">Запуск</string>
+
+    <string name="step_quiz_code_input_data">Входные данные</string>
+    <string name="step_quiz_code_output_data">Результат выполнения</string>
+    <string name="step_quiz_code_samples">примеры</string>
+    <string name="step_quiz_code_run_code_action">Запустить код</string>
+    <string name="step_quiz_code_empty_output">Пустой вывод</string>
+    <string name="step_quiz_code_spinner_item">Пример %d: %s</string>
+    <string name="step_quiz_code_input_data_hint">Введите входные данные…</string>
+    <string name="step_quiz_code_run_code_tooltip">Перед отправкой решения, вы можете запустить ваш код с тестовыми вводными данными!</string>
+    <string name="step_quiz_code_empty_code">Поле с кодом не может быть пустым</string>
+    <string name="step_quiz_code_input_not_supported">Данный тип заданий не поддерживает ввод данных</string>
 
     <string name="step_quiz_pycharm_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
@@ -747,6 +786,7 @@
     <string name="comment_solution_pattern">Решение %d</string>
 
     <string name="comment_disabled">Комментарии отключены</string>
+    <string name="solution_disabled">Решения отключены</string>
 
     <string name="comments_title">Комментарии</string>
     <string name="solutions_title">Решения</string>
@@ -755,6 +795,7 @@
     <string name="comment_tag_pinned">Закреплен</string>
     <string name="comment_tag_course_team">Команда курса</string>
     <string name="comment_tag_staff">Команда Stepik</string>
+    <string name="comment_tag_moderator">Модератор курса</string>
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>
@@ -769,17 +810,70 @@
 
     <!-- Settings -->
     <string name="setting_section_learning">Обучение</string>
+    <string name="setting_section_appearance">Оформление</string>
+    <string name="setting_section_other">Прочее</string>
 
     <string name="setting_autoplay">Автопереход на следующий шаг по окончании видео</string>
     <string name="setting_autoplay_short">Автопереход на следующий шаг</string>
+
+    <string name="setting_night_mode">Тема</string>
 
     <string name="setting_font_size">Размер шрифта в шагах</string>
     <string name="setting_font_size_dialog_title">Выберите размер шрифта</string>
 
     <!-- Downloads -->
     <string name="downloads_title">Загруженные курсы</string>
+    <string name="downloads_remove_task_error">При удалении элемента возникла ошибка</string>
+    <string name="downloads_is_used_by_stepik">&#160;используется Stepik</string>
+    <string name="downloads_free_space">%s свободно</string>
+    <string name="downloads_other_apps">Другие приложения</string>
 
     <!-- Submissions -->
     <string name="submissions_title">Решения</string>
     <string name="submissions_select_title">Выберите решение</string>
+
+    <!-- Profile -->
+    <string name="profile_stat_knowledge">Знания</string>
+    <string name="profile_stat_reputation">Репутация</string>
+    <string name="profile_stat_certificates">выдано</string>
+    <string name="profile_stat_courses">опубликовано</string>
+    <string name="profile_stat_top">" %d | Топ %d"</string>
+
+    <string name="profile_detail_title">О себе</string>
+
+    <string name="profile_activities_title">Активность</string>
+    <string name="profile_activities_current_streak_start">Начните учиться сегодня</string>
+    <string name="profile_activities_current_streak_continue">Решайте сегодня, чтобы продолжить серию</string>
+    <string name="profile_activities_current_streak_active">Текущая серия</string>
+    <string name="profile_activities_max_streak">Максимальная серия</string>
+
+    <string name="profile_external_links_title">Ссылки</string>
+    <string name="profile_notifcation_title">Уведомления</string>
+    <string name="profile_settings_menu_item">Настройки</string>
+
+    <string name="profile_courses_title">Курсы</string>
+
+    <!-- Solutions -->
+    <string name="solutions_toolbar_title">Неотправленные решения</string>
+    <string name="solutions_information_block">При необходимости вы можете отредактировать решения перед отправкой</string>
+    <string name="solutions_selected">%d&#160;выбрано</string>
+    <string name="solutions_delete_dialog_title">Удалить решение?</string>
+    <string name="solutions_delete_dialog_description">Это решение будет удалено с ващего устройства</string>
+    <string name="solutions_submission_step_position">Шаг %d – %s</string>
+    <string name="solutions_submit_all">Отправить все решения</string>
+    <string name="solutions_submit_in_progress">Идет отправка решений</string>
+    <string name="solutions_submission_correctly">Задача решена верно</string>
+    <string name="solutions_submission_incorrectly">Задача решена неверно</string>
+
+    <!-- Course list -->
+    <string name="course_list_popular_toolbar_title">Рекомендуемые</string>
+    <string name="course_list_user_courses_title">Мои курсы</string>
+
+    <string name="course_list_user_all_courses_tab">Все курсы</string>
+    <string name="course_list_user_favorites_tab">Избранные</string>
+    <string name="course_list_user_archive_tab">Архив</string>
+
+    <string name="ar_not_supported_alert">Устройство не поддерживает функции дополненной реальности</string>
+
+    <string name="course_purchase">Покупка курса</string>
 </resources>

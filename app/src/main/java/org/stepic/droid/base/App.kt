@@ -3,6 +3,7 @@ package org.stepic.droid.base
 import android.content.Context
 import android.os.Build
 import android.webkit.WebView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
 import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
@@ -14,6 +15,7 @@ import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 import io.branch.referral.Branch
 import org.stepic.droid.BuildConfig
+import org.stepic.droid.R
 import org.stepic.droid.analytic.experiments.SplitTestsHolder
 import org.stepic.droid.code.highlight.ParserContainer
 import org.stepic.droid.core.ComponentManager
@@ -22,6 +24,7 @@ import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.DaggerAppCoreComponent
 import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
@@ -70,6 +73,9 @@ class App : MultiDexApplication() {
     @Inject
     internal lateinit var codeParserContainer: ParserContainer
 
+    @Inject
+    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
     override fun onCreate() {
         super.onCreate()
         if (!isMainProcess) return
@@ -80,6 +86,9 @@ class App : MultiDexApplication() {
             return
         }
         refWatcher = LeakCanary.install(this)
+
+        setTheme(R.style.AppTheme)
+
         init()
     }
 
@@ -106,6 +115,10 @@ class App : MultiDexApplication() {
         FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)
         VKSdk.initialize(this)
+        
+        // init AppMetrica SDK
+        YandexMetrica.activate(applicationContext, YandexMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build())
+        YandexMetrica.enableActivityAutoTracking(this)
 
         component = DaggerAppCoreComponent.builder()
                 .context(application)
@@ -120,12 +133,9 @@ class App : MultiDexApplication() {
 
         componentManager = ComponentManagerImpl(component)
 
-        // init AppMetrica SDK
-        YandexMetrica.activate(applicationContext, YandexMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build())
-        YandexMetrica.enableActivityAutoTracking(this)
-
         Branch.getAutoInstance(this)
         initChannels()
+        initNightMode()
     }
 
     private fun initSSL() {
@@ -141,5 +151,9 @@ class App : MultiDexApplication() {
 
     private fun initChannels() {
         NotificationChannelInitializer.initNotificationChannels(this)
+    }
+
+    private fun initNightMode() {
+        AppCompatDelegate.setDefaultNightMode(sharedPreferenceHelper.nightMode)
     }
 }

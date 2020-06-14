@@ -19,7 +19,8 @@ data class CourseInfoData(
     val timeToComplete: Long = 0,
     val instructors: List<User?>? = null,
     val language: String? = null,
-    val certificate: Certificate? = null
+    val certificate: Certificate? = null,
+    val learnersCount: Long = 0
 ) : Parcelable {
     data class Certificate(
         val title: String,
@@ -57,6 +58,7 @@ data class CourseInfoData(
         parcel.writeTypedList(instructors)
         parcel.writeString(language)
         parcel.writeParcelable(certificate, flags)
+        parcel.writeLong(learnersCount)
     }
 
     override fun describeContents(): Int = 0
@@ -72,7 +74,8 @@ data class CourseInfoData(
                 parcel.readLong(),
                 parcel.createTypedArrayList(User),
                 parcel.readString(),
-                parcel.readParcelable(Certificate::class.java.classLoader)
+                parcel.readParcelable(Certificate::class.java.classLoader),
+                parcel.readLong()
             )
 
         override fun newArray(size: Int): Array<CourseInfoData?> =

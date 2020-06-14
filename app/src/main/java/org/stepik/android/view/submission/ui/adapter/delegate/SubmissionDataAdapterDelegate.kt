@@ -7,7 +7,7 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.item_submission_data.view.*
 import org.stepic.droid.R
-import org.stepic.droid.ui.util.wrapWithGlide
+import org.stepik.android.view.glide.ui.extension.wrapWithGlide
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.user.User

@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.ObservableEmitter
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -142,3 +143,10 @@ fun <T : Any, R : Any> reduce(sources: List<Single<T>>, seed: R, transform: (R, 
  */
 fun <T : Any, R : Any> Observable<T>.reduceMap(seed: R, transform: (R, T) -> R): Observable<R> =
     ObservableReduceMap<T, R>(this, seed, transform)
+
+
+fun <T : Any> ObservableEmitter<T>.onErrorSafe(throwable: Throwable) {
+    if (!isDisposed) {
+        onError(throwable)
+    }
+}

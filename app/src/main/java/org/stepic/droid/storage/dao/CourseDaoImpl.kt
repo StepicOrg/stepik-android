@@ -58,6 +58,7 @@ constructor(
             certificateRegularThreshold     = cursor.getLong(DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD),
             certificateLink                 = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_LINK),
             isCertificateAutoIssued         = cursor.getBoolean(DbStructureCourse.Columns.IS_CERTIFICATE_AUTO_ISSUED),
+            isCertificateIssued =  cursor.getBoolean(DbStructureCourse.Columns.IS_CERTIFICATE_ISSUED),
             lastDeadline    = cursor.getString(DbStructureCourse.Columns.LAST_DEADLINE),
             beginDate       = cursor.getString(DbStructureCourse.Columns.BEGIN_DATE),
             endDate         = cursor.getString(DbStructureCourse.Columns.END_DATE),
@@ -113,6 +114,7 @@ constructor(
         values.put(DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD, course.certificateRegularThreshold)
         values.put(DbStructureCourse.Columns.CERTIFICATE_LINK, course.certificateLink)
         values.put(DbStructureCourse.Columns.IS_CERTIFICATE_AUTO_ISSUED, course.isCertificateAutoIssued)
+        values.put(DbStructureCourse.Columns.IS_CERTIFICATE_ISSUED, course.isCertificateIssued)
         values.put(DbStructureCourse.Columns.LAST_DEADLINE, course.lastDeadline)
         values.put(DbStructureCourse.Columns.BEGIN_DATE, course.beginDate)
         values.put(DbStructureCourse.Columns.END_DATE, course.endDate)

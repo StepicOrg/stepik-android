@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="AppTheme.21"/>
+<!--    <style name="AppTheme" parent="AppTheme.21"/>-->
 
-    <style name="AppTheme.21" parent="AppTheme.15">
-        <item name="android:colorEdgeEffect">@color/overscroll_color</item>
-    </style>
+<!--    <style name="AppTheme.21" parent="AppTheme">-->
+<!--        <item name="android:colorEdgeEffect">@color/overscroll_color</item>-->
+<!--    </style>-->
 
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.21"/>
 
     <style name="AppTheme.VideoPlayer.21" parent="AppTheme.VideoPlayer.19">
         <item name="android:windowTranslucentStatus">false</item>">
         <item name="android:windowTranslucentNavigation">false</item>
-        <item name="android:navigationBarColor">@color/transparent_black_30</item>
+        <item name="android:navigationBarColor">@color/black_alpha_30</item>
     </style>
 </resources>

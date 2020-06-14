@@ -19,9 +19,9 @@ import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.dialogs.DiscardTextDialogFragment
 import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
+import org.stepic.droid.ui.util.setTintedNavigationIcon
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
-import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_source.EditStepSourcePresenter
 import org.stepik.android.presentation.step_source.EditStepSourceView
 import ru.nobird.android.view.base.ui.extension.argument
@@ -37,11 +37,11 @@ class EditStepSourceDialogFragment :
     companion object {
         const val TAG = "ComposeCommentDialogFragment"
 
-        fun newInstance(stepWrapper: StepPersistentWrapper, lessonData: LessonData): DialogFragment =
+        fun newInstance(stepWrapper: StepPersistentWrapper, lessonTitle: String): DialogFragment =
             EditStepSourceDialogFragment()
                 .apply {
                     this.stepWrapper = stepWrapper
-                    this.lessonData = lessonData
+                    this.lessonTitle = lessonTitle
                 }
     }
 
@@ -51,7 +51,7 @@ class EditStepSourceDialogFragment :
     private lateinit var editStepContentPresenter: EditStepSourcePresenter
 
     private var stepWrapper: StepPersistentWrapper by argument()
-    private var lessonData: LessonData by argument()
+    private var lessonTitle: String by argument()
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -72,7 +72,7 @@ class EditStepSourceDialogFragment :
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.AppTheme_FullScreenDialog)
+        setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
 
         injectComponent()
         editStepContentPresenter = ViewModelProviders
@@ -81,9 +81,8 @@ class EditStepSourceDialogFragment :
     }
 
     private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
+        App.componentManager()
+            .stepComponent(stepWrapper.step.id)
             .inject(this)
     }
 
@@ -91,9 +90,9 @@ class EditStepSourceDialogFragment :
         inflater.inflate(R.layout.dialog_step_source_edit, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        centeredToolbarTitle.text = "${lessonData.lesson.title} - ${stepWrapper.originalStep.position}"
+        centeredToolbarTitle.text = "$lessonTitle - ${stepWrapper.originalStep.position}"
         centeredToolbar.setNavigationOnClickListener { dismiss() }
-        centeredToolbar.setNavigationIcon(R.drawable.ic_close_dark)
+        centeredToolbar.setTintedNavigationIcon(R.drawable.ic_close_dark)
         centeredToolbar.inflateMenu(R.menu.comment_compose_menu)
         centeredToolbar.setOnMenuItemClickListener { menuItem ->
             if (menuItem.itemId == R.id.comment_submit) {
@@ -105,7 +104,7 @@ class EditStepSourceDialogFragment :
         }
 
         if (savedInstanceState == null) {
-            stepContentEditText.setText(stepWrapper.originalStep.block?.text)
+            editStepContentPresenter.fetchStepContent(stepWrapper)
         }
         invalidateMenuState()
 
@@ -129,7 +128,7 @@ class EditStepSourceDialogFragment :
             ?.window
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
-                window.setWindowAnimations(R.style.AppTheme_FullScreenDialog)
+                window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
                 window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             }
 
@@ -143,16 +142,16 @@ class EditStepSourceDialogFragment :
 
     private fun submit() {
         stepContentEditText.hideKeyboard()
-        editStepContentPresenter.changeStepBlockText(stepWrapper.originalStep, stepContentEditText.text.toString())
+        editStepContentPresenter.changeStepBlockText(stepWrapper, stepContentEditText.text.toString())
     }
 
     override fun setState(state: EditStepSourceView.State) {
         when (state) {
-            EditStepSourceView.State.Idle ->
-                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
-
             EditStepSourceView.State.Loading ->
                 ProgressHelper.activate(progressDialogFragment, childFragmentManager, LoadingProgressDialogFragment.TAG)
+
+            is EditStepSourceView.State.StepLoaded ->
+                ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
 
             is EditStepSourceView.State.Complete -> {
                 ProgressHelper.dismiss(childFragmentManager, LoadingProgressDialogFragment.TAG)
@@ -187,6 +186,16 @@ class EditStepSourceDialogFragment :
 
     override fun onDiscardConfirmed() {
         super.dismiss()
+    }
+
+    override fun setStepWrapperInfo(stepWrapper: StepPersistentWrapper) {
+        (activity as? Callback
+            ?: parentFragment as? Callback
+            ?: targetFragment as? Callback)
+            ?.onStepContentChanged(stepWrapper)
+
+        this.stepWrapper = stepWrapper
+        stepContentEditText.setText(stepWrapper.originalStep.block?.text)
     }
 
     interface Callback {

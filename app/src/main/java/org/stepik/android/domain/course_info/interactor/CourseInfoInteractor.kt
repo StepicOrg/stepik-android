@@ -2,7 +2,6 @@ package org.stepik.android.domain.course_info.interactor
 
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Singles.zip
-import org.stepic.droid.util.concat
 import org.stepik.android.domain.course_info.model.CourseInfoData
 import org.stepik.android.domain.user.repository.UserRepository
 import org.stepik.android.model.Course
@@ -18,7 +17,6 @@ constructor(
 ) {
     fun getCourseInfoData(): Observable<CourseInfoData> =
         courseObservableSource
-            .take(1)
             .flatMap(::getCourseInfoUsers)
 
     private fun getCourseInfoUsers(course: Course): Observable<CourseInfoData> {
@@ -27,18 +25,19 @@ constructor(
         val instructorsSource = userRepository.getUsers(userIds = *course.instructors ?: longArrayOf())
         val ownerSource = userRepository.getUsers(course.owner)
 
-        return emptySource concat
-                zip(instructorsSource, ownerSource)
-                    .toObservable()
-                    .map { (instructors, owners) ->
-                        mapToCourseInfoData(course, instructors, owners.firstOrNull())
-                    }
-                    .onErrorReturn {
-                        mapToCourseInfoData(course, instructors = emptyList()) // fallback on network error
-                    }
+        val remoteSource =
+            zip(instructorsSource, ownerSource) { instructors, owners ->
+                mapToCourseInfoData(course, instructors, owners.firstOrNull())
+            }
+
+        return emptySource
+            .concatWith(remoteSource.toObservable())
+            .onErrorReturn {
+                mapToCourseInfoData(course, instructors = emptyList()) // fallback on network error
+            }
     }
 
-    private fun mapToCourseInfoData(course: Course, instructors: List<User>? = null, organization: User? = null) =
+    private fun mapToCourseInfoData(course: Course, instructors: List<User>? = null, organization: User? = null): CourseInfoData =
         CourseInfoData(
             organization   = organization?.takeIf(User::isOrganization),
             videoMediaData = course.introVideo
@@ -57,13 +56,18 @@ constructor(
             instructors    = (instructors ?: course.instructors?.map { null })?.takeIf { it.isNotEmpty() },
             language       = course.language,
             certificate    = course.certificate
-                ?.takeIf { course.isCertificateAutoIssued }
+                ?.takeIf {
+                    val hasText = it.isNotEmpty()
+                    val anyCertificateThreshold = course.certificateRegularThreshold > 0 || course.certificateDistinctionThreshold > 0
+                    anyCertificateThreshold && (hasText || (course.isCertificateAutoIssued && course.isCertificateIssued))
+                }
                 ?.let {
                     CourseInfoData.Certificate(
                         title = it,
                         distinctionThreshold = course.certificateDistinctionThreshold,
                         regularThreshold     = course.certificateRegularThreshold
                     )
-                }
+                },
+            learnersCount = course.learnersCount
         )
 }

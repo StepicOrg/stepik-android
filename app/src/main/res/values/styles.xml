@@ -1,81 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="StepikTheme" parent="StepikTheme.15" />
-
-    <style name="StepikTheme.15" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/new_primary_color</item>
-        <item name="colorPrimaryDark">@color/new_accent_color</item>
-        <item name="colorAccent">@color/new_accent_color</item>
-
-        <!--this change the background of main window (activity)-->
-        <item name="android:windowBackground">@color/white</item>
-
-        <!--this change the background of main window (activity and) AND all the components (dialogs) -->
-        <item name="android:colorBackground">@color/new_cover</item>
-
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="buttonStyle">@style/NewStepikButton</item>
-        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
-        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
-        <item name="dialogTheme">@style/AppTheme.Dialog</item>
-        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-
-        <item name="colorSwitchThumbNormal">#D8D8D8</item>
-        <item name="android:colorForeground">#c7c7c7</item>
-
-        <item name="actionBarPopupTheme">@style/ThemeOverlay.AppCompat.Light</item>
-
-        <!--color of back button and overflow-->
-        <item name="colorControlNormal">@color/new_accent_color</item>
-
-        <!--For setting text color to edit text (android O)-->
-        <item name="editTextStyle">@style/StepikTheme.EditTextStyle</item>
-
-        <item name="searchViewStyle">@style/SearchViewStyle</item>
-        <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
-    </style>
-
-    <style name="OverflowMenuButton" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_action_more_vert</item>
-    </style>
-
-    <style name="AppTheme" parent="AppTheme.15" />
-
-    <style name="AppTheme.15" parent="@style/Theme.AppCompat.Light.DarkActionBar">
-        <item name="colorPrimary">@color/stepic_brand_primary</item>
-        <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/new_accent_color</item>
-
-        <!--this change the background of main window (activity)-->
-        <item name="android:windowBackground">@color/old_cover</item>
-
-        <!--this change the background of main window (activity and) AND all the components (dialogs) -->
-        <item name="android:colorBackground">@color/old_cover</item>
-
-        <item name="android:textColor">@color/stepic_regular_text</item>
-        <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:actionMenuTextColor">@color/white</item>
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-        <item name="android:textAppearance">@style/TextAppearance.FontPath</item>
-        <item name="android:dialogTheme">@style/AppTheme.Dialog</item>
-        <item name="dialogTheme">@style/AppTheme.Dialog</item>
-        <item name="android:alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="alertDialogTheme">@style/AppTheme.Dialog</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
-
-        <item name="colorSwitchThumbNormal">#D8D8D8</item>
-        <item name="android:colorForeground">#c7c7c7</item>
-    </style>
-
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
     </style>
@@ -84,15 +8,9 @@
         <item name="behavior_peekHeight">@dimen/custom_peek_height</item>
     </style>
 
-    <style name="AppTheme.BrandedLaunch">
-        <item name="colorPrimaryDark">@color/transparent_black_30</item>
-        <item name="android:windowBackground">@drawable/branded_logo</item>
-    </style>
-
-    <style name="StepikTheme.Onboarding">
+    <style name="AppTheme.Onboarding">
         <item name="android:windowBackground">@drawable/onboarding_background</item>
     </style>
-
 
     <style name="AppTheme.PhotoView">
         <item name="windowActionBar">false</item>
@@ -102,65 +20,24 @@
         <item name="android:windowBackground">@color/black</item>
     </style>
 
-    <style name="StepikTheme.EditTextStyle" parent="@android:style/Widget.EditText">
-        <item name="android:textColor">@color/text_color</item>
-    </style>
-
     <style name="TransparentActionBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <!-- Support library compatibility -->
         <item name="windowActionBarOverlay">true</item>
     </style>
 
-    <style name="StepikTheme.LoginLaunchRegistration" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimaryDark">@color/transparent_black_30</item>
-        <item name="android:windowBackground">@color/login_launch_registration_background</item>
-        <item name="android:colorBackground">@color/login_launch_registration_background</item>
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/new_accent_color</item>
-        <item name="colorControlActivated">@color/new_accent_color</item>
-        <item name="android:colorControlActivated" tools:targetApi="lollipop">@color/new_accent_color</item>
-        <item name="alertDialogTheme">@style/StepikTheme.LoginDialog</item>
-        <item name="android:textColorHighlight">@color/drawer_item_highlighting_pressed</item>
-    </style>
-
-    <style name="StepikTheme.LoginDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textColor">@color/restore_password_dialog_button_color</item>
-    </style>
-
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
 
-    <style name="AppTheme.VideoPlayer.7" parent="Theme.AppCompat">
+    <style name="AppTheme.VideoPlayer.7" parent="AppTheme">
         <item name="colorAccent">@color/white</item>
-        <item name="colorPrimary">@color/stepic_brand_primary</item>
+        <item name="colorPrimary">@color/color_overlay_green</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/black</item>
-        <item name="colorPrimaryDark">@color/transparent_black_30</item>
+        <item name="colorPrimaryDark">@color/black_alpha_30</item>
         <item name="windowActionBarOverlay">true</item>
-    </style>
-
-    <style name="AppTheme.Dialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorPrimary">@color/new_primary_color</item>
-        <item name="colorAccent">@color/new_accent_color</item>
-    </style>
-
-    <style name="TextAppearance.FontPath" parent="android:TextAppearance">
-        <item name="android:fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="AppTheme.Widget.TextView" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="StepicSmallMaterialButton" parent="Theme.AppCompat.Light">
-        <item name="android:minHeight">@dimen/height_of_small_button</item>
-        <item name="android:maxHeight">@dimen/height_of_small_button</item>
-        <item name="android:textSize">@dimen/stepik_text_size_in_button</item>
-        <item name="android:background">@drawable/new_button_selector</item>
-        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="BottomSheetShareItem">
@@ -170,142 +47,59 @@
         <item name="android:drawablePadding">@dimen/share_item_padding</item>
         <item name="android:padding">@dimen/share_item_padding</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
+        <item name="android:foreground">?selectableItemBackground</item>
     </style>
 
     <style name="PlaceholderTextViewStyle">
-        <item name="android:textSize">@dimen/text_size_placeholders</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textAppearance">?textAppearanceBody1</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
         <item name="android:padding">@dimen/padding_placeholders</item>
-        <item name="android:lineSpacingMultiplier">1.15</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/stepic_weak_text</item>
     </style>
     
-    <style name="PlaceholderButton">
-        <item name="android:textSize">14sp</item>
-        <item name="android:background">@drawable/placeholder_button_background_selector</item>
-        <item name="android:foreground">@null</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/new_accent_color</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:padding">@dimen/guideline_standard_padding</item>
-    </style>
-
-    <style name="previousNextTextViewStyle">
-        <item name="android:clickable">true</item>
-        <item name="android:drawablePadding">8dp</item>
-        <item name="android:focusable">false</item>
-        <item name="android:focusableInTouchMode">false</item>
-        <item name="android:gravity">center</item>
-        <item name="android:padding">16dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">?colorAccent</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:visibility">invisible</item>
+    <style name="PlaceholderButton" parent="Widget.AppTheme.Button.OutlinedButton">
+        <item name="android:theme">@style/ThemeOverlay.Violet</item>
     </style>
 
     <style name="SettingHeaderTextView">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/violet1</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
-        <item name="android:padding">@dimen/guideline_standard_padding</item>
-    </style>
-
-    <style name="SettingCardStyle">
-        <item name="android:layout_marginBottom">@dimen/card_bottom_margin</item>
-    </style>
-
-    <style name="SettingCompoundButton">
-        <item name="android:textColor">@color/stepic_regular_text</item>
-        <item name="android:textSize">@dimen/text_header</item>
-        <item name="android:layout_marginLeft">@dimen/guideline_standard_padding</item>
-        <item name="android:layout_marginRight">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingLeft">@dimen/half_padding</item>
-        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingRight">@dimen/half_padding</item>
+        <item name="android:textAppearance">?textAppearanceSubtitle2</item>
+        <item name="android:theme">@style/ThemeOverlay.Violet</item>
+        <item name="android:layout_marginTop">@dimen/settings_offset_vertical</item>
+        <item name="android:paddingTop">@dimen/settings_offset_vertical</item>
+        <item name="android:paddingBottom">@dimen/settings_offset_vertical</item>
+        <item name="android:paddingLeft">@dimen/settings_offset_horizontal</item>
+        <item name="android:paddingRight">@dimen/settings_offset_horizontal</item>
     </style>
 
     <style name="SettingSwitch">
-        <item name="android:textColor">@color/stepic_regular_text</item>
-        <item name="android:textSize">@dimen/text_header</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
+        <item name="android:textAppearance">?textAppearanceBody1</item>
+        <item name="android:foreground">?selectableItemBackground</item>
+        <item name="switchTextAppearance">?textAppearanceBody1</item>
+        <item name="android:switchTextAppearance">?textAppearanceBody1</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+
+        <item name="android:paddingLeft">@dimen/settings_offset_horizontal</item>
+        <item name="android:paddingRight">@dimen/settings_offset_horizontal</item>
+        <item name="android:paddingTop">@dimen/settings_offset_vertical</item>
+        <item name="android:paddingBottom">@dimen/settings_offset_vertical</item>
     </style>
 
-    <style name="NewSettingSwitch">
-        <item name="android:textColor">@color/new_accent_color</item>
-        <item name="android:textSize">@dimen/text_header</item>
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:paddingBottom">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingLeft">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingTop">@dimen/guideline_standard_padding</item>
-        <item name="android:paddingRight">@dimen/guideline_standard_padding</item>
-    </style>
-
-    <style name="StepikButtonStyleBase" parent="Base.Widget.AppCompat.Button.Borderless">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
-        <item name="android:background">@drawable/login_button_background</item>
-        <item name="android:textColor">@color/login_button_text_color</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="LoginButtons" parent="StepikButtonStyleBase">
-        <item name="android:layout_width">@dimen/auth_elements_width</item>
-        <item name="android:textSize">@dimen/launch_button_text_size</item>
-    </style>
-
-    <style name="LoginEditFields">
+    <style name="LoginEditFields" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">24dp</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/new_accent_color</item>
+        <item name="android:textAppearance">?textAppearanceBody1</item>
         <item name="android:maxLength">100</item>
         <item name="android:maxLines">1</item>
+        <item name="hintEnabled">true</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:textCursorDrawable">@null</item>
     </style>
 
-    <style name="BorderLessTextButton">
-        <item name="android:textSize">@dimen/borderless_text_button_text_size</item>
-        <item name="android:background">?selectableItemBackground</item>
-        <item name="android:padding">12dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:minWidth">0dp</item>
-    </style>
-
-    <style name="TryAgainButton" parent="Base.Widget.AppCompat.Button.Borderless">
-        <item name="android:textColor">@color/launchTextColor</item>
-    </style>
-
-    <style name="CourseWidgetView" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:textSize">@dimen/course_item_button_text_size</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">@dimen/min_ux_touchable_size</item>
-        <item name="android:clickable">true</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:gravity">center</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="CourseWidgetPropertyTextView" parent="CourseWidgetPropertyTextView.15" />
-
-    <style name="CourseWidgetPropertyTextView.15" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:textSize">@dimen/course_item_property_text_size</item>
+    <style name="CourseWidgetPropertyTextView">
         <item name="android:layout_marginLeft">@dimen/course_item_property_text_image_margin</item>
         <item name="android:layout_marginRight">@dimen/course_item_property_between_items_margin</item>
-        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textAppearance">?textAppearanceBody2</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
@@ -316,6 +110,8 @@
         <item name="android:clickable">false</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:alpha">?alphaEmphasisMedium</item>
+        <item name="tint">?colorOnSurface</item>
     </style>
 
     <style name="FastContinueSubtextStyle">
@@ -328,69 +124,18 @@
         <item name="android:lineSpacingMultiplier">1.33</item>
     </style>
 
-    <style name="NewContinueButton">
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="StepikSpinnerItem" parent="@style/Widget.AppCompat.TextView.SpinnerItem">
-        <item name="android:gravity">center_horizontal</item>
-    </style>
-
-    <style name="VideoTimeThumbnail" parent="AppTheme.Widget.TextView">
+    <style name="VideoTimeThumbnail">
         <item name="android:background">@color/background_time_thumbnail</item>
-        <item name="android:textColor">@color/text_color_time_thumbnail</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingTop">2dp</item>
         <item name="android:paddingBottom">2dp</item>
     </style>
 
-    <style name="StreakDrawerTextView">
-        <item name="android:textSize">9sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:drawablePadding">@dimen/half_padding</item>
-    </style>
-
-    <style name="MainDrawerTextView">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:layout_gravity">center_vertical</item>
-    </style>
-
-
-    <style name="RateItemTextView">
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-        <item name="android:padding">@dimen/guideline_standard_padding</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textSize">@dimen/rate_dialog_button_text_size</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-    </style>
-
-    <style name="ProfileTheme" parent="AppTheme">
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <style name="StepikToolbarTheme" parent="@style/ThemeOverlay.AppCompat.Light"></style>
-
     <style name="StepikToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">@color/new_accent_color</item>
-    </style>
-
-    <style name="NewStepikButton" parent="@style/Widget.AppCompat.Button">
-        <item name="android:foreground">@drawable/non_radius_foreground</item>
-        <item name="android:background">@drawable/new_button_selector</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:minHeight">@dimen/min_ux_touchable_size</item>
+        <item name="android:textColor">@color/material_on_surface_emphasis_high_type</item>
     </style>
 
     <style name="PopupAnimations">
@@ -398,94 +143,11 @@
         <item name="android:windowExitAnimation">@anim/popup_exit</item>
     </style>
 
-    <style name="SearchViewStyle" parent="Widget.AppCompat.SearchView">
-        <item name="queryBackground">@android:color/transparent</item>
-        <item name="searchIcon">@null</item>
-        <item name="searchHintIcon">@null</item>
-        <item name="android:iconifiedByDefault">false</item>
-    </style>
-
-    <style name="AutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
-        <item name="android:textColor">@color/text_color</item>
-        <item name="android:textColorHighlight">@color/text_color_highlight</item>
-    </style>
-
-    <style name="Adaptive.BorderlessButton" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:foreground">@null</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textColor">@color/borderless_button_text_color</item>
-    </style>
-
-
-    <style name="Adaptive" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/new_primary_color</item>
-        <item name="colorPrimaryDark">@color/new_accent_color</item>
-        <item name="colorAccent">@color/new_accent_color</item>
-
-        <item name="android:windowBackground">@color/windowBackground</item>
-
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
-    <style name="Adaptive.White" parent="Adaptive">
-        <item name="android:windowBackground">@color/white</item>
-    </style>
-
-    <style name="Adaptive.ReactionStamp">
+    <style name="AdaptiveReactionStamp">
         <item name="android:textSize">24sp</item>
         <item name="android:gravity">center</item>
         <item name="fontFamily">sans-serif-black</item>
         <item name="android:fontFamily">sans-serif-black</item>
-    </style>
-
-    <style name="AdaptiveLevelDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:windowAnimationStyle">@style/AdaptiveLevelDialogTheme.Window</item>
-    </style>
-
-    <style name="AdaptiveLevelDialogTheme.Window" parent="@android:style/Animation.Activity">
-        <item name="android:windowEnterAnimation">@anim/adaptive_dialog_in</item>
-        <item name="android:windowExitAnimation">@anim/adaptive_dialog_out</item>
-    </style>
-
-    <style name="CalendarPickerDialogStyle">
-        <item name="bpPreHeaderBackgroundColor">@color/new_accent_color</item>
-        <item name="bpHeaderBackgroundColor">@color/new_accent_color</item>
-        <item name="bpHeaderSelectedTextColor">@color/new_primary_color</item>
-
-        <item name="bpBodySelectedTextColor">@color/new_accent_color</item>
-        <item name="bpBodyUnselectedTextColor">@color/text_color</item>
-    </style>
-
-    <style name="CourseTabAppearance">
-        <item name="android:fontFamily">@font/roboto_light</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textColor">@color/new_accent_color</item>
-    </style>
-    
-    <style name="StepikTheme.DarkActionBar">
-        <item name="colorControlNormal">@color/white</item>
-        <item name="android:textColorSecondary">@color/white</item>
-    </style>
-
-    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="android:textColorPrimary">@color/new_accent_color</item>
-        <item name="colorControlNormal">@color/new_accent_color</item>
-        <item name="colorControlActivated">@color/new_accent_color</item>
-    </style>
-    
-    <style name="TextInputLayout.HelperTextAppearance" parent="TextAppearance.AppCompat">
-        <item name="android:textColor">@color/new_accent_color_opacity_50</item>
-        <item name="android:textSize">12sp</item>
-    </style>
-
-    <style name="AppTheme.FullScreenDialog" parent="AppTheme.Dialog">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
-        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
     </style>
 
     <style name="StepQuizFeedback">
@@ -497,15 +159,71 @@
         <item name="android:paddingTop">12dp</item>
         <item name="android:paddingBottom">12dp</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textAppearance">?textAppearanceBody1</item>
         <item name="android:drawablePadding">16dp</item>
     </style>
 
+    <style name="StepQuizFeedback.Info">
+        <item name="android:theme">@style/ThemeOverlay.Violet</item>
+        <item name="android:background">@drawable/bg_shape_rounded</item>
+        <item name="backgroundTint">@color/color_secondary_alpha_12</item>
+        <item name="drawableTint">?android:textColorPrimary</item>
+    </style>
+
     <style name="StepQuizDescription">
-        <item name="android:textColor">@color/new_accent_color</item>
-        <item name="android:fontFamily">@font/roboto_medium</item>
-        <item name="android:textSize">12sp</item>
-        <item name="android:letterSpacing" tools:targetApi="lollipop">0.03</item>
+        <item name="android:textAppearance">?textAppearanceCaption</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+    <style name="ProfileStat">
+<!--        <item name="android:background">@drawable/bg_rounded_selectable_item</item>--> <!-- disabled during analytics study -->
+        <item name="android:textAppearance">?textAppearanceCaption</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:drawablePadding">8dp</item>
+    </style>
+
+    <style name="ProfileItemHeader">
+        <item name="android:textAppearance">?textAppearanceSubtitle1</item>
+        <item name="drawableTint">?colorControlNormal</item>
+    </style>
+
+    <style name="ProfileItemText">
+        <item name="android:textAppearance">?textAppearanceBody2</item>
+    </style>
+
+    <style name="DownloadsProgressBar" parent="@style/Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/downloads_progress</item>
+        <item name="android:minHeight">4dp</item>
+        <item name="android:maxHeight">4dp</item>
+    </style>
+
+    <style name="CourseReviewSummaryCountTitle">
+        <item name="android:textAppearance">?textAppearanceCaption</item>
+        <item name="android:textColor">?android:textColorSecondary</item>
+    </style>
+
+    <!-- Buttons -->
+    <style name="Widget.AppTheme.Button" parent="@style/Widget.MaterialComponents.Button">
+        <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>
+        <item name="elevation">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.Button.TextButton" parent="@style/Widget.MaterialComponents.Button.TextButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.Button.OutlinedButton" parent="@style/Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+    </style>
+
+    <!-- Buttons custom -->
+    <style name="Widget.AppTheme.Button.TextButton.Small" parent="Widget.AppTheme.Button.TextButton">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:textAppearance">?textAppearanceCaption</item>
     </style>
 </resources>

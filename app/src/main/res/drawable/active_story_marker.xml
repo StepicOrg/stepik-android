@@ -2,7 +2,7 @@
 <shape
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <corners android:radius="@dimen/stories_default_corner_radius" />
+    <corners android:radius="@dimen/stories_default_corner_outer_radius" />
     <solid android:color="@android:color/transparent"/>
-    <stroke android:width="2dp" android:color="@color/new_accent_color" />
+    <stroke android:width="2dp" android:color="@color/color_overlay_brown" />
 </shape>

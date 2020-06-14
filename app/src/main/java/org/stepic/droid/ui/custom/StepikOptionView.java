@@ -17,12 +17,13 @@ import android.widget.ProgressBar;
 import androidx.annotation.DrawableRes;
 
 import org.stepic.droid.R;
+import org.stepik.android.view.latex.ui.widget.LatexView;
 
 public abstract class StepikOptionView extends FrameLayout implements Checkable {
 
     private ImageView optionIcon;
 
-    private LatexSupportableEnhancedFrameLayout optionText;
+    private LatexView optionText;
 
     private ProgressBar progressBar;
 
@@ -64,7 +65,7 @@ public abstract class StepikOptionView extends FrameLayout implements Checkable 
 
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        optionText.getWebView().setWebViewClient(new WebViewClient() {
+        optionText.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
                 super.onPageStarted(view, url, favicon);
@@ -159,6 +160,7 @@ public abstract class StepikOptionView extends FrameLayout implements Checkable 
         } else {
             optionIcon.setImageResource(getUncheckedDrawableForOption());
         }
+        optionIcon.setSelected(isChecked);
     }
 
     @Override

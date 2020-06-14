@@ -4,18 +4,31 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-
-    <ImageView
-        android:id="@+id/zoomable_image"
+    <View
+        android:id="@+id/backgroundColorView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="#000" />
+
+    <org.stepik.android.view.ui.layout.VerticalDragLayout
+        android:id="@+id/verticalDragLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.github.chrisbanes.photoview.PhotoView
+            android:id="@+id/zoomableImageView"
+            android:scaleType="fitCenter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </org.stepik.android.view.ui.layout.VerticalDragLayout>
 
 
     <LinearLayout
-        android:id="@+id/internet_problem_root"
+        android:id="@+id/internetProblemRootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_black_30"
+        android:background="@color/black_alpha_30"
         android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
@@ -29,12 +42,11 @@
             android:textColor="@color/white"/>
 
         <Button
-            android:id="@+id/retry_button"
-            style="@style/StepicSmallMaterialButton"
+            android:id="@+id/retryButton"
+            style="?materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/retry"
-            />
+            android:text="@string/retry" />
 
     </LinearLayout>
 
@@ -42,7 +54,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/abc_action_bar_default_height_material"
+        android:layout_height="?actionBarSize"
         android:background="@drawable/background_toolbar_translucent"
         app:theme="@style/TransparentActionBar"/>
 

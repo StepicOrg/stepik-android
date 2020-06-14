@@ -2,13 +2,16 @@ package org.stepic.droid.core
 
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
-import org.stepic.droid.di.course_general.CourseGeneralComponent
-import org.stepic.droid.di.login.LoginComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
+import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.util.SuppressFBWarnings
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.injection.course.CourseComponent
+import org.stepik.android.view.injection.profile.ProfileComponent
+import org.stepik.android.view.injection.step.StepComponent
 import timber.log.Timber
+import java.lang.ref.WeakReference
 
 class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : ComponentManager {
 
@@ -69,20 +72,34 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
                     ?.release()
                     ?: throw IllegalStateException("release course = $courseId component, which is not allocated")
 
-    // Login
+    // Profile
 
-    private val loginComponentMap = HashMap<String, LoginComponent>()
+    private val _profileComponentMap = hashMapOf<Long, WeakComponentHolder<ProfileComponent>>()
 
-    override fun releaseLoginComponent(tag: String) {
-        loginComponentMap.remove(tag)
-    }
+    override fun profileComponent(userId: Long): ProfileComponent =
+        _profileComponentMap.getOrPut(userId, ::WeakComponentHolder).get {
+            appCoreComponent.profileComponentBuilder().userId(userId).build()
+        }
 
-    override fun loginComponent(tag: String) =
-            loginComponentMap.getOrPut(tag) {
-                appCoreComponent
-                        .loginComponentBuilder()
-                        .build()
-            }
+    /**
+     * Steps
+     */
+    private val _stepComponentMap = hashMapOf<Long, WeakComponentHolder<StepComponent>>()
+
+    override fun stepParentComponent(
+        stepPersistentWrapper: StepPersistentWrapper,
+        lessonData: LessonData
+    ): StepComponent =
+        _stepComponentMap.getOrPut(stepPersistentWrapper.step.id, ::WeakComponentHolder).get {
+            appCoreComponent
+                .stepComponentBuilder()
+                .stepWrapper(stepPersistentWrapper)
+                .lessonData(lessonData)
+                .build()
+        }
+
+    override fun stepComponent(stepId: Long): StepComponent =
+        _stepComponentMap[stepId]?.get() ?: throw IllegalStateException("StepComponent with id=$stepId not initialized")
 
     // Main Screen
 
@@ -104,16 +121,6 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
             mainScreenComponentProp = null
         }
     }
-
-    // Course general
-
-    private val _courseGeneralComponent by lazy {
-        appCoreComponent
-                .courseGeneralComponentBuilder()
-                .build()
-    }
-
-    override fun courseGeneralComponent(): CourseGeneralComponent = _courseGeneralComponent
 }
 
 class ComponentHolder<T> {
@@ -143,4 +150,18 @@ class ComponentHolder<T> {
         }
     }
 
+}
+
+class WeakComponentHolder<T> {
+    private var componentReference: WeakReference<T> = WeakReference<T>(null)
+
+    fun get(creationBlock: () -> T): T {
+        val component = componentReference.get() ?: creationBlock()
+        componentReference = WeakReference(component)
+
+        return component
+    }
+
+    fun get(): T? =
+        componentReference.get()
 }

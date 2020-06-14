@@ -17,14 +17,19 @@ import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
+import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
+import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.step.routing.StepDeepLinkBuilder
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
@@ -34,10 +39,17 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     @Inject
     internal lateinit var screenManager: ScreenManager
 
-    private lateinit var presenter: StepQuizPresenter
+    @Inject
+    internal lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
 
-    protected var lessonData: LessonData by argument()
-    protected var stepWrapper: StepPersistentWrapper by argument()
+    @Inject
+    internal lateinit var stepWrapper: StepPersistentWrapper
+    @Inject
+    internal lateinit var lessonData: LessonData
+
+    protected var stepId: Long by argument()
+
+    private lateinit var presenter: StepQuizPresenter
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizView.State>
     private lateinit var stepQuizDelegate: StepQuizDelegate
@@ -58,9 +70,8 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     }
 
     private fun injectComponent() {
-        App.component()
-            .stepComponentBuilder()
-            .build()
+        App.componentManager()
+            .stepComponent(stepId)
             .inject(this)
     }
 
@@ -84,13 +95,13 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         stepQuizDelegate =
             StepQuizDelegate(
                 step = stepWrapper.step,
-                lessonData = lessonData,
+                stepQuizLessonData = StepQuizLessonData(lessonData),
                 stepQuizFormDelegate = createStepQuizFormDelegate(view),
                 stepQuizFeedbackBlocksDelegate =
                     StepQuizFeedbackBlocksDelegate(
                         stepQuizFeedbackBlocks,
                         stepWrapper.step.actions?.doReview != null
-                    ) { screenManager.openStepInWeb(requireContext(), stepWrapper.step) },
+                    ) { openStepInWeb(stepWrapper.step) },
                 stepQuizActionButton = stepQuizAction,
                 stepRetryButton = stepQuizRetry,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
@@ -126,5 +137,11 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
 
     override fun showNetworkError() {
         view?.snackbar(messageRes = R.string.no_connection)
+    }
+
+    private fun openStepInWeb(step: Step) {
+        MagicLinkDialogFragment
+            .newInstance(stepDeepLinkBuilder.createStepLink(step))
+            .showIfNotExists(childFragmentManager, MagicLinkDialogFragment.TAG)
     }
 }
