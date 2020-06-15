@@ -6,13 +6,10 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
 import org.stepic.droid.util.rx.ObservableReduceMap
 import java.util.concurrent.TimeUnit
-
 
 enum class RxEmpty { INSTANCE }
 
@@ -32,8 +29,6 @@ fun <T> Single<RxOptional<T>>.unwrapOptional(): Maybe<T> =
 
 fun <T, R> Single<T>.mapNotNull(transform: (T) -> R?): Maybe<R> =
         this.map { RxOptional(transform(it)) }.unwrapOptional()
-
-infix fun CompositeDisposable.addDisposable(d: Disposable) = this.add(d)
 
 infix fun Completable.then(completable: Completable): Completable = this.andThen(completable)
 infix fun <T> Completable.then(observable: Observable<T>): Observable<T> = this.andThen(observable)

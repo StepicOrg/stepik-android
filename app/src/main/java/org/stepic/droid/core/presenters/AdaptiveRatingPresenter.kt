@@ -9,7 +9,6 @@ import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.rxkotlin.zipWith
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.adaptive.ui.adapters.AdaptiveRatingAdapter
 import org.stepic.droid.adaptive.util.RatingNamesGenerator
@@ -18,7 +17,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.addDisposable
 import org.stepic.droid.util.mapToLongArray
 import org.stepik.android.domain.rating.repository.RatingRepository
 import org.stepik.android.domain.user.repository.UserRepository
