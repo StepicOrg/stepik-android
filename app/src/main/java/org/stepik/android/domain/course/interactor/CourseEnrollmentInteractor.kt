@@ -9,6 +9,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
+import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.personal_deadlines.repository.DeadlinesRepository
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
@@ -30,6 +31,7 @@ constructor(
     private val courseRepository: CourseRepository,
     private val userCoursesRepository: UserCoursesRepository,
     private val profileRepository: ProfileRepository,
+    private val lessonRepository: LessonRepository,
 
     private val deadlinesRepository: DeadlinesRepository,
     @EnrollmentCourseUpdates
@@ -74,6 +76,9 @@ constructor(
             .andThen(userCoursesRepository.removeUserCourse(courseId))
             .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
+
+    fun removeCachedLessons(courseId: Long): Completable =
+        lessonRepository.removeCachedLessons(courseId)
 
     private fun addUserCourse(courseId: Long): Completable =
         profileRepository.getProfile().flatMapCompletable { profile ->

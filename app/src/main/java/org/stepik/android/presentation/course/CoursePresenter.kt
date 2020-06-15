@@ -236,7 +236,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning(); resolveCourseShareTooltip(it) },
+                onNext  = { removeCachedLesson(it) },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
             )
     }
@@ -269,6 +269,16 @@ constructor(
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                 },
                 onError = emptyOnErrorStub
+            )
+    }
+
+    private fun removeCachedLesson(courseHeaderData: CourseHeaderData) {
+        compositeDisposable += courseEnrollmentInteractor
+            .removeCachedLessons(courseHeaderData.courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = { state = CourseView.State.CourseLoaded(courseHeaderData); continueLearning(); resolveCourseShareTooltip(courseHeaderData) }
             )
     }
 
