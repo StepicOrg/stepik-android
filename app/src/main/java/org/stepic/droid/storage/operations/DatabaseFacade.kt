@@ -171,7 +171,7 @@ constructor(
         lessonDao.insertOrReplaceAll(lessons)
 
     fun removeLessons(courseId: Long) {
-        lessonDao.removeAllInRange(DbStructureLesson.Columns.COURSES, courseId.toString())
+        lessonDao.removeLike(DbStructureLesson.Columns.COURSES, "%[$courseId]%")
     }
 
     fun addToQueueViewedState(viewState: ViewAssignment) = viewAssignmentDao.insertOrUpdate(viewState)
