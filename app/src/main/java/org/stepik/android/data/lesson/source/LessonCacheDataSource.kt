@@ -16,4 +16,6 @@ interface LessonCacheDataSource {
         saveLessons(listOf(lesson))
 
     fun saveLessons(lessons: List<Lesson>): Completable
+
+    fun removeCachedLessons(courseId: Long): Completable
 }

@@ -35,6 +35,7 @@ constructor(
             title = cursor.getString(DbStructureLesson.Columns.TITLE),
             slug = cursor.getString(DbStructureLesson.Columns.SLUG),
             coverUrl = cursor.getString(DbStructureLesson.Columns.COVER_URL),
+            courses = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureLesson.Columns.COURSES), escapeSymbols = true) ?: longArrayOf(),
             steps = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureLesson.Columns.STEPS)) ?: longArrayOf(),
             actions = cursor.getString(DbStructureLesson.Columns.ACTIONS)?.toObject(gson),
             isFeatured = cursor.getBoolean(DbStructureLesson.Columns.IS_FEATURED),
@@ -60,6 +61,7 @@ constructor(
         values.put(DbStructureLesson.Columns.TITLE, lesson.title)
         values.put(DbStructureLesson.Columns.SLUG, lesson.slug)
         values.put(DbStructureLesson.Columns.COVER_URL, lesson.coverUrl)
+        values.put(DbStructureLesson.Columns.COURSES, DbParseHelper.parseLongArrayToString(lesson.courses, escapeSymbols = true))
         values.put(DbStructureLesson.Columns.STEPS, DbParseHelper.parseLongArrayToString(lesson.steps))
         values.put(DbStructureLesson.Columns.ACTIONS, gson.toJson(lesson.actions))
         values.put(DbStructureLesson.Columns.IS_FEATURED, lesson.isFeatured)
