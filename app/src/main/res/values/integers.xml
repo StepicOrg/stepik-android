@@ -16,6 +16,7 @@
     <integer name="dialog_disappear_animation_duration">200</integer>
 
     <integer name="achievements_to_display">3</integer>
+    <integer name="course_list_columns">1</integer>
 
     <integer name="highlighted_element_elevation">2</integer>
     <integer name="score_decimal_count">2</integer>
