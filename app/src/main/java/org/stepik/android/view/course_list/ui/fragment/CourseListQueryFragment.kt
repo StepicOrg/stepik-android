@@ -13,7 +13,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
