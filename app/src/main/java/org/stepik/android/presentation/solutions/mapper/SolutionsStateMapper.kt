@@ -1,6 +1,6 @@
 package org.stepik.android.presentation.solutions.mapper
 
-import org.stepic.droid.util.mutate
+import ru.nobird.android.core.model.mutate
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.solutions.SolutionsView

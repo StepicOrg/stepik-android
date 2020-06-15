@@ -5,7 +5,7 @@ import io.reactivex.rxkotlin.Singles.zip
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapNotNullPaged
-import org.stepic.droid.util.mapToLongArray
+import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Submission

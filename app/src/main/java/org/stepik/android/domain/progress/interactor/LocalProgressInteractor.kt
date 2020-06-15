@@ -6,9 +6,7 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.distinct
-import org.stepic.droid.util.flatten
-import org.stepic.droid.util.mapToLongArray
+import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -22,6 +20,8 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
+import ru.nobird.android.core.model.flatten
+import ru.nobird.android.core.model.distinct
 import javax.inject.Inject
 
 class LocalProgressInteractor
