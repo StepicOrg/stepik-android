@@ -68,7 +68,6 @@ class CourseListCollectionFragment : Fragment(R.layout.fragment_course_list), Co
 
         initCenteredToolbar(courseCollection.title, true)
         with(courseListCoursesRecycler) {
-            // todo handle header
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
         }
 
