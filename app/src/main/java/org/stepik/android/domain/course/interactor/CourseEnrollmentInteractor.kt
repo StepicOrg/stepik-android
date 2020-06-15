@@ -6,6 +6,7 @@ import io.reactivex.subjects.PublishSubject
 import okhttp3.ResponseBody
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
+import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.then
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
@@ -19,6 +20,7 @@ import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.HttpURLConnection
+import java.util.Date
 import javax.inject.Inject
 
 class CourseEnrollmentInteractor
@@ -51,19 +53,27 @@ constructor(
             }
         }
 
-    fun publishEnrollment(course: Course) {
-        enrollmentSubject.onNext(course)
-    }
-
-    fun fetchCourse(courseId: Long): Single<Course> =
+    fun fetchCourseEnrollmentAfterPurchaseInWeb(courseId: Long): Completable =
         requireAuthorization then
-        courseRepository.getCourse(courseId, canUseCache = false).toSingle()
+        courseRepository
+            .getCourse(courseId, canUseCache = false)
+            .toSingle()
+            .flatMapCompletable { course ->
+                if (course.enrollment > 0) {
+                    addUserCourse(course.id)
+                        .andThen(lessonRepository.removeCachedLessons(course.id))
+                        .doOnComplete { enrollmentSubject.onNext(course) }
+                } else {
+                    Completable.complete()
+                }
+            }
 
     fun enrollCourse(courseId: Long): Single<Course> =
         requireAuthorization then
         enrollmentRepository
             .addEnrollment(courseId)
             .andThen(addUserCourse(courseId))
+            .andThen(lessonRepository.removeCachedLessons(courseId))
             .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 
@@ -74,11 +84,9 @@ constructor(
             .doOnComplete { analytic.reportEvent(Analytic.Course.DROP_COURSE_SUCCESSFUL, courseId.toString()) }
             .andThen(deadlinesRepository.removeDeadlineRecordByCourseId(courseId).onErrorComplete())
             .andThen(userCoursesRepository.removeUserCourse(courseId))
+            .andThen(lessonRepository.removeCachedLessons(courseId))
             .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
-
-    fun removeCachedLessons(courseId: Long): Completable =
-        lessonRepository.removeCachedLessons(courseId)
 
     private fun addUserCourse(courseId: Long): Completable =
         profileRepository.getProfile().flatMapCompletable { profile ->
@@ -90,7 +98,7 @@ constructor(
                     isFavorite = false,
                     isPinned = false,
                     isArchived = false,
-                    lastViewed = null
+                    lastViewed = Date(DateTimeHelper.nowUtc())
                 )
             )
         }

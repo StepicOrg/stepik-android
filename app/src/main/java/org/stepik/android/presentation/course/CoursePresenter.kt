@@ -236,7 +236,7 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onNext  = { removeCachedLesson(it) },
+                onNext  = { state = CourseView.State.CourseLoaded(it); continueLearning(); resolveCourseShareTooltip(it) },
                 onError = { state = CourseView.State.NetworkError; subscriberForEnrollmentUpdates() }
             )
     }
@@ -269,16 +269,6 @@ constructor(
                     state = CourseView.State.CourseLoaded(courseHeaderData)
                 },
                 onError = emptyOnErrorStub
-            )
-    }
-
-    private fun removeCachedLesson(courseHeaderData: CourseHeaderData) {
-        compositeDisposable += courseEnrollmentInteractor
-            .removeCachedLessons(courseHeaderData.courseId)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = { state = CourseView.State.CourseLoaded(courseHeaderData); continueLearning(); resolveCourseShareTooltip(courseHeaderData) }
             )
     }
 
@@ -363,17 +353,10 @@ constructor(
 
         isNeedCheckCourseEnrollment = false
         userCourseDisposable += courseEnrollmentInteractor
-            .fetchCourse(courseId)
+            .fetchCourseEnrollmentAfterPurchaseInWeb(courseId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { course ->
-                    if (course.enrollment > 0L) {
-                        courseEnrollmentInteractor.publishEnrollment(course)
-                    }
-                },
-                onError = emptyOnErrorStub
-            )
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
