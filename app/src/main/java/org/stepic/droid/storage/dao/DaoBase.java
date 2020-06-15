@@ -128,8 +128,8 @@ public abstract class DaoBase<T> implements IDao<T> {
 
     @Override
     public void removeLike(@NotNull String whereColumn, @NotNull String likeValue) {
-        String query = whereColumn + " LIKE " + '\'' + likeValue + '\'';
-        databaseOperations.executeDelete(getDbName(), query, null);
+        String query = whereColumn + " LIKE ?";
+        databaseOperations.executeDelete(getDbName(), query, new String[]{likeValue});
     }
 
     @NotNull

@@ -17,7 +17,7 @@ object DbParseHelper {
             try {
                 str?.split(separator)?.map {
                     if (escapeSymbols) {
-                        it.trim().removeSurrounding(PREFIX, POSTFIX).toLong()
+                        removeEscapeId(it.trim()).toLong()
                     } else {
                         it.trim().toLong()
                     }
@@ -32,7 +32,7 @@ object DbParseHelper {
         if (longArray == null || longArray.isEmpty()) return null
 
         return if (escapeSymbols) {
-            longArray.joinToString(separator, transform = { "$PREFIX$it$POSTFIX" } )
+            longArray.joinToString(separator, transform = { escapeId(it.toString()) } )
         } else {
             longArray.joinToString(separator)
         }
@@ -44,7 +44,7 @@ object DbParseHelper {
         if (longArray == null || longArray.isEmpty()) return null
 
         return if (escapeSymbols) {
-            longArray.joinToString(separator, transform = { "$PREFIX$it$POSTFIX" })
+            longArray.joinToString(separator, transform = { escapeId(it.toString()) })
         } else {
             longArray.joinToString(separator)
         }
@@ -69,6 +69,13 @@ object DbParseHelper {
     fun parseStringToStringArray(str: String?, separator: String = DEFAULT_SEPARATOR): Array<String>? =
             parseStringToStringList(str, separator)?.toTypedArray()
 
+    @JvmStatic
+    fun escapeId(value: String): String =
+        "$PREFIX$value$POSTFIX"
+
+    @JvmStatic
+    fun removeEscapeId(value: String): String =
+        value.removeSurrounding(PREFIX, POSTFIX)
 }
 
 
