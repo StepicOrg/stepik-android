@@ -4,9 +4,9 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.doCompletableOnSuccess
-import org.stepic.droid.util.maybeFirst
-import org.stepic.droid.util.requireSize
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.maybeFirst
+import ru.nobird.android.domain.rx.requireSize
 import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType

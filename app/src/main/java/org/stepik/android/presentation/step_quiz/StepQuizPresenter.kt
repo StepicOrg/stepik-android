@@ -10,7 +10,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor

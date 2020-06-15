@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor

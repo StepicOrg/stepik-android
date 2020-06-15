@@ -1,7 +1,6 @@
 package org.stepic.droid.core.presenters
 
 import io.reactivex.Maybe
-import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -11,12 +10,10 @@ import org.stepic.droid.di.home.HomeScope
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.RxOptional
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.util.emptyOnErrorStub
-import org.stepic.droid.util.toMaybe
-import org.stepic.droid.util.unwrapOptional
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
+import ru.nobird.android.domain.rx.emptyOnErrorStub
+import ru.nobird.android.domain.rx.toMaybe
 import javax.inject.Inject
 
 @HomeScope

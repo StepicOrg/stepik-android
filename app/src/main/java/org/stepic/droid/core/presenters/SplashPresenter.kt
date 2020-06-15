@@ -20,7 +20,7 @@ import org.stepic.droid.di.splash.SplashScope
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.view.routing.deeplink.BranchDeepLinkParser
 import org.stepik.android.view.routing.deeplink.BranchRoute
 import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate

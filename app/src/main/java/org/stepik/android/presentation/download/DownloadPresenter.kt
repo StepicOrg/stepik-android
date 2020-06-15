@@ -10,7 +10,7 @@ import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.files.ExternalStorageManager
 import org.stepic.droid.persistence.model.DownloadItem
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.size
 import org.stepik.android.domain.download.interactor.DownloadsInteractor
 import org.stepik.android.model.Course

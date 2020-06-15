@@ -10,7 +10,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.features.stories.mapper.toStory
 import org.stepic.droid.features.stories.repository.StoryTemplatesRepository
 import org.stepic.droid.util.defaultLocale
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.model.StoryTemplate
 import org.stepik.android.presentation.catalog.model.CatalogItem
 import ru.nobird.android.presentation.base.PresenterBase

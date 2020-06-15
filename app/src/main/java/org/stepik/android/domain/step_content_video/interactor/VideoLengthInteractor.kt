@@ -3,7 +3,7 @@ package org.stepik.android.domain.step_content_video.interactor
 import android.media.MediaMetadataRetriever
 import io.reactivex.Maybe
 import org.stepic.droid.persistence.model.StepPersistentWrapper
-import org.stepic.droid.util.toMaybe
+import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.step_content_video.mapper.VideoLengthMapper
 import org.stepik.android.model.Video
 import javax.inject.Inject

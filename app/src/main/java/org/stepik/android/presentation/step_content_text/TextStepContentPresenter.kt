@@ -5,7 +5,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.step_content_text.interactor.TextContentFontInteractor
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject

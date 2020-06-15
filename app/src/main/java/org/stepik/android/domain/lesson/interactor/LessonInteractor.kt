@@ -3,7 +3,7 @@ package org.stepik.android.domain.lesson.interactor
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Maybes.zip
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.discussion_thread.repository.DiscussionThreadRepository
 import org.stepik.android.domain.last_step.model.LastStep
