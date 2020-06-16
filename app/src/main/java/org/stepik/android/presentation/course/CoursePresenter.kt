@@ -353,17 +353,10 @@ constructor(
 
         isNeedCheckCourseEnrollment = false
         userCourseDisposable += courseEnrollmentInteractor
-            .fetchCourse(courseId)
+            .fetchCourseEnrollmentAfterPurchaseInWeb(courseId)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { course ->
-                    if (course.enrollment > 0L) {
-                        courseEnrollmentInteractor.publishEnrollment(course)
-                    }
-                },
-                onError = emptyOnErrorStub
-            )
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {

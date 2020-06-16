@@ -10,6 +10,7 @@
     tools:visibility="visible">
 
 <ImageView
+    android:alpha="0.5"
     android:id="@+id/placeholderIcon"
     android:layout_width="@dimen/placeholders_image_width"
     android:layout_height="wrap_content"

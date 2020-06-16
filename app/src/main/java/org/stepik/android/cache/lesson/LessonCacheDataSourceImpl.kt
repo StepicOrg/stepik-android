@@ -21,4 +21,9 @@ constructor(
         Completable.fromAction {
             databaseFacade.addLessons(lessons)
         }
+
+    override fun removeCachedLessons(courseId: Long): Completable =
+        Completable.fromAction {
+            databaseFacade.removeLessons(courseId)
+        }
 }
