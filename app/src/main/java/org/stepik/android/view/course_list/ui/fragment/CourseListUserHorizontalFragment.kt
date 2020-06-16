@@ -12,7 +12,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.activities.MainFeedActivity
-import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
@@ -63,20 +62,11 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
         courseListTitle.text = resources.getString(R.string.course_list_user_courses_title)
 
-        val courseListPadding = resources.getDimensionPixelOffset(R.dimen.course_list_padding)
-        courseListCoursesRecycler.setPadding(
-            courseListPadding,
-            courseListPadding,
-            resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding),
-            courseListPadding
-        )
-
         with(courseListCoursesRecycler) {
             val rowCount = resources.getInteger(R.integer.course_list_rows)
             val columnsCount = resources.getInteger(R.integer.course_list_columns)
             layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
             itemAnimator?.changeDuration = 0
-            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), rowCount))
             val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(this)
             setOnPaginationListener { pageDirection ->

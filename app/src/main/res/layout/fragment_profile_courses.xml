@@ -41,9 +41,7 @@
         android:clipToPadding="false"
 
         android:paddingLeft="16dp"
-        android:paddingStart="16dp"
-        android:paddingRight="@dimen/home_right_recycler_padding"
-        android:paddingEnd="@dimen/home_right_recycler_padding"
+        android:paddingRight="16dp"
         android:paddingBottom="16dp" />
 
     <include

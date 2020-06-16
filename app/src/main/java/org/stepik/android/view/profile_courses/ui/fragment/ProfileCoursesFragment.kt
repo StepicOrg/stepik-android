@@ -2,9 +2,6 @@ package org.stepik.android.view.profile_courses.ui.fragment
 
 import android.os.Bundle
 import android.view.View
-import android.widget.GridLayout
-import android.widget.LinearLayout
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -16,9 +13,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
-import org.stepic.droid.ui.util.inflate
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -120,7 +115,6 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
 
             adapter = coursesAdapter
             itemAnimator?.changeDuration = 0
-            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), rowCount))
             val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(this)
         }

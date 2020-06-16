@@ -9,7 +9,6 @@ import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
@@ -90,7 +89,6 @@ class CourseListQueryAdapterDelegate(
                 val columnsCount = resources.getInteger(R.integer.course_list_columns)
                 layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
                 itemAnimator?.changeDuration = 0
-                addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), rowCount))
                 val snapHelper = CoursesSnapHelper(rowCount)
                 snapHelper.attachToRecyclerView(this)
                 setOnPaginationListener { pageDirection ->

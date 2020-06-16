@@ -70,16 +70,6 @@ class CourseListViewDelegate(
                         state.courseListDataItems.size,
                         state.courseListDataItems.size
                     )
-
-                /**
-                 * notify is necessary, because margins don't get recalculated after adding loading placeholder
-                 */
-                val size = state.courseListItems.size
-                if (size > 2 &&
-                    (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL) {
-                    courseItemAdapter.notifyItemChanged(size - 2)
-                    courseItemAdapter.notifyItemChanged(size - 3)
-                }
             }
 
             else ->
