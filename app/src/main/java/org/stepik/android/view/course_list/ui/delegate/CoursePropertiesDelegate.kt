@@ -29,8 +29,7 @@ class CoursePropertiesDelegate(
     private val courseCertificateText = view.courseCertificateText
 
     fun setStats(courseListItem: CourseListItem.Data) {
-        val isEnrolled = courseListItem.course.enrollment > 0L
-        setLearnersCount(courseListItem.course.learnersCount, isEnrolled)
+        setLearnersCount(courseListItem.course.learnersCount, courseListItem.course.enrollment > 0L)
         setProgress(courseListItem.courseStats)
         setRating(courseListItem.courseStats)
         setCertificate(courseListItem.course)
@@ -81,12 +80,14 @@ class CoursePropertiesDelegate(
     }
 
     private fun setCertificate(course: Course) {
-        val needShow = course.certificate
+        val hasCertificate = course.certificate
             ?.let {
                 val hasText = it.isNotEmpty()
                 val anyCertificateThreshold = course.certificateRegularThreshold > 0 || course.certificateDistinctionThreshold > 0
                 anyCertificateThreshold && (hasText || (course.isCertificateAutoIssued && course.isCertificateIssued))
             } ?: false
+        val isEnrolled = course.enrollment > 0L
+        val needShow = hasCertificate && !isEnrolled
         courseCertificateImage.isVisible = needShow
         courseCertificateText.isVisible = needShow
     }
