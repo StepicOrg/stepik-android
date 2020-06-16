@@ -25,7 +25,7 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.rating.repository.RatingRepository
 import org.stepik.android.domain.recommendation.repository.RecommendationRepository

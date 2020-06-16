@@ -3,8 +3,8 @@ package org.stepik.android.remote.user_courses
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.first
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.first
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.data.user_courses.source.UserCoursesRemoteDataSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse

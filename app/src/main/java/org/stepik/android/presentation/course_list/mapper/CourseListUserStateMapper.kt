@@ -2,12 +2,9 @@ package org.stepik.android.presentation.course_list.mapper
 
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.plus
-import org.stepic.droid.util.mapToLongArray
-import org.stepic.droid.util.mutate
-import org.stepic.droid.util.slice
 import org.stepic.droid.util.filterNot
-import org.stepic.droid.util.insert
+import ru.nobird.android.core.model.mutate
+import org.stepic.droid.util.plus
 import org.stepic.droid.util.transform
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -15,6 +12,9 @@ import org.stepik.android.domain.course_list.model.UserCoursesLoaded
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
+import ru.nobird.android.core.model.insert
+import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.android.core.model.slice
 import java.util.Date
 import javax.inject.Inject
 
@@ -275,7 +275,7 @@ constructor(
                 if (indexOfPreviousCourseItem == -1) {
                     listState.courseListDataItems
                 } else {
-                    listState.courseListDataItems.transform { insert(indexOfPreviousCourseItem + 1, courseListItem) }
+                    listState.courseListDataItems.transform { insert(courseListItem, pos = indexOfPreviousCourseItem + 1) }
                 }
 
             state.copy(courseListViewState = listState.copy(courseListDataItems, courseListItems))

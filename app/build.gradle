@@ -137,6 +137,8 @@ dependencies {
     implementation libraries.adapters
     implementation libraries.presentationBase
     implementation libraries.viewKit
+    implementation libraries.model
+    implementation libraries.domainRx
 
     implementation libraries.exoPlayerCore
     implementation libraries.exoPlayerUI

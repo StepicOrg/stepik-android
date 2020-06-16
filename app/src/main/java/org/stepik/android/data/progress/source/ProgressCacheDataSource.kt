@@ -3,7 +3,7 @@ package org.stepik.android.data.progress.source
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.model.Progress
 
 interface ProgressCacheDataSource {

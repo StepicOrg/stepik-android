@@ -7,13 +7,13 @@ import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.preferences.UserPreferences
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.maybeFirst
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Step
+import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 
 @PersistenceScope

@@ -13,7 +13,7 @@ import org.stepic.droid.persistence.model.Structure
 import org.stepic.droid.persistence.model.SystemDownloadRecord
 import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.SystemDownloadsDao
-import org.stepic.droid.util.mapToLongArray
+import ru.nobird.android.core.model.mapToLongArray
 import org.stepic.droid.util.plus
 import org.stepik.android.data.download.source.DownloadCacheDataSource
 import org.stepik.android.domain.course.repository.CourseRepository

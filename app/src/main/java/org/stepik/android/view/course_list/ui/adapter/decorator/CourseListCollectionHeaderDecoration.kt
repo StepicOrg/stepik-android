@@ -5,6 +5,7 @@ import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.stepic.droid.R
 import org.stepic.droid.model.CollectionDescriptionColors
@@ -56,9 +57,13 @@ class CourseListCollectionHeaderDecoration(
     }
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+        val columnsCount = (parent.layoutManager as? GridLayoutManager)
+            ?.spanCount
+            ?: 1
+
         (view.layoutParams as? RecyclerView.LayoutParams)
             ?.viewLayoutPosition
-            ?.takeIf { it == 0 }
+            ?.takeIf { it < columnsCount }
             ?: return
 
         initHeader(parent)

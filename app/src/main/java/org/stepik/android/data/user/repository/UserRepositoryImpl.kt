@@ -1,7 +1,7 @@
 package org.stepik.android.data.user.repository
 
 import io.reactivex.Single
-import org.stepic.droid.util.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.user.source.UserCacheDataSource
 import org.stepik.android.data.user.source.UserRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
