@@ -2,6 +2,9 @@ package org.stepik.android.view.profile_courses.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.widget.GridLayout
+import android.widget.LinearLayout
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +18,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
+import org.stepic.droid.ui.util.inflate
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -109,9 +113,9 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
         setDataToPresenter()
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
+        val columnsCount = resources.getInteger(R.integer.course_list_columns)
         with(profileCoursesRecycler) {
             val rowCount = resources.getInteger(R.integer.course_list_rows)
-            val columnsCount = resources.getInteger(R.integer.course_list_columns)
             layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
 
             adapter = coursesAdapter
@@ -119,6 +123,17 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
             addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), rowCount))
             val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(this)
+        }
+
+        with(profileCoursesPlaceholder) {
+            profileCoursesPlaceholder.weightSum = columnsCount.toFloat()
+            for (i in 0 until columnsCount) {
+                val skeletonView = inflate(R.layout.item_course_list_skeleton, attachToRoot = false)
+                skeletonView.updateLayoutParams<LinearLayout.LayoutParams> {
+                    weight = 1f
+                }
+                addView(skeletonView)
+            }
         }
     }
 
