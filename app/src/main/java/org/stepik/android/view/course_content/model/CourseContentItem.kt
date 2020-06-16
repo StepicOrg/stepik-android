@@ -35,7 +35,7 @@ sealed class CourseContentItem {
         val access: Access
     ) : CourseContentItem() {
         enum class Access {
-            NO_ACCESS, DEMO, ACCESS
+            NO_ACCESS, DEMO, FULL_ACCESS
         }
     }
 }

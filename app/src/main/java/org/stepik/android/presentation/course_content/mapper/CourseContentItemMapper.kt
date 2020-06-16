@@ -61,10 +61,10 @@ constructor(
                 sectionItem.section, unit, lesson, progress,
                 access =
                     if (lesson.actions?.learnLesson != null) {
-                        if (course.enrollment > 0L) {
-                            CourseContentItem.UnitItem.Access.ACCESS
-                        } else {
+                        if (course.enrollment == 0L && course.isPaid) {
                             CourseContentItem.UnitItem.Access.DEMO
+                        } else {
+                            CourseContentItem.UnitItem.Access.FULL_ACCESS
                         }
                     } else {
                         CourseContentItem.UnitItem.Access.NO_ACCESS

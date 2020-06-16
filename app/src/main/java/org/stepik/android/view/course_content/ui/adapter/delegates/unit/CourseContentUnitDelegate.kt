@@ -133,7 +133,7 @@ class CourseContentUnitDelegate(
                 unitRatingIcon.setImageResource(unitRatingDrawableRes)
                 unitRating.text = abs(lesson.voteDelta).toString()
 
-                unitDownloadStatus.isVisible = access == CourseContentItem.UnitItem.Access.ACCESS
+                unitDownloadStatus.isVisible = access == CourseContentItem.UnitItem.Access.FULL_ACCESS
                 itemView.isEnabled = access != CourseContentItem.UnitItem.Access.NO_ACCESS
 
                 val alpha = if (access != CourseContentItem.UnitItem.Access.NO_ACCESS) 1f else 0.4f
