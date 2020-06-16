@@ -53,7 +53,12 @@ class CoursePropertiesDelegate(
         if (learnersCount < 10000) return learnersCount.toString()
         val exp = (ln(learnersCount.toDouble()) / ln(1000.0)).toInt()
         val decimalFormat = DecimalFormat("0.#")
-        return "${decimalFormat.format(learnersCount / 1000.0.pow(exp.toDouble()))}${"KMGTPE"[exp - 1]}"
+        val result = "${decimalFormat.format(learnersCount / 1000.0.pow(exp.toDouble()))}${"KMGTPE"[exp - 1]}"
+        return if (result.length > 5) {
+            result.substring(0, result.length - 3) + result.last()
+        } else {
+            result
+        }
     }
 
     private fun setProgress(courseStats: CourseStats) {
