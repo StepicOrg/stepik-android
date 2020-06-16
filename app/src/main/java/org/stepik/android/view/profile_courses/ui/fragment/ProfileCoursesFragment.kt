@@ -113,9 +113,9 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
         setDataToPresenter()
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
-        val columnsCount = resources.getInteger(R.integer.course_list_columns)
         with(profileCoursesRecycler) {
             val rowCount = resources.getInteger(R.integer.course_list_rows)
+            val columnsCount = resources.getInteger(R.integer.course_list_columns)
             layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
 
             adapter = coursesAdapter
@@ -123,17 +123,6 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
             addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), rowCount))
             val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(this)
-        }
-
-        with(profileCoursesPlaceholder) {
-            profileCoursesPlaceholder.weightSum = columnsCount.toFloat()
-            for (i in 0 until columnsCount) {
-                val skeletonView = inflate(R.layout.item_course_list_skeleton, attachToRoot = false)
-                skeletonView.updateLayoutParams<LinearLayout.LayoutParams> {
-                    weight = 1f
-                }
-                addView(skeletonView)
-            }
         }
     }
 
