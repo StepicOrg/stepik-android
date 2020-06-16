@@ -114,11 +114,11 @@ class CourseContentUnitDelegate(
                 unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
 
                 Glide.with(unitIcon.context)
-                        .asBitmap()
-                        .load(lesson.coverUrl)
-                        .placeholder(unitIconPlaceholder)
-                        .centerCrop()
-                        .into(unitIconTarget)
+                    .asBitmap()
+                    .load(lesson.coverUrl)
+                    .placeholder(unitIconPlaceholder)
+                    .centerCrop()
+                    .into(unitIconTarget)
 
                 unitViewCount.text = lesson.passedBy.toString()
 
@@ -133,10 +133,10 @@ class CourseContentUnitDelegate(
                 unitRatingIcon.setImageResource(unitRatingDrawableRes)
                 unitRating.text = abs(lesson.voteDelta).toString()
 
-                unitDownloadStatus.isVisible = isEnabled
-                itemView.isEnabled = isEnabled
+                unitDownloadStatus.isVisible = access == CourseContentItem.UnitItem.Access.ACCESS
+                itemView.isEnabled = access != CourseContentItem.UnitItem.Access.NO_ACCESS
 
-                val alpha = if (isEnabled) 1f else 0.4f
+                val alpha = if (access != CourseContentItem.UnitItem.Access.NO_ACCESS) 1f else 0.4f
                 unitTitle.alpha = alpha
                 unitRatingIcon.alpha = alpha
                 unitRating.alpha = alpha

@@ -152,7 +152,10 @@ constructor(
 
         val unitIds = items
             .mapNotNull {
-                (it as? CourseContentItem.UnitItem)?.takeIf(CourseContentItem.UnitItem::isEnabled)?.unit?.id
+                (it as? CourseContentItem.UnitItem)
+                    ?.takeIf { it.access == CourseContentItem.UnitItem.Access.ACCESS }
+                    ?.unit
+                    ?.id
                     ?: (it as? CourseContentItem.UnitItemPlaceholder)?.unitId
             }
             .toLongArray()

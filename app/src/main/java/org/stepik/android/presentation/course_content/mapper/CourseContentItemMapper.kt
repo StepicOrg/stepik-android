@@ -52,12 +52,24 @@ constructor(
             null
         }
 
-    fun mapUnits(sectionItems: List<CourseContentItem.SectionItem>, units: List<Unit>, lessons: List<Lesson>, progresses: List<Progress>): List<CourseContentItem.UnitItem> =
+    fun mapUnits(course: Course, sectionItems: List<CourseContentItem.SectionItem>, units: List<Unit>, lessons: List<Lesson>, progresses: List<Progress>): List<CourseContentItem.UnitItem> =
         units.mapNotNull { unit ->
             val sectionItem = sectionItems.find { it.section.id == unit.section } ?: return@mapNotNull null
             val lesson = lessons.find { it.id == unit.lesson } ?: return@mapNotNull null
             val progress = progresses.find { it.id == unit.progress }
-            CourseContentItem.UnitItem(sectionItem.section, unit, lesson, progress, sectionItem.isEnabled)
+            CourseContentItem.UnitItem(
+                sectionItem.section, unit, lesson, progress,
+                access =
+                    if (lesson.actions?.learnLesson != null) {
+                        if (course.enrollment > 0L) {
+                            CourseContentItem.UnitItem.Access.ACCESS
+                        } else {
+                            CourseContentItem.UnitItem.Access.DEMO
+                        }
+                    } else {
+                        CourseContentItem.UnitItem.Access.NO_ACCESS
+                    }
+            )
         }
 
     fun replaceUnits(items: List<CourseContentItem>, unitItems: List<CourseContentItem.UnitItem>, progresses: List<Progress>): List<CourseContentItem> =

@@ -32,6 +32,10 @@ sealed class CourseContentItem {
         val unit: Unit,
         val lesson: Lesson,
         val progress: Progress?,
-        val isEnabled: Boolean
-    ) : CourseContentItem()
+        val access: Access
+    ) : CourseContentItem() {
+        enum class Access {
+            NO_ACCESS, DEMO, ACCESS
+        }
+    }
 }
