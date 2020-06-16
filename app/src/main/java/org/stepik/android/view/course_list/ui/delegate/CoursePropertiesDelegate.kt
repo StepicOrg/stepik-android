@@ -90,14 +90,8 @@ class CoursePropertiesDelegate(
     }
 
     private fun setCertificate(course: Course) {
-        val hasCertificate = course.certificate
-            ?.let {
-                val hasText = it.isNotEmpty()
-                val anyCertificateThreshold = course.certificateRegularThreshold > 0 || course.certificateDistinctionThreshold > 0
-                anyCertificateThreshold && (hasText || (course.isCertificateAutoIssued && course.isCertificateIssued))
-            } ?: false
         val isEnrolled = course.enrollment > 0L
-        val needShow = hasCertificate && !isEnrolled
+        val needShow = course.hasCertificate && !isEnrolled
         courseCertificateImage.isVisible = needShow
         courseCertificateText.isVisible = needShow
     }
