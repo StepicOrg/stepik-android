@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
 import org.stepic.droid.R
@@ -22,6 +23,7 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.profile_courses.ProfileCoursesPresenter
 import org.stepik.android.presentation.profile_courses.ProfileCoursesView
+import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -32,8 +34,6 @@ import kotlin.math.min
 
 class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), ProfileCoursesView {
     companion object {
-        private const val ROW_COUNT = 2
-
         fun newInstance(userId: Long): Fragment =
             ProfileCoursesFragment()
                 .apply {
@@ -110,11 +110,14 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
         with(profileCoursesRecycler) {
+            val rowCount = resources.getInteger(R.integer.course_list_rows)
+            val columnsCount = resources.getInteger(R.integer.course_list_columns)
+            layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
+
             adapter = coursesAdapter
-            layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
             itemAnimator?.changeDuration = 0
-            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), ROW_COUNT))
-            val snapHelper = CoursesSnapHelper(ROW_COUNT)
+            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.home_right_recycler_padding_without_extra), rowCount))
+            val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(this)
         }
     }
@@ -141,7 +144,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
             is ProfileCoursesView.State.Content -> {
                 coursesAdapter.items = state.courseListDataItems
                 (profileCoursesRecycler.layoutManager as? GridLayoutManager)
-                    ?.spanCount = min(ROW_COUNT, state.courseListDataItems.size)
+                    ?.spanCount = min(resources.getInteger(R.integer.course_list_rows), state.courseListDataItems.size)
             }
         }
     }

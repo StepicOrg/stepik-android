@@ -6,7 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -25,6 +25,7 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -32,8 +33,6 @@ import javax.inject.Inject
 
 class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseListQueryView {
     companion object {
-        private const val ROW_COUNT = 2
-
         fun newInstance(): Fragment =
             CourseListPopularFragment()
     }
@@ -77,10 +76,12 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
         )
 
         with(courseListCoursesRecycler) {
-            layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
+            val rowCount = resources.getInteger(R.integer.course_list_rows)
+            val columnsCount = resources.getInteger(R.integer.course_list_columns)
+            layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
             itemAnimator?.changeDuration = 0
-            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), ROW_COUNT))
-            val snapHelper = CoursesSnapHelper(ROW_COUNT)
+            addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), rowCount))
+            val snapHelper = CoursesSnapHelper(rowCount)
             snapHelper.attachToRecyclerView(this)
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
