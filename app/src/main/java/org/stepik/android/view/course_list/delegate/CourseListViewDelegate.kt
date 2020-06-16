@@ -27,9 +27,17 @@ class CourseListViewDelegate(
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
-    private var courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
+    private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
+
+    private val courseItemsSkeleton: List<CourseListItem>
 
     init {
+        val skeletonCount =
+            courseItemsRecyclerView.resources.getInteger(R.integer.course_list_rows) *
+                    courseItemsRecyclerView.resources.getInteger(R.integer.course_list_columns)
+
+        courseItemsSkeleton = List(skeletonCount) { CourseListItem.PlaceHolder() }
+
         courseItemAdapter += CourseListItemAdapterDelegate(
             analytic,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
@@ -52,10 +60,7 @@ class CourseListViewDelegate(
             }
 
             is CourseListView.State.Loading ->
-                courseItemAdapter.items = listOf(
-                    CourseListItem.PlaceHolder(),
-                    CourseListItem.PlaceHolder()
-                )
+                courseItemAdapter.items = courseItemsSkeleton
 
             is CourseListView.State.Content -> {
                 courseItemAdapter.items = state.courseListItems
