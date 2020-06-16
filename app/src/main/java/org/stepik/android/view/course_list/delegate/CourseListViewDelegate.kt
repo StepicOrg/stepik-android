@@ -1,7 +1,6 @@
 package org.stepik.android.view.course_list.delegate
 
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
@@ -23,7 +22,7 @@ class CourseListViewDelegate(
     private val courseListSwipeRefresh: StepikSwipeRefreshLayout? = null,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
-    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
+    onContinueCourseClicked: (CourseListItem.Data) -> Unit
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
