@@ -1,5 +1,6 @@
 package org.stepik.android.domain.lesson.repository
 
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.maybeFirst
@@ -11,4 +12,6 @@ interface LessonRepository {
         getLessons(lessonId, primarySourceType = primarySourceType).maybeFirst()
 
     fun getLessons(vararg lessonIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Lesson>>
+
+    fun removeCachedLessons(courseId: Long): Completable
 }

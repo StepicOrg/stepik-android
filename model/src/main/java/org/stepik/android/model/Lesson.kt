@@ -19,6 +19,9 @@ class Lesson(
     @SerializedName("cover_url")
     val coverUrl: String? = null,
 
+    @SerializedName("courses")
+    val courses: LongArray = longArrayOf(),
+
     @SerializedName("steps")
     val steps: LongArray = longArrayOf(),
 
@@ -68,6 +71,7 @@ class Lesson(
         dest.writeString(this.title)
         dest.writeString(this.slug)
         dest.writeString(this.coverUrl)
+        dest.writeLongArray(this.courses)
         dest.writeLongArray(this.steps)
         dest.writeParcelable(this.actions, 0)
         dest.writeBoolean(isFeatured)
@@ -92,6 +96,7 @@ class Lesson(
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
+                parcel.createLongArray() ?: longArrayOf(),
                 parcel.createLongArray() ?: longArrayOf(),
                 parcel.readParcelable(LessonActions::class.java.classLoader),
                 parcel.readBoolean(),
