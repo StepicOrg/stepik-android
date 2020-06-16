@@ -25,15 +25,15 @@ class CoursePropertiesDelegate(
     private val courseRatingText = view.courseRatingText
 
     fun setStats(courseListItem: CourseListItem.Data) {
-        setLearnersCount(courseListItem.course.learnersCount)
+        setLearnersCount(courseListItem.course.learnersCount, courseListItem.course.enrollment > 0L)
         setProgress(courseListItem.courseStats)
         setRating(courseListItem.courseStats)
 
         view.isVisible = view.children.any(View::isVisible)
     }
 
-    private fun setLearnersCount(learnersCount: Long) {
-        val needShowLearners = learnersCount > 0
+    private fun setLearnersCount(learnersCount: Long, isEnrolled: Boolean) {
+        val needShowLearners = learnersCount > 0 && !isEnrolled
         if (needShowLearners) {
             learnersCountText.text = String.format(Locale.getDefault(), "%d", learnersCount)
         }
