@@ -24,6 +24,8 @@ import org.stepic.droid.storage.migration.MigrationFrom49To50;
 import org.stepic.droid.storage.migration.MigrationFrom50To51;
 import org.stepic.droid.storage.migration.MigrationFrom51To52;
 import org.stepic.droid.storage.migration.MigrationFrom52To53;
+import org.stepic.droid.storage.migration.MigrationFrom53To54;
+import org.stepic.droid.storage.migration.MigrationFrom54To55;
 import org.stepic.droid.storage.structure.DatabaseInfo;
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
@@ -136,6 +138,8 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom50To51(db);
         upgradeFrom51To52(db);
         upgradeFrom52To53(db);
+        upgradeFrom53To54(db);
+        upgradeFrom54To55(db);
     }
 
 
@@ -390,6 +394,22 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion < 53) {
             upgradeFrom52To53(db);
         }
+
+        if (oldVersion < 54) {
+            upgradeFrom53To54(db);
+        }
+
+        if (oldVersion < 55) {
+            upgradeFrom54To55(db);
+        }
+    }
+
+    private void upgradeFrom54To55(SQLiteDatabase db) {
+        MigrationFrom54To55.INSTANCE.migrate(db);
+    }
+
+    private void upgradeFrom53To54(SQLiteDatabase db) {
+        MigrationFrom53To54.INSTANCE.migrate(db);
     }
 
     private void upgradeFrom52To53(SQLiteDatabase db) {

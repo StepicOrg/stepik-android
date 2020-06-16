@@ -58,7 +58,8 @@ constructor(
     private val discussionThreadDao: IDao<DiscussionThread>,
     private val attemptDao: IDao<Attempt>,
     private val socialProfileDao: IDao<SocialProfile>,
-    private val userCourseDao: IDao<UserCourse>
+    private val userCourseDao: IDao<UserCourse>,
+    private val courseCollectionDao: IDao<CourseCollection>
 ) {
 
     fun dropDatabase() {
@@ -87,6 +88,7 @@ constructor(
         attemptDao.removeAll()
         socialProfileDao.removeAll()
         userCourseDao.removeAll()
+        courseCollectionDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {
@@ -167,6 +169,10 @@ constructor(
 
     fun addLessons(lessons: List<Lesson>) =
         lessonDao.insertOrReplaceAll(lessons)
+
+    fun removeLessons(courseId: Long) {
+        lessonDao.removeLike(DbStructureLesson.Columns.COURSES, "%${DbParseHelper.escapeId(courseId.toString())}%")
+    }
 
     fun addToQueueViewedState(viewState: ViewAssignment) = viewAssignmentDao.insertOrUpdate(viewState)
 

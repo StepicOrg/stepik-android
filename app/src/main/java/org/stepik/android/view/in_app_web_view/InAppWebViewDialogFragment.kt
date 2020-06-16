@@ -2,11 +2,13 @@ package org.stepik.android.view.in_app_web_view
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowManager
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -134,6 +136,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
             ?.let { window ->
                 window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,  ViewGroup.LayoutParams.MATCH_PARENT)
                 window.setWindowAnimations(R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
             }
         inAppWebViewPresenter.attachView(this)
     }
@@ -158,5 +161,14 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     override fun onDestroy() {
         webView = null
         super.onDestroy()
+    }
+
+    override fun onDismiss(dialog: DialogInterface) {
+        (activity as? Callback)?.onDismissed()
+        super.onDismiss(dialog)
+    }
+
+    interface Callback {
+        fun onDismissed()
     }
 }

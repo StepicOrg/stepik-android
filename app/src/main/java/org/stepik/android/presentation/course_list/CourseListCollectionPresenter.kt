@@ -2,12 +2,14 @@ package org.stepik.android.presentation.course_list
 
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.model.Course
@@ -67,22 +69,24 @@ constructor(
 
         paginationDisposable.clear()
 
-        val oldCourseListViewState = (state as? CourseListCollectionView.State.Data)
-            ?.courseListViewState
+        val viewSource = CourseViewSource.Collection(courseCollection.id)
 
         state = CourseListCollectionView.State.Data(courseCollection, CourseListView.State.Loading)
-        paginationDisposable += courseListInteractor
-            .getCourseListItems(*courseCollection.courses, courseViewSource = CourseViewSource.Collection(courseCollection.id))
+        paginationDisposable += Single
+            .concat(
+                courseListInteractor
+                    .getCourseListItems(*courseCollection.courses, sourceType = DataSourceType.CACHE, courseViewSource = viewSource),
+
+                courseListInteractor
+                    .getCourseListItems(*courseCollection.courses, sourceType = DataSourceType.REMOTE, courseViewSource = viewSource)
+            )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { items ->
+                onNext = { items ->
                     val courseListViewState =
                         if (items.isNotEmpty()) {
-                            CourseListView.State.Content(
-                                courseListDataItems = items,
-                                courseListItems = items
-                            )
+                            CourseListView.State.Content(courseListDataItems = items, courseListItems = items)
                         } else {
                             CourseListView.State.Empty
                         }
@@ -90,6 +94,9 @@ constructor(
                     state = CourseListCollectionView.State.Data(courseCollection, courseListViewState)
                 },
                 onError = {
+                    val oldCourseListViewState = (state as? CourseListCollectionView.State.Data)
+                        ?.courseListViewState
+
                     when (oldCourseListViewState) {
                         is CourseListView.State.Content -> {
                             state = CourseListCollectionView.State.Data(courseCollection, oldCourseListViewState)

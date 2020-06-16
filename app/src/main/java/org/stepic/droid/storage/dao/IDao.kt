@@ -30,6 +30,7 @@ interface IDao<T> {
     fun remove(whereColumn: String, whereValue: String)
     fun remove(whereArgs: Map<String, String>)
     fun removeAllInRange(whereColumn: String, commaSeparatedIds: String)
+    fun removeLike(whereColumn: String, likeValue: String)
 
     fun removeAll()
 }
