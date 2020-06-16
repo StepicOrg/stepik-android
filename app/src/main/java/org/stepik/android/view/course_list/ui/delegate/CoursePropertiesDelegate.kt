@@ -10,6 +10,7 @@ import org.stepic.droid.util.safeDiv
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.model.Course
 import java.util.Locale
 
 class CoursePropertiesDelegate(
@@ -24,10 +25,15 @@ class CoursePropertiesDelegate(
     private val courseRatingImage = view.courseRatingImage
     private val courseRatingText = view.courseRatingText
 
+    private val courseCertificateImage = view.courseCertificateImage
+    private val courseCertificateText = view.courseCertificateText
+
     fun setStats(courseListItem: CourseListItem.Data) {
-        setLearnersCount(courseListItem.course.learnersCount, courseListItem.course.enrollment > 0L)
+        val isEnrolled = courseListItem.course.enrollment > 0L
+        setLearnersCount(courseListItem.course.learnersCount, isEnrolled)
         setProgress(courseListItem.courseStats)
         setRating(courseListItem.courseStats)
+        setCertificate(courseListItem.course)
 
         view.isVisible = view.children.any(View::isVisible)
     }
@@ -72,5 +78,16 @@ class CoursePropertiesDelegate(
         }
         courseRatingImage.isVisible = needShow
         courseRatingText.isVisible = needShow
+    }
+
+    private fun setCertificate(course: Course) {
+        val needShow = course.certificate
+            ?.let {
+                val hasText = it.isNotEmpty()
+                val anyCertificateThreshold = course.certificateRegularThreshold > 0 || course.certificateDistinctionThreshold > 0
+                anyCertificateThreshold && (hasText || (course.isCertificateAutoIssued && course.isCertificateIssued))
+            } ?: false
+        courseCertificateImage.isVisible = needShow
+        courseCertificateText.isVisible = needShow
     }
 }

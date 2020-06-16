@@ -58,4 +58,22 @@
         android:layout_toRightOf="@id/courseItemProgressView"
         tools:text="77%"/>
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/courseCertificateImage"
+        style="@style/CourseWidgetPropertyImageView"
+        android:layout_marginTop="5dp"
+        android:layout_width="14dp"
+        android:layout_height="12dp"
+        android:layout_toEndOf="@id/courseItemProgressTitle"
+        android:layout_toRightOf="@id/courseItemProgressTitle"
+        android:contentDescription="@string/course_info_certificate"
+        app:srcCompat="@drawable/ic_course_info_certificate"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseCertificateText"
+        style="@style/CourseWidgetPropertyTextView"
+        android:layout_toEndOf="@id/courseCertificateImage"
+        android:layout_toRightOf="@id/courseCertificateImage"
+        android:text="@string/course_info_certificate"/>
+
 </RelativeLayout>
