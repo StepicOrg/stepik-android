@@ -6,10 +6,12 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.TextUtil
 import org.stepic.droid.util.safeDiv
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.model.Course
 import java.util.Locale
 
 class CoursePropertiesDelegate(
@@ -24,18 +26,22 @@ class CoursePropertiesDelegate(
     private val courseRatingImage = view.courseRatingImage
     private val courseRatingText = view.courseRatingText
 
+    private val courseCertificateImage = view.courseCertificateImage
+    private val courseCertificateText = view.courseCertificateText
+
     fun setStats(courseListItem: CourseListItem.Data) {
-        setLearnersCount(courseListItem.course.learnersCount)
+        setLearnersCount(courseListItem.course.learnersCount, courseListItem.course.enrollment > 0L)
         setProgress(courseListItem.courseStats)
         setRating(courseListItem.courseStats)
+        setCertificate(courseListItem.course)
 
         view.isVisible = view.children.any(View::isVisible)
     }
 
-    private fun setLearnersCount(learnersCount: Long) {
-        val needShowLearners = learnersCount > 0
+    private fun setLearnersCount(learnersCount: Long, isEnrolled: Boolean) {
+        val needShowLearners = learnersCount > 0 && !isEnrolled
         if (needShowLearners) {
-            learnersCountText.text = String.format(Locale.getDefault(), "%d", learnersCount)
+            learnersCountText.text = TextUtil.formatNumbers(learnersCount)
         }
         learnersCountImage.isVisible = needShowLearners
         learnersCountText.isVisible = needShowLearners
@@ -72,5 +78,12 @@ class CoursePropertiesDelegate(
         }
         courseRatingImage.isVisible = needShow
         courseRatingText.isVisible = needShow
+    }
+
+    private fun setCertificate(course: Course) {
+        val isEnrolled = course.enrollment > 0L
+        val needShow = course.hasCertificate && !isEnrolled
+        courseCertificateImage.isVisible = needShow
+        courseCertificateText.isVisible = needShow
     }
 }

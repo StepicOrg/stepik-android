@@ -55,12 +55,8 @@ constructor(
             timeToComplete = course.timeToComplete ?: 0,
             instructors    = (instructors ?: course.instructors?.map { null })?.takeIf { it.isNotEmpty() },
             language       = course.language,
-            certificate    = course.certificate
-                ?.takeIf {
-                    val hasText = it.isNotEmpty()
-                    val anyCertificateThreshold = course.certificateRegularThreshold > 0 || course.certificateDistinctionThreshold > 0
-                    anyCertificateThreshold && (hasText || (course.isCertificateAutoIssued && course.isCertificateIssued))
-                }
+            certificate = course.certificate
+                ?.takeIf { course.hasCertificate }
                 ?.let {
                     CourseInfoData.Certificate(
                         title = it,

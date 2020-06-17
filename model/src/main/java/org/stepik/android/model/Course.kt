@@ -122,6 +122,13 @@ data class Course(
     val priceTier: String? = null
 ) : Progressable, Parcelable {
 
+    val hasCertificate: Boolean
+        get() = certificate?.let {
+            val hasText = it.isNotEmpty()
+            val anyCertificateThreshold = certificateRegularThreshold > 0 || certificateDistinctionThreshold > 0
+            anyCertificateThreshold && (hasText || (isCertificateAutoIssued && isCertificateIssued))
+        } ?: false
+
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeLong(id)
         parcel.writeString(title)
