@@ -151,9 +151,12 @@ constructor(
         subscribeForSectionsProgress(*sectionIds)
 
         val unitIds = items
-            .mapNotNull {
-                (it as? CourseContentItem.UnitItem)?.takeIf(CourseContentItem.UnitItem::isEnabled)?.unit?.id
-                    ?: (it as? CourseContentItem.UnitItemPlaceholder)?.unitId
+            .mapNotNull { item ->
+                (item as? CourseContentItem.UnitItem)
+                    ?.takeIf { it.access == CourseContentItem.UnitItem.Access.FULL_ACCESS }
+                    ?.unit
+                    ?.id
+                    ?: (item as? CourseContentItem.UnitItemPlaceholder)?.unitId
             }
             .toLongArray()
 

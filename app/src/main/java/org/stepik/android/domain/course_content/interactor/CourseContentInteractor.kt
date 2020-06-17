@@ -141,7 +141,7 @@ constructor(
                     .scan(items) { newItems, (units, lessons, progresses) ->
                         val sectionItems = newItems
                             .filterIsInstance<CourseContentItem.SectionItem>()
-                        val unitItems = courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
+                        val unitItems = courseContentItemMapper.mapUnits(course, sectionItems, units, lessons, progresses)
 
                         courseContentItemMapper.replaceUnits(newItems, unitItems, progresses)
                     }
