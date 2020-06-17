@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.view.*
@@ -15,7 +16,6 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
-import org.stepic.droid.ui.custom.WrapContentLinearLayoutManager
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
@@ -71,7 +71,7 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
         courseListUserSkeleton.isVisible = true
 
         with(courseListCoursesRecycler) {
-            layoutManager = WrapContentLinearLayoutManager(context)
+            layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
             setOnPaginationListener { pageDirection ->
                 if (pageDirection == PaginationDirection.NEXT) {
                     courseListPresenter.fetchNextPage()

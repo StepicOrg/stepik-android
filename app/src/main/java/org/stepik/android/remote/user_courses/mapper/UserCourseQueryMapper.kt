@@ -1,6 +1,6 @@
 package org.stepik.android.remote.user_courses.mapper
 
-import org.stepic.droid.util.putNullable
+import ru.nobird.android.core.model.putNullable
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import javax.inject.Inject
 

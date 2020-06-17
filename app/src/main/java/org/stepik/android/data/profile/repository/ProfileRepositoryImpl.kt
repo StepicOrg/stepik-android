@@ -2,7 +2,7 @@ package org.stepik.android.data.profile.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepic.droid.util.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.profile.source.ProfileCacheDataSource
 import org.stepik.android.data.profile.source.ProfileRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType

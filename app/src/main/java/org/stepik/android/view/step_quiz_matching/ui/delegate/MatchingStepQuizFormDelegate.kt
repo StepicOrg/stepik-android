@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.fragment_step_quiz.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_sorting.view.*
 import org.stepic.droid.R
-import org.stepic.droid.util.swap
 import org.stepik.android.model.Reply
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
@@ -16,6 +15,7 @@ import org.stepik.android.view.step_quiz_matching.ui.adapter.delegate.MatchingIt
 import org.stepik.android.view.step_quiz_matching.ui.adapter.delegate.MatchingItemTitleAdapterDelegate
 import org.stepik.android.view.step_quiz_matching.ui.mapper.MatchingItemMapper
 import org.stepik.android.view.step_quiz_matching.ui.model.MatchingItem
+import ru.nobird.android.core.model.swap
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 
 class MatchingStepQuizFormDelegate(

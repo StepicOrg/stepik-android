@@ -3,12 +3,14 @@ package org.stepik.android.presentation.comment.mapper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.filterNot
 import org.stepic.droid.util.mapPaged
-import org.stepic.droid.util.mutate
 import org.stepic.droid.util.plus
+import org.stepic.droid.util.transform
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.comment.CommentsView
 import org.stepik.android.presentation.comment.model.CommentItem
+import ru.nobird.android.core.model.insert
+import ru.nobird.android.core.model.mutate
 import javax.inject.Inject
 
 class CommentsStateMapper
@@ -139,7 +141,7 @@ constructor() {
                 }
 
             val commentDataItems =
-                commentsState.commentDataItems.mutate { addAll(index + 1, items) }
+                commentsState.commentDataItems.transform { mutate { addAll(index + 1, items) } }
 
             state.copy(commentsState = commentsState.copy(commentDataItems, commentItems))
         } else {
@@ -323,7 +325,7 @@ constructor() {
                                 ?: state.commentsState.commentItems.size
 
                             copy(
-                                commentDataItems = commentDataItems.mutate { add(1, commentDataItem) },
+                                commentDataItems = commentDataItems.transform { insert(commentDataItem, pos = 1) },
                                 commentItems = commentItems.mutate { add(rawIndexOfSecondTopComment, commentDataItem) }
                             )
                         }
@@ -363,7 +365,7 @@ constructor() {
                 with(commentsState) {
                     copy(
                         commentItems = commentItems.mutate { add(rawIndex, commentDataItem) },
-                        commentDataItems = commentDataItems.mutate { add(index, commentDataItem) }
+                        commentDataItems = commentDataItems.transform { insert(commentDataItem, index) }
                     )
                 }
         )

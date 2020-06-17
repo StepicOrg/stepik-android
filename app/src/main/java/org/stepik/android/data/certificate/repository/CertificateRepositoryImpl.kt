@@ -2,7 +2,7 @@ package org.stepik.android.data.certificate.repository
 
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.certificate.source.CertificateCacheDataSource
 import org.stepik.android.data.certificate.source.CertificateRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType

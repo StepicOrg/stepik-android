@@ -17,7 +17,7 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
-import org.stepic.droid.util.mutate
+import ru.nobird.android.core.model.mutate
 import org.stepik.android.model.user.Profile
 import org.stepik.android.presentation.profile_edit.ProfileEditPresenter
 import org.stepik.android.presentation.profile_edit.ProfileEditView

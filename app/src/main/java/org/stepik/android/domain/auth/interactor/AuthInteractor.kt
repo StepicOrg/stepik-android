@@ -7,7 +7,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.model.Credentials
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
-import org.stepic.droid.util.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.domain.auth.model.SocialAuthType
 import org.stepik.android.domain.auth.repository.AuthRepository
 import org.stepik.android.domain.course.repository.CourseRepository

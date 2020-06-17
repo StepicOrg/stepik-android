@@ -10,9 +10,8 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.emptyOnErrorStub
-import org.stepic.droid.util.mapToLongArray
-import org.stepic.droid.util.takeLazy
+import ru.nobird.android.domain.rx.emptyOnErrorStub
+import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -30,6 +29,7 @@ import org.stepik.android.view.injection.course_list.UserCoursesLoadedBus
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.course_list.UserCoursesUpdateBus
 import retrofit2.HttpException
+import ru.nobird.android.core.model.slice
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -137,7 +137,7 @@ constructor(
 
         val ids = oldState
             .userCourses
-            .takeLazy(PAGE_SIZE)
+            .slice(to = PAGE_SIZE)
             .mapToLongArray(UserCourse::course)
 
         paginationDisposable += Single

@@ -1,6 +1,6 @@
 package org.stepik.android.remote.search_result.mapper
 
-import org.stepic.droid.util.putNullable
+import ru.nobird.android.core.model.putNullable
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import javax.inject.Inject
 

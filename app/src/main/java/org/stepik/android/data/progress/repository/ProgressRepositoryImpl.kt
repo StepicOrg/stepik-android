@@ -2,8 +2,8 @@ package org.stepik.android.data.progress.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepic.droid.util.doCompletableOnSuccess
-import org.stepic.droid.util.requireSize
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.requireSize
 import org.stepik.android.data.progress.source.ProgressCacheDataSource
 import org.stepik.android.data.progress.source.ProgressRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
