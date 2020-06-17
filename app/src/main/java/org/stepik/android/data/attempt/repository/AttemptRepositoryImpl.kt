@@ -1,7 +1,7 @@
 package org.stepik.android.data.attempt.repository
 
 import io.reactivex.Single
-import org.stepic.droid.util.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.attempt.source.AttemptCacheDataSource
 import org.stepik.android.data.attempt.source.AttemptRemoteDataSource
 import org.stepik.android.domain.attempt.repository.AttemptRepository

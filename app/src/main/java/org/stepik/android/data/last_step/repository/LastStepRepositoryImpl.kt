@@ -2,7 +2,7 @@ package org.stepik.android.data.last_step.repository
 
 import io.reactivex.Completable
 import io.reactivex.Maybe
-import org.stepic.droid.util.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.last_step.source.LastStepCacheDataSource
 import org.stepik.android.data.last_step.source.LastStepRemoteDataSource
 import org.stepik.android.domain.last_step.model.LastStep

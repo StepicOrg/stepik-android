@@ -3,9 +3,8 @@ package org.stepik.android.domain.step.interactor
 import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
-import org.stepic.droid.util.filterSingle
 import org.stepic.droid.util.hasUserAccessAndNotEmpty
-import org.stepic.droid.util.toMaybe
+import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.section.repository.SectionRepository
@@ -16,6 +15,7 @@ import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
+import ru.nobird.android.domain.rx.filterSingle
 import java.util.EnumSet
 import javax.inject.Inject
 

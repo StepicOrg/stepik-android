@@ -8,8 +8,8 @@ import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.AppConstants
-import org.stepic.droid.util.maybeFirst
-import org.stepic.droid.util.toMaybe
+import ru.nobird.android.domain.rx.maybeFirst
+import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.model.LessonData

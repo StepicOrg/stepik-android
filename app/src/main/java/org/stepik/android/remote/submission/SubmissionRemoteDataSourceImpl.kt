@@ -3,7 +3,7 @@ package org.stepik.android.remote.submission
 import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.first
+import ru.nobird.android.domain.rx.first
 import org.stepik.android.data.submission.source.SubmissionRemoteDataSource
 import org.stepik.android.model.Submission
 import org.stepik.android.remote.base.mapper.toPagedList

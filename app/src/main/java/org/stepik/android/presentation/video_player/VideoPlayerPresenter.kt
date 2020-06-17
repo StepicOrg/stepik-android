@@ -10,7 +10,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.VideoPlaybackRate
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.video_player.interactor.VideoPlayerSettingsInteractor
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.base.PresenterBase

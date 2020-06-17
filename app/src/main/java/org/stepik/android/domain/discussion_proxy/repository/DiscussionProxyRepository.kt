@@ -2,7 +2,7 @@ package org.stepik.android.domain.discussion_proxy.repository
 
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.model.comments.DiscussionProxy
 
 interface DiscussionProxyRepository {

@@ -1,10 +1,10 @@
 package org.stepik.android.domain.profile_activities.interactor
 
 import io.reactivex.Single
-import org.stepic.droid.util.first
 import org.stepik.android.domain.profile_activities.model.ProfileActivitiesData
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.model.user.UserActivity
+import ru.nobird.android.domain.rx.first
 import javax.inject.Inject
 import kotlin.math.max
 

@@ -3,7 +3,7 @@ package org.stepik.android.domain.course.interactor
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
-import org.stepic.droid.util.mapToLongArray
+import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState

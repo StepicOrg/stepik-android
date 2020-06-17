@@ -2,7 +2,7 @@ package org.stepik.android.data.lesson.source
 
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.model.Lesson
 
 interface LessonRemoteDataSource {

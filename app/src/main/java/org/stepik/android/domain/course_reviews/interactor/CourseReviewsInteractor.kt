@@ -6,7 +6,7 @@ import io.reactivex.rxkotlin.Maybes
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.zipWith
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_reviews.model.CourseReview

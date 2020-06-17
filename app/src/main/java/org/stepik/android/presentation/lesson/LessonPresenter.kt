@@ -9,7 +9,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.app_rating.interactor.AppRatingInteractor
 import org.stepik.android.domain.feedback.interactor.FeedbackInteractor
 import org.stepik.android.domain.last_step.model.LastStep

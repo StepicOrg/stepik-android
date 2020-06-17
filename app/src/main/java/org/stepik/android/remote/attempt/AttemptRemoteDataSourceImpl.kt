@@ -2,7 +2,7 @@ package org.stepik.android.remote.attempt
 
 import io.reactivex.Single
 import io.reactivex.functions.Function
-import org.stepic.droid.util.first
+import ru.nobird.android.domain.rx.first
 import org.stepik.android.data.attempt.source.AttemptRemoteDataSource
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.remote.attempt.model.AttemptRequest
