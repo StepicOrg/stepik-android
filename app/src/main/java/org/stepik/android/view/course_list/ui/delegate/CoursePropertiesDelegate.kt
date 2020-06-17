@@ -6,15 +6,13 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
+import org.stepic.droid.util.TextUtil
 import org.stepic.droid.util.safeDiv
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.model.Course
-import java.text.DecimalFormat
 import java.util.Locale
-import kotlin.math.ln
-import kotlin.math.pow
 
 class CoursePropertiesDelegate(
     private val view: ViewGroup
@@ -43,22 +41,10 @@ class CoursePropertiesDelegate(
     private fun setLearnersCount(learnersCount: Long, isEnrolled: Boolean) {
         val needShowLearners = learnersCount > 0 && !isEnrolled
         if (needShowLearners) {
-            learnersCountText.text = formatLearners(learnersCount)
+            learnersCountText.text = TextUtil.formatNumbers(learnersCount)
         }
         learnersCountImage.isVisible = needShowLearners
         learnersCountText.isVisible = needShowLearners
-    }
-
-    private fun formatLearners(learnersCount: Long): String {
-        if (learnersCount < 10000) return learnersCount.toString()
-        val exp = (ln(learnersCount.toDouble()) / ln(1000.0)).toInt()
-        val decimalFormat = DecimalFormat("0.#")
-        val result = "${decimalFormat.format(learnersCount / 1000.0.pow(exp.toDouble()))}${"KMGTPE"[exp - 1]}"
-        return if (result.length > 5) {
-            result.substring(0, result.length - 3) + result.last()
-        } else {
-            result
-        }
     }
 
     private fun setProgress(courseStats: CourseStats) {

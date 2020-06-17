@@ -4,6 +4,8 @@ import android.text.SpannableString
 import android.text.util.Linkify
 import androidx.core.text.HtmlCompat
 import androidx.core.text.util.LinkifyCompat
+import java.text.DecimalFormat
+import kotlin.math.abs
 import kotlin.math.log
 import kotlin.math.pow
 
@@ -45,6 +47,36 @@ object TextUtil {
         val exp = log(bytes.toFloat(), unit.toFloat()).toInt()
         val letter = "kMGTPE"[exp - 1]
         return "%.1f %sB".format(bytes / unit.toDouble().pow(exp), letter)
+    }
+
+    /**
+     * Format [number] in human readable format with 4 symbols
+     */
+    @JvmStatic
+    fun formatNumbers(number: Long): String {
+        if (number < 10000) return number.toString()
+
+        val unit = 1000.0
+
+        val exp = log(number.toDouble(), unit).toInt()
+
+        val mean = number / unit.pow(exp)
+        val absMean = abs(mean)
+        val precision =
+            when {
+                absMean < 10.0 ->
+                    2
+
+                10.0 <= absMean && absMean < 100.0 ->
+                    1
+
+                else ->
+                    0
+            }
+
+        val decimalFormat = DecimalFormat("0" + (if (precision > 0) "." else "") + "#".repeat(precision))
+
+        return decimalFormat.format(mean) + "KMGTPE"[exp - 1]
     }
 
     @JvmStatic
