@@ -1,5 +1,6 @@
 package org.stepik.android.data.lesson.repository
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import ru.nobird.android.domain.rx.requireSize
@@ -41,4 +42,7 @@ constructor(
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
         }.map { lessons -> lessons.sortedBy { lessonIds.indexOf(it.id) } }
     }
+
+    override fun removeCachedLessons(courseId: Long): Completable =
+        lessonCacheDataSource.removeCachedLessons(courseId)
 }

@@ -32,6 +32,7 @@ class CourseContentUnitDelegate(
     inner class ViewHolder(root: View) : DelegateViewHolder<CourseContentItem>(root) {
         private val unitIcon = root.unitIcon
         private val unitTitle = root.unitTitle
+        private val unitDemoAccess = root.unitDemoAccess
         private val unitTextProgress = root.unitTextProgress
         private val unitProgress = root.unitProgress
 
@@ -88,16 +89,16 @@ class CourseContentUnitDelegate(
                         score.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), progress.cost)
 
                     unitProgress.progress = score / progress.cost.toFloat()
-                    unitTextProgress.visibility = View.VISIBLE
+                    unitTextProgress.isVisible = true
                 } else {
                     unitProgress.progress = 0f
-                    unitTextProgress.visibility = View.GONE
+                    unitTextProgress.isVisible = false
                 }
 
                 val timeToComplete = lesson.timeToComplete.takeIf { it > 60 } ?: lesson.steps.size * 60L
 
                 if (timeToComplete > 0) {
-                    unitTimeToComplete.visibility = View.VISIBLE
+                    unitTimeToComplete.isVisible = true
 
                     val timeToCompleteString = if (timeToComplete in 0 until 3600) {
                         val timeValue = timeToComplete / 60
@@ -108,17 +109,17 @@ class CourseContentUnitDelegate(
 
                     unitTimeToComplete.text = context.getString(R.string.course_content_time_to_complete, timeToCompleteString)
                 } else {
-                    unitTimeToComplete.visibility = View.GONE
+                    unitTimeToComplete.isVisible = false
                 }
 
                 unitDownloadStatus.status = unitDownloadStatuses[data.unit.id] ?: DownloadProgress.Status.Pending
 
                 Glide.with(unitIcon.context)
-                        .asBitmap()
-                        .load(lesson.coverUrl)
-                        .placeholder(unitIconPlaceholder)
-                        .centerCrop()
-                        .into(unitIconTarget)
+                    .asBitmap()
+                    .load(lesson.coverUrl)
+                    .placeholder(unitIconPlaceholder)
+                    .centerCrop()
+                    .into(unitIconTarget)
 
                 unitViewCount.text = lesson.passedBy.toString()
 
@@ -133,10 +134,11 @@ class CourseContentUnitDelegate(
                 unitRatingIcon.setImageResource(unitRatingDrawableRes)
                 unitRating.text = abs(lesson.voteDelta).toString()
 
-                unitDownloadStatus.isVisible = isEnabled
-                itemView.isEnabled = isEnabled
+                unitDownloadStatus.isVisible = access == CourseContentItem.UnitItem.Access.FULL_ACCESS
+                unitDemoAccess.isVisible = access == CourseContentItem.UnitItem.Access.DEMO
+                itemView.isEnabled = access != CourseContentItem.UnitItem.Access.NO_ACCESS
 
-                val alpha = if (isEnabled) 1f else 0.4f
+                val alpha = if (access != CourseContentItem.UnitItem.Access.NO_ACCESS) 1f else 0.4f
                 unitTitle.alpha = alpha
                 unitRatingIcon.alpha = alpha
                 unitRating.alpha = alpha
