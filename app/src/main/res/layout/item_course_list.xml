@@ -17,10 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginLeft="@dimen/course_list_side_padding"
+            android:layout_marginRight="@dimen/course_list_side_padding"
             android:layout_marginTop="@dimen/guideline_standard_padding"
             android:visibility="gone"
             tools:visibility="visible"/>
@@ -89,10 +87,8 @@
             android:layout_below="@id/courseListTitleContainer"
             android:clipToPadding="false"
             android:paddingTop="8dp"
-            android:paddingLeft="8dp"
-            android:paddingStart="8dp"
-            android:paddingRight="46dp"
-            android:paddingEnd="46dp"
+            android:paddingLeft="@dimen/course_list_padding"
+            android:paddingRight="@dimen/course_list_padding"
             android:paddingBottom="8dp" />
 
         <org.stepic.droid.ui.custom.PlaceholderTextView
@@ -100,10 +96,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="@dimen/course_list_side_padding"
+            android:layout_marginRight="@dimen/course_list_side_padding"
             android:layout_marginTop="@dimen/guideline_standard_padding"
             android:visibility="visible"
             tools:visibility="visible"/>
@@ -114,10 +108,8 @@
             android:layout_height="wrap_content"
             android:text="@string/internet_problem"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginLeft="@dimen/course_list_side_padding"
+            android:layout_marginRight="@dimen/course_list_side_padding"
             android:layout_marginTop="@dimen/guideline_standard_padding"
             android:visibility="visible"
             tools:visibility="visible"/>

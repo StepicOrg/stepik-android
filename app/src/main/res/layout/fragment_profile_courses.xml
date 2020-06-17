@@ -41,27 +41,18 @@
         android:clipToPadding="false"
 
         android:paddingLeft="16dp"
-        android:paddingStart="16dp"
-        android:paddingRight="@dimen/home_right_recycler_padding"
-        android:paddingEnd="@dimen/home_right_recycler_padding"
+        android:paddingRight="16dp"
         android:paddingBottom="16dp" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <include
+        layout="@layout/item_course_loading_skeleton_container"
         android:id="@+id/profileCoursesPlaceholder"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="@dimen/profile_block_margin"
-        android:layout_marginRight="@dimen/profile_block_margin"
-        android:layout_marginBottom="@dimen/profile_block_vertical_margin">
-        <include
-            layout="@layout/course_loading_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        android:visibility="gone"
+        android:layout_marginLeft="@dimen/profile_block_vertical_margin"
+        android:layout_marginRight="@dimen/profile_block_vertical_margin"
+        android:layout_marginBottom="@dimen/profile_block_vertical_margin" />
 
     <include
         android:id="@+id/profileCoursesLoadingError"
