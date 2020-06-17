@@ -1,7 +1,6 @@
 package org.stepik.android.view.course_list.delegate
 
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
@@ -23,13 +22,21 @@ class CourseListViewDelegate(
     private val courseListSwipeRefresh: StepikSwipeRefreshLayout? = null,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
-    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
+    onContinueCourseClicked: (CourseListItem.Data) -> Unit
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
-    private var courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
+    private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
+
+    private val courseItemsSkeleton: List<CourseListItem>
 
     init {
+        val skeletonCount =
+            courseItemsRecyclerView.resources.getInteger(R.integer.course_list_rows) *
+                    courseItemsRecyclerView.resources.getInteger(R.integer.course_list_columns)
+
+        courseItemsSkeleton = List(skeletonCount) { CourseListItem.PlaceHolder() }
+
         courseItemAdapter += CourseListItemAdapterDelegate(
             analytic,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
@@ -52,10 +59,7 @@ class CourseListViewDelegate(
             }
 
             is CourseListView.State.Loading ->
-                courseItemAdapter.items = listOf(
-                    CourseListItem.PlaceHolder(),
-                    CourseListItem.PlaceHolder()
-                )
+                courseItemAdapter.items = courseItemsSkeleton
 
             is CourseListView.State.Content -> {
                 courseItemAdapter.items = state.courseListItems
@@ -65,16 +69,6 @@ class CourseListViewDelegate(
                         state.courseListDataItems.size,
                         state.courseListDataItems.size
                     )
-
-                /**
-                 * notify is necessary, because margins don't get recalculated after adding loading placeholder
-                 */
-                val size = state.courseListItems.size
-                if (size > 2 &&
-                    (courseItemsRecyclerView.layoutManager as? LinearLayoutManager)?.orientation == LinearLayoutManager.HORIZONTAL) {
-                    courseItemAdapter.notifyItemChanged(size - 2)
-                    courseItemAdapter.notifyItemChanged(size - 3)
-                }
             }
 
             else ->

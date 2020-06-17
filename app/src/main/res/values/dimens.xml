@@ -47,8 +47,8 @@
 
     <dimen name="course_item_height">141dp</dimen>
     <dimen name="course_item_radius">@dimen/corner_radius</dimen>
-    <dimen name="course_item_margin">8dp</dimen> <!-- Total offset is 8 + 8 = 16 -->
-    <dimen name="course_list_padding">8dp</dimen> <!-- Padding for regular course lists @see CourseListFragmentBase -->
+    <dimen name="course_item_margin">6dp</dimen> <!-- Total offset is 8 + 8 = 16 -->
+    <dimen name="course_list_padding">14dp</dimen> <!-- Padding for regular course lists @see CourseListFragmentBase -->
 
     <dimen name="fast_continue_course_image_size">40dp</dimen>
     <dimen name="fast_continue_inner_content_margin">20dp</dimen>
@@ -66,13 +66,6 @@
     <dimen name="course_item_property_text_size">16sp</dimen>
     <dimen name="course_item_property_text_image_margin">2dp</dimen>
     <dimen name="course_item_property_between_items_margin">7dp</dimen>
-
-
-    <!--Left padding (moteIcon) + right padding(moreIcon) + moreIcon.width-->
-    <dimen name="home_right_recycler_padding">46dp</dimen>
-    <!-- 'home_right_recycler_padding' minus 'course_list_side_right_padding'-->
-    <dimen name="home_right_recycler_padding_without_extra">34dp</dimen>
-    <dimen name="new_home_right_recycler_padding_without_extra">36dp</dimen>
 
     <dimen name="placeholder_text_size">16sp</dimen>
     <dimen name="placeholder_side_padding">28dp</dimen>
