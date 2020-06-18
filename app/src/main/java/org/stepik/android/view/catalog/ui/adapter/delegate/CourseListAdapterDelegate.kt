@@ -3,14 +3,13 @@ package org.stepik.android.view.catalog.ui.adapter.delegate
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_course_list.view.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.model.CollectionDescriptionColors
-import org.stepic.droid.ui.decorators.RightMarginForLastItems
 import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
@@ -22,6 +21,7 @@ import org.stepik.android.presentation.course_continue.model.CourseContinueInter
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListCollectionView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.view.base.ui.adapter.layoutmanager.TableLayoutManager
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -33,10 +33,6 @@ class CourseListAdapterDelegate(
     private val screenManager: ScreenManager,
     private val courseContinueViewDelegate: CourseContinueViewDelegate
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
-    companion object {
-        private const val ROW_COUNT = 2
-    }
-
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
         data is CourseListCollectionPresenter
 
@@ -89,10 +85,11 @@ class CourseListAdapterDelegate(
             courseListPlaceholderNoConnection.setText(R.string.internet_problem)
 
             with(courseListCoursesRecycler) {
-                layoutManager = GridLayoutManager(context, ROW_COUNT, GridLayoutManager.HORIZONTAL, false)
+                val rowCount = resources.getInteger(R.integer.course_list_rows)
+                val columnsCount = resources.getInteger(R.integer.course_list_columns)
+                layoutManager = TableLayoutManager(context, columnsCount, rowCount, RecyclerView.HORIZONTAL, false)
                 itemAnimator?.changeDuration = 0
-                addItemDecoration(RightMarginForLastItems(resources.getDimensionPixelSize(R.dimen.new_home_right_recycler_padding_without_extra), ROW_COUNT))
-                val snapHelper = CoursesSnapHelper(ROW_COUNT)
+                val snapHelper = CoursesSnapHelper(rowCount)
                 snapHelper.attachToRecyclerView(this)
             }
         }

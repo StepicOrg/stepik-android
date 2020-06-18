@@ -6,13 +6,10 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableEmitter
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.rxkotlin.zipWith
 import org.stepic.droid.util.rx.ObservableReduceMap
 import java.util.concurrent.TimeUnit
-
 
 enum class RxEmpty { INSTANCE }
 
@@ -32,8 +29,6 @@ fun <T> Single<RxOptional<T>>.unwrapOptional(): Maybe<T> =
 
 fun <T, R> Single<T>.mapNotNull(transform: (T) -> R?): Maybe<R> =
         this.map { RxOptional(transform(it)) }.unwrapOptional()
-
-infix fun CompositeDisposable.addDisposable(d: Disposable) = this.add(d)
 
 infix fun Completable.then(completable: Completable): Completable = this.andThen(completable)
 infix fun <T> Completable.then(observable: Observable<T>): Observable<T> = this.andThen(observable)
@@ -69,57 +64,6 @@ class RetryExponential(private val maxAttempts: Int)
             }
 
 }
-
-inline fun <T> Maybe<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Maybe<T> =
-        flatMap { completableSource(it).andThen(Maybe.just(it)) }
-
-inline fun <T> Single<T>.doCompletableOnSuccess(crossinline completableSource: (T) -> Completable): Single<T> =
-    flatMap { completableSource(it).andThen(Single.just(it)) }
-
-fun <T> Single<List<T>>.requireSize(size: Int): Single<List<T>> =
-    flatMap { list ->
-        list.takeIf { it.size == size }
-            ?.let { Single.just(it) }
-            ?: Single.error(IllegalStateException("Expected list size = $size, actual = ${list.size}"))
-    }
-
-/**
- * Empty on error stub in order to suppress errors
- */
-val emptyOnErrorStub: (Throwable) -> Unit = {}
-
-/**
- * Filters observable according to [predicateSource] predicate
- */
-fun <T> Observable<T>.filterSingle(predicateSource: (T) -> Single<Boolean>): Observable<T> =
-    flatMap { item ->
-        predicateSource(item)
-            .toObservable()
-            .filter { it }
-            .map { item }
-    }
-
-/**
- * Wraps current object to Maybe
- */
-fun <T : Any> T?.toMaybe(): Maybe<T> =
-    if (this == null) {
-        Maybe.empty()
-    } else {
-        Maybe.just(this)
-    }
-
-/**
- * Returns first element of list wrapped in Maybe or empty
- */
-fun <T : Any> Single<List<T>>.maybeFirst(): Maybe<T> =
-    flatMapMaybe { it.firstOrNull().toMaybe() }
-
-/**
- * Returns first element of list
- */
-fun <T : Any> Single<List<T>>.first(): Single<T> =
-    map { it.first() }
 
 /**
  * Performs reduce operation with [seed] over values in [sources] and emits every obtained value

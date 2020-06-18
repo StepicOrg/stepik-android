@@ -2,7 +2,7 @@ package org.stepik.android.domain.step.repository
 
 import io.reactivex.Maybe
 import io.reactivex.Single
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.Step
 

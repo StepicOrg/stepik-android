@@ -7,7 +7,9 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.emptyOnErrorStub
+import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.analytic.CourseViewSource
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -152,6 +154,24 @@ constructor(
                         ?: return@subscribeBy
 
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, enrolledCourse))
+                    fetchForEnrollmentUpdate(enrolledCourse)
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    // TODO Remove duplication here, at CourseListCollectionPresenter.kt and CourseListSearchPresenter.kt in future sprint
+    private fun fetchForEnrollmentUpdate(course: Course) {
+        val oldState = (state as? CourseListQueryView.State.Data)
+            ?: return
+
+        compositeDisposable += courseListInteractor
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Query(oldState.courseListQuery), sourceType = DataSourceType.CACHE)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { courses ->
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, courses.first()))
                 },
                 onError = emptyOnErrorStub
             )

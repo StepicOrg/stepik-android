@@ -1,7 +1,6 @@
 package org.stepik.android.presentation.course_content.mapper
 
 import org.stepic.droid.R
-import org.stepic.droid.util.isNullOrEmpty
 import org.stepic.droid.web.storage.model.StorageRecord
 import org.stepik.android.domain.personal_deadlines.model.DeadlinesWrapper
 import org.stepik.android.model.Course
@@ -10,6 +9,7 @@ import org.stepik.android.presentation.course_content.CourseContentView
 import org.stepik.android.presentation.personal_deadlines.model.PersonalDeadlinesState
 import org.stepik.android.view.course_content.model.CourseContentItem
 import org.stepik.android.view.course_content.model.CourseContentSectionDate
+import ru.nobird.android.core.model.isNullOrEmpty
 import javax.inject.Inject
 
 class CourseContentStateMapper

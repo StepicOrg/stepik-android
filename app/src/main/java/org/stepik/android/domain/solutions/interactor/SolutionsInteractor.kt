@@ -4,8 +4,8 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
-import org.stepic.droid.util.mapToLongArray
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.core.model.mapToLongArray
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.domain.attempt.repository.AttemptRepository
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository

@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.util.mapToLongArray
+import ru.nobird.android.core.model.mapToLongArray
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -141,7 +141,7 @@ constructor(
                     .scan(items) { newItems, (units, lessons, progresses) ->
                         val sectionItems = newItems
                             .filterIsInstance<CourseContentItem.SectionItem>()
-                        val unitItems = courseContentItemMapper.mapUnits(sectionItems, units, lessons, progresses)
+                        val unitItems = courseContentItemMapper.mapUnits(course, sectionItems, units, lessons, progresses)
 
                         courseContentItemMapper.replaceUnits(newItems, unitItems, progresses)
                     }

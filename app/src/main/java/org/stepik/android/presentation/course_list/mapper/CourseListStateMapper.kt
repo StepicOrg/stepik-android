@@ -67,15 +67,20 @@ constructor() {
                 if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
             }
 
-        return CourseListView.State.Content(
-            courseListDataItems = courseListItems,
-            courseListItems =
-                if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
-                    courseListItems + CourseListItem.PlaceHolder()
-                } else {
-                    courseListItems
-                }
-        )
+        return mergeCourseListItemsWithEnrollment(state, courseListItems)
+    }
+
+    fun mapToEnrollmentUpdateState(state: CourseListView.State, enrolledCourse: CourseListItem.Data): CourseListView.State {
+        if (state !is CourseListView.State.Content) {
+            return state
+        }
+
+        val courseListItems =
+            state.courseListDataItems.mapPaged {
+                if (it.course.id == enrolledCourse.course.id) enrolledCourse else it
+            }
+
+        return mergeCourseListItemsWithEnrollment(state, courseListItems)
     }
 
     fun mergeWithCourseProgress(state: CourseListView.State, progress: Progress): CourseListView.State {
@@ -104,4 +109,15 @@ constructor() {
         } else {
             item
         }
+
+    private fun mergeCourseListItemsWithEnrollment(state: CourseListView.State.Content, courseListItems: PagedList<CourseListItem.Data>): CourseListView.State =
+        CourseListView.State.Content(
+            courseListDataItems = courseListItems,
+            courseListItems =
+            if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
+                courseListItems + CourseListItem.PlaceHolder()
+            } else {
+                courseListItems
+            }
+        )
 }

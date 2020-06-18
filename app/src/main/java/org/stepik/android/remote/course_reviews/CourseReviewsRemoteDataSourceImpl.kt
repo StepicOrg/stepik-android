@@ -4,7 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.data.course_reviews.source.CourseReviewsRemoteDataSource
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.remote.base.mapper.toPagedList

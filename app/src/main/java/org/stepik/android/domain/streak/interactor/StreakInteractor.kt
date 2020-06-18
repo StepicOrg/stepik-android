@@ -3,7 +3,7 @@ package org.stepik.android.domain.streak.interactor
 import io.reactivex.Maybe
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.StepikUtil
-import org.stepic.droid.util.toMaybe
+import ru.nobird.android.domain.rx.toMaybe
 import org.stepik.android.domain.user_activity.repository.UserActivityRepository
 import org.stepik.android.view.streak.notification.StreakNotificationDelegate
 import javax.inject.Inject

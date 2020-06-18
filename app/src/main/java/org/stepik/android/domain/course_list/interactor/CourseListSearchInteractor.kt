@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.mapToLongArray
+import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -32,6 +32,13 @@ constructor(
                     )
                     .toObservable()
             }
+
+    fun getCourseListItems(
+        vararg courseId: Long,
+        courseViewSource: CourseViewSource,
+        sourceType: DataSourceType = DataSourceType.REMOTE
+    ): Single<PagedList<CourseListItem.Data>> =
+        courseListInteractor.getCourseListItems(*courseId, courseViewSource = courseViewSource, sourceType = sourceType)
 
     private fun getCourseListItems(
         courseIds: LongArray,

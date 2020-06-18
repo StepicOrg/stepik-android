@@ -1,7 +1,7 @@
 package org.stepik.android.data.course_collection.repository
 
 import io.reactivex.Single
-import org.stepic.droid.util.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import org.stepik.android.data.course_collection.source.CourseCollectionCacheDataSource
 import org.stepik.android.data.course_collection.source.CourseCollectionRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType

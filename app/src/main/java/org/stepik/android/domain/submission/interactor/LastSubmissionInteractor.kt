@@ -2,7 +2,7 @@ package org.stepik.android.domain.submission.interactor
 
 import io.reactivex.Maybe
 import org.stepic.droid.preferences.UserPreferences
-import org.stepic.droid.util.maybeFirst
+import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.domain.submission.repository.SubmissionRepository
 import org.stepik.android.model.Submission
 import javax.inject.Inject

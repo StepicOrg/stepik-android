@@ -3,7 +3,7 @@ package org.stepik.android.domain.certificate.interactor
 import io.reactivex.Single
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.mapToLongArray
+import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.repository.CertificateRepository
 import org.stepik.android.domain.course.repository.CourseRepository

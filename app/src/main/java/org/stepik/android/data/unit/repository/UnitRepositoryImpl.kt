@@ -1,8 +1,8 @@
 package org.stepik.android.data.unit.repository
 
 import io.reactivex.Single
-import org.stepic.droid.util.doCompletableOnSuccess
-import org.stepic.droid.util.requireSize
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.requireSize
 import org.stepik.android.data.unit.source.UnitCacheDataSource
 import org.stepik.android.data.unit.source.UnitRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType

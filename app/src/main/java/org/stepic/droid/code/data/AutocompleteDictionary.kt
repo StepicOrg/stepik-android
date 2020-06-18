@@ -1,6 +1,6 @@
 package org.stepic.droid.code.data
 
-import org.stepic.droid.util.isNotOrdered
+import ru.nobird.android.core.model.isNotOrdered
 
 /**
  * Class for fast search strings with common prefix

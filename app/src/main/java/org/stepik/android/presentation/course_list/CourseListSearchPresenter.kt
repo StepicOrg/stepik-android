@@ -8,8 +8,9 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.interactor.CourseListSearchInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.search_result.model.SearchResultQuery
@@ -148,6 +149,22 @@ constructor(
             .subscribeBy(
                 onNext = { enrolledCourse ->
                     state = courseListStateMapper.mapToEnrollmentUpdateState(state, enrolledCourse)
+                    fetchForEnrollmentUpdate(enrolledCourse)
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun fetchForEnrollmentUpdate(course: Course) {
+        val oldSearchQuery = searchResultQuery ?: return
+
+        compositeDisposable += courseListSearchInteractor
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Search(oldSearchQuery), sourceType = DataSourceType.CACHE)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { courses ->
+                    state = courseListStateMapper.mapToEnrollmentUpdateState(state, courses.first())
                 },
                 onError = emptyOnErrorStub
             )

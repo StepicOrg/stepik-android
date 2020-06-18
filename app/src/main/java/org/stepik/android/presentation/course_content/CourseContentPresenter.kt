@@ -13,7 +13,7 @@ import org.stepic.droid.persistence.downloads.interactor.DownloadInteractor
 import org.stepic.droid.persistence.downloads.progress.DownloadProgressProvider
 import org.stepic.droid.persistence.model.DownloadConfiguration
 import org.stepic.droid.persistence.model.DownloadProgress
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.calendar.model.CalendarItem
 import org.stepik.android.domain.course_calendar.interactor.CourseCalendarInteractor
 import org.stepik.android.domain.course_content.interactor.CourseContentInteractor
@@ -151,9 +151,12 @@ constructor(
         subscribeForSectionsProgress(*sectionIds)
 
         val unitIds = items
-            .mapNotNull {
-                (it as? CourseContentItem.UnitItem)?.takeIf(CourseContentItem.UnitItem::isEnabled)?.unit?.id
-                    ?: (it as? CourseContentItem.UnitItemPlaceholder)?.unitId
+            .mapNotNull { item ->
+                (item as? CourseContentItem.UnitItem)
+                    ?.takeIf { it.access == CourseContentItem.UnitItem.Access.FULL_ACCESS }
+                    ?.unit
+                    ?.id
+                    ?: (item as? CourseContentItem.UnitItemPlaceholder)?.unitId
             }
             .toLongArray()
 

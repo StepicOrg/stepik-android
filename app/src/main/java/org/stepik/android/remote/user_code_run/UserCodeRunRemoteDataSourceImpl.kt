@@ -2,7 +2,7 @@ package org.stepik.android.remote.user_code_run
 
 import io.reactivex.Single
 import io.reactivex.functions.Function
-import org.stepic.droid.util.first
+import ru.nobird.android.domain.rx.first
 import org.stepik.android.data.user_code_run.source.UserCodeRunRemoteDataSource
 import org.stepik.android.model.code.UserCodeRun
 import org.stepik.android.remote.user_code_run.model.UserCodeRunRequest

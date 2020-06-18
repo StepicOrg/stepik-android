@@ -1,13 +1,13 @@
 package org.stepik.android.data.assignment.repository
 
 import io.reactivex.Single
-import org.stepic.droid.util.doCompletableOnSuccess
-import org.stepic.droid.util.requireSize
 import org.stepik.android.data.assignment.source.AssignmentCacheDataSource
 import org.stepik.android.data.assignment.source.AssignmentRemoteDataSource
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.Assignment
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.requireSize
 import javax.inject.Inject
 
 class AssignmentRepositoryImpl

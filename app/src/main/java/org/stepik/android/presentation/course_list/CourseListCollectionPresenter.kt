@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepic.droid.util.emptyOnErrorStub
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
@@ -119,6 +119,23 @@ constructor(
                         ?: return@subscribeBy
 
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, enrolledCourse))
+                    fetchForEnrollmentUpdate(enrolledCourse)
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun fetchForEnrollmentUpdate(course: Course) {
+        val oldState = (state as? CourseListCollectionView.State.Data)
+            ?: return
+
+        compositeDisposable += courseListInteractor
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceType = DataSourceType.CACHE)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { courses ->
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, courses.first()))
                 },
                 onError = emptyOnErrorStub
             )

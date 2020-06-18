@@ -34,6 +34,21 @@
         tools:text="1.2 Second Lesson More Detailed and Interesting Name" />
 
     <TextView
+        android:id="@+id/unitDemoAccess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_content_item_inner_margin"
+        android:layout_marginLeft="@dimen/course_content_item_inner_margin"
+        android:layout_marginTop="@dimen/course_content_item_inner_margin"
+        android:layout_marginBottom="@dimen/course_content_item_margin"
+        android:textAppearance="?textAppearanceCaption"
+        android:theme="@style/ThemeOverlay.Violet"
+        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintTop_toBottomOf="@+id/unitTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/course_content_unit_demo_access" />
+
+    <TextView
         android:id="@+id/unitTextProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,10 +58,9 @@
         android:layout_marginBottom="@dimen/course_content_item_margin"
         android:textAppearance="?textAppearanceCaption"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintStart_toEndOf="@+id/unitIcon"
+        app:layout_constraintStart_toEndOf="@+id/unitDemoAccess"
         app:layout_constraintTop_toBottomOf="@+id/unitTitle"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="missingPrefix"
         tools:text="6/10" />
 
     <TextView
