@@ -130,7 +130,7 @@ constructor(
             ?: return
 
         compositeDisposable += courseListInteractor
-            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id))
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceType = DataSourceType.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
