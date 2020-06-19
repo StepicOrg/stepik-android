@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface CourseCollectionService {
-    @GET("api/course-lists?platform=mobile")
+    @GET("api/course-lists?platform=mobile,android")
     fun getCourseCollectionList(@Query("language") language: String): Single<CourseCollectionsResponse>
 }
