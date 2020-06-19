@@ -11,6 +11,7 @@ constructor() {
         private const val PAGE = "page"
         private const val IS_FAVORITE = "is_favorite"
         private const val IS_ARCHIVED = "is_archived"
+        private const val COURSE = "course"
     }
 
     fun mapToQueryMap(userCourseQuery: UserCourseQuery): Map<String, String> {
@@ -19,6 +20,7 @@ constructor() {
         mutableMap.putNullable(PAGE, userCourseQuery.page?.toString())
         mutableMap.putNullable(IS_FAVORITE, userCourseQuery.isFavorite?.toString())
         mutableMap.putNullable(IS_ARCHIVED, userCourseQuery.isArchived?.toString())
+        mutableMap.putNullable(COURSE, userCourseQuery.course?.toString())
 
         return mutableMap
     }

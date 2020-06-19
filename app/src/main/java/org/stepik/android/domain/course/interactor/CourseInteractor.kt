@@ -4,6 +4,7 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
@@ -66,7 +67,7 @@ constructor(
     private fun obtainUserCourse(course: Course): Single<UserCourseHeader> =
         if (course.enrollment != 0L) {
             userCoursesRepository
-                .getUserCourseByCourseId(course.id)
+                .getUserCourseByCourseId(course.id, sourceType = DataSourceType.REMOTE)
                 .map { UserCourseHeader.Data(userCourse = it, isSending = false) as UserCourseHeader }
                 .toSingle()
                 .onErrorReturnItem(UserCourseHeader.Empty)

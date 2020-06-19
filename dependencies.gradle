@@ -42,7 +42,7 @@ ext.versions = [
         presentationBase     : '1.1.1',
         viewKit              : '1.0.1',
         model                : '1.0.4',
-        domainRx             : '1.0.0',
+        domainRx             : '1.0.1',
 
         retrofit             : '2.6.1',
         okhttp               : '3.12.8',
