@@ -8,6 +8,9 @@ import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonPrimitive
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -29,6 +32,7 @@ import org.stepic.droid.util.commit
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
+import org.stepik.android.model.analytic.AnalyticLocalEvent
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
@@ -145,6 +149,20 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         App.componentManager()
             .mainFeedComponent()
             .inject(this)
+
+        val gson = Gson()
+
+        val jsonElement = JsonObject()
+        val jsonObject = JsonObject()
+        jsonObject.add("test", JsonPrimitive(123))
+        jsonObject.add("aaaa", JsonPrimitive("AAAA"))
+        jsonElement.add("event_name", JsonPrimitive("Test name"))
+        jsonElement.add("event_json", jsonObject)
+        jsonElement.add("event_timestamp", JsonPrimitive(123123213L))
+
+        Timber.d("Test: $jsonElement")
+        Timber.d("Test.toJsonTree: ${gson.toJsonTree(jsonElement)}")
+        Timber.d("Test: ${gson.fromJson(jsonElement.toString(), AnalyticLocalEvent::class.java)}")
 
         setContentView(R.layout.activity_main_feed)
 
