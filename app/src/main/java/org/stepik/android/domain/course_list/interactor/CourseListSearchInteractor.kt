@@ -33,6 +33,13 @@ constructor(
                     .toObservable()
             }
 
+    fun getCourseListItems(
+        vararg courseId: Long,
+        courseViewSource: CourseViewSource,
+        sourceType: DataSourceType = DataSourceType.REMOTE
+    ): Single<PagedList<CourseListItem.Data>> =
+        courseListInteractor.getCourseListItems(*courseId, courseViewSource = courseViewSource, sourceType = sourceType)
+
     private fun getCourseListItems(
         courseIds: LongArray,
         searchResult: PagedList<SearchResult>,
