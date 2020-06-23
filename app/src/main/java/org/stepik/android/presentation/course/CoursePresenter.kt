@@ -126,11 +126,20 @@ constructor(
      * Data initialization variants
      */
     fun onCourseId(courseId: Long, viewSource: CourseViewSource, forceUpdate: Boolean = false) {
-        observeCourseData(courseInteractor.getCourseHeaderData(courseId), viewSource, forceUpdate)
+        val courseHeaderDataSource = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.course
+            ?.let { courseInteractor.getCourseHeaderData(it, canUseCache = !forceUpdate) }
+            ?: courseInteractor.getCourseHeaderData(courseId, canUseCache = !forceUpdate)
+        observeCourseData(courseHeaderDataSource, viewSource, forceUpdate)
     }
 
     fun onCourse(course: Course, viewSource: CourseViewSource, forceUpdate: Boolean = false) {
-        observeCourseData(courseInteractor.getCourseHeaderData(course), viewSource, forceUpdate)
+        val courseToPass = (state as? CourseView.State.CourseLoaded)
+            ?.courseHeaderData
+            ?.course
+            ?: course
+        observeCourseData(courseInteractor.getCourseHeaderData(courseToPass, canUseCache = !forceUpdate), viewSource, forceUpdate)
     }
 
     private fun observeCourseData(courseDataSource: Maybe<CourseHeaderData>, viewSource: CourseViewSource, forceUpdate: Boolean) {
