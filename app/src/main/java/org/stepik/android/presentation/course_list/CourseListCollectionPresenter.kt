@@ -119,6 +119,23 @@ constructor(
                         ?: return@subscribeBy
 
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, enrolledCourse))
+                    fetchForEnrollmentUpdate(enrolledCourse)
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    private fun fetchForEnrollmentUpdate(course: Course) {
+        val oldState = (state as? CourseListCollectionView.State.Data)
+            ?: return
+
+        compositeDisposable += courseListInteractor
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceType = DataSourceType.CACHE)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { courses ->
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, courses.first()))
                 },
                 onError = emptyOnErrorStub
             )
