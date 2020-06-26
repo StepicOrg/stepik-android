@@ -11,6 +11,7 @@ import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
+import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
@@ -23,14 +24,15 @@ constructor(
     //    private val billingRepository: BillingRepository,
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
-    private val progressRepository: ProgressRepository
+    private val progressRepository: ProgressRepository,
+    private val userCoursesRepository: UserCoursesRepository
 ) {
 
     fun getCourseStats(courses: List<Course>, sourceType: DataSourceType = DataSourceType.REMOTE, resolveEnrollmentState: Boolean = true): Single<List<CourseStats>> =
         zip(
             resolveCourseReview(courses, sourceType),
             resolveCourseProgress(courses, sourceType),
-            resolveCoursesEnrollmentStates(courses, resolveEnrollmentState)
+            resolveCoursesEnrollmentStates(courses, sourceType, resolveEnrollmentState)
         ) { courseReviews, courseProgresses, enrollmentStates ->
             val reviewsMap = courseReviews.associateBy(CourseReviewSummary::course)
             val progressMaps = courseProgresses.associateBy(Progress::id)
@@ -59,16 +61,21 @@ constructor(
         progressRepository
             .getProgresses(progressIds = *courses.mapNotNull(Progressable::progress).toTypedArray(), primarySourceType = sourceType)
 
-    private fun resolveCoursesEnrollmentStates(courses: List<Course>, resolveEnrollmentState: Boolean): Single<List<Pair<Long, EnrollmentState>>> =
+    private fun resolveCoursesEnrollmentStates(courses: List<Course>, sourceType: DataSourceType, resolveEnrollmentState: Boolean): Single<List<Pair<Long, EnrollmentState>>> =
         courses
             .toObservable()
-            .flatMapSingle { resolveCourseEnrollmentState(it, resolveEnrollmentState) }
+            .flatMapSingle { resolveCourseEnrollmentState(it, sourceType, resolveEnrollmentState) }
             .toList()
 
-    private fun resolveCourseEnrollmentState(course: Course, resolveEnrollmentState: Boolean): Single<Pair<Long, EnrollmentState>> =
+    private fun resolveCourseEnrollmentState(course: Course, sourceType: DataSourceType, resolveEnrollmentState: Boolean): Single<Pair<Long, EnrollmentState>> =
         when {
             course.enrollment > 0 ->
-                Single.just(course.id to EnrollmentState.Enrolled)
+                userCoursesRepository
+                    .getUserCourseByCourseId(course.id, sourceType)
+                    .map {
+                        course.id to EnrollmentState.Enrolled(it) as EnrollmentState
+                    }
+                    .toSingle()
 
             !course.isPaid ->
                 Single.just(course.id to EnrollmentState.NotEnrolledFree)
