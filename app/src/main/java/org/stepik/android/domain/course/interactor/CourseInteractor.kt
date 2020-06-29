@@ -38,9 +38,9 @@ constructor(
     /**
      * Trying to fetch DB data in first place as course object passed with intent could be obsolete
      */
-    fun getCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
+    fun getCourseHeaderData(course: Course, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
         courseRepository
-            .getCourse(course.id)
+            .getCourse(course.id, canUseCache)
             .onErrorReturnItem(course)
             .doOnSuccess(coursePublishSubject::onNext)
             .flatMap(::obtainCourseHeaderData)
