@@ -4,7 +4,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.util.PagedList
-import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
 import org.stepik.android.domain.course.model.SourceTypeComposition
