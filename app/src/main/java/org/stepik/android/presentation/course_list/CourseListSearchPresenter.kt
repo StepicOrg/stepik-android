@@ -11,6 +11,7 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListSearchInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.search_result.model.SearchResultQuery
@@ -167,7 +168,7 @@ constructor(
         val oldSearchQuery = searchResultQuery ?: return
 
         compositeDisposable += courseListSearchInteractor
-            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Search(oldSearchQuery), sourceType = DataSourceType.CACHE)
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Search(oldSearchQuery), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

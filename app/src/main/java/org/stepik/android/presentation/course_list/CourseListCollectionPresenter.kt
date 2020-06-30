@@ -9,8 +9,8 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
-import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
@@ -80,10 +80,10 @@ constructor(
         paginationDisposable += Single
             .concat(
                 courseListInteractor
-                    .getCourseListItems(*courseCollection.courses, sourceType = DataSourceType.CACHE, courseViewSource = viewSource),
+                    .getCourseListItems(*courseCollection.courses, sourceTypeComposition = SourceTypeComposition.CACHE, courseViewSource = viewSource),
 
                 courseListInteractor
-                    .getCourseListItems(*courseCollection.courses, sourceType = DataSourceType.REMOTE, courseViewSource = viewSource)
+                    .getCourseListItems(*courseCollection.courses, sourceTypeComposition = SourceTypeComposition.REMOTE, courseViewSource = viewSource)
             )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -138,7 +138,7 @@ constructor(
             ?: return
 
         compositeDisposable += courseListInteractor
-            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceType = DataSourceType.CACHE)
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

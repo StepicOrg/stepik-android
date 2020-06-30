@@ -7,6 +7,7 @@ import org.stepic.droid.util.PagedList
 import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.domain.search_result.repository.SearchResultRepository
@@ -27,8 +28,8 @@ constructor(
                 val ids = searchResult.mapToLongArray(SearchResult::course)
                 Single
                     .concat(
-                        getCourseListItems(ids, searchResult, searchResultQuery, DataSourceType.CACHE),
-                        getCourseListItems(ids, searchResult, searchResultQuery, DataSourceType.REMOTE)
+                        getCourseListItems(ids, searchResult, searchResultQuery, SourceTypeComposition.CACHE),
+                        getCourseListItems(ids, searchResult, searchResultQuery, SourceTypeComposition.REMOTE)
                     )
                     .toObservable()
             }
@@ -36,24 +37,24 @@ constructor(
     fun getCourseListItems(
         vararg courseId: Long,
         courseViewSource: CourseViewSource,
-        sourceType: DataSourceType = DataSourceType.REMOTE
+        sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE
     ): Single<PagedList<CourseListItem.Data>> =
-        courseListInteractor.getCourseListItems(*courseId, courseViewSource = courseViewSource, sourceType = sourceType)
+        courseListInteractor.getCourseListItems(*courseId, courseViewSource = courseViewSource, sourceTypeComposition = sourceTypeComposition)
 
     private fun getCourseListItems(
         courseIds: LongArray,
         searchResult: PagedList<SearchResult>,
         searchResultQuery: SearchResultQuery,
-        sourceType: DataSourceType
+        sourceTypeComposition: SourceTypeComposition
     ): Single<Pair<PagedList<CourseListItem.Data>, DataSourceType>> =
         courseListInteractor
-            .getCourseListItems(*courseIds, courseViewSource = CourseViewSource.Search(searchResultQuery), sourceType = sourceType)
+            .getCourseListItems(*courseIds, courseViewSource = CourseViewSource.Search(searchResultQuery), sourceTypeComposition = sourceTypeComposition)
             .map { courseListItems ->
                 PagedList(
                     list = courseListItems,
                     page = searchResult.page,
                     hasPrev = searchResult.hasPrev,
                     hasNext = searchResult.hasNext
-                ) to sourceType
+                ) to sourceTypeComposition.generalSourceType
             }
 }

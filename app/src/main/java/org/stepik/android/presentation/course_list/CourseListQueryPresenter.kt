@@ -7,8 +7,8 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
-import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.model.SourceTypeComposition
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -170,7 +170,7 @@ constructor(
             ?: return
 
         compositeDisposable += courseListInteractor
-            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Query(oldState.courseListQuery), sourceType = DataSourceType.CACHE)
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Query(oldState.courseListQuery), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

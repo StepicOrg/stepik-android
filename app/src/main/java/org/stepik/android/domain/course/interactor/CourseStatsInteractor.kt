@@ -7,6 +7,7 @@ import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
+import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
@@ -28,11 +29,15 @@ constructor(
     private val userCoursesRepository: UserCoursesRepository
 ) {
 
-    fun getCourseStats(courses: List<Course>, sourceType: DataSourceType = DataSourceType.REMOTE, resolveEnrollmentState: Boolean = true): Single<List<CourseStats>> =
+    fun getCourseStats(
+        courses: List<Course>,
+        sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE,
+        resolveEnrollmentState: Boolean = true
+    ): Single<List<CourseStats>> =
         zip(
-            resolveCourseReview(courses, sourceType),
-            resolveCourseProgress(courses, sourceType),
-            resolveCoursesEnrollmentStates(courses, sourceType, resolveEnrollmentState)
+            resolveCourseReview(courses, sourceTypeComposition.generalSourceType),
+            resolveCourseProgress(courses, sourceTypeComposition.generalSourceType),
+            resolveCoursesEnrollmentStates(courses, sourceTypeComposition.enrollmentSourceType, resolveEnrollmentState)
         ) { courseReviews, courseProgresses, enrollmentStates ->
             val reviewsMap = courseReviews.associateBy(CourseReviewSummary::course)
             val progressMaps = courseProgresses.associateBy(Progress::id)
