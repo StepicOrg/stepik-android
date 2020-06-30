@@ -14,11 +14,13 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.interactor.CourseListSearchInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.search_result.model.SearchResultQuery
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -36,6 +38,8 @@ constructor(
     private val mainScheduler: Scheduler,
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
+    @UserCoursesOperationBus
+    private val userCourseOperationObservable: Observable<UserCourse>,
 
     viewContainer: PresenterViewContainer<CourseListView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
@@ -57,6 +61,7 @@ constructor(
     init {
         compositeDisposable += paginationDisposable
         subscribeForEnrollmentUpdates()
+        subscribeForUserCourseOperationUpdates()
     }
 
     override fun attachView(view: CourseListView) {
@@ -142,6 +147,9 @@ constructor(
             )
     }
 
+    /**
+     * Enrollment updates
+     */
     private fun subscribeForEnrollmentUpdates() {
         compositeDisposable += enrollmentUpdatesObservable
             .subscribeOn(backgroundScheduler)
@@ -165,6 +173,21 @@ constructor(
             .subscribeBy(
                 onSuccess = { courses ->
                     state = courseListStateMapper.mapToEnrollmentUpdateState(state, courses.first())
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    /**
+     * UserCourse updates
+     */
+    private fun subscribeForUserCourseOperationUpdates() {
+        compositeDisposable += userCourseOperationObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { userCourse ->
+                    state = courseListStateMapper.mapToUserCourseUpdate(state, userCourse)
                 },
                 onError = emptyOnErrorStub
             )
