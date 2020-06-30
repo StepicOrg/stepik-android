@@ -24,13 +24,13 @@ import org.stepic.droid.util.getAllQueryParameters
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
-import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.course.routing.getCourseTabFromDeepLink
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.safeCast
 import kotlin.math.abs
 
 class CourseHeaderDelegate(
@@ -41,14 +41,16 @@ class CourseHeaderDelegate(
     onSubmissionCountClicked: () -> Unit,
     isLocalSubmissionsEnabled: Boolean
 ) {
+    companion object {
+        private val CourseHeaderData.enrolledState: EnrollmentState.Enrolled?
+            get() = stats.enrollmentState.safeCast<EnrollmentState.Enrolled>()
+    }
+
     var courseHeaderData: CourseHeaderData? = null
         set(value) {
             field = value
-            userCourseHeader = (value?.userCourseHeader as? UserCourseHeader.Data)
             value?.let(::setCourseData)
         }
-
-    private var userCourseHeader: UserCourseHeader.Data? = null
 
     private var dropCourseMenuItem: MenuItem? = null
     private var shareCourseMenuItem: MenuItem? = null
@@ -199,12 +201,15 @@ class CourseHeaderDelegate(
     }
 
     fun onOptionsMenuCreated(menu: Menu) {
+        val userCourseState = courseHeaderData?.enrolledState
+
         menu.findItem(R.id.favorite_course)
             ?.let { favoriteCourseMenuItem ->
-                favoriteCourseMenuItem.isVisible = userCourseHeader != null
-                favoriteCourseMenuItem.isEnabled = userCourseHeader?.isSending == false
+
+                favoriteCourseMenuItem.isVisible = userCourseState != null
+                favoriteCourseMenuItem.isEnabled = userCourseState?.isUserCourseUpdating == false
                 favoriteCourseMenuItem.title =
-                    if (userCourseHeader?.userCourse?.isFavorite == true) {
+                    if (userCourseState?.userCourse?.isFavorite == true) {
                         courseActivity.getString(R.string.course_action_favorites_remove)
                     } else {
                         courseActivity.getString(R.string.course_action_favorites_add)
@@ -213,10 +218,10 @@ class CourseHeaderDelegate(
 
         menu.findItem(R.id.archive_course)
             ?.let { archiveCourseMenuItem ->
-                archiveCourseMenuItem.isVisible = userCourseHeader != null
-                archiveCourseMenuItem.isEnabled = userCourseHeader?.isSending == false
+                archiveCourseMenuItem.isVisible = userCourseState != null
+                archiveCourseMenuItem.isEnabled = userCourseState?.isUserCourseUpdating == false
                 archiveCourseMenuItem.title =
-                    if (userCourseHeader?.userCourse?.isArchived == true) {
+                    if (userCourseState?.userCourse?.isArchived == true) {
                         courseActivity.getString(R.string.course_action_archive_remove)
                     } else {
                         courseActivity.getString(R.string.course_action_archive_add)
@@ -251,7 +256,7 @@ class CourseHeaderDelegate(
                 true
             }
             R.id.favorite_course -> {
-                userCourseHeader?.let {
+                courseHeaderData?.enrolledState?.let {
                     val action =
                         if (it.userCourse.isFavorite) {
                             UserCourseAction.REMOVE_FAVORITE
@@ -263,7 +268,7 @@ class CourseHeaderDelegate(
                 true
             }
             R.id.archive_course -> {
-                userCourseHeader?.let {
+                courseHeaderData?.enrolledState?.let {
                     val action =
                         if (it.userCourse.isArchived) {
                             UserCourseAction.REMOVE_ARCHIVE

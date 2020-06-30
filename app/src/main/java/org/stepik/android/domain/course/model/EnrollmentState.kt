@@ -6,7 +6,7 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 
 sealed class EnrollmentState : Parcelable {
     @Parcelize
-    data class Enrolled(val userCourse: UserCourse) : EnrollmentState()
+    data class Enrolled(val userCourse: UserCourse, val isUserCourseUpdating: Boolean = false) : EnrollmentState()
 
     @Parcelize
     object NotEnrolledFree : EnrollmentState()

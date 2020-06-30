@@ -18,6 +18,7 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
 import org.stepik.android.domain.course.interactor.CourseInteractor
+import org.stepik.android.domain.course.mapper.CourseStateMapper
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
@@ -25,7 +26,6 @@ import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
-import org.stepik.android.domain.user_courses.model.UserCourseHeader
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
@@ -37,6 +37,7 @@ import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import org.stepik.android.view.injection.solutions.SolutionsBus
 import org.stepik.android.view.injection.solutions.SolutionsSentBus
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -51,6 +52,8 @@ constructor(
     viewContainer: PresenterViewContainer<CourseView>,
 
     private val courseContinuePresenterDelegateImpl: CourseContinuePresenterDelegateImpl,
+
+    private val courseStateMapper: CourseStateMapper,
 
     private val courseInteractor: CourseInteractor,
 //    private val courseBillingInteractor: CourseBillingInteractor,
@@ -417,35 +420,34 @@ constructor(
      */
 
     fun toggleUserCourse(userCourseAction: UserCourseAction) {
-        val oldCourseHeaderData = (state as? CourseView.State.CourseLoaded)
+        val oldUserCourse = state.safeCast<CourseView.State.CourseLoaded>()
             ?.courseHeaderData
-            ?: return
-
-        val oldUserCourseHeader = (oldCourseHeaderData.userCourseHeader as? UserCourseHeader.Data)
+            ?.stats
+            ?.enrollmentState
+            ?.safeCast<EnrollmentState.Enrolled>()
+            ?.userCourse
             ?: return
 
         val userCourse =
             when (userCourseAction) {
                 UserCourseAction.ADD_ARCHIVE ->
-                    oldUserCourseHeader.userCourse.copy(isArchived = true)
+                    oldUserCourse.copy(isArchived = true)
 
                 UserCourseAction.REMOVE_ARCHIVE ->
-                    oldUserCourseHeader.userCourse.copy(isArchived = false)
+                    oldUserCourse.copy(isArchived = false)
 
                 UserCourseAction.ADD_FAVORITE ->
-                    oldUserCourseHeader.userCourse.copy(isFavorite = true)
+                    oldUserCourse.copy(isFavorite = true)
 
                 UserCourseAction.REMOVE_FAVORITE ->
-                    oldUserCourseHeader.userCourse.copy(isFavorite = false)
+                    oldUserCourse.copy(isFavorite = false)
             }
 
-        val newCourseHeaderData = oldCourseHeaderData.copy(userCourseHeader = oldUserCourseHeader.copy(isSending = true))
-        saveUserCourse(newCourseHeaderData, userCourse, userCourseAction)
+        state = courseStateMapper.mutateEnrolledState(state) { copy(isUserCourseUpdating = true) }
+        saveUserCourse(userCourse, userCourseAction)
     }
 
-    private fun saveUserCourse(preparedCourseHeaderData: CourseHeaderData, userCourse: UserCourse, userCourseAction: UserCourseAction) {
-        state = CourseView.State.CourseLoaded(preparedCourseHeaderData)
-
+    private fun saveUserCourse(userCourse: UserCourse, userCourseAction: UserCourseAction) {
         userCourseDisposable += userCoursesInteractor
             .saveUserCourse(userCourse = userCourse)
             .subscribeOn(backgroundScheduler)
@@ -453,17 +455,7 @@ constructor(
             .subscribeBy(
                 onSuccess = { view?.showSaveUserCourseSuccess(userCourseAction) },
                 onError = {
-                    val oldState = (state as? CourseView.State.CourseLoaded)
-                        ?: return@subscribeBy
-
-                    val userCourseHeader = (oldState.courseHeaderData.userCourseHeader as? UserCourseHeader.Data)
-                        ?: return@subscribeBy
-
-                    val courseHeaderData = oldState
-                        .courseHeaderData
-                        .copy(userCourseHeader = userCourseHeader.copy(isSending = false))
-
-                    state = CourseView.State.CourseLoaded(courseHeaderData)
+                    state = courseStateMapper.mutateEnrolledState(state) { copy(isUserCourseUpdating = false) }
                     view?.showSaveUserCourseError(userCourseAction)
                 }
             )
@@ -476,13 +468,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { userCourse ->
-                    val courseHeaderData = (state as? CourseView.State.CourseLoaded)
-                        ?.courseHeaderData
-                        ?.takeIf { it.stats.enrollmentState is EnrollmentState.Enrolled }
-                        ?: return@subscribeBy
-
-                    state =
-                        CourseView.State.CourseLoaded(courseHeaderData.copy(userCourseHeader = UserCourseHeader.Data(userCourse, isSending = false)))
+                    state = courseStateMapper.mutateEnrolledState(state) { copy(userCourse = userCourse, isUserCourseUpdating = false) }
                 },
                 onError = emptyOnErrorStub
             )
