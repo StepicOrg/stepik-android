@@ -224,7 +224,7 @@ class CourseHeaderDelegate(
             }
 
         dropCourseMenuItem = menu.findItem(R.id.drop_course)
-        dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState == EnrollmentState.Enrolled
+        dropCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.Enrolled
         val dropCourseMenuItemSpan = SpannableString(dropCourseMenuItem?.title)
         dropCourseMenuItemSpan.setSpan(ForegroundColorSpan(courseCollapsingToolbar.context.resolveColorAttribute(R.attr.colorError)), 0, dropCourseMenuItemSpan.length, 0)
         dropCourseMenuItem?.title = dropCourseMenuItemSpan

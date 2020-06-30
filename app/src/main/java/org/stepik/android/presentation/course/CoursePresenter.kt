@@ -282,7 +282,7 @@ constructor(
     }
 
     private fun resolveCourseShareTooltip(courseHeaderData: CourseHeaderData) {
-        if (courseHeaderData.stats.enrollmentState == EnrollmentState.Enrolled) {
+        if (courseHeaderData.stats.enrollmentState is EnrollmentState.Enrolled) {
             view?.showCourseShareTooltip()
         }
     }
@@ -379,7 +379,7 @@ constructor(
     fun continueLearning() {
         val headerData = (state as? CourseView.State.CourseLoaded)
             ?.courseHeaderData
-            ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
+            ?.takeIf { it.stats.enrollmentState is EnrollmentState.Enrolled }
             ?: return
 
         courseContinuePresenterDelegateImpl.continueCourse(headerData.course, viewSource, CourseContinueInteractionSource.COURSE_SCREEN)
@@ -478,7 +478,7 @@ constructor(
                 onNext = { userCourse ->
                     val courseHeaderData = (state as? CourseView.State.CourseLoaded)
                         ?.courseHeaderData
-                        ?.takeIf { it.stats.enrollmentState == EnrollmentState.Enrolled }
+                        ?.takeIf { it.stats.enrollmentState is EnrollmentState.Enrolled }
                         ?: return@subscribeBy
 
                     state =
