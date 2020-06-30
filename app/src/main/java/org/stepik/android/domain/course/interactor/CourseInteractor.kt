@@ -1,15 +1,12 @@
 package org.stepik.android.domain.course.interactor
 
 import io.reactivex.Maybe
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.subjects.BehaviorSubject
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
-import org.stepik.android.domain.user_courses.model.UserCourseHeader
-import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.CourseScope
 import javax.inject.Inject
@@ -19,13 +16,12 @@ class CourseInteractor
 @Inject
 constructor(
     private val courseRepository: CourseRepository,
-    private val userCoursesRepository: UserCoursesRepository,
     private val solutionsInteractor: SolutionsInteractor,
     private val coursePublishSubject: BehaviorSubject<Course>,
     private val courseStatsInteractor: CourseStatsInteractor
 ) {
     companion object {
-        private const val COURSE_TIER_PREFIX = "course_tier_"
+//        private const val COURSE_TIER_PREFIX = "course_tier_"
     }
 
     fun getCourseHeaderData(courseId: Long, canUseCache: Boolean = true): Maybe<CourseHeaderData> =
@@ -47,13 +43,11 @@ constructor(
     private fun obtainCourseHeaderData(course: Course): Maybe<CourseHeaderData> =
         zip(
             courseStatsInteractor.getCourseStats(listOf(course)),
-            solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true),
-            obtainUserCourse(course)
-        ) { courseStats, localSubmissions, userCourseHeader ->
+            solutionsInteractor.fetchAttemptCacheItems(course.id, localOnly = true)
+        ) { courseStats, localSubmissions ->
             CourseHeaderData(
                 courseId = course.id,
                 course = course,
-                userCourseHeader = userCourseHeader,
                 title = course.title ?: "",
                 cover = course.cover ?: "",
 
@@ -62,15 +56,4 @@ constructor(
             )
         }
             .toMaybe()
-
-    private fun obtainUserCourse(course: Course): Single<UserCourseHeader> =
-        if (course.enrollment != 0L) {
-            userCoursesRepository
-                .getUserCourseByCourseId(course.id)
-                .map { UserCourseHeader.Data(userCourse = it, isSending = false) as UserCourseHeader }
-                .toSingle()
-                .onErrorReturnItem(UserCourseHeader.Empty)
-        } else {
-            Single.just(UserCourseHeader.Empty)
-        }
 }

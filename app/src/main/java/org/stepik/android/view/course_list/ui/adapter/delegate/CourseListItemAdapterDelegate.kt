@@ -43,7 +43,7 @@ class CourseListItemAdapterDelegate(
                     }
             }
 
-        private val coursePropertiesDelegate = CoursePropertiesDelegate(root.coursePropertiesContainer as ViewGroup)
+        private val coursePropertiesDelegate = CoursePropertiesDelegate(root, root.coursePropertiesContainer as ViewGroup)
         private val courseItemName = root.courseItemName
         private val adaptiveCourseMarker = root.adaptiveCourseMarker
         private val courseContinueButton = root.courseContinueButton

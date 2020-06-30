@@ -4,9 +4,9 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.adaptive.util.AdaptiveCoursesResolver
 import org.stepic.droid.util.PagedList
-import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.interactor.CourseStatsInteractor
+import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -30,36 +30,36 @@ constructor(
     fun getCourseListItems(
         vararg courseId: Long,
         courseViewSource: CourseViewSource,
-        sourceType: DataSourceType = DataSourceType.REMOTE
+        sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE
     ): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(
-            coursesSource = courseRepository.getCourses(*courseId, primarySourceType = sourceType),
+            coursesSource = courseRepository.getCourses(*courseId, primarySourceType = sourceTypeComposition.generalSourceType),
             courseViewSource = courseViewSource,
-            sourceType = sourceType
+            sourceTypeComposition = sourceTypeComposition
         )
 
     fun getCourseListItems(courseListQuery: CourseListQuery): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(
             coursesSource = courseRepository.getCourses(courseListQuery),
             courseViewSource = CourseViewSource.Query(courseListQuery),
-            sourceType = DataSourceType.REMOTE
+            sourceTypeComposition = SourceTypeComposition.REMOTE
         )
 
     private fun getCourseListItems(
         coursesSource: Single<PagedList<Course>>,
         courseViewSource: CourseViewSource,
-        sourceType: DataSourceType
+        sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> =
         coursesSource
-            .flatMap { obtainCourseListItem(it, courseViewSource, sourceType) }
+            .flatMap { obtainCourseListItem(it, courseViewSource, sourceTypeComposition) }
 
     private fun obtainCourseListItem(
         courses: PagedList<Course>,
         courseViewSource: CourseViewSource,
-        sourceType: DataSourceType
+        sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> =
         courseStatsInteractor
-            .getCourseStats(courses, resolveEnrollmentState = false, sourceType = sourceType)
+            .getCourseStats(courses, resolveEnrollmentState = false, sourceTypeComposition = sourceTypeComposition)
             .map { courseStats ->
                 val list = courses.mapIndexed { index, course ->
                     CourseListItem.Data(

@@ -50,18 +50,36 @@
                 app:layout_constraintEnd_toEndOf="@+id/courseItemImage"
                 app:layout_constraintStart_toStartOf="@+id/courseItemImage" />
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/courseListFavorite"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:srcCompat="@drawable/ic_course_list_favorite"
+
+                android:layout_marginTop="@dimen/course_item_space_between_items"
+                android:layout_marginEnd="@dimen/course_item_space_between_items"
+                android:layout_marginRight="@dimen/course_item_space_between_items"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+                app:tint="?colorOnSurface"
+                android:alpha="?alphaEmphasisMedium" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/courseItemName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/course_item_space_between_items"
                 android:layout_marginLeft="@dimen/course_item_space_between_items"
                 android:layout_marginRight="@dimen/course_item_space_between_items"
-                android:layout_marginStart="@dimen/course_item_space_between_items"
                 android:layout_marginTop="@dimen/course_item_space_between_items"
+
+                app:layout_goneMarginRight="@dimen/course_item_space_between_items"
+                app:layout_goneMarginEnd="@dimen/course_item_space_between_items"
+
                 android:textAppearance="?textAppearanceBody1"
                 app:layout_constraintLeft_toRightOf="@+id/courseItemImage"
-                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/courseListFavorite"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="MissingPrefix"
                 android:ellipsize="end"

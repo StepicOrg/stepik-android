@@ -306,7 +306,7 @@ constructor(
                  */
 
                 if (state.userCourses.any { it.course == userCourse.course }) { // если такой уже есть, то ничего не трогаем
-                    state to false
+                    state.copy(courseListViewState = courseListStateMapper.mapToUserCourseUpdate(state.courseListViewState, userCourse)) to false
                 } else {
                     addUserCourseToTop(state, userCourse)
                 }
