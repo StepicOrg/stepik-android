@@ -12,6 +12,7 @@ interface CommentsView {
         object NetworkError : State()
 
         data class DiscussionLoaded(
+            val isGuest: Boolean,
             val discussionProxy: DiscussionProxy,
             val discussionOrder: DiscussionOrder,
             val discussionId: Long? = null,
