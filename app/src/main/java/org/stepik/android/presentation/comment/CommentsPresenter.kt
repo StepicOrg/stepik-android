@@ -15,6 +15,10 @@ import org.stepik.android.domain.comment.interactor.ComposeCommentInteractor
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
+import org.stepik.android.domain.profile.interactor.ProfileGuestInteractor
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
+import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.base.PresenterBase
@@ -29,6 +33,7 @@ constructor(
     private val commentInteractor: CommentInteractor,
     private val composeCommentInteractor: ComposeCommentInteractor,
     private val discussionProxyInteractor: DiscussionProxyInteractor,
+    private val profileGuestInteractor: ProfileGuestInteractor,
 
     private val commentsStateMapper: CommentsStateMapper,
 
@@ -70,27 +75,29 @@ constructor(
         state = CommentsView.State.Loading
         compositeDisposable += Singles
             .zip(
+                profileGuestInteractor.isGuest(),
                 discussionProxyInteractor.getDiscussionProxy(discussionProxyId),
                 discussionOrderSource
             )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { (discussionProxy, discussionOrder) ->
-                    fetchComments(discussionProxy, discussionOrder, discussionId)
+                onSuccess = { (isGuest, discussionProxy, discussionOrder) ->
+                    fetchComments(isGuest, discussionProxy, discussionOrder, discussionId)
                 },
                 onError = { state = CommentsView.State.NetworkError }
             )
     }
 
     private fun fetchComments(
+        isGuest: Boolean,
         discussionProxy: DiscussionProxy,
         discussionOrder: DiscussionOrder,
         discussionId: Long?,
         keepCachedComments: Boolean = false
     ) {
         if (discussionProxy.discussions.isEmpty()) {
-            state = CommentsView.State.DiscussionLoaded(discussionProxy, discussionOrder, discussionId, CommentsView.CommentsState.EmptyComments)
+            state = CommentsView.State.DiscussionLoaded(isGuest, discussionProxy, discussionOrder, discussionId, CommentsView.CommentsState.EmptyComments)
         } else {
             val cachedComments: List<CommentItem.Data> = ((state as? CommentsView.State.DiscussionLoaded)
                 ?.commentsState as? CommentsView.CommentsState.Loaded)
@@ -98,7 +105,7 @@ constructor(
                 ?.takeIf { keepCachedComments }
                 ?: emptyList()
 
-            val newState = CommentsView.State.DiscussionLoaded(discussionProxy, discussionOrder, discussionId, CommentsView.CommentsState.Loading)
+            val newState = CommentsView.State.DiscussionLoaded(isGuest, discussionProxy, discussionOrder, discussionId, CommentsView.CommentsState.Loading)
             state = newState
             compositeDisposable += commentInteractor
                 .getComments(discussionProxy, discussionOrder, discussionId, cachedComments)
@@ -128,7 +135,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(onError = emptyOnErrorStub)
-        fetchComments(oldState.discussionProxy, discussionOrder, oldState.discussionId, keepCachedComments = true)
+        fetchComments(oldState.isGuest, oldState.discussionProxy, discussionOrder, oldState.discussionId, keepCachedComments = true)
     }
 
     /**
@@ -224,6 +231,17 @@ constructor(
                 onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
                 onError = { state = commentsStateMapper.mapFromVotePendingToError(state, commentDataItem.voteStatus.vote); view?.showNetworkError() }
             )
+    }
+
+    fun onComposeCommentClicked(step: Step, parent: Long? = null, comment: Comment? = null, submission: Submission? = null) {
+        val oldState = (state as? CommentsView.State.DiscussionLoaded)
+            ?: return
+
+        if (oldState.isGuest) {
+            view?.showAuthRequired()
+        } else {
+            view?.showCommentComposeDialog(step, parent, comment, submission)
+        }
     }
 
     /**

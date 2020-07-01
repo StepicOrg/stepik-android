@@ -4,6 +4,7 @@ import dagger.Subcomponent
 import org.stepik.android.view.comment.ui.activity.CommentsActivity
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.injection.discussion_proxy.DiscussionProxyDataModule
+import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.vote.VoteDataModule
 
 @Subcomponent(modules = [
@@ -11,7 +12,9 @@ import org.stepik.android.view.injection.vote.VoteDataModule
 
     CommentDataModule::class,
     DiscussionProxyDataModule::class,
-    VoteDataModule::class
+    VoteDataModule::class,
+
+    ProfileDataModule::class
 ])
 interface CommentsComponent {
     @Subcomponent.Builder
