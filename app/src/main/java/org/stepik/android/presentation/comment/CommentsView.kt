@@ -2,6 +2,9 @@ package org.stepik.android.presentation.comment
 
 import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
+import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.presentation.comment.model.CommentItem
 
@@ -12,6 +15,7 @@ interface CommentsView {
         object NetworkError : State()
 
         data class DiscussionLoaded(
+            val isGuest: Boolean,
             val discussionProxy: DiscussionProxy,
             val discussionOrder: DiscussionOrder,
             val discussionId: Long? = null,
@@ -32,4 +36,6 @@ interface CommentsView {
     fun setState(state: State)
     fun focusDiscussion(discussionId: Long)
     fun showNetworkError()
+    fun showAuthRequired()
+    fun showCommentComposeDialog(step: Step, parent: Long? = null, comment: Comment? = null, submission: Submission? = null)
 }
