@@ -8,7 +8,6 @@ import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.comment.repository.CommentRepository
 import org.stepik.android.domain.discussion_proxy.mapper.getOrdering
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
-import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.vote.repository.VoteRepository
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
@@ -21,7 +20,6 @@ import kotlin.math.min
 class CommentInteractor
 @Inject
 constructor(
-    private val profileRepository: ProfileRepository,
     private val commentRepository: CommentRepository,
     private val voteRepository: VoteRepository,
 

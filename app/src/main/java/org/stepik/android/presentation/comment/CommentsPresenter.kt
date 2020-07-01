@@ -16,6 +16,9 @@ import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.domain.discussion_proxy.interactor.DiscussionProxyInteractor
 import org.stepik.android.domain.discussion_proxy.model.DiscussionOrder
 import org.stepik.android.domain.profile.interactor.ProfileGuestInteractor
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
+import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionProxy
 import org.stepik.android.model.comments.Vote
 import org.stepik.android.presentation.base.PresenterBase
@@ -213,6 +216,11 @@ constructor(
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
 
+        if (oldState.isGuest) {
+            view?.showAuthRequired()
+            return
+        }
+
         val commentsState = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
             ?: return
 
@@ -228,6 +236,17 @@ constructor(
                 onSuccess = { state = commentsStateMapper.mapFromVotePendingToSuccess(state, it) },
                 onError = { state = commentsStateMapper.mapFromVotePendingToError(state, commentDataItem.voteStatus.vote); view?.showNetworkError() }
             )
+    }
+
+    fun onComposeCommentClicked(step: Step, parent: Long? = null, comment: Comment? = null, submission: Submission? = null) {
+        val oldState = (state as? CommentsView.State.DiscussionLoaded)
+            ?: return
+
+        if (oldState.isGuest) {
+            view?.showAuthRequired()
+        } else {
+            view?.showCommentComposeDialog(step, parent, comment, submission)
+        }
     }
 
     /**

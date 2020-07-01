@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,7 +42,6 @@ import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
-import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -121,7 +119,7 @@ class CommentsActivity :
         commentsAdapter += CommentDataAdapterDelegate(
             actionListener = object : CommentDataAdapterDelegate.ActionListener {
                 override fun onReplyClicked(parentCommentId: Long) {
-                    showCommentComposeDialog(step, parent = parentCommentId)
+                    commentsPresenter.onComposeCommentClicked(step, parent = parentCommentId)
                 }
 
                 override fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
@@ -129,7 +127,7 @@ class CommentsActivity :
                 }
 
                 override fun onEditCommentClicked(commentDataItem: CommentItem.Data) {
-                    showCommentComposeDialog(step, commentDataItem.comment.parent, commentDataItem.comment, commentDataItem.solution?.submission)
+                    commentsPresenter.onComposeCommentClicked(step, commentDataItem.comment.parent, commentDataItem.comment, commentDataItem.solution?.submission)
                 }
 
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
@@ -175,7 +173,7 @@ class CommentsActivity :
         viewStateDelegate.addState<CommentsView.State.Idle>()
         viewStateDelegate.addState<CommentsView.State.Loading>(commentsRecycler)
         viewStateDelegate.addState<CommentsView.State.NetworkError>(reportProblem)
-        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsRecycler, emptyComments)
+        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsRecycler, emptyComments, composeCommentButton)
 
         commentsViewStateDelegate = ViewStateDelegate()
         commentsViewStateDelegate.addState<CommentsView.CommentsState.Loaded>(commentsRecycler)
@@ -188,8 +186,7 @@ class CommentsActivity :
             emptyComments.placeholderMessage.setText(R.string.step_solutions_empty)
         }
 
-        composeCommentButton.isVisible = false
-        composeCommentButton.setOnClickListener { showCommentComposeDialog(step) }
+        composeCommentButton.setOnClickListener { commentsPresenter.onComposeCommentClicked(step) }
         commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
 
@@ -205,7 +202,7 @@ class CommentsActivity :
             .takeIf { it != -1L }
 
         if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
-            showCommentComposeDialog(step)
+            commentsPresenter.onComposeCommentClicked(step) // todo handle
             intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
         }
 
@@ -264,9 +261,6 @@ class CommentsActivity :
         viewStateDelegate.switchState(state)
         isMenuOrderGroupVisible = state is CommentsView.State.DiscussionLoaded
 
-        composeCommentButton.isVisible =
-            state.safeCast<CommentsView.State.DiscussionLoaded>()?.isGuest == false
-
         when (state) {
             is CommentsView.State.Loading ->
                 commentsAdapter.items = commentPlaceholders
@@ -289,7 +283,7 @@ class CommentsActivity :
         invalidateOptionsMenu()
     }
 
-    private fun showCommentComposeDialog(step: Step, parent: Long? = null, comment: Comment? = null, submission: Submission? = null) {
+    override fun showCommentComposeDialog(step: Step, parent: Long?, comment: Comment?, submission: Submission?) {
         analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
 
         ComposeCommentDialogFragment
@@ -326,6 +320,10 @@ class CommentsActivity :
 
     override fun showNetworkError() {
         root.snackbar(messageRes = R.string.no_connection)
+    }
+
+    override fun showAuthRequired() {
+        root.snackbar(messageRes = R.string.comment_auth_required)
     }
 
     override fun onCommentReplaced(commentsData: CommentsData, isCommentCreated: Boolean) {
