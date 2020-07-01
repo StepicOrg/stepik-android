@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -42,6 +43,7 @@ import org.stepik.android.view.comment.ui.dialog.ComposeCommentDialogFragment
 import org.stepik.android.view.comment.ui.dialog.RemoveCommentDialogFragment
 import org.stepik.android.view.comment.ui.dialog.SolutionCommentDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.ui.adapters.DefaultDelegateAdapter
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -186,6 +188,7 @@ class CommentsActivity :
             emptyComments.placeholderMessage.setText(R.string.step_solutions_empty)
         }
 
+        composeCommentButton.isVisible = false
         composeCommentButton.setOnClickListener { showCommentComposeDialog(step) }
         commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
@@ -260,6 +263,9 @@ class CommentsActivity :
 
         viewStateDelegate.switchState(state)
         isMenuOrderGroupVisible = state is CommentsView.State.DiscussionLoaded
+
+        composeCommentButton.isVisible =
+            state.safeCast<CommentsView.State.DiscussionLoaded>()?.isGuest == false
 
         when (state) {
             is CommentsView.State.Loading ->
