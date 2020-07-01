@@ -216,11 +216,6 @@ constructor(
         val oldState = (state as? CommentsView.State.DiscussionLoaded)
             ?: return
 
-        if (oldState.isGuest) {
-            view?.showAuthRequired()
-            return
-        }
-
         val commentsState = (oldState.commentsState as? CommentsView.CommentsState.Loaded)
             ?: return
 
