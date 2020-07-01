@@ -201,11 +201,6 @@ class CommentsActivity :
         val discussionId = intent.getLongExtra(EXTRA_DISCUSSION_ID, -1)
             .takeIf { it != -1L }
 
-        if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
-            commentsPresenter.onComposeCommentClicked(step) // todo handle
-            intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
-        }
-
         commentsPresenter.onDiscussion(discussionThread.discussionProxy, discussionId, forceUpdate)
     }
 
@@ -276,6 +271,11 @@ class CommentsActivity :
 
                     is CommentsView.CommentsState.Loaded ->
                         commentsAdapter.items = state.commentsState.commentItems
+                }
+
+                if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
+                    commentsPresenter.onComposeCommentClicked(step)
+                    intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
                 }
             }
         }
