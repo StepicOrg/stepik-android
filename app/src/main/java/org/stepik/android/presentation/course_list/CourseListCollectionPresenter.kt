@@ -9,9 +9,10 @@ import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
-import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseCollection
 import org.stepik.android.presentation.catalog.model.CatalogItem
@@ -19,6 +20,7 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
+import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -35,6 +37,8 @@ constructor(
     private val mainScheduler: Scheduler,
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
+    @UserCoursesOperationBus
+    private val userCourseOperationObservable: Observable<UserCourse>,
 
     viewContainer: PresenterViewContainer<CourseListCollectionView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
@@ -57,6 +61,7 @@ constructor(
     init {
         compositeDisposable += paginationDisposable
         subscribeForEnrollmentUpdates()
+        subscribeForUserCourseOperationUpdates()
     }
 
     override fun attachView(view: CourseListCollectionView) {
@@ -75,10 +80,10 @@ constructor(
         paginationDisposable += Single
             .concat(
                 courseListInteractor
-                    .getCourseListItems(*courseCollection.courses, sourceType = DataSourceType.CACHE, courseViewSource = viewSource),
+                    .getCourseListItems(*courseCollection.courses, sourceTypeComposition = SourceTypeComposition.CACHE, courseViewSource = viewSource),
 
                 courseListInteractor
-                    .getCourseListItems(*courseCollection.courses, sourceType = DataSourceType.REMOTE, courseViewSource = viewSource)
+                    .getCourseListItems(*courseCollection.courses, sourceTypeComposition = SourceTypeComposition.REMOTE, courseViewSource = viewSource)
             )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -109,6 +114,9 @@ constructor(
             )
     }
 
+    /**
+     * Enrollment updates
+     */
     private fun subscribeForEnrollmentUpdates() {
         compositeDisposable += enrollmentUpdatesObservable
             .subscribeOn(backgroundScheduler)
@@ -130,12 +138,30 @@ constructor(
             ?: return
 
         compositeDisposable += courseListInteractor
-            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceType = DataSourceType.CACHE)
+            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { courses ->
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, courses.first()))
+                },
+                onError = emptyOnErrorStub
+            )
+    }
+
+    /**
+     * UserCourse updates
+     */
+    private fun subscribeForUserCourseOperationUpdates() {
+        compositeDisposable += userCourseOperationObservable
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { userCourse ->
+                    val oldState = (state as? CourseListCollectionView.State.Data)
+                        ?: return@subscribeBy
+
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToUserCourseUpdate(oldState.courseListViewState, userCourse))
                 },
                 onError = emptyOnErrorStub
             )

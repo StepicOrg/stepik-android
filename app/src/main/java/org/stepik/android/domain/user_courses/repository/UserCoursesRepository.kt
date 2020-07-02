@@ -10,7 +10,7 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 
 interface UserCoursesRepository {
     fun getUserCourses(userCourseQuery: UserCourseQuery = UserCourseQuery(page = 1, isArchived = false), sourceType: DataSourceType = DataSourceType.CACHE): Single<PagedList<UserCourse>>
-    fun getUserCourseByCourseId(courseId: Long): Maybe<UserCourse>
+    fun getUserCourseByCourseId(courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Maybe<UserCourse>
     fun saveUserCourse(userCourse: UserCourse): Single<UserCourse>
 
     /***

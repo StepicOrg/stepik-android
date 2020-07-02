@@ -76,4 +76,22 @@
         android:layout_toRightOf="@id/courseCertificateImage"
         android:text="@string/course_info_certificate"/>
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/courseArchiveImage"
+        style="@style/CourseWidgetPropertyImageView"
+        android:layout_marginTop="4dp"
+        android:layout_toEndOf="@id/courseCertificateText"
+        android:layout_toRightOf="@id/courseCertificateText"
+        android:contentDescription="@string/course_list_archived"
+        app:srcCompat="@drawable/ic_course_list_archived"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/courseArchiveText"
+        style="@style/CourseWidgetPropertyTextView"
+        android:layout_marginLeft="6dp"
+        android:layout_marginStart="6dp"
+        android:layout_toEndOf="@id/courseArchiveImage"
+        android:layout_toRightOf="@id/courseArchiveImage"
+        android:text="@string/course_list_archived"/>
+
 </RelativeLayout>

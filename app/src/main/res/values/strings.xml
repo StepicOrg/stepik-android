@@ -579,6 +579,8 @@
     <string name="course_progress_current">Current progress</string>
     <string name="course_progress_solutions">Solution to submit</string>
 
+    <string name="course_list_archived">Archived</string>
+
     <string name="course_info_organization_prefix">by %s</string>
     <string name="course_info_about">About</string>
     <string name="course_info_requirements">Requirements</string>
@@ -830,6 +832,8 @@
     <string name="comment_tag_course_team">Course Team</string>
     <string name="comment_tag_staff">Stepik Team</string>
     <string name="comment_tag_moderator">Course Moderator</string>
+    
+    <string name="comment_auth_required">You have to login to join this discussion</string>
 
     <string name="relative_date_pattern">%s ago</string>
     <string name="relative_date_now">now</string>

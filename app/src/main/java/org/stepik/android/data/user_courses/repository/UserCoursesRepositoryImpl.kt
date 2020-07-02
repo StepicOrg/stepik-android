@@ -11,6 +11,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
+import ru.nobird.android.domain.rx.maybeFirst
 import javax.inject.Inject
 
 class UserCoursesRepositoryImpl
@@ -41,13 +42,33 @@ constructor(
         }
     }
 
+    override fun getUserCourseByCourseId(courseId: Long, sourceType: DataSourceType): Maybe<UserCourse> {
+        val query = UserCourseQuery(course = courseId)
+
+        val remoteSource = userCoursesRemoteDataSource
+            .getUserCourses(query)
+            .doCompletableOnSuccess(userCoursesCacheDataSource::saveUserCourses)
+            .maybeFirst()
+
+        val cacheSource = userCoursesCacheDataSource
+            .getUserCourses(query)
+            .maybeFirst()
+
+        return when (sourceType) {
+            DataSourceType.CACHE ->
+                cacheSource
+                    .switchIfEmpty(remoteSource)
+
+            DataSourceType.REMOTE ->
+                remoteSource
+                    .onErrorResumeNext(cacheSource)
+        }
+    }
+
     override fun saveUserCourse(userCourse: UserCourse): Single<UserCourse> =
         userCoursesRemoteDataSource
             .saveUserCourse(userCourse.id, userCourse)
             .doCompletableOnSuccess { userCoursesCacheDataSource.saveUserCourses(listOf(it)) }
-
-    override fun getUserCourseByCourseId(courseId: Long): Maybe<UserCourse> =
-        userCoursesRemoteDataSource.getUserCourseByCourseId(courseId)
 
     override fun addUserCourse(userCourse: UserCourse): Completable =
         userCoursesCacheDataSource.saveUserCourses(listOf(userCourse))

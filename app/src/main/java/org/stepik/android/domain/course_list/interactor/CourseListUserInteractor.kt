@@ -9,6 +9,7 @@ import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.then
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
@@ -48,11 +49,19 @@ constructor(
 
     fun getCourseListItems(vararg courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<Pair<PagedList<CourseListItem.Data>, DataSourceType>> =
         courseListInteractor
-            .getCourseListItems(*courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
+            .getCourseListItems(
+                *courseId,
+                courseViewSource = CourseViewSource.MyCourses,
+                sourceTypeComposition = SourceTypeComposition(sourceType, enrollmentSourceType = DataSourceType.CACHE)
+            )
             .map { it to sourceType }
 
     fun getUserCourse(courseId: Long, sourceType: DataSourceType = DataSourceType.CACHE): Single<CourseListItem.Data> =
         courseListInteractor
-            .getCourseListItems(courseId, courseViewSource = CourseViewSource.MyCourses, sourceType = sourceType)
+            .getCourseListItems(
+                courseId,
+                courseViewSource = CourseViewSource.MyCourses,
+                sourceTypeComposition = SourceTypeComposition(sourceType, enrollmentSourceType = DataSourceType.CACHE)
+            )
             .map { it.first() }
 }

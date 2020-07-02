@@ -3,7 +3,9 @@ package org.stepik.android.presentation.course_list.mapper
 import org.stepic.droid.util.PagedList
 import org.stepic.droid.util.mapPaged
 import org.stepic.droid.util.plus
+import org.stepik.android.domain.course.mapper.CourseStatsMapper
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.model.Progress
 import org.stepik.android.presentation.course_list.CourseListView
@@ -11,7 +13,9 @@ import javax.inject.Inject
 
 class CourseListStateMapper
 @Inject
-constructor() {
+constructor(
+    private val courseStatsMapper: CourseStatsMapper
+) {
     fun mapToLoadMoreState(courseListState: CourseListView.State.Content): CourseListView.State =
         CourseListView.State.Content(
             courseListDataItems = courseListState.courseListDataItems,
@@ -57,51 +61,33 @@ constructor() {
         )
     }
 
-    fun mapToEnrollmentUpdateState(state: CourseListView.State, enrolledCourse: Course): CourseListView.State {
-        if (state !is CourseListView.State.Content) {
-            return state
+    /**
+     * Enrollment
+     */
+    fun mapToEnrollmentUpdateState(state: CourseListView.State, enrolledCourse: Course): CourseListView.State =
+        mapCourseDataItems(state) { if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it }
+
+    fun mapToEnrollmentUpdateState(state: CourseListView.State, enrolledCourse: CourseListItem.Data): CourseListView.State =
+        mapCourseDataItems(state) { if (it.course.id == enrolledCourse.course.id) enrolledCourse else it }
+
+    /**
+     * User courses
+     */
+    fun mapToUserCourseUpdate(state: CourseListView.State, userCourse: UserCourse): CourseListView.State =
+        mapCourseDataItems(state) { mergeCourseDataItemWithUserCourse(it, userCourse) }
+
+    private fun mergeCourseDataItemWithUserCourse(item: CourseListItem.Data, userCourse: UserCourse): CourseListItem.Data =
+        if (item.course.id == userCourse.course) {
+            item.copy(courseStats = courseStatsMapper.mutateEnrolledState(item.courseStats) { copy(userCourse = userCourse) })
+        } else {
+            item
         }
 
-        val courseListItems =
-            state.courseListDataItems.mapPaged {
-                if (it.course.id == enrolledCourse.id) it.copy(course = enrolledCourse) else it
-            }
-
-        return mergeCourseListItemsWithEnrollment(state, courseListItems)
-    }
-
-    fun mapToEnrollmentUpdateState(state: CourseListView.State, enrolledCourse: CourseListItem.Data): CourseListView.State {
-        if (state !is CourseListView.State.Content) {
-            return state
-        }
-
-        val courseListItems =
-            state.courseListDataItems.mapPaged {
-                if (it.course.id == enrolledCourse.course.id) enrolledCourse else it
-            }
-
-        return mergeCourseListItemsWithEnrollment(state, courseListItems)
-    }
-
-    fun mergeWithCourseProgress(state: CourseListView.State, progress: Progress): CourseListView.State {
-        if (state !is CourseListView.State.Content) {
-            return state
-        }
-
-        val courseListItems = state.courseListItems.map { mergeCourseItemWithProgress(it, progress) }
-        val courseListDataItems = state.courseListDataItems.mapPaged { mergeCourseDataItemWithProgress(it, progress) }
-
-        return state.copy(courseListDataItems, courseListItems)
-    }
-
-    private fun mergeCourseItemWithProgress(item: CourseListItem, progress: Progress): CourseListItem =
-        when (item) {
-            is CourseListItem.PlaceHolder ->
-                item
-
-            is CourseListItem.Data ->
-                mergeCourseDataItemWithProgress(item, progress)
-        }
+    /**
+     * Progress
+     */
+    fun mergeWithCourseProgress(state: CourseListView.State, progress: Progress): CourseListView.State =
+        mapCourseDataItems(state) { mergeCourseDataItemWithProgress(it, progress) }
 
     private fun mergeCourseDataItemWithProgress(item: CourseListItem.Data, progress: Progress): CourseListItem.Data =
         if (item.course.progress == progress.id && progress.id != null) {
@@ -110,14 +96,17 @@ constructor() {
             item
         }
 
-    private fun mergeCourseListItemsWithEnrollment(state: CourseListView.State.Content, courseListItems: PagedList<CourseListItem.Data>): CourseListView.State =
-        CourseListView.State.Content(
-            courseListDataItems = courseListItems,
-            courseListItems =
-            if (state.courseListItems.last() is CourseListItem.PlaceHolder) {
-                courseListItems + CourseListItem.PlaceHolder()
-            } else {
-                courseListItems
-            }
-        )
+    /**
+     * Common
+     */
+    private inline fun mapCourseDataItems(state: CourseListView.State, transform: (CourseListItem.Data) -> CourseListItem.Data): CourseListView.State {
+        if (state !is CourseListView.State.Content) {
+            return state
+        }
+
+        val courseListItems = state.courseListItems.map { if (it is CourseListItem.Data) transform(it) else it }
+        val courseListDataItems = state.courseListDataItems.mapPaged(transform)
+
+        return state.copy(courseListDataItems, courseListItems)
+    }
 }
