@@ -108,6 +108,7 @@ android {
 
 dependencies {
     implementation project(':androidsvg')
+    implementation files('libs/flexbox-release.aar')
 //    implementation project(':billing')
     implementation project(':model')
     implementation libraries.kotlinStd
@@ -131,7 +132,6 @@ dependencies {
     implementation libraries.cardView
     implementation libraries.constraintLayout
     implementation libraries.material
-    implementation libraries.flexbox
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel

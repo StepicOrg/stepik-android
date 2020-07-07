@@ -30,6 +30,9 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://dl.bintray.com/eadm/ru.nobird.android" }
         maven { url 'https://dl.bintray.com/guardian/android' }
+        flatDir {
+            dirs 'libs/aars'
+        }
     }
 }
 
