@@ -4,17 +4,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import kotlinx.android.synthetic.main.item_course.view.*
 import kotlinx.android.synthetic.main.layout_course_properties.view.*
 import org.stepic.droid.R
 import org.stepic.droid.util.TextUtil
 import org.stepic.droid.util.safeDiv
 import org.stepic.droid.util.toFixed
 import org.stepik.android.domain.course.model.CourseStats
+import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
+import ru.nobird.android.core.model.safeCast
 import java.util.Locale
 
 class CoursePropertiesDelegate(
+    root: View,
     private val view: ViewGroup
 ) {
     private val learnersCountImage = view.learnersCountImage
@@ -29,11 +34,17 @@ class CoursePropertiesDelegate(
     private val courseCertificateImage = view.courseCertificateImage
     private val courseCertificateText = view.courseCertificateText
 
+    private val courseArchiveImage = view.courseArchiveImage
+    private val courseArchiveText = view.courseArchiveText
+
+    private val courseFavoriteImage = root.courseListFavorite
+
     fun setStats(courseListItem: CourseListItem.Data) {
         setLearnersCount(courseListItem.course.learnersCount, courseListItem.course.enrollment > 0L)
         setProgress(courseListItem.courseStats)
         setRating(courseListItem.courseStats)
         setCertificate(courseListItem.course)
+        setUserCourse(courseListItem.courseStats.enrollmentState.safeCast<EnrollmentState.Enrolled>()?.userCourse)
 
         view.isVisible = view.children.any(View::isVisible)
     }
@@ -49,7 +60,11 @@ class CoursePropertiesDelegate(
 
     private fun setProgress(courseStats: CourseStats) {
         val progress = courseStats.progress
-        val needShow = if (progress != null && progress.cost > 0) {
+        val needShow = if (
+            progress != null &&
+            progress.cost > 0 &&
+            courseStats.enrollmentState.safeCast<EnrollmentState.Enrolled>()?.userCourse?.isArchived != true
+        ) {
             val score = progress
                 .score
                 ?.toFloatOrNull()
@@ -85,5 +100,13 @@ class CoursePropertiesDelegate(
         val needShow = course.hasCertificate && !isEnrolled
         courseCertificateImage.isVisible = needShow
         courseCertificateText.isVisible = needShow
+    }
+
+    private fun setUserCourse(userCourse: UserCourse?) {
+        courseFavoriteImage.isVisible = userCourse?.isFavorite == true
+
+        val isArchived = userCourse?.isArchived == true
+        courseArchiveImage.isVisible = isArchived
+        courseArchiveText.isVisible = isArchived
     }
 }

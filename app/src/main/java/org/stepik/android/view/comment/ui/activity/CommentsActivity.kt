@@ -119,7 +119,7 @@ class CommentsActivity :
         commentsAdapter += CommentDataAdapterDelegate(
             actionListener = object : CommentDataAdapterDelegate.ActionListener {
                 override fun onReplyClicked(parentCommentId: Long) {
-                    showCommentComposeDialog(step, parent = parentCommentId)
+                    commentsPresenter.onComposeCommentClicked(step, parent = parentCommentId)
                 }
 
                 override fun onVoteClicked(commentDataItem: CommentItem.Data, voteValue: Vote.Value) {
@@ -127,7 +127,7 @@ class CommentsActivity :
                 }
 
                 override fun onEditCommentClicked(commentDataItem: CommentItem.Data) {
-                    showCommentComposeDialog(step, commentDataItem.comment.parent, commentDataItem.comment, commentDataItem.solution?.submission)
+                    commentsPresenter.onComposeCommentClicked(step, commentDataItem.comment.parent, commentDataItem.comment, commentDataItem.solution?.submission)
                 }
 
                 override fun onRemoveCommentClicked(commentDataItem: CommentItem.Data) {
@@ -173,7 +173,7 @@ class CommentsActivity :
         viewStateDelegate.addState<CommentsView.State.Idle>()
         viewStateDelegate.addState<CommentsView.State.Loading>(commentsRecycler)
         viewStateDelegate.addState<CommentsView.State.NetworkError>(reportProblem)
-        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsRecycler, emptyComments)
+        viewStateDelegate.addState<CommentsView.State.DiscussionLoaded>(commentsRecycler, emptyComments, composeCommentButton)
 
         commentsViewStateDelegate = ViewStateDelegate()
         commentsViewStateDelegate.addState<CommentsView.CommentsState.Loaded>(commentsRecycler)
@@ -186,7 +186,7 @@ class CommentsActivity :
             emptyComments.placeholderMessage.setText(R.string.step_solutions_empty)
         }
 
-        composeCommentButton.setOnClickListener { showCommentComposeDialog(step) }
+        composeCommentButton.setOnClickListener { commentsPresenter.onComposeCommentClicked(step) }
         commentsSwipeRefresh.setOnRefreshListener { setDataToPresenter(forceUpdate = true) }
     }
 
@@ -200,11 +200,6 @@ class CommentsActivity :
     private fun setDataToPresenter(forceUpdate: Boolean = false) {
         val discussionId = intent.getLongExtra(EXTRA_DISCUSSION_ID, -1)
             .takeIf { it != -1L }
-
-        if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
-            showCommentComposeDialog(step)
-            intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
-        }
 
         commentsPresenter.onDiscussion(discussionThread.discussionProxy, discussionId, forceUpdate)
     }
@@ -277,13 +272,18 @@ class CommentsActivity :
                     is CommentsView.CommentsState.Loaded ->
                         commentsAdapter.items = state.commentsState.commentItems
                 }
+
+                if (intent.getBooleanExtra(EXTRA_IS_NEED_OPEN_COMPOSE, false)) {
+                    commentsPresenter.onComposeCommentClicked(step)
+                    intent.removeExtra(EXTRA_IS_NEED_OPEN_COMPOSE)
+                }
             }
         }
 
         invalidateOptionsMenu()
     }
 
-    private fun showCommentComposeDialog(step: Step, parent: Long? = null, comment: Comment? = null, submission: Submission? = null) {
+    override fun showCommentComposeDialog(step: Step, parent: Long?, comment: Comment?, submission: Submission?) {
         analytic.reportEvent(Analytic.Screens.OPEN_WRITE_COMMENT)
 
         ComposeCommentDialogFragment
@@ -320,6 +320,10 @@ class CommentsActivity :
 
     override fun showNetworkError() {
         root.snackbar(messageRes = R.string.no_connection)
+    }
+
+    override fun showAuthRequired() {
+        root.snackbar(messageRes = R.string.comment_auth_required)
     }
 
     override fun onCommentReplaced(commentsData: CommentsData, isCommentCreated: Boolean) {

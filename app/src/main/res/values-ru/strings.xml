@@ -560,6 +560,8 @@
     <string name="course_progress_current">Текущий прогресс</string>
     <string name="course_progress_solutions">Неотправленные решения</string>
 
+    <string name="course_list_archived">В архиве</string>
+
     <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
     <string name="course_info_requirements">Требования</string>
@@ -798,6 +800,8 @@
     <string name="comment_tag_course_team">Команда курса</string>
     <string name="comment_tag_staff">Команда Stepik</string>
     <string name="comment_tag_moderator">Модератор курса</string>
+
+    <string name="comment_auth_required">Чтобы присоединиться к этому обсуждению необходимо зайти под своим аккаунтом</string>
 
     <string name="relative_date_pattern">%s назад</string>
     <string name="relative_date_now">сейчас</string>
