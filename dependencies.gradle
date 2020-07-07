@@ -63,7 +63,7 @@ ext.versions = [
         firebaseAppindexing  : '17.1.0',
         firebaseCore         : '16.0.6',
         firebaseConfig       : '16.1.2',
-        firebaseMessaging    : '17.3.4',
+        firebaseMessaging    : '20.2.1',
         firebasePerf         : '16.2.5',
 
         checkout             : '1.2.1',
