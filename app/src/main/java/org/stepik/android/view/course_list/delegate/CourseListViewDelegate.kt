@@ -44,6 +44,7 @@ class CourseListViewDelegate(
         )
         courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
         courseItemsRecyclerView.adapter = courseItemAdapter
+        courseItemsRecyclerView.setHasFixedSize(true)
     }
 
     override fun setState(state: CourseListView.State) {

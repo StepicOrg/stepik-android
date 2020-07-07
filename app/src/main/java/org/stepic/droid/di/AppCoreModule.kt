@@ -6,8 +6,10 @@ import android.content.ContentResolver
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -173,12 +175,14 @@ abstract class AppCoreModule {
         @JvmStatic
         @AppSingleton
         internal fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
-            val firebaseRemoteConfig = FirebaseRemoteConfig.getInstance()
-            val configSettings = FirebaseRemoteConfigSettings.Builder()
-                    .setDeveloperModeEnabled(BuildConfig.DEBUG)
-                    .build()
-            firebaseRemoteConfig.setConfigSettings(configSettings)
-            firebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults)
+            val firebaseRemoteConfig = Firebase.remoteConfig
+            val configSettings = remoteConfigSettings {
+                if (BuildConfig.DEBUG) {
+                    minimumFetchIntervalInSeconds = 0
+                }
+            }
+            firebaseRemoteConfig.setConfigSettingsAsync(configSettings)
+            firebaseRemoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
             return firebaseRemoteConfig
         }
 
