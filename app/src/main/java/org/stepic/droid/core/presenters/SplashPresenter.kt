@@ -1,6 +1,7 @@
 package org.stepic.droid.core.presenters
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import io.reactivex.Completable
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -125,10 +126,9 @@ constructor(
 
     private fun checkRemoteConfigs() {
         if (googleApiChecker.checkPlayServices()) {
-            firebaseRemoteConfig.fetch().addOnCompleteListener { task ->
+            firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     analytic.reportEvent(Analytic.RemoteConfig.FETCHED_SUCCESSFUL)
-                    firebaseRemoteConfig.activateFetched()
                 } else {
                     analytic.reportEvent(Analytic.RemoteConfig.FETCHED_UNSUCCESSFUL)
                 }
@@ -136,7 +136,7 @@ constructor(
                 analytic
                     .setUserProperty(
                         RemoteConfig.PREFIX + RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED,
-                        firebaseRemoteConfig.getBoolean(RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED).toString()
+                        firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean().toString()
                     )
             }
         }

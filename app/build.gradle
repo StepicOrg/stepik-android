@@ -175,7 +175,6 @@ dependencies {
     implementation libraries.firebaseMessaging
     implementation libraries.firebaseAppindexing
     implementation libraries.googleauth
-    implementation libraries.firebaseCore
     implementation libraries.firebaseConfig
     implementation libraries.firebasePerf
 

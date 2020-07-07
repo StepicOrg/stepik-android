@@ -61,8 +61,7 @@ ext.versions = [
 
         googleauth           : '16.0.1',
         firebaseAppindexing  : '19.1.0',
-        firebaseCore         : '16.0.6',
-        firebaseConfig       : '16.1.2',
+        firebaseConfig       : '19.1.4',
         firebaseMessaging    : '20.2.1',
         firebasePerf         : '16.2.5',
 
@@ -177,8 +176,7 @@ ext.libraries = [
 
         googleauth           : "com.google.android.gms:play-services-auth:$versions.googleauth",
         firebaseAppindexing  : "com.google.firebase:firebase-appindexing:$versions.firebaseAppindexing",
-        firebaseCore         : "com.google.firebase:firebase-core:$versions.firebaseCore",
-        firebaseConfig       : "com.google.firebase:firebase-config:$versions.firebaseConfig",
+        firebaseConfig       : "com.google.firebase:firebase-config-ktx:$versions.firebaseConfig",
         firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebaseMessaging",
         firebasePerf         : "com.google.firebase:firebase-perf:$versions.firebasePerf",
 

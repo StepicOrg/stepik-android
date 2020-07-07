@@ -11,6 +11,7 @@ import com.amplitude.api.Identify
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.crashlytics.internal.common.CrashlyticsCore
+import com.google.firebase.ktx.Firebase
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
@@ -41,7 +42,7 @@ constructor(
         }
     }
 
-    private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+    private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
     private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
 
     private val amplitude = Amplitude.getInstance()
