@@ -18,7 +18,9 @@ data class CourseListQuery(
     @SerializedName("is_exclude_ended")
     val isExcludeEnded: Boolean? = null,
     @SerializedName("is_public")
-    val isPublic: Boolean? = null
+    val isPublic: Boolean? = null,
+    @SerializedName("is_cataloged")
+    val isCataloged: Boolean? = null
 ) : Parcelable {
     enum class Order(val order: String) {
         @SerializedName("-activity")
