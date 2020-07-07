@@ -41,6 +41,7 @@ import org.stepic.droid.storage.dao.ViewAssignmentDaoImpl
 import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
+import org.stepik.android.cache.analytic.dao.AnalyticDaoImpl
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.course_collection.dao.CourseCollectionDaoImpl
@@ -68,6 +69,7 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
+import org.stepik.android.model.analytic.AnalyticLocalEvent
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
@@ -220,6 +222,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindCourseCollectionDao(courseCollectionDaoImpl: CourseCollectionDaoImpl): IDao<CourseCollection>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindAnalyticDao(analyticDaoImpl: AnalyticDaoImpl): IDao<AnalyticLocalEvent>
 
     @Module
     companion object {

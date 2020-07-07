@@ -2,6 +2,7 @@ package org.stepic.droid.base
 
 import android.content.Context
 import android.os.Build
+import android.os.Process
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
@@ -25,11 +26,13 @@ import org.stepic.droid.di.DaggerAppCoreComponent
 import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.persistence.downloads.DownloadsSyncronizer
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepic.droid.util.DebugToolsHelper
+import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
 import ru.nobird.android.view.base.ui.extension.isMainProcess
 import timber.log.Timber
+import java.io.FileInputStream
+import java.io.InputStreamReader
 import javax.inject.Inject
 import javax.net.ssl.SSLContext
 
@@ -78,6 +81,9 @@ class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        if (fetchProcessName() == "org.stepic.droid:analyticProcess" && BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
         if (!isMainProcess) return
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -90,6 +96,34 @@ class App : MultiDexApplication() {
         setTheme(R.style.AppTheme)
 
         init()
+    }
+
+    private fun fetchProcessName(): String {
+        val myPid = Process.myPid() // Get my Process ID
+        val processName = StringBuilder()
+
+        var reader: InputStreamReader? = null
+        try {
+            reader = InputStreamReader(
+                FileInputStream("/proc/$myPid/cmdline")
+            )
+            var c: Int = 0
+            while (reader.read().also({ c = it }) > 0) {
+                processName.append(c.toChar())
+            }
+            // processName.toString() is my process name!
+        } catch (e: java.lang.Exception) {
+            // ignore
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close()
+                } catch (e: java.lang.Exception) {
+                    // Ignore
+                }
+            }
+            return processName.toString()
+        }
     }
 
     private fun init() {

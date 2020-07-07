@@ -26,6 +26,7 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
+import org.stepik.android.model.analytic.AnalyticLocalEvent
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import javax.inject.Inject
@@ -59,7 +60,8 @@ constructor(
     private val attemptDao: IDao<Attempt>,
     private val socialProfileDao: IDao<SocialProfile>,
     private val userCourseDao: IDao<UserCourse>,
-    private val courseCollectionDao: IDao<CourseCollection>
+    private val courseCollectionDao: IDao<CourseCollection>,
+    private val analyticDao: IDao<AnalyticLocalEvent>
 ) {
 
     fun dropDatabase() {
@@ -89,6 +91,7 @@ constructor(
         socialProfileDao.removeAll()
         userCourseDao.removeAll()
         courseCollectionDao.removeAll()
+        analyticDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {

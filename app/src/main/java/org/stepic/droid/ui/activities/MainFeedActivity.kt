@@ -3,6 +3,7 @@ package org.stepic.droid.ui.activities
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.ShortcutManager
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.annotation.IdRes
@@ -12,6 +13,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 import kotlinx.android.synthetic.main.activity_main_feed.*
+import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
@@ -33,6 +35,7 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.model.analytic.AnalyticLocalEvent
+import org.stepik.android.view.analytic.AnalyticContentProvider
 import org.stepik.android.view.catalog.ui.fragment.CatalogFragment
 import org.stepik.android.view.profile.ui.fragment.ProfileFragment
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
@@ -163,6 +166,10 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         Timber.d("Test: $jsonElement")
         Timber.d("Test.toJsonTree: ${gson.toJsonTree(jsonElement)}")
         Timber.d("Test: ${gson.fromJson(jsonElement.toString(), AnalyticLocalEvent::class.java)}")
+
+
+        val uri = Uri.parse("content://${BuildConfig.APPLICATION_ID}.analytic_provider")
+        contentResolver.call(uri, AnalyticContentProvider.FLUSH, null, null)
 
         setContentView(R.layout.activity_main_feed)
 
