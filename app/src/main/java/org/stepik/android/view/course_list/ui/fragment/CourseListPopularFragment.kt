@@ -84,8 +84,7 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
             page = 1,
             order = CourseListQuery.Order.ACTIVITY_DESC,
             language = sharedPreferenceHelper.languageForFeatured,
-            isExcludeEnded = true,
-            isPublic = true
+            isCataloged = true
         )
 
         courseListTitleContainer.setOnClickListener {
