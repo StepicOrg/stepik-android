@@ -60,7 +60,7 @@ ext.versions = [
         lottie               : '2.7.0',
 
         googleauth           : '16.0.1',
-        firebaseAppindexing  : '17.1.0',
+        firebaseAppindexing  : '19.1.0',
         firebaseCore         : '16.0.6',
         firebaseConfig       : '16.1.2',
         firebaseMessaging    : '20.2.1',
