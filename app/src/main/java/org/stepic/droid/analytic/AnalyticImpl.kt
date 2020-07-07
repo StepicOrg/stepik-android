@@ -143,6 +143,7 @@ constructor(
         amplitude.identify(Identify().set(name, value))
         updateYandexUserProfile { apply(Attribute.customString(name).withValue(value)) }
         firebaseCrashlytics.setCustomKey(name, value)
+        firebaseAnalytics.setUserProperty(name, value)
     }
     // End of amplitude properties
 
