@@ -173,6 +173,7 @@ dependencies {
     implementation libraries.lottie
 
     implementation libraries.firebaseMessaging
+    implementation libraries.firebaseAnalytics
     implementation libraries.firebaseAppindexing
     implementation libraries.googleauth
     implementation libraries.firebaseConfig

@@ -60,6 +60,7 @@ ext.versions = [
         lottie               : '2.7.0',
 
         googleauth           : '16.0.1',
+        firebaseAnalytics    : '17.4.3',
         firebaseAppindexing  : '19.1.0',
         firebaseConfig       : '19.1.4',
         firebaseMessaging    : '20.2.1',
@@ -175,6 +176,7 @@ ext.libraries = [
         lottie               : "com.airbnb.android:lottie:$versions.lottie",
 
         googleauth           : "com.google.android.gms:play-services-auth:$versions.googleauth",
+        firebaseAnalytics    : "com.google.firebase:firebase-analytics-ktx:$versions.firebaseAnalytics",
         firebaseAppindexing  : "com.google.firebase:firebase-appindexing:$versions.firebaseAppindexing",
         firebaseConfig       : "com.google.firebase:firebase-config-ktx:$versions.firebaseConfig",
         firebaseMessaging    : "com.google.firebase:firebase-messaging:$versions.firebaseMessaging",
