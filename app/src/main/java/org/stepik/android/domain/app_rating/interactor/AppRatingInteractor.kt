@@ -1,6 +1,7 @@
 package org.stepik.android.domain.app_rating.interactor
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import org.stepic.droid.configuration.RemoteConfig
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.DateTimeHelper
@@ -42,7 +43,7 @@ constructor(
             return true
         }
 
-        val delayMillis = firebaseRemoteConfig.getLong(RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC).toInt() * 1000L
+        val delayMillis = firebaseRemoteConfig[RemoteConfig.MIN_DELAY_RATE_DIALOG_SEC].asLong() * 1000L
 
         return DateTimeHelper.isBeforeNowUtc(delayMillis + wasShownMillis) // if delay is expired (before now) -> show
     }

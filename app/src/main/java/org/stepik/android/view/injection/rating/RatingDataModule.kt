@@ -1,6 +1,7 @@
 package org.stepik.android.view.injection.rating
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -31,6 +32,6 @@ abstract class RatingDataModule {
         @Provides
         @JvmStatic
         internal fun provideRatingService(firebaseRemoteConfig: FirebaseRemoteConfig, okHttpClient: OkHttpClient, converterFactory: Converter.Factory): RatingService =
-            NetworkFactory.createService(firebaseRemoteConfig.getString(RemoteConfig.ADAPTIVE_BACKEND_URL), okHttpClient, converterFactory)
+            NetworkFactory.createService(firebaseRemoteConfig[RemoteConfig.ADAPTIVE_BACKEND_URL].asString(), okHttpClient, converterFactory)
     }
 }
