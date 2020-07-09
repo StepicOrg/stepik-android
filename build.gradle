@@ -11,16 +11,15 @@ buildscript {
         google()
         jcenter()
         maven { url "https://jitpack.io" }
-        maven { url "https://maven.fabric.io/public" }
         maven { url "https://dl.bintray.com/eadm/ru.nobird.android" }
     }
     dependencies {
         classpath gradlePlugins.android
         classpath gradlePlugins.googleServices
-        classpath gradlePlugins.kotlin
-        classpath gradlePlugins.fabric
-        classpath gradlePlugins.dexcount
+        classpath gradlePlugins.crashlyticsPlugin
         classpath gradlePlugins.firebasePerfPlugin
+        classpath gradlePlugins.kotlin
+        classpath gradlePlugins.dexcount
     }
 }
 
@@ -31,6 +30,9 @@ allprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://dl.bintray.com/eadm/ru.nobird.android" }
         maven { url 'https://dl.bintray.com/guardian/android' }
+        flatDir {
+            dirs 'libs/aars'
+        }
     }
 }
 

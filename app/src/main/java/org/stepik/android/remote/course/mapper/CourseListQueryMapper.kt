@@ -13,7 +13,8 @@ constructor() {
         private const val TEACHER = "teacher"
         private const val LANGUAGE = "language"
         private const val IS_PUBLIC = "is_public"
-        private const val IS_EXLUDE_ENDED = "exclude_ended"
+        private const val IS_EXCLUDE_ENDED = "exclude_ended"
+        private const val IS_CATALOGED = "is_cataloged"
     }
 
     fun mapToQueryMap(courseListQuery: CourseListQuery): Map<String, String> {
@@ -24,7 +25,8 @@ constructor() {
         mutableMap.putNullable(TEACHER, courseListQuery.teacher?.toString())
         mutableMap.putNullable(LANGUAGE, courseListQuery.language)
         mutableMap.putNullable(IS_PUBLIC, courseListQuery.isPublic?.toString())
-        mutableMap.putNullable(IS_EXLUDE_ENDED, courseListQuery.isExcludeEnded?.toString())
+        mutableMap.putNullable(IS_EXCLUDE_ENDED, courseListQuery.isExcludeEnded?.toString())
+        mutableMap.putNullable(IS_CATALOGED, courseListQuery.isCataloged?.toString())
 
         return mutableMap
     }

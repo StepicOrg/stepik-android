@@ -33,6 +33,8 @@ class CourseListAdapterDelegate(
     private val screenManager: ScreenManager,
     private val courseContinueViewDelegate: CourseContinueViewDelegate
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
+    private val sharedViewPool = RecyclerView.RecycledViewPool()
+
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
         data is CourseListCollectionPresenter
 
@@ -91,6 +93,7 @@ class CourseListAdapterDelegate(
                 itemAnimator?.changeDuration = 0
                 val snapHelper = CoursesSnapHelper(rowCount)
                 snapHelper.attachToRecyclerView(this)
+                courseListCoursesRecycler.setRecycledViewPool(sharedViewPool)
             }
         }
 

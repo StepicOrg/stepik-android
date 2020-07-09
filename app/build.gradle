@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 apply from: '../code_quality_tools/jacoco.gradle'
 //apply from: '../code_quality_tools/findbugs.gradle'
 apply from: '../code_quality_tools/checkstyle.gradle'
@@ -83,6 +83,10 @@ android {
             versionNameSuffix "DEV"
 
             testCoverageEnabled = false
+
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+            }
         }
 
         //the apk of this type is signed by old prod keys
@@ -104,6 +108,7 @@ android {
 
 dependencies {
     implementation project(':androidsvg')
+    implementation files('libs/flexbox-release.aar')
 //    implementation project(':billing')
     implementation project(':model')
     implementation libraries.kotlinStd
@@ -127,7 +132,6 @@ dependencies {
     implementation libraries.cardView
     implementation libraries.constraintLayout
     implementation libraries.material
-    implementation libraries.flexbox
 
     implementation libraries.archExtensions
     implementation libraries.archViewModel
@@ -169,9 +173,9 @@ dependencies {
     implementation libraries.lottie
 
     implementation libraries.firebaseMessaging
+    implementation libraries.firebaseAnalytics
     implementation libraries.firebaseAppindexing
     implementation libraries.googleauth
-    implementation libraries.firebaseCore
     implementation libraries.firebaseConfig
     implementation libraries.firebasePerf
 

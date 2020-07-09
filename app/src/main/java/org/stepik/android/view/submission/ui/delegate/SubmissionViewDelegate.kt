@@ -20,6 +20,9 @@ fun TextView.setSubmission(submission: Submission?, showArrow: Boolean = false) 
                 Submission.Status.CORRECT ->
                     R.drawable.ic_step_quiz_correct
 
+                Submission.Status.PARTIALLY_CORRECT ->
+                    R.drawable.ic_step_quiz_partially_correct
+
                 Submission.Status.WRONG ->
                     R.drawable.ic_step_quiz_wrong_wide
 
