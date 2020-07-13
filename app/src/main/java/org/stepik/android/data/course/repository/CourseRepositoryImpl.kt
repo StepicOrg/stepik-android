@@ -4,22 +4,24 @@ import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
-import ru.nobird.android.domain.rx.doCompletableOnSuccess
-import ru.nobird.android.domain.rx.maybeFirst
-import ru.nobird.android.domain.rx.requireSize
 import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource
+import org.stepik.android.data.course_list.source.CourseListQueryCacheDataSource
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.model.Course
+import ru.nobird.android.domain.rx.doCompletableOnSuccess
+import ru.nobird.android.domain.rx.maybeFirst
+import ru.nobird.android.domain.rx.requireSize
 import javax.inject.Inject
 
 class CourseRepositoryImpl
 @Inject
 constructor(
     private val courseRemoteDataSource: CourseRemoteDataSource,
-    private val courseCacheDataSource: CourseCacheDataSource
+    private val courseCacheDataSource: CourseCacheDataSource,
+    private val courseListQueryCacheDataSource: CourseListQueryCacheDataSource
 ) : CourseRepository {
 
     override fun getCourse(courseId: Long, canUseCache: Boolean): Maybe<Course> {
@@ -63,10 +65,23 @@ constructor(
         }.map { courses -> PagedList(courses.sortedBy { courseIds.indexOf(it.id) }) }
     }
 
-    override fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
+    // TODO Handle cache Data Source
+    override fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType): Single<PagedList<Course>> =
         courseRemoteDataSource
             .getCourses(courseListQuery)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
+            .doCompletableOnSuccess { courseListQueryCacheDataSource.saveCourses(courseListQuery, it.map(Course::id).toLongArray()) }
+
+//        val cacheSource = courseListQueryCacheDataSource
+//            .getCourses(courseListQuery)
+//            .flatMap { ids ->
+//                getCourses(ids.toLongArray(), primarySourceType)
+//            }
+//
+//        return when (primarySourceType) {
+//
+//        }
+//    }
 
     override fun removeCachedCourses(): Completable =
         courseCacheDataSource

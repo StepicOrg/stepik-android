@@ -11,6 +11,8 @@ import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
+import org.stepik.android.data.course_list.model.CourseListQueryData
+import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.model.Certificate
 import org.stepik.android.model.CourseReviewSummary
@@ -54,4 +56,5 @@ interface StorageComponent {
     val socialProfileDao: IDao<SocialProfile>
     val userCourseDao: IDao<UserCourse>
     val courseCollectionDao: IDao<CourseCollection>
+    val courseListQueryDao: IDao<CourseListQueryData>
 }

@@ -44,6 +44,7 @@ import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.course_collection.dao.CourseCollectionDaoImpl
+import org.stepik.android.cache.course_list.dao.CourseListQueryDaoImpl
 import org.stepik.android.cache.discussion_thread.dao.DiscussionThreadDaoImpl
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.download.dao.DownloadedCoursesDaoImpl
@@ -62,6 +63,7 @@ import org.stepik.android.cache.video.dao.VideoUrlEntityDaoImpl
 import org.stepik.android.cache.video.model.VideoEntity
 import org.stepik.android.cache.video.model.VideoUrlEntity
 import org.stepik.android.cache.video_player.model.VideoTimestamp
+import org.stepik.android.data.course_list.model.CourseListQueryData
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.last_step.model.LastStep
@@ -220,6 +222,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindCourseCollectionDao(courseCollectionDaoImpl: CourseCollectionDaoImpl): IDao<CourseCollection>
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindCourseListQueryDataDao(courseListQueryDataDaoImpl: CourseListQueryDaoImpl): IDao<CourseListQueryData>
 
     @Module
     companion object {
