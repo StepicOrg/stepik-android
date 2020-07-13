@@ -38,11 +38,14 @@ constructor(
             sourceTypeComposition = sourceTypeComposition
         )
 
-    fun getCourseListItems(courseListQuery: CourseListQuery): Single<PagedList<CourseListItem.Data>> =
+    fun getCourseListItems(
+        courseListQuery: CourseListQuery,
+        sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE
+    ): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(
             coursesSource = courseRepository.getCourses(courseListQuery),
             courseViewSource = CourseViewSource.Query(courseListQuery),
-            sourceTypeComposition = SourceTypeComposition.REMOTE
+            sourceTypeComposition = sourceTypeComposition
         )
 
     private fun getCourseListItems(

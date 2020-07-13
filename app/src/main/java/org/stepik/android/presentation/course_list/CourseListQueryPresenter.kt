@@ -2,6 +2,7 @@ package org.stepik.android.presentation.course_list
 
 import io.reactivex.Observable
 import io.reactivex.Scheduler
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -80,12 +81,18 @@ constructor(
             courseListViewState = CourseListView.State.Loading
         )
 
-        paginationDisposable += courseListInteractor
-            .getCourseListItems(courseListQuery)
+        paginationDisposable += Single
+            .concat(
+                courseListInteractor
+                    .getCourseListItems(courseListQuery, sourceTypeComposition = SourceTypeComposition.CACHE),
+
+                courseListInteractor
+                    .getCourseListItems(courseListQuery, sourceTypeComposition = SourceTypeComposition.REMOTE)
+            )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = {
+                onNext = {
                     state = if (it.isNotEmpty()) {
                         // TODO Unsafe casting
                         (state as CourseListQueryView.State.Data).copy(
