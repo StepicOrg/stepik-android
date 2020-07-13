@@ -11,6 +11,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.model.Course
+import ru.nobird.android.core.model.mapToLongArray
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import ru.nobird.android.domain.rx.maybeFirst
 import ru.nobird.android.domain.rx.requireSize
@@ -69,12 +70,12 @@ constructor(
         val remoteSource = courseRemoteDataSource
             .getCourses(courseListQuery)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
-            .doCompletableOnSuccess { courseListQueryCacheDataSource.saveCourses(courseListQuery, it.map(Course::id).toLongArray()) }
+            .doCompletableOnSuccess { courseListQueryCacheDataSource.saveCourses(courseListQuery, it.mapToLongArray(Course::id)) }
 
         val cacheSource = courseListQueryCacheDataSource
             .getCourses(courseListQuery)
             .flatMap { ids ->
-                getCourses(*ids.toLongArray(), primarySourceType = primarySourceType)
+                getCourses(*ids, primarySourceType = primarySourceType)
             }
 
         return when (primarySourceType) {
