@@ -65,23 +65,32 @@ constructor(
         }.map { courses -> PagedList(courses.sortedBy { courseIds.indexOf(it.id) }) }
     }
 
-    // TODO Handle cache Data Source
-    override fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType): Single<PagedList<Course>> =
-        courseRemoteDataSource
+    override fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType): Single<PagedList<Course>> {
+        val remoteSource = courseRemoteDataSource
             .getCourses(courseListQuery)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
             .doCompletableOnSuccess { courseListQueryCacheDataSource.saveCourses(courseListQuery, it.map(Course::id).toLongArray()) }
 
-//        val cacheSource = courseListQueryCacheDataSource
-//            .getCourses(courseListQuery)
-//            .flatMap { ids ->
-//                getCourses(ids.toLongArray(), primarySourceType)
-//            }
-//
-//        return when (primarySourceType) {
-//
-//        }
-//    }
+        val cacheSource = courseListQueryCacheDataSource
+            .getCourses(courseListQuery)
+            .flatMap { ids ->
+                getCourses(*ids.toLongArray(), primarySourceType = primarySourceType)
+            }
+
+        return when (primarySourceType) {
+            DataSourceType.REMOTE ->
+                remoteSource
+                    .onErrorResumeNext(cacheSource)
+
+            DataSourceType.CACHE ->
+                cacheSource
+                    .filter(Collection<*>::isNotEmpty)
+                    .switchIfEmpty(remoteSource)
+
+            else ->
+                throw IllegalArgumentException("Unsupported source type = $primarySourceType")
+        }
+    }
 
     override fun removeCachedCourses(): Completable =
         courseCacheDataSource
