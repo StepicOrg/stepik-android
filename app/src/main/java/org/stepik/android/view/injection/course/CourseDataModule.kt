@@ -6,6 +6,7 @@ import dagger.Provides
 import org.stepik.android.cache.course.source.CourseCacheDataSourceImpl
 import org.stepik.android.cache.course.source.CourseReviewSummaryCacheDataSourceImpl
 import org.stepik.android.cache.course.source.EnrollmentCacheDataSourceImpl
+import org.stepik.android.cache.course_list.CourseListQueryCacheDataSourceImpl
 import org.stepik.android.data.course.repository.CourseRepositoryImpl
 import org.stepik.android.data.course.repository.CourseReviewSummaryRepositoryImpl
 import org.stepik.android.data.course.repository.EnrollmentRepositoryImpl
@@ -15,6 +16,7 @@ import org.stepik.android.data.course.source.CourseReviewSummaryCacheDataSource
 import org.stepik.android.data.course.source.CourseReviewSummaryRemoteDataSource
 import org.stepik.android.data.course.source.EnrollmentCacheDataSource
 import org.stepik.android.data.course.source.EnrollmentRemoteDataSource
+import org.stepik.android.data.course_list.source.CourseListQueryCacheDataSource
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
@@ -43,6 +45,11 @@ abstract class CourseDataModule {
     internal abstract fun bindCourseCacheDataSource(
         courseCacheDataSourceImpl: CourseCacheDataSourceImpl
     ): CourseCacheDataSource
+
+    @Binds
+    internal abstract fun bindCourseListQueryCacheDataSource(
+        courseListQueryCacheDataSourceImpl: CourseListQueryCacheDataSourceImpl
+    ): CourseListQueryCacheDataSource
 
     @Binds
     internal abstract fun bindEnrollmentRepository(
