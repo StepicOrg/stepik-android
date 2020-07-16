@@ -19,6 +19,7 @@ constructor(
             courseListQueryDataDao
                 .get(DbStructureCourseListQuery.Columns.ID, courseListQuery.toString())
                 ?.courses
+                ?: LongArray(0)
         }
 
     override fun saveCourses(courseListQuery: CourseListQuery, courses: LongArray): Completable =
