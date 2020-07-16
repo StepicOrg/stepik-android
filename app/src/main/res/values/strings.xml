@@ -579,6 +579,7 @@
     <string name="course_progress_current">Current progress</string>
     <string name="course_progress_solutions">Solution to submit</string>
 
+    <string name="course_list_free">Free</string>
     <string name="course_list_archived">Archived</string>
 
     <string name="course_info_organization_prefix">by %s</string>
