@@ -32,6 +32,7 @@ import org.stepic.droid.util.reportRateEvent
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.feedback.model.SupportEmailData
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.model.Lesson
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
@@ -239,7 +240,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         when (state) {
             is LessonView.State.LessonLoaded -> {
                 viewStepStateDelegate.switchState(state.stepsState)
-                centeredToolbarTitle.text = state.lessonData.lesson.title
+                setupToolbarTitle(state.lessonData)
                 if (centeredToolbarSubtitle.text.isEmpty()) {
                     centeredToolbarSubtitle.text = getString(
                         R.string.lesson_step_counter, state.lessonData.stepPosition + 1,
@@ -277,6 +278,15 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         isInfoMenuItemVisible =
             state is LessonView.State.LessonLoaded &&
             state.stepsState is LessonView.StepsState.Loaded
+    }
+
+    private fun setupToolbarTitle(lessonData: LessonData) {
+        centeredToolbarTitle.text =
+            if (lessonData.section != null && lessonData.unit != null) {
+                resources.getString(R.string.lesson_toolbar_title, lessonData.section.position, lessonData.unit.position, lessonData.lesson.title)
+            } else {
+                lessonData.lesson.title
+            }
     }
 
     private fun invalidateTabLayout() {
