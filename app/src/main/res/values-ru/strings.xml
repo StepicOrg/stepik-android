@@ -560,7 +560,7 @@
     <string name="course_progress_current">Текущий прогресс</string>
     <string name="course_progress_solutions">Неотправленные решения</string>
 
-    <string name="course_list_free">Бесп.</string>
+    <string name="course_list_free">Бесплатно</string>
     <string name="course_list_archived">В архиве</string>
 
     <string name="course_info_organization_prefix">от %s</string>
