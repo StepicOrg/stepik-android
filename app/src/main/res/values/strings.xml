@@ -728,6 +728,7 @@
     <string name="lesson_error_exam_description">This lesson is a part of an exam module, you can only solve it in the web version.</string>
     <string name="lesson_error_exam_action">Open the web version</string>
 
+    <string name="lesson_toolbar_title" translatable="false">%d.%d %s</string>
     <string name="lesson_step_counter">Step %d out of %d</string>
 
     <!-- Step -->
