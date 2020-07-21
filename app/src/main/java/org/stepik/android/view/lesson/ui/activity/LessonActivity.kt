@@ -302,7 +302,13 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 lessonTab.getTabAt(i)?.customView = view
             }
             tabIcon?.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
+
+            val isPassed = stepsAdapter.items[i].assignmentProgress?.isPassed
+                ?: stepsAdapter.items[i].stepProgress?.isPassed
+                ?: false
+
             view.tabCheckMark.apply {
+                isVisible = isPassed
                 background = backgroundDrawable
                 setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
             }
