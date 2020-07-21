@@ -42,7 +42,7 @@ android {
             keyPassword aliasPass
         }
 
-        oldRelease {
+        stage {
             storeFile file(keystore)
             storePassword keystorePass
             keyAlias oldAlias
@@ -66,6 +66,24 @@ android {
         htmlOutput rootProject.file("reports/lint/lint.html")
     }
 
+    flavorDimensions "environment"
+
+    productFlavors {
+        rls { // release.stepik.org
+            dimension "environment"
+            versionNameSuffix "-release"
+        }
+
+        dev { // dev.stepik.org
+            dimension "environment"
+            versionNameSuffix "-dev"
+        }
+
+        production { // stepik.org
+            dimension "environment"
+        }
+    }
+
     buildTypes {
         release {
             signingConfig signingConfigs.release
@@ -80,7 +98,7 @@ android {
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     'proguard-rules.pro', 'proguard-rules-dev.pro'
-            versionNameSuffix "DEV"
+            versionNameSuffix "-debug"
 
             testCoverageEnabled = false
 
@@ -93,9 +111,9 @@ android {
         //it makes apk testable (sign in, smart lock, etc are worked).
         //now new sign configs are used for providing to Google Play
         //assemble with oldProd on release/* branches
-        oldRelease {
+        stage {
             initWith release
-            signingConfig signingConfigs.oldRelease
+            signingConfig signingConfigs.stage
             matchingFallbacks = ['release']
         }
     }
@@ -158,8 +176,8 @@ dependencies {
     implementation libraries.jsoup
     debugImplementation libraries.stetho
     debugImplementation libraries.stethoOkHttp
-    oldReleaseImplementation libraries.stetho
-    oldReleaseImplementation libraries.stethoOkHttp
+    stageImplementation libraries.stetho
+    stageImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
     implementation libraries.glideTransformations
@@ -198,7 +216,7 @@ dependencies {
 
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
-    oldReleaseImplementation libraries.leakCanaryNoOp
+    stageImplementation libraries.leakCanaryNoOp
 
     implementation(libraries.crashlytics) {
         transitive = true
@@ -221,10 +239,10 @@ dependencies {
     debugImplementation libraries.flipperCore
     debugImplementation libraries.flipperNetwork
     debugImplementation libraries.toolargetool
-    oldReleaseImplementation libraries.soloader
-    oldReleaseImplementation libraries.flipperCore
-    oldReleaseImplementation libraries.flipperNetwork
-    oldReleaseImplementation libraries.toolargetool
+    stageImplementation libraries.soloader
+    stageImplementation libraries.flipperCore
+    stageImplementation libraries.flipperNetwork
+    stageImplementation libraries.toolargetool
 
     releaseImplementation libraries.flipperNoop
 }
