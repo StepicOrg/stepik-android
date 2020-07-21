@@ -6,6 +6,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_is_exam.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
+import kotlinx.android.synthetic.main.layout_step_tab_icon.view.*
 import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -40,6 +42,7 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
+import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
@@ -287,8 +290,22 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
             val tintColor = stepsAdapter.getTabTint(i)
 
-            lessonTab.getTabAt(i)?.icon = tabIcon
+            val backgroundDrawable = AppCompatResources
+                .getDrawable(this, R.drawable.bg_shape_rounded)
+                ?.mutate()
+
+            backgroundDrawable?.setColorFilter(ColorExtensions.colorSurfaceWithElevationOverlay(this, 4), PorterDuff.Mode.SRC_IN)
+
+            val view = View.inflate(this, R.layout.layout_step_tab_icon, null)
+            view.tabIconDrawable.setImageDrawable(tabIcon)
+            if (lessonTab.getTabAt(i)?.customView == null) {
+                lessonTab.getTabAt(i)?.customView = view
+            }
             tabIcon?.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
+            view.tabCheckMark.apply {
+                background = backgroundDrawable
+                setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
+            }
         }
     }
 
