@@ -69,17 +69,17 @@ android {
     flavorDimensions "environment"
 
     productFlavors {
-        rls { // release.stepik.org
+        envRelease { // release.stepik.org
             dimension "environment"
             versionNameSuffix "-release"
         }
 
-        dev { // dev.stepik.org
+        evnDev { // dev.stepik.org
             dimension "environment"
             versionNameSuffix "-dev"
         }
 
-        production { // stepik.org
+        envProduction { // stepik.org
             dimension "environment"
         }
     }
