@@ -81,7 +81,7 @@ class CourseListItemAdapterDelegate(
             }
 
             coursePrice.isVisible = !isEnrolled
-            val (@ColorRes textColor, displayPrice) = if (data.course.price != null) {
+            val (@ColorRes textColor, displayPrice) = if (data.course.isPaid) {
                 R.color.color_overlay_violet to data.course.displayPrice
             } else {
                 R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
