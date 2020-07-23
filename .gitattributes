@@ -1,5 +1,7 @@
 app/google-services.json filter=git-crypt diff=git-crypt
 app/src/main/assets/configs/config.json filter=git-crypt diff=git-crypt
+app/src/envRelease/assets/configs/config.json filter=git-crypt diff=git-crypt
+app/src/envDev/assets/configs/config.json filter=git-crypt diff=git-crypt
 buildsystem/cert/** filter=git-crypt diff=git-crypt
 buildsystem/secret.gradle filter=git-crypt diff=git-crypt
 fastlane/Fastfile filter=git-crypt diff=git-crypt
