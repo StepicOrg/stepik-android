@@ -42,7 +42,6 @@ import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.lesson.LessonPresenter
 import org.stepik.android.presentation.lesson.LessonView
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
-import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.course.routing.CourseDeepLinkBuilder
 import org.stepik.android.view.course.routing.CourseScreenTab
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
@@ -284,17 +283,23 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     private fun invalidateTabLayout() {
         for (i in 0 until lessonTab.tabCount) {
+            val tabFrames = stepsAdapter.getTabDrawable(i)
+
+            val isPassed = stepsAdapter.items[i].assignmentProgress?.isPassed
+                ?: stepsAdapter.items[i].stepProgress?.isPassed
+                ?: false
+
+            val resource = if (isPassed) {
+                tabFrames.first
+            } else {
+                tabFrames.second
+            }
+
             val tabIcon = AppCompatResources
-                .getDrawable(this, stepsAdapter.getTabDrawable(i))
+                .getDrawable(this, resource)
                 ?.mutate()
 
             val tintColor = stepsAdapter.getTabTint(i)
-
-            val backgroundDrawable = AppCompatResources
-                .getDrawable(this, R.drawable.bg_shape_rounded)
-                ?.mutate()
-
-            backgroundDrawable?.setColorFilter(ColorExtensions.colorSurfaceWithElevationOverlay(this, 4), PorterDuff.Mode.SRC_IN)
 
             val view = View.inflate(this, R.layout.layout_step_tab_icon, null)
             view.tabIconDrawable.setImageDrawable(tabIcon)
@@ -302,16 +307,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 lessonTab.getTabAt(i)?.customView = view
             }
             tabIcon?.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
-
-            val isPassed = stepsAdapter.items[i].assignmentProgress?.isPassed
-                ?: stepsAdapter.items[i].stepProgress?.isPassed
-                ?: false
-
-            view.tabCheckMark.apply {
-                isVisible = isPassed
-                background = backgroundDrawable
-                setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
-            }
         }
     }
 

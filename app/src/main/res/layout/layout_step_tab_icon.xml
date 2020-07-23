@@ -3,26 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/tabIconDrawable"
         android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/tabCheckMark"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginRight="2dp"
-        android:layout_marginEnd="2dp"
-        android:paddingRight="2dp"
-        android:paddingEnd="2dp"
-        android:paddingLeft="2dp"
-        android:paddingStart="2dp"
-        android:paddingTop="2dp"
-        android:layout_gravity="bottom|end"
-        android:background="@drawable/bg_shape_rounded"
-        app:srcCompat="@drawable/ic_step_passed_check"/>
+        android:layout_width="32dp"
+        android:layout_height="28dp" />
 </FrameLayout>
