@@ -36,31 +36,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         Pair<Integer, Integer> hardQuizDrawable = new Pair<>(R.drawable.ic_code_basic, R.drawable.ic_code_checked);
         Pair<Integer, Integer> theoryQuizDrawable = new Pair<>(R.drawable.ic_theory_basic, R.drawable.ic_theory_checked);
 
-//        peerReviewDrawableRes = new AnimationDrawable();
-//        peerReviewDrawableRes.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_review_basic), 0);
-//        peerReviewDrawableRes.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_review_vector), 0);
-//        peerReviewDrawableRes.setOneShot(false);
-//
-//        AnimationDrawable simpleQuestionDrawable = new AnimationDrawable();
-//        simpleQuestionDrawable.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_question_basic), 0);
-//        simpleQuestionDrawable.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_question_vector), 0);
-//        simpleQuestionDrawable.setOneShot(false);
-//
-//        AnimationDrawable videoDrawable = new AnimationDrawable();
-//        videoDrawable.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_video_basic), 0);
-//        videoDrawable.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_video_vector), 0);
-//        videoDrawable.setOneShot(false);
-//
-//        AnimationDrawable hardQuizDrawable = new AnimationDrawable();
-//        hardQuizDrawable.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_code_basic), 0);
-//        hardQuizDrawable.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_code_vector), 0);
-//        hardQuizDrawable.setOneShot(false);
-//
-//        AnimationDrawable theoryQuizDrawable = new AnimationDrawable();
-//        theoryQuizDrawable.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_theory_basic), 0);
-//        theoryQuizDrawable.addFrame(ContextExtensionsKt.getDrawableCompat(context, R.drawable.ic_theory_vector), 0);
-//        theoryQuizDrawable.setOneShot(false);
-
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_TEXT, theoryQuizDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_VIDEO, videoDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_MATCHING, simpleQuestionDrawable);
