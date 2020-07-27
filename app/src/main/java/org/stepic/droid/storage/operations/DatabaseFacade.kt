@@ -21,6 +21,7 @@ import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.video_player.model.VideoTimestamp
+import org.stepik.android.data.course_list.model.CourseListQueryData
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
@@ -61,6 +62,7 @@ constructor(
     private val socialProfileDao: IDao<SocialProfile>,
     private val userCourseDao: IDao<UserCourse>,
     private val courseCollectionDao: IDao<CourseCollection>,
+    private val courseListQueryDataDao: IDao<CourseListQueryData>,
     private val analyticDao: IDao<AnalyticLocalEvent>
 ) {
 
@@ -91,6 +93,7 @@ constructor(
         socialProfileDao.removeAll()
         userCourseDao.removeAll()
         courseCollectionDao.removeAll()
+        courseListQueryDataDao.removeAll()
         analyticDao.removeAll()
     }
 

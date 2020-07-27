@@ -19,7 +19,6 @@ import org.stepic.droid.di.splash.SplashComponent
 import org.stepic.droid.di.storage.StorageComponent
 import org.stepic.droid.features.achievements.service.AchievementsNotificationService
 import org.stepic.droid.notifications.HackFcmListener
-import org.stepic.droid.notifications.HackerFcmInstanceId
 import org.stepic.droid.notifications.NotificationBroadcastReceiver
 import org.stepic.droid.persistence.di.PersistenceModule
 import org.stepic.droid.persistence.service.DownloadCompleteService
@@ -258,8 +257,6 @@ interface AppCoreComponent {
     fun inject(downloadClickReceiver: DownloadClickReceiver)
 
     fun inject(service: HackFcmListener)
-
-    fun inject(instanceIdService: HackerFcmInstanceId)
 
     fun inject(receiver: NotificationBroadcastReceiver)
 

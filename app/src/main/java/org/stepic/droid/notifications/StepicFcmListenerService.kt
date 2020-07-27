@@ -5,6 +5,7 @@ import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
+import org.stepic.droid.core.StepikDevicePoster
 import org.stepic.droid.notifications.badges.NotificationsBadgesManager
 import org.stepic.droid.notifications.handlers.RemoteMessageHandler
 import org.stepic.droid.notifications.model.Notification
@@ -61,6 +62,10 @@ class StepicFcmListenerService : FirebaseMessagingService() {
         }
     }
 
+    override fun onNewToken(token: String) {
+        hacker.stepikDevicePoster.registerDevice()
+    }
+
 }
 
 class HackFcmListener {
@@ -79,6 +84,9 @@ class HackFcmListener {
 
     @Inject
     internal lateinit var fcmNotificationHandler: FcmNotificationHandler
+
+    @Inject
+    lateinit var stepikDevicePoster: StepikDevicePoster
 
     init {
         App.component().inject(this)

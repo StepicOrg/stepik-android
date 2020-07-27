@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
 import kotlinx.android.synthetic.main.activity_course.*
 import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -20,7 +21,6 @@ import kotlinx.android.synthetic.main.header_course_placeholder.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
 import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
@@ -117,9 +117,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     @Inject
-    internal lateinit var coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest
-
-    @Inject
     internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
 
     @Inject
@@ -168,11 +165,11 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
-                this, analytic, coursePresenter, coursePurchasePriceSplitTest,
+                this, analytic, coursePresenter,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
-                isLocalSubmissionsEnabled = firebaseRemoteConfig.getBoolean(RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED)
+                isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()
             )
 
 //        uiCheckout = Checkout.forActivity(this, billing)

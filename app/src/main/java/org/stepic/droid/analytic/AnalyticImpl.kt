@@ -8,8 +8,10 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
 import com.amplitude.api.Amplitude
 import com.amplitude.api.Identify
-import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.ktx.Firebase
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.yandex.metrica.YandexMetrica
@@ -43,7 +45,9 @@ constructor(
         }
     }
 
-    private val firebaseAnalytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(context)
+    private val firebaseAnalytics = Firebase.analytics
+    private val firebaseCrashlytics = FirebaseCrashlytics.getInstance()
+
     private val amplitude = Amplitude.getInstance()
             .initialize(context, config.amplitudeApiKey)
             .enableForegroundTracking(App.application)
@@ -72,7 +76,7 @@ constructor(
 
     override fun setUserId(userId: String) {
         firebaseAnalytics.setUserId(userId)
-        Crashlytics.setUserIdentifier(userId)
+        firebaseCrashlytics.setUserId(userId)
         YandexMetrica.setUserProfileID(userId)
         amplitude.identify(Identify().set(AmplitudeAnalytic.Properties.STEPIK_ID, userId))
     }
@@ -115,7 +119,7 @@ constructor(
                 properties.put(k, v)
             }
             amplitude.logEvent(analyticEvent.name, properties)
-            Crashlytics.log("${analyticEvent.name}=${analyticEvent.params}")
+            firebaseCrashlytics.log("${analyticEvent.name}=${analyticEvent.params}")
         }
 
         if (AnalyticSource.FIREBASE in analyticEvent.sources) {
@@ -140,11 +144,15 @@ constructor(
         }
         amplitude.logEvent(eventName, properties)
         YandexMetrica.reportEvent(eventName, params)
-        Crashlytics.log("$eventName=$params")
+        firebaseCrashlytics.log("$eventName=$params")
     }
 
-    override fun setUserProperty(name: String, value: String) =
+    override fun setUserProperty(name: String, value: String) {
         amplitude.identify(Identify().set(name, value))
+        updateYandexUserProfile { apply(Attribute.customString(name).withValue(value)) }
+        firebaseCrashlytics.setCustomKey(name, value)
+        firebaseAnalytics.setUserProperty(name, value)
+    }
     // End of amplitude properties
 
     override fun reportEventValue(eventName: String, value: Long) {
@@ -173,7 +181,7 @@ constructor(
     }
 
     override fun reportError(message: String, throwable: Throwable) {
-        Crashlytics.logException(throwable)
+        firebaseCrashlytics.recordException(throwable)
         YandexMetrica.reportError(message, throwable)
     }
 
