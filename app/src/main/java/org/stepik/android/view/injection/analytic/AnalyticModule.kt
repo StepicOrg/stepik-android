@@ -3,12 +3,15 @@ package org.stepik.android.view.injection.analytic
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.AnalyticStubImpl
 import org.stepic.droid.concurrency.MainHandler
 import org.stepic.droid.concurrency.MainHandlerAnalyticImpl
+import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepik.android.cache.analytic.AnalyticCacheDataSourceImpl
 import org.stepik.android.data.analytic.repository.AnalyticRepositoryImpl
@@ -59,5 +62,24 @@ abstract class AnalyticModule {
         @BackgroundScheduler
         internal fun provideBackgroundScheduler(): Scheduler =
             Schedulers.io()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @AnalyticFlush
+        internal fun provideAnalyticUpdatesSubject(): PublishSubject<Unit> =
+            PublishSubject.create()
+
+        @Provides
+        @JvmStatic
+        @AppSingleton
+        @AnalyticFlush
+        internal fun bindAnalyticUpdatesObservable(
+            @AnalyticFlush
+            analyticUpdatesPublisher: PublishSubject<Unit>,
+            @BackgroundScheduler
+            scheduler: Scheduler
+        ): Observable<Unit> =
+            analyticUpdatesPublisher.observeOn(scheduler)
     }
 }
