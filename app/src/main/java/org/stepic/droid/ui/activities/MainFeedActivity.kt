@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.StepikAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.core.StepikDevicePoster
@@ -81,6 +82,9 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             sourceActivity.startActivity(intent)
         }
     }
+
+    @Inject
+    lateinit var stepikAnalytic: StepikAnalytic
 
     @Inject
     lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
@@ -155,35 +159,16 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             .mainFeedComponent()
             .inject(this)
 
-        val gson = Gson()
-
-        val jsonElement = JsonObject()
-        val jsonObject = JsonObject()
-        jsonObject.add("test", JsonPrimitive(123))
-        jsonObject.add("aaaa", JsonPrimitive("AAAA"))
-        jsonElement.add("event_name", JsonPrimitive("Test name"))
-        jsonElement.add("event_json", jsonObject)
-        jsonElement.add("event_timestamp", JsonPrimitive(123123213L))
-
-        Timber.d("Test: $jsonElement")
-        Timber.d("Test.toJsonTree: ${gson.toJsonTree(jsonElement)}")
-        Timber.d("Test: ${gson.fromJson(jsonElement.toString(), AnalyticLocalEvent::class.java)}")
-
-
-        val uri = Uri.parse("content://${BuildConfig.APPLICATION_ID}.analytic_provider")
-        contentResolver.call(uri, AnalyticContentProvider.FLUSH, null, null)
-
         setContentView(R.layout.activity_main_feed)
 
         notificationClickedCheck(intent)
 
         initGoogleApiClient(true)
 
-        analytic.report(TestAnalyticEvent(
-            DateTimeHelper.nowUtc(),
-            "en",
-            "1"
-        ))
+        // TODO Testing analytics
+//        analytic.report(TestAnalyticEvent(12345L, CourseViewSource.MyCourses))
+
+//        stepikAnalytic.flushEvents()
 
         initNavigation()
 

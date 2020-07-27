@@ -8,8 +8,10 @@ data class AnalyticBatchEvent(
     val name: String,
     @SerializedName("timestamp")
     val timeStamp: Long,
-    @SerializedName("tags")
-    val tags: JsonElement?,
+    @SerializedName("platform")
+    val platform: String,
+    @SerializedName("source")
+    val source: String,
     @SerializedName("data")
     val data: JsonElement?
 )

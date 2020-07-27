@@ -1,9 +1,11 @@
 package org.stepik.android.cache.analytic
 
 import io.reactivex.Completable
+import io.reactivex.Single
 import org.stepic.droid.storage.dao.IDao
 import org.stepik.android.data.analytic.source.AnalyticCacheDataSource
 import org.stepik.android.model.analytic.AnalyticLocalEvent
+import timber.log.Timber
 import javax.inject.Inject
 
 class AnalyticCacheDataSourceImpl
@@ -16,8 +18,14 @@ constructor(
             analyticDao.insertOrReplace(analyticEvent)
         }
 
+    override fun getAllEvents(): Single<List<AnalyticLocalEvent>> =
+        Single.fromCallable {
+            analyticDao.getAll()
+        }
+
     override fun clearEvents(): Completable =
         Completable.fromCallable {
+            Timber.d("Remove all")
             analyticDao.removeAll()
         }
 }
