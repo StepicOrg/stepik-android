@@ -27,6 +27,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
+        app:icon="@drawable/ic_submit_code_fab"
+        app:iconPadding="-18dp"
+
         android:theme="@style/ThemeOverlay.Green"
 
         android:text="@string/step_quiz_action_button_submit" />

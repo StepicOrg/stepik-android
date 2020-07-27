@@ -146,6 +146,8 @@
         android:layout_gravity="bottom|end"
         android:contentDescription="@string/comment_action_create"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
+        app:maxImageSize="18dp"
+        app:srcCompat="@drawable/ic_step_run_code"
         app:useCompatPadding="true"
         android:theme="@style/ThemeOverlay.Violet"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"

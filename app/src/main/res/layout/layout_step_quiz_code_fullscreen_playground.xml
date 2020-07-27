@@ -69,6 +69,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         style="@style/Widget.MaterialComponents.FloatingActionButton"
+        app:srcCompat="@drawable/ic_submit_code_fab"
         app:useCompatPadding="true"
         android:theme="@style/ThemeOverlay.Secondary.Green"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
