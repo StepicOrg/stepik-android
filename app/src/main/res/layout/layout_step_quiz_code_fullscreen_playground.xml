@@ -63,5 +63,21 @@
         android:layout_above="@id/codeSubmitButton"
         layout="@layout/view_divider_vertical" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/codeSubmitFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        app:useCompatPadding="true"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        android:layout_marginBottom="48dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        app:layout_anchorGravity="bottom|right|end" />
 
 </RelativeLayout>
