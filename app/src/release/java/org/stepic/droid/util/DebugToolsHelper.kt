@@ -8,6 +8,13 @@ object DebugToolsHelper {
         // no op
     }
 
+    /***
+     *  This function can be used to debug non-main processes
+     */
+    fun initDebugTools(context: Context) {
+        // no op
+    }
+
     fun getDebugInterceptors(): List<Interceptor> =
         emptyList()
 }
