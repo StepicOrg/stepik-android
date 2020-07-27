@@ -12,7 +12,7 @@ object DbStructureAnalytic {
 
     const val TABLE_SCHEMA =
         "CREATE TABLE IF NOT EXISTS $TABLE_NAME (" +
-            "${Columns.ID} LONG PRIMARY KEY AUTOINCREMENT," +
+            "${Columns.ID} INTEGER PRIMARY KEY AUTOINCREMENT," +
             "${Columns.EVENT_NAME} TEXT," +
             "${Columns.EVENT_JSON} TEXT," +
             "${Columns.EVENT_TIMESTAMP} LONG" +

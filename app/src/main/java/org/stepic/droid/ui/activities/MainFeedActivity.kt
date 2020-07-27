@@ -31,6 +31,8 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
+import org.stepik.android.domain.analytic.TestAnalyticEvent
+import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
@@ -176,6 +178,12 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         notificationClickedCheck(intent)
 
         initGoogleApiClient(true)
+
+        analytic.report(TestAnalyticEvent(
+            DateTimeHelper.nowUtc(),
+            "en",
+            "1"
+        ))
 
         initNavigation()
 

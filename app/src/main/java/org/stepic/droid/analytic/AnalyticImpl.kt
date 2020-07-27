@@ -31,8 +31,8 @@ class AnalyticImpl
 @Inject
 constructor(
     context: Context,
-    config: Config
-   // TODO Inject Stepik API interface
+    config: Config,
+    private val stepikAnalytic: StepikAnalytic
 ) : Analytic {
     private companion object {
         inline fun updateYandexUserProfile(mutation: UserProfile.Builder.() -> Unit) {
@@ -124,7 +124,8 @@ constructor(
         }
 
         if (AnalyticSource.STEPIK_API in analyticEvent.sources) {
-            // TODO Send events to interface
+            val properties = analyticEvent.params
+            stepikAnalytic.logEvent(analyticEvent.name, properties)
         }
     }
 

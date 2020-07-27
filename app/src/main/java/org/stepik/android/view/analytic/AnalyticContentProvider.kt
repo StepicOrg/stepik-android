@@ -6,20 +6,22 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import org.stepic.droid.di.storage.DaggerStorageComponent
-import org.stepik.android.domain.analytic.repository.AnalyticRepository
+import org.stepik.android.domain.analytic.interactor.AnalyticInteractor
 import org.stepik.android.view.injection.analytic.AnalyticComponent
 import org.stepik.android.view.injection.analytic.DaggerAnalyticComponent
+import timber.log.Timber
 import javax.inject.Inject
 
 class AnalyticContentProvider : ContentProvider() {
     companion object {
         const val FLUSH = "flush"
+        const val LOG = "log"
     }
 
     private lateinit var component: AnalyticComponent
 
     @Inject
-    internal lateinit var analyticRepository: AnalyticRepository
+    lateinit var analyticInteractor: AnalyticInteractor
 
     override fun insert(uri: Uri, values: ContentValues?): Uri? {
         throw UnsupportedOperationException()
@@ -42,12 +44,19 @@ class AnalyticContentProvider : ContentProvider() {
                 .build())
             .build()
 
+        Timber.d("Injecting")
         component.inject(this)
     }
 
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
-        if (::component.isInitialized) {
+        if (!::component.isInitialized) {
             injectComponent()
+        }
+        when (method) {
+            LOG -> {
+                Timber.d("Log")
+                logEvent(arg, extras)
+            }
         }
         return super.call(method, arg, extras)
     }
@@ -62,5 +71,16 @@ class AnalyticContentProvider : ContentProvider() {
 
     override fun getType(uri: Uri): String? {
         throw UnsupportedOperationException()
+    }
+
+    private fun logEvent(eventName: String?, bundle: Bundle?) {
+        if (eventName == null || bundle == null) return
+        val map: HashMap<String, String> = HashMap()
+        bundle.keySet()?.forEach {
+            map[it] = java.lang.String.valueOf(bundle[it])
+        }
+        analyticInteractor
+            .logEvent(eventName, map)
+            .subscribe()
     }
 }

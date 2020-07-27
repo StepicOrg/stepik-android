@@ -115,6 +115,7 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
     ],
     modules = [
         AppCoreModule::class,
+        ConfigModule::class,
         AnalyticModule::class,
         GoogleModule::class,
         FirebaseModule::class,

@@ -80,10 +80,6 @@ abstract class AppCoreModule {
     @AppSingleton
     abstract fun provideInternetEnabledClient(container: ClientImpl<InternetEnabledListener>): Client<InternetEnabledListener>
 
-    @Binds
-    @AppSingleton
-    internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
-
     @AppSingleton
     @Binds
     internal abstract fun provideLessonSessionManager(localLessonSessionManager: LocalLessonSessionManagerImpl): LessonSessionManager
@@ -98,15 +94,7 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
-    internal abstract fun provideDefaultFilter(defaultFilter: DefaultFilterImpl): DefaultFilter
-
-    @Binds
-    @AppSingleton
     internal abstract fun provideTextResolver(textResolver: TextResolverImpl): TextResolver
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideUserAgent(userAgentProvider: UserAgentProviderImpl): UserAgentProvider
 
     @Binds
     @AppSingleton
@@ -145,14 +133,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideSystemAlarmManager(context: Context): AlarmManager {
             return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        }
-
-        //it is good for many short lived, which should do async
-        @Provides
-        @AppSingleton
-        @JvmStatic
-        internal fun provideThreadPool(): ThreadPoolExecutor {
-            return Executors.newCachedThreadPool() as ThreadPoolExecutor
         }
 
         /**
@@ -205,14 +185,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideConnectivityManager(context: Context): ConnectivityManager {
             return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        }
-
-
-        @Provides
-        @AppSingleton
-        @JvmStatic
-        internal fun provideConfig(configFactory: ConfigImpl.ConfigFactory): Config {
-            return configFactory.create()
         }
 
         @Provides
