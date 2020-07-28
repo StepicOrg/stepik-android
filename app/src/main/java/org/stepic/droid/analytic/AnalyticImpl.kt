@@ -128,8 +128,7 @@ constructor(
         }
 
         if (AnalyticSource.STEPIK_API in analyticEvent.sources) {
-            val properties = analyticEvent.params
-            stepikAnalytic.logEvent(analyticEvent.name, properties)
+            stepikAnalytic.logEvent(analyticEvent.name, analyticEvent.params)
         }
     }
 

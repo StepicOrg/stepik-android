@@ -14,15 +14,18 @@ constructor(
 ) {
     companion object {
         private const val TIMESTAMP_KEY = "timestamp"
-        private const val BUNDLE_MAP_KEY = "mMap"
     }
-    fun logEvent(eventName: String, properties: Bundle): Completable {
-        val timeStamp = properties.getLong(TIMESTAMP_KEY, 0L)
-        properties.remove(TIMESTAMP_KEY)
+    fun logEvent(eventName: String, bundle: Bundle): Completable {
+        val properties: HashMap<String, String> = HashMap()
+        bundle.keySet()?.forEach {
+            properties[it] = java.lang.String.valueOf(bundle[it])
+        }
+
+        val timeStamp = properties.remove(TIMESTAMP_KEY)?.toLong() ?: 0L
         val analyticEvent =
             AnalyticLocalEvent(
                 name = eventName,
-                eventData = Gson().toJsonTree(properties).asJsonObject[BUNDLE_MAP_KEY],
+                eventData = Gson().toJsonTree(properties),
                 eventTimestamp = timeStamp
             )
         return analyticRepository.logEvent(analyticEvent)

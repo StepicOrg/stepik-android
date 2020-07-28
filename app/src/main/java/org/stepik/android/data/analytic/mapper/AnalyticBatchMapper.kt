@@ -25,7 +25,7 @@ constructor() {
                 timeStamp = it.eventTimestamp,
                 platform = PLATFORM_VALUE,
                 source = element.asJsonObject.get(SOURCE)?.asString ?: "",
-                data = element.asJsonObject.get(DATA)
+                data = jsonParser.parse(element.asJsonObject.get(DATA)?.asString ?: "")
             )
         }
 }

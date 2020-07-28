@@ -65,9 +65,9 @@ class AnalyticContentProvider : ContentProvider() {
             .build()
         component.inject(this)
 
+        initFlushTracking()
         initFlushInterval()
         subscribeForFlushUpdates()
-        initFlushTracking()
     }
 
     private fun initFlushInterval() {
@@ -137,6 +137,7 @@ class AnalyticContentProvider : ContentProvider() {
                 onError = emptyOnErrorStub
             )
     }
+
     private fun signalFlushEvents() {
         analyticsSubject.onNext(Unit)
     }

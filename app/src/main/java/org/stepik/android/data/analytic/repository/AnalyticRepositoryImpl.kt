@@ -25,5 +25,5 @@ constructor(
                 val batchEvents = analyticBatchMapper.mapLocalToBatchEvents(events)
                 analyticRemoteDataSource.flushEvents(batchEvents)
             }
-            .andThen(analyticCacheDataSource.clearEvents())
+//            .andThen(analyticCacheDataSource.clearEvents())
 }

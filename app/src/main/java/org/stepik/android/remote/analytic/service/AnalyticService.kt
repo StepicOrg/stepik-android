@@ -6,6 +6,8 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AnalyticService {
-    @POST("api/metrics/batch")
+    // TODO Commented for testing purposes, in order not to spam our backend
+//    @POST("api/metrics/batch")
+    @POST("https://jsonplaceholder.typicode.com/posts")
     fun batch(@Body request: AnalyticBatchRequest): Completable
 }

@@ -3,7 +3,6 @@ package org.stepic.droid.analytic
 import android.content.Context
 import android.net.Uri
 import androidx.core.os.bundleOf
-import com.google.gson.JsonObject
 import org.stepic.droid.BuildConfig
 import org.stepic.droid.di.AppSingleton
 import org.stepik.android.view.analytic.AnalyticContentProvider
