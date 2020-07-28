@@ -58,7 +58,10 @@ constructor(
                         ?.response()
                         ?.errorBody()
                         ?.string()
-                        ?.toObject<RegistrationError>()
+                        .runCatching {
+                            this?.toObject<RegistrationError>()
+                        }
+                        .getOrNull()
 
                     if (throwable is HttpException) {
                         analytic.reportEvent(Analytic.Error.REGISTRATION_FAILED, throwable.response()?.errorBody()?.string() ?: "empty response")
