@@ -1,4 +1,4 @@
-package org.stepik.android.model.analytic
+package org.stepik.android.remote.analytic.model
 
 import com.google.gson.JsonElement
 import com.google.gson.annotations.SerializedName

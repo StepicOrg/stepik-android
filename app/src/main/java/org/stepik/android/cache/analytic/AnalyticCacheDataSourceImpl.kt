@@ -3,8 +3,8 @@ package org.stepik.android.cache.analytic
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.storage.dao.IDao
+import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import org.stepik.android.data.analytic.source.AnalyticCacheDataSource
-import org.stepik.android.model.analytic.AnalyticLocalEvent
 import timber.log.Timber
 import javax.inject.Inject
 

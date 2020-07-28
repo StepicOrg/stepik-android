@@ -16,8 +16,8 @@ import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.domain.analytic.interactor.AnalyticInteractor
 import org.stepik.android.view.injection.analytic.AnalyticComponent
-import org.stepik.android.view.injection.analytic.AnalyticFlush
 import org.stepik.android.view.injection.analytic.DaggerAnalyticComponent
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -33,12 +33,7 @@ class AnalyticContentProvider : ContentProvider() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    @Inject
-    @AnalyticFlush
     lateinit var analyticsObservable: Observable<Unit>
-
-    @Inject
-    @AnalyticFlush
     lateinit var analyticsSubject: PublishSubject<Unit>
 
     @Inject
@@ -72,6 +67,7 @@ class AnalyticContentProvider : ContentProvider() {
 
         initFlushInterval()
         subscribeForFlushUpdates()
+        initFlushTracking()
     }
 
     private fun initFlushInterval() {
@@ -88,16 +84,14 @@ class AnalyticContentProvider : ContentProvider() {
         compositeDisposable += analyticsObservable
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = {
-                    analyticInteractor
-                        .flushEvents()
-                        .subscribeOn(backgroundScheduler)
-                        .subscribe()
-                },
-                onError = {
-                    subscribeForFlushUpdates()
-                }
+                onNext = { flushEvents() },
+                onError = { subscribeForFlushUpdates() }
             )
+    }
+
+    private fun initFlushTracking() {
+        analyticsSubject = PublishSubject.create()
+        analyticsObservable = analyticsSubject.observeOn(backgroundScheduler)
     }
 
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
@@ -110,7 +104,7 @@ class AnalyticContentProvider : ContentProvider() {
                 logEvent(arg, extras)
 
             FLUSH ->
-                flushEvents()
+                signalFlushEvents()
         }
         return super.call(method, arg, extras)
     }
@@ -136,6 +130,14 @@ class AnalyticContentProvider : ContentProvider() {
     }
 
     private fun flushEvents() {
+        compositeDisposable += analyticInteractor
+            .flushEvents()
+            .subscribeOn(backgroundScheduler)
+            .subscribeBy(
+                onError = emptyOnErrorStub
+            )
+    }
+    private fun signalFlushEvents() {
         analyticsSubject.onNext(Unit)
     }
 }

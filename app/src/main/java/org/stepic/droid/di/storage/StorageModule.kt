@@ -71,7 +71,7 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
-import org.stepik.android.model.analytic.AnalyticLocalEvent
+import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User

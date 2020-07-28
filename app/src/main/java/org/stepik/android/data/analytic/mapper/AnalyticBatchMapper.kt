@@ -1,8 +1,8 @@
 package org.stepik.android.data.analytic.mapper
 
 import com.google.gson.JsonParser
-import org.stepik.android.model.analytic.AnalyticBatchEvent
-import org.stepik.android.model.analytic.AnalyticLocalEvent
+import org.stepik.android.remote.analytic.model.AnalyticBatchEvent
+import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import javax.inject.Inject
 
 class AnalyticBatchMapper

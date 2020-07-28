@@ -5,7 +5,7 @@ import org.stepik.android.data.analytic.mapper.AnalyticBatchMapper
 import org.stepik.android.data.analytic.source.AnalyticCacheDataSource
 import org.stepik.android.data.analytic.source.AnalyticRemoteDataSource
 import org.stepik.android.domain.analytic.repository.AnalyticRepository
-import org.stepik.android.model.analytic.AnalyticLocalEvent
+import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import javax.inject.Inject
 
 class AnalyticRepositoryImpl
@@ -18,16 +18,12 @@ constructor(
     override fun logEvent(analyticEvent: AnalyticLocalEvent): Completable =
         analyticCacheDataSource.logEvent(analyticEvent)
 
-    // TODO Clean up flush
     override fun flushEvents(): Completable =
         analyticCacheDataSource
             .getAllEvents()
             .flatMapCompletable { events ->
                 val batchEvents = analyticBatchMapper.mapLocalToBatchEvents(events)
-                Completable.complete()
-//                analyticRemoteDataSource.flushEvents(batchEvents)
+                analyticRemoteDataSource.flushEvents(batchEvents)
             }
-//            .doFinally {
-//                analyticCacheDataSource.clearEvents().subscribe()
-//            }
+            .andThen(analyticCacheDataSource.clearEvents())
 }

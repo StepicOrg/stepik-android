@@ -8,7 +8,7 @@ import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
 import org.stepik.android.cache.analytic.structure.DbStructureAnalytic
-import org.stepik.android.model.analytic.AnalyticLocalEvent
+import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import javax.inject.Inject
 
 class AnalyticDaoImpl
