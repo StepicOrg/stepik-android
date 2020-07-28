@@ -65,18 +65,4 @@ class StepFragmentAdapter(
         val step = items.getOrNull(position)?.stepWrapper?.step
         return stepTypeResolver.getDrawableForType(step?.block?.name, step?.actions?.doReview != null)
     }
-
-    @ColorInt
-    fun getTabTint(position: Int): Int {
-        val stepItem = items.getOrNull(position)
-        val isStepPassed = stepItem?.assignmentProgress?.isPassed
-            ?: stepItem?.stepProgress?.isPassed
-            ?: false
-
-        return if (isStepPassed) {
-            ColorExtensions.colorWithAlpha(colorSecondary, alphaEmphasisDisabled)
-        } else {
-            colorSecondary
-        }
-    }
 }

@@ -2,12 +2,11 @@ package org.stepik.android.view.lesson.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.content.res.AppCompatResources
+import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -299,24 +298,21 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 ?: stepsAdapter.items[i].stepProgress?.isPassed
                 ?: false
 
-            val resource = if (isPassed) {
+            @DrawableRes
+            val tabIconResource = if (!isPassed) {
                 tabFrames.first
             } else {
                 tabFrames.second
             }
 
-            val tabIcon = AppCompatResources
-                .getDrawable(this, resource)
-                ?.mutate()
-
-            val tintColor = stepsAdapter.getTabTint(i)
-
-            val view = View.inflate(this, R.layout.layout_step_tab_icon, null)
-            view.tabIconDrawable.setImageDrawable(tabIcon)
             if (lessonTab.getTabAt(i)?.customView == null) {
-                lessonTab.getTabAt(i)?.customView = view
+                lessonTab.getTabAt(i)?.customView = View.inflate(this, R.layout.layout_step_tab_icon, null)
             }
-            tabIcon?.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
+
+            lessonTab.getTabAt(i)?.customView?.tabIconDrawable?.apply {
+                setImageResource(tabIconResource)
+                isEnabled = isPassed
+            }
         }
     }
 
