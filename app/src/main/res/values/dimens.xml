@@ -189,6 +189,7 @@
     <!-- Code quiz -->
     <dimen name="step_quiz_fullscreen_code_layout_bottom_padding">80dp</dimen>
     <dimen name="step_quiz_full_screen_code_layout_drop_down_width">156dp</dimen>
+    <dimen name="step_quiz_full_screen_code_layout_action_button_icon_padding">-18dp</dimen>
 
     <!-- Fill blanks quiz -->
     <dimen name="step_quiz_fill_blanks_item_radius">18dp</dimen>
