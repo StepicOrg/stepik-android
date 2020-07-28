@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.dialog_step_quiz_code_fullscreen.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_instruction.view.*
 import kotlinx.android.synthetic.main.layout_step_quiz_code_fullscreen_playground.view.*
@@ -80,7 +81,8 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      */
     private lateinit var codeLayout: CodeEditorLayout
     private lateinit var submitButtonSeparator: View
-    private lateinit var codeSubmitButton: View
+    private lateinit var codeSubmitFab: FloatingActionButton
+    private lateinit var codeSubmitButton: MaterialButton
     private lateinit var retryButton: View
 
     private lateinit var codeToolbarAdapter: CodeToolbarAdapter
@@ -92,6 +94,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      * Run code views
      */
     private var runCodeActionSeparator: View? = null
+    private var runCodeFab: FloatingActionButton? = null
     private var runCodeAction: MaterialButton? = null
 
     private var lang: String by argument()
@@ -178,6 +181,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
          *  Code play ground view binding
          */
         submitButtonSeparator = playgroundLayout.submitButtonSeparator
+        codeSubmitFab = playgroundLayout.codeSubmitFab
         codeSubmitButton = playgroundLayout.stepQuizAction
         retryButton = playgroundLayout.stepQuizRetry
         codeLayout = playgroundLayout.codeStepLayout
@@ -199,6 +203,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
          *  Run code view binding
          */
         runCodeActionSeparator = runCodeLayout?.runCodeActionSeparator
+        runCodeFab = runCodeLayout?.runCodeFab
         runCodeAction = runCodeLayout?.runCodeAction
 
         retryButton.isVisible = false
@@ -218,11 +223,10 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         codeLayoutDelegate.setDetailsContentData(lang)
         fullScreenCodeViewPager.setCurrentItem(CODE_TAB, false)
 
-        codeSubmitButton.setOnClickListener {
-            (parentFragment as? Callback)
-                ?.onSyncCodeStateWithParent(lang, codeLayout.text.toString(), onSubmitClicked = true)
-            dismiss()
-        }
+        codeSubmitButton.setIconResource(R.drawable.ic_submit_code_fab)
+        codeSubmitButton.iconPadding = requireContext().resources.getDimensionPixelSize(R.dimen.step_quiz_full_screen_code_layout_action_button_icon_padding)
+        codeSubmitFab.setOnClickListener { submitCodeActionClick() }
+        codeSubmitButton.setOnClickListener { submitCodeActionClick() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -370,10 +374,12 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
      */
     private fun setViewsVisibility(needShow: Boolean) {
         submitButtonSeparator.isVisible = needShow
+        codeSubmitFab.isVisible = !needShow
         codeSubmitButton.isVisible = needShow
         centeredToolbar.isVisible = needShow
         fullScreenCodeTabs.isVisible = needShow
         runCodeActionSeparator?.isVisible = needShow
+        runCodeFab?.isVisible = !needShow
         runCodeAction?.isVisible = needShow
     }
 
@@ -387,6 +393,12 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     private fun resolveIsShowRunCode(isRunCodeEnabled: Boolean, hasSamples: Boolean): Boolean =
         (lang == ProgrammingLanguage.SQL.serverPrintableName && isRunCodeEnabled) ||
         (isRunCodeEnabled && hasSamples)
+
+    private fun submitCodeActionClick() {
+        (parentFragment as? Callback)
+            ?.onSyncCodeStateWithParent(lang, codeLayout.text.toString(), onSubmitClicked = true)
+        dismiss()
+    }
 
     interface Callback {
         fun onSyncCodeStateWithParent(lang: String, code: String, onSubmitClicked: Boolean = false)
