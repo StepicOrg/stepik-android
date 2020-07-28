@@ -51,11 +51,10 @@ class ProfileMainFeedPresenter
                 val emailIds = tempProfile.emailAddresses
                 if (emailIds?.isNotEmpty() == true) {
                     try {
-                        emailAddressRepository.getEmailAddresses(*emailIds).blockingGet().let {
-                            if (it.isNotEmpty()) {
-                                sharedPreferenceHelper.storeEmailAddresses(it)
-                            }
-                        }
+                        emailAddressRepository
+                            .getEmailAddresses(*emailIds)
+                            .ignoreElement()
+                            .blockingAwait()
                     } catch (exceptionEmails: Exception) {
                         //ok emails is not critical
                     }
