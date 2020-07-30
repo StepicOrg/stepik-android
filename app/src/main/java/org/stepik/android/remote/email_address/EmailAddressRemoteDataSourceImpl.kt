@@ -15,9 +15,13 @@ constructor(
     private val emailAddressService: EmailAddressService
 ) : EmailAddressRemoteDataSource {
     override fun getEmailAddresses(vararg emailIds: Long): Single<List<EmailAddress>> =
-        emailAddressService
-            .getEmailAddresses(emailIds)
-            .map(EmailAddressResponse::emailAddresses)
+        if (emailIds.isEmpty()) {
+            Single.just(emptyList())
+        } else {
+            emailAddressService
+                .getEmailAddresses(emailIds)
+                .map(EmailAddressResponse::emailAddresses)
+        }
 
     override fun createEmailAddress(emailAddress: EmailAddress): Single<EmailAddress> =
         emailAddressService

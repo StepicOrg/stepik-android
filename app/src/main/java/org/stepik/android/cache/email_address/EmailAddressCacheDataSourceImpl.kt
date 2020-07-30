@@ -15,6 +15,9 @@ constructor(
     override fun getEmailAddresses(vararg emailIds: Long): Single<List<EmailAddress>> =
         Single.fromCallable {
             sharedPreferenceHelper.storedEmails
+                ?.filter { it.id in emailIds }
+                ?.sortedBy { emailIds.indexOf(it.id) }
+                .orEmpty()
         }
 
     override fun saveEmailAddresses(emailAddresses: List<EmailAddress>): Completable =

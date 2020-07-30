@@ -47,6 +47,7 @@ class CodeStepRunCodeDelegate(
     private val runCodeOutputDataTitle = runCodeLayout.outputDataTitle
     private val runCodeOutputDataSample = runCodeLayout.outputDataSample
     private val runCodeFeedback = runCodeLayout.runCodeFeedback
+    private val runCodeFab = runCodeLayout.runCodeFab
     private val runCodeAction = runCodeLayout.runCodeAction
 
     var lang: String  = ""
@@ -118,14 +119,8 @@ class CodeStepRunCodeDelegate(
 
         runCodeInputSamplePicker.setOnClickListener { popupWindow.show() }
 
-        runCodeAction.setOnClickListener {
-            codeRunPresenter.createUserCodeRun(
-                code = codeLayout.text.toString(),
-                language = lang,
-                stdin = runCodeInputDataSample.text.toString(),
-                stepId = stepWrapper.step.id
-            )
-        }
+        runCodeFab.setOnClickListener { runCodeActionClick() }
+        runCodeAction.setOnClickListener { runCodeActionClick() }
 
         val evaluationDrawable = AnimationDrawable()
         evaluationDrawable.addFrame(context.getDrawableCompat(R.drawable.ic_step_quiz_evaluation_frame_1), EVALUATION_FRAME_DURATION_MS)
@@ -147,6 +142,7 @@ class CodeStepRunCodeDelegate(
         val isEnabled = state is StepQuizRunCodeView.State.Idle ||
                 (state is StepQuizRunCodeView.State.UserCodeRunLoaded && state.userCodeRun.status != UserCodeRun.Status.EVALUATION)
 
+        runCodeFab.isEnabled = isEnabled
         runCodeAction.isEnabled = isEnabled
         runCodeInputSamplePicker.isEnabled = isEnabled
         runCodeInputDataSample.isEnabled = isEnabled && !(lang == ProgrammingLanguage.SQL.serverPrintableName)
@@ -228,5 +224,14 @@ class CodeStepRunCodeDelegate(
 
         runCodeInputDataSample.layoutParams = inputDataSampleParams
         runCodeOutputDataSample.layoutParams = outputDataSampleParams
+    }
+
+    private fun runCodeActionClick() {
+        codeRunPresenter.createUserCodeRun(
+            code = codeLayout.text.toString(),
+            language = lang,
+            stdin = runCodeInputDataSample.text.toString(),
+            stepId = stepWrapper.step.id
+        )
     }
 }
