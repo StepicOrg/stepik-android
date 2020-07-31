@@ -409,7 +409,6 @@
         <provider
             android:name="org.stepik.android.view.analytic.AnalyticContentProvider"
             android:authorities="${applicationId}.analytic_provider"
-            android:process=":analyticProcess"
             android:exported="false" />
 
         <service

@@ -62,8 +62,7 @@ constructor(
     private val socialProfileDao: IDao<SocialProfile>,
     private val userCourseDao: IDao<UserCourse>,
     private val courseCollectionDao: IDao<CourseCollection>,
-    private val courseListQueryDataDao: IDao<CourseListQueryData>,
-    private val analyticDao: IDao<AnalyticLocalEvent>
+    private val courseListQueryDataDao: IDao<CourseListQueryData>
 ) {
 
     fun dropDatabase() {
@@ -94,7 +93,6 @@ constructor(
         userCourseDao.removeAll()
         courseCollectionDao.removeAll()
         courseListQueryDataDao.removeAll()
-        analyticDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {

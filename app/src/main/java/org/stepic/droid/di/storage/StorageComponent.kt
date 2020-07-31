@@ -8,6 +8,7 @@ import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.PersistentStateDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepik.android.cache.analytic.dao.AnalyticDao
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
@@ -57,5 +58,5 @@ interface StorageComponent {
     val userCourseDao: IDao<UserCourse>
     val courseCollectionDao: IDao<CourseCollection>
     val courseListQueryDao: IDao<CourseListQueryData>
-    val analyticDao: IDao<AnalyticLocalEvent>
+    val analyticDao: AnalyticDao
 }

@@ -11,12 +11,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
+import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepic.droid.di.storage.DaggerStorageComponent
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.domain.analytic.interactor.AnalyticInteractor
 import org.stepik.android.view.injection.analytic.AnalyticComponent
-import org.stepik.android.view.injection.analytic.DaggerAnalyticComponent
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -56,12 +55,8 @@ class AnalyticContentProvider : ContentProvider() {
 
     private fun injectComponent() {
         if (context == null) return
-        component = DaggerAnalyticComponent.builder()
-            .context(context)
-            .setStorageComponent(DaggerStorageComponent
-                .builder()
-                .context(context)
-                .build())
+        component = App.component()
+            .analyticProviderComponentBuilder()
             .build()
         component.inject(this)
 

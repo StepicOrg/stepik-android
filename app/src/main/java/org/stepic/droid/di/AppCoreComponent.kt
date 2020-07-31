@@ -232,6 +232,8 @@ interface AppCoreComponent {
 
     fun magicLinksComponentBuilder(): MagicLinksComponent.Builder
 
+    fun analyticProviderComponentBuilder(): AnalyticComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)

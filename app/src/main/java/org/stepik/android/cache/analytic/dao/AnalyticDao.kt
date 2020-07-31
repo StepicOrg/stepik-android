@@ -12,7 +12,7 @@ import org.stepik.android.cache.analytic.structure.DbStructureAnalytic
 @Dao
 interface AnalyticDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAnalyticEvent(analyticLocalEvent: AnalyticLocalEvent)
+    fun insertAnalyticEvent(analyticLocalEvent: AnalyticLocalEvent): Completable
 
     @Query("SELECT * FROM ${DbStructureAnalytic.TABLE_NAME}")
     fun getAllAnalyticEvents(): Single<List<AnalyticLocalEvent>>
