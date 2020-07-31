@@ -1,7 +1,5 @@
 package org.stepic.droid.util.resolvers;
 
-import androidx.annotation.DrawableRes;
-
 import org.jetbrains.annotations.NotNull;
 import org.stepic.droid.R;
 import org.stepic.droid.di.AppSingleton;
@@ -18,25 +16,25 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import kotlin.Pair;
 import timber.log.Timber;
 
 @AppSingleton
 public class StepTypeResolverImpl implements StepTypeResolver {
 
-    private final Map<String, Integer> mapFromTypeToDrawableRes;
-    private final int peerReviewDrawableRes;
+    private final Map<String, Pair<Integer, Integer>> mapFromTypeToDrawableRes;
+    private final Pair<Integer, Integer> peerReviewDrawableRes;
 
     @Inject
     StepTypeResolverImpl() {
         Timber.d("create step type resolver: %s", toString());
         mapFromTypeToDrawableRes = new HashMap<>();
 
-        peerReviewDrawableRes = R.drawable.ic_peer_review;
-        int simpleQuestionDrawable = R.drawable.ic_easy_quiz;
-        int videoDrawable = R.drawable.ic_video_pin;
-        int animationDrawable = R.drawable.ic_animation;
-        int hardQuizDrawable = R.drawable.ic_hard_quiz;
-        int theoryQuizDrawable = R.drawable.ic_theory;
+        peerReviewDrawableRes = new Pair<>(R.drawable.ic_review_basic, R.drawable.ic_review_checked);
+        Pair<Integer, Integer> simpleQuestionDrawable = new Pair<>(R.drawable.ic_question_basic, R.drawable.ic_question_checked);
+        Pair<Integer, Integer> videoDrawable = new Pair<>(R.drawable.ic_video_basic, R.drawable.ic_video_checked);
+        Pair<Integer, Integer> hardQuizDrawable = new Pair<>(R.drawable.ic_code_basic, R.drawable.ic_code_checked);
+        Pair<Integer, Integer> theoryQuizDrawable = new Pair<>(R.drawable.ic_theory_basic, R.drawable.ic_theory_checked);
 
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_TEXT, theoryQuizDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_VIDEO, videoDrawable);
@@ -48,7 +46,6 @@ public class StepTypeResolverImpl implements StepTypeResolver {
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_CHOICE, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_NUMBER, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_DATASET, hardQuizDrawable);
-        mapFromTypeToDrawableRes.put(AppConstants.TYPE_ANIMATION, animationDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_CHEMICAL, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_PUZZLE, simpleQuestionDrawable);
         mapFromTypeToDrawableRes.put(AppConstants.TYPE_PYCHARM, simpleQuestionDrawable);
@@ -60,13 +57,12 @@ public class StepTypeResolverImpl implements StepTypeResolver {
     }
 
     @Override
-    @DrawableRes
-    public int getDrawableForType(String type, boolean isPeerReview) {
+    public Pair<Integer, Integer> getDrawableForType(String type, boolean isPeerReview) {
         if (isPeerReview) {
             return peerReviewDrawableRes;
         }
 
-        Integer drawable = mapFromTypeToDrawableRes.get(type);
+        Pair<Integer, Integer> drawable = mapFromTypeToDrawableRes.get(type);
         if (drawable == null) {
             drawable = mapFromTypeToDrawableRes.get(AppConstants.TYPE_TEXT);
         }

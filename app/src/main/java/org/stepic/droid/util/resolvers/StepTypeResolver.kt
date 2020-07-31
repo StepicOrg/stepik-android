@@ -1,14 +1,12 @@
 package org.stepic.droid.util.resolvers
 
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
+import android.graphics.drawable.AnimationDrawable
 import org.stepic.droid.ui.quiz.QuizDelegate
 import org.stepik.android.model.Step
 
 interface StepTypeResolver {
 
-    @DrawableRes
-    fun getDrawableForType(type: String?, isPeerReview: Boolean): Int
+    fun getDrawableForType(type: String?, isPeerReview: Boolean): Pair<Int, Int>
 
     fun getQuizDelegate(step: Step?): QuizDelegate
 }
