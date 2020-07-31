@@ -25,7 +25,6 @@ constructor(
 
     override fun clearEvents(): Completable =
         Completable.fromCallable {
-            Timber.d("Remove all")
             analyticDao.removeAll()
         }
 }

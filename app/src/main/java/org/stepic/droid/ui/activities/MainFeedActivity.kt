@@ -158,7 +158,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         initGoogleApiClient(true)
 
         // TODO Testing analytics
-        analytic.report(TestAnalyticEvent(12345L, CourseViewSource.MyCourses))
+//        analytic.report(TestAnalyticEvent(12345L, CourseViewSource.MyCourses))
 
 //        stepikAnalytic.flushEvents()
 
