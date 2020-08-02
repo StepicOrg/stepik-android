@@ -12,6 +12,7 @@ import org.stepic.droid.storage.dao.SearchQueryDao
 import org.stepic.droid.storage.structure.*
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
+import org.stepik.android.cache.analytic.dao.AnalyticDao
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.lesson.structure.DbStructureLesson

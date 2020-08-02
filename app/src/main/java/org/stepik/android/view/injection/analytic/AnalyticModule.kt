@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import org.stepik.android.cache.analytic.AnalyticCacheDataSourceImpl
+import org.stepik.android.cache.analytic.dao.AnalyticDao
+import org.stepik.android.cache.base.AnalyticDatabase
 import org.stepik.android.data.analytic.repository.AnalyticRepositoryImpl
 import org.stepik.android.data.analytic.source.AnalyticCacheDataSource
 import org.stepik.android.data.analytic.source.AnalyticRemoteDataSource
@@ -36,5 +38,10 @@ abstract class AnalyticModule {
         @JvmStatic
         internal fun provideAnalyticService(@Authorized retroFit: Retrofit): AnalyticService =
             retroFit.create(AnalyticService::class.java)
+
+        @Provides
+        @JvmStatic
+        internal fun provideAnalyticEventDao(analyticDatabase: AnalyticDatabase): AnalyticDao =
+            analyticDatabase.analyticDao()
     }
 }

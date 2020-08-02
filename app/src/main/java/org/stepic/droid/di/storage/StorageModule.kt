@@ -75,7 +75,6 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
-import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import org.stepik.android.cache.base.AnalyticDatabase
 import org.stepik.android.cache.base.AnalyticDatabaseInfo
 import org.stepik.android.model.attempts.Attempt
@@ -262,11 +261,5 @@ abstract class StorageModule {
         @JvmStatic
         internal fun provideAnalyticDatabase(context: Context): AnalyticDatabase =
             Room.databaseBuilder(context, AnalyticDatabase::class.java, AnalyticDatabaseInfo.DATABASE_NAME).build()
-
-        @StorageSingleton
-        @Provides
-        @JvmStatic
-        internal fun provideAnalyticEventDao(analyticDatabase: AnalyticDatabase): AnalyticDao =
-            analyticDatabase.analyticDao()
     }
 }
