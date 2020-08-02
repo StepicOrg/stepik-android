@@ -1,11 +1,11 @@
 package org.stepik.android.data.analytic.repository
 
 import io.reactivex.Completable
+import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import org.stepik.android.data.analytic.mapper.AnalyticBatchMapper
 import org.stepik.android.data.analytic.source.AnalyticCacheDataSource
 import org.stepik.android.data.analytic.source.AnalyticRemoteDataSource
 import org.stepik.android.domain.analytic.repository.AnalyticRepository
-import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import javax.inject.Inject
 
 class AnalyticRepositoryImpl
@@ -25,5 +25,5 @@ constructor(
                 val batchEvents = analyticBatchMapper.mapLocalToBatchEvents(events)
                 analyticRemoteDataSource.flushEvents(batchEvents)
             }
-//            .andThen(analyticCacheDataSource.clearEvents())
+            .andThen(analyticCacheDataSource.clearEvents())
 }
