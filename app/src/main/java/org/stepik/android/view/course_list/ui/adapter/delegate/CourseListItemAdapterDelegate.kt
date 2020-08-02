@@ -15,6 +15,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
+import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -94,6 +95,7 @@ class CourseListItemAdapterDelegate(
             coursePropertiesDelegate.setStats(data)
 
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
+            analytic.report(CourseCardSeenAnalyticBatchEvent(data.course.id, data.source))
         }
     }
 }
