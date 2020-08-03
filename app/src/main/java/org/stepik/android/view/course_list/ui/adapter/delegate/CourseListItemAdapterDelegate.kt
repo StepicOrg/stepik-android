@@ -20,7 +20,6 @@ import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
-import timber.log.Timber
 
 class CourseListItemAdapterDelegate(
     private val analytic: Analytic,
@@ -97,17 +96,11 @@ class CourseListItemAdapterDelegate(
             coursePropertiesDelegate.setStats(data)
 
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
-            if (data.course.id == 51112L) {
-                if (data.course.priceTier != null) {
-                    Timber.d("Item: ${data.courseStats.enrollmentState}")
-                }
-            }
         }
     }
 
     private fun handleCoursePrice(data: CourseListItem.Data) =
         if (isHandleInAppPurchase && data.course.priceTier != null) {
-            Timber.d("Detailed: ${(data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.detailedPrice}")
             (data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: ""
         } else {
             data.course.displayPrice
