@@ -25,6 +25,7 @@ import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.configuration.RemoteConfig
@@ -35,7 +36,6 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
-import org.stepik.android.presentation.billing.BillingView
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
 import org.stepik.android.presentation.course.model.EnrollmentError
@@ -54,7 +54,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CourseActivity : FragmentActivityBase(), CourseView, BillingView, InAppWebViewDialogFragment.Callback {
+class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFragment.Callback {
     companion object {
         private const val EXTRA_COURSE = "course"
         private const val EXTRA_COURSE_ID = "course_id"
@@ -124,6 +124,9 @@ class CourseActivity : FragmentActivityBase(), CourseView, BillingView, InAppWeb
     internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
 
     @Inject
+    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
+    @Inject
     internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
     @Inject
@@ -190,6 +193,8 @@ class CourseActivity : FragmentActivityBase(), CourseView, BillingView, InAppWeb
             screenManager.showCatalog(this)
             finish()
         }
+
+//        isHandleInAppPurchase = course?.priceTier != null && inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {

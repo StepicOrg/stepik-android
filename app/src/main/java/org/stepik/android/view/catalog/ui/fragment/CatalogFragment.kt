@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.features.stories.presentation.StoriesPresenter
@@ -62,6 +63,9 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    @Inject
+    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
     private lateinit var searchIcon: ImageView
 
     private lateinit var catalogPresenter: CatalogPresenter
@@ -104,13 +108,15 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
         catalogItemAdapter += CourseListAdapterDelegate(
             analytic = analytic,
             screenManager = screenManager,
-            courseContinueViewDelegate = courseContinueViewDelegate
+            courseContinueViewDelegate = courseContinueViewDelegate,
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
         )
 
         catalogItemAdapter += CourseListQueryAdapterDelegate(
             analytic = analytic,
             screenManager = screenManager,
-            courseContinueViewDelegate = courseContinueViewDelegate
+            courseContinueViewDelegate = courseContinueViewDelegate,
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
         )
 
         catalogItemAdapter += OfflineAdapterDelegate { catalogPresenter.fetchCollections(forceUpdate = true) }

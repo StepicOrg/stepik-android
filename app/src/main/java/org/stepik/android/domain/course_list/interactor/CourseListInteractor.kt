@@ -62,7 +62,7 @@ constructor(
         sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> =
         courseStatsInteractor
-            .getCourseStats(courses, resolveEnrollmentState = false, sourceTypeComposition = sourceTypeComposition)
+            .getCourseStats(courses, resolveEnrollmentState = true, sourceTypeComposition = sourceTypeComposition)
             .map { courseStats ->
                 val list = courses.mapIndexed { index, course ->
                     CourseListItem.Data(

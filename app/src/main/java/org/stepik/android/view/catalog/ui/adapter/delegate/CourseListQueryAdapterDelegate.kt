@@ -32,7 +32,8 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class CourseListQueryAdapterDelegate(
     private val analytic: Analytic,
     private val screenManager: ScreenManager,
-    private val courseContinueViewDelegate: CourseContinueViewDelegate
+    private val courseContinueViewDelegate: CourseContinueViewDelegate,
+    private val isHandleInAppPurchase: Boolean
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     override fun isForViewType(position: Int, data: CatalogItem): Boolean =
         data is CourseListQueryPresenter
@@ -113,7 +114,8 @@ class CourseListQueryAdapterDelegate(
                         viewSource = CourseViewSource.Query(courseListQuery),
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
-            }
+            },
+            isHandleInAppPurchase = isHandleInAppPurchase
         )
 
         override fun setState(state: CourseListQueryView.State) {

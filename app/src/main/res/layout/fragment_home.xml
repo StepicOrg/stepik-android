@@ -29,21 +29,18 @@
                 layout="@layout/home_streak_view"
                 android:visibility="gone" />
 
-            <fragment
-                android:name="org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment"
-                android:id="@+id/fastContinueFragment"
+            <FrameLayout
+                android:id="@+id/homeFastContinueContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <fragment
-                android:name="org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment"
-                android:id="@+id/userCoursesFragment"
+            <FrameLayout
+                android:id="@+id/popularCoursesContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <fragment
-                android:name="org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment"
-                android:id="@+id/popularCoursesFragment"
+            <FrameLayout
+                android:id="@+id/userCoursesContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

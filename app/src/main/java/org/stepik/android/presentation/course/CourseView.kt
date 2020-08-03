@@ -2,11 +2,12 @@ package org.stepik.android.presentation.course
 
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.model.Course
+import org.stepik.android.presentation.billing.BillingView
 import org.stepik.android.presentation.course.model.EnrollmentError
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.user_courses.model.UserCourseAction
 
-interface CourseView : CourseContinueView {
+interface CourseView : CourseContinueView, BillingView {
     sealed class State {
         object Idle : State()
         object Loading : State()

@@ -4,6 +4,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.solovyev.android.checkout.ProductTypes
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.model.SkuSerializableWrapper
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class CourseStatsInteractor
 @Inject
 constructor(
+    private val inAppPurchaseSplitTest: InAppPurchaseSplitTest,
     private val billingRepository: BillingRepository,
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
@@ -96,13 +98,17 @@ constructor(
                     .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS)
                     .flatMap { payments ->
                         if (payments.isEmpty()) {
-                            billingRepository
-                                .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
-                                .map(::SkuSerializableWrapper)
-                                .map(EnrollmentState::NotEnrolledInApp)
-                                .cast(EnrollmentState::class.java)
-                                .toSingle(EnrollmentState.NotEnrolledWeb)
-                                .map { course.id to it }
+                            if (inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive) {
+                                billingRepository
+                                    .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
+                                    .map(::SkuSerializableWrapper)
+                                    .map(EnrollmentState::NotEnrolledInApp)
+                                    .cast(EnrollmentState::class.java)
+                                    .toSingle(EnrollmentState.NotEnrolledWeb)
+                                    .map { course.id to it }
+                            } else {
+                                Single.just(course.id to EnrollmentState.NotEnrolledWeb)
+                            }
                         } else {
                             Single.just(course.id to EnrollmentState.NotEnrolledFree)
                         }
