@@ -101,7 +101,7 @@ class CourseListItemAdapterDelegate(
 
     private fun handleCoursePrice(data: CourseListItem.Data) =
         if (isHandleInAppPurchase && data.course.priceTier != null) {
-            (data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: ""
+            (data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice
         } else {
             data.course.displayPrice
         }
