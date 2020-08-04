@@ -1,9 +1,7 @@
 package org.stepik.android.domain.course.analytic
 
 import org.stepik.android.domain.base.analytic.AnalyticEvent
-import org.stepik.android.domain.base.analytic.AnalyticSource
 import org.stepik.android.model.Course
-import java.util.EnumSet
 
 class CoursePreviewScreenOpenedAnalyticEvent(
     course: Course,
@@ -26,7 +24,4 @@ class CoursePreviewScreenOpenedAnalyticEvent(
             PARAM_IS_PAID to course.isPaid,
             PARAM_SOURCE to source.name
         ) + source.params.mapKeys { "${PARAM_SOURCE}_$it" }
-
-    override val sources: EnumSet<AnalyticSource> =
-        EnumSet.complementOf(EnumSet.of(AnalyticSource.STEPIK_API))
 }

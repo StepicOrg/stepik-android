@@ -20,10 +20,12 @@ constructor(
 
     override fun flushEvents(): Completable =
         analyticCacheDataSource
-            .getAllEvents()
+            .getEvents()
+            .takeUntil { it.isEmpty() }
             .flatMapCompletable { events ->
                 val batchEvents = analyticBatchMapper.mapLocalToBatchEvents(events)
-                analyticRemoteDataSource.flushEvents(batchEvents)
+                analyticRemoteDataSource
+                    .flushEvents(batchEvents)
+                    .andThen(analyticCacheDataSource.clearEvents(events))
             }
-            .andThen(analyticCacheDataSource.clearEvents())
 }

@@ -27,7 +27,6 @@ import org.stepic.droid.ui.fragments.NotificationsFragment
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DateTimeHelper
 import org.stepic.droid.util.commit
-import org.stepik.android.domain.analytic.TestAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.streak.interactor.StreakInteractor
 import org.stepik.android.model.Course
@@ -157,11 +156,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
 
         initGoogleApiClient(true)
 
-        // TODO Testing analytics
-        analytic.report(TestAnalyticEvent(12345L, CourseViewSource.MyCourses))
-
-//        stepikAnalytic.flushEvents()
-
         initNavigation()
 
         earlyStreakClient.subscribe(this)
@@ -189,6 +183,7 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         onShowStreakSuggestion()
+        stepikAnalytic.flushEvents()
     }
 
     private fun getFragmentIndexFromIntent(intent: Intent?): Int {

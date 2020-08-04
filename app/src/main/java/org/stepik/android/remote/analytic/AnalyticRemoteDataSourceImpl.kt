@@ -13,5 +13,9 @@ constructor(
     private val analyticService: AnalyticService
 ) : AnalyticRemoteDataSource {
     override fun flushEvents(events: List<AnalyticBatchEvent>): Completable =
-        analyticService.batch(AnalyticBatchRequest(events))
+        if (events.isEmpty()) {
+            Completable.complete()
+        } else {
+            analyticService.batch(AnalyticBatchRequest(events))
+        }
 }
