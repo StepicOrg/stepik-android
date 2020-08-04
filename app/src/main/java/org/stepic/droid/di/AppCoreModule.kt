@@ -55,6 +55,7 @@ import org.stepic.droid.util.resolvers.text.TextResolverImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.remote.base.UserAgentProvider
 import org.stepik.android.remote.base.UserAgentProviderImpl
+import org.stepik.android.view.injection.billing.PublicLicenseKey
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -196,6 +197,13 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideContentResolver(context: Context): ContentResolver =
             context.contentResolver
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        @PublicLicenseKey
+        internal fun providePublicLicenseKey(config: Config): String =
+            config.appPublicLicenseKey
     }
 
 }

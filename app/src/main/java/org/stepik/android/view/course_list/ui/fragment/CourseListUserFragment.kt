@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.fragment_course_list.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.setOnPaginationListener
@@ -50,6 +51,9 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private lateinit var courseListPresenter: CourseListUserPresenter
@@ -114,7 +118,8 @@ class CourseListUserFragment : Fragment(R.layout.fragment_course_list), CourseLi
                         viewSource = CourseViewSource.MyCourses,
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
-            }
+            },
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
         )
 
         wrapperViewStateDelegate = ViewStateDelegate()
