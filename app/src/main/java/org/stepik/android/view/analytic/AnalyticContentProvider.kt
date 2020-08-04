@@ -16,7 +16,6 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.domain.analytic.interactor.AnalyticInteractor
 import org.stepik.android.view.injection.analytic.AnalyticComponent
-import ru.nobird.android.domain.rx.emptyOnErrorStub
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -32,8 +31,7 @@ class AnalyticContentProvider : ContentProvider() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    lateinit var analyticsObservable: Observable<Unit>
-    lateinit var analyticsSubject: PublishSubject<Unit>
+    private val analyticsSubject = PublishSubject.create<Unit>()
 
     @Inject
     @BackgroundScheduler
@@ -60,33 +58,23 @@ class AnalyticContentProvider : ContentProvider() {
             .build()
         component.inject(this)
 
-        initFlushTracking()
-        initFlushInterval()
         subscribeForFlushUpdates()
     }
 
-    private fun initFlushInterval() {
-        compositeDisposable += Observable
-            .interval(FLUSH_INTERVAL, TimeUnit.SECONDS)
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onNext = { analyticsSubject.onNext(Unit) },
-                onError = { initFlushInterval() }
-            )
-    }
-
     private fun subscribeForFlushUpdates() {
-        compositeDisposable += analyticsObservable
+        val timerSource = Observable
+            .interval(FLUSH_INTERVAL, TimeUnit.SECONDS)
+            .map { Unit }
+
+        compositeDisposable += Observable
+            .merge(timerSource, analyticsSubject)
+            .concatMapCompletable {
+                analyticInteractor.flushEvents()
+            }
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = { flushEvents() },
                 onError = { subscribeForFlushUpdates() }
             )
-    }
-
-    private fun initFlushTracking() {
-        analyticsSubject = PublishSubject.create()
-        analyticsObservable = analyticsSubject.observeOn(backgroundScheduler)
     }
 
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
@@ -99,9 +87,21 @@ class AnalyticContentProvider : ContentProvider() {
                 logEvent(arg, extras)
 
             FLUSH ->
-                signalFlushEvents()
+                flushEvents()
         }
         return super.call(method, arg, extras)
+    }
+
+    private fun logEvent(eventName: String?, bundle: Bundle?) {
+        if (eventName == null || bundle == null) return
+        compositeDisposable += analyticInteractor
+            .logEvent(eventName, bundle)
+            .subscribeOn(backgroundScheduler)
+            .subscribe()
+    }
+
+    private fun flushEvents() {
+        analyticsSubject.onNext(Unit)
     }
 
     override fun update(uri: Uri, values: ContentValues?, selection: String?, selectionArgs: Array<String>?): Int {
@@ -114,26 +114,5 @@ class AnalyticContentProvider : ContentProvider() {
 
     override fun getType(uri: Uri): String? {
         throw UnsupportedOperationException()
-    }
-
-    private fun logEvent(eventName: String?, bundle: Bundle?) {
-        if (eventName == null || bundle == null) return
-        compositeDisposable += analyticInteractor
-            .logEvent(eventName, bundle)
-            .subscribeOn(backgroundScheduler)
-            .subscribe()
-    }
-
-    private fun flushEvents() {
-        compositeDisposable += analyticInteractor
-            .flushEvents()
-            .subscribeOn(backgroundScheduler)
-            .subscribeBy(
-                onError = emptyOnErrorStub
-            )
-    }
-
-    private fun signalFlushEvents() {
-        analyticsSubject.onNext(Unit)
     }
 }
