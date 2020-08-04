@@ -15,6 +15,7 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
+import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -23,7 +24,8 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class CourseListItemAdapterDelegate(
     private val analytic: Analytic,
     private val onItemClicked: (CourseListItem.Data) -> Unit,
-    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
+    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit,
+    private val isHandleInAppPurchase: Boolean
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
         data is CourseListItem.Data
@@ -82,7 +84,7 @@ class CourseListItemAdapterDelegate(
 
             coursePrice.isVisible = !isEnrolled
             val (@ColorRes textColor, displayPrice) = if (data.course.isPaid) {
-                R.color.color_overlay_violet to data.course.displayPrice
+                R.color.color_overlay_violet to handleCoursePrice(data)
             } else {
                 R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
             }
@@ -96,4 +98,11 @@ class CourseListItemAdapterDelegate(
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
         }
     }
+
+    private fun handleCoursePrice(data: CourseListItem.Data) =
+        if (isHandleInAppPurchase && data.course.priceTier != null) {
+            (data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice
+        } else {
+            data.course.displayPrice
+        }
 }

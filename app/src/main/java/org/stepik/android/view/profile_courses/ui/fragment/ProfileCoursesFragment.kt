@@ -11,6 +11,7 @@ import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_courses.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.util.CoursesSnapHelper
@@ -49,6 +50,9 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
     @Inject
     internal lateinit var screenManager: ScreenManager
 
+    @Inject
+    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
+
     private var userId by argument<Long>()
 
     private lateinit var profileCoursesPresenter: ProfileCoursesPresenter
@@ -85,7 +89,8 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
                         viewSource = CourseViewSource.Query(CourseListQuery(teacher = userId)),
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
-            }
+            },
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
         )
     }
 

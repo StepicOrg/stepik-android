@@ -50,6 +50,8 @@ import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.auth.AuthComponent
+import org.stepik.android.view.injection.billing.BillingDataModule
+import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.catalog.CatalogBusModule
 import org.stepik.android.view.injection.catalog.CatalogComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
@@ -145,7 +147,10 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
         CourseCollectionDataModule::class,
         SolutionsBusModule::class,
         CourseListBusModule::class,
-        CatalogBusModule::class
+        CatalogBusModule::class,
+
+        BillingModule::class,
+        BillingDataModule::class
     ]
 )
 interface AppCoreComponent {

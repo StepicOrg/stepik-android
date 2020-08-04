@@ -3,8 +3,12 @@ package org.stepik.android.domain.course.interactor
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
+import org.solovyev.android.checkout.ProductTypes
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
+import org.stepik.android.domain.billing.model.SkuSerializableWrapper
+import org.stepik.android.domain.billing.repository.BillingRepository
 import org.stepik.android.domain.course.model.CourseStats
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course.model.SourceTypeComposition
@@ -22,12 +26,16 @@ import javax.inject.Inject
 class CourseStatsInteractor
 @Inject
 constructor(
-    //    private val billingRepository: BillingRepository,
+    private val inAppPurchaseSplitTest: InAppPurchaseSplitTest,
+    private val billingRepository: BillingRepository,
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository,
     private val userCoursesRepository: UserCoursesRepository
 ) {
+    companion object {
+        private const val COURSE_TIER_PREFIX = "course_tier_"
+    }
 
     fun getCourseStats(
         courses: List<Course>,
@@ -90,13 +98,17 @@ constructor(
                     .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS)
                     .flatMap { payments ->
                         if (payments.isEmpty()) {
-                            Single.just(course.id to EnrollmentState.NotEnrolledWeb)
-//                            billingRepository
-//                                .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
-//                                .map(::SkuSerializableWrapper)
-//                                .map(EnrollmentState::NotEnrolledInApp)
-//                                .cast(EnrollmentState::class.java)
-//                                .toSingle(EnrollmentState.NotEnrolledWeb) // if price_tier == null
+                            if (inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive) {
+                                billingRepository
+                                    .getInventory(ProductTypes.IN_APP, COURSE_TIER_PREFIX + course.priceTier)
+                                    .map(::SkuSerializableWrapper)
+                                    .map(EnrollmentState::NotEnrolledInApp)
+                                    .cast(EnrollmentState::class.java)
+                                    .toSingle(EnrollmentState.NotEnrolledWeb)
+                                    .map { course.id to it }
+                            } else {
+                                Single.just(course.id to EnrollmentState.NotEnrolledWeb)
+                            }
                         } else {
                             Single.just(course.id to EnrollmentState.NotEnrolledFree)
                         }

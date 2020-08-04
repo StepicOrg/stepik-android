@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
@@ -59,6 +60,9 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private lateinit var courseListPresenter: CourseListSearchPresenter
@@ -128,7 +132,8 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
                         viewSource = CourseViewSource.Search(searchResultQuery),
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
-            }
+            },
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
         )
 
         courseListPresenter.fetchCourses(searchResultQuery)

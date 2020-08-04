@@ -119,9 +119,9 @@ class CourseHeaderDelegate(
                 }
             }
 
-//            courseBuyInAppAction.setOnClickListener {
-//                coursePresenter.purchaseCourse()
-//            }
+            courseBuyInAppAction.setOnClickListener {
+                coursePresenter.purchaseCourse()
+            }
         }
     }
 
@@ -168,11 +168,11 @@ class CourseHeaderDelegate(
             with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
 
-                courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
+                courseBuyInAppAction.isVisible = this is EnrollmentState.NotEnrolledInApp
 
-//                if (this is EnrollmentState.NotEnrolledInApp) {
-//                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
-//                }
+                if (this is EnrollmentState.NotEnrolledInApp) {
+                    courseBuyInAppAction.text = getString(R.string.course_payments_purchase_in_app, this.skuWrapper.sku.price)
+                }
 
                 dropCourseMenuItem?.isVisible = this is EnrollmentState.Enrolled
                 restorePurchaseCourseMenuItem?.isVisible = false // this is EnrollmentState.NotEnrolledInApp
@@ -236,7 +236,7 @@ class CourseHeaderDelegate(
         shareCourseMenuItem?.isVisible = courseHeaderData != null
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
-        restorePurchaseCourseMenuItem?.isVisible = false // courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp
+        restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.NotEnrolledInApp
     }
 
     fun onOptionsItemSelected(item: MenuItem): Boolean =
@@ -282,7 +282,7 @@ class CourseHeaderDelegate(
                 true
             }
             R.id.restore_purchase -> {
-//                coursePresenter.restoreCoursePurchase()
+                coursePresenter.restoreCoursePurchase()
                 true
             }
             else ->

@@ -31,7 +31,8 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class CourseListAdapterDelegate(
     private val analytic: Analytic,
     private val screenManager: ScreenManager,
-    private val courseContinueViewDelegate: CourseContinueViewDelegate
+    private val courseContinueViewDelegate: CourseContinueViewDelegate,
+    private val isHandleInAppPurchase: Boolean
 ) : AdapterDelegate<CatalogItem, DelegateViewHolder<CatalogItem>>() {
     private val sharedViewPool = RecyclerView.RecycledViewPool()
 
@@ -113,7 +114,8 @@ class CourseListAdapterDelegate(
                         viewSource = CourseViewSource.Collection(courseCollectionId),
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
-            }
+            },
+            isHandleInAppPurchase = isHandleInAppPurchase
         )
 
         override fun setState(state: CourseListCollectionView.State) {
