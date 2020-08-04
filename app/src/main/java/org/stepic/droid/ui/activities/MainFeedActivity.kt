@@ -11,7 +11,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main_feed.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.StepikAnalytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.Client
 import org.stepic.droid.core.StepikDevicePoster
@@ -73,9 +72,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
             sourceActivity.startActivity(intent)
         }
     }
-
-    @Inject
-    lateinit var stepikAnalytic: StepikAnalytic
 
     @Inject
     lateinit var profileMainFeedPresenter: ProfileMainFeedPresenter
@@ -183,7 +179,6 @@ class MainFeedActivity : BackToExitActivityWithSmartLockBase(),
         }
 
         onShowStreakSuggestion()
-        stepikAnalytic.flushEvents()
     }
 
     private fun getFragmentIndexFromIntent(intent: Intent?): Int {
