@@ -5,6 +5,8 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
@@ -67,6 +69,7 @@ class AnalyticContentProvider : ContentProvider() {
 
         compositeDisposable += Observable
             .merge(timerSource, analyticsSubject)
+            .toFlowable(BackpressureStrategy.LATEST)
             .concatMapCompletable {
                 analyticInteractor.flushEvents()
             }
