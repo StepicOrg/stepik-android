@@ -19,7 +19,7 @@ constructor(
     enum class Group(
         val isInAppPurchaseActive: Boolean
     ) : SplitTest.Group {
-        Control(isInAppPurchaseActive = false),
+        Control(isInAppPurchaseActive = true),
         InAppPurchase(isInAppPurchaseActive = true)
     }
 }

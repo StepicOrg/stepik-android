@@ -51,9 +51,9 @@ class HomeFragment : FragmentBase(), HomeStreakView {
         initCenteredToolbar(R.string.home_title)
 
         childFragmentManager.commitNow {
-            add(R.id.homeFastContinueContainer, FastContinueFragment.newInstance(), fastContinueTag)
-            add(R.id.popularCoursesContainer, CourseListPopularFragment.newInstance())
-            add(R.id.userCoursesContainer, CourseListUserHorizontalFragment.newInstance())
+            add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
+            add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
+            add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
         }
 
         homeStreakPresenter.attachView(this)

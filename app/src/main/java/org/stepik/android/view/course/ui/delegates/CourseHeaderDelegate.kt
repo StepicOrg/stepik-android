@@ -168,7 +168,6 @@ class CourseHeaderDelegate(
             with(courseHeaderData.stats.enrollmentState) {
                 viewStateDelegate.switchState(this)
 
-//                courseBuyInAppAction.isVisible = false // this is EnrollmentState.NotEnrolledInApp
                 courseBuyInAppAction.isVisible = this is EnrollmentState.NotEnrolledInApp
 
                 if (this is EnrollmentState.NotEnrolledInApp) {
@@ -237,7 +236,6 @@ class CourseHeaderDelegate(
         shareCourseMenuItem?.isVisible = courseHeaderData != null
 
         restorePurchaseCourseMenuItem = menu.findItem(R.id.restore_purchase)
-//        restorePurchaseCourseMenuItem?.isVisible = false // courseHeaderData?.enrollmentState is EnrollmentState.NotEnrolledInApp
         restorePurchaseCourseMenuItem?.isVisible = courseHeaderData?.stats?.enrollmentState is EnrollmentState.NotEnrolledInApp
     }
 

@@ -25,6 +25,7 @@ import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwnedExc
 import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerificationException
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import retrofit2.HttpException
@@ -49,7 +50,9 @@ constructor(
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
-    private val mainScheduler: Scheduler
+    private val mainScheduler: Scheduler,
+
+    private val userCoursesInteractor: UserCoursesInteractor
 ) {
     private val gson = Gson()
 
@@ -118,8 +121,10 @@ constructor(
 
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =
         courseRepository.getCourse(courseId, canUseCache = false).toSingle()
-            .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
-            .ignoreElement()
+            .flatMapCompletable { course ->
+                userCoursesInteractor.addUserCourse(courseId)
+                    .doOnComplete { enrollmentSubject.onNext(course) } // notify everyone about changes
+            }
 
     private fun getCurrentProfileId(): Single<Long> =
         Single.fromCallable {

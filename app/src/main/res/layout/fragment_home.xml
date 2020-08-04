@@ -29,21 +29,6 @@
                 layout="@layout/home_streak_view"
                 android:visibility="gone" />
 
-            <FrameLayout
-                android:id="@+id/homeFastContinueContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <FrameLayout
-                android:id="@+id/popularCoursesContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <FrameLayout
-                android:id="@+id/userCoursesContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
