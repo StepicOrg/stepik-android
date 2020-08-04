@@ -13,7 +13,6 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.base.App
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
-import org.stepic.droid.util.DebugToolsHelper
 import org.stepik.android.domain.analytic.interactor.AnalyticInteractor
 import org.stepik.android.view.injection.analytic.AnalyticComponent
 import ru.nobird.android.domain.rx.emptyOnErrorStub
@@ -91,7 +90,6 @@ class AnalyticContentProvider : ContentProvider() {
 
     override fun call(method: String, arg: String?, extras: Bundle?): Bundle? {
         if (!::component.isInitialized) {
-            DebugToolsHelper.initDebugTools(context)
             injectComponent()
         }
         when (method) {
