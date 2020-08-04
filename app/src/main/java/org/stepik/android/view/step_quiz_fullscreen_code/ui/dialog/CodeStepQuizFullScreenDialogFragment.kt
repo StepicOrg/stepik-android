@@ -223,7 +223,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
         codeLayoutDelegate.setDetailsContentData(lang)
         fullScreenCodeViewPager.setCurrentItem(CODE_TAB, false)
 
-        codeSubmitButton.setIconResource(R.drawable.ic_submit_code_fab)
+        codeSubmitButton.setIconResource(R.drawable.ic_submit_code)
         codeSubmitButton.iconPadding = requireContext().resources.getDimensionPixelSize(R.dimen.step_quiz_full_screen_code_layout_action_button_icon_padding)
         codeSubmitFab.setOnClickListener { submitCodeActionClick() }
         codeSubmitButton.setOnClickListener { submitCodeActionClick() }

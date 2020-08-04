@@ -116,6 +116,14 @@ android {
             signingConfig signingConfigs.stage
             matchingFallbacks = ['release']
         }
+
+        stageDebuggable {
+            initWith stage
+            debuggable true
+            signingConfig signingConfigs.stage
+            matchingFallbacks = ['release']
+            versionNameSuffix "-debuggable"
+        }
     }
 
     compileOptions {
@@ -176,8 +184,8 @@ dependencies {
     implementation libraries.jsoup
     debugImplementation libraries.stetho
     debugImplementation libraries.stethoOkHttp
-    stageImplementation libraries.stetho
-    stageImplementation libraries.stethoOkHttp
+    stageDebuggableImplementation libraries.stetho
+    stageDebuggableImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
     implementation libraries.glideTransformations
@@ -217,6 +225,7 @@ dependencies {
     debugImplementation libraries.leakCanary
     releaseImplementation libraries.leakCanaryNoOp
     stageImplementation libraries.leakCanaryNoOp
+    stageDebuggableImplementation libraries.leakCanaryNoOp
 
     implementation(libraries.crashlytics) {
         transitive = true
@@ -239,11 +248,12 @@ dependencies {
     debugImplementation libraries.flipperCore
     debugImplementation libraries.flipperNetwork
     debugImplementation libraries.toolargetool
-    stageImplementation libraries.soloader
-    stageImplementation libraries.flipperCore
-    stageImplementation libraries.flipperNetwork
-    stageImplementation libraries.toolargetool
+    stageDebuggableImplementation libraries.soloader
+    stageDebuggableImplementation libraries.flipperCore
+    stageDebuggableImplementation libraries.flipperNetwork
+    stageDebuggableImplementation libraries.toolargetool
 
+    stageImplementation libraries.flipperNoop
     releaseImplementation libraries.flipperNoop
 }
 
