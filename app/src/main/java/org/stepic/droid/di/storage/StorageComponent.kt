@@ -8,11 +8,11 @@ import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.PersistentStateDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.operations.DatabaseFacade
+import org.stepik.android.cache.analytic.dao.AnalyticDao
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
 import org.stepik.android.data.course_list.model.CourseListQueryData
-import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.model.Certificate
 import org.stepik.android.model.CourseReviewSummary
@@ -20,6 +20,8 @@ import org.stepik.android.model.SocialProfile
 import org.stepik.android.model.Submission
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.CourseCollection
+import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
+import org.stepik.android.cache.base.AnalyticDatabase
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
@@ -57,4 +59,6 @@ interface StorageComponent {
     val userCourseDao: IDao<UserCourse>
     val courseCollectionDao: IDao<CourseCollection>
     val courseListQueryDao: IDao<CourseListQueryData>
+
+    val analyticDatabase: AnalyticDatabase
 }

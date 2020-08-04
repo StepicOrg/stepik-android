@@ -16,6 +16,7 @@ import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepic.droid.util.plus
 import org.stepik.android.domain.course.analytic.CoursePreviewScreenOpenedAnalyticEvent
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.course.analytic.batch.CoursePreviewScreenOpenedAnalyticBatchEvent
 import org.stepik.android.domain.course.interactor.CourseBillingInteractor
 import org.stepik.android.domain.course.interactor.CourseEnrollmentInteractor
 import org.stepik.android.domain.course.interactor.CourseIndexingInteractor
@@ -495,5 +496,6 @@ constructor(
         }
         isCoursePreviewLogged = true
         analytic.report(CoursePreviewScreenOpenedAnalyticEvent(course, source))
+        analytic.report(CoursePreviewScreenOpenedAnalyticBatchEvent(course, source))
     }
 }
