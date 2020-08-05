@@ -3,6 +3,7 @@ package org.stepik.android.domain.search_result.model
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
 
 @Parcelize
 data class SearchResultQuery(
@@ -14,4 +15,4 @@ data class SearchResultQuery(
     val query: String? = null,
     @SerializedName("lang")
     val lang: String? = null
-) : Parcelable
+) : Parcelable, Serializable
