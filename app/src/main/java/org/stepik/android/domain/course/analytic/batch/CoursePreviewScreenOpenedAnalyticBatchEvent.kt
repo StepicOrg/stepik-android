@@ -18,7 +18,7 @@ class CoursePreviewScreenOpenedAnalyticBatchEvent(
     }
 
     override val name: String =
-        "Course preview screen opened"
+        "catalog-click"
 
     override val params: Map<String, Any> =
         mapOf(

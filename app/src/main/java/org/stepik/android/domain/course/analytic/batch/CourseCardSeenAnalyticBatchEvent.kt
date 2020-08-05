@@ -17,7 +17,7 @@ class CourseCardSeenAnalyticBatchEvent(
     }
 
     override val name: String =
-        "Course card seen"
+        "catalog-display"
 
     override val params: Map<String, Any> =
         mapOf(

@@ -22,7 +22,7 @@ constructor() {
             val element = jsonParser.parse(it.eventData.asString)
             AnalyticBatchEvent(
                 name = it.name,
-                timeStamp = it.eventTimestamp,
+                timeStamp = it.eventTimestamp.toDouble() / 1000,
                 platform = PLATFORM_VALUE,
                 source = element.asJsonObject.get(SOURCE)?.asString ?: "",
                 data = element.asJsonObject.get(DATA)
