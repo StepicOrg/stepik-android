@@ -12,7 +12,6 @@ class CoursePreviewScreenOpenedAnalyticBatchEvent(
 ) : AnalyticEvent {
     companion object {
         private const val DATA = "data"
-        private const val QUERY = "query"
 
         private const val PARAM_COURSE = "course"
         private const val PARAM_SOURCE = "source"
