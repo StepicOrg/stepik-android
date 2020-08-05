@@ -14,6 +14,12 @@ class CourseCardSeenAnalyticBatchEvent(
 
         private const val PARAM_COURSE = "course"
         private const val PARAM_SOURCE = "source"
+        private const val PARAM_PLATFORM = "platform"
+        private const val PARAM_POSITION = "position"
+        private const val PARAM_DATA = "data"
+
+        private const val PLATFORM_VALUE = "android"
+        private const val POSITION_VALUE = 1
     }
 
     override val name: String =
@@ -21,10 +27,13 @@ class CourseCardSeenAnalyticBatchEvent(
 
     override val params: Map<String, Any> =
         mapOf(
-            PARAM_SOURCE to source.name,
             DATA to mapOf(
-                PARAM_COURSE to courseId
-            ) + source.params
+                PARAM_COURSE to courseId,
+                PARAM_SOURCE to source.name,
+                PARAM_PLATFORM to PLATFORM_VALUE,
+                PARAM_POSITION to POSITION_VALUE,
+                PARAM_DATA to source.params
+            )
         )
 
     override val sources: EnumSet<AnalyticSource> =

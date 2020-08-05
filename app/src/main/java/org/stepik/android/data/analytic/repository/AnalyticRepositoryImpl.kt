@@ -1,6 +1,7 @@
 package org.stepik.android.data.analytic.repository
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import org.stepik.android.data.analytic.mapper.AnalyticBatchMapper
 import org.stepik.android.data.analytic.source.AnalyticCacheDataSource
@@ -19,10 +20,10 @@ constructor(
         analyticCacheDataSource.logEvent(analyticEvent)
 
     override fun flushEvents(): Completable =
-        analyticCacheDataSource
-            .getEvents()
+        Observable.range(1, Int.MAX_VALUE)
+            .concatMapSingle { analyticCacheDataSource.getEvents() }
             .takeUntil { it.isEmpty() }
-            .flatMapCompletable { events ->
+            .concatMapCompletable { events ->
                 val batchEvents = analyticBatchMapper.mapLocalToBatchEvents(events)
                 analyticRemoteDataSource
                     .flushEvents(batchEvents)

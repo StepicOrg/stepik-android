@@ -9,9 +9,6 @@ class AnalyticBatchMapper
 @Inject
 constructor() {
     companion object {
-        private const val PLATFORM_VALUE = "android"
-
-        private const val SOURCE = "source"
         private const val DATA = "data"
     }
 
@@ -23,8 +20,6 @@ constructor() {
             AnalyticBatchEvent(
                 name = it.name,
                 timeStamp = it.eventTimestamp.toDouble() / 1000,
-                platform = PLATFORM_VALUE,
-                source = element.asJsonObject.get(SOURCE)?.asString ?: "",
                 data = element.asJsonObject.get(DATA)
             )
         }
