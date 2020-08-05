@@ -2,9 +2,8 @@ package org.stepik.android.domain.analytic.interactor
 
 import android.os.Bundle
 import com.google.gson.Gson
-import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.preferences.SharedPreferenceHelper
@@ -25,25 +24,27 @@ constructor(
         private const val PARAM_LANGUAGE = "language"
     }
 
-    private val jsonParser = JsonParser()
-
     fun logEvent(eventName: String, bundle: Bundle): Completable =
-        Single.fromCallable {
-            val properties: HashMap<String, JsonElement> = HashMap()
-            bundle.keySet()?.forEach {
-                properties[it] = jsonParser.parse(java.lang.String.valueOf(bundle[it]))
+        Single
+            .fromCallable {
+                val properties = JsonObject()
+                bundle.keySet()?.forEach {
+                    properties.add(it, gson.toJsonTree(bundle[it]))
+                }
+                (properties[PARAM_DATA] as? JsonObject)
+                    ?.add(PARAM_LANGUAGE, JsonPrimitive(sharedPreferencesHelper.languageForFeatured))
+
+                return@fromCallable properties
             }
-            (properties[PARAM_DATA] as JsonObject).add(PARAM_LANGUAGE, jsonParser.parse(sharedPreferencesHelper.languageForFeatured))
-            return@fromCallable properties
-        }.flatMapCompletable {
-            val analyticEvent =
-                AnalyticLocalEvent(
-                    name = eventName,
-                    eventData = gson.toJsonTree(it),
-                    eventTimestamp = DateTimeHelper.nowUtc()
-                )
-            analyticRepository.logEvent(analyticEvent)
-        }
+            .flatMapCompletable {
+                val analyticEvent =
+                    AnalyticLocalEvent(
+                        name = eventName,
+                        eventData = it,
+                        eventTimestamp = DateTimeHelper.nowUtc()
+                    )
+                analyticRepository.logEvent(analyticEvent)
+            }
 
     fun flushEvents(): Completable =
         analyticRepository.flushEvents()
