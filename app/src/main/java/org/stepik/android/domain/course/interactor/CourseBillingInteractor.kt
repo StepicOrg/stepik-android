@@ -2,7 +2,6 @@ package org.stepik.android.domain.course.interactor
 
 import com.google.gson.Gson
 import io.reactivex.Completable
-
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Maybes.zip
@@ -114,6 +113,13 @@ constructor(
                     Completable.complete()
                 } else {
                     Completable.error(CoursePurchaseVerificationException())
+                }
+            }
+            .onErrorResumeNext {
+                if (it is HttpException && it.code() == 400) {
+                    billingRepository.consumePurchase(purchase)
+                } else {
+                    Completable.error(it)
                 }
             }
             .andThen(updateCourseAfterEnrollment(courseId))
