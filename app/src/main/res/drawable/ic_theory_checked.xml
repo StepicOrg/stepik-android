@@ -12,12 +12,12 @@
       android:fillColor="#000000"
       android:fillAlpha="0.87"/>
   <path
-      android:pathData="M14,20H0V23H14.6736C14.2417,22.0907 14,21.0736 14,20Z"
+      android:pathData="M13,20H0V23H13.5815C13.2065,22.0736 13,21.0609 13,20Z"
       android:fillColor="#000000"
       android:fillAlpha="0.87"
       android:fillType="evenOdd"/>
   <path
-      android:pathData="M17.3924,14H0V17H14.6736C15.2662,15.7527 16.2167,14.7084 17.3924,14Z"
+      android:pathData="M15.7084,14H0V17H13.5815C14.0511,15.8399 14.7849,14.815 15.7084,14Z"
       android:fillColor="#000000"
       android:fillAlpha="0.87"
       android:fillType="evenOdd"/>
