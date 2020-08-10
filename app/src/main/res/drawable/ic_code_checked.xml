@@ -8,11 +8,12 @@
         android:pathData="M0,0h28v26h-28z"/>
     <path
         android:pathData="M1.071,1L8.1421,8.0711L1.0711,15.1421"
+        android:strokeAlpha="0.87"
         android:strokeWidth="3"
         android:fillColor="#00000000"
         android:strokeColor="#000000"/>
     <path
-        android:pathData="M14.0709,19H9V22H14.2899C14.1013,21.3663 14,20.695 14,20C14,19.6605 14.0242,19.3266 14.0709,19Z"
+        android:pathData="M13.0619,19H9V22H13.252C13.0875,21.3608 13,20.6906 13,20C13,19.6613 13.021,19.3276 13.0619,19Z"
         android:fillColor="#000000"
         android:fillAlpha="0.87"
         android:fillType="evenOdd"/>
