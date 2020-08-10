@@ -12,6 +12,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.profile.Attribute
 import com.yandex.metrica.profile.UserProfile
@@ -31,7 +33,8 @@ class AnalyticImpl
 @Inject
 constructor(
     context: Context,
-    config: Config
+    config: Config,
+    private val stepikAnalytic: StepikAnalytic
 ) : Analytic {
     private companion object {
         inline fun updateYandexUserProfile(mutation: UserProfile.Builder.() -> Unit) {
@@ -122,6 +125,10 @@ constructor(
         if (AnalyticSource.FIREBASE in analyticEvent.sources) {
             val bundle = bundleOf(*analyticEvent.params.map { (a, b) -> a to b }.toTypedArray())
             firebaseAnalytics.logEvent(analyticEvent.name, bundle)
+        }
+
+        if (AnalyticSource.STEPIK_API in analyticEvent.sources) {
+            stepikAnalytic.logEvent(analyticEvent.name, analyticEvent.params)
         }
     }
 

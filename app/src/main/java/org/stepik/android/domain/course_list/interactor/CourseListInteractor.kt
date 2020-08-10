@@ -62,7 +62,7 @@ constructor(
         sourceTypeComposition: SourceTypeComposition
     ): Single<PagedList<CourseListItem.Data>> =
         courseStatsInteractor
-            .getCourseStats(courses, resolveEnrollmentState = false, sourceTypeComposition = sourceTypeComposition)
+            .getCourseStats(courses, resolveEnrollmentState = isMustResolveEnrollmentState(courses), sourceTypeComposition = sourceTypeComposition)
             .map { courseStats ->
                 val list = courses.mapIndexed { index, course ->
                     CourseListItem.Data(
@@ -79,4 +79,7 @@ constructor(
                     hasPrev = courses.hasPrev
                 )
             }
+
+    private fun isMustResolveEnrollmentState(courses: List<Course>) =
+        courses.any { it.priceTier != null }
 }

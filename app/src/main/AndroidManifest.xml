@@ -17,7 +17,7 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!--<uses-permission android:name="com.android.vending.BILLING" />-->
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:name=".base.App"
@@ -405,6 +405,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
+
+        <provider
+            android:name="org.stepik.android.view.analytic.AnalyticContentProvider"
+            android:authorities="${applicationId}.analytic_provider"
+            android:exported="false" />
 
         <service
             android:name=".features.achievements.service.AchievementsNotificationService"

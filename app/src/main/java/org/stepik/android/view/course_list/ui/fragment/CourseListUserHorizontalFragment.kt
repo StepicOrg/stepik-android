@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.ui.activities.MainFeedActivity
@@ -43,6 +44,9 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
     private lateinit var courseListPresenter: CourseListUserPresenter
@@ -113,7 +117,8 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
                         viewSource = CourseViewSource.MyCourses,
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
-            }
+            },
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
         )
 
         wrapperViewStateDelegate = ViewStateDelegate()

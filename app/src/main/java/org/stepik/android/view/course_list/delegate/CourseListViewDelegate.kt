@@ -22,7 +22,8 @@ class CourseListViewDelegate(
     private val courseListSwipeRefresh: StepikSwipeRefreshLayout? = null,
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
-    onContinueCourseClicked: (CourseListItem.Data) -> Unit
+    onContinueCourseClicked: (CourseListItem.Data) -> Unit,
+    private val isHandleInAppPurchase: Boolean
 ) : CourseListView, CourseContinueView by courseContinueViewDelegate {
 
     private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
@@ -40,7 +41,8 @@ class CourseListViewDelegate(
         courseItemAdapter += CourseListItemAdapterDelegate(
             analytic,
             onItemClicked = courseContinueViewDelegate::onCourseClicked,
-            onContinueCourseClicked = onContinueCourseClicked
+            onContinueCourseClicked = onContinueCourseClicked,
+            isHandleInAppPurchase = isHandleInAppPurchase
         )
         courseItemAdapter += CourseListPlaceHolderAdapterDelegate()
         courseItemsRecyclerView.adapter = courseItemAdapter
