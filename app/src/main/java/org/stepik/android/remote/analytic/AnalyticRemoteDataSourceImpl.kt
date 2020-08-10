@@ -3,7 +3,6 @@ package org.stepik.android.remote.analytic
 import io.reactivex.Completable
 import org.stepik.android.data.analytic.source.AnalyticRemoteDataSource
 import org.stepik.android.remote.analytic.model.AnalyticBatchEvent
-import org.stepik.android.remote.analytic.model.AnalyticBatchRequest
 import org.stepik.android.remote.analytic.service.AnalyticService
 import javax.inject.Inject
 
@@ -16,6 +15,6 @@ constructor(
         if (events.isEmpty()) {
             Completable.complete()
         } else {
-            analyticService.batch(AnalyticBatchRequest(events))
+            analyticService.batch(events)
         }
 }

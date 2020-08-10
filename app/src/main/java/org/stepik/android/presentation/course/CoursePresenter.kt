@@ -321,7 +321,10 @@ constructor(
                 onError = {
                     state = CourseView.State.CourseLoaded(headerData) // roll back data
 
-                    when (val errorType = it.toEnrollmentError()) {
+                    val errorType = it.toEnrollmentError()
+                    analytic.reportError(errorType.name, it)
+
+                    when (errorType) {
                         EnrollmentError.UNAUTHORIZED ->
                             view?.showEmptyAuthDialog(headerData.course)
 
@@ -362,6 +365,8 @@ constructor(
                     state = CourseView.State.CourseLoaded(headerData) // roll back data
 
                     val errorType = it.toEnrollmentError()
+                    analytic.reportError(errorType.name, it)
+
                     if (errorType == EnrollmentError.UNAUTHORIZED) {
                         view?.showEmptyAuthDialog(headerData.course)
                     } else {

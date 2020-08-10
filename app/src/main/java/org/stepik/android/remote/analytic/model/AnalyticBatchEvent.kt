@@ -7,11 +7,7 @@ data class AnalyticBatchEvent(
     @SerializedName("name")
     val name: String,
     @SerializedName("timestamp")
-    val timeStamp: Long,
-    @SerializedName("platform")
-    val platform: String,
-    @SerializedName("source")
-    val source: String,
+    val timeStamp: Double,
     @SerializedName("data")
     val data: JsonElement?
 )

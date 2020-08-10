@@ -2,7 +2,6 @@ package org.stepik.android.domain.course.interactor
 
 import com.google.gson.Gson
 import io.reactivex.Completable
-
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Maybes.zip
@@ -25,6 +24,7 @@ import org.stepik.android.domain.course_payments.exception.CourseAlreadyOwnedExc
 import org.stepik.android.domain.course_payments.exception.CoursePurchaseVerificationException
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.lesson.repository.LessonRepository
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
@@ -43,6 +43,7 @@ constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper,
 
     private val courseRepository: CourseRepository,
+    private val lessonRepository: LessonRepository,
 
     @EnrollmentCourseUpdates
     private val enrollmentSubject: PublishSubject<Course>,
@@ -120,11 +121,11 @@ constructor(
             .andThen(billingRepository.consumePurchase(purchase))
 
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =
-        courseRepository.getCourse(courseId, canUseCache = false).toSingle()
-            .flatMapCompletable { course ->
-                userCoursesInteractor.addUserCourse(courseId)
-                    .doOnComplete { enrollmentSubject.onNext(course) } // notify everyone about changes
-            }
+        userCoursesInteractor.addUserCourse(courseId)
+            .andThen(lessonRepository.removeCachedLessons(courseId))
+            .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
+            .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
+            .ignoreElement()
 
     private fun getCurrentProfileId(): Single<Long> =
         Single.fromCallable {

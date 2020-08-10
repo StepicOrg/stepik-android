@@ -2,6 +2,7 @@ package org.stepik.android.view.course_list.ui.activity
 
 import android.content.Context
 import android.content.Intent
+import android.os.Parcelable
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import org.stepic.droid.base.SingleFragmentActivity
@@ -16,7 +17,7 @@ class CourseListQueryActivity : SingleFragmentActivity() {
         fun createIntent(context: Context, courseListTitle: String, courseListQuery: CourseListQuery): Intent =
             Intent(context, CourseListQueryActivity::class.java)
                 .putExtra(EXTRA_COURSE_LIST_TITLE, courseListTitle)
-                .putExtra(EXTRA_COURSE_LIST_QUERY, courseListQuery)
+                .putExtra(EXTRA_COURSE_LIST_QUERY, courseListQuery as Parcelable)
     }
 
     override fun createFragment(): Fragment =

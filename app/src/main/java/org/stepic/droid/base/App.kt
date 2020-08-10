@@ -81,9 +81,6 @@ class App : MultiDexApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        if (fetchProcessName() == "org.stepic.droid:analyticProcess" && BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
-        }
         if (!isMainProcess) return
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
@@ -96,34 +93,6 @@ class App : MultiDexApplication() {
         setTheme(R.style.AppTheme)
 
         init()
-    }
-
-    private fun fetchProcessName(): String {
-        val myPid = Process.myPid() // Get my Process ID
-        val processName = StringBuilder()
-
-        var reader: InputStreamReader? = null
-        try {
-            reader = InputStreamReader(
-                FileInputStream("/proc/$myPid/cmdline")
-            )
-            var c: Int = 0
-            while (reader.read().also({ c = it }) > 0) {
-                processName.append(c.toChar())
-            }
-            // processName.toString() is my process name!
-        } catch (e: java.lang.Exception) {
-            // ignore
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close()
-                } catch (e: java.lang.Exception) {
-                    // Ignore
-                }
-            }
-            return processName.toString()
-        }
     }
 
     private fun init() {

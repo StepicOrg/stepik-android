@@ -3,6 +3,7 @@ package org.stepik.android.domain.course_list.model
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import java.io.Serializable
 
 @Parcelize
 data class CourseListQuery(
@@ -21,7 +22,7 @@ data class CourseListQuery(
     val isPublic: Boolean? = null,
     @SerializedName("is_cataloged")
     val isCataloged: Boolean? = null
-) : Parcelable {
+) : Parcelable, Serializable {
     enum class Order(val order: String) {
         @SerializedName("-activity")
         ACTIVITY_DESC("-activity"),
