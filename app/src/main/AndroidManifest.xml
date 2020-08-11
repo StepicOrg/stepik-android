@@ -378,6 +378,12 @@
             </intent-filter>
         </service>
 
+        <receiver android:name="org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver">
+            <intent-filter>
+                <action android:name="notification_dismissed" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".persistence.service.DownloadCompleteService"
             android:permission="android.permission.BIND_JOB_SERVICE"

@@ -919,4 +919,7 @@
     <string name="ar_not_supported_alert">Device does not support AR functionality</string>
 
     <string name="course_purchase">Course purchase</string>
+
+    <string name="purchase_notification_title">One step to new knowledge</string>
+    <string name="purchase_notification_description">Were you planning to obtain %s? Finish your purchase and start studying right away!</string>
 </resources>

@@ -22,6 +22,8 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.CourseCollection
 import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
 import org.stepik.android.cache.base.AnalyticDatabase
+import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
+import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
@@ -59,6 +61,7 @@ interface StorageComponent {
     val userCourseDao: IDao<UserCourse>
     val courseCollectionDao: IDao<CourseCollection>
     val courseListQueryDao: IDao<CourseListQueryData>
+    val purchaseNotificationDao: PurchaseNotificationDao
 
     val analyticDatabase: AnalyticDatabase
 }

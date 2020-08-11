@@ -253,6 +253,10 @@ public interface Analytic {
         String NIGHT_WITHOUT_SOUND_AND_VIBRATE = "notification_night_without_sound_and_vibrate";
 
         String NOTIFICATION_SCREEN_OPENED = "notification_screen_opened";
+
+        String PURCHASE_NOTIFICATION_SHOWN = "purchase_notification_shown";
+        String PURCHASE_NOTIFICATION_DISMISSED = "purchase_notification_dismissed";
+        String PURCHASE_NOTIFICATION_CLICKED = "purchase_notification_clicked";
     }
 
     interface Comments {

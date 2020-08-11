@@ -23,11 +23,13 @@ import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDate
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
+import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
 import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.data.course_list.model.CourseListQueryData
+import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
@@ -77,7 +79,8 @@ constructor(
     private val socialProfileDao: IDao<SocialProfile>,
     private val userCourseDao: IDao<UserCourse>,
     private val courseCollectionDao: IDao<CourseCollection>,
-    private val courseListQueryDataDao: IDao<CourseListQueryData>
+    private val courseListQueryDataDao: IDao<CourseListQueryData>,
+    private val purchaseNotificationDao: PurchaseNotificationDao
 ) {
 
     fun dropDatabase() {
@@ -108,6 +111,7 @@ constructor(
         userCourseDao.removeAll()
         courseCollectionDao.removeAll()
         courseListQueryDataDao.removeAll()
+        purchaseNotificationDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {
