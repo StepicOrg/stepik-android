@@ -109,6 +109,7 @@ import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
+import org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 
 @AppSingleton
@@ -325,4 +326,6 @@ interface AppCoreComponent {
     fun inject(removeCachedContentDialog: RemoveCachedContentDialog)
 
     fun inject(onboardingActivity: AnimatedOnboardingActivity)
+
+    fun inject(purchaseNotificationReceiver: PurchaseNotificationReceiver)
 }

@@ -50,6 +50,7 @@ import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -160,6 +161,10 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
 
         if (course != null) {
             courseToolbarTitle.text = course.title
+        }
+
+        if (intent.action == PurchaseNotificationDelegate.NOTIFICATION_CLICKED) {
+            analytic.reportEvent(Analytic.Notification.PURCHASE_NOTIFICATION_CLICKED)
         }
 
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)

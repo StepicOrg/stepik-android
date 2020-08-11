@@ -5,7 +5,7 @@ import org.stepic.droid.analytic.experiments.CoursePurchaseReminderSplitTest
 import org.stepic.droid.util.DateTimeHelper
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.purchase_notification.repository.PurchaseNotificationRepository
-import org.stepik.android.view.profile_notification.ui.fragment.notification.PurchaseNotificationDelegate
+import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import javax.inject.Inject
 
 class PurchaseReminderInteractor
