@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.analytic.Analytic
+import org.stepic.droid.analytic.experiments.CoursePurchaseReminderSplitTest
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
@@ -25,6 +26,7 @@ import org.stepik.android.domain.course.mapper.CourseStateMapper
 import org.stepik.android.domain.course.model.CourseHeaderData
 import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.notification.interactor.CourseNotificationInteractor
+import org.stepik.android.domain.purchase_notification.interactor.PurchaseReminderInteractor
 import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
@@ -66,6 +68,8 @@ constructor(
     private val userCoursesInteractor: UserCoursesInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
+    private val coursePurchaseReminderInteractor: PurchaseReminderInteractor,
+    private val coursePurchaseReminderSplitTest: CoursePurchaseReminderSplitTest,
 
     @EnrollmentCourseUpdates
     private val enrollmentUpdatesObservable: Observable<Course>,
@@ -351,6 +355,10 @@ constructor(
         val checkout = this.uiCheckout
             ?: return
 
+        if (coursePurchaseReminderSplitTest.currentGroup.notificationDelayHours != -1) {
+            schedulePurchaseReminder()
+        }
+
         state = CourseView.State.BlockingLoading(
             headerData.copy(
                 stats = headerData.stats.copy(enrollmentState = EnrollmentState.Pending)
@@ -391,6 +399,9 @@ constructor(
 
     fun openCoursePurchaseInWeb(queryParams: Map<String, List<String>>? = null) {
         isNeedCheckCourseEnrollment = true
+        if (coursePurchaseReminderSplitTest.currentGroup.notificationDelayHours != -1) {
+            schedulePurchaseReminder()
+        }
         view?.openCoursePurchaseInWeb(courseId, queryParams)
     }
 
@@ -502,5 +513,15 @@ constructor(
         isCoursePreviewLogged = true
         analytic.report(CoursePreviewScreenOpenedAnalyticEvent(course, source))
         analytic.report(CoursePreviewScreenOpenedAnalyticBatchEvent(course, source))
+    }
+
+    private fun schedulePurchaseReminder() {
+        compositeDisposable += coursePurchaseReminderInteractor
+            .savePurchaseNotificationSchedule(courseId)
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onError = emptyOnErrorStub
+            )
     }
 }

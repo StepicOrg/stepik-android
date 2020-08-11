@@ -13,8 +13,14 @@ class PurchaseNotificationRepositoryImpl
 constructor(
     private val purchaseNotificationCacheDataSource: PurchaseNotificationCacheDataSource
 ) : PurchaseNotificationRepository {
+    override fun getClosestTimeStamp(): Single<Long> =
+        purchaseNotificationCacheDataSource.getClosestTimeStamp()
+
     override fun getClosestScheduledNotification(): Maybe<PurchaseNotificationScheduled> =
         purchaseNotificationCacheDataSource.getClosestScheduledNotification()
+
+    override fun getClosestExpiredScheduledNotification(): Maybe<PurchaseNotificationScheduled> =
+        purchaseNotificationCacheDataSource.getClosestExpiredScheduledNotification()
 
     override fun savePurchaseNotificationSchedule(purchaseNotificationScheduled: PurchaseNotificationScheduled): Completable =
         purchaseNotificationCacheDataSource.savePurchaseNotificationSchedule(purchaseNotificationScheduled)

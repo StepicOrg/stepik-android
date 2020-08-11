@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.core.app.JobIntentService
 import org.stepic.droid.base.App
 import org.stepik.android.view.notification.NotificationPublisher
+import timber.log.Timber
 import javax.inject.Inject
 
 class NotificationAlarmService : JobIntentService() {
@@ -26,6 +27,7 @@ class NotificationAlarmService : JobIntentService() {
 
     override fun onHandleWork(intent: Intent) {
         val action = intent.action ?: return
+        Timber.d("Action: $action")
         notificationPublisher.onNeedShowNotificationWithId(action)
     }
 }

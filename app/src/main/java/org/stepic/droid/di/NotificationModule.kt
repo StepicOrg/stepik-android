@@ -15,6 +15,7 @@ import org.stepik.android.view.notification.StepikNotificationManagerImpl
 import org.stepik.android.view.notification.helpers.NotificationHelper
 import org.stepik.android.view.notification.helpers.NotificationHelperImpl
 import org.stepik.android.view.personal_deadlines.notification.DeadlinesNotificationDelegate
+import org.stepik.android.view.profile_notification.ui.fragment.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.splash.notification.RemindRegistrationNotificationDelegate
 import org.stepik.android.view.splash.notification.RetentionNotificationDelegate
 import org.stepik.android.view.streak.notification.StreakNotificationDelegate
@@ -52,4 +53,8 @@ interface NotificationModule {
     @Binds
     @IntoSet
     fun provideStreakNotificationDelegate(streakNotificationDelegate: StreakNotificationDelegate): NotificationDelegate
+
+    @Binds
+    @IntoSet
+    fun providePurchaseNotificationDelegate(purchaseNotificationDelegate: PurchaseNotificationDelegate): NotificationDelegate
 }

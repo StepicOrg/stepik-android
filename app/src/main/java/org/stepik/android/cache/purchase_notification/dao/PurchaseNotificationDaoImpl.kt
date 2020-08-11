@@ -43,4 +43,14 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<PurchaseNotificati
                 null
             }
         }
+
+    override fun getClosestExpiredScheduledNotification(): PurchaseNotificationScheduled? =
+        rawQuery("SELECT * FROM $dbName WHERE ${DbStructurePurchaseNotification.Columns.SCHEDULED_TIME} < ${DateTimeHelper.nowUtc()} " +
+                "ORDER BY ${DbStructurePurchaseNotification.Columns.SCHEDULED_TIME} DESC LIMIT 1", null) {
+            return@rawQuery if (it.moveToFirst()) {
+                parsePersistentObject(it)
+            } else {
+                null
+            }
+        }
 }

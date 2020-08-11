@@ -193,8 +193,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             screenManager.showCatalog(this)
             finish()
         }
-
-//        isHandleInAppPurchase = course?.priceTier != null && inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
     }
 
     private fun setDataToPresenter(forceUpdate: Boolean = false) {

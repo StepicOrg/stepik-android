@@ -5,4 +5,5 @@ import org.stepik.android.data.purchase_notification.model.PurchaseNotificationS
 
 interface PurchaseNotificationDao : IDao<PurchaseNotificationScheduled> {
     fun getClosestScheduledNotification(): PurchaseNotificationScheduled?
+    fun getClosestExpiredScheduledNotification(): PurchaseNotificationScheduled?
 }
