@@ -66,6 +66,7 @@ import org.stepik.android.view.injection.course_list.CourseListComponent
 import org.stepik.android.view.injection.course_list.collection.CourseListCollectionComponent
 import org.stepik.android.view.injection.course_list.query.CourseListQueryComponent
 import org.stepik.android.view.injection.course_list.user.CourseListUserComponent
+import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
@@ -85,6 +86,7 @@ import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
+import org.stepik.android.view.injection.purchase_notification.PurchaseNotificationDataModule
 import org.stepik.android.view.injection.search.SearchDataModule
 import org.stepik.android.view.injection.search_result.SearchResultDataModule
 import org.stepik.android.view.injection.settings.SettingsComponent
@@ -107,6 +109,7 @@ import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
+import org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 
 @AppSingleton
@@ -152,7 +155,10 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
         CatalogBusModule::class,
 
         BillingModule::class,
-        BillingDataModule::class
+        BillingDataModule::class,
+
+        CoursePaymentsDataModule::class,
+        PurchaseNotificationDataModule::class
     ]
 )
 interface AppCoreComponent {
@@ -320,4 +326,6 @@ interface AppCoreComponent {
     fun inject(removeCachedContentDialog: RemoveCachedContentDialog)
 
     fun inject(onboardingActivity: AnimatedOnboardingActivity)
+
+    fun inject(purchaseNotificationReceiver: PurchaseNotificationReceiver)
 }
