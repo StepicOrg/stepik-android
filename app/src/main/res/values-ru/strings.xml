@@ -47,7 +47,8 @@
     <string name="video_quality_playing">Качество видео для просмотра</string>
     <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для последующих загрузок:</string>
 
-    <string name="download_error">Ошибка при загрузке видео %s</string>
+    <string name="download_system_request_title">шага - %s в уроке - %s</string>
+    <string name="download_error">Ошибка при загрузке %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
     <string name="download_error_system_manager">При загрузке контента произошла ошибка системного загрузчика. Если ошибка повторяется, пожалуйста, обратитесь в поддержку.</string>
 

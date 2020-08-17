@@ -60,7 +60,8 @@
     <string name="video_quality_playing">Video quality of playing</string>
     <string name="video_quality_presence_message">Please choose a video quality for downloading all further video courses:</string>
 
-    <string name="download_error">An error occurred while downloading video %s</string>
+    <string name="download_system_request_title">step - %s in lesson - %s</string>
+    <string name="download_error">An error occurred while downloading %s</string>
     <string name="download_error_insufficient_storage">: insufficient storage</string>
     <string name="download_error_system_manager">A system\'s download manager error occurred while downloading content. If an error persists, please, contact support.</string>
 
