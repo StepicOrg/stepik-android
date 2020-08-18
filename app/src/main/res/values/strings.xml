@@ -923,4 +923,6 @@
 
     <string name="purchase_notification_title">One step to new knowledge</string>
     <string name="purchase_notification_description">Were you planning to obtain %s? Finish your purchase and start studying right away!</string>
+
+    <string name="internal_deeplink_error">Не удалось открыть ссылку: %s</string>
 </resources>
