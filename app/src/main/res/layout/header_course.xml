@@ -59,6 +59,22 @@
         android:paddingStart="@dimen/guideline_standard_padding"
         android:layout_marginTop="?actionBarSize" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/courseTryFree"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minWidth="200dp"
+        android:paddingStart="@dimen/guideline_standard_padding"
+        android:paddingEnd="@dimen/guideline_standard_padding"
+        android:text="@string/course_try_free"
+        android:theme="@style/ThemeOverlay.Green"
+        app:icon="@drawable/ic_step_navigation_next"
+        app:iconGravity="start"
+        app:iconPadding="8dp"
+        app:cornerRadius="@dimen/header_action_radius" />
+
     <include
         android:id="@+id/courseStats"
         layout="@layout/layout_course_stats"

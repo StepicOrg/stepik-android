@@ -583,6 +583,8 @@
     <string name="course_list_free">Free</string>
     <string name="course_list_archived">Archived</string>
 
+    <string name="course_try_free">Try for Free</string>
+
     <string name="course_info_organization_prefix">by %s</string>
     <string name="course_info_about">About</string>
     <string name="course_info_requirements">Requirements</string>
@@ -924,5 +926,5 @@
     <string name="purchase_notification_title">One step to new knowledge</string>
     <string name="purchase_notification_description">Were you planning to obtain %s? Finish your purchase and start studying right away!</string>
 
-    <string name="internal_deeplink_error">Не удалось открыть ссылку: %s</string>
+    <string name="internal_deeplink_error">Unable to open link: %s</string>
 </resources>

@@ -178,6 +178,8 @@ class CourseHeaderDelegate(
                 restorePurchaseCourseMenuItem?.isVisible = false // this is EnrollmentState.NotEnrolledInApp
             }
 
+            courseTryFree.isVisible = courseHeaderData.course.courseOptions?.coursePreview?.previewLessonId != null
+
             shareCourseMenuItem?.isVisible = true
         }
 
