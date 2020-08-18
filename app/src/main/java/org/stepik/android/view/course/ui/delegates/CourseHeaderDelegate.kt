@@ -122,6 +122,17 @@ class CourseHeaderDelegate(
             courseBuyInAppAction.setOnClickListener {
                 coursePresenter.purchaseCourse()
             }
+
+            courseTryFree.setOnClickListener {
+                val lessonId = courseHeaderData
+                    ?.course
+                    ?.courseOptions
+                    ?.coursePreview
+                    ?.previewLessonId
+                    ?: return@setOnClickListener
+
+                coursePresenter.tryLessonFree(lessonId)
+            }
         }
     }
 
@@ -178,7 +189,9 @@ class CourseHeaderDelegate(
                 restorePurchaseCourseMenuItem?.isVisible = false // this is EnrollmentState.NotEnrolledInApp
             }
 
-            courseTryFree.isVisible = courseHeaderData.course.courseOptions?.coursePreview?.previewLessonId != null
+            courseTryFree.isVisible = courseHeaderData.course.let {
+                it.courseOptions?.coursePreview?.previewLessonId != null && it.enrollment == 0L
+            }
 
             shareCourseMenuItem?.isVisible = true
         }

@@ -417,6 +417,10 @@ constructor(
         courseContinuePresenterDelegateImpl.continueCourse(headerData.course, viewSource, CourseContinueInteractionSource.COURSE_SCREEN)
     }
 
+    fun tryLessonFree(lessonId: Long) {
+        view?.showTrialLesson(lessonId)
+    }
+
     /**
      * Indexing
      */

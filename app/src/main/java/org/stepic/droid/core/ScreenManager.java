@@ -65,6 +65,8 @@ public interface ScreenManager {
 
     void showSteps(Activity sourceActivity, @NotNull Unit unit, @NotNull Lesson lesson, @NotNull Section section, boolean backAnimation, boolean isAutoplayEnabled);
 
+    void showTrialLesson(Activity sourceActivity, Long lessonId);
+
     void openStepInWeb(Context context, Step step);
 
     void openRemindPassword(AppCompatActivity context);
