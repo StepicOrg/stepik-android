@@ -887,4 +887,6 @@
 
     <string name="purchase_notification_title">Один шаг до новых знаний</string>
     <string name="purchase_notification_description">Вы собирались приобрести курс %s? Завершите покупку и начните учиться прямо сейчас!</string>
+
+    <string name="internal_deeplink_error">Unable to open link: %s</string>
 </resources>
