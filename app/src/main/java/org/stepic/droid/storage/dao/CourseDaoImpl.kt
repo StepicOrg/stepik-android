@@ -2,6 +2,7 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
+import com.google.gson.Gson
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureCourse
 import org.stepic.droid.util.DbParseHelper
@@ -9,76 +10,87 @@ import org.stepic.droid.util.getBoolean
 import org.stepic.droid.util.getDouble
 import org.stepic.droid.util.getLong
 import org.stepic.droid.util.getString
+import org.stepic.droid.util.toObject
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.model.Course
+import org.stepik.android.model.CourseOptions
 import org.stepik.android.model.Video
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseDaoImpl
 @Inject
 constructor(
     databaseOperations: DatabaseOperations,
-    private val videoDao: VideoDao
+    private val videoDao: VideoDao,
+    private val gson: Gson
 ) : DaoBase<Course>(databaseOperations) {
+
     public override fun getDbName() = DbStructureCourse.TABLE_NAME
     public override fun getDefaultPrimaryColumn() = DbStructureCourse.Columns.ID
 
     public override fun getDefaultPrimaryValue(persistentObject: Course) = persistentObject.id.toString()
 
-    public override fun parsePersistentObject(cursor: Cursor): Course =
-        Course(
-            id          = cursor.getLong(DbStructureCourse.Columns.ID),
-            title       = cursor.getString(DbStructureCourse.Columns.TITLE),
+    public override fun parsePersistentObject(cursor: Cursor): Course {
+        val string = cursor.getString(DbStructureCourse.Columns.OPTIONS)
+        val a = cursor.getString(DbStructureCourse.Columns.OPTIONS)?.toObject<CourseOptions>(gson)
+        Timber.d("String: $string")
+        Timber.d("Parsed: $a")
+        return Course(
+            id = cursor.getLong(DbStructureCourse.Columns.ID),
+            title = cursor.getString(DbStructureCourse.Columns.TITLE),
             description = cursor.getString(DbStructureCourse.Columns.DESCRIPTION),
-            cover       = cursor.getString(DbStructureCourse.Columns.COVER),
-            certificate     = cursor.getString(DbStructureCourse.Columns.CERTIFICATE),
-            requirements    = cursor.getString(DbStructureCourse.Columns.REQUIREMENTS),
-            summary     = cursor.getString(DbStructureCourse.Columns.SUMMARY),
-            workload    = cursor.getString(DbStructureCourse.Columns.WORKLOAD),
-            intro       = cursor.getString(DbStructureCourse.Columns.INTRO),
-            introVideo  = Video(id = cursor.getLong(DbStructureCourse.Columns.INTRO_VIDEO_ID)),
-            language    = cursor.getString(DbStructureCourse.Columns.LANGUAGE),
-            authors     = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourse.Columns.AUTHORS)),
+            cover = cursor.getString(DbStructureCourse.Columns.COVER),
+            certificate = cursor.getString(DbStructureCourse.Columns.CERTIFICATE),
+            requirements = cursor.getString(DbStructureCourse.Columns.REQUIREMENTS),
+            summary = cursor.getString(DbStructureCourse.Columns.SUMMARY),
+            workload = cursor.getString(DbStructureCourse.Columns.WORKLOAD),
+            intro = cursor.getString(DbStructureCourse.Columns.INTRO),
+            introVideo = Video(id = cursor.getLong(DbStructureCourse.Columns.INTRO_VIDEO_ID)),
+            language = cursor.getString(DbStructureCourse.Columns.LANGUAGE),
+            authors = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourse.Columns.AUTHORS)),
             instructors = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourse.Columns.INSTRUCTORS)),
-            sections    = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourse.Columns.SECTIONS)),
-            courseFormat        = cursor.getString(DbStructureCourse.Columns.COURSE_FORMAT),
-            targetAudience      = cursor.getString(DbStructureCourse.Columns.TARGET_AUDIENCE),
-            certificateFooter   = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_FOOTER),
+            sections = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourse.Columns.SECTIONS)),
+            courseFormat = cursor.getString(DbStructureCourse.Columns.COURSE_FORMAT),
+            targetAudience = cursor.getString(DbStructureCourse.Columns.TARGET_AUDIENCE),
+            certificateFooter = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_FOOTER),
             certificateCoverOrg = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_COVER_ORG),
-            totalUnits  = cursor.getLong(DbStructureCourse.Columns.TOTAL_UNITS),
-            enrollment  = cursor.getLong(DbStructureCourse.Columns.ENROLLMENT),
-            progress    = cursor.getString(DbStructureCourse.Columns.PROGRESS),
-            owner       = cursor.getLong(DbStructureCourse.Columns.OWNER),
-            readiness   = cursor.getDouble(DbStructureCourse.Columns.READINESS),
-            isContest   = cursor.getBoolean(DbStructureCourse.Columns.IS_CONTEST),
-            isFeatured  = cursor.getBoolean(DbStructureCourse.Columns.IS_FEATURED),
-            isActive    = cursor.getBoolean(DbStructureCourse.Columns.IS_ACTIVE),
-            isPublic    = cursor.getBoolean(DbStructureCourse.Columns.IS_PUBLIC),
+            totalUnits = cursor.getLong(DbStructureCourse.Columns.TOTAL_UNITS),
+            enrollment = cursor.getLong(DbStructureCourse.Columns.ENROLLMENT),
+            progress = cursor.getString(DbStructureCourse.Columns.PROGRESS),
+            owner = cursor.getLong(DbStructureCourse.Columns.OWNER),
+            readiness = cursor.getDouble(DbStructureCourse.Columns.READINESS),
+            isContest = cursor.getBoolean(DbStructureCourse.Columns.IS_CONTEST),
+            isFeatured = cursor.getBoolean(DbStructureCourse.Columns.IS_FEATURED),
+            isActive = cursor.getBoolean(DbStructureCourse.Columns.IS_ACTIVE),
+            isPublic = cursor.getBoolean(DbStructureCourse.Columns.IS_PUBLIC),
             certificateDistinctionThreshold = cursor.getLong(DbStructureCourse.Columns.CERTIFICATE_DISTINCTION_THRESHOLD),
-            certificateRegularThreshold     = cursor.getLong(DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD),
-            certificateLink                 = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_LINK),
-            isCertificateAutoIssued         = cursor.getBoolean(DbStructureCourse.Columns.IS_CERTIFICATE_AUTO_ISSUED),
-            isCertificateIssued =  cursor.getBoolean(DbStructureCourse.Columns.IS_CERTIFICATE_ISSUED),
-            lastDeadline    = cursor.getString(DbStructureCourse.Columns.LAST_DEADLINE),
-            beginDate       = cursor.getString(DbStructureCourse.Columns.BEGIN_DATE),
-            endDate         = cursor.getString(DbStructureCourse.Columns.END_DATE),
-            slug            = cursor.getString(DbStructureCourse.Columns.SLUG),
+            certificateRegularThreshold = cursor.getLong(DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD),
+            certificateLink = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_LINK),
+            isCertificateAutoIssued = cursor.getBoolean(DbStructureCourse.Columns.IS_CERTIFICATE_AUTO_ISSUED),
+            isCertificateIssued = cursor.getBoolean(DbStructureCourse.Columns.IS_CERTIFICATE_ISSUED),
+            lastDeadline = cursor.getString(DbStructureCourse.Columns.LAST_DEADLINE),
+            beginDate = cursor.getString(DbStructureCourse.Columns.BEGIN_DATE),
+            endDate = cursor.getString(DbStructureCourse.Columns.END_DATE),
+            slug = cursor.getString(DbStructureCourse.Columns.SLUG),
 
-            scheduleLink    = cursor.getString(DbStructureCourse.Columns.SCHEDULE_LINK),
-            scheduleLongLink    = cursor.getString(DbStructureCourse.Columns.SCHEDULE_LONG_LINK),
-            scheduleType    = cursor.getString(DbStructureCourse.Columns.SCHEDULE_TYPE),
+            scheduleLink = cursor.getString(DbStructureCourse.Columns.SCHEDULE_LINK),
+            scheduleLongLink = cursor.getString(DbStructureCourse.Columns.SCHEDULE_LONG_LINK),
+            scheduleType = cursor.getString(DbStructureCourse.Columns.SCHEDULE_TYPE),
 
-            lastStepId      = cursor.getString(DbStructureCourse.Columns.LAST_STEP),
-            learnersCount   = cursor.getLong(DbStructureCourse.Columns.LEARNERS_COUNT),
-            reviewSummary   = cursor.getLong(DbStructureCourse.Columns.REVIEW_SUMMARY),
-            timeToComplete  = cursor.getLong(DbStructureCourse.Columns.TIME_TO_COMPLETE),
+            lastStepId = cursor.getString(DbStructureCourse.Columns.LAST_STEP),
+            learnersCount = cursor.getLong(DbStructureCourse.Columns.LEARNERS_COUNT),
+            reviewSummary = cursor.getLong(DbStructureCourse.Columns.REVIEW_SUMMARY),
+            timeToComplete = cursor.getLong(DbStructureCourse.Columns.TIME_TO_COMPLETE),
+            courseOptions = cursor.getString(DbStructureCourse.Columns.OPTIONS)?.toObject(gson),
 
-            isPaid          = cursor.getBoolean(DbStructureCourse.Columns.IS_PAID),
-            price           = cursor.getString(DbStructureCourse.Columns.PRICE),
-            currencyCode    = cursor.getString(DbStructureCourse.Columns.CURRENCY_CODE),
-            displayPrice    = cursor.getString(DbStructureCourse.Columns.DISPLAY_PRICE),
-            priceTier       = cursor.getString(DbStructureCourse.Columns.PRICE_TIER)
+            isPaid = cursor.getBoolean(DbStructureCourse.Columns.IS_PAID),
+            price = cursor.getString(DbStructureCourse.Columns.PRICE),
+            currencyCode = cursor.getString(DbStructureCourse.Columns.CURRENCY_CODE),
+            displayPrice = cursor.getString(DbStructureCourse.Columns.DISPLAY_PRICE),
+            priceTier = cursor.getString(DbStructureCourse.Columns.PRICE_TIER)
         )
+    }
 
     public override fun getContentValues(course: Course): ContentValues {
         val values = ContentValues()
@@ -128,6 +140,7 @@ constructor(
         values.put(DbStructureCourse.Columns.LEARNERS_COUNT, course.learnersCount)
         values.put(DbStructureCourse.Columns.REVIEW_SUMMARY, course.reviewSummary)
         values.put(DbStructureCourse.Columns.TIME_TO_COMPLETE, course.timeToComplete)
+        values.put(DbStructureCourse.Columns.OPTIONS, course.courseOptions?.let(gson::toJson))
 
         values.put(DbStructureCourse.Columns.IS_PAID, course.isPaid)
         values.put(DbStructureCourse.Columns.PRICE, course.price)
