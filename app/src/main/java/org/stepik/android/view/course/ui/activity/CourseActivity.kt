@@ -455,6 +455,10 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         }
     }
 
+    override fun showTrialLesson(lessonId: Long) {
+        screenManager.showTrialLesson(this, lessonId)
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
             super.onActivityResult(requestCode, resultCode, data)

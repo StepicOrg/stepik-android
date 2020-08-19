@@ -107,6 +107,9 @@ data class Course(
     @SerializedName("time_to_complete")
     val timeToComplete: Long? = null,
 
+    @SerializedName("options")
+    val courseOptions: CourseOptions? = null,
+
     /**
      * Paid courses fields
      */
@@ -186,6 +189,7 @@ data class Course(
         parcel.writeLong(reviewSummary)
 
         parcel.writeValue(timeToComplete)
+        parcel.writeParcelable(courseOptions, flags)
 
         parcel.writeBoolean(isPaid)
         parcel.writeString(price)
@@ -246,6 +250,7 @@ data class Course(
                 parcel.readLong(),
                 parcel.readLong(),
                 parcel.readValue(Long::class.java.classLoader) as Long?,
+                parcel.readParcelable(CourseOptions::class.java.classLoader) as CourseOptions?,
 
                 parcel.readBoolean(),
                 parcel.readString(),

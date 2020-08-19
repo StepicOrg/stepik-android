@@ -30,4 +30,6 @@ interface CourseView : CourseContinueView, BillingView {
     fun showCourseShareTooltip()
 
     fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>? = null)
+
+    fun showTrialLesson(lessonId: Long)
 }

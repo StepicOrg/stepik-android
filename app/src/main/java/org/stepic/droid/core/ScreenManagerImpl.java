@@ -577,6 +577,12 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
+    public void showTrialLesson(Activity sourceActivity, Long lessonId) {
+        Intent intent = LessonActivity.Companion.createIntent(sourceActivity, lessonId);
+        sourceActivity.startActivity(intent);
+    }
+
+    @Override
     public void openStepInWeb(Context context, Step step) {
         analytic.reportEvent(Analytic.Screens.OPEN_STEP_IN_WEB, step.getId() + "");
         String url = config.getBaseUrl() + "/lesson/" + step.getLesson() + "/step/" + step.getPosition() + "/?from_mobile_app=true";

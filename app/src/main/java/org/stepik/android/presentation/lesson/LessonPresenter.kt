@@ -102,6 +102,10 @@ constructor(
         obtainLessonData(lessonInteractor.getLessonData(deepLinkData), forceUpdate)
     }
 
+    fun onTrialLesson(trialLessonId: Long, forceUpdate: Boolean = false) {
+        obtainLessonData(lessonInteractor.getLessonData(trialLessonId), forceUpdate)
+    }
+
     fun onEmptyData() {
         if (state == LessonView.State.Idle) {
             state = LessonView.State.LessonNotFound

@@ -564,6 +564,8 @@
     <string name="course_list_free">Бесплатно</string>
     <string name="course_list_archived">В архиве</string>
 
+    <string name="course_try_free">Попробовать бесплатно</string>
+
     <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
     <string name="course_info_requirements">Требования</string>
@@ -888,5 +890,5 @@
     <string name="purchase_notification_title">Один шаг до новых знаний</string>
     <string name="purchase_notification_description">Вы собирались приобрести курс %s? Завершите покупку и начните учиться прямо сейчас!</string>
 
-    <string name="internal_deeplink_error">Unable to open link: %s</string>
+    <string name="internal_deeplink_error">Не удалось открыть ссылку: %s</string>
 </resources>

@@ -61,6 +61,7 @@ object DbStructureCourse {
         const val REVIEW_SUMMARY = "review_summary"
 
         const val TIME_TO_COMPLETE = "time_to_complete"
+        const val OPTIONS = "options"
 
         const val IS_PAID = "is_paid"
         const val PRICE = "price"
