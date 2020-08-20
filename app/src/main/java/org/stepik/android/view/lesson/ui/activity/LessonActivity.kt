@@ -70,6 +70,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         private const val EXTRA_LAST_STEP = "last_step"
 
+        private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
+
         fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_SECTION, section)
@@ -81,6 +83,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         fun createIntent(context: Context, lastStep: LastStep): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_LAST_STEP, lastStep)
+
+        fun createIntent(context: Context, trialLessonId: Long): Intent =
+            Intent(context, LessonActivity::class.java)
+                .putExtra(EXTRA_TRIAL_LESSON_ID, trialLessonId)
     }
 
     @Inject
@@ -190,6 +196,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         val deepLinkData = intent.getLessonDeepLinkData()
 
+        val trialLessonId = intent.getLongExtra(EXTRA_TRIAL_LESSON_ID, -1L)
+
         when {
             lastStep != null ->
                 lessonPresenter.onLastStep(lastStep, forceUpdate)
@@ -199,6 +207,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
             lesson != null && unit != null && section != null ->
                 lessonPresenter.onLesson(lesson, unit, section, isFromNextLesson, forceUpdate)
+
+            trialLessonId != -1L ->
+                lessonPresenter.onTrialLesson(trialLessonId, forceUpdate)
 
             else ->
                 lessonPresenter.onEmptyData()

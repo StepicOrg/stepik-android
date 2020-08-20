@@ -47,7 +47,8 @@
     <string name="video_quality_playing">Качество видео для просмотра</string>
     <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для последующих загрузок:</string>
 
-    <string name="download_error">Ошибка при загрузке видео %s</string>
+    <string name="download_system_request_title">шага - %s в уроке - %s</string>
+    <string name="download_error">Ошибка при загрузке %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
     <string name="download_error_system_manager">При загрузке контента произошла ошибка системного загрузчика. Если ошибка повторяется, пожалуйста, обратитесь в поддержку.</string>
 
@@ -563,6 +564,8 @@
     <string name="course_list_free">Бесплатно</string>
     <string name="course_list_archived">В архиве</string>
 
+    <string name="course_try_free">Попробовать бесплатно</string>
+
     <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
     <string name="course_info_requirements">Требования</string>
@@ -886,4 +889,6 @@
 
     <string name="purchase_notification_title">Один шаг до новых знаний</string>
     <string name="purchase_notification_description">Вы собирались приобрести курс %s? Завершите покупку и начните учиться прямо сейчас!</string>
+
+    <string name="internal_deeplink_error">Не удалось открыть ссылку: %s</string>
 </resources>
