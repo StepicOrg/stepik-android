@@ -207,7 +207,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         intent
             ?.getParcelableExtra<VideoPlayerMediaData>(EXTRA_VIDEO_PLAYER_DATA)
-            ?.let(videoPlayerPresenter::onMediaData)
+            ?.let { videoPlayerPresenter.onMediaData(it, isFromNewIntent = false) }
 
         setTitle(R.string.video_title)
         setContentView(R.layout.activity_video_player)
@@ -262,6 +262,17 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             .videoPlayerComponentBuilder()
             .build()
             .inject(this)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent
+            ?.getParcelableExtra<VideoPlayerMediaData>(EXTRA_VIDEO_PLAYER_DATA)
+            ?.let { videoPlayerPresenter.onMediaData(it, isFromNewIntent = true) }
+    }
+
+    override fun invalidatePlayer() {
+        exoPlayer?.stop(true)
     }
 
     override fun onStart() {
