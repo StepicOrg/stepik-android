@@ -4,11 +4,15 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.app.Activity
+import android.app.PictureInPictureParams
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.view.Gravity
@@ -44,6 +48,7 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
+import timber.log.Timber
 import javax.inject.Inject
 
 class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDialogInPlayer.Callback {
@@ -93,6 +98,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             override fun onPlayerError(error: ExoPlaybackException?) {
                 error ?: return
 
+                Timber.d("Video source error: $error")
+
                 if (error.type == ExoPlaybackException.TYPE_SOURCE && error.cause is HttpDataSource.HttpDataSourceException) {
                     Toast
                         .makeText(this@VideoPlayerActivity, R.string.no_connection, Toast.LENGTH_LONG)
@@ -123,6 +130,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             playerView?.player = value
         }
     private var isLandscapeVideo = false
+    private var isPIPModeEnabled = false
 
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<VideoPlayerView.State>
@@ -163,6 +171,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
+        exo_pip_icon_container.isVisible = supportsPip()
+        exo_pip_icon_container.setOnClickListener { enterPipMode() }
         exo_fullscreen_icon_container.setOnClickListener { changeVideoRotation() }
 
         playerView.setControllerVisibilityListener { visibility ->
@@ -202,6 +212,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     }
 
     override fun onStop() {
+        if (supportsPip() && isInPictureInPictureMode) {
+            finishAndRemoveTask()
+        }
         playerInBackroundPopup?.dismiss()
         exoPlayer?.let { player ->
             videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
@@ -355,11 +368,29 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
     }
 
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+    }
+
     override fun onBackPressed() {
         if (isLandscapeVideo) {
             changeVideoRotation()
         } else {
             super.onBackPressed()
+        }
+    }
+
+    // For N devices that support it, not "officially"
+    @Suppress("DEPRECATION")
+    private fun enterPipMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+            playerView.hideController()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val params = PictureInPictureParams.Builder()
+                this.enterPictureInPictureMode(params.build())
+            } else {
+                this.enterPictureInPictureMode()
+            }
         }
     }
 
@@ -372,4 +403,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
         videoPlayerPresenter.changeVideoRotation(isLandscapeVideo)
     }
+
+    private fun supportsPip(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 }

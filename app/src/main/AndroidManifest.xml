@@ -127,8 +127,13 @@
 
         <activity
             android:name="org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity"
+            android:supportsPictureInPicture="true"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:hardwareAccelerated="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:autoRemoveFromRecents="true"
+            android:taskAffinity="org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity"
             android:theme="@style/AppTheme.VideoPlayer" />
 
         <service
