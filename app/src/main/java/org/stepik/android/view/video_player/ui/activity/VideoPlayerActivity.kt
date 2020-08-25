@@ -3,15 +3,21 @@ package org.stepik.android.view.video_player.ui.activity
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
+import android.annotation.TargetApi
 import android.app.Activity
+import android.app.PendingIntent
 import android.app.PictureInPictureParams
+import android.app.RemoteAction
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
@@ -48,11 +54,30 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import org.stepik.android.view.video_player.model.VideoPlayerData
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import org.stepik.android.view.video_player.ui.service.VideoPlayerForegroundService
-import timber.log.Timber
 import javax.inject.Inject
 
 class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDialogInPlayer.Callback {
     companion object {
+        /***
+         *  Picture-in-picture related
+         */
+        private const val ACTION_MEDIA_CONTROL = "media_control"
+
+        private const val EXTRA_CONTROL_TYPE = "control_type"
+
+        private const val REQUEST_PLAY = 1
+        private const val REQUEST_PAUSE = 2
+        private const val REQUEST_REWIND = 3
+        private const val REQUEST_FORWARD = 4
+
+        private const val CONTROL_TYPE_PLAY = 1
+        private const val CONTROL_TYPE_PAUSE = 2
+        private const val CONTROL_TYPE_REWIND = 3
+        private const val CONTROL_TYPE_FORWARD = 4
+
+        /***
+         * Video player related
+         */
         const val REQUEST_CODE = 1535
 
         private const val TIMEOUT_BEFORE_HIDE = 4000
@@ -80,6 +105,11 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     private val isAutoplayEnabled: Boolean by lazy { intent.getBooleanExtra(EXTRA_VIDEO_AUTOPLAY, false) }
 
+    private val labelPlay: String by lazy { getString(R.string.pip_play_label) }
+    private val labelPause: String by lazy { getString(R.string.pip_stop_label) }
+    private val labelRewind: String by lazy { getString(R.string.pip_rewind_label) }
+    private val labelForward: String by lazy { getString(R.string.pip_forward_label) }
+
     private val videoServiceConnection =
         object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
@@ -98,8 +128,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             override fun onPlayerError(error: ExoPlaybackException?) {
                 error ?: return
 
-                Timber.d("Video source error: $error")
-
                 if (error.type == ExoPlaybackException.TYPE_SOURCE && error.cause is HttpDataSource.HttpDataSourceException) {
                     Toast
                         .makeText(this@VideoPlayerActivity, R.string.no_connection, Toast.LENGTH_LONG)
@@ -111,10 +139,37 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 }
             }
 
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                if (!isSupportPIP()) {
+                    return
+                }
+                if (isPlaying) {
+                    updatePictureInPictureActions(R.drawable.ic_pause_24, labelPause, CONTROL_TYPE_PAUSE, REQUEST_PAUSE)
+                } else {
+                    updatePictureInPictureActions(R.drawable.ic_play_arrow_24, labelPlay, CONTROL_TYPE_PLAY, REQUEST_PLAY)
+                }
+            }
+
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 videoPlayerPresenter.onPlayerStateChanged(playbackState, isAutoplayEnabled)
             }
         }
+
+    private val pipReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent != null) {
+                if (intent.action != ACTION_MEDIA_CONTROL) {
+                    return
+                }
+                when (intent.getIntExtra(EXTRA_CONTROL_TYPE, 0)) {
+                    CONTROL_TYPE_PLAY -> exoPlayer?.playWhenReady = true
+                    CONTROL_TYPE_PAUSE -> exoPlayer?.playWhenReady = false
+                    CONTROL_TYPE_REWIND -> exoPlayer?.let { it.seekTo(it.currentPosition - 12000) }
+                    CONTROL_TYPE_FORWARD -> exoPlayer?.let { it.seekTo(it.currentPosition + 12000) }
+                }
+            }
+        }
+    }
 
     private var exoPlayer: ExoPlayer? = null
         set(value) {
@@ -130,7 +185,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             playerView?.player = value
         }
     private var isLandscapeVideo = false
-    private var isPIPModeEnabled = false
+    private var isPIPModeActive = false
 
     private lateinit var videoPlayerPresenter: VideoPlayerPresenter
     private lateinit var viewStateDelegate: ViewStateDelegate<VideoPlayerView.State>
@@ -171,11 +226,15 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.setFastForwardIncrementMs(JUMP_TIME_MILLIS)
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
-        exo_pip_icon_container.isVisible = supportsPip()
+        exo_pip_icon_container.isVisible = isSupportPIP()
         exo_pip_icon_container.setOnClickListener { enterPipMode() }
         exo_fullscreen_icon_container.setOnClickListener { changeVideoRotation() }
 
         playerView.setControllerVisibilityListener { visibility ->
+            if (isSupportPIP() && isInPictureInPictureMode) {
+                playerView.hideController()
+                return@setControllerVisibilityListener
+            }
             if (visibility == View.VISIBLE) {
                 NavigationBarUtil.hideNavigationBar(false, this)
             } else if (visibility == View.GONE) {
@@ -211,11 +270,16 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         bindService(VideoPlayerForegroundService.createBindingIntent(this), videoServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
+    override fun onPause() {
+        playerInBackroundPopup?.dismiss()
+        super.onPause()
+    }
+
     override fun onStop() {
-        if (supportsPip() && isInPictureInPictureMode) {
+        if (isSupportPIP() && isPIPModeActive) {
             finishAndRemoveTask()
         }
-        playerInBackroundPopup?.dismiss()
+
         exoPlayer?.let { player ->
             videoPlayerPresenter.syncVideoTimestamp(player.currentPosition, player.duration)
         }
@@ -370,6 +434,15 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean, newConfig: Configuration?) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
+        isPIPModeActive = isInPictureInPictureMode
+        if (isInPictureInPictureMode) {
+            registerReceiver(pipReceiver, IntentFilter(ACTION_MEDIA_CONTROL))
+        } else {
+            unregisterReceiver(pipReceiver)
+            if (exoPlayer?.isPlaying == false) {
+                playerView.showController()
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -380,17 +453,46 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
     }
 
-    // For N devices that support it, not "officially"
-    @Suppress("DEPRECATION")
+    @TargetApi(Build.VERSION_CODES.O)
+    private fun updatePictureInPictureActions(@DrawableRes iconId: Int, title: String, controlType: Int, requestCode: Int) {
+        val actions = ArrayList<RemoteAction>()
+
+        actions.add(
+            RemoteAction(
+                Icon.createWithResource(this, R.drawable.ic_replay_10_24),
+                labelRewind,
+                labelRewind,
+                PendingIntent.getBroadcast(this, REQUEST_REWIND, Intent(ACTION_MEDIA_CONTROL).putExtra(
+                    EXTRA_CONTROL_TYPE, CONTROL_TYPE_REWIND), 0)
+            )
+        )
+
+        val intent = PendingIntent.getBroadcast(this,
+            requestCode, Intent(ACTION_MEDIA_CONTROL)
+                .putExtra(EXTRA_CONTROL_TYPE, controlType), 0)
+        val icon = Icon.createWithResource(this, iconId)
+        actions.add(RemoteAction(icon, title, title, intent))
+
+        actions.add(
+            RemoteAction(
+                Icon.createWithResource(this, R.drawable.ic_forward_10_24),
+                labelForward,
+                labelForward,
+                PendingIntent.getBroadcast(this, REQUEST_FORWARD, Intent(ACTION_MEDIA_CONTROL).putExtra(
+                    EXTRA_CONTROL_TYPE, CONTROL_TYPE_FORWARD), 0)
+            )
+        )
+
+        val pictureInPictureParamsBuilder = PictureInPictureParams.Builder()
+        pictureInPictureParamsBuilder.setActions(actions)
+        setPictureInPictureParams(pictureInPictureParamsBuilder.build())
+    }
+
     private fun enterPipMode() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+        if (isSupportPIP()) {
             playerView.hideController()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val params = PictureInPictureParams.Builder()
-                this.enterPictureInPictureMode(params.build())
-            } else {
-                this.enterPictureInPictureMode()
-            }
+            val params = PictureInPictureParams.Builder()
+            this.enterPictureInPictureMode(params.build())
         }
     }
 
@@ -404,6 +506,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         videoPlayerPresenter.changeVideoRotation(isLandscapeVideo)
     }
 
-    private fun supportsPip(): Boolean =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+    private fun isSupportPIP(): Boolean =
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 }
