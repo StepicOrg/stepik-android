@@ -35,6 +35,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
@@ -163,10 +164,6 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             courseToolbarTitle.text = course.title
         }
 
-        if (intent.action == PurchaseNotificationDelegate.NOTIFICATION_CLICKED) {
-            analytic.reportEvent(Analytic.Notification.PURCHASE_NOTIFICATION_CLICKED)
-        }
-
         courseId = intent.getLongExtra(EXTRA_COURSE_ID, NO_ID)
             .takeIf { it != NO_ID }
             ?: course?.id
@@ -174,6 +171,11 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             ?: NO_ID
 
         injectComponent(courseId)
+
+        if (intent.action == PurchaseNotificationDelegate.NOTIFICATION_CLICKED) {
+            analytic.report(PurchaseNotificationClicked(courseId))
+        }
+
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
