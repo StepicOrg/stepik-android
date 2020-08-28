@@ -5,8 +5,6 @@ import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.util.PagedList
-import org.stepic.droid.util.RxOptional
-import org.stepic.droid.util.unwrapOptional
 import org.stepik.android.cache.course_reviews.structure.DbStructureCourseReview
 import org.stepik.android.data.course_reviews.source.CourseReviewsCacheDataSource
 import org.stepik.android.domain.course_reviews.model.CourseReview
@@ -38,17 +36,14 @@ constructor(
         }
 
     override fun getCourseReviewByCourseIdAndUserId(courseId: Long, userId: Long): Maybe<CourseReview> =
-        Single
+        Maybe
             .fromCallable {
-                val courseReview = courseReviewsDao
+                courseReviewsDao
                     .get(mapOf(
                         DbStructureCourseReview.Columns.COURSE to courseId.toString(),
                         DbStructureCourseReview.Columns.USER to userId.toString()
                     ))
-
-                RxOptional(courseReview)
             }
-            .unwrapOptional()
 
     override fun saveCourseReviews(courseReviews: List<CourseReview>): Completable =
         Completable.fromAction {

@@ -16,6 +16,7 @@ import android.util.AttributeSet
 import android.view.ViewTreeObserver
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.AppCompatEditText
+import io.reactivex.Maybe
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -29,10 +30,8 @@ import org.stepic.droid.code.highlight.themes.CodeTheme
 import org.stepic.droid.code.highlight.themes.Presets
 import org.stepic.droid.ui.adapters.CodeToolbarAdapter
 import org.stepic.droid.util.RxEmpty
-import org.stepic.droid.util.RxOptional
 import org.stepic.droid.util.substringOrNull
 import org.stepic.droid.util.toPx
-import org.stepic.droid.util.unwrapOptional
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -139,10 +138,9 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
         compositeDisposable.add(
                 highlightPublisher
                         .debounce(INPUT_DEBOUNCE_MS, TimeUnit.MILLISECONDS)
-                        .map {
-                            RxOptional(parserContainer.prettifyParser?.parse(lang, it.toString()))
+                        .flatMapMaybe {
+                            Maybe.fromCallable { parserContainer.prettifyParser?.parse(lang, it.toString()) }
                         }
-                        .unwrapOptional()
                         .subscribe(spanPublisher::onNext) {
                             analytic.reportError(Analytic.Code.CODE_EDITOR_ERROR, it)
                             initListeners()
