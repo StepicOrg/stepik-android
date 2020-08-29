@@ -1,5 +1,6 @@
 package org.stepik.android.cache.course_payments
 
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.stepic.droid.storage.dao.IDao
 import org.stepik.android.cache.course_payments.structure.DbStructureCoursePayments
@@ -22,5 +23,10 @@ constructor(
             } else {
                 payments
             }
+        }
+
+    override fun saveCoursePayments(coursePayments: List<CoursePayment>): Completable =
+        Completable.fromCallable {
+            coursePaymentsDao.insertOrReplaceAll(coursePayments)
         }
 }
