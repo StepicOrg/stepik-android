@@ -95,7 +95,7 @@ constructor(
 
             resolveEnrollmentState ->
                 coursePaymentsRepository
-                    .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS)
+                    .getCoursePaymentsByCourseId(course.id, coursePaymentStatus = CoursePayment.Status.SUCCESS, primarySourceType = sourceType)
                     .flatMap { payments ->
                         if (payments.isEmpty()) {
                             if (inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive) {
