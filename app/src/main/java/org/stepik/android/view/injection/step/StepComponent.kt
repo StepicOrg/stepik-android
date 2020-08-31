@@ -2,6 +2,7 @@ package org.stepik.android.view.injection.step
 
 import dagger.BindsInstance
 import dagger.Subcomponent
+import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.view.injection.attempt.AttemptDataModule
@@ -40,7 +41,7 @@ interface StepComponent {
         fun lessonData(lessonData: LessonData): Builder
 
         @BindsInstance
-        fun stepWrapper(stepPersistentWrapper: StepPersistentWrapper): Builder
+        fun stepWrapper(stepPersistentWrapper: BehaviorSubject<StepPersistentWrapper>): Builder
     }
 
     fun videoStepContentComponentBuilder(): VideoStepContentComponent.Builder

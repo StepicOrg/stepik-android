@@ -1,5 +1,6 @@
 package org.stepic.droid.core
 
+import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
@@ -87,13 +88,14 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
     private val _stepComponentMap = hashMapOf<Long, WeakComponentHolder<StepComponent>>()
 
     override fun stepParentComponent(
-        stepPersistentWrapper: StepPersistentWrapper,
+        stepId: Long,
+        stepPersistentWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>,
         lessonData: LessonData
     ): StepComponent =
-        _stepComponentMap.getOrPut(stepPersistentWrapper.step.id, ::WeakComponentHolder).get {
+        _stepComponentMap.getOrPut(stepId, ::WeakComponentHolder).get {
             appCoreComponent
                 .stepComponentBuilder()
-                .stepWrapper(stepPersistentWrapper)
+                .stepWrapper(stepPersistentWrapperBehaviorSubject)
                 .lessonData(lessonData)
                 .build()
         }

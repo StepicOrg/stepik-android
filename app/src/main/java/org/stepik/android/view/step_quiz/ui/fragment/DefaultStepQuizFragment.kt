@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
@@ -43,11 +44,13 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     internal lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
 
     @Inject
-    internal lateinit var stepWrapper: StepPersistentWrapper
+    internal lateinit var stepWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>
     @Inject
     internal lateinit var lessonData: LessonData
 
     protected var stepId: Long by argument()
+
+    internal lateinit var stepWrapper: StepPersistentWrapper
 
     private lateinit var presenter: StepQuizPresenter
 
@@ -63,10 +66,11 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         super.onCreate(savedInstanceState)
         injectComponent()
 
+        stepWrapper = stepWrapperBehaviorSubject.value ?: throw IllegalArgumentException("Cannot be null")
         presenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(StepQuizPresenter::class.java)
-        presenter.onStepData(stepWrapper, lessonData)
+        presenter.onStepData(stepWrapperBehaviorSubject, lessonData)
     }
 
     private fun injectComponent() {
@@ -90,7 +94,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizDescription, stepQuizActionContainer, *quizViews)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
-        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
+        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapperBehaviorSubject, lessonData, forceUpdate = true) }
 
         stepQuizDelegate =
             StepQuizDelegate(

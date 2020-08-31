@@ -14,6 +14,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.fragment_step.*
 import kotlinx.android.synthetic.main.view_step_quiz_error.*
 import org.stepic.droid.R
@@ -43,6 +44,7 @@ import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import javax.inject.Inject
 
 class StepFragment : Fragment(), StepView,
@@ -75,6 +77,7 @@ class StepFragment : Fragment(), StepView,
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
+    private lateinit var stepWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonData: LessonData by argument()
 
@@ -89,6 +92,7 @@ class StepFragment : Fragment(), StepView,
         LoadingProgressDialogFragment.newInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        stepWrapperBehaviorSubject = BehaviorSubject.createDefault(stepWrapper)
         injectComponent()
 
         super.onCreate(savedInstanceState)
@@ -101,7 +105,7 @@ class StepFragment : Fragment(), StepView,
     private fun injectComponent() {
         stepComponent = App
             .componentManager()
-            .stepParentComponent(stepWrapper, lessonData)
+            .stepParentComponent(stepWrapper.step.id, stepWrapperBehaviorSubject, lessonData)
         stepComponent.inject(this)
     }
 
@@ -238,10 +242,14 @@ class StepFragment : Fragment(), StepView,
             val isNeedReloadQuiz = stepWrapper.step.block != state.stepWrapper.step.block
 
             stepWrapper = state.stepWrapper
+            stepWrapperBehaviorSubject.onNext(stepWrapper)
+            Timber.d("Step wrapper: ${stepWrapper.step.block?.options?.codeTemplates?.keys}")
             stepDiscussionsDelegate.setDiscussionThreads(state.discussionThreads)
             when (stepWrapper.step.status) {
-                Step.Status.READY ->
+                Step.Status.READY -> {
+
                     setStepQuizFragment(isNeedReloadQuiz)
+                }
                 Step.Status.PREPARING,
                 Step.Status.ERROR -> {
                     stepContentSeparator.isVisible = true

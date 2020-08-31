@@ -1,6 +1,7 @@
 package org.stepic.droid.core
 
 import androidx.annotation.MainThread
+import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent
 import org.stepic.droid.di.splash.SplashComponent
@@ -42,7 +43,7 @@ interface ComponentManager {
      * Steps
      */
     @MainThread
-    fun stepParentComponent(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): StepComponent
+    fun stepParentComponent(stepId: Long, stepPersistentWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>, lessonData: LessonData): StepComponent
 
     @MainThread
     fun stepComponent(stepId: Long): StepComponent
