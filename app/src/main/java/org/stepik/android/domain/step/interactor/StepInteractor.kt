@@ -12,6 +12,7 @@ import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.model.Step
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.view.injection.step.StepDiscussionBus
+import org.stepik.android.view.injection.step.StepWrapperBus
 import javax.inject.Inject
 
 class StepInteractor
@@ -19,6 +20,7 @@ class StepInteractor
 constructor(
     private val discussionThreadRepository: DiscussionThreadRepository,
 
+    @StepWrapperBus
     private val stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
 
     @StepDiscussionBus

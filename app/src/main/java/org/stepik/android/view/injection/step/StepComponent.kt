@@ -32,6 +32,7 @@ import org.stepik.android.view.step_quiz_unsupported.ui.fragment.UnsupportedStep
     StepSourceDataModule::class,
     StepWrapperBusModule::class
 ])
+@StepScope
 interface StepComponent {
     @Subcomponent.Builder
     interface Builder {

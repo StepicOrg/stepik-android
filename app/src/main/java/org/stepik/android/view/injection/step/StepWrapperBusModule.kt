@@ -11,6 +11,8 @@ abstract class StepWrapperBusModule {
     companion object {
         @Provides
         @JvmStatic
+        @StepScope
+        @StepWrapperBus
         internal fun provideBehaviorRelay(stepWrapper: StepPersistentWrapper): BehaviorRelay<StepPersistentWrapper> =
             BehaviorRelay.createDefault(stepWrapper)
     }
