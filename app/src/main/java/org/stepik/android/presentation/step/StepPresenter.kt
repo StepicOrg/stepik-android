@@ -15,7 +15,6 @@ import org.stepik.android.domain.step.interactor.StepNavigationInteractor
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
-import org.stepik.android.view.injection.step.StepWrapperBus
 import javax.inject.Inject
 
 class StepPresenter
@@ -23,7 +22,7 @@ class StepPresenter
 constructor(
     private val stepInteractor: StepInteractor,
     private val stepNavigationInteractor: StepNavigationInteractor,
-    @StepWrapperBus
+
     private val stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
 
     @BackgroundScheduler

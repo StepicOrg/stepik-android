@@ -22,7 +22,6 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
-import org.stepik.android.view.injection.step.StepWrapperBus
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
@@ -47,7 +46,6 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     internal lateinit var stepWrapper: StepPersistentWrapper
 
     @Inject
-    @StepWrapperBus
     internal lateinit var stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>
     @Inject
     internal lateinit var lessonData: LessonData
