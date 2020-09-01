@@ -88,14 +88,13 @@ class ComponentManagerImpl(private val appCoreComponent: AppCoreComponent) : Com
     private val _stepComponentMap = hashMapOf<Long, WeakComponentHolder<StepComponent>>()
 
     override fun stepParentComponent(
-        stepId: Long,
-        stepPersistentWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>,
+        stepPersistentWrapper: StepPersistentWrapper,
         lessonData: LessonData
     ): StepComponent =
-        _stepComponentMap.getOrPut(stepId, ::WeakComponentHolder).get {
+        _stepComponentMap.getOrPut(stepPersistentWrapper.step.id, ::WeakComponentHolder).get {
             appCoreComponent
                 .stepComponentBuilder()
-                .stepWrapper(stepPersistentWrapperBehaviorSubject)
+                .stepWrapper(stepPersistentWrapper)
                 .lessonData(lessonData)
                 .build()
         }

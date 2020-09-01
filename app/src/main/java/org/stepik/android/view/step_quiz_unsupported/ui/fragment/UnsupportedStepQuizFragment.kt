@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -33,15 +32,13 @@ class UnsupportedStepQuizFragment : Fragment() {
     internal lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
 
     @Inject
-    internal lateinit var stepWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>
+    internal lateinit var stepWrapper: StepPersistentWrapper
 
     private var stepId: Long by argument()
-    private lateinit var stepWrapper: StepPersistentWrapper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-        stepWrapper = stepWrapperBehaviorSubject.value ?: throw IllegalArgumentException("Cannot be null")
     }
 
     private fun injectComponent() {

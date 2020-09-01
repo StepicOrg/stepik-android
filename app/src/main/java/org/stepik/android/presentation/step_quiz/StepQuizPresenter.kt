@@ -5,7 +5,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
@@ -19,7 +18,6 @@ import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
-import timber.log.Timber
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -45,20 +43,10 @@ constructor(
         view.setState(state)
     }
 
-    fun onStepData(stepWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>, lessonData: LessonData, forceUpdate: Boolean = false) {
+    fun onStepData(stepWrapper: StepPersistentWrapper, lessonData: LessonData, forceUpdate: Boolean = false) {
         if (state == StepQuizView.State.Idle ||
             state == StepQuizView.State.NetworkError && forceUpdate) {
-            compositeDisposable += stepWrapperBehaviorSubject
-                .subscribeOn(backgroundScheduler)
-                .subscribeBy(
-                    onNext = { stepWrapper ->
-                        Timber.d("Step wrapper: ${stepWrapper.step.block?.options?.codeTemplates?.keys}")
-                        fetchAttempt(stepWrapper, lessonData)
-                    },
-                    onError = {
-                        Timber.d("Error: $it")
-                    }
-                )
+            fetchAttempt(stepWrapper, lessonData)
         }
     }
 

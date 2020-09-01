@@ -43,7 +43,7 @@ interface ComponentManager {
      * Steps
      */
     @MainThread
-    fun stepParentComponent(stepId: Long, stepPersistentWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>, lessonData: LessonData): StepComponent
+    fun stepParentComponent(stepPersistentWrapper: StepPersistentWrapper, lessonData: LessonData): StepComponent
 
     @MainThread
     fun stepComponent(stepId: Long): StepComponent

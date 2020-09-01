@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -48,14 +47,13 @@ class TextStepContentFragment :
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    lateinit var stepWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>
+    lateinit var stepWrapper: StepPersistentWrapper
 
     @Inject
     lateinit var lessonData: LessonData
 
     private var stepId: Long by argument()
 
-    private lateinit var stepWrapper: StepPersistentWrapper
     private lateinit var presenter: TextStepContentPresenter
 
     private var latexWebView: LatexWebView? = null
@@ -66,7 +64,6 @@ class TextStepContentFragment :
 
         injectComponent()
 
-        stepWrapper = stepWrapperBehaviorSubject.value ?: throw IllegalArgumentException("Cannot be null")
         presenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(TextStepContentPresenter::class.java)

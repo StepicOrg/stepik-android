@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
-import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.fragment_step_content_video.*
 import kotlinx.android.synthetic.main.view_course_info_video.*
 import kotlinx.android.synthetic.main.view_length_video_thumbnail.*
@@ -50,12 +49,11 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
-    internal lateinit var stepWrapperBehaviorSubject: BehaviorSubject<StepPersistentWrapper>
+    internal lateinit var stepWrapper: StepPersistentWrapper
 
     @Inject
     internal lateinit var lessonData: LessonData
 
-    private lateinit var stepWrapper: StepPersistentWrapper
     private lateinit var presenter: VideoStepContentPresenter
     private var stepId: Long by argument()
 
@@ -66,8 +64,6 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
         presenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(VideoStepContentPresenter::class.java)
-
-        stepWrapper = stepWrapperBehaviorSubject.value ?: throw IllegalArgumentException("Cannot be null")
 
         if (savedInstanceState == null) {
             presenter.fetchVideoLength(stepWrapper)
