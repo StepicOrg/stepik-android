@@ -20,7 +20,7 @@ class CourseCardSeenAnalyticEvent(
         mapOf(
             PARAM_COURSE to courseId,
             PARAM_SOURCE to source.name
-        ) + source.params.mapKeys { "${PARAM_SOURCE}_$it" }
+        ) + source.params.mapKeys { "${PARAM_SOURCE}_${it.key}" }
 
     override val sources: EnumSet<AnalyticSource> =
         EnumSet.of(AnalyticSource.YANDEX)
