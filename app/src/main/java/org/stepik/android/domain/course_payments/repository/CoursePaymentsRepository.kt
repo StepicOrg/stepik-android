@@ -14,5 +14,5 @@ interface CoursePaymentsRepository {
      *
      * @param coursePaymentStatus - course payments status filter, if null no filter will be applied
      */
-    fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status? = null, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<CoursePayment>>
+    fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status? = null, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<CoursePayment>>
 }

@@ -16,13 +16,11 @@ constructor(
 
     override fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status?): Single<List<CoursePayment>> =
         Single.fromCallable {
-            val payments = coursePaymentsDao
-                .getAll(DbStructureCoursePayments.Columns.COURSE, courseId.toString())
-            if (coursePaymentStatus != null) {
-                payments.filter { it.status == coursePaymentStatus }
-            } else {
-                payments
+            val queryParams = mutableMapOf(DbStructureCoursePayments.Columns.COURSE to courseId.toString())
+            coursePaymentStatus?.ordinal?.let {
+                queryParams[DbStructureCoursePayments.Columns.STATUS] = it.toString()
             }
+            coursePaymentsDao.getAll(queryParams)
         }
 
     override fun saveCoursePayments(coursePayments: List<CoursePayment>): Completable =

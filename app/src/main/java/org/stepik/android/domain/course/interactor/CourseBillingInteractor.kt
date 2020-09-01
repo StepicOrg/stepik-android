@@ -65,7 +65,7 @@ constructor(
 
     fun purchaseCourse(checkout: UiCheckout, courseId: Long, sku: Sku): Completable =
         coursePaymentsRepository
-            .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS, primarySourceType = DataSourceType.REMOTE)
+            .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS, sourceType = DataSourceType.REMOTE)
             .flatMapCompletable { payments ->
                 if (payments.isEmpty()) {
                     purchaseCourseAfterCheck(checkout, courseId, sku)

@@ -21,7 +21,7 @@ constructor(
 
     fun isHasCoursePayments(courseId: Long): Boolean =
         coursePaymentsRepository
-            .getCoursePaymentsByCourseId(courseId, coursePaymentStatus = CoursePayment.Status.SUCCESS, primarySourceType = DataSourceType.REMOTE)
+            .getCoursePaymentsByCourseId(courseId, coursePaymentStatus = CoursePayment.Status.SUCCESS, sourceType = DataSourceType.REMOTE)
             .onErrorReturnItem(emptyList())
             .blockingGet()
             .isNotEmpty()

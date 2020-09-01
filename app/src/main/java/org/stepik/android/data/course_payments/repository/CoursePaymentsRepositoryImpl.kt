@@ -21,15 +21,17 @@ constructor(
         coursePaymentsRemoteDataSource
             .createCoursePayment(courseId, sku, purchase)
 
-    override fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status?, primarySourceType: DataSourceType): Single<List<CoursePayment>> =
-        when (primarySourceType) {
+    override fun getCoursePaymentsByCourseId(courseId: Long, coursePaymentStatus: CoursePayment.Status?, sourceType: DataSourceType): Single<List<CoursePayment>> =
+        when (sourceType) {
             DataSourceType.REMOTE ->
                 coursePaymentsRemoteDataSource
                     .getCoursePaymentsByCourseId(courseId, coursePaymentStatus)
                     .doCompletableOnSuccess(coursePaymentsCacheDataSource::saveCoursePayments)
-                    .onErrorResumeNext { coursePaymentsCacheDataSource.getCoursePaymentsByCourseId(courseId, coursePaymentStatus) }
 
             DataSourceType.CACHE ->
                 coursePaymentsCacheDataSource.getCoursePaymentsByCourseId(courseId, coursePaymentStatus)
+
+            else ->
+                throw IllegalArgumentException("Unsupported source type = $sourceType")
         }
 }
