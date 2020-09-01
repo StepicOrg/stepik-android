@@ -77,8 +77,10 @@ import org.stepik.android.model.*
 import org.stepik.android.model.Unit
 import org.stepik.android.cache.base.AnalyticDatabase
 import org.stepik.android.cache.base.AnalyticDatabaseInfo
+import org.stepik.android.cache.course_payments.dao.CoursePaymentsDaoImpl
 import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
 import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDaoImpl
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
@@ -239,6 +241,10 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindPurchaseNotificationDao(purchaseNotificationDaoImpl: PurchaseNotificationDaoImpl): PurchaseNotificationDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindCoursePaymentDao(coursePaymentsDaoImpl: CoursePaymentsDaoImpl): IDao<CoursePayment>
 
     @Module
     companion object {
