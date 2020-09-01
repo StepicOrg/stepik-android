@@ -127,6 +127,7 @@ class CourseListQueryAdapterDelegate(
         }
 
         override fun showNetworkError() {
+            if (itemView.parent == null) return
             delegate.showNetworkError()
         }
 
