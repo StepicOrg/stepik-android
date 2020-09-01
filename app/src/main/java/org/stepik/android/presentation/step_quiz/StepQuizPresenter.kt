@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.step_quiz
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles.zip
@@ -27,6 +28,7 @@ constructor(
     private val analytic: Analytic,
     private val stepQuizInteractor: StepQuizInteractor,
 
+    private val stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
     @MainScheduler
