@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.persistence.content.StepContentResolver
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.concat
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.discussion_thread.repository.DiscussionThreadRepository
@@ -36,7 +37,15 @@ constructor(
             .filter { it == stepId }
             .flatMapMaybe { stepRepository.getStep(stepId, DataSourceType.REMOTE) }
             .flatMapSingle(stepContentResolver::resolvePersistentContent)
-            .doOnNext(stepWrapperRxRelay::accept)
+            .doOnNext { stepWrapper ->
+                /*
+                 * We publish StepPersistentWrapper from REMOTE only for code steps,
+                 * in order to reload the code quiz, if there are any changes
+                 */
+                if (stepWrapper.step.block?.name == AppConstants.TYPE_CODE) {
+                    stepWrapperRxRelay.accept(stepWrapper)
+                }
+            }
 
     fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
         discussionThreadRepository

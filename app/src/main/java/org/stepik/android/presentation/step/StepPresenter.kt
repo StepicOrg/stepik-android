@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.step
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -14,6 +15,7 @@ import org.stepik.android.domain.step.interactor.StepNavigationInteractor
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.injection.step.StepWrapperBus
 import javax.inject.Inject
 
 class StepPresenter
@@ -21,6 +23,8 @@ class StepPresenter
 constructor(
     private val stepInteractor: StepInteractor,
     private val stepNavigationInteractor: StepNavigationInteractor,
+    @StepWrapperBus
+    private val stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -46,9 +50,11 @@ constructor(
         }
 
     private val stepUpdatesDisposable = CompositeDisposable()
+    private val stepWrapperRelayDisposable = CompositeDisposable()
 
     init {
         compositeDisposable += stepUpdatesDisposable
+        compositeDisposable += stepWrapperRelayDisposable
     }
 
     override fun attachView(view: StepView) {
@@ -77,6 +83,7 @@ constructor(
         fetchDiscussionThreads(stepWrapper)
         fetchNavigation(stepWrapper, lessonData)
         subscribeForStepUpdates(stepWrapper.step.id)
+        subscribeForStepWrapperRelay()
     }
 
     /**
@@ -98,6 +105,24 @@ constructor(
                     }
                 },
                 onError = { subscribeForStepUpdates(stepId, shouldSkipFirstValue = true) }
+            )
+    }
+
+    private fun subscribeForStepWrapperRelay() {
+        stepWrapperRelayDisposable.clear()
+
+        stepWrapperRelayDisposable += stepWrapperRxRelay
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { stepWrapper ->
+                    val oldState = this.state
+                    if (oldState is StepView.State.Loaded &&
+                        oldState.stepWrapper.step.block != stepWrapper.step.block) {
+                        view?.showQuizReloadMessage()
+                        this.state = oldState.copy(stepWrapper)
+                    }
+                }
             )
     }
 

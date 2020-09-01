@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
@@ -279,6 +280,10 @@ class StepFragment : Fragment(), StepView,
 
         screenManager.showSteps(activity, unit, lessonData.lesson, section, direction == StepNavigationDirection.PREV, isAutoplayEnabled)
         activity?.finish()
+    }
+
+    override fun showQuizReloadMessage() {
+        Toast.makeText(requireContext(), getString(R.string.step_quiz_reload_message), Toast.LENGTH_LONG).show()
     }
 
     override fun moveNext(isAutoplayEnabled: Boolean): Boolean {
