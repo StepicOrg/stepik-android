@@ -49,11 +49,9 @@ constructor(
         }
 
     private val stepUpdatesDisposable = CompositeDisposable()
-    private val stepWrapperRelayDisposable = CompositeDisposable()
 
     init {
         compositeDisposable += stepUpdatesDisposable
-        compositeDisposable += stepWrapperRelayDisposable
         subscribeForStepWrapperRelay()
     }
 
@@ -108,9 +106,7 @@ constructor(
     }
 
     private fun subscribeForStepWrapperRelay() {
-        stepWrapperRelayDisposable.clear()
-
-        stepWrapperRelayDisposable += stepWrapperRxRelay
+        compositeDisposable += stepWrapperRxRelay
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
