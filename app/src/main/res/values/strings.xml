@@ -812,6 +812,8 @@
 
     <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
+    <string name="step_quiz_reload_message">Sorry! This problem has been updated by the author. You have to start it over. Your score for previous submissions is preserved.</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 
