@@ -13,9 +13,7 @@ import org.stepic.droid.util.getString
 import org.stepic.droid.util.toObject
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.model.Course
-import org.stepik.android.model.CourseOptions
 import org.stepik.android.model.Video
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseDaoImpl
@@ -31,12 +29,8 @@ constructor(
 
     public override fun getDefaultPrimaryValue(persistentObject: Course) = persistentObject.id.toString()
 
-    public override fun parsePersistentObject(cursor: Cursor): Course {
-        val string = cursor.getString(DbStructureCourse.Columns.OPTIONS)
-        val a = cursor.getString(DbStructureCourse.Columns.OPTIONS)?.toObject<CourseOptions>(gson)
-        Timber.d("String: $string")
-        Timber.d("Parsed: $a")
-        return Course(
+    public override fun parsePersistentObject(cursor: Cursor): Course =
+        Course(
             id = cursor.getLong(DbStructureCourse.Columns.ID),
             title = cursor.getString(DbStructureCourse.Columns.TITLE),
             description = cursor.getString(DbStructureCourse.Columns.DESCRIPTION),
@@ -90,7 +84,6 @@ constructor(
             displayPrice = cursor.getString(DbStructureCourse.Columns.DISPLAY_PRICE),
             priceTier = cursor.getString(DbStructureCourse.Columns.PRICE_TIER)
         )
-    }
 
     public override fun getContentValues(course: Course): ContentValues {
         val values = ContentValues()

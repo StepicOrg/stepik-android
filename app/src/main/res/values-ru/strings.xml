@@ -779,6 +779,8 @@
 
     <string name="step_quiz_pycharm_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
+    <string name="step_quiz_reload_message">Извините, задание было изменено авторами. Необходимо начать сначала. Баллы за прошлые решения сохранены.</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 

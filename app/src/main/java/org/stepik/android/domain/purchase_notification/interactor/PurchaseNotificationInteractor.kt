@@ -1,6 +1,7 @@
 package org.stepik.android.domain.purchase_notification.interactor
 
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
@@ -20,7 +21,7 @@ constructor(
 
     fun isHasCoursePayments(courseId: Long): Boolean =
         coursePaymentsRepository
-            .getCoursePaymentsByCourseId(courseId, coursePaymentStatus = CoursePayment.Status.SUCCESS)
+            .getCoursePaymentsByCourseId(courseId, coursePaymentStatus = CoursePayment.Status.SUCCESS, sourceType = DataSourceType.REMOTE)
             .onErrorReturnItem(emptyList())
             .blockingGet()
             .isNotEmpty()

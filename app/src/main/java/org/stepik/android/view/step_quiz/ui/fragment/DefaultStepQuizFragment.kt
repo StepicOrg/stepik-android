@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.jakewharton.rxrelay2.BehaviorRelay
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz.*
 import kotlinx.android.synthetic.main.view_step_quiz_submit_button.*
@@ -42,8 +43,10 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     @Inject
     internal lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
 
+    protected lateinit var stepWrapper: StepPersistentWrapper
+
     @Inject
-    internal lateinit var stepWrapper: StepPersistentWrapper
+    internal lateinit var stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>
     @Inject
     internal lateinit var lessonData: LessonData
 
@@ -62,6 +65,8 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
+
+        stepWrapper = stepWrapperRxRelay.value ?: throw IllegalStateException("Step wrapper cannot be null")
 
         presenter = ViewModelProviders
             .of(this, viewModelFactory)
