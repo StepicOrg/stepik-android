@@ -43,7 +43,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
     @Inject
     internal lateinit var stepDeepLinkBuilder: StepDeepLinkBuilder
 
-    internal lateinit var stepWrapper: StepPersistentWrapper
+    protected lateinit var stepWrapper: StepPersistentWrapper
 
     @Inject
     internal lateinit var stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>

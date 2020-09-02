@@ -1,6 +1,5 @@
 package org.stepic.droid.core
 
-import io.reactivex.subjects.BehaviorSubject
 import org.stepic.droid.di.AppCoreComponent
 import org.stepic.droid.di.adaptive.AdaptiveCourseComponent
 import org.stepic.droid.di.mainscreen.MainScreenComponent

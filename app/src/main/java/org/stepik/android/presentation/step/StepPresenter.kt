@@ -54,6 +54,7 @@ constructor(
     init {
         compositeDisposable += stepUpdatesDisposable
         compositeDisposable += stepWrapperRelayDisposable
+        subscribeForStepWrapperRelay()
     }
 
     override fun attachView(view: StepView) {
@@ -82,7 +83,6 @@ constructor(
         fetchDiscussionThreads(stepWrapper)
         fetchNavigation(stepWrapper, lessonData)
         subscribeForStepUpdates(stepWrapper.step.id)
-        subscribeForStepWrapperRelay()
     }
 
     /**
