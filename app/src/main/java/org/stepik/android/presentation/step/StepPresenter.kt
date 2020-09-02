@@ -1,5 +1,6 @@
 package org.stepik.android.presentation.step
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -21,6 +22,8 @@ class StepPresenter
 constructor(
     private val stepInteractor: StepInteractor,
     private val stepNavigationInteractor: StepNavigationInteractor,
+
+    private val stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
 
     @BackgroundScheduler
     private val backgroundScheduler: Scheduler,
@@ -49,6 +52,7 @@ constructor(
 
     init {
         compositeDisposable += stepUpdatesDisposable
+        subscribeForStepWrapperRelay()
     }
 
     override fun attachView(view: StepView) {
@@ -98,6 +102,22 @@ constructor(
                     }
                 },
                 onError = { subscribeForStepUpdates(stepId, shouldSkipFirstValue = true) }
+            )
+    }
+
+    private fun subscribeForStepWrapperRelay() {
+        compositeDisposable += stepWrapperRxRelay
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onNext = { stepWrapper ->
+                    val oldState = this.state
+                    if (oldState is StepView.State.Loaded &&
+                        oldState.stepWrapper.step.block != stepWrapper.step.block) {
+                        view?.showQuizReloadMessage()
+                        this.state = oldState.copy(stepWrapper)
+                    }
+                }
             )
     }
 

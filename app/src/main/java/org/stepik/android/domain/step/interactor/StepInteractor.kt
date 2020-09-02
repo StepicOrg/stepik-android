@@ -1,5 +1,6 @@
 package org.stepik.android.domain.step.interactor
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.persistence.content.StepContentResolver
@@ -18,6 +19,8 @@ class StepInteractor
 constructor(
     private val discussionThreadRepository: DiscussionThreadRepository,
 
+    private val stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
+
     @StepDiscussionBus
     private val stepDiscussionObservable: Observable<Long>,
     private val stepRepository: StepRepository,
@@ -31,6 +34,7 @@ constructor(
             .filter { it == stepId }
             .flatMapMaybe { stepRepository.getStep(stepId, DataSourceType.REMOTE) }
             .flatMapSingle(stepContentResolver::resolvePersistentContent)
+            .doOnNext(stepWrapperRxRelay::accept)
 
     fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
         discussionThreadRepository
