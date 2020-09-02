@@ -23,5 +23,5 @@ class CoursePreviewScreenOpenedAnalyticEvent(
             PARAM_TITLE to course.title.toString(),
             PARAM_IS_PAID to course.isPaid,
             PARAM_SOURCE to source.name
-        ) + source.params.mapKeys { "${PARAM_SOURCE}_$it" }
+        ) + source.params.mapKeys { "${PARAM_SOURCE}_${it.key}" }
 }

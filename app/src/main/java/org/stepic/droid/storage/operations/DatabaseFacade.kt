@@ -31,6 +31,7 @@ import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.data.course_list.model.CourseListQueryData
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Assignment
@@ -80,7 +81,8 @@ constructor(
     private val userCourseDao: IDao<UserCourse>,
     private val courseCollectionDao: IDao<CourseCollection>,
     private val courseListQueryDataDao: IDao<CourseListQueryData>,
-    private val purchaseNotificationDao: PurchaseNotificationDao
+    private val purchaseNotificationDao: PurchaseNotificationDao,
+    private val coursePaymentDao: IDao<CoursePayment>
 ) {
 
     fun dropDatabase() {
@@ -112,6 +114,7 @@ constructor(
         courseCollectionDao.removeAll()
         courseListQueryDataDao.removeAll()
         purchaseNotificationDao.removeAll()
+        coursePaymentDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {
