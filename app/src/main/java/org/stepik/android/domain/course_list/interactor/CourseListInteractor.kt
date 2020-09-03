@@ -43,7 +43,7 @@ constructor(
         sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE
     ): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(
-            coursesSource = courseRepository.getCourses(courseListQuery),
+            coursesSource = courseRepository.getCourses(courseListQuery, primarySourceType = sourceTypeComposition.generalSourceType),
             courseViewSource = CourseViewSource.Query(courseListQuery),
             sourceTypeComposition = sourceTypeComposition
         )
