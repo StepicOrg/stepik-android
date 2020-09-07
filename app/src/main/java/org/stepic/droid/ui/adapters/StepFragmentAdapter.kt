@@ -3,7 +3,6 @@ package org.stepic.droid.ui.adapters
 import android.content.Context
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -62,23 +61,8 @@ class StepFragmentAdapter(
         super.destroyItem(container, position, `object`)
     }
 
-    @DrawableRes
-    fun getTabDrawable(position: Int): Int {
+    fun getTabDrawable(position: Int): Pair<Int, Int> {
         val step = items.getOrNull(position)?.stepWrapper?.step
         return stepTypeResolver.getDrawableForType(step?.block?.name, step?.actions?.doReview != null)
-    }
-
-    @ColorInt
-    fun getTabTint(position: Int): Int {
-        val stepItem = items.getOrNull(position)
-        val isStepPassed = stepItem?.assignmentProgress?.isPassed
-            ?: stepItem?.stepProgress?.isPassed
-            ?: false
-
-        return if (isStepPassed) {
-            ColorExtensions.colorWithAlpha(colorSecondary, alphaEmphasisDisabled)
-        } else {
-            colorSecondary
-        }
     }
 }

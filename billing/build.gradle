@@ -38,6 +38,7 @@ dependencies {
     implementation libraries.rxAndroid
     implementation libraries.rxJava2
     implementation libraries.rxKotlin
+    implementation libraries.domainRx
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric

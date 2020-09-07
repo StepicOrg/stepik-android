@@ -47,7 +47,8 @@
     <string name="video_quality_playing">Качество видео для просмотра</string>
     <string name="video_quality_presence_message">Пожалуйста, выберите качество видео для последующих загрузок:</string>
 
-    <string name="download_error">Ошибка при загрузке видео %s</string>
+    <string name="download_system_request_title">шага - %s в уроке - %s</string>
+    <string name="download_error">Ошибка при загрузке %s</string>
     <string name="download_error_insufficient_storage">: недостаточно свободного места</string>
     <string name="download_error_system_manager">При загрузке контента произошла ошибка системного загрузчика. Если ошибка повторяется, пожалуйста, обратитесь в поддержку.</string>
 
@@ -560,7 +561,10 @@
     <string name="course_progress_current">Текущий прогресс</string>
     <string name="course_progress_solutions">Неотправленные решения</string>
 
+    <string name="course_list_free">Бесплатно</string>
     <string name="course_list_archived">В архиве</string>
+
+    <string name="course_try_free">Попробовать бесплатно</string>
 
     <string name="course_info_organization_prefix">от %s</string>
     <string name="course_info_about">О курсе</string>
@@ -775,6 +779,8 @@
 
     <string name="step_quiz_pycharm_message">Пожалуйста, откройте эту задачу в <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
 
+    <string name="step_quiz_reload_message">Извините, задание было изменено авторами. Необходимо начать сначала. Баллы за прошлые решения сохранены.</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 
@@ -882,4 +888,9 @@
     <string name="ar_not_supported_alert">Устройство не поддерживает функции дополненной реальности</string>
 
     <string name="course_purchase">Покупка курса</string>
+
+    <string name="purchase_notification_title">Один шаг до новых знаний</string>
+    <string name="purchase_notification_description">Вы собирались приобрести курс %s? Завершите покупку и начните учиться прямо сейчас!</string>
+
+    <string name="internal_deeplink_error">Не удалось открыть ссылку: %s</string>
 </resources>

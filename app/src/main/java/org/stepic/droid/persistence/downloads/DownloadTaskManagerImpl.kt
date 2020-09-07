@@ -1,8 +1,10 @@
 package org.stepic.droid.persistence.downloads
 
 import android.app.DownloadManager
+import android.content.Context
 import android.net.Uri
 import io.reactivex.Completable
+import org.stepic.droid.R
 import org.stepic.droid.persistence.di.FSLock
 import org.stepic.droid.persistence.di.PersistenceScope
 import org.stepic.droid.persistence.files.ExternalStorageManager
@@ -20,6 +22,7 @@ import kotlin.concurrent.withLock
 class DownloadTaskManagerImpl
 @Inject
 constructor(
+        private val context: Context,
         private val downloadManager: DownloadManager,
         private val persistentItemObserver: PersistentItemObserver,
         private val externalStorageManager: ExternalStorageManager,
@@ -29,6 +32,7 @@ constructor(
 ): DownloadTaskManager {
     override fun addTask(request: DownloadRequest): Completable = Completable.fromAction {
         fsLock.withLock { // in order to prevent receiving broadcast before persistentItem was added
+            val title = request.title.split("-").map { it.trim() }
             val systemRequest = DownloadManager.Request(Uri.parse(request.task.originalPath))
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
                     .setAllowedNetworkTypes(request
@@ -37,7 +41,7 @@ constructor(
                             .map(DownloadConfiguration.NetworkType::systemNetworkType)
                             .reduce(Int::or)
                     )
-                    .setTitle("${request.title} - ${System.nanoTime().toString().takeLast(5)}")
+                    .setTitle(context.getString(R.string.download_system_request_title, title.last(), title.first()))
 
             val downloadId = downloadManager.enqueue(systemRequest)
 

@@ -49,7 +49,10 @@ import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
 import org.stepik.android.view.injection.achievements.AchievementsComponent
+import org.stepik.android.view.injection.analytic.AnalyticComponent
 import org.stepik.android.view.injection.auth.AuthComponent
+import org.stepik.android.view.injection.billing.BillingDataModule
+import org.stepik.android.view.injection.billing.BillingModule
 import org.stepik.android.view.injection.catalog.CatalogBusModule
 import org.stepik.android.view.injection.catalog.CatalogComponent
 import org.stepik.android.view.injection.certificate.CertificateComponent
@@ -63,6 +66,7 @@ import org.stepik.android.view.injection.course_list.CourseListComponent
 import org.stepik.android.view.injection.course_list.collection.CourseListCollectionComponent
 import org.stepik.android.view.injection.course_list.query.CourseListQueryComponent
 import org.stepik.android.view.injection.course_list.user.CourseListUserComponent
+import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
 import org.stepik.android.view.injection.download.DownloadComponent
@@ -82,6 +86,7 @@ import org.stepik.android.view.injection.profile.ProfileBusModule
 import org.stepik.android.view.injection.profile.ProfileComponent
 import org.stepik.android.view.injection.profile_edit.ProfileEditComponent
 import org.stepik.android.view.injection.progress.ProgressBusModule
+import org.stepik.android.view.injection.purchase_notification.PurchaseNotificationDataModule
 import org.stepik.android.view.injection.search.SearchDataModule
 import org.stepik.android.view.injection.search_result.SearchResultDataModule
 import org.stepik.android.view.injection.settings.SettingsComponent
@@ -104,6 +109,7 @@ import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
 import org.stepik.android.view.personal_deadlines.ui.dialogs.EditDeadlinesDialog
 import org.stepik.android.view.personal_deadlines.ui.dialogs.LearningRateDialog
+import org.stepik.android.view.purchase_notification.receiver.PurchaseNotificationReceiver
 import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
 
 @AppSingleton
@@ -113,6 +119,7 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
     ],
     modules = [
         AppCoreModule::class,
+        ConfigModule::class,
         AnalyticModule::class,
         GoogleModule::class,
         FirebaseModule::class,
@@ -145,7 +152,13 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
         CourseCollectionDataModule::class,
         SolutionsBusModule::class,
         CourseListBusModule::class,
-        CatalogBusModule::class
+        CatalogBusModule::class,
+
+        BillingModule::class,
+        BillingDataModule::class,
+
+        CoursePaymentsDataModule::class,
+        PurchaseNotificationDataModule::class
     ]
 )
 interface AppCoreComponent {
@@ -230,6 +243,8 @@ interface AppCoreComponent {
 
     fun magicLinksComponentBuilder(): MagicLinksComponent.Builder
 
+    fun analyticProviderComponentBuilder(): AnalyticComponent.Builder
+
     fun inject(someActivity: FragmentActivityBase)
 
     fun inject(adapter: StepikRadioGroupAdapter)
@@ -311,4 +326,6 @@ interface AppCoreComponent {
     fun inject(removeCachedContentDialog: RemoveCachedContentDialog)
 
     fun inject(onboardingActivity: AnimatedOnboardingActivity)
+
+    fun inject(purchaseNotificationReceiver: PurchaseNotificationReceiver)
 }

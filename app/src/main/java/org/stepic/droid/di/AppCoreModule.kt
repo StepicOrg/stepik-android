@@ -55,6 +55,7 @@ import org.stepic.droid.util.resolvers.text.TextResolverImpl
 import org.stepik.android.presentation.base.injection.DaggerViewModelFactory
 import org.stepik.android.remote.base.UserAgentProvider
 import org.stepik.android.remote.base.UserAgentProviderImpl
+import org.stepik.android.view.injection.billing.PublicLicenseKey
 import org.stepik.android.view.injection.qualifiers.AuthLock
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -82,10 +83,6 @@ abstract class AppCoreModule {
     @AppSingleton
     abstract fun provideInternetEnabledClient(container: ClientImpl<InternetEnabledListener>): Client<InternetEnabledListener>
 
-    @Binds
-    @AppSingleton
-    internal abstract fun provideScreenManager(screenManager: ScreenManagerImpl): ScreenManager
-
     @AppSingleton
     @Binds
     internal abstract fun provideLessonSessionManager(localLessonSessionManager: LocalLessonSessionManagerImpl): LessonSessionManager
@@ -100,15 +97,7 @@ abstract class AppCoreModule {
 
     @Binds
     @AppSingleton
-    internal abstract fun provideDefaultFilter(defaultFilter: DefaultFilterImpl): DefaultFilter
-
-    @Binds
-    @AppSingleton
     internal abstract fun provideTextResolver(textResolver: TextResolverImpl): TextResolver
-
-    @Binds
-    @AppSingleton
-    internal abstract fun provideUserAgent(userAgentProvider: UserAgentProviderImpl): UserAgentProvider
 
     @Binds
     @AppSingleton
@@ -147,14 +136,6 @@ abstract class AppCoreModule {
         @JvmStatic
         internal fun provideSystemAlarmManager(context: Context): AlarmManager {
             return context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        }
-
-        //it is good for many short lived, which should do async
-        @Provides
-        @AppSingleton
-        @JvmStatic
-        internal fun provideThreadPool(): ThreadPoolExecutor {
-            return Executors.newCachedThreadPool() as ThreadPoolExecutor
         }
 
         /**
@@ -211,19 +192,18 @@ abstract class AppCoreModule {
             return context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         }
 
-
-        @Provides
-        @AppSingleton
-        @JvmStatic
-        internal fun provideConfig(configFactory: ConfigImpl.ConfigFactory): Config {
-            return configFactory.create()
-        }
-
         @Provides
         @AppSingleton
         @JvmStatic
         internal fun provideContentResolver(context: Context): ContentResolver =
             context.contentResolver
+
+        @Provides
+        @AppSingleton
+        @JvmStatic
+        @PublicLicenseKey
+        internal fun providePublicLicenseKey(config: Config): String =
+            config.appPublicLicenseKey
     }
 
 }

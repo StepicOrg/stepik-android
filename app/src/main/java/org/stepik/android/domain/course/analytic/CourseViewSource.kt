@@ -1,6 +1,5 @@
 package org.stepik.android.domain.course.analytic
 
-import com.google.gson.Gson
 import org.stepik.android.domain.base.analytic.AnalyticEvent
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.domain.search_result.model.SearchResultQuery
@@ -30,7 +29,7 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
         override val name: String = "search"
 
         override val params: Map<String, Any> =
-            mapOf(PARAM_QUERY to Gson().toJson(query))
+            mapOf(PARAM_QUERY to query)
     }
 
     class Collection(collectionId: Long) : CourseViewSource() {
@@ -52,7 +51,7 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
         override val name: String = "query"
 
         override val params: Map<String, Any> =
-            mapOf(PARAM_QUERY to Gson().toJson(query))
+            mapOf(PARAM_QUERY to query)
     }
 
     class Story(storyId: Long) : CourseViewSource() {
@@ -85,6 +84,11 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
     object Auth : CourseViewSource() {
         override val name: String =
             "auth"
+    }
+
+    object PurchaseReminderNotification : CourseViewSource() {
+        override val name: String =
+            "purchase_reminder_notification"
     }
 
     object Unknown : CourseViewSource() {

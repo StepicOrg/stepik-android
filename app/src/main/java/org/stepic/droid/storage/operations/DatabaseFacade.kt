@@ -9,7 +9,13 @@ import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.dao.SearchQueryDao
-import org.stepic.droid.storage.structure.*
+import org.stepic.droid.storage.structure.DbStructureCourse
+import org.stepic.droid.storage.structure.DbStructureLastStep
+import org.stepic.droid.storage.structure.DbStructureNotification
+import org.stepic.droid.storage.structure.DbStructureProgress
+import org.stepic.droid.storage.structure.DbStructureVideoTimestamp
+import org.stepic.droid.storage.structure.DbStructureViewQueue
+import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
@@ -17,16 +23,29 @@ import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDate
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
+import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
 import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.data.course_list.model.CourseListQueryData
+import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
-import org.stepik.android.model.*
+import org.stepik.android.model.Assignment
+import org.stepik.android.model.Certificate
+import org.stepik.android.model.Course
+import org.stepik.android.model.CourseCollection
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Section
+import org.stepik.android.model.SocialProfile
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
+import org.stepik.android.model.ViewAssignment
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import javax.inject.Inject
@@ -61,7 +80,9 @@ constructor(
     private val socialProfileDao: IDao<SocialProfile>,
     private val userCourseDao: IDao<UserCourse>,
     private val courseCollectionDao: IDao<CourseCollection>,
-    private val courseListQueryDataDao: IDao<CourseListQueryData>
+    private val courseListQueryDataDao: IDao<CourseListQueryData>,
+    private val purchaseNotificationDao: PurchaseNotificationDao,
+    private val coursePaymentDao: IDao<CoursePayment>
 ) {
 
     fun dropDatabase() {
@@ -92,6 +113,8 @@ constructor(
         userCourseDao.removeAll()
         courseCollectionDao.removeAll()
         courseListQueryDataDao.removeAll()
+        purchaseNotificationDao.removeAll()
+        coursePaymentDao.removeAll()
     }
 
     fun addAssignments(assignments: List<Assignment>) {

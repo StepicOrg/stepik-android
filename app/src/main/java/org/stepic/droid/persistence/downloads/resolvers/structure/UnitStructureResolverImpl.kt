@@ -13,6 +13,7 @@ import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Unit
+import ru.nobird.android.core.model.flatten
 import javax.inject.Inject
 
 @AppSingleton
@@ -59,7 +60,7 @@ constructor(
         lessonRepository
             .getLessons(*units.mapToLongArray(Unit::lesson))
             .flatMapObservable { lessons ->
-                val assignmentIds = units.mapNotNull(Unit::assignments).fold(longArrayOf(), LongArray::plus)
+                val assignmentIds = units.mapNotNull(Unit::assignments).flatten()
                 val progresses = units.asIterable().getProgresses() + lessons.getProgresses()
 
                 val observables =
@@ -73,9 +74,11 @@ constructor(
                     if (resolveNestedObjects) {
                         assignmentRepository
                             .getAssignments(*assignmentIds, primarySourceType = DataSourceType.REMOTE)
-                            .ignoreElement()
-                            .andThen(progressRepository.getProgresses(*progresses))
-                            .ignoreElement()
+                            .flatMapCompletable { assignments ->
+                                progressRepository
+                                    .getProgresses(*progresses + assignments.getProgresses())
+                                    .ignoreElement()
+                            }
                     } else {
                         Completable.complete()
                     }

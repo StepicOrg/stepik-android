@@ -2,11 +2,11 @@ package org.stepik.android.view.lesson.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.content.res.AppCompatResources
+import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_is_exam.*
 import kotlinx.android.synthetic.main.error_lesson_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
+import kotlinx.android.synthetic.main.layout_step_tab_icon.view.*
 import kotlinx.android.synthetic.main.view_subtitled_toolbar.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -69,6 +70,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         private const val EXTRA_LAST_STEP = "last_step"
 
+        private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
+
         fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_SECTION, section)
@@ -80,6 +83,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         fun createIntent(context: Context, lastStep: LastStep): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_LAST_STEP, lastStep)
+
+        fun createIntent(context: Context, trialLessonId: Long): Intent =
+            Intent(context, LessonActivity::class.java)
+                .putExtra(EXTRA_TRIAL_LESSON_ID, trialLessonId)
     }
 
     @Inject
@@ -189,6 +196,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         val deepLinkData = intent.getLessonDeepLinkData()
 
+        val trialLessonId = intent.getLongExtra(EXTRA_TRIAL_LESSON_ID, -1L)
+
         when {
             lastStep != null ->
                 lessonPresenter.onLastStep(lastStep, forceUpdate)
@@ -198,6 +207,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
             lesson != null && unit != null && section != null ->
                 lessonPresenter.onLesson(lesson, unit, section, isFromNextLesson, forceUpdate)
+
+            trialLessonId != -1L ->
+                lessonPresenter.onTrialLesson(trialLessonId, forceUpdate)
 
             else ->
                 lessonPresenter.onEmptyData()
@@ -291,14 +303,27 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
     private fun invalidateTabLayout() {
         for (i in 0 until lessonTab.tabCount) {
-            val tabIcon = AppCompatResources
-                .getDrawable(this, stepsAdapter.getTabDrawable(i))
-                ?.mutate()
+            val tabFrames = stepsAdapter.getTabDrawable(i)
 
-            val tintColor = stepsAdapter.getTabTint(i)
+            val isPassed = stepsAdapter.items[i].assignmentProgress?.isPassed
+                ?: stepsAdapter.items[i].stepProgress?.isPassed
+                ?: false
 
-            lessonTab.getTabAt(i)?.icon = tabIcon
-            tabIcon?.setColorFilter(tintColor, PorterDuff.Mode.SRC_IN)
+            @DrawableRes
+            val tabIconResource = if (!isPassed) {
+                tabFrames.first
+            } else {
+                tabFrames.second
+            }
+
+            if (lessonTab.getTabAt(i)?.customView == null) {
+                lessonTab.getTabAt(i)?.customView = View.inflate(this, R.layout.layout_step_tab_icon, null)
+            }
+
+            lessonTab.getTabAt(i)?.customView?.tabIconDrawable?.apply {
+                setImageResource(tabIconResource)
+                isEnabled = isPassed
+            }
         }
     }
 

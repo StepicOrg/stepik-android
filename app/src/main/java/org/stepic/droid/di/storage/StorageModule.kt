@@ -1,7 +1,11 @@
 package org.stepic.droid.di.storage
 
+import android.app.Application
+import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import androidx.room.Room
+import androidx.room.RoomDatabase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Binds
@@ -41,6 +45,7 @@ import org.stepic.droid.storage.dao.ViewAssignmentDaoImpl
 import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
+import org.stepik.android.cache.analytic.dao.AnalyticDao
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.course_collection.dao.CourseCollectionDaoImpl
@@ -70,6 +75,12 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
+import org.stepik.android.cache.base.AnalyticDatabase
+import org.stepik.android.cache.base.AnalyticDatabaseInfo
+import org.stepik.android.cache.course_payments.dao.CoursePaymentsDaoImpl
+import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
+import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDaoImpl
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
@@ -227,6 +238,14 @@ abstract class StorageModule {
     @Binds
     internal abstract fun bindCourseListQueryDataDao(courseListQueryDataDaoImpl: CourseListQueryDaoImpl): IDao<CourseListQueryData>
 
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindPurchaseNotificationDao(purchaseNotificationDaoImpl: PurchaseNotificationDaoImpl): PurchaseNotificationDao
+
+    @StorageSingleton
+    @Binds
+    internal abstract fun bindCoursePaymentDao(coursePaymentsDaoImpl: CoursePaymentsDaoImpl): IDao<CoursePayment>
+
     @Module
     companion object {
 
@@ -248,5 +267,11 @@ abstract class StorageModule {
         @JvmStatic
         internal fun provideWritableDatabase(helper: SQLiteOpenHelper): SQLiteDatabase =
                 helper.writableDatabase
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideAnalyticDatabase(context: Context): AnalyticDatabase =
+            Room.databaseBuilder(context, AnalyticDatabase::class.java, AnalyticDatabaseInfo.DATABASE_NAME).build()
     }
 }

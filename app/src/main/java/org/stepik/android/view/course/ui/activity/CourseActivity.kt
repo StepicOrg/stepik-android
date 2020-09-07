@@ -18,11 +18,14 @@ import kotlinx.android.synthetic.main.error_course_not_found.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.header_course.*
 import kotlinx.android.synthetic.main.header_course_placeholder.*
+import org.solovyev.android.checkout.Billing
+import org.solovyev.android.checkout.Checkout
+import org.solovyev.android.checkout.UiCheckout
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
-import org.stepic.droid.analytic.experiments.CoursePurchasePriceSplitTest
 import org.stepic.droid.analytic.experiments.CoursePurchaseWebviewSplitTest
+import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.configuration.RemoteConfig
@@ -32,6 +35,7 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.last_step.model.LastStep
+import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationClicked
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.CoursePresenter
 import org.stepik.android.presentation.course.CourseView
@@ -47,6 +51,7 @@ import org.stepik.android.view.course_content.ui.fragment.CourseContentFragment
 import org.stepik.android.view.fragment_pager.FragmentDelegateScrollStateChangeListener
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
+import org.stepik.android.view.purchase_notification.notification.PurchaseNotificationDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -118,18 +123,18 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     internal lateinit var firebaseRemoteConfig: FirebaseRemoteConfig
 
     @Inject
-    internal lateinit var coursePurchasePriceSplitTest: CoursePurchasePriceSplitTest
+    internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
 
     @Inject
-    internal lateinit var coursePurchaseWebviewSplitTest: CoursePurchaseWebviewSplitTest
+    internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     @Inject
     internal lateinit var courseDeeplinkBuilder: CourseDeepLinkBuilder
 
-//    @Inject
-//    internal lateinit var billing: Billing
+    @Inject
+    internal lateinit var billing: Billing
 
-//    private lateinit var uiCheckout: UiCheckout
+    private lateinit var uiCheckout: UiCheckout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -166,17 +171,22 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
             ?: NO_ID
 
         injectComponent(courseId)
+
+        if (intent.action == PurchaseNotificationDelegate.NOTIFICATION_CLICKED) {
+            analytic.report(PurchaseNotificationClicked(courseId))
+        }
+
         coursePresenter = ViewModelProviders.of(this, viewModelFactory).get(CoursePresenter::class.java)
         courseHeaderDelegate =
             CourseHeaderDelegate(
-                this, analytic, coursePresenter, coursePurchasePriceSplitTest,
+                this, analytic, coursePresenter,
                 onSubmissionCountClicked = {
                     screenManager.showCachedAttempts(this, courseId)
                 },
                 isLocalSubmissionsEnabled = firebaseRemoteConfig[RemoteConfig.IS_LOCAL_SUBMISSIONS_ENABLED].asBoolean()
             )
 
-//        uiCheckout = Checkout.forActivity(this, billing)
+        uiCheckout = Checkout.forActivity(this, billing)
         initViewPager(courseId)
         initViewStateDelegate()
 
@@ -431,8 +441,8 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
     /**
      * BillingView
      */
-//    override fun createUiCheckout(): UiCheckout =
-//        uiCheckout
+    override fun createUiCheckout(): UiCheckout =
+        uiCheckout
 
     override fun openCoursePurchaseInWeb(courseId: Long, queryParams: Map<String, List<String>>?) {
         val url = courseDeeplinkBuilder.createCourseLink(courseId, CourseScreenTab.PAY, queryParams)
@@ -447,11 +457,15 @@ class CourseActivity : FragmentActivityBase(), CourseView, InAppWebViewDialogFra
         }
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
-//            super.onActivityResult(requestCode, resultCode, data)
-//        }
-//    }
+    override fun showTrialLesson(lessonId: Long) {
+        screenManager.showTrialLesson(this, lessonId)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (!uiCheckout.onActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
 
     override fun onDestroy() {
         releaseComponent(courseId)

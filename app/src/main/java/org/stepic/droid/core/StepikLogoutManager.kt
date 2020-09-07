@@ -7,6 +7,7 @@ import org.stepic.droid.persistence.downloads.interactor.RemovalDownloadsInterac
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.RWLocks
+import org.stepik.android.cache.base.AnalyticDatabase
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 
@@ -18,6 +19,7 @@ constructor(
     private val mainHandler: MainHandler,
     private val sharedPreferenceHelper: SharedPreferenceHelper,
     private val databaseFacade: DatabaseFacade,
+    private val analyticDatabase: AnalyticDatabase,
     private val notificationsBadgesLogoutPoster: NotificationsBadgesLogoutPoster,
     private val removalDownloadsInteractor: RemovalDownloadsInteractor
 ) {
@@ -29,6 +31,7 @@ constructor(
                 RWLocks.ClearEnrollmentsLock.writeLock().lock()
                 sharedPreferenceHelper.deleteAuthInfo()
                 databaseFacade.dropDatabase()
+                analyticDatabase.clearAllTables()
             } finally {
                 RWLocks.ClearEnrollmentsLock.writeLock().unlock()
             }

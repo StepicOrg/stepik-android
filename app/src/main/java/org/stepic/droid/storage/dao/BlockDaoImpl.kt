@@ -3,6 +3,7 @@ package org.stepic.droid.storage.dao
 import android.content.ContentValues
 import android.database.Cursor
 import com.google.gson.Gson
+import com.google.gson.JsonArray
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepik.android.cache.block.structure.DbStructureBlock
@@ -51,7 +52,8 @@ constructor(
                 name = cursor.getString(indexName),
                 text = cursor.getString(indexText),
                 video = video,
-                options = codeOptions
+                options = codeOptions,
+                subtitleFiles = JsonArray()
         )
         return BlockPersistentWrapper(block, stepId = cursor.getLong(indexStep))
     }

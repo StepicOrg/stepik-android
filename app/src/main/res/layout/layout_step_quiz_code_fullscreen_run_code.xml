@@ -139,6 +139,25 @@
         </LinearLayout>
     </ScrollView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/runCodeFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:contentDescription="@string/comment_action_create"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
+        app:maxImageSize="20dp"
+        app:srcCompat="@drawable/ic_run_code_fab"
+        app:useCompatPadding="true"
+        android:theme="@style/ThemeOverlay.Violet"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
+        android:visibility="gone"
+        tools:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        app:layout_anchorGravity="bottom|right|end" />
+
     <include
         android:id="@+id/runCodeActionSeparator"
         android:layout_width="match_parent"

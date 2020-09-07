@@ -86,6 +86,13 @@ constructor(
                     .toSingle(LessonData(lesson, null, null, null, lessonDeepLinkData.stepPosition - 1, lessonDeepLinkData.discussionId, lessonDeepLinkData.discussionThread))
             }
 
+    fun getLessonData(trialLessonId: Long): Maybe<LessonData> =
+        lessonRepository
+            .getLesson(trialLessonId)
+            .map { lesson ->
+                LessonData(lesson, null, null, null)
+            }
+
     fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
         discussionThreadRepository
             .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())

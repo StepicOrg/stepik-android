@@ -3,6 +3,8 @@ package org.stepik.android.view.course_list.ui.adapter.delegate
 import android.graphics.BitmapFactory
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
@@ -13,6 +15,8 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.util.RoundedBitmapImageViewTarget
 import org.stepic.droid.ui.util.doOnGlobalLayout
 import org.stepik.android.domain.course.analytic.CourseCardSeenAnalyticEvent
+import org.stepik.android.domain.course.analytic.batch.CourseCardSeenAnalyticBatchEvent
+import org.stepik.android.domain.course.model.EnrollmentState
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.view.course_list.ui.delegate.CoursePropertiesDelegate
 import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
@@ -21,7 +25,8 @@ import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 class CourseListItemAdapterDelegate(
     private val analytic: Analytic,
     private val onItemClicked: (CourseListItem.Data) -> Unit,
-    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit
+    private val onContinueCourseClicked: (CourseListItem.Data) -> Unit,
+    private val isHandleInAppPurchase: Boolean
 ) : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
         data is CourseListItem.Data
@@ -49,6 +54,7 @@ class CourseListItemAdapterDelegate(
         private val courseContinueButton = root.courseContinueButton
         private val courseDescription = root.courseDescription
         private val courseButtonSeparator = root.courseButtonSeparator
+        private val coursePrice = root.coursePrice
 
         init {
             root.setOnClickListener { (itemData as? CourseListItem.Data)?.let(onItemClicked) }
@@ -77,11 +83,28 @@ class CourseListItemAdapterDelegate(
                 courseDescription.doOnGlobalLayout { it.post { it.maxLines = it.height / it.lineHeight } }
             }
 
+            coursePrice.isVisible = !isEnrolled
+            val (@ColorRes textColor, displayPrice) = if (data.course.isPaid) {
+                R.color.color_overlay_violet to handleCoursePrice(data)
+            } else {
+                R.color.color_overlay_green to context.resources.getString(R.string.course_list_free)
+            }
+            coursePrice.setTextColor(ContextCompat.getColor(context, textColor))
+            coursePrice.text = displayPrice
+
             adaptiveCourseMarker.isVisible = data.isAdaptive
 
             coursePropertiesDelegate.setStats(data)
 
             analytic.report(CourseCardSeenAnalyticEvent(data.course.id, data.source))
+            analytic.report(CourseCardSeenAnalyticBatchEvent(data.course.id, data.source))
         }
     }
+
+    private fun handleCoursePrice(data: CourseListItem.Data) =
+        if (isHandleInAppPurchase && data.course.priceTier != null) {
+            (data.courseStats.enrollmentState as? EnrollmentState.NotEnrolledInApp)?.skuWrapper?.sku?.price ?: data.course.displayPrice
+        } else {
+            data.course.displayPrice
+        }
 }

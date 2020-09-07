@@ -31,7 +31,8 @@ class AnalyticImpl
 @Inject
 constructor(
     context: Context,
-    config: Config
+    config: Config,
+    private val stepikAnalytic: StepikAnalytic
 ) : Analytic {
     private companion object {
         inline fun updateYandexUserProfile(mutation: UserProfile.Builder.() -> Unit) {
@@ -122,6 +123,10 @@ constructor(
         if (AnalyticSource.FIREBASE in analyticEvent.sources) {
             val bundle = bundleOf(*analyticEvent.params.map { (a, b) -> a to b }.toTypedArray())
             firebaseAnalytics.logEvent(analyticEvent.name, bundle)
+        }
+
+        if (AnalyticSource.STEPIK_API in analyticEvent.sources) {
+            stepikAnalytic.logEvent(analyticEvent.name, analyticEvent.params)
         }
     }
 

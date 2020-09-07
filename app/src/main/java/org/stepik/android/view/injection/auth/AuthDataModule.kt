@@ -64,10 +64,17 @@ abstract class AuthDataModule {
         @Provides
         @AppSingleton
         @JvmStatic
-        internal fun provideEmptyAuthService(config: Config, converterFactory: Converter.Factory): EmptyAuthService {
+        internal fun provideEmptyAuthService(
+            config: Config,
+            userAgentProvider: UserAgentProvider,
+            converterFactory: Converter.Factory
+        ): EmptyAuthService {
             val okHttpBuilder = OkHttpClient.Builder()
             okHttpBuilder.setTimeoutsInSeconds(NetworkFactory.TIMEOUT_IN_SECONDS)
             addDebugInterceptors(okHttpBuilder)
+            okHttpBuilder.addInterceptor { chain ->
+                chain.proceed(chain.addUserAgent(userAgentProvider.provideUserAgent()))
+            }
             val retrofit = NetworkFactory.createRetrofit(config.baseUrl, okHttpBuilder.build(), converterFactory)
             return retrofit.create(EmptyAuthService::class.java)
         }

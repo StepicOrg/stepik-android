@@ -8,5 +8,5 @@ interface AnalyticEvent {
         get() = emptyMap()
 
     val sources: EnumSet<AnalyticSource>
-        get() = EnumSet.allOf(AnalyticSource::class.java)
+        get() = EnumSet.complementOf(EnumSet.of(AnalyticSource.STEPIK_API))
 }
