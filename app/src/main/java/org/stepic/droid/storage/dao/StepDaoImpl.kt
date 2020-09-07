@@ -2,6 +2,7 @@ package org.stepic.droid.storage.dao
 
 import android.content.ContentValues
 import android.database.Cursor
+import androidx.core.database.getLongOrNull
 import org.stepic.droid.model.BlockPersistentWrapper
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.structure.DbStructureBlock
@@ -41,6 +42,11 @@ constructor(
             updateDate = cursor.getDate(DbStructureStep.Column.UPDATE_DATE),
 
             subscriptions = DbParseHelper.parseStringToStringList(cursor.getString(DbStructureStep.Column.SUBSCRIPTION)),
+
+            session = cursor.getLongOrNull(cursor.getColumnIndex(DbStructureStep.Column.SESSION)),
+            instruction = cursor.getLongOrNull(cursor.getColumnIndex(DbStructureStep.Column.INSTRUCTION)),
+            instructionType = cursor.getString(DbStructureStep.Column.INSTRUCTION_TYPE),
+
             position = cursor.getLong(DbStructureStep.Column.POSITION),
             hasSubmissionRestriction = cursor.getBoolean(DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION),
             maxSubmissionCount = cursor.getInt(DbStructureStep.Column.MAX_SUBMISSION_COUNT),
@@ -68,6 +74,11 @@ constructor(
         values.put(DbStructureStep.Column.STATUS, step.status?.name)
         values.put(DbStructureStep.Column.PROGRESS, step.progress)
         values.put(DbStructureStep.Column.SUBSCRIPTION, DbParseHelper.parseStringArrayToString(step.subscriptions?.toTypedArray()))
+
+        values.put(DbStructureStep.Column.SESSION, step.session)
+        values.put(DbStructureStep.Column.INSTRUCTION, step.instruction)
+        values.put(DbStructureStep.Column.INSTRUCTION_TYPE, step.instructionType)
+
         values.put(DbStructureStep.Column.VIEWED_BY, step.viewedBy)
         values.put(DbStructureStep.Column.PASSED_BY, step.passedBy)
         values.put(DbStructureStep.Column.WORTH, step.worth)

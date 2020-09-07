@@ -1,14 +1,11 @@
 package org.stepik.android.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.readDate
-import org.stepik.android.model.util.writeBoolean
-import org.stepik.android.model.util.writeDate
+import kotlinx.android.parcel.Parcelize
 import java.util.Date
 
+@Parcelize
 data class Step(
     @SerializedName("id")
     val id: Long = 0,
@@ -24,6 +21,13 @@ data class Step(
     override val progress: String? = null,
     @SerializedName("subscriptions")
     val subscriptions: List<String>? = null,
+
+    @SerializedName("session")
+    val session: Long? = null,
+    @SerializedName("instruction")
+    val instruction: Long? = null,
+    @SerializedName("instruction_type")
+    val instructionType: String? = null, //todo enum
 
     @SerializedName("viewed_by")
     val viewedBy: Long = 0,
@@ -57,69 +61,6 @@ data class Step(
     @SerializedName("correct_ratio")
     val correctRatio: Double? = null
 ) : Parcelable, Progressable {
-    override fun describeContents() = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeLong(this.id)
-        dest.writeLong(this.lesson)
-        dest.writeLong(this.position)
-        dest.writeInt(this.status?.ordinal ?: -1)
-        dest.writeParcelable(this.block, 0)
-        dest.writeString(this.progress)
-        dest.writeStringList(this.subscriptions)
-
-        dest.writeLong(this.viewedBy)
-        dest.writeLong(this.passedBy)
-        dest.writeLong(this.worth)
-
-        dest.writeDate(this.createDate)
-        dest.writeDate(this.updateDate)
-
-        dest.writeParcelable(this.actions, flags)
-
-        dest.writeInt(this.discussionsCount)
-        dest.writeString(this.discussionProxy)
-        dest.writeStringList(this.discussionThreads)
-
-        dest.writeBoolean(this.hasSubmissionRestriction)
-        dest.writeInt(this.maxSubmissionCount)
-        dest.writeValue(this.correctRatio)
-    }
-
-    companion object CREATOR : Parcelable.Creator<Step> {
-        override fun createFromParcel(parcel: Parcel): Step =
-            Step(
-                parcel.readLong(),
-                parcel.readLong(),
-                parcel.readLong(),
-                Status.values().getOrNull(parcel.readInt()),
-                parcel.readParcelable(Block::class.java.classLoader),
-                parcel.readString(),
-                parcel.createStringArrayList(),
-
-                parcel.readLong(),
-                parcel.readLong(),
-
-                parcel.readLong(),
-
-                parcel.readDate(),
-                parcel.readDate(),
-
-                parcel.readParcelable(Actions::class.java.classLoader),
-
-                parcel.readInt(),
-                parcel.readString(),
-                parcel.createStringArrayList(),
-
-                parcel.readBoolean(),
-                parcel.readInt(),
-                parcel.readValue(Long::class.java.classLoader) as Double?
-            )
-
-        override fun newArray(size: Int): Array<out Step?> =
-            arrayOfNulls(size)
-    }
-
     enum class Status {
         @SerializedName("ready")
         READY,
