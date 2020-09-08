@@ -1,6 +1,6 @@
 package org.stepik.android.data.review_instruction.repository
 
-import org.stepik.android.domain.review_instruction.model.ReviewInstruction
+import org.stepik.android.model.ReviewInstruction
 import org.stepik.android.data.review_instruction.source.ReviewInstructionCacheDataSource
 import org.stepik.android.data.review_instruction.source.ReviewInstructionRemoteDataSource
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository

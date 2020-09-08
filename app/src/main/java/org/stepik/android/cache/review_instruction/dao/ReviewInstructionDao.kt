@@ -1,6 +1,6 @@
 package org.stepik.android.cache.review_instruction.dao
 
-import org.stepik.android.domain.review_instruction.model.ReviewInstruction
+import org.stepik.android.model.ReviewInstruction
 import io.reactivex.Completable
 import io.reactivex.Single
 

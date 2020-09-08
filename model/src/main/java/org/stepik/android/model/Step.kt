@@ -27,7 +27,7 @@ data class Step(
     @SerializedName("instruction")
     val instruction: Long? = null,
     @SerializedName("instruction_type")
-    val instructionType: String? = null, //todo enum
+    val instructionType: ReviewStrategyType? = null,
 
     @SerializedName("viewed_by")
     val viewedBy: Long = 0,
