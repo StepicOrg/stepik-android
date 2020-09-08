@@ -27,6 +27,7 @@ import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDa
 import org.stepik.android.cache.section.structure.DbStructureSection
 import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.cache.unit.structure.DbStructureUnit
+import org.stepik.android.cache.user_courses.dao.UserCourseDao
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.data.course_list.model.CourseListQueryData
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
@@ -78,7 +79,7 @@ constructor(
     private val discussionThreadDao: IDao<DiscussionThread>,
     private val attemptDao: IDao<Attempt>,
     private val socialProfileDao: IDao<SocialProfile>,
-    private val userCourseDao: IDao<UserCourse>,
+    private val userCourseDao: UserCourseDao,
     private val courseCollectionDao: IDao<CourseCollection>,
     private val courseListQueryDataDao: IDao<CourseListQueryData>,
     private val purchaseNotificationDao: PurchaseNotificationDao,

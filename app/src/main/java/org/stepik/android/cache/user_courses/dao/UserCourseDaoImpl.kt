@@ -15,7 +15,7 @@ class UserCourseDaoImpl
 @Inject
 constructor(
     databaseOperations: DatabaseOperations
-) : DaoBase<UserCourse>(databaseOperations) {
+) : DaoBase<UserCourse>(databaseOperations), UserCourseDao {
     override fun getDbName(): String =
         DbStructureUserCourse.TABLE_NAME
 
@@ -49,4 +49,11 @@ constructor(
             isArchived = cursor.getBoolean(DbStructureUserCourse.Columns.IS_ARCHIVED),
             lastViewed = cursor.getDate(DbStructureUserCourse.Columns.LAST_VIEWED)
         )
+
+    override fun getAllUserCourses(whereArgs: Map<String, String>): List<UserCourse> {
+        val query = "SELECT * FROM $dbName WHERE "
+        val where = whereArgs.keys.joinToString(" = ? AND ", "", "", -1, "", null) + " = ?" +
+                "ORDER BY ${DbStructureUserCourse.Columns.LAST_VIEWED} DESC"
+        return getAllWithQuery(query + where, whereArgs.values.toTypedArray())
+    }
 }
