@@ -1,9 +1,14 @@
 package org.stepik.android.domain.review_session.model
 
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
+@Entity
 data class ReviewSession(
+    @PrimaryKey
     @SerializedName("id")
     val id: Long,
     @SerializedName("instruction")
@@ -43,6 +48,7 @@ data class ReviewSession(
     @SerializedName("active_review")
     val activeReview: Long?,
 
+    @Embedded
     @SerializedName("actions")
     val actions: Actions
 ) {

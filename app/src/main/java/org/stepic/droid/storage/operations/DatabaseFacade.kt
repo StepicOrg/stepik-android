@@ -19,6 +19,7 @@ import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
+import org.stepik.android.cache.base.AppDatabase
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
@@ -82,7 +83,9 @@ constructor(
     private val courseCollectionDao: IDao<CourseCollection>,
     private val courseListQueryDataDao: IDao<CourseListQueryData>,
     private val purchaseNotificationDao: PurchaseNotificationDao,
-    private val coursePaymentDao: IDao<CoursePayment>
+    private val coursePaymentDao: IDao<CoursePayment>,
+
+    private val appDatabase: AppDatabase
 ) {
 
     fun dropDatabase() {
@@ -115,6 +118,8 @@ constructor(
         courseListQueryDataDao.removeAll()
         purchaseNotificationDao.removeAll()
         coursePaymentDao.removeAll()
+
+        appDatabase.clearAllTables()
     }
 
     fun addAssignments(assignments: List<Assignment>) {

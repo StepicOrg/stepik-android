@@ -3,6 +3,7 @@ package org.stepik.android.view.injection.review_session
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import org.stepik.android.cache.base.AppDatabase
 import org.stepik.android.domain.review_session.repository.ReviewSessionRepository
 import org.stepik.android.data.review_session.repository.ReviewSessionRepositoryImpl
 import org.stepik.android.cache.review_session.ReviewSessionCacheDataSourceImpl
@@ -36,7 +37,8 @@ abstract class ReviewSessionDataModule {
     companion object {
         @Provides
         @JvmStatic
-        fun provideReviewSessionDao(): ReviewSessionDao = TODO()
+        fun provideReviewSessionDao(appDatabase: AppDatabase): ReviewSessionDao =
+            appDatabase.reviewSessionDao()
 
         @Provides
         @JvmStatic

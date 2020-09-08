@@ -1,11 +1,9 @@
 package org.stepic.droid.di.storage
 
-import android.app.Application
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import androidx.room.Room
-import androidx.room.RoomDatabase
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Binds
@@ -77,6 +75,7 @@ import org.stepik.android.model.*
 import org.stepik.android.model.Unit
 import org.stepik.android.cache.base.AnalyticDatabase
 import org.stepik.android.cache.base.AnalyticDatabaseInfo
+import org.stepik.android.cache.base.AppDatabase
 import org.stepik.android.cache.course_payments.dao.CoursePaymentsDaoImpl
 import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
 import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDaoImpl
@@ -273,5 +272,11 @@ abstract class StorageModule {
         @JvmStatic
         internal fun provideAnalyticDatabase(context: Context): AnalyticDatabase =
             Room.databaseBuilder(context, AnalyticDatabase::class.java, AnalyticDatabaseInfo.DATABASE_NAME).build()
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideAppDatabase(context: Context): AppDatabase =
+            Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME).build()
     }
 }

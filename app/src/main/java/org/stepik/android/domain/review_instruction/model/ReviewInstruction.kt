@@ -1,8 +1,13 @@
-package org.stepik.android.model
+package org.stepik.android.domain.review_instruction.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import org.stepik.android.model.ReviewStrategyType
 
+@Entity
 data class ReviewInstruction(
+    @PrimaryKey
     @SerializedName("id")
     val id: Long,
     @SerializedName("step")
