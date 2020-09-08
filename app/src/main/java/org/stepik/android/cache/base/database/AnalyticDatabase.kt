@@ -1,4 +1,4 @@
-package org.stepik.android.cache.base
+package org.stepik.android.cache.base.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

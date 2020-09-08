@@ -43,7 +43,6 @@ import org.stepic.droid.storage.dao.ViewAssignmentDaoImpl
 import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
-import org.stepik.android.cache.analytic.dao.AnalyticDao
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.course_collection.dao.CourseCollectionDaoImpl
@@ -73,9 +72,9 @@ import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.*
 import org.stepik.android.model.Unit
-import org.stepik.android.cache.base.AnalyticDatabase
-import org.stepik.android.cache.base.AnalyticDatabaseInfo
-import org.stepik.android.cache.base.AppDatabase
+import org.stepik.android.cache.base.database.AnalyticDatabase
+import org.stepik.android.cache.base.database.AnalyticDatabaseInfo
+import org.stepik.android.cache.base.database.AppDatabase
 import org.stepik.android.cache.course_payments.dao.CoursePaymentsDaoImpl
 import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
 import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDaoImpl

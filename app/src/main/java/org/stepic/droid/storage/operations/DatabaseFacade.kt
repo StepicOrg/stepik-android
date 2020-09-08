@@ -19,7 +19,7 @@ import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
-import org.stepik.android.cache.base.AppDatabase
+import org.stepik.android.cache.base.database.AppDatabase
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
@@ -30,7 +30,6 @@ import org.stepik.android.cache.step.structure.DbStructureStep
 import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.data.course_list.model.CourseListQueryData
-import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.last_step.model.LastStep

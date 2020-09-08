@@ -1,4 +1,4 @@
-package org.stepik.android.cache.base
+package org.stepik.android.cache.base.database
 
 object AnalyticDatabaseInfo {
     const val DATABASE_NAME = "stepik_analytic.db"

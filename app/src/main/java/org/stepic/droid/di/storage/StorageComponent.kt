@@ -8,7 +8,6 @@ import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.PersistentStateDao
 import org.stepic.droid.storage.dao.IDao
 import org.stepic.droid.storage.operations.DatabaseFacade
-import org.stepik.android.cache.analytic.dao.AnalyticDao
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
@@ -20,11 +19,9 @@ import org.stepik.android.model.SocialProfile
 import org.stepik.android.model.Submission
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.CourseCollection
-import org.stepik.android.cache.analytic.model.AnalyticLocalEvent
-import org.stepik.android.cache.base.AnalyticDatabase
-import org.stepik.android.cache.base.AppDatabase
+import org.stepik.android.cache.base.database.AnalyticDatabase
+import org.stepik.android.cache.base.database.AppDatabase
 import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
-import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread

@@ -3,7 +3,7 @@ package org.stepik.android.view.injection.review_instruction
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import org.stepik.android.cache.base.AppDatabase
+import org.stepik.android.cache.base.database.AppDatabase
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository
 import org.stepik.android.data.review_instruction.repository.ReviewInstructionRepositoryImpl
 import org.stepik.android.cache.review_instruction.ReviewInstructionCacheDataSourceImpl
