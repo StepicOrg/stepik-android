@@ -37,6 +37,17 @@ data class ReviewSession(
     @SerializedName("score")
     val score: Float,
 
-//    @SerializedName("available_reviews_count")
-//    val
-)
+    @SerializedName("available_reviews_count")
+    val availableReviewsCount: Int?,
+
+    @SerializedName("active_review")
+    val activeReview: Long?,
+
+    @SerializedName("actions")
+    val actions: Actions
+) {
+    data class Actions(
+        @SerializedName("finish")
+        val finish: Boolean
+    )
+}
