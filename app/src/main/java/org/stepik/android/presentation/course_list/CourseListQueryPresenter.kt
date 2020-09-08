@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.util.PagedList
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import ru.nobird.android.domain.rx.emptyOnErrorStub
@@ -84,27 +85,25 @@ constructor(
         paginationDisposable += Single
             .concat(
                 courseListInteractor
-                    .getCourseListItems(courseListQuery, sourceTypeComposition = SourceTypeComposition.CACHE),
+                    .getCourseListItems(courseListQuery, sourceTypeComposition = SourceTypeComposition.CACHE)
+                    .map { courseListItems ->
+                        courseListItems to SourceTypeComposition.CACHE
+                    },
 
                 courseListInteractor
                     .getCourseListItems(courseListQuery, sourceTypeComposition = SourceTypeComposition.REMOTE)
+                    .map { courseListItems ->
+                        courseListItems to SourceTypeComposition.REMOTE
+                    }
             )
+            .toObservable()
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onNext = {
-                    state = if (it.isNotEmpty()) {
-                        // TODO Unsafe casting
-                        (state as CourseListQueryView.State.Data).copy(
-                            courseListViewState = CourseListView.State.Content(
-                                courseListDataItems = it,
-                                courseListItems = it
-                            )
-                        )
-                    } else {
-                        (state as CourseListQueryView.State.Data).copy(
-                            courseListViewState = CourseListView.State.Empty
-                        )
+                onNext = { (items, source) ->
+                    state = resolveInitialFetchCourses(items, source)
+                    if (source == SourceTypeComposition.REMOTE) {
+                        fetchNextPage()
                     }
                 },
                 onError = {
@@ -151,6 +150,25 @@ constructor(
                 }
             )
     }
+
+    private fun resolveInitialFetchCourses(items: PagedList<CourseListItem.Data>, source: SourceTypeComposition): CourseListQueryView.State.Data =
+        if (items.isNotEmpty()) {
+            val courseListItems = if (source == SourceTypeComposition.CACHE) {
+                items + CourseListItem.PlaceHolder()
+            } else {
+                items
+            }
+            (state as CourseListQueryView.State.Data).copy(
+                courseListViewState = CourseListView.State.Content(
+                    courseListDataItems = items,
+                    courseListItems = courseListItems
+                )
+            )
+        } else {
+            (state as CourseListQueryView.State.Data).copy(
+                courseListViewState = CourseListView.State.Empty
+            )
+        }
 
     /**
      * Enrollment updates
