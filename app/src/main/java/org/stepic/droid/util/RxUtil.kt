@@ -13,23 +13,6 @@ import java.util.concurrent.TimeUnit
 
 enum class RxEmpty { INSTANCE }
 
-data class RxOptional<out T>(val value: T?) {
-    fun <R> map(f: (T) -> R?) =
-            RxOptional(value?.let(f))
-}
-
-fun <T> Observable<RxOptional<T>>.unwrapOptional(): Observable<T> =
-        this.filter { it.value != null }.map { it.value }
-
-fun <T> Flowable<RxOptional<T>>.unwrapOptional(): Flowable<T> =
-        this.filter { it.value != null }.map { it.value }
-
-fun <T> Single<RxOptional<T>>.unwrapOptional(): Maybe<T> =
-        this.filter { it.value != null }.map { it.value }
-
-fun <T, R> Single<T>.mapNotNull(transform: (T) -> R?): Maybe<R> =
-        this.map { RxOptional(transform(it)) }.unwrapOptional()
-
 infix fun Completable.then(completable: Completable): Completable = this.andThen(completable)
 infix fun <T> Completable.then(observable: Observable<T>): Observable<T> = this.andThen(observable)
 infix fun <T> Completable.then(single: Single<T>): Single<T> = this.andThen(single)
