@@ -1,9 +1,9 @@
 package org.stepic.droid.di.storage
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import androidx.room.Room
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Binds
@@ -19,7 +19,6 @@ import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDaoImpl
 import org.stepic.droid.persistence.storage.dao.PersistentStateDao
 import org.stepic.droid.persistence.storage.dao.PersistentStateDaoImpl
-import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.AdaptiveExpDaoImpl
 import org.stepic.droid.storage.dao.AssignmentDaoImpl
@@ -89,10 +88,6 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindsOperations(databaseOperationsImpl: DatabaseOperationsImpl): DatabaseOperations
-
-    @StorageSingleton
-    @Binds
-    internal abstract fun provideSqlOpenHelper(databaseHelper: DatabaseHelper): SQLiteOpenHelper
 
     @StorageSingleton
     @Binds
@@ -263,12 +258,6 @@ abstract class StorageModule {
         @StorageSingleton
         @Provides
         @JvmStatic
-        internal fun provideWritableDatabase(helper: SQLiteOpenHelper): SQLiteDatabase =
-                helper.writableDatabase
-
-        @StorageSingleton
-        @Provides
-        @JvmStatic
         internal fun provideAnalyticDatabase(context: Context): AnalyticDatabase =
             Room.databaseBuilder(context, AnalyticDatabase::class.java, AnalyticDatabaseInfo.DATABASE_NAME).build()
 
@@ -277,5 +266,17 @@ abstract class StorageModule {
         @JvmStatic
         internal fun provideAppDatabase(context: Context): AppDatabase =
             Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME).build()
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideSqlOpenHelper(appDatabase: AppDatabase): SupportSQLiteOpenHelper =
+            appDatabase.openHelper
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideWritableDatabase(helper: SupportSQLiteOpenHelper): SupportSQLiteDatabase =
+            helper.writableDatabase
     }
 }

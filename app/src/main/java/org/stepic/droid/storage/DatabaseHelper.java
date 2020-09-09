@@ -1,8 +1,6 @@
 package org.stepic.droid.storage;
 
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.stepic.droid.storage.migration.MigrationFrom33To34;
 import org.stepic.droid.storage.migration.MigrationFrom34To35;
@@ -30,7 +28,6 @@ import org.stepic.droid.storage.migration.MigrationFrom55To56;
 import org.stepic.droid.storage.migration.MigrationFrom56To57;
 import org.stepic.droid.storage.migration.MigrationFrom57To58;
 import org.stepic.droid.storage.migration.MigrationFrom58To59;
-import org.stepic.droid.storage.structure.DatabaseInfo;
 import org.stepic.droid.storage.structure.DbStructureAdaptiveExp;
 import org.stepic.droid.storage.structure.DbStructureAssignment;
 import org.stepic.droid.storage.structure.DbStructureBlock;
@@ -53,9 +50,7 @@ import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue;
 import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlines;
 import org.stepik.android.cache.personal_deadlines.structure.DbStructureDeadlinesBanner;
 
-import javax.inject.Inject;
-
-public final class DatabaseHelper extends SQLiteOpenHelper {
+public final class DatabaseHelper {
     private static final String TEXT_TYPE = "TEXT";
     private static final String LONG_TYPE = "LONG";
     private static final String INT_TYPE = "INTEGER";
@@ -67,14 +62,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TRUE_VALUE = "1";
     private static final String DEFAULT = "DEFAULT";
 
-
-    @Inject
-    public DatabaseHelper(Context context) {
-        super(context, DatabaseInfo.FILE_NAME, null, DatabaseInfo.VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SupportSQLiteDatabase db) {
         createCourseTable(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES);
         createCourseTable(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES);
         createSectionTable(db, DbStructureSections.SECTIONS);
@@ -150,9 +138,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         upgradeFrom58To59(db);
     }
 
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SupportSQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 2) {
 //            update from 1 to 2
             createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
@@ -428,129 +414,129 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    private void upgradeFrom58To59(SQLiteDatabase db) {
+    private void upgradeFrom58To59(SupportSQLiteDatabase db) {
         MigrationFrom58To59.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom57To58(SQLiteDatabase db) {
+    private void upgradeFrom57To58(SupportSQLiteDatabase db) {
         MigrationFrom57To58.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom56To57(SQLiteDatabase db) {
+    private void upgradeFrom56To57(SupportSQLiteDatabase db) {
         MigrationFrom56To57.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom55To56(SQLiteDatabase db) {
+    private void upgradeFrom55To56(SupportSQLiteDatabase db) {
         MigrationFrom55To56.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom54To55(SQLiteDatabase db) {
+    private void upgradeFrom54To55(SupportSQLiteDatabase db) {
         MigrationFrom54To55.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom53To54(SQLiteDatabase db) {
+    private void upgradeFrom53To54(SupportSQLiteDatabase db) {
         MigrationFrom53To54.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom52To53(SQLiteDatabase db) {
+    private void upgradeFrom52To53(SupportSQLiteDatabase db) {
         MigrationFrom52To53.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom51To52(SQLiteDatabase db) {
+    private void upgradeFrom51To52(SupportSQLiteDatabase db) {
         MigrationFrom51To52.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom50To51(SQLiteDatabase db) {
+    private void upgradeFrom50To51(SupportSQLiteDatabase db) {
         MigrationFrom50To51.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom49To50(SQLiteDatabase db) {
+    private void upgradeFrom49To50(SupportSQLiteDatabase db) {
         MigrationFrom49To50.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom48To49(SQLiteDatabase db) {
+    private void upgradeFrom48To49(SupportSQLiteDatabase db) {
         MigrationFrom48To49.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom47To48(SQLiteDatabase db) {
+    private void upgradeFrom47To48(SupportSQLiteDatabase db) {
         MigrationFrom47To48.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom46To47(SQLiteDatabase db) {
+    private void upgradeFrom46To47(SupportSQLiteDatabase db) {
         MigrationFrom46To47.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom45To46(SQLiteDatabase db) {
+    private void upgradeFrom45To46(SupportSQLiteDatabase db) {
         MigrationFrom45To46.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom44To45(SQLiteDatabase db) {
+    private void upgradeFrom44To45(SupportSQLiteDatabase db) {
         MigrationFrom44To45.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom43To44(SQLiteDatabase db) {
+    private void upgradeFrom43To44(SupportSQLiteDatabase db) {
         MigrationFrom43To44.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom42To43(SQLiteDatabase db) {
+    private void upgradeFrom42To43(SupportSQLiteDatabase db) {
         MigrationFrom42To43.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom41To42(SQLiteDatabase db) {
+    private void upgradeFrom41To42(SupportSQLiteDatabase db) {
         MigrationFrom41To42.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom40To41(SQLiteDatabase db) {
+    private void upgradeFrom40To41(SupportSQLiteDatabase db) {
         MigrationFrom40To41.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom39To40(SQLiteDatabase db) {
+    private void upgradeFrom39To40(SupportSQLiteDatabase db) {
         MigrationFrom39To40.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom38To39(SQLiteDatabase db) {
+    private void upgradeFrom38To39(SupportSQLiteDatabase db) {
         MigrationFrom38To39.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom37To38(SQLiteDatabase db) {
+    private void upgradeFrom37To38(SupportSQLiteDatabase db) {
         MigrationFrom37To38.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom36To37(SQLiteDatabase db) {
+    private void upgradeFrom36To37(SupportSQLiteDatabase db) {
         MigrationFrom36To37.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom35To36(SQLiteDatabase db) {
+    private void upgradeFrom35To36(SupportSQLiteDatabase db) {
         MigrationFrom35To36.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom34To35(SQLiteDatabase db) {
+    private void upgradeFrom34To35(SupportSQLiteDatabase db) {
         MigrationFrom34To35.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom33To34(SQLiteDatabase db) {
+    private void upgradeFrom33To34(SupportSQLiteDatabase db) {
         MigrationFrom33To34.INSTANCE.migrate(db);
     }
 
-    private void upgradeFrom32To33(SQLiteDatabase db) {
+    private void upgradeFrom32To33(SupportSQLiteDatabase db) {
         DbStructureDeadlines.INSTANCE.createTable(db);
         DbStructureDeadlinesBanner.INSTANCE.createTable(db);
     }
 
-    private void upgradeFrom31To32(SQLiteDatabase db) {
+    private void upgradeFrom31To32(SupportSQLiteDatabase db) {
         createAdaptiveExpTable(db);
     }
 
-    private void upgradeFrom30To31(SQLiteDatabase db) {
+    private void upgradeFrom30To31(SupportSQLiteDatabase db) {
         createViewedNotificationsQueueTable(db);
     }
 
-    private void upgradeFrom29To30(SQLiteDatabase db) {
+    private void upgradeFrom29To30(SupportSQLiteDatabase db) {
         createSearchQueryTable(db);
         createSearchQueryTableSizeLimiterTrigger(db);
     }
 
-    private void upgradeFrom28To29(SQLiteDatabase db) {
+    private void upgradeFrom28To29(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING, REAL_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.AVERAGE_RATING, REAL_TYPE);
 
@@ -558,39 +544,39 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.REVIEW_SUMMARY, INT_TYPE);
     }
 
-    private void upgradeFrom27To28(SQLiteDatabase db) {
+    private void upgradeFrom27To28(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS, TEXT_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.PROGRESS, TEXT_TYPE);
     }
 
-    private void upgradeFrom26To27(SQLiteDatabase db) {
+    private void upgradeFrom26To27(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.IS_REQUIREMENT_SATISFIED, BOOLEAN_TYPE, TRUE_VALUE);
         alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.REQUIRED_PERCENT, INT_TYPE);
         alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.REQUIRED_SECTION, LONG_TYPE);
     }
 
-    private void upgradeFrom25To26(SQLiteDatabase db) {}
+    private void upgradeFrom25To26(SupportSQLiteDatabase db) {}
 
-    private void upgradeFrom24To25(SQLiteDatabase db) {
+    private void upgradeFrom24To25(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.CODE_OPTIONS, TEXT_TYPE);
     }
 
-    private void upgradeFrom23To24(SQLiteDatabase db) {
+    private void upgradeFrom23To24(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, LONG_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LEARNERS_COUNT, LONG_TYPE);
     }
 
-    private void upgradeFrom22To23(SQLiteDatabase db) {
+    private void upgradeFrom22To23(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_DURATION, LONG_TYPE);
     }
 
-    private void upgradeFrom21To22(SQLiteDatabase db) {
+    private void upgradeFrom21To22(SupportSQLiteDatabase db) {
         createVideoUrlTable(db, DbStructureVideoUrl.externalVideosName);
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_THUMBNAIL, TEXT_TYPE);
         alterColumn(db, DbStructureBlock.BLOCKS, DbStructureBlock.Column.EXTERNAL_VIDEO_ID, LONG_TYPE);
     }
 
-    private void upgradeFrom20To21(SQLiteDatabase db) {
+    private void upgradeFrom20To21(SupportSQLiteDatabase db) {
 //        createCourseLastInteractionTable(db); // There was creating of table, but not it is not needed
     }
 
@@ -598,7 +584,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         // NO ACTION FOR LEGACY
     }
 
-    private void upgradeFrom18To19(SQLiteDatabase db) {
+    private void upgradeFrom18To19(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.LAST_STEP_ID, TEXT_TYPE);
 
@@ -606,28 +592,28 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.IS_ACTIVE, BOOLEAN_TYPE);
     }
 
-    private void upgradeFrom17To18(SQLiteDatabase db) {
+    private void upgradeFrom17To18(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.HAS_SUBMISSION_RESTRICTION, BOOLEAN_TYPE);
         alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.MAX_SUBMISSION_COUNT, INT_TYPE);
     }
 
-    private void upgradeFrom16To17(SQLiteDatabase db) {
+    private void upgradeFrom16To17(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.IS_EXAM, BOOLEAN_TYPE);
     }
 
-    private void upgradeFrom15To16(SQLiteDatabase db) {
+    private void upgradeFrom15To16(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.DISCOUNTING_POLICY, INT_TYPE);
     }
 
-    private void upgradeFrom14To15(SQLiteDatabase db) {
+    private void upgradeFrom14To15(SupportSQLiteDatabase db) {
         createVideoTimestamp(db);
     }
 
-    private void upgradeFrom13To14(SQLiteDatabase db) {
+    private void upgradeFrom13To14(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.PEER_REVIEW, TEXT_TYPE);
     }
 
-    private void upgradeFrom12To13(SQLiteDatabase db) {
+    private void upgradeFrom12To13(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, TEXT_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.BEGIN_DATE, TEXT_TYPE);
 
@@ -635,19 +621,19 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.END_DATE, TEXT_TYPE);
     }
 
-    private void upgradeFrom11To12(SQLiteDatabase db) {
+    private void upgradeFrom11To12(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureSections.SECTIONS, DbStructureSections.Column.TEST_SECTION, BOOLEAN_TYPE);
     }
 
-    private void upgradeFrom10To11(SQLiteDatabase db) {
+    private void upgradeFrom10To11(SupportSQLiteDatabase db) {
         createCertificateView(db, DbStructureCertificateViewItem.CERTIFICATE_VIEW_ITEM);
     }
 
-    private void upgradeFrom9To10(SQLiteDatabase db) {
+    private void upgradeFrom9To10(SupportSQLiteDatabase db) {
         createCalendarSection(db, DbStructureCalendarSection.CALENDAR_SECTION);
     }
 
-    private void upgradeFrom8To9(SQLiteDatabase db) {
+    private void upgradeFrom8To9(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, TEXT_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LINK, TEXT_TYPE);
 
@@ -655,44 +641,44 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.SCHEDULE_LONG_LINK, TEXT_TYPE);
     }
 
-    private void upgradeFrom7To8(SQLiteDatabase db) {
+    private void upgradeFrom7To8(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_COUNT, INT_TYPE);
         alterColumn(db, DbStructureStep.STEPS, DbStructureStep.Column.DISCUSSION_ID, TEXT_TYPE);
     }
 
-    private void upgradeFrom6To7(SQLiteDatabase db) {
+    private void upgradeFrom6To7(SupportSQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS " + DbStructureNotification.NOTIFICATIONS_TEMP);
         createNotification(db, DbStructureNotification.NOTIFICATIONS_TEMP);
     }
 
-    private void upgradeFrom3To4(SQLiteDatabase db) {
+    private void upgradeFrom3To4(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.CERTIFICATE, TEXT_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.CERTIFICATE, TEXT_TYPE);
     }
 
-    private void upgradeFrom4To5(SQLiteDatabase db) {
+    private void upgradeFrom4To5(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.INTRO_VIDEO_ID, LONG_TYPE);
         alterColumn(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES, DbStructureEnrolledAndFeaturedCourses.Column.INTRO_VIDEO_ID, LONG_TYPE);
     }
 
-    private void upgradeFrom5To6(SQLiteDatabase db) {
+    private void upgradeFrom5To6(SupportSQLiteDatabase db) {
         alterColumn(db, DbStructureLesson.LESSONS, DbStructureLesson.Column.COVER_URL, TEXT_TYPE);
     }
 
-    private void alterColumn(SQLiteDatabase db, String dbName, String column, String type) {
+    private void alterColumn(SupportSQLiteDatabase db, String dbName, String column, String type) {
         String upgrade = "ALTER TABLE " + dbName + " ADD COLUMN "
                 + column + " " + type + " ";
         db.execSQL(upgrade);
     }
 
-    private void alterColumn(SQLiteDatabase db, String dbName, String column, String type, String defaultValue) {
+    private void alterColumn(SupportSQLiteDatabase db, String dbName, String column, String type, String defaultValue) {
         String upgrade = "ALTER TABLE " + dbName + " ADD COLUMN "
                 + column + WHITESPACE + type + WHITESPACE + DEFAULT + WHITESPACE + defaultValue;
         db.execSQL(upgrade);
     }
 
 
-    private void createCourseTable(SQLiteDatabase db, String name) {
+    private void createCourseTable(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureEnrolledAndFeaturedCourses.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -724,7 +710,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createSectionTable(SQLiteDatabase db, String name) {
+    private void createSectionTable(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureSections.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -755,7 +741,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createCachedVideoTable(SQLiteDatabase db, String name) {
+    private void createCachedVideoTable(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureCachedVideo.Column.VIDEO_ID + " LONG, "
@@ -768,7 +754,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createUnitsDb(SQLiteDatabase db, String name) {
+    private void createUnitsDb(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureUnit.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -795,7 +781,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createLessonsDb(SQLiteDatabase db, String name) {
+    private void createLessonsDb(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureLesson.Column.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -822,7 +808,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createStepsDb(SQLiteDatabase db, String name) {
+    private void createStepsDb(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureStep.Column.STEP_ID + " LONG, "
@@ -841,7 +827,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createBlocksDb(SQLiteDatabase db, String name) {
+    private void createBlocksDb(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureBlock.Column.STEP_ID + " LONG, "
@@ -851,7 +837,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createShareDownloads(SQLiteDatabase db, String name) {
+    private void createShareDownloads(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureSharedDownloads.Column.DOWNLOAD_ID + " LONG, "
@@ -863,7 +849,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createAssignment(SQLiteDatabase db, String name) {
+    private void createAssignment(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureAssignment.Column.ASSIGNMENT_ID + " LONG, "
@@ -876,7 +862,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createProgress(SQLiteDatabase db, String name) {
+    private void createProgress(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureProgress.Columns.IS_PASSED + " BOOLEAN, "
@@ -890,7 +876,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createViewQueue(SQLiteDatabase db, String name) {
+    private void createViewQueue(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureViewQueue.Column.STEP_ID + " LONG, "
@@ -899,7 +885,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createNotification(SQLiteDatabase db, String name) {
+    private void createNotification(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureNotification.Column.ID + " LONG, "
@@ -917,7 +903,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createCalendarSection(SQLiteDatabase db, String name) {
+    private void createCalendarSection(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureCalendarSection.Column.SECTION_ID + " LONG, "
@@ -929,7 +915,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createCertificateView(SQLiteDatabase db, String name) {
+    private void createCertificateView(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureCertificateViewItem.Column.CERTIFICATE_ID + " LONG, "
@@ -944,7 +930,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    private void createVideoTimestamp(SQLiteDatabase db) {
+    private void createVideoTimestamp(SupportSQLiteDatabase db) {
         String sql = "CREATE TABLE " + DbStructureVideoTimestamp.VIDEO_TIMESTAMP
                 + " ("
                 + DbStructureVideoTimestamp.Column.VIDEO_ID + WHITESPACE + LONG_TYPE + ", "
@@ -953,7 +939,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createVideoUrlTable(SQLiteDatabase db, String name) {
+    private void createVideoUrlTable(SupportSQLiteDatabase db, String name) {
         String sql = "CREATE TABLE " + name
                 + " ("
                 + DbStructureVideoUrl.Column.videoId + WHITESPACE + LONG_TYPE + ", "
@@ -963,7 +949,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createSearchQueryTable(SQLiteDatabase db) {
+    private void createSearchQueryTable(SupportSQLiteDatabase db) {
         String sql = "CREATE TABLE " + DbStructureSearchQuery.SEARCH_QUERY
                 + " ("
                 + DbStructureSearchQuery.Column.QUERY_HASH + WHITESPACE + LONG_TYPE + " PRIMARY KEY, "
@@ -973,7 +959,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createSearchQueryTableSizeLimiterTrigger(SQLiteDatabase db) {
+    private void createSearchQueryTableSizeLimiterTrigger(SupportSQLiteDatabase db) {
         String sql = "CREATE TRIGGER IF NOT EXISTS" + WHITESPACE + DbStructureSearchQuery.LIMITER_TRIGGER_NAME + WHITESPACE
                 + "AFTER INSERT ON" + WHITESPACE + DbStructureSearchQuery.SEARCH_QUERY + WHITESPACE
                 + "BEGIN" + WHITESPACE
@@ -988,7 +974,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createViewedNotificationsQueueTable(SQLiteDatabase db) {
+    private void createViewedNotificationsQueueTable(SupportSQLiteDatabase db) {
         String sql = "CREATE TABLE " + DbStructureViewedNotificationsQueue.VIEWED_NOTIFICATIONS_QUEUE
                 + " ("
                 + DbStructureViewedNotificationsQueue.Column.NOTIFICATION_ID + WHITESPACE + LONG_TYPE + " PRIMARY KEY"
@@ -996,7 +982,7 @@ public final class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(sql);
     }
 
-    private void createAdaptiveExpTable(SQLiteDatabase db) {
+    private void createAdaptiveExpTable(SupportSQLiteDatabase db) {
         String sql = "CREATE TABLE IF NOT EXISTS" + WHITESPACE + DbStructureAdaptiveExp.ADAPTIVE_EXP + WHITESPACE
                 + " ("
                 + DbStructureAdaptiveExp.Column.EXP + WHITESPACE + LONG_TYPE + ", "

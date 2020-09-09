@@ -27,7 +27,7 @@ import org.stepik.android.domain.review_session.model.ReviewSession
 )
 abstract class AppDatabase : RoomDatabase() {
     companion object {
-        const val VERSION = 1
+        const val VERSION = 59
         const val NAME = "stepic_database.db"
     }
 
