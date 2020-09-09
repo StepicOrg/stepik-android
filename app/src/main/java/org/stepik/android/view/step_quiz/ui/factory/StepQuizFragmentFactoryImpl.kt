@@ -19,39 +19,40 @@ class StepQuizFragmentFactoryImpl
 @Inject
 constructor() : StepQuizFragmentFactory {
     override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment =
-        if (stepPersistentWrapper.step.actions?.doReview != null) {
-            StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id)
-        } else {
-            when (stepPersistentWrapper.step.block?.name) {
-                AppConstants.TYPE_STRING,
-                AppConstants.TYPE_NUMBER,
-                AppConstants.TYPE_MATH,
-                AppConstants.TYPE_FREE_ANSWER ->
+        when (stepPersistentWrapper.step.block?.name) {
+            AppConstants.TYPE_STRING,
+            AppConstants.TYPE_NUMBER,
+            AppConstants.TYPE_MATH,
+            AppConstants.TYPE_FREE_ANSWER ->
+                if (stepPersistentWrapper.step.actions?.doReview != null) {
+                    StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id)
+                } else {
                     TextStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
-                AppConstants.TYPE_CHOICE ->
-                    ChoiceStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+                }
 
-                AppConstants.TYPE_CODE ->
-                    CodeStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+            AppConstants.TYPE_CHOICE ->
+                ChoiceStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
 
-                AppConstants.TYPE_SORTING ->
-                    SortingStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+            AppConstants.TYPE_CODE ->
+                CodeStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
 
-                AppConstants.TYPE_MATCHING ->
-                    MatchingStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+            AppConstants.TYPE_SORTING ->
+                SortingStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
 
-                AppConstants.TYPE_PYCHARM ->
-                    PyCharmStepQuizFragment.newInstance()
+            AppConstants.TYPE_MATCHING ->
+                MatchingStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
 
-                AppConstants.TYPE_SQL ->
-                    SqlStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+            AppConstants.TYPE_PYCHARM ->
+                PyCharmStepQuizFragment.newInstance()
 
-                AppConstants.TYPE_FILL_BLANKS ->
-                    FillBlanksStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+            AppConstants.TYPE_SQL ->
+                SqlStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
 
-                else ->
-                    UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
-            }
+            AppConstants.TYPE_FILL_BLANKS ->
+                FillBlanksStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
+
+            else ->
+                UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
         }
 
     override fun isStepCanHaveQuiz(stepPersistentWrapper: StepPersistentWrapper): Boolean =
