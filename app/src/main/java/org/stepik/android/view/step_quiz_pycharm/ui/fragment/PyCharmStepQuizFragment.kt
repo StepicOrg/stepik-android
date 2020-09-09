@@ -1,4 +1,4 @@
-package org.stepik.android.view.step_quz_pycharm.ui.fragment
+package org.stepik.android.view.step_quiz_pycharm.ui.fragment
 
 import android.os.Bundle
 import android.text.method.LinkMovementMethod

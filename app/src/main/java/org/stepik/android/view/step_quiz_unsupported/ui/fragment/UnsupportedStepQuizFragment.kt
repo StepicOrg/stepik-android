@@ -1,9 +1,7 @@
 package org.stepik.android.view.step_quiz_unsupported.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_step_quiz_unsupported.*
 import org.stepic.droid.R
@@ -16,7 +14,7 @@ import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class UnsupportedStepQuizFragment : Fragment() {
+class UnsupportedStepQuizFragment : Fragment(R.layout.fragment_step_quiz_unsupported) {
     companion object {
         fun newInstance(stepId: Long): UnsupportedStepQuizFragment =
             UnsupportedStepQuizFragment()
@@ -46,9 +44,6 @@ class UnsupportedStepQuizFragment : Fragment() {
             .stepComponent(stepId)
             .inject(this)
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_step_quiz_unsupported, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
