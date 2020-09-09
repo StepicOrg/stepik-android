@@ -40,6 +40,7 @@ import org.stepic.droid.storage.dao.UnitDaoImpl
 import org.stepic.droid.storage.dao.VideoTimestampDaoImpl
 import org.stepic.droid.storage.dao.ViewAssignmentDaoImpl
 import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
+import org.stepic.droid.storage.migration.Migrations
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
@@ -265,7 +266,9 @@ abstract class StorageModule {
         @Provides
         @JvmStatic
         internal fun provideAppDatabase(context: Context): AppDatabase =
-            Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME).build()
+            Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
+                .addMigrations(*Migrations.migrations)
+                .build()
 
         @StorageSingleton
         @Provides

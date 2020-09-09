@@ -4,7 +4,6 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCourse
-import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.storage.structure.DbStructureLastStep
 import org.stepic.droid.storage.structure.DbStructureProgress
 import org.stepic.droid.storage.structure.DbStructureSections
@@ -39,7 +38,6 @@ object MigrationFrom36To37 : Migration(36, 37) {
 
     private fun migrateCourses(db: SupportSQLiteDatabase) {
         DbStructureCourse.createTable(db)
-        DbStructureCourseList.createTable(db)
     }
 
     private fun migrateBlockVideos(db: SupportSQLiteDatabase) {
@@ -155,6 +153,8 @@ object MigrationFrom36To37 : Migration(36, 37) {
                 ${DbStructureSections.Column.REQUIRED_PERCENT}
             FROM ${DbStructureSections.SECTIONS}
         """.trimIndent())
+
+        db.execSQL("DROP TABLE IF EXISTS ${DbStructureSections.SECTIONS}")
     }
 
     private fun migrateProgress(db: SupportSQLiteDatabase) {
