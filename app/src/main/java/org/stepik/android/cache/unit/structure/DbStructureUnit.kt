@@ -1,6 +1,7 @@
 package org.stepik.android.cache.unit.structure
 
 import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureUnit {
     const val TABLE_NAME = "unit"
@@ -27,7 +28,7 @@ object DbStructureUnit {
         const val UPDATE_DATE = "update_date"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${DbStructureUnit.Columns.ID} LONG PRIMARY KEY,

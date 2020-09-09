@@ -1,6 +1,6 @@
 package org.stepic.droid.storage.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Deprecated("Removed structure")
 object DbStructureCourseList {
@@ -11,7 +11,7 @@ object DbStructureCourseList {
         const val COURSE_ID = "course_id"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${Columns.TYPE} TEXT,
@@ -21,9 +21,9 @@ object DbStructureCourseList {
         """.trimIndent())
     }
 
-    fun dropTable(db: SQLiteDatabase) {
+    fun dropTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
-            DROP TABLE IF EXISTS ${DbStructureCourseList.TABLE_NAME}
+            DROP TABLE IF EXISTS $TABLE_NAME
         """.trimIndent())
     }
 }

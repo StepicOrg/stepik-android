@@ -1,15 +1,16 @@
 package org.stepic.droid.storage.migration
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepik.android.cache.block.structure.DbStructureBlock
 
-object MigrationFrom44To45 : Migration {
-    override fun migrate(db: SQLiteDatabase) {
+object MigrationFrom44To45 : Migration(44, 45) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         createBlocksTable(db)
         migrateBlocks(db)
     }
 
-    private fun createBlocksTable(db: SQLiteDatabase) {
+    private fun createBlocksTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS ${DbStructureBlock.TABLE_NAME} (
                 ${DbStructureBlock.Column.STEP_ID} LONG PRIMARY KEY,
@@ -23,7 +24,7 @@ object MigrationFrom44To45 : Migration {
         """.trimIndent())
     }
 
-    private fun migrateBlocks(db: SQLiteDatabase) {
+    private fun migrateBlocks(db: SupportSQLiteDatabase) {
         db.execSQL("""
             REPLACE INTO ${DbStructureBlock.TABLE_NAME}
             SELECT

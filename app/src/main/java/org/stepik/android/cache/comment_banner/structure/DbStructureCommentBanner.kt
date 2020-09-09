@@ -1,6 +1,6 @@
 package org.stepik.android.cache.comment_banner.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Deprecated("Removed structure")
 object DbStructureCommentBanner {
@@ -10,7 +10,7 @@ object DbStructureCommentBanner {
         const val COURSE_ID = "course_id"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         val sql = """
             CREATE TABLE IF NOT EXISTS ${DbStructureCommentBanner.TABLE_NAME} (
                 ${Columns.COURSE_ID} LONG PRIMARY KEY
@@ -18,7 +18,7 @@ object DbStructureCommentBanner {
         db.execSQL(sql)
     }
 
-    fun dropTable(db: SQLiteDatabase) {
+    fun dropTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             DROP TABLE IF EXISTS ${DbStructureCommentBanner.TABLE_NAME}
         """.trimIndent())
