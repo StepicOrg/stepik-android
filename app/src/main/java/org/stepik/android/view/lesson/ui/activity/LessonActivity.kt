@@ -282,6 +282,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     stepsAdapter.items = emptyList()
                 }
 
+                centeredToolbarSubtitle.isVisible = stepsAdapter.items.isNotEmpty()
                 invalidateTabLayout()
             }
         }
@@ -289,8 +290,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         isInfoMenuItemVisible =
             state is LessonView.State.LessonLoaded &&
             state.stepsState is LessonView.StepsState.Loaded
-
-        centeredToolbarSubtitle.isVisible = stepsAdapter.items.isNotEmpty()
     }
 
     private fun setupToolbarTitle(lessonData: LessonData) {
