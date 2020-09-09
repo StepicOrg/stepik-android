@@ -258,7 +258,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                         R.string.lesson_step_counter, state.lessonData.stepPosition + 1,
                         state.lessonData.lesson.steps.size
                     )
-                    centeredToolbarSubtitle.isVisible = true
                 }
 
                 stepsAdapter.lessonData = state.lessonData
@@ -290,6 +289,8 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         isInfoMenuItemVisible =
             state is LessonView.State.LessonLoaded &&
             state.stepsState is LessonView.StepsState.Loaded
+
+        centeredToolbarSubtitle.isVisible = stepsAdapter.items.isNotEmpty()
     }
 
     private fun setupToolbarTitle(lessonData: LessonData) {
