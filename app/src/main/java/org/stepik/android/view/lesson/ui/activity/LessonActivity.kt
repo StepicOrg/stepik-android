@@ -258,7 +258,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                         R.string.lesson_step_counter, state.lessonData.stepPosition + 1,
                         state.lessonData.lesson.steps.size
                     )
-                    centeredToolbarSubtitle.isVisible = true
                 }
 
                 stepsAdapter.lessonData = state.lessonData
@@ -283,6 +282,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     stepsAdapter.items = emptyList()
                 }
 
+                centeredToolbarSubtitle.isVisible = stepsAdapter.items.isNotEmpty()
                 invalidateTabLayout()
             }
         }

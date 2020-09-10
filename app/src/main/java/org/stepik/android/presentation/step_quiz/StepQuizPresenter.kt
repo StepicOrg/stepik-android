@@ -131,7 +131,7 @@ constructor(
                             restrictions = oldState.restrictions.copy(submissionCount = oldState.restrictions.submissionCount + 1)
                         )
 
-                    val params =
+                    val params: MutableMap<String, Any> =
                         mutableMapOf(
                             AmplitudeAnalytic.Steps.Params.SUBMISSION to newSubmission.id,
                             AmplitudeAnalytic.Steps.Params.STEP to step.id,

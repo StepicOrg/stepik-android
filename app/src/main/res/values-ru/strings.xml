@@ -196,12 +196,13 @@
     <string name="cant_show_next_step">Извините, следующий урок недоступен</string>
     <string name="previous_lesson">Предыдущий урок</string>
     <string name="cant_show_previous_step">Извините, предыдущий урок недоступен</string>
-    <string name="lesson_not_found_or_not_access">Урок не существует или у Вас нет прав на его
+    <string name="lesson_not_found_or_not_access">Урок не существует или у вас нет прав на его
         просмотр
     </string>
     <string name="not_auth_message">Войдите, чтобы продолжить</string>
     <string name="auth_action_title">Войти</string>
-    <string name="empty_steps_title">В данном уроке еще нет шагов</string>
+    <string name="empty_steps_title">В данном уроке еще нет шагов или у вас нет прав на его
+        просмотр</string>
     <string name="open_in_browser">Открыть в Браузере</string>
     <string name="low_quality">Низкое</string>
     <string name="medium_quality">Среднее</string>

@@ -47,7 +47,7 @@ constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr: 
         nestedTextView?.let {
             if (params.text != null) it.text = params.text
 
-            setIfNot({ it@nestedTextView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, it) }, params.textSize, -1f)
+            setIfNot({ nestedTextView?.setTextSize(TypedValue.COMPLEX_UNIT_PX, it) }, params.textSize, -1f)
         }
     }
 
