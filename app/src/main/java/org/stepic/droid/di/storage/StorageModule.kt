@@ -2,6 +2,7 @@ package org.stepic.droid.di.storage
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.google.gson.Gson
@@ -268,6 +269,11 @@ abstract class StorageModule {
         internal fun provideAppDatabase(context: Context): AppDatabase =
             Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
                 .addMigrations(*Migrations.migrations)
+                .addCallback(object : RoomDatabase.Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        Migrations.migrations.forEach { it.migrate(db) }
+                    }
+                })
                 .build()
 
         @StorageSingleton

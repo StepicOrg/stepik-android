@@ -169,16 +169,6 @@ final class LegacyDatabaseMigrations {
     }
 
     static void upgradeFrom2To3(SupportSQLiteDatabase db) {
-        String upgradeToV3 =
-                "ALTER TABLE " + DbStructureCachedVideo.CACHED_VIDEO + " ADD COLUMN "
-                        + DbStructureCachedVideo.Column.QUALITY + " TEXT ";
-        db.execSQL(upgradeToV3);
-
-        upgradeToV3 = "ALTER TABLE " + DbStructureSharedDownloads.SHARED_DOWNLOADS + " ADD COLUMN "
-                + DbStructureSharedDownloads.Column.QUALITY + " TEXT ";
-        db.execSQL(upgradeToV3);
-
-
         //in release 0.6 we create progress table with score type = Text, but in database it was Integer, now rename it:
         //http://stackoverflow.com/questions/21199398/sqlite-alter-a-tables-column-type
 
@@ -212,6 +202,12 @@ final class LegacyDatabaseMigrations {
     }
     
     static void upgradeFrom1To2(SupportSQLiteDatabase db) {
+        createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
+        createProgress(db, DbStructureProgress.TABLE_NAME);
+        createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
+    }
+
+    static void upgradeFrom0To1(SupportSQLiteDatabase db) {
         createCourseTable(db, DbStructureEnrolledAndFeaturedCourses.ENROLLED_COURSES);
         createCourseTable(db, DbStructureEnrolledAndFeaturedCourses.FEATURED_COURSES);
         createSectionTable(db, DbStructureSections.SECTIONS);
@@ -221,10 +217,6 @@ final class LegacyDatabaseMigrations {
         createStepsDb(db, DbStructureStep.STEPS);
         createBlocksDb(db, DbStructureBlock.BLOCKS);
         createShareDownloads(db, DbStructureSharedDownloads.SHARED_DOWNLOADS);
-
-        createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
-        createProgress(db, DbStructureProgress.TABLE_NAME);
-        createViewQueue(db, DbStructureViewQueue.VIEW_QUEUE);
     }
 
     private static void alterColumn(SupportSQLiteDatabase db, String dbName, String column, String type) {

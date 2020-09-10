@@ -5,6 +5,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 object Migrations {
     private val oldMigration = arrayOf(
+        object : Migration(0, 1) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                LegacyDatabaseMigrations.upgradeFrom0To1(database)
+            }
+        },
         object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 LegacyDatabaseMigrations.upgradeFrom1To2(database)
@@ -186,5 +191,6 @@ object Migrations {
         MigrationFrom56To57,
         MigrationFrom57To58,
         MigrationFrom58To59,
+        MigrationFrom59To60,
     )
 }
