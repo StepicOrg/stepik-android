@@ -66,7 +66,7 @@ constructor(
         }.map { courses -> PagedList(courses.sortedBy { courseIds.indexOf(it.id) }) }
     }
 
-    override fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType): Single<PagedList<Course>> {
+    override fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType, allowFallback: Boolean): Single<PagedList<Course>> {
         val remoteSource = courseRemoteDataSource
             .getCourses(courseListQuery)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
@@ -79,9 +79,11 @@ constructor(
             }
 
         return when (primarySourceType) {
-            DataSourceType.REMOTE ->
+            DataSourceType.REMOTE -> if (allowFallback) {
+                remoteSource.onErrorResumeNext(cacheSource)
+            } else {
                 remoteSource
-                    .onErrorResumeNext(cacheSource)
+            }
 
             DataSourceType.CACHE ->
                 cacheSource

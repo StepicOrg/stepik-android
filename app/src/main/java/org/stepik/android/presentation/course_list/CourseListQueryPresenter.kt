@@ -57,6 +57,8 @@ constructor(
             view?.setState(value)
         }
 
+    private var isFromCache: Boolean = false
+
     var firstVisibleItemPosition: Int? = null
 
     private val paginationDisposable = CompositeDisposable()
@@ -102,9 +104,7 @@ constructor(
             .subscribeBy(
                 onNext = { (items, source) ->
                     state = resolveInitialFetchCourses(items, source)
-                    if (source == SourceTypeComposition.REMOTE) {
-                        fetchNextPage()
-                    }
+                    isFromCache = source == SourceTypeComposition.CACHE || isSameCourseListItems(state, items)
                 },
                 onError = {
                     when (val oldState = (state as? CourseListQueryView.State.Data)?.courseListViewState) {
@@ -119,6 +119,27 @@ constructor(
             )
     }
 
+    private fun isSameCourseListItems(courseListQueryState: CourseListQueryView.State, items: PagedList<CourseListItem.Data>): Boolean {
+        val oldState = (courseListQueryState as? CourseListQueryView.State.Data)
+            ?: return false
+
+        val oldCourseListState = (oldState.courseListViewState as? CourseListView.State.Content)
+            ?: return false
+
+        if (oldCourseListState.courseListDataItems.size != items.size) {
+            return false
+        }
+
+        return oldCourseListState.courseListDataItems.zip(items).all { (firstListItem, secondListItem)  -> firstListItem.id == secondListItem.id }
+    }
+
+    private fun isMustStopFetchNextPage(oldCourseListState: CourseListView.State.Content): Boolean =
+        if (isFromCache && oldCourseListState.courseListItems.last() !is CourseListItem.PlaceHolder) {
+            false
+        } else {
+            oldCourseListState.courseListItems.last() is CourseListItem.PlaceHolder || !oldCourseListState.courseListDataItems.hasNext
+        }
+
     fun fetchNextPage() {
         val oldState = (state as? CourseListQueryView.State.Data)
             ?: return
@@ -126,10 +147,11 @@ constructor(
         val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
             ?: return
 
-        if (oldCourseListState.courseListItems.last() is CourseListItem.PlaceHolder ||
-            !oldCourseListState.courseListDataItems.hasNext) {
+        if (isMustStopFetchNextPage(oldCourseListState)) {
             return
         }
+
+        isFromCache = false
 
         val nextPage = oldCourseListState.courseListDataItems.page + 1
 
@@ -137,7 +159,7 @@ constructor(
 
         state = oldState.copy(courseListViewState = courseListStateMapper.mapToLoadMoreState(oldCourseListState))
         paginationDisposable += courseListInteractor
-            .getCourseListItems(courseListQuery)
+            .getCourseListItems(courseListQuery, isAllowFallback = false)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -145,6 +167,7 @@ constructor(
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(oldCourseListState, it))
                 },
                 onError = {
+                    isFromCache = true
                     state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToError(oldCourseListState))
                     view?.showNetworkError()
                 }
