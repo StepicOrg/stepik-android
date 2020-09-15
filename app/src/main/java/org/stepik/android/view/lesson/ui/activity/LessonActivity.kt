@@ -263,6 +263,16 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 super.onOptionsItemSelected(item)
         }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            if (intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false)) {
+                lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
+                intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
+            }
+        }
+    }
+
     override fun setState(state: LessonView.State) {
         viewStateDelegate.switchState(state)
         when (state) {

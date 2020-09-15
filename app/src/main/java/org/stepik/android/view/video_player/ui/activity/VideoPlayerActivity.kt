@@ -529,9 +529,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
 
     private fun moveNext() {
+        if (isPIPModeActive) return
         lessonAutoplayData?.let {
             startActivity(it)
-//            startActivity(LessonActivity.createIntent(this, it.lessonId, it.stepPosition, true))
         }
         finish()
     }

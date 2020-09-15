@@ -328,6 +328,7 @@ public class ScreenManagerImpl implements ScreenManager {
                 sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled));
             } else {
                 Intent lessonMoveNextIntent = LessonActivity.Companion.createIntent(context, lessonAutoplayData.getLessonId(), lessonAutoplayData.getStepPosition(), true);
+                lessonMoveNextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled, lessonMoveNextIntent));
             }
         } else {

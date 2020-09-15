@@ -102,7 +102,7 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
                 title = lessonData.lesson.title.orEmpty(),
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
-            ), true, LessonAutoplayData(lessonData.lesson.id, lessonData.stepPosition)
+            ), true, LessonAutoplayData(lessonData.lesson.id, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id })
             )
         }
     }
