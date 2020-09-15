@@ -72,6 +72,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
 
+        private const val EXTRA_AUTOPLAY_LESSON_ID = "autoplay_lesson_id"
+        private const val EXTRA_AUTOPLAY_STEP_POSITION = "autoplay_step_position"
+        private const val EXTRA_AUTOPLAY_MOVE_NEXT = "autoplay_move_next"
+
         fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_SECTION, section)
@@ -87,6 +91,12 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         fun createIntent(context: Context, trialLessonId: Long): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_TRIAL_LESSON_ID, trialLessonId)
+
+        fun createIntent(context: Context, autoplayLessonId: Long, autoplayStepPosition: Int, autoplayMoveNext: Boolean): Intent =
+            Intent(context, LessonActivity::class.java)
+                .putExtra(EXTRA_AUTOPLAY_LESSON_ID, autoplayLessonId)
+                .putExtra(EXTRA_AUTOPLAY_STEP_POSITION, autoplayStepPosition)
+                .putExtra(EXTRA_AUTOPLAY_MOVE_NEXT, autoplayMoveNext)
     }
 
     @Inject
@@ -198,6 +208,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         val trialLessonId = intent.getLongExtra(EXTRA_TRIAL_LESSON_ID, -1L)
 
+        val autoplayLessonId = intent.getLongExtra(EXTRA_AUTOPLAY_LESSON_ID, -1)
+        val autoplayStepPosition = intent.getIntExtra(EXTRA_AUTOPLAY_STEP_POSITION, -1)
+
         when {
             lastStep != null ->
                 lessonPresenter.onLastStep(lastStep, forceUpdate)
@@ -210,6 +223,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
             trialLessonId != -1L ->
                 lessonPresenter.onTrialLesson(trialLessonId, forceUpdate)
+
+            autoplayLessonId != -1L && autoplayStepPosition != -1 ->
+                lessonPresenter.onAutoplay(autoplayLessonId, autoplayStepPosition, forceUpdate)
 
             else ->
                 lessonPresenter.onEmptyData()
@@ -268,6 +284,11 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     if (intent.getBooleanExtra(EXTRA_AUTOPLAY, false)) {
                         lessonPager.post { playCurrentStep() }
                         intent.removeExtra(EXTRA_AUTOPLAY)
+                    }
+
+                    if (intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false)) {
+                        lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
+                        intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
                     }
                 } else {
                     if (state.stepsState is LessonView.StepsState.Exam) {

@@ -93,6 +93,13 @@ constructor(
                 LessonData(lesson, null, null, null)
             }
 
+    fun getLessonData(autoplayLessonId: Long, autoplayStepPosition: Int): Maybe<LessonData> =
+        lessonRepository
+            .getLesson(autoplayLessonId)
+            .map { lesson ->
+                LessonData(lesson, null, null, null, autoplayStepPosition)
+            }
+
     fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
         discussionThreadRepository
             .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())

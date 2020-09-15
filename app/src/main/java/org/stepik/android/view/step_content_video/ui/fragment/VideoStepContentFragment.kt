@@ -1,7 +1,5 @@
 package org.stepik.android.view.step_content_video.ui.fragment
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,13 +18,12 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
+import org.stepik.android.domain.lesson.model.LessonAutoplayData
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
-import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -105,7 +102,8 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
                 title = lessonData.lesson.title.orEmpty(),
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
-            ), true)
+            ), true, LessonAutoplayData(lessonData.lesson.id, lessonData.stepPosition)
+            )
         }
     }
 
@@ -130,13 +128,5 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     override fun play(): Boolean {
         openVideoPlayer()
         return true
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == VideoPlayerActivity.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            (parentFragment as? NextMoveable)
-                ?.moveNext(isAutoplayEnabled = true)
-        }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 }

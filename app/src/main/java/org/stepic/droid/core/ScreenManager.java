@@ -20,6 +20,7 @@ import org.stepik.android.domain.course.analytic.CourseViewSource;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
+import org.stepik.android.domain.lesson.model.LessonAutoplayData;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
@@ -85,7 +86,7 @@ public interface ScreenManager {
 
     Intent getCatalogIntent(Context context);
 
-    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled);
+    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled, @Nullable LessonAutoplayData lessonAutoplayData);
 
     void showSettings(Activity sourceActivity);
 

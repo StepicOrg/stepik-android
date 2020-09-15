@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.TargetApi
-import android.app.Activity
 import android.app.PendingIntent
 import android.app.PictureInPictureParams
 import android.app.RemoteAction
@@ -90,11 +89,18 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
         private const val EXTRA_VIDEO_AUTOPLAY = "video_player_autoplay"
+        private const val EXTRA_VIDEO_MOVE_NEXT_INTENT = "video_player_move_next_intent"
 
         fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
                 .putExtra(EXTRA_VIDEO_AUTOPLAY, isAutoplayEnabled)
+
+        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, isAutoplayEnabled: Boolean = false, lessonMoveNextIntent: Intent): Intent =
+            Intent(context, VideoPlayerActivity::class.java)
+                .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
+                .putExtra(EXTRA_VIDEO_AUTOPLAY, isAutoplayEnabled)
+                .putExtra(EXTRA_VIDEO_MOVE_NEXT_INTENT, lessonMoveNextIntent)
     }
 
     @Inject
@@ -104,6 +110,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val isAutoplayEnabled: Boolean by lazy { intent.getBooleanExtra(EXTRA_VIDEO_AUTOPLAY, false) }
+    private val lessonAutoplayData: Intent? by lazy { intent.getParcelableExtra<Intent>(EXTRA_VIDEO_MOVE_NEXT_INTENT) }
 
     private val labelPlay: String by lazy { getString(R.string.pip_play_label) }
     private val labelPause: String by lazy { getString(R.string.pip_stop_label) }
@@ -242,7 +249,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
             }
         }
 
-        autoplay_controller_panel.setOnClickListener { videoPlayerPresenter.onAutoplayNext() }
+        autoplay_controller_panel.setOnClickListener {
+            moveNext()
+//            videoPlayerPresenter.onAutoplayNext()
+        }
         autoplayProgress.max = AUTOPLAY_PROGRESS_MAX
         autoplayCancel.setOnClickListener { videoPlayerPresenter.stayOnThisStep() }
         autoplaySwitch.setOnCheckedChangeListener { _, isChecked ->
@@ -357,10 +367,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 }
             }
 
-            VideoPlayerView.State.AutoplayNext -> {
-                setResult(Activity.RESULT_OK)
-                finish()
-            }
+            VideoPlayerView.State.AutoplayNext ->
+                moveNext()
         }
     }
 
@@ -519,4 +527,12 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     private fun isSupportPIP(): Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)
+
+    private fun moveNext() {
+        lessonAutoplayData?.let {
+            startActivity(it)
+//            startActivity(LessonActivity.createIntent(this, it.lessonId, it.stepPosition, true))
+        }
+        finish()
+    }
 }

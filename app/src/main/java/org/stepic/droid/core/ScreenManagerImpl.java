@@ -52,6 +52,7 @@ import org.stepik.android.domain.course.analytic.CourseViewSource;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
+import org.stepik.android.domain.lesson.model.LessonAutoplayData;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
@@ -311,7 +312,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled) {
+    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled, @Nullable LessonAutoplayData lessonAutoplayData) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -323,12 +324,12 @@ public class ScreenManagerImpl implements ScreenManager {
         final Context context = sourceFragment.requireContext();
 
         if (!isOpenExternal) {
-            // TODO Broken Autoplay
-            sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled));
-//            sourceFragment.startActivityForResult(
-//                    VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled),
-//                    VideoPlayerActivity.REQUEST_CODE
-//            );
+            if (lessonAutoplayData == null) {
+                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled));
+            } else {
+                Intent lessonMoveNextIntent = LessonActivity.Companion.createIntent(context, lessonAutoplayData.getLessonId(), lessonAutoplayData.getStepPosition(), true);
+                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled, lessonMoveNextIntent));
+            }
         } else {
             @Nullable
             final Video cachedVideo = videoPlayerMediaData.getCachedVideo();
