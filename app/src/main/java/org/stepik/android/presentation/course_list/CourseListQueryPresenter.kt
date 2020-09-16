@@ -1,6 +1,5 @@
 package org.stepik.android.presentation.course_list
 
-import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.disposables.CompositeDisposable
@@ -86,18 +85,18 @@ constructor(
             courseListViewState = CourseListView.State.Loading
         )
 
-        paginationDisposable += Flowable
+        paginationDisposable += Observable
             .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
-            .flatMapSingle { source ->
+            .concatMapMaybe { source ->
                 courseListInteractor
                     .getCourseListItems(courseListQuery, sourceTypeComposition = source, isAllowFallback = false)
                     .map { courseListItems ->
                         courseListItems to source
                     }
+                    .filter { (items, source) -> items.isNotEmpty() || source == SourceTypeComposition.REMOTE }
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
             }
-            .filter { (items, source) -> items.isNotEmpty() || source == SourceTypeComposition.REMOTE }
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onNext = { (items, source) ->
                     val isNeedLoadNextPage = courseListQueryStateMapper.isNeedLoadNextPage(state)
