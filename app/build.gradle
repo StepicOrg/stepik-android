@@ -149,6 +149,7 @@ dependencies {
     implementation libraries.rxAndroid
     implementation libraries.rxJava2
     implementation libraries.rxKotlin
+    implementation libraries.rxRelay
     implementation libraries.rxRoom
 
     implementation libraries.appCompat

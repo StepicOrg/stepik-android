@@ -1,6 +1,7 @@
 package org.stepik.android.view.comment.ui.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
@@ -143,6 +145,7 @@ class ComposeCommentDialogFragment :
 
         if (savedInstanceState == null) {
             commentEditText.setText(comment?.text)
+            requestFocusNewComment(comment?.text ?: "")
         }
         invalidateMenuState()
 
@@ -157,7 +160,6 @@ class ComposeCommentDialogFragment :
         tryAgain.setOnClickListener { setDataToPresenter(forceUpdate = true) }
 
         commentSolution.setOnClickListener { showSubmissions() }
-
         setDataToPresenter()
     }
 
@@ -255,6 +257,14 @@ class ComposeCommentDialogFragment :
                     .newInstance()
                     .show(childFragmentManager, DiscardTextDialogFragment.TAG)
             }
+        }
+    }
+
+    private fun requestFocusNewComment(text: String) {
+        if (text.isNotEmpty()) return
+        commentEditText.post {
+            commentEditText.requestFocus()
+            (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(commentEditText, InputMethodManager.SHOW_IMPLICIT)
         }
     }
 

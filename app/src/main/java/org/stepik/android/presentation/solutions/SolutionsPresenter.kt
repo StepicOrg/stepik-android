@@ -154,7 +154,7 @@ constructor(
     }
 
     private fun sendSubmissionEvent(step: Step, submission: Submission) {
-        val params =
+        val params: MutableMap<String, Any> =
             mutableMapOf(
                 AmplitudeAnalytic.Steps.Params.SUBMISSION to submission.id,
                 AmplitudeAnalytic.Steps.Params.STEP to step.id,

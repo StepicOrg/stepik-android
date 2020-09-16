@@ -222,7 +222,8 @@
     </string>
     <string name="not_auth_message">Sign in to continue</string>
     <string name="auth_action_title">Sign in</string>
-    <string name="empty_steps_title">This lesson doesn\'t have any steps</string>
+    <string name="empty_steps_title">This lesson doesn\'t have any steps or you don\'t have
+        permission to view it</string>
     <string name="open_in_browser">Open in Browser</string>
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
@@ -811,6 +812,8 @@
     <string name="step_quiz_code_input_not_supported">Current quiz type does not support input data</string>
 
     <string name="step_quiz_pycharm_message">Please open this problem in your <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
+
+    <string name="step_quiz_reload_message">Sorry! This problem has been updated by the author. You have to start it over. Your score for previous submissions is preserved.</string>
 
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
