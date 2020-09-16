@@ -2,12 +2,12 @@ package org.stepik.android.presentation.course_list
 
 import io.reactivex.Observable
 import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import ru.nobird.android.domain.rx.emptyOnErrorStub
@@ -19,9 +19,12 @@ import org.stepik.android.model.Course
 import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
+import org.stepik.android.presentation.course_list.mapper.CourseListQueryStateMapper
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
+import ru.nobird.android.core.model.cast
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -30,6 +33,7 @@ import javax.inject.Inject
 class CourseListQueryPresenter
 @Inject
 constructor(
+    private val courseListQueryStateMapper: CourseListQueryStateMapper,
     private val courseListStateMapper: CourseListStateMapper,
     private val courseListInteractor: CourseListInteractor,
     @BackgroundScheduler
@@ -81,40 +85,40 @@ constructor(
             courseListViewState = CourseListView.State.Loading
         )
 
-        paginationDisposable += Single
-            .concat(
+        paginationDisposable += Observable
+            .fromArray(SourceTypeComposition.CACHE, SourceTypeComposition.REMOTE)
+            .concatMapMaybe { source ->
                 courseListInteractor
-                    .getCourseListItems(courseListQuery, sourceTypeComposition = SourceTypeComposition.CACHE),
-
-                courseListInteractor
-                    .getCourseListItems(courseListQuery, sourceTypeComposition = SourceTypeComposition.REMOTE)
-            )
-            .observeOn(mainScheduler)
-            .subscribeOn(backgroundScheduler)
+                    .getCourseListItems(courseListQuery, sourceTypeComposition = source, isAllowFallback = false)
+                    .map { courseListItems ->
+                        courseListItems to source
+                    }
+                    .filter { (items, source) -> items.isNotEmpty() || source == SourceTypeComposition.REMOTE }
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+            }
             .subscribeBy(
-                onNext = {
-                    state = if (it.isNotEmpty()) {
-                        // TODO Unsafe casting
-                        (state as CourseListQueryView.State.Data).copy(
-                            courseListViewState = CourseListView.State.Content(
-                                courseListDataItems = it,
-                                courseListItems = it
-                            )
-                        )
-                    } else {
-                        (state as CourseListQueryView.State.Data).copy(
-                            courseListViewState = CourseListView.State.Empty
-                        )
+                onNext = { (items, source) ->
+                    val isNeedLoadNextPage = courseListQueryStateMapper.isNeedLoadNextPage(state)
+
+                    state = courseListQueryStateMapper.mapToCourseListLoadedSuccess(courseListQuery, items, source)
+
+                    if (isNeedLoadNextPage) {
+                        fetchNextPage()
                     }
                 },
                 onError = {
-                    when (val oldState = (state as? CourseListQueryView.State.Data)?.courseListViewState) {
+                    when (val oldState = state.safeCast<CourseListQueryView.State.Data>()?.courseListViewState) {
                         is CourseListView.State.Content -> {
-                            state = (state as CourseListQueryView.State.Data).copy(courseListViewState = oldState)
+                            state = state.cast<CourseListQueryView.State.Data>()
+                                .copy(
+                                    courseListViewState = oldState.copy(oldState.courseListDataItems, oldState.courseListDataItems),
+                                    sourceType = null
+                                ) // remove fake item in case of error
                             view?.showNetworkError()
                         }
                         else ->
-                            state = CourseListQueryView.State.Data(courseListQuery, CourseListView.State.NetworkError)
+                            state = CourseListQueryView.State.Data(courseListQuery, CourseListView.State.NetworkError, sourceType = null)
                     }
                 }
             )
@@ -128,28 +132,41 @@ constructor(
             ?: return
 
         if (oldCourseListState.courseListItems.last() is CourseListItem.PlaceHolder ||
-            !oldCourseListState.courseListDataItems.hasNext) {
+            !oldCourseListState.courseListDataItems.hasNext && oldState.sourceType == DataSourceType.REMOTE
+        ) {
             return
         }
 
-        val nextPage = oldCourseListState.courseListDataItems.page + 1
+        val nextPage =
+            if (oldState.sourceType == DataSourceType.REMOTE) {
+                oldCourseListState.courseListDataItems.page + 1
+            } else {
+                1
+            }
 
         val courseListQuery = oldState.courseListQuery.copy(page = nextPage)
 
         state = oldState.copy(courseListViewState = courseListStateMapper.mapToLoadMoreState(oldCourseListState))
-        paginationDisposable += courseListInteractor
-            .getCourseListItems(courseListQuery)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = {
-                    state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(oldCourseListState, it))
-                },
-                onError = {
-                    state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToError(oldCourseListState))
-                    view?.showNetworkError()
-                }
-            )
+        if (oldState.sourceType != DataSourceType.CACHE) {
+            paginationDisposable += courseListInteractor
+                .getCourseListItems(courseListQuery, isAllowFallback = false)
+                .subscribeOn(backgroundScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = {
+                        if (oldState.sourceType == null) {
+                            state = oldState.copy(courseListViewState = CourseListView.State.Content(it, it), sourceType = DataSourceType.REMOTE)
+                            fetchNextPage()
+                        } else {
+                            state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(oldCourseListState, it))
+                        }
+                    },
+                    onError = {
+                        state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToError(oldCourseListState))
+                        view?.showNetworkError()
+                    }
+                )
+        }
     }
 
     /**
