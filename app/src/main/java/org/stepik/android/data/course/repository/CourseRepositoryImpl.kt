@@ -66,7 +66,7 @@ constructor(
         }.map { courses -> PagedList(courses.sortedBy { courseIds.indexOf(it.id) }) }
     }
 
-    override fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType): Single<PagedList<Course>> {
+    override fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType, allowFallback: Boolean): Single<PagedList<Course>> {
         val remoteSource = courseRemoteDataSource
             .getCourses(courseListQuery)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
@@ -80,13 +80,20 @@ constructor(
 
         return when (primarySourceType) {
             DataSourceType.REMOTE ->
-                remoteSource
-                    .onErrorResumeNext(cacheSource)
+                if (allowFallback) {
+                    remoteSource.onErrorResumeNext(cacheSource)
+                } else {
+                    remoteSource
+                }
 
             DataSourceType.CACHE ->
-                cacheSource
-                    .filter(Collection<*>::isNotEmpty)
-                    .switchIfEmpty(remoteSource)
+                if (allowFallback) {
+                    cacheSource
+                        .filter(Collection<*>::isNotEmpty)
+                        .switchIfEmpty(remoteSource)
+                } else {
+                    cacheSource
+                }
 
             else ->
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
