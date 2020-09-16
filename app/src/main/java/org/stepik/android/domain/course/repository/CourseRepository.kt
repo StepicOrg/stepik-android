@@ -16,7 +16,7 @@ interface CourseRepository {
     /**
      * Fetches courses from remote source with [courseListQuery]
      */
-    fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType = DataSourceType.CACHE, isAllowFallback: Boolean): Single<PagedList<Course>>
+    fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType = DataSourceType.CACHE, allowFallback: Boolean): Single<PagedList<Course>>
 
     fun removeCachedCourses(): Completable
 }

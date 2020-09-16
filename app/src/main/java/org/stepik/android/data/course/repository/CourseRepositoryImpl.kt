@@ -79,16 +79,21 @@ constructor(
             }
 
         return when (primarySourceType) {
-            DataSourceType.REMOTE -> if (allowFallback) {
-                remoteSource.onErrorResumeNext(cacheSource)
-            } else {
-                remoteSource
-            }
+            DataSourceType.REMOTE ->
+                if (allowFallback) {
+                    remoteSource.onErrorResumeNext(cacheSource)
+                } else {
+                    remoteSource
+                }
 
             DataSourceType.CACHE ->
-                cacheSource
-                    .filter(Collection<*>::isNotEmpty)
-                    .switchIfEmpty(remoteSource)
+                if (allowFallback) {
+                    cacheSource
+                        .filter(Collection<*>::isNotEmpty)
+                        .switchIfEmpty(remoteSource)
+                } else {
+                    cacheSource
+                }
 
             else ->
                 throw IllegalArgumentException("Unsupported source type = $primarySourceType")
