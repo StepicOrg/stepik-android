@@ -222,7 +222,8 @@
     </string>
     <string name="not_auth_message">Sign in to continue</string>
     <string name="auth_action_title">Sign in</string>
-    <string name="empty_steps_title">This lesson doesn\'t have any steps</string>
+    <string name="empty_steps_title">This lesson doesn\'t have any steps or you don\'t have
+        permission to view it</string>
     <string name="open_in_browser">Open in Browser</string>
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
