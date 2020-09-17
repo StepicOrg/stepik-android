@@ -30,7 +30,6 @@ abstract class SearchDataModule {
         searchCacheDataSourceImpl: SearchCacheDataSourceImpl
     ): SearchCacheDataSource
 
-
     @Module
     companion object {
         @Provides
