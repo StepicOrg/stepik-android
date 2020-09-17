@@ -106,6 +106,10 @@ constructor(
         obtainLessonData(lessonInteractor.getLessonData(trialLessonId), forceUpdate)
     }
 
+    fun onAutoplay(autoplayLessonId: Long, autoplayStepPosition: Int, forceUpdate: Boolean = false) {
+        obtainLessonData(lessonInteractor.getLessonData(autoplayLessonId, autoplayStepPosition))
+    }
+
     fun onEmptyData() {
         if (state == LessonView.State.Idle) {
             state = LessonView.State.LessonNotFound

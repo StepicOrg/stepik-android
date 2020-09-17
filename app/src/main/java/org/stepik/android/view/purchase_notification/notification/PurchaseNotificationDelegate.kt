@@ -11,6 +11,7 @@ import org.stepic.droid.notifications.model.StepikNotificationChannel
 import org.stepic.droid.util.resolveColorAttribute
 import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.purchase_notification.analytic.PurchaseNotificationShown
 import org.stepik.android.domain.purchase_notification.interactor.PurchaseNotificationInteractor
 import org.stepik.android.view.course.ui.activity.CourseActivity
 import org.stepik.android.view.notification.NotificationDelegate
@@ -67,7 +68,7 @@ constructor(
         taskBuilder.addParentStack(CourseActivity::class.java)
         taskBuilder.addNextIntent(intent)
 
-        val deleteIntent = PurchaseNotificationReceiver.createIntent(context, PurchaseNotificationReceiver.NOTIFICATION_DISMISSED)
+        val deleteIntent = PurchaseNotificationReceiver.createIntent(context, course.id)
         val deletePendingIntent = PendingIntent.getBroadcast(context, PurchaseNotificationReceiver.REQUEST_CODE, deleteIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val largeIcon = notificationHelper.getPictureByCourse(course)
@@ -91,7 +92,7 @@ constructor(
             .setDeleteIntent(deletePendingIntent)
             .setStyle(NotificationCompat.BigTextStyle().bigText(message))
 
-        analytic.reportEvent(Analytic.Notification.PURCHASE_NOTIFICATION_SHOWN)
+        analytic.report(PurchaseNotificationShown(course.id))
         showNotification(PURCHASE_NOTIFICATION_ID, notification.build())
     }
 }

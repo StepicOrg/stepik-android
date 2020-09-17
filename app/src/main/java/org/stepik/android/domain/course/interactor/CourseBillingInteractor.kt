@@ -15,6 +15,7 @@ import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.toObject
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.exception.NoPurchasesToRestoreException
 import org.stepik.android.domain.billing.extension.startPurchaseFlowRx
 import org.stepik.android.domain.billing.repository.BillingRepository
@@ -64,7 +65,7 @@ constructor(
 
     fun purchaseCourse(checkout: UiCheckout, courseId: Long, sku: Sku): Completable =
         coursePaymentsRepository
-            .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS)
+            .getCoursePaymentsByCourseId(courseId, CoursePayment.Status.SUCCESS, sourceType = DataSourceType.REMOTE)
             .flatMapCompletable { payments ->
                 if (payments.isEmpty()) {
                     purchaseCourseAfterCheck(checkout, courseId, sku)
