@@ -13,7 +13,6 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.interactor.StepInteractor
 import org.stepik.android.domain.step.interactor.StepNavigationInteractor
 import org.stepik.android.domain.step.model.StepNavigationDirection
-import org.stepik.android.domain.step_quiz.factory.StepQuizFactory
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
@@ -21,7 +20,6 @@ import javax.inject.Inject
 class StepPresenter
 @Inject
 constructor(
-    private val stepQuizFactory: StepQuizFactory,
     private val stepInteractor: StepInteractor,
     private val stepNavigationInteractor: StepNavigationInteractor,
 
@@ -116,7 +114,7 @@ constructor(
                     val oldState = this.state
                     if (oldState is StepView.State.Loaded &&
                         oldState.stepWrapper.step.block != stepWrapper.step.block) {
-                        if (stepQuizFactory.isStepCanHaveQuiz(stepWrapper)) {
+                        if (stepWrapper.isStepCanHaveQuiz) {
                             view?.showQuizReloadMessage()
                         }
                         this.state = oldState.copy(stepWrapper)
