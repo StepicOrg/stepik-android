@@ -30,6 +30,7 @@ import org.stepic.droid.util.commitNow
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step.analytic.reportStepEvent
 import org.stepik.android.domain.step.model.StepNavigationDirection
+import org.stepik.android.domain.step_quiz.factory.StepQuizFactory
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step.StepPresenter
 import org.stepik.android.presentation.step.StepView
@@ -75,6 +76,9 @@ class StepFragment : Fragment(), StepView,
     internal lateinit var stepQuizFragmentFactory: StepQuizFragmentFactory
 
     @Inject
+    internal lateinit var stepQuizFactory: StepQuizFactory
+
+    @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private var stepWrapper: StepPersistentWrapper by argument()
@@ -114,7 +118,7 @@ class StepFragment : Fragment(), StepView,
         stepSolutionStatsDelegate = StepSolutionStatsDelegate(
             stepSolutionStats,
             stepWrapper.step,
-            stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+            stepQuizFactory.isStepCanHaveQuiz(stepWrapper)
         )
 
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
@@ -137,7 +141,7 @@ class StepFragment : Fragment(), StepView,
     private fun initStepContentFragment() {
         stepContentContainer.layoutParams = (stepContentContainer.layoutParams as LinearLayoutCompat.LayoutParams)
             .apply {
-                if (stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)) {
+                if (stepQuizFactory.isStepCanHaveQuiz(stepWrapper)) {
                     height = LinearLayout.LayoutParams.WRAP_CONTENT
                     weight = 0f
                 } else {
@@ -158,7 +162,7 @@ class StepFragment : Fragment(), StepView,
     }
 
     private fun setStepQuizFragment(isNeedReload: Boolean) {
-        val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+        val isStepHasQuiz = stepQuizFactory.isStepCanHaveQuiz(stepWrapper)
         stepContentSeparator.isVisible = isStepHasQuiz
         stepQuizContainer.isVisible = isStepHasQuiz
         stepQuizError.isVisible = false
@@ -192,7 +196,7 @@ class StepFragment : Fragment(), StepView,
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.step_menu, menu)
         menu.findItem(R.id.menu_item_submissions)
-            ?.isVisible = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+            ?.isVisible = stepQuizFactory.isStepCanHaveQuiz(stepWrapper)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

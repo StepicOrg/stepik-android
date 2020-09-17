@@ -5,5 +5,4 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 
 interface StepQuizFragmentFactory {
     fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment
-    fun isStepCanHaveQuiz(stepPersistentWrapper: StepPersistentWrapper): Boolean
 }
