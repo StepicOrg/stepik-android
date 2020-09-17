@@ -15,11 +15,13 @@ import org.stepik.android.domain.step.interactor.StepNavigationInteractor
 import org.stepik.android.domain.step.model.StepNavigationDirection
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.base.PresenterBase
+import org.stepik.android.view.step_quiz.ui.factory.StepQuizFragmentFactory
 import javax.inject.Inject
 
 class StepPresenter
 @Inject
 constructor(
+    stepQuizFragmentFactory: StepQuizFragmentFactory,
     private val stepInteractor: StepInteractor,
     private val stepNavigationInteractor: StepNavigationInteractor,
 
@@ -49,6 +51,11 @@ constructor(
         }
 
     private val stepUpdatesDisposable = CompositeDisposable()
+
+    private val isStepHasQuiz: Boolean by lazy {
+        val stepWrapper = stepWrapperRxRelay.value ?: throw IllegalStateException("Cannot be null")
+        stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+    }
 
     init {
         compositeDisposable += stepUpdatesDisposable
@@ -111,6 +118,7 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { stepWrapper ->
+                    if (!isStepHasQuiz) return@subscribeBy
                     val oldState = this.state
                     if (oldState is StepView.State.Loaded &&
                         oldState.stepWrapper.step.block != stepWrapper.step.block) {
