@@ -114,7 +114,7 @@ class StepFragment : Fragment(), StepView,
         stepSolutionStatsDelegate = StepSolutionStatsDelegate(
             stepSolutionStats,
             stepWrapper.step,
-            stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+            stepWrapper.isStepCanHaveQuiz
         )
 
         stepNavigationDelegate = StepNavigationDelegate(stepNavigation) { stepPresenter.onStepDirectionClicked(it) }
@@ -137,7 +137,7 @@ class StepFragment : Fragment(), StepView,
     private fun initStepContentFragment() {
         stepContentContainer.layoutParams = (stepContentContainer.layoutParams as LinearLayoutCompat.LayoutParams)
             .apply {
-                if (stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)) {
+                if (stepWrapper.isStepCanHaveQuiz) {
                     height = LinearLayout.LayoutParams.WRAP_CONTENT
                     weight = 0f
                 } else {
@@ -158,7 +158,7 @@ class StepFragment : Fragment(), StepView,
     }
 
     private fun setStepQuizFragment(isNeedReload: Boolean) {
-        val isStepHasQuiz = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+        val isStepHasQuiz = stepWrapper.isStepCanHaveQuiz
         stepContentSeparator.isVisible = isStepHasQuiz
         stepQuizContainer.isVisible = isStepHasQuiz
         stepQuizError.isVisible = false
@@ -192,7 +192,7 @@ class StepFragment : Fragment(), StepView,
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.step_menu, menu)
         menu.findItem(R.id.menu_item_submissions)
-            ?.isVisible = stepQuizFragmentFactory.isStepCanHaveQuiz(stepWrapper)
+            ?.isVisible = stepWrapper.isStepCanHaveQuiz
         super.onCreateOptionsMenu(menu, inflater)
     }
 
