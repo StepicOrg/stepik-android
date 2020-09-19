@@ -17,10 +17,10 @@ constructor(
     private val lessonResponseMapper =
         Function<LessonResponse, List<Lesson>>(LessonResponse::lessons)
 
-    override fun getLessons(vararg lessonIds: Long): Single<List<Lesson>> =
+    override fun getLessons(lessonIds: List<Long>): Single<List<Lesson>> =
         lessonIds
             .chunkedSingleMap { ids ->
-                lessonService.getLessonsRx(ids)
+                lessonService.getLessons(ids)
                     .map(lessonResponseMapper)
             }
 }
