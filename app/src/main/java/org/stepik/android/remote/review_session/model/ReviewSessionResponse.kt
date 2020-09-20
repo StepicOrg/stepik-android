@@ -9,7 +9,7 @@ class ReviewSessionResponse(
     @SerializedName("meta")
     override val meta: Meta,
     @SerializedName("review-sessions")
-    val reviewSessions: List<ReviewSession>,
+    val reviewSessions: List<ReviewSession>
 
 //    @SerializedName("attempts")
 //    @SerializedName("reviews")

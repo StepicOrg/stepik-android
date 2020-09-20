@@ -1,6 +1,5 @@
 package org.stepik.android.cache.lesson.structure
 
-import android.database.sqlite.SQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureLesson {

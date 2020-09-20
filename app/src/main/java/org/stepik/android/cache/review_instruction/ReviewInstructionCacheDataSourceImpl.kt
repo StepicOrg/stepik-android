@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ReviewInstructionCacheDataSourceImpl
 @Inject
 constructor(
-    private val reviewInstructionDao: ReviewInstructionDao,
+    private val reviewInstructionDao: ReviewInstructionDao
 ) : ReviewInstructionCacheDataSource {
     override fun getReviewInstruction(id: Long): Single<ReviewInstruction> =
         reviewInstructionDao

@@ -4,6 +4,4 @@ import javax.inject.Inject
 
 class StepQuizReviewInteractor
 @Inject
-constructor() {
-
-}
+constructor()

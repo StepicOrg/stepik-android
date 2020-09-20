@@ -9,7 +9,7 @@ import javax.inject.Inject
 class ReviewInstructionRemoteDataSourceImpl
 @Inject
 constructor(
-    private val reviewInstructionService: ReviewInstructionService,
+    private val reviewInstructionService: ReviewInstructionService
 ) : ReviewInstructionRemoteDataSource {
     override fun getReviewInstruction(id: Long): Single<ReviewInstruction> =
         reviewInstructionService
