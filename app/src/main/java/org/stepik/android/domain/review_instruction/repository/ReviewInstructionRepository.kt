@@ -9,5 +9,4 @@ interface ReviewInstructionRepository {
         id: Long,
         primarySourceType: DataSourceType = DataSourceType.REMOTE
     ): Single<ReviewInstruction>
-
 }

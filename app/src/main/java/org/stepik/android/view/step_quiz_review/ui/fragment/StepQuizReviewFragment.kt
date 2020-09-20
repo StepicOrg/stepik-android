@@ -49,7 +49,6 @@ class StepQuizReviewFragment : Fragment(R.layout.fragment_step_quiz_review), Ste
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
-
     }
 
     override fun onStart() {
@@ -64,11 +63,9 @@ class StepQuizReviewFragment : Fragment(R.layout.fragment_step_quiz_review), Ste
 
     override fun setState(state: StepQuizReviewView.State) {
         when (state) {
-
         }
     }
 
     override fun showNetworkError() {
-
     }
 }

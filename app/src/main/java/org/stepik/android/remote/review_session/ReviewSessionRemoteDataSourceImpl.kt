@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ReviewSessionRemoteDataSourceImpl
 @Inject
 constructor(
-    private val reviewSessionService: ReviewSessionService,
+    private val reviewSessionService: ReviewSessionService
 ) : ReviewSessionRemoteDataSource {
     override fun createReviewSession(submissionId: Long): Single<ReviewSession> =
         reviewSessionService

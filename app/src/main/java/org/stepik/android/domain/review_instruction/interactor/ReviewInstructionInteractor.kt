@@ -7,6 +7,4 @@ class ReviewInstructionInteractor
 @Inject
 constructor(
     private val reviewInstructionRepository: ReviewInstructionRepository
-) {
-
-}
+)
