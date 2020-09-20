@@ -1,7 +1,6 @@
 package org.stepik.android.data.course.repository
 
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
 import org.stepik.android.data.base.repository.delegate.ListRepositoryDelegate
@@ -14,8 +13,6 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.model.Course
 import ru.nobird.android.core.model.mapToLongArray
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
-import ru.nobird.android.domain.rx.maybeFirst
-import ru.nobird.android.domain.rx.requireSize
 import javax.inject.Inject
 
 class CourseRepositoryImpl
