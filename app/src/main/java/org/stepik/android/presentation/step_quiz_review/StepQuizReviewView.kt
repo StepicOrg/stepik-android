@@ -14,11 +14,11 @@ interface StepQuizReviewView {
         data class Loading(val step: Step) : State()
         object Error : State()
 
-        data class SubmissionNotMade(val quizState: StepQuizView.State, val instruction: ReviewInstruction) : State()
-        data class SubmissionNotSelected(val quizState: StepQuizView.State.AttemptLoaded, val instruction: ReviewInstruction) : State()
-        data class SubmissionSelectedLoading(val quizState: StepQuizView.State.AttemptLoaded, val instruction: ReviewInstruction) : State()
-        data class SubmissionSelected(val quizState: StepQuizView.State.AttemptLoaded, val session: ReviewSession, val instruction: ReviewInstruction) : State()
-        data class Completed(val quizState: StepQuizView.State.AttemptLoaded, val progress: Progress) : State()
+        data class SubmissionNotMade(val quizState: StepQuizView.State, val instruction: ReviewInstruction) : State() // 1
+        data class SubmissionNotSelected(val quizState: StepQuizView.State.AttemptLoaded, val instruction: ReviewInstruction) : State() // 2
+        data class SubmissionSelectedLoading(val quizState: StepQuizView.State.AttemptLoaded, val instruction: ReviewInstruction) : State() // 2
+        data class SubmissionSelected(val quizState: StepQuizView.State.AttemptLoaded, val session: ReviewSession, val instruction: ReviewInstruction) : State() // 3
+        data class Completed(val quizState: StepQuizView.State.AttemptLoaded, val progress: Progress) : State() // 3 / 5
     }
 
     sealed class Message {
@@ -30,7 +30,8 @@ interface StepQuizReviewView {
             val session: ReviewSession,
             val instruction: ReviewInstruction,
             val submission: Submission,
-            val attempt: Attempt
+            val attempt: Attempt,
+            val progress: Progress? // assignment progress
         ) : Message()
         data class FetchStepQuizStateSuccess(
             val quizState: StepQuizView.State,
