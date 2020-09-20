@@ -13,6 +13,8 @@ class ListRepositoryDelegate<ID, Item : Identifiable<ID>>(
     private val saveAction: (List<Item>) -> Completable
 ) {
     fun get(ids: List<ID>, sourceType: DataSourceType, allowFallback: Boolean = false): Single<List<Item>> {
+        if (ids.isEmpty()) return Single.just(emptyList())
+
         val remote = remoteSource(ids)
             .doCompletableOnSuccess(saveAction)
 
