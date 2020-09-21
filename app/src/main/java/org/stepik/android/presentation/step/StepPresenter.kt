@@ -114,7 +114,9 @@ constructor(
                     val oldState = this.state
                     if (oldState is StepView.State.Loaded &&
                         oldState.stepWrapper.step.block != stepWrapper.step.block) {
-                        view?.showQuizReloadMessage()
+                        if (stepWrapper.isStepCanHaveQuiz) {
+                            view?.showQuizReloadMessage()
+                        }
                         this.state = oldState.copy(stepWrapper)
                     }
                 }
