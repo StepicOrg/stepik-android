@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface DiscussionProxyService {
     @GET("api/discussion-proxies")
-    fun getDiscussionProxies(@Query("ids[]") ids: Array<String>): Single<DiscussionProxyResponse>
+    fun getDiscussionProxies(@Query("ids[]") ids: List<String>): Single<DiscussionProxyResponse>
 }
