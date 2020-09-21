@@ -48,8 +48,8 @@ interface StepQuizReviewView {
         /**
          * Submitting submission to review
          */
-        object SelectCurrentSubmission : Message() // selects current solution
-        object SelectSubmissionError : Message() // error during solution selecting
+        object CreateSessionWithCurrentSubmission : Message() // selects current solution
+        object CreateSessionError : Message() // error during solution selecting
         data class SessionCreated(val reviewSession: ReviewSession) : Message() // solution selected and session created
     }
 
@@ -57,9 +57,12 @@ interface StepQuizReviewView {
         data class FetchStepQuizState(val step: Step) : Action() // if there is no review session
         data class FetchReviewSession(val instructionId: Long, val sessionId: Long) : Action()
         data class CreateSessionWithSubmission(val submissionId: Long) : Action() // select solution
-        object ShowNetworkError : Action() // error
+
+        sealed class ViewAction : Action() {
+            object ShowNetworkError : ViewAction() // error
+        }
     }
 
     fun render(state: State)
-    fun onAction(action: Action)
+    fun onAction(action: Action.ViewAction)
 }

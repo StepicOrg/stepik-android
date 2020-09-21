@@ -89,7 +89,7 @@ constructor() : StateReducer<State, Message, Action> {
                     else -> null
                 }
 
-            is Message.SelectCurrentSubmission ->
+            is Message.CreateSessionWithCurrentSubmission ->
                 when (state) {
                     is State.SubmissionNotSelected -> {
                         val submissionId = state.quizState.submissionState.safeCast<StepQuizView.SubmissionState.Loaded>()
@@ -106,10 +106,10 @@ constructor() : StateReducer<State, Message, Action> {
                     else -> null
                 }
 
-            is Message.SelectSubmissionError ->
+            is Message.CreateSessionError ->
                 when (state) {
                     is State.SubmissionSelectedLoading ->
-                        State.SubmissionNotSelected(state.quizState, state.instruction) to setOf(Action.ShowNetworkError)
+                        State.SubmissionNotSelected(state.quizState, state.instruction) to setOf(Action.ViewAction.ShowNetworkError)
 
                     else -> null
                 }

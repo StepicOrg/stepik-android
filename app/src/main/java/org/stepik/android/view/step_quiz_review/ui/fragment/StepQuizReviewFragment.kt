@@ -65,7 +65,7 @@ class StepQuizReviewFragment : Fragment(R.layout.fragment_step_quiz_review), Ste
         TODO("Not yet implemented")
     }
 
-    override fun onAction(action: StepQuizReviewView.Action) {
+    override fun onAction(action: StepQuizReviewView.Action.ViewAction) {
         TODO("Not yet implemented")
     }
 }
