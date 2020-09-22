@@ -54,7 +54,6 @@ constructor(
             }
 
             is StepQuizReviewView.Action.FetchReviewSession -> {
-
             }
 
             is StepQuizReviewView.Action.CreateSessionWithSubmission -> {
