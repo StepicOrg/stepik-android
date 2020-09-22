@@ -6,12 +6,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import org.stepik.android.domain.review_session.model.ReviewSession
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Maybe
 
 @Dao
 interface ReviewSessionDao {
     @Query("SELECT * FROM ReviewSession WHERE id = :id")
-    fun getReviewSession(id: Long): Single<ReviewSession>
+    fun getReviewSession(id: Long): Maybe<ReviewSession>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveReviewSession(item: ReviewSession): Completable

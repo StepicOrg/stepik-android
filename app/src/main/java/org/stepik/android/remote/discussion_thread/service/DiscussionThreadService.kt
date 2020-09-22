@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface DiscussionThreadService {
     @GET("api/discussion-threads")
-    fun getDiscussionThreads(@Query("ids[]") ids: Array<String>): Single<DiscussionThreadResponse>
+    fun getDiscussionThreads(@Query("ids[]") ids: List<String>): Single<DiscussionThreadResponse>
 }

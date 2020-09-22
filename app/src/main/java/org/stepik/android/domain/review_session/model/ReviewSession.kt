@@ -4,13 +4,14 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import ru.nobird.android.core.model.Identifiable
 import java.util.Date
 
 @Entity
 data class ReviewSession(
     @PrimaryKey
     @SerializedName("id")
-    val id: Long,
+    override val id: Long,
     @SerializedName("instruction")
     val instruction: Long,
     @SerializedName("submission")
@@ -51,7 +52,7 @@ data class ReviewSession(
     @Embedded
     @SerializedName("actions")
     val actions: Actions
-) {
+) : Identifiable<Long> {
     data class Actions(
         @SerializedName("finish")
         val finish: Boolean
