@@ -127,6 +127,7 @@
 
         <activity
             android:name="org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity"
+            android:resizeableActivity="true"
             android:supportsPictureInPicture="true"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:hardwareAccelerated="true"
