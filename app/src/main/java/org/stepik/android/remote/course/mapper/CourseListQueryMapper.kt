@@ -1,7 +1,7 @@
 package org.stepik.android.remote.course.mapper
 
 import org.stepik.android.domain.course_list.model.CourseListQuery
-import ru.nobird.android.core.model.putNullable
+import ru.nobird.android.core.model.mapOfNotNull
 import javax.inject.Inject
 
 class CourseListQueryMapper
@@ -17,17 +17,14 @@ constructor() {
         private const val IS_CATALOGED = "is_cataloged"
     }
 
-    fun mapToQueryMap(courseListQuery: CourseListQuery): Map<String, String> {
-        val mutableMap = hashMapOf<String, String>()
-
-        mutableMap.putNullable(PAGE, courseListQuery.page?.toString())
-        mutableMap.putNullable(ORDER, courseListQuery.order?.order)
-        mutableMap.putNullable(TEACHER, courseListQuery.teacher?.toString())
-        mutableMap.putNullable(LANGUAGE, courseListQuery.language)
-        mutableMap.putNullable(IS_PUBLIC, courseListQuery.isPublic?.toString())
-        mutableMap.putNullable(IS_EXCLUDE_ENDED, courseListQuery.isExcludeEnded?.toString())
-        mutableMap.putNullable(IS_CATALOGED, courseListQuery.isCataloged?.toString())
-
-        return mutableMap
-    }
+    fun mapToQueryMap(courseListQuery: CourseListQuery): Map<String, String> =
+        mapOfNotNull(
+            PAGE to courseListQuery.page?.toString(),
+            ORDER to courseListQuery.order?.order,
+            TEACHER to courseListQuery.teacher?.toString(),
+            LANGUAGE to courseListQuery.language,
+            IS_PUBLIC to courseListQuery.isPublic?.toString(),
+            IS_EXCLUDE_ENDED to courseListQuery.isExcludeEnded?.toString(),
+            IS_CATALOGED to courseListQuery.isCataloged?.toString()
+        )
 }

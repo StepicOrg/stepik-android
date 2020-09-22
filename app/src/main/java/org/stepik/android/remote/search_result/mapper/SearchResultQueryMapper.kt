@@ -1,7 +1,7 @@
 package org.stepik.android.remote.search_result.mapper
 
-import ru.nobird.android.core.model.putNullable
 import org.stepik.android.domain.search_result.model.SearchResultQuery
+import ru.nobird.android.core.model.mapOfNotNull
 import javax.inject.Inject
 
 class SearchResultQueryMapper
@@ -14,14 +14,11 @@ constructor() {
         private const val LANG = "language"
     }
 
-    fun mapToQueryMap(searchResultQuery: SearchResultQuery): Map<String, String> {
-        val mutableMap = hashMapOf<String, String>()
-
-        mutableMap.putNullable(PAGE, searchResultQuery.page?.toString())
-        mutableMap.putNullable(TAG, searchResultQuery.tagId?.toString())
-        mutableMap.putNullable(QUERY, searchResultQuery.query)
-        mutableMap.putNullable(LANG, searchResultQuery.lang)
-
-        return mutableMap
-    }
+    fun mapToQueryMap(searchResultQuery: SearchResultQuery): Map<String, String> =
+        mapOfNotNull(
+            PAGE to searchResultQuery.page?.toString(),
+            TAG to searchResultQuery.tagId?.toString(),
+            QUERY to searchResultQuery.query,
+            LANG to searchResultQuery.lang
+        )
 }

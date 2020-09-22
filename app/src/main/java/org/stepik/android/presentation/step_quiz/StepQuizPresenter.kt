@@ -18,6 +18,7 @@ import org.stepik.android.model.Reply
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
+import ru.nobird.android.core.model.mapOfNotNull
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -71,7 +72,7 @@ constructor(
     private fun getSubmissionState(attemptId: Long): Single<StepQuizView.SubmissionState> =
         stepQuizInteractor
             .getSubmission(attemptId)
-            .map { StepQuizView.SubmissionState.Loaded(it) as StepQuizView.SubmissionState }
+            .map<StepQuizView.SubmissionState> { StepQuizView.SubmissionState.Loaded(it) }
             .toSingle(StepQuizView.SubmissionState.Empty())
 
     /**
@@ -131,18 +132,15 @@ constructor(
                             restrictions = oldState.restrictions.copy(submissionCount = oldState.restrictions.submissionCount + 1)
                         )
 
-                    val params: MutableMap<String, Any> =
-                        mutableMapOf(
+                    val params =
+                        mapOfNotNull(
                             AmplitudeAnalytic.Steps.Params.SUBMISSION to newSubmission.id,
                             AmplitudeAnalytic.Steps.Params.STEP to step.id,
                             AmplitudeAnalytic.Steps.Params.TYPE to step.getStepType(),
                             AmplitudeAnalytic.Steps.Params.LOCAL to false,
-                            AmplitudeAnalytic.Steps.Params.IS_ADAPTIVE to false
+                            AmplitudeAnalytic.Steps.Params.IS_ADAPTIVE to false,
+                            AmplitudeAnalytic.Steps.Params.LANGUAGE to newSubmission.reply?.language
                         )
-                    newSubmission.reply?.language
-                        ?.let { lang ->
-                            params[AmplitudeAnalytic.Steps.Params.LANGUAGE] = lang
-                        }
 
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Steps.SUBMISSION_MADE, params)
                 },

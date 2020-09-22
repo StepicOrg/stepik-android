@@ -7,7 +7,7 @@ import org.stepik.android.cache.user_courses.structure.DbStructureUserCourse
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
-import ru.nobird.android.core.model.putNullable
+import ru.nobird.android.core.model.mapOfNotNull
 import javax.inject.Inject
 
 class UserCoursesCacheDataSourceImpl
@@ -34,20 +34,12 @@ constructor(
             userCourseDao.remove(DbStructureUserCourse.Columns.ID, courseId.toString())
         }
 
-    private fun mapToDbQuery(userCourseQuery: UserCourseQuery): Map<String, String> {
-        val mutableMap = hashMapOf<String, String>()
-
-        mutableMap
-            .putNullable(DbStructureUserCourse.Columns.IS_FAVORITE, userCourseQuery.isFavorite?.let(::mapBooleanToString))
-
-        mutableMap
-            .putNullable(DbStructureUserCourse.Columns.IS_ARCHIVED, userCourseQuery.isArchived?.let(::mapBooleanToString))
-
-        mutableMap
-            .putNullable(DbStructureUserCourse.Columns.COURSE, userCourseQuery.course?.toString())
-
-        return mutableMap
-    }
+    private fun mapToDbQuery(userCourseQuery: UserCourseQuery): Map<String, String> =
+        mapOfNotNull(
+            DbStructureUserCourse.Columns.IS_FAVORITE to userCourseQuery.isFavorite?.let(::mapBooleanToString),
+            DbStructureUserCourse.Columns.IS_ARCHIVED to userCourseQuery.isArchived?.let(::mapBooleanToString),
+            DbStructureUserCourse.Columns.COURSE to userCourseQuery.course?.toString()
+        )
 
     private fun mapBooleanToString(value: Boolean): String =
         if (value) {
