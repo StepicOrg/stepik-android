@@ -4,12 +4,13 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.ReviewStrategyType
+import ru.nobird.android.core.model.Identifiable
 
 @Entity
 data class ReviewInstruction(
     @PrimaryKey
     @SerializedName("id")
-    val id: Long,
+    override val id: Long,
     @SerializedName("step")
     val step: Long,
     @SerializedName("min_reviews")
@@ -22,4 +23,4 @@ data class ReviewInstruction(
     val isFrozen: Boolean,
     @SerializedName("text")
     val text: String
-)
+) : Identifiable<Long>

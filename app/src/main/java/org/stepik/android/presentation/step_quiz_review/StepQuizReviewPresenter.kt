@@ -54,6 +54,7 @@ constructor(
             }
 
             is StepQuizReviewView.Action.FetchReviewSession -> {
+                compositeDisposable
             }
 
             is StepQuizReviewView.Action.CreateSessionWithSubmission -> {
@@ -66,6 +67,6 @@ constructor(
                         onError = { onNewMessage(StepQuizReviewView.Message.CreateSessionError) }
                     )
             }
-        }
+        }.hashCode()
     }
 }
