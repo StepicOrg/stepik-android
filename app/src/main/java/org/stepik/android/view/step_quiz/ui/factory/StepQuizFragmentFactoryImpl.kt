@@ -48,10 +48,4 @@ constructor() : StepQuizFragmentFactory {
             else ->
                 UnsupportedStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
         }
-
-    override fun isStepCanHaveQuiz(stepPersistentWrapper: StepPersistentWrapper): Boolean =
-        stepPersistentWrapper.step.block?.name?.let { name ->
-            name != AppConstants.TYPE_VIDEO &&
-            name != AppConstants.TYPE_TEXT
-        } ?: false
 }

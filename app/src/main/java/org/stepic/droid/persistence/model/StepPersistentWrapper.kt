@@ -2,6 +2,7 @@ package org.stepic.droid.persistence.model
 
 import android.os.Parcel
 import android.os.Parcelable
+import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.Progressable
 import org.stepik.android.model.Step
 import org.stepik.android.model.Video
@@ -13,6 +14,12 @@ data class StepPersistentWrapper(
 ) : Progressable, Parcelable {
     override val progress: String?
         get() = step.progress
+
+    val isStepCanHaveQuiz: Boolean =
+        step.block?.name?.let { name ->
+            name != AppConstants.TYPE_VIDEO &&
+                    name != AppConstants.TYPE_TEXT
+        } ?: false
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeParcelable(step, flags)
