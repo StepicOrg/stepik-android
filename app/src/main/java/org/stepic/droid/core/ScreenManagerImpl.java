@@ -324,6 +324,7 @@ public class ScreenManagerImpl implements ScreenManager {
 
         if (!isOpenExternal) {
             sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, lessonMoveNextIntent));
+            sourceFragment.requireActivity().overridePendingTransition(R.anim.slide_in_from_end, R.anim.slide_out_to_start);
         } else {
             @Nullable
             final Video cachedVideo = videoPlayerMediaData.getCachedVideo();

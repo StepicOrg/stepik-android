@@ -533,4 +533,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         }
         finish()
     }
+
+    override fun finish() {
+        super.finish()
+        overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
+    }
 }
