@@ -107,7 +107,7 @@ constructor(
     }
 
     fun onAutoplay(autoplayLessonId: Long, autoplayStepPosition: Int, forceUpdate: Boolean = false) {
-        obtainLessonData(lessonInteractor.getLessonData(autoplayLessonId, autoplayStepPosition))
+        obtainLessonData(lessonInteractor.getLessonData(autoplayLessonId, autoplayStepPosition), forceUpdate)
     }
 
     fun onEmptyData() {

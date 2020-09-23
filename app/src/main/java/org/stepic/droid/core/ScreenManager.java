@@ -86,7 +86,7 @@ public interface ScreenManager {
 
     Intent getCatalogIntent(Context context);
 
-    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled, @Nullable LessonAutoplayData lessonAutoplayData);
+    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, @Nullable LessonAutoplayData lessonAutoplayData);
 
     void showSettings(Activity sourceActivity);
 

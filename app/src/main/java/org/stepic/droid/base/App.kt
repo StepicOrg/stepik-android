@@ -36,7 +36,7 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLContext
 
-class App : MultiDexApplication(), Application.ActivityLifecycleCallbacks {
+class App : MultiDexApplication() {
 
     companion object {
         lateinit var application: App
@@ -102,7 +102,6 @@ class App : MultiDexApplication(), Application.ActivityLifecycleCallbacks {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-            registerActivityLifecycleCallbacks(this)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -159,33 +158,5 @@ class App : MultiDexApplication(), Application.ActivityLifecycleCallbacks {
 
     private fun initNightMode() {
         AppCompatDelegate.setDefaultNightMode(sharedPreferenceHelper.nightMode)
-    }
-
-    override fun onActivityCreated(activity: Activity?, savedInstanceState: Bundle?) {
-        Timber.d("onActivityCreated: $activity")
-    }
-
-    override fun onActivityStarted(activity: Activity?) {
-        Timber.d("onActivityStarted: $activity")
-    }
-
-    override fun onActivityResumed(activity: Activity?) {
-        Timber.d("onActivityResumed: $activity")
-    }
-
-    override fun onActivityPaused(activity: Activity?) {
-        Timber.d("onActivityPaused: $activity")
-    }
-
-    override fun onActivityStopped(activity: Activity?) {
-        Timber.d("onActivityStopped: $activity")
-    }
-
-    override fun onActivitySaveInstanceState(activity: Activity?, outState: Bundle?) {
-        Timber.d("onActivitySaveInstanceState: $activity")
-    }
-
-    override fun onActivityDestroyed(activity: Activity?) {
-        Timber.d("onActivityDestroyed: $activity")
     }
 }

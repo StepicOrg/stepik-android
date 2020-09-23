@@ -112,10 +112,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     private val isAutoplayEnabled: Boolean by lazy { intent.getBooleanExtra(EXTRA_VIDEO_AUTOPLAY, false) }
     private val lessonAutoplayData: Intent? by lazy { intent.getParcelableExtra<Intent>(EXTRA_VIDEO_MOVE_NEXT_INTENT) }
 
-    private val labelPlay: String by lazy { getString(R.string.pip_play_label) }
-    private val labelPause: String by lazy { getString(R.string.pip_stop_label) }
-    private val labelRewind: String by lazy { getString(R.string.pip_rewind_label) }
-    private val labelForward: String by lazy { getString(R.string.pip_forward_label) }
+    private lateinit var labelPlay: String
+    private lateinit var labelPause: String
+    private lateinit var labelRewind: String
+    private lateinit var labelForward: String
 
     private val videoServiceConnection =
         object : ServiceConnection {
@@ -171,8 +171,8 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                 when (intent.getIntExtra(EXTRA_CONTROL_TYPE, 0)) {
                     CONTROL_TYPE_PLAY -> exoPlayer?.playWhenReady = true
                     CONTROL_TYPE_PAUSE -> exoPlayer?.playWhenReady = false
-                    CONTROL_TYPE_REWIND -> exoPlayer?.let { it.seekTo(it.currentPosition - 12000) }
-                    CONTROL_TYPE_FORWARD -> exoPlayer?.let { it.seekTo(it.currentPosition + 12000) }
+                    CONTROL_TYPE_REWIND -> exoPlayer?.let { it.seekTo(it.currentPosition - JUMP_TIME_MILLIS) }
+                    CONTROL_TYPE_FORWARD -> exoPlayer?.let { it.seekTo(it.currentPosition + JUMP_TIME_MILLIS) }
                 }
             }
         }
@@ -204,6 +204,11 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
+
+        labelPlay = getString(R.string.pip_play_label)
+        labelPause = getString(R.string.pip_stop_label)
+        labelRewind = getString(R.string.pip_rewind_label)
+        labelForward = getString(R.string.pip_forward_label)
 
         videoPlayerPresenter = ViewModelProviders
             .of(this, viewModelFactory)

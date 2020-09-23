@@ -312,7 +312,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled, @Nullable LessonAutoplayData lessonAutoplayData) {
+    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, @Nullable LessonAutoplayData lessonAutoplayData) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -325,11 +325,11 @@ public class ScreenManagerImpl implements ScreenManager {
 
         if (!isOpenExternal) {
             if (lessonAutoplayData == null) {
-                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled));
+                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, false));
             } else {
                 Intent lessonMoveNextIntent = LessonActivity.Companion.createIntent(context, lessonAutoplayData.getLessonId(), lessonAutoplayData.getStepPosition(), true);
                 lessonMoveNextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, isAutoplayEnabled, lessonMoveNextIntent));
+                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, true, lessonMoveNextIntent));
             }
         } else {
             @Nullable
