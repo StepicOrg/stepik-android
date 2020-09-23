@@ -72,8 +72,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
 
-        const val EXTRA_AUTOPLAY_LESSON_ID = "autoplay_lesson_id"
-        const val EXTRA_AUTOPLAY_STEP_POSITION = "autoplay_step_position"
         const val EXTRA_AUTOPLAY_MOVE_NEXT = "autoplay_move_next"
 
         fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =

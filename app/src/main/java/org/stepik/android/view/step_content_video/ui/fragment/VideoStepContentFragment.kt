@@ -100,8 +100,6 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
                 ?: stepWrapper.step.block?.video?.thumbnail
 
             val lessonMoveNextIntent = Intent(requireActivity().intent)
-                .putExtra(LessonActivity.EXTRA_AUTOPLAY_LESSON_ID, lessonData.lesson.id)
-                .putExtra(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id } - 1)
                 .putExtra(LessonActivity.EXTRA_AUTOPLAY_MOVE_NEXT, true)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 

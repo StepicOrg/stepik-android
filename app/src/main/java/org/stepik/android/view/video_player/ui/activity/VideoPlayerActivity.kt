@@ -88,18 +88,15 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         private const val AUTOPLAY_ANIMATION_DURATION_MS = 7200L
 
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
-        private const val EXTRA_VIDEO_AUTOPLAY = "video_player_autoplay"
         private const val EXTRA_VIDEO_MOVE_NEXT_INTENT = "video_player_move_next_intent"
 
-        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, isAutoplayEnabled: Boolean = false): Intent =
+        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
-                .putExtra(EXTRA_VIDEO_AUTOPLAY, isAutoplayEnabled)
 
-        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, isAutoplayEnabled: Boolean = false, lessonMoveNextIntent: Intent): Intent =
+        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, lessonMoveNextIntent: Intent): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
-                .putExtra(EXTRA_VIDEO_AUTOPLAY, isAutoplayEnabled)
                 .putExtra(EXTRA_VIDEO_MOVE_NEXT_INTENT, lessonMoveNextIntent)
     }
 
@@ -109,8 +106,9 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val isAutoplayEnabled: Boolean by lazy { intent.getBooleanExtra(EXTRA_VIDEO_AUTOPLAY, false) }
-    private val lessonAutoplayData: Intent? by lazy { intent.getParcelableExtra<Intent>(EXTRA_VIDEO_MOVE_NEXT_INTENT) }
+    private val lessonMoveNextIntent: Intent? by lazy { intent.getParcelableExtra<Intent>(EXTRA_VIDEO_MOVE_NEXT_INTENT) }
+    private val isAutoplayEnabled: Boolean by lazy { lessonMoveNextIntent != null }
+
 
     private lateinit var labelPlay: String
     private lateinit var labelPause: String
@@ -535,7 +533,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
 
     private fun moveNext() {
         if (isPIPModeActive) return
-        lessonAutoplayData?.let {
+        lessonMoveNextIntent?.let {
             startActivity(it)
         }
         finish()

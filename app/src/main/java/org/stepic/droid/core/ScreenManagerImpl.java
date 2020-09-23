@@ -324,9 +324,9 @@ public class ScreenManagerImpl implements ScreenManager {
 
         if (!isOpenExternal) {
             if (lessonMoveNextIntent == null) {
-                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, false));
+                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData));
             } else {
-                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, true, lessonMoveNextIntent));
+                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, lessonMoveNextIntent));
             }
         } else {
             @Nullable
