@@ -109,7 +109,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     private val lessonMoveNextIntent: Intent? by lazy { intent.getParcelableExtra<Intent>(EXTRA_VIDEO_MOVE_NEXT_INTENT) }
     private val isAutoplayEnabled: Boolean by lazy { lessonMoveNextIntent != null }
 
-
     private lateinit var labelPlay: String
     private lateinit var labelPause: String
     private lateinit var labelRewind: String
