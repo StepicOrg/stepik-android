@@ -45,6 +45,7 @@ import org.stepic.droid.preferences.VideoPlaybackRate
 import org.stepic.droid.ui.custom_exo.NavigationBarUtil
 import org.stepic.droid.ui.dialogs.VideoQualityDialogInPlayer
 import org.stepic.droid.ui.util.PopupHelper
+import org.stepik.android.domain.video_player.analytic.PIPActivated
 import org.stepik.android.model.Video
 import org.stepik.android.model.VideoUrl
 import org.stepik.android.presentation.video_player.VideoPlayerPresenter
@@ -232,7 +233,10 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         playerView.setRewindIncrementMs(JUMP_TIME_MILLIS)
 
         exo_pip_icon_container.isVisible = isSupportPIP()
-        exo_pip_icon_container.setOnClickListener { enterPipMode() }
+        exo_pip_icon_container.setOnClickListener {
+            analytic.report(PIPActivated())
+            enterPipMode()
+        }
         exo_fullscreen_icon_container.setOnClickListener { changeVideoRotation() }
 
         playerView.setControllerVisibilityListener { visibility ->
