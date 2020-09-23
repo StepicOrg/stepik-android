@@ -93,30 +93,6 @@ constructor(
                 LessonData(lesson, null, null, null)
             }
 
-    fun getLessonData(autoplayLessonId: Long, autoplayStepPosition: Int): Maybe<LessonData> =
-        lessonRepository
-            .getLesson(autoplayLessonId)
-            .flatMapSingleElement { lesson ->
-                unitRepository
-                    .getUnitsByLessonId(lesson.id)
-                    .maybeFirst()
-                    .flatMap { unit ->
-                        sectionRepository
-                            .getSection(unit.section)
-                            .map { section ->
-                                unit to section
-                            }
-                    }
-                    .flatMap { (unit, section) ->
-                        courseRepository
-                            .getCourse(section.course)
-                            .map { course ->
-                                LessonData(lesson, unit, section, course, autoplayStepPosition)
-                            }
-                    }
-                    .toSingle(LessonData(lesson, null, null, null, autoplayStepPosition))
-            }
-
     fun getDiscussionThreads(step: Step): Single<List<DiscussionThread>> =
         discussionThreadRepository
             .getDiscussionThreads(*step.discussionThreads?.toTypedArray() ?: arrayOf())

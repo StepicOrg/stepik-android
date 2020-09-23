@@ -1,5 +1,6 @@
 package org.stepik.android.view.step_content_video.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,10 +19,10 @@ import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
-import org.stepik.android.domain.lesson.model.LessonAutoplayData
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
+import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
 import ru.nobird.android.view.base.ui.extension.argument
@@ -97,13 +98,19 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
         } else {
             val thumbnail = stepWrapper.cachedVideo?.thumbnail
                 ?: stepWrapper.step.block?.video?.thumbnail
+
+            val lessonMoveNextIntent = Intent(requireActivity().intent)
+                .putExtra(LessonActivity.EXTRA_AUTOPLAY_LESSON_ID, lessonData.lesson.id)
+                .putExtra(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id } - 1)
+                .putExtra(LessonActivity.EXTRA_AUTOPLAY_MOVE_NEXT, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
             screenManager.showVideo(this, VideoPlayerMediaData(
                 thumbnail = thumbnail,
                 title = lessonData.lesson.title.orEmpty(),
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
-            ), LessonAutoplayData(lessonData.lesson.id, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id })
-            )
+            ), lessonMoveNextIntent)
         }
     }
 

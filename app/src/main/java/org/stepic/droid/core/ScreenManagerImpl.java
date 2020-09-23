@@ -52,7 +52,6 @@ import org.stepik.android.domain.course.analytic.CourseViewSource;
 import org.stepik.android.domain.course_list.model.CourseListQuery;
 import org.stepik.android.domain.feedback.model.SupportEmailData;
 import org.stepik.android.domain.last_step.model.LastStep;
-import org.stepik.android.domain.lesson.model.LessonAutoplayData;
 import org.stepik.android.model.Course;
 import org.stepik.android.model.CourseCollection;
 import org.stepik.android.model.Lesson;
@@ -312,7 +311,7 @@ public class ScreenManagerImpl implements ScreenManager {
     }
 
     @Override
-    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, @Nullable LessonAutoplayData lessonAutoplayData) {
+    public void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, @Nullable Intent lessonMoveNextIntent) {
         analytic.reportEvent(Analytic.Screens.TRY_OPEN_VIDEO);
         boolean isOpenExternal = userPreferences.isOpenInExternal();
         if (isOpenExternal) {
@@ -324,11 +323,9 @@ public class ScreenManagerImpl implements ScreenManager {
         final Context context = sourceFragment.requireContext();
 
         if (!isOpenExternal) {
-            if (lessonAutoplayData == null) {
+            if (lessonMoveNextIntent == null) {
                 sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, false));
             } else {
-                Intent lessonMoveNextIntent = LessonActivity.Companion.createIntent(context, lessonAutoplayData.getLessonId(), lessonAutoplayData.getStepPosition(), true);
-                lessonMoveNextIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, true, lessonMoveNextIntent));
             }
         } else {
