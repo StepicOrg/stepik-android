@@ -90,11 +90,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         private const val EXTRA_VIDEO_PLAYER_DATA = "video_player_media_data"
         private const val EXTRA_VIDEO_MOVE_NEXT_INTENT = "video_player_move_next_intent"
 
-        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData): Intent =
-            Intent(context, VideoPlayerActivity::class.java)
-                .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
-
-        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, lessonMoveNextIntent: Intent): Intent =
+        fun createIntent(context: Context, videoPlayerMediaData: VideoPlayerMediaData, lessonMoveNextIntent: Intent? = null): Intent =
             Intent(context, VideoPlayerActivity::class.java)
                 .putExtra(EXTRA_VIDEO_PLAYER_DATA, videoPlayerMediaData)
                 .putExtra(EXTRA_VIDEO_MOVE_NEXT_INTENT, lessonMoveNextIntent)
@@ -106,7 +102,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private val lessonMoveNextIntent: Intent? by lazy { intent.getParcelableExtra<Intent>(EXTRA_VIDEO_MOVE_NEXT_INTENT) }
+    private val lessonMoveNextIntent: Intent? by lazy { intent.getParcelableExtra(EXTRA_VIDEO_MOVE_NEXT_INTENT) }
     private val isAutoplayEnabled: Boolean by lazy { lessonMoveNextIntent != null }
 
     private lateinit var labelPlay: String

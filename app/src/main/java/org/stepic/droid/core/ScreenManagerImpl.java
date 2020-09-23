@@ -323,11 +323,7 @@ public class ScreenManagerImpl implements ScreenManager {
         final Context context = sourceFragment.requireContext();
 
         if (!isOpenExternal) {
-            if (lessonMoveNextIntent == null) {
-                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData));
-            } else {
-                sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, lessonMoveNextIntent));
-            }
+            sourceFragment.startActivity(VideoPlayerActivity.Companion.createIntent(context, videoPlayerMediaData, lessonMoveNextIntent));
         } else {
             @Nullable
             final Video cachedVideo = videoPlayerMediaData.getCachedVideo();
