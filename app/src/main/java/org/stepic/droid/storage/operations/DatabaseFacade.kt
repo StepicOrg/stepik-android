@@ -4,6 +4,7 @@ import org.stepic.droid.adaptive.model.LocalExpItem
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.features.stories.model.ViewedStoryTemplate
 import org.stepic.droid.model.BlockPersistentWrapper
+import org.stepic.droid.model.SearchQuery
 import org.stepic.droid.model.ViewedNotification
 import org.stepic.droid.notifications.model.Notification
 import org.stepic.droid.storage.dao.AdaptiveExpDao
@@ -271,6 +272,10 @@ constructor(
 
     fun getSearchQueries(constraint: String, count: Int) =
         searchQueryDao.getSearchQueries(constraint, count)
+
+    fun addSearchQuery(searchQuery: SearchQuery) {
+        searchQueryDao.insertOrReplace(searchQuery)
+    }
 
     fun addToViewedNotificationsQueue(viewedNotification: ViewedNotification) {
         viewedNotificationsQueueDao.insertOrReplace(viewedNotification)

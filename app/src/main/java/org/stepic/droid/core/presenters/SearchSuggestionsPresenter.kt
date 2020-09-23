@@ -16,9 +16,9 @@ import org.stepik.android.domain.search.repository.SearchRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 class SearchSuggestionsPresenter
-@Inject constructor(
+@Inject
+constructor(
     private val searchRepository: SearchRepository,
     private val databaseFacade: DatabaseFacade,
     private val analytic: Analytic,
