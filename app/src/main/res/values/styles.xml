@@ -126,7 +126,6 @@
 
     <style name="VideoTimeThumbnail">
         <item name="android:background">@color/background_time_thumbnail</item>
-        <item name="android:textColor">@color/white_color_alpha_70</item>
         <item name="android:paddingLeft">4dp</item>
         <item name="android:paddingRight">4dp</item>
         <item name="android:paddingTop">2dp</item>
