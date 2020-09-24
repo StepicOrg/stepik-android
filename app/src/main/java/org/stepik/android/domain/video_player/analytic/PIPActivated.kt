@@ -4,5 +4,5 @@ import org.stepik.android.domain.base.analytic.AnalyticEvent
 
 class PIPActivated : AnalyticEvent {
     override val name: String =
-        "Video picture-in-picture mode activated"
+        "Video played in picture-in-picture"
 }
