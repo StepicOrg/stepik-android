@@ -34,9 +34,6 @@ import org.stepik.android.view.course.routing.CourseScreenTab;
 import org.stepik.android.view.routing.deeplink.BranchRoute;
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData;
 
-import java.util.List;
-import java.util.Map;
-
 public interface ScreenManager {
 
     void showLaunchFromSplash(Activity activity);
@@ -85,7 +82,7 @@ public interface ScreenManager {
 
     Intent getCatalogIntent(Context context);
 
-    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, boolean isAutoplayEnabled);
+    void showVideo(@NotNull Fragment sourceFragment, @NotNull VideoPlayerMediaData videoPlayerMediaData, @Nullable Intent lessonMoveNextIntent);
 
     void showSettings(Activity sourceActivity);
 

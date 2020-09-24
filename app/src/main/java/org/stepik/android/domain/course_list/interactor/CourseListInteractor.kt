@@ -23,7 +23,7 @@ constructor(
 
     fun getAllCourses(courseListQuery: CourseListQuery): Single<List<Course>> =
         Observable.range(1, Int.MAX_VALUE)
-            .concatMapSingle { courseRepository.getCourses(courseListQuery.copy(page = it)) }
+            .concatMapSingle { courseRepository.getCourses(courseListQuery.copy(page = it), allowFallback = false) }
             .takeUntil { !it.hasNext }
             .reduce(emptyList()) { a, b -> a + b }
 
@@ -40,10 +40,11 @@ constructor(
 
     fun getCourseListItems(
         courseListQuery: CourseListQuery,
-        sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE
+        sourceTypeComposition: SourceTypeComposition = SourceTypeComposition.REMOTE,
+        isAllowFallback: Boolean = true
     ): Single<PagedList<CourseListItem.Data>> =
         getCourseListItems(
-            coursesSource = courseRepository.getCourses(courseListQuery),
+            coursesSource = courseRepository.getCourses(courseListQuery, primarySourceType = sourceTypeComposition.generalSourceType, allowFallback = isAllowFallback),
             courseViewSource = CourseViewSource.Query(courseListQuery),
             sourceTypeComposition = sourceTypeComposition
         )

@@ -72,6 +72,9 @@ class LessonActivity : FragmentActivityBase(), LessonView,
 
         private const val EXTRA_TRIAL_LESSON_ID = "trial_lesson_id"
 
+        const val EXTRA_AUTOPLAY_STEP_POSITION = "autoplay_step_position"
+        const val EXTRA_AUTOPLAY_MOVE_NEXT = "autoplay_move_next"
+
         fun createIntent(context: Context, section: Section, unit: Unit, lesson: Lesson, isNeedBackAnimation: Boolean = false, isAutoplayEnabled: Boolean = false): Intent =
             Intent(context, LessonActivity::class.java)
                 .putExtra(EXTRA_SECTION, section)
@@ -247,6 +250,16 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                 super.onOptionsItemSelected(item)
         }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null) {
+            if (intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false)) {
+                lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
+                intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
+            }
+        }
+    }
+
     override fun setState(state: LessonView.State) {
         viewStateDelegate.switchState(state)
         when (state) {
@@ -258,7 +271,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                         R.string.lesson_step_counter, state.lessonData.stepPosition + 1,
                         state.lessonData.lesson.steps.size
                     )
-                    centeredToolbarSubtitle.isVisible = true
                 }
 
                 stepsAdapter.lessonData = state.lessonData
@@ -268,6 +280,11 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     if (intent.getBooleanExtra(EXTRA_AUTOPLAY, false)) {
                         lessonPager.post { playCurrentStep() }
                         intent.removeExtra(EXTRA_AUTOPLAY)
+                    }
+
+                    if (intent.getBooleanExtra(EXTRA_AUTOPLAY_MOVE_NEXT, false)) {
+                        lessonPager.post { (stepsAdapter.activeFragments[lessonPager.currentItem] as? NextMoveable)?.moveNext(true) }
+                        intent.removeExtra(EXTRA_AUTOPLAY_MOVE_NEXT)
                     }
                 } else {
                     if (state.stepsState is LessonView.StepsState.Exam) {
@@ -283,6 +300,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
                     stepsAdapter.items = emptyList()
                 }
 
+                centeredToolbarSubtitle.isVisible = stepsAdapter.items.isNotEmpty()
                 invalidateTabLayout()
             }
         }
@@ -328,8 +346,13 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     }
 
     override fun showStepAtPosition(position: Int) {
-        lessonPager.currentItem = position
-        lessonPresenter.onStepOpened(position)
+        val stepPosition = intent
+            .getIntExtra(EXTRA_AUTOPLAY_STEP_POSITION, -1)
+            .takeIf { it != -1 }
+            ?: position
+
+        lessonPager.currentItem = stepPosition
+        lessonPresenter.onStepOpened(stepPosition)
     }
 
     override fun showLessonInfoTooltip(stepScore: Float, stepCost: Long, lessonTimeToComplete: Long, certificateThreshold: Long) {

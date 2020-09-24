@@ -15,4 +15,5 @@ interface VideoPlayerView {
     fun setVideoPlayerData(videoPlayerData: VideoPlayerData)
     fun setIsLandscapeVideo(isLandScapeVideo: Boolean)
     fun showPlayInBackgroundPopup()
+    fun invalidatePlayer()
 }

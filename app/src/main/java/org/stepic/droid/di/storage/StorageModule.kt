@@ -45,9 +45,13 @@ import org.stepic.droid.storage.migration.Migrations
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
+import org.stepik.android.cache.base.database.AnalyticDatabase
+import org.stepik.android.cache.base.database.AnalyticDatabaseInfo
+import org.stepik.android.cache.base.database.AppDatabase
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.course_collection.dao.CourseCollectionDaoImpl
 import org.stepik.android.cache.course_list.dao.CourseListQueryDaoImpl
+import org.stepik.android.cache.course_payments.dao.CoursePaymentsDaoImpl
 import org.stepik.android.cache.discussion_thread.dao.DiscussionThreadDaoImpl
 import org.stepik.android.cache.download.dao.DownloadedCoursesDao
 import org.stepik.android.cache.download.dao.DownloadedCoursesDaoImpl
@@ -55,9 +59,12 @@ import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDaoImpl
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDao
 import org.stepik.android.cache.personal_deadlines.dao.PersonalDeadlinesDaoImpl
+import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
+import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDaoImpl
 import org.stepik.android.cache.social_profile.dao.SocialProfileDaoImpl
 import org.stepik.android.cache.submission.dao.SubmissionDaoImpl
 import org.stepik.android.cache.user.dao.UserDaoImpl
+import org.stepik.android.cache.user_courses.dao.UserCourseDao
 import org.stepik.android.cache.user_courses.dao.UserCourseDaoImpl
 import org.stepik.android.cache.video.dao.VideoDao
 import org.stepik.android.cache.video.dao.VideoDaoImpl
@@ -68,18 +75,22 @@ import org.stepik.android.cache.video.model.VideoUrlEntity
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.data.course_list.model.CourseListQueryData
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
+import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_reviews.model.CourseReview
 import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.domain.user_courses.model.UserCourse
-import org.stepik.android.model.*
+import org.stepik.android.model.Assignment
+import org.stepik.android.model.Certificate
+import org.stepik.android.model.Course
+import org.stepik.android.model.CourseCollection
+import org.stepik.android.model.CourseReviewSummary
+import org.stepik.android.model.Lesson
+import org.stepik.android.model.Progress
+import org.stepik.android.model.Section
+import org.stepik.android.model.SocialProfile
+import org.stepik.android.model.Step
+import org.stepik.android.model.Submission
 import org.stepik.android.model.Unit
-import org.stepik.android.cache.base.database.AnalyticDatabase
-import org.stepik.android.cache.base.database.AnalyticDatabaseInfo
-import org.stepik.android.cache.base.database.AppDatabase
-import org.stepik.android.cache.course_payments.dao.CoursePaymentsDaoImpl
-import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDao
-import org.stepik.android.cache.purchase_notification.dao.PurchaseNotificationDaoImpl
-import org.stepik.android.domain.course_payments.model.CoursePayment
+import org.stepik.android.model.ViewAssignment
 import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.model.user.User
@@ -223,7 +234,7 @@ abstract class StorageModule {
 
     @StorageSingleton
     @Binds
-    internal abstract fun bindUserCourseDao(userCourseDao: UserCourseDaoImpl): IDao<UserCourse>
+    internal abstract fun bindUserCourseDao(userCourseDao: UserCourseDaoImpl): UserCourseDao
 
     @StorageSingleton
     @Binds

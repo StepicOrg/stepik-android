@@ -222,7 +222,8 @@
     </string>
     <string name="not_auth_message">Sign in to continue</string>
     <string name="auth_action_title">Sign in</string>
-    <string name="empty_steps_title">This lesson doesn\'t have any steps</string>
+    <string name="empty_steps_title">This lesson doesn\'t have any steps or you don\'t have
+        permission to view it</string>
     <string name="open_in_browser">Open in Browser</string>
     <string name="low_quality">Low</string>
     <string name="medium_quality">Medium</string>
@@ -929,4 +930,10 @@
     <string name="purchase_notification_description">Were you planning to obtain %s? Finish your purchase and start studying right away!</string>
 
     <string name="internal_deeplink_error">Unable to open link: %s</string>
+
+    <!-- Picture in picture -->
+    <string name="pip_play_label">Play</string>
+    <string name="pip_stop_label">Pause</string>
+    <string name="pip_forward_label">Forward</string>
+    <string name="pip_rewind_label">Rewind</string>
 </resources>

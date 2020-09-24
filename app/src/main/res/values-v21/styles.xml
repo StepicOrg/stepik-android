@@ -10,7 +10,7 @@
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.21"/>
 
     <style name="AppTheme.VideoPlayer.21" parent="AppTheme.VideoPlayer.19">
-        <item name="android:windowTranslucentStatus">false</item>">
+        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:navigationBarColor">@color/black_alpha_30</item>
     </style>

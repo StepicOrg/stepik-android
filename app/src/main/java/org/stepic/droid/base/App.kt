@@ -1,8 +1,10 @@
 package org.stepic.droid.base
 
+import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.os.Build
-import android.os.Process
+import android.os.Bundle
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
@@ -31,8 +33,6 @@ import org.stepic.droid.util.NotificationChannelInitializer
 import org.stepik.android.domain.view_assignment.service.DeferrableViewAssignmentReportServiceContainer
 import ru.nobird.android.view.base.ui.extension.isMainProcess
 import timber.log.Timber
-import java.io.FileInputStream
-import java.io.InputStreamReader
 import javax.inject.Inject
 import javax.net.ssl.SSLContext
 

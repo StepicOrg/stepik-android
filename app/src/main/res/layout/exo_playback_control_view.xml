@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/ThemeOverlay.Dark"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
@@ -177,7 +178,7 @@
         android:layout_below="@id/autoplay_controller_panel"
         app:switchPadding="8dp"
 
-        android:theme="@style/ThemeOverlay.Green"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
         android:text="@string/setting_autoplay_short"
         android:textColor="@color/white" />
 
@@ -240,10 +241,30 @@
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/exo_fullscreen_icon_container"
+            app:layout_constraintRight_toLeftOf="@id/exo_pip_icon_container"
             android:layout_marginRight="@dimen/video_player_seek_bar_margin"
             android:layout_marginEnd="@dimen/video_player_seek_bar_margin"
             tools:text="03:35"/>
+
+        <FrameLayout
+            android:id="@+id/exo_pip_icon_container"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            app:layout_constraintRight_toLeftOf="@id/exo_fullscreen_icon_container"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="?selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:id="@+id/exo_pip_icon"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_pip_open"/>
+
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/exo_fullscreen_icon_container"

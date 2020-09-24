@@ -2,7 +2,7 @@ package org.stepik.android.cache.user_courses
 
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.stepic.droid.storage.dao.IDao
+import org.stepik.android.cache.user_courses.dao.UserCourseDao
 import org.stepik.android.cache.user_courses.structure.DbStructureUserCourse
 import org.stepik.android.data.user_courses.source.UserCoursesCacheDataSource
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -13,7 +13,7 @@ import javax.inject.Inject
 class UserCoursesCacheDataSourceImpl
 @Inject
 constructor(
-    private val userCourseDao: IDao<UserCourse>
+    private val userCourseDao: UserCourseDao
 ) : UserCoursesCacheDataSource {
     companion object {
         private const val TRUE = "1"
@@ -21,7 +21,7 @@ constructor(
     }
     override fun getUserCourses(userCourseQuery: UserCourseQuery): Single<List<UserCourse>> =
         Single.fromCallable {
-            userCourseDao.getAll(mapToDbQuery(userCourseQuery))
+            userCourseDao.getAllUserCourses(mapToDbQuery(userCourseQuery))
         }
 
     override fun saveUserCourses(userCourses: List<UserCourse>): Completable =
