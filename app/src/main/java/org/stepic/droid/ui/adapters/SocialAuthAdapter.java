@@ -12,8 +12,6 @@ import org.stepic.droid.R;
 import org.stepic.droid.ui.listeners.OnItemClickListener;
 import org.stepik.android.view.auth.model.SocialNetwork;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 
@@ -85,17 +83,12 @@ public class SocialAuthAdapter extends RecyclerView.Adapter<SocialAuthAdapter.So
     }
 
     static class SocialViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.root_view)
-        View rootView;
-
-        @BindView(R.id.social_item)
-        ImageView imageView;
+        private final ImageView imageView;
 
         private SocialViewHolder(View itemView, final OnItemClickListener clickItemListener) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
-
-            rootView.setOnClickListener(v -> clickItemListener.onItemClick(getAdapterPosition()));
+            itemView.setOnClickListener(v -> clickItemListener.onItemClick(getAdapterPosition()));
+            imageView = itemView.findViewById(R.id.social_item);
         }
     }
 }

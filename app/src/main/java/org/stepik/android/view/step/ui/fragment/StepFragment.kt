@@ -279,8 +279,8 @@ class StepFragment : Fragment(), StepView,
         val unit = lessonData.unit ?: return
         val section = lessonData.section ?: return
 
-        screenManager.showSteps(activity, unit, lessonData.lesson, section, direction == StepNavigationDirection.PREV, isAutoplayEnabled)
         activity?.finish()
+        screenManager.showSteps(activity, unit, lessonData.lesson, section, direction == StepNavigationDirection.PREV, isAutoplayEnabled)
     }
 
     override fun showQuizReloadMessage() {

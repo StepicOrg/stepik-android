@@ -74,14 +74,16 @@ constructor(
         isLandscapeVideo = savedInstanceState.getBoolean(FULLSCREEN_DATA)
     }
 
-    fun onMediaData(mediaData: VideoPlayerMediaData) {
-        if (videoPlayerData != null || isLoading) return
+    fun onMediaData(mediaData: VideoPlayerMediaData, isFromNewIntent: Boolean = false) {
+        if (videoPlayerData?.mediaData?.externalVideo?.id == mediaData.externalVideo?.id) return
+        if ((videoPlayerData != null || isLoading) && !isFromNewIntent) return
 
         compositeDisposable += videoPlayerSettingsInteractor
             .getVideoPlayerData(mediaData)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doOnSubscribe {
+                view?.invalidatePlayer()
                 isLoading = true
             }
             .doFinally {
