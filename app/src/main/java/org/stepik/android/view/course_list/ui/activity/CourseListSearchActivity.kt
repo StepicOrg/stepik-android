@@ -31,7 +31,8 @@ class CourseListSearchActivity : FragmentActivityBase() {
         }
     }
 
-    override fun onNewIntent(intent: Intent) { // add new fragment
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent) // add new fragment
         setIntent(intent)
         query = intent.getStringExtra(SearchManager.QUERY)
         val fm = supportFragmentManager
