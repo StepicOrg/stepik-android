@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
+import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
@@ -36,9 +36,7 @@ class StepQuizReviewFragment : Fragment(R.layout.fragment_step_quiz_review), Ste
 
         injectComponent()
 
-        stepQuizReviewPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(StepQuizReviewPresenter::class.java)
+        stepQuizReviewPresenter = viewModel(viewModelFactory)
     }
 
     private fun injectComponent() {
@@ -62,10 +60,8 @@ class StepQuizReviewFragment : Fragment(R.layout.fragment_step_quiz_review), Ste
     }
 
     override fun render(state: StepQuizReviewView.State) {
-        TODO("Not yet implemented")
     }
 
     override fun onAction(action: StepQuizReviewView.Action.ViewAction) {
-        TODO("Not yet implemented")
     }
 }
