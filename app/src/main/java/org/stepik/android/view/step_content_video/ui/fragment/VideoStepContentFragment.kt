@@ -1,6 +1,5 @@
 package org.stepik.android.view.step_content_video.ui.fragment
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -23,10 +22,9 @@ import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.presentation.step_content_video.VideoStepContentPresenter
 import org.stepik.android.presentation.step_content_video.VideoStepContentView
-import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
+import org.stepik.android.view.lesson.ui.activity.LessonActivity
 import org.stepik.android.view.lesson.ui.interfaces.Playable
 import org.stepik.android.view.video_player.model.VideoPlayerMediaData
-import org.stepik.android.view.video_player.ui.activity.VideoPlayerActivity
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
@@ -100,12 +98,18 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
         } else {
             val thumbnail = stepWrapper.cachedVideo?.thumbnail
                 ?: stepWrapper.step.block?.video?.thumbnail
+
+            val lessonMoveNextIntent = Intent(requireActivity().intent)
+                .putExtra(LessonActivity.EXTRA_AUTOPLAY_STEP_POSITION, lessonData.lesson.steps.indexOfFirst { it == stepWrapper.step.id })
+                .putExtra(LessonActivity.EXTRA_AUTOPLAY_MOVE_NEXT, true)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
             screenManager.showVideo(this, VideoPlayerMediaData(
                 thumbnail = thumbnail,
                 title = lessonData.lesson.title.orEmpty(),
                 cachedVideo = stepWrapper.cachedVideo,
                 externalVideo = stepWrapper.step.block?.video
-            ), true)
+            ), lessonMoveNextIntent)
         }
     }
 
@@ -130,13 +134,5 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     override fun play(): Boolean {
         openVideoPlayer()
         return true
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == VideoPlayerActivity.REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            (parentFragment as? NextMoveable)
-                ?.moveNext(isAutoplayEnabled = true)
-        }
-        super.onActivityResult(requestCode, resultCode, data)
     }
 }

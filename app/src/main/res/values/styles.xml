@@ -29,8 +29,6 @@
     <style name="AppTheme.VideoPlayer" parent="AppTheme.VideoPlayer.7" />
 
     <style name="AppTheme.VideoPlayer.7" parent="AppTheme">
-        <item name="colorAccent">@color/white</item>
-        <item name="colorPrimary">@color/color_overlay_green</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
