@@ -163,7 +163,12 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
                     return
                 }
                 when (intent.getIntExtra(EXTRA_CONTROL_TYPE, 0)) {
-                    CONTROL_TYPE_PLAY -> exoPlayer?.playWhenReady = true
+                    CONTROL_TYPE_PLAY -> {
+                        if (exoPlayer?.playbackState == Player.STATE_ENDED) {
+                            exoPlayer?.seekTo(0)
+                        }
+                        exoPlayer?.playWhenReady = true
+                    }
                     CONTROL_TYPE_PAUSE -> exoPlayer?.playWhenReady = false
                     CONTROL_TYPE_REWIND -> exoPlayer?.let { it.seekTo(it.currentPosition - JUMP_TIME_MILLIS) }
                     CONTROL_TYPE_FORWARD -> exoPlayer?.let { it.seekTo(it.currentPosition + JUMP_TIME_MILLIS) }
