@@ -22,6 +22,6 @@ constructor(
             assignmentCacheDataSource::saveAssignments
         )
 
-    override fun getAssignments(assignmentIds: List<Long>, primarySourceType: DataSourceType): Single<List<Assignment>> =
-        delegate.get(assignmentIds, primarySourceType, allowFallback = true)
+    override fun getAssignments(assignmentIds: List<Long>, sourceType: DataSourceType): Single<List<Assignment>> =
+        delegate.get(assignmentIds, sourceType, allowFallback = true)
 }

@@ -2,12 +2,17 @@ package org.stepik.android.presentation.step_quiz_review
 
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Scheduler
+import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.domain.step_quiz_review.interactor.StepQuizReviewInteractor
+import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
 import ru.nobird.android.presentation.base.PresenterBase
 import timber.log.Timber
@@ -17,7 +22,9 @@ class StepQuizReviewPresenter
 @Inject
 constructor(
     stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
+    lessonData: LessonData,
 
+    private val stepQuizInteractor: StepQuizInteractor,
     private val stepQuizReviewInteractor: StepQuizReviewInteractor,
     private val stepQuizReviewReducer: StepQuizReviewReducer,
 
@@ -38,7 +45,7 @@ constructor(
         compositeDisposable += stepWrapperRxRelay
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
-            .subscribeBy(onNext = { onNewMessage(StepQuizReviewView.Message.InitWithStep(it.step)) })
+            .subscribeBy(onNext = { onNewMessage(StepQuizReviewView.Message.InitWithStep(it, lessonData)) })
     }
 
     override fun attachView(view: StepQuizReviewView) {
@@ -66,7 +73,18 @@ constructor(
             }
 
             is StepQuizReviewView.Action.FetchStepQuizState -> {
-                compositeDisposable
+                compositeDisposable += Singles
+                    .zip(
+                        getAttemptState(action.stepWrapper, action.lessonData),
+                        stepQuizReviewInteractor.getInstruction(action.stepWrapper.step.instruction ?: -1),
+                        StepQuizReviewView.Message::FetchStepQuizStateSuccess
+                    )
+                    .subscribeOn(backgroundScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onSuccess = { onNewMessage(it) },
+                        onError = { onNewMessage(StepQuizReviewView.Message.InitialFetchError) }
+                    )
             }
 
             is StepQuizReviewView.Action.FetchReviewSession -> {
@@ -94,4 +112,25 @@ constructor(
             }
         }
     }
+
+    private fun getAttemptState(stepWrapper: StepPersistentWrapper, lessonData: LessonData): Single<StepQuizView.State.AttemptLoaded> =
+        stepQuizInteractor
+            .getAttempt(stepWrapper.id)
+            .flatMap { attempt ->
+                Singles
+                    .zip(
+                        getSubmissionState(attempt.id),
+                        stepQuizInteractor.getStepRestrictions(stepWrapper, lessonData)
+                    )
+                    .map { (submissionState, stepRestrictions) ->
+                        StepQuizView.State.AttemptLoaded(attempt, submissionState, stepRestrictions)
+                    }
+            }
+
+    // todo remove duplication from StepQuizPresenter.kt
+    private fun getSubmissionState(attemptId: Long): Single<StepQuizView.SubmissionState> =
+        stepQuizInteractor
+            .getSubmission(attemptId)
+            .map<StepQuizView.SubmissionState> { StepQuizView.SubmissionState.Loaded(it) }
+            .toSingle(StepQuizView.SubmissionState.Empty())
 }

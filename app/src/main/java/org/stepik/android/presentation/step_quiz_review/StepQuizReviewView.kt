@@ -1,5 +1,7 @@
 package org.stepik.android.presentation.step_quiz_review
 
+import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_session.model.ReviewSession
 import org.stepik.android.domain.review_session.model.ReviewSessionData
@@ -26,7 +28,7 @@ interface StepQuizReviewView {
         /**
          * Initialization
          */
-        data class InitWithStep(val step: Step, val forceUpdate: Boolean = false) : Message()
+        data class InitWithStep(val stepWrapper: StepPersistentWrapper, val lessonData: LessonData, val forceUpdate: Boolean = false) : Message()
         data class FetchReviewSessionSuccess(
             val sessionData: ReviewSessionData,
             val instruction: ReviewInstruction,
@@ -53,8 +55,8 @@ interface StepQuizReviewView {
     }
 
     sealed class Action {
-        data class FetchStepQuizState(val step: Step) : Action() // if there is no review session
-        data class FetchReviewSession(val instructionId: Long, val sessionId: Long) : Action()
+        data class FetchStepQuizState(val stepWrapper: StepPersistentWrapper, val lessonData: LessonData) : Action() // if there is no review session
+        data class FetchReviewSession(val stepId: Long, val instructionId: Long, val sessionId: Long) : Action()
         data class CreateSessionWithSubmission(val submissionId: Long) : Action() // select solution
 
         sealed class ViewAction : Action() {

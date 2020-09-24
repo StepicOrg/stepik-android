@@ -21,7 +21,10 @@ constructor(
     fun getReviewSession(instructionId: Long, sessionId: Long): Single<Pair<ReviewInstruction, ReviewSessionData>> =
         Singles
             .zip(
-                reviewInstructionRepository.getReviewInstruction(instructionId, sourceType = DataSourceType.REMOTE),
+                getInstruction(instructionId),
                 reviewSessionRepository.getReviewSession(sessionId, sourceType = DataSourceType.REMOTE)
             )
+
+    fun getInstruction(instructionId: Long): Single<ReviewInstruction> =
+        reviewInstructionRepository.getReviewInstruction(instructionId, sourceType = DataSourceType.REMOTE)
 }

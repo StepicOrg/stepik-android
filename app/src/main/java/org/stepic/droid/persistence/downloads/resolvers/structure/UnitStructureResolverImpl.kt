@@ -72,7 +72,7 @@ constructor(
                 val nestedObjectsCompletableSource =
                     if (resolveNestedObjects) {
                         assignmentRepository
-                            .getAssignments(assignmentIds, primarySourceType = DataSourceType.REMOTE)
+                            .getAssignments(assignmentIds, sourceType = DataSourceType.REMOTE)
                             .flatMapCompletable { assignments ->
                                 progressRepository
                                     .getProgresses(*progresses + assignments.getProgresses())

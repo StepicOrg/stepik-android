@@ -5,5 +5,5 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.model.Assignment
 
 interface AssignmentRepository {
-    fun getAssignments(assignmentIds: List<Long>, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Assignment>>
+    fun getAssignments(assignmentIds: List<Long>, sourceType: DataSourceType = DataSourceType.CACHE): Single<List<Assignment>>
 }

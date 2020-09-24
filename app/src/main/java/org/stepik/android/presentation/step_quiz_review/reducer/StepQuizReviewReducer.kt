@@ -22,15 +22,15 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.InitWithStep ->
                 if (state is State.Idle ||
                     state is State.Error && message.forceUpdate) {
-                    val sessionId = message.step.session
+                    val sessionId = message.stepWrapper.step.session
                     val action =
                         if (sessionId != null && sessionId > 0) {
-                            Action.FetchReviewSession(message.step.instruction ?: -1, sessionId)
+                            Action.FetchReviewSession(message.stepWrapper.id, message.stepWrapper.step.instruction ?: -1, sessionId)
                         } else {
-                            Action.FetchStepQuizState(message.step)
+                            Action.FetchStepQuizState(message.stepWrapper, message.lessonData)
                         }
 
-                    State.Loading(message.step) to setOf(action)
+                    State.Loading(message.stepWrapper.step) to setOf(action)
                 } else {
                     null
                 }
