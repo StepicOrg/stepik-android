@@ -5,8 +5,5 @@ import io.reactivex.Single
 import org.stepik.android.domain.base.DataSourceType
 
 interface ReviewInstructionRepository {
-    fun getReviewInstruction(
-        id: Long,
-        primarySourceType: DataSourceType = DataSourceType.REMOTE
-    ): Single<ReviewInstruction>
+    fun getReviewInstruction(id: Long, sourceType: DataSourceType = DataSourceType.REMOTE): Single<ReviewInstruction>
 }

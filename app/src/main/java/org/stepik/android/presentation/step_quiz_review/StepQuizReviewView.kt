@@ -2,6 +2,7 @@ package org.stepik.android.presentation.step_quiz_review
 
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_session.model.ReviewSession
+import org.stepik.android.domain.review_session.model.ReviewSessionData
 import org.stepik.android.model.Progress
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
@@ -27,10 +28,8 @@ interface StepQuizReviewView {
          */
         data class InitWithStep(val step: Step, val forceUpdate: Boolean = false) : Message()
         data class FetchReviewSessionSuccess(
-            val session: ReviewSession,
+            val sessionData: ReviewSessionData,
             val instruction: ReviewInstruction,
-            val submission: Submission,
-            val attempt: Attempt,
             val progress: Progress? // assignment progress
         ) : Message()
         data class FetchStepQuizStateSuccess(

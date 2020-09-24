@@ -38,12 +38,12 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.FetchReviewSessionSuccess ->
                 when (state) {
                     is State.Loading -> {
-                        val quizState = createAttemptLoadedState(message.attempt, message.submission)
+                        val quizState = createAttemptLoadedState(message.sessionData.attempt, message.sessionData.submission)
                         val newState =
                             if (message.progress != null) {
                                 State.Completed(quizState, message.progress)
                             } else {
-                                State.SubmissionSelected(quizState, message.session, message.instruction)
+                                State.SubmissionSelected(quizState, message.sessionData.session, message.instruction)
                             }
 
                         newState to emptySet()

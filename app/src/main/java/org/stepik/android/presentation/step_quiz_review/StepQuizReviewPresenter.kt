@@ -70,7 +70,16 @@ constructor(
             }
 
             is StepQuizReviewView.Action.FetchReviewSession -> {
-                compositeDisposable
+                compositeDisposable += stepQuizReviewInteractor
+                    .getReviewSession(action.instructionId, action.sessionId)
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+                    .subscribeBy(
+                        onSuccess = { (instruction, sessionData) ->
+                            onNewMessage(StepQuizReviewView.Message.FetchReviewSessionSuccess(sessionData, instruction, null))
+                        },
+                        onError = { onNewMessage(StepQuizReviewView.Message.InitialFetchError) }
+                    )
             }
 
             is StepQuizReviewView.Action.CreateSessionWithSubmission -> {
@@ -83,6 +92,6 @@ constructor(
                         onError = { onNewMessage(StepQuizReviewView.Message.CreateSessionError) }
                     )
             }
-        }.hashCode()
+        }
     }
 }
