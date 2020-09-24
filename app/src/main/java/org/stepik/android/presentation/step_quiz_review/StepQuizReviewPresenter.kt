@@ -1,18 +1,23 @@
 package org.stepik.android.presentation.step_quiz_review
 
+import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepik.android.domain.step_quiz_review.interactor.StepQuizReviewInteractor
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
 import ru.nobird.android.presentation.base.PresenterBase
+import timber.log.Timber
 import javax.inject.Inject
 
 class StepQuizReviewPresenter
 @Inject
 constructor(
+    stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
+
     private val stepQuizReviewInteractor: StepQuizReviewInteractor,
     private val stepQuizReviewReducer: StepQuizReviewReducer,
 
@@ -29,6 +34,13 @@ constructor(
 
     private val viewActionQueue = ArrayDeque<StepQuizReviewView.Action.ViewAction>()
 
+    init {
+        compositeDisposable += stepWrapperRxRelay
+            .subscribeOn(backgroundScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(onNext = { onNewMessage(StepQuizReviewView.Message.InitWithStep(it.step)) })
+    }
+
     override fun attachView(view: StepQuizReviewView) {
         super.attachView(view)
         view.render(state)
@@ -39,6 +51,10 @@ constructor(
 
     fun onNewMessage(message: StepQuizReviewView.Message) {
         val (newState, actions) = stepQuizReviewReducer.reduce(state, message)
+        Timber.d("message = ${message.javaClass.canonicalName}")
+        Timber.d("newState = ${newState.javaClass.canonicalName}")
+        Timber.d("actions = $actions")
+
         state = newState
         actions.forEach(::handleAction)
     }
@@ -63,7 +79,7 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(StepQuizReviewView.Message.SessionCreated(it)) },
+                        onSuccess = { onNewMessage(StepQuizReviewView.Message.SessionCreated(it.session)) },
                         onError = { onNewMessage(StepQuizReviewView.Message.CreateSessionError) }
                     )
             }

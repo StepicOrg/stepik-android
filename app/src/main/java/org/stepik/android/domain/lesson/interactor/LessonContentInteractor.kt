@@ -9,7 +9,7 @@ import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.lesson.model.StepItem
 import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.progress.repository.ProgressRepository
-import org.stepik.android.domain.review_session.model.ReviewSession
+import org.stepik.android.domain.review_session.model.ReviewSessionData
 import org.stepik.android.domain.review_session.repository.ReviewSessionRepository
 import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.model.Assignment
@@ -54,7 +54,7 @@ constructor(
         assignmentRepository
             .getAssignments(*unit?.assignments ?: emptyList())
 
-    private fun packStepItems(assignments: List<Assignment>, steps: List<StepPersistentWrapper>, progresses: List<Progress>, reviewSessions: List<ReviewSession>): List<StepItem> =
+    private fun packStepItems(assignments: List<Assignment>, steps: List<StepPersistentWrapper>, progresses: List<Progress>, reviewSessions: List<ReviewSessionData>): List<StepItem> =
         steps
             .map { stepWrapper ->
                 val assignment = assignments
@@ -70,7 +70,7 @@ constructor(
                     assignment = assignment,
                     assignmentProgress = progresses.find { it.id == assignment?.progress },
 
-                    reviewSession = reviewSession
+                    reviewSession = reviewSession?.session
                 )
             }
 }
