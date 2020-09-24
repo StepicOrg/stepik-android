@@ -12,7 +12,7 @@ class AssignmentCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : AssignmentCacheDataSource {
-    override fun getAssignments(vararg assignmentIds: Long): Single<List<Assignment>> =
+    override fun getAssignments(assignmentIds: List<Long>): Single<List<Assignment>> =
         Single.fromCallable {
             databaseFacade.getAssignments(assignmentIds)
         }
