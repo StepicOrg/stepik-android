@@ -26,6 +26,7 @@ import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.submission.model.SubmissionItem
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
+import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.user.User
 import org.stepik.android.presentation.submission.SubmissionsPresenter
 import org.stepik.android.presentation.submission.SubmissionsView
@@ -119,7 +120,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
                     (activity as? Callback
                         ?: parentFragment as? Callback
                         ?: targetFragment as? Callback)
-                        ?.onSubmissionSelected(data.submission)
+                        ?.onSubmissionSelected(data.submission, data.attempt)
                     dismiss()
                 }
             }
@@ -200,6 +201,6 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     }
 
     interface Callback {
-        fun onSubmissionSelected(submission: Submission)
+        fun onSubmissionSelected(submission: Submission, attempt: Attempt)
     }
 }

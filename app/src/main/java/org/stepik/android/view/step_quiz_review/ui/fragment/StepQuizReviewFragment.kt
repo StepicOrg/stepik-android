@@ -6,14 +6,22 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.stepic.droid.R
 import org.stepic.droid.base.App
+import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepik.android.model.Submission
+import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
+import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class StepQuizReviewFragment : Fragment(R.layout.fragment_step_quiz_review), StepQuizReviewView {
+class StepQuizReviewFragment :
+    Fragment(R.layout.fragment_step_quiz_review),
+    StepQuizReviewView,
+    SubmissionsDialogFragment.Callback {
     companion object {
         fun newInstance(stepId: Long): Fragment =
             StepQuizReviewFragment()
@@ -24,6 +32,9 @@ class StepQuizReviewFragment : Fragment(R.layout.fragment_step_quiz_review), Ste
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var stepPersistentWrapper: StepPersistentWrapper
 
     private var stepId: Long by argument()
 
@@ -63,5 +74,15 @@ class StepQuizReviewFragment : Fragment(R.layout.fragment_step_quiz_review), Ste
     }
 
     override fun onAction(action: StepQuizReviewView.Action.ViewAction) {
+    }
+
+    private fun showSubmissions() {
+        SubmissionsDialogFragment
+            .newInstance(stepPersistentWrapper.step, isSelectionEnabled = true)
+            .showIfNotExists(childFragmentManager, SubmissionsDialogFragment.TAG)
+    }
+
+    override fun onSubmissionSelected(submission: Submission, attempt: Attempt) {
+        stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.ChangeSubmission(submission, attempt))
     }
 }
