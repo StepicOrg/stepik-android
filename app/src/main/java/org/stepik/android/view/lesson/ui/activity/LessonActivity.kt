@@ -162,7 +162,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         goToCatalog.setOnClickListener { screenManager.showCatalog(this); finish() }
         authAction.setOnClickListener { screenManager.showLaunchScreen(this) }
 
-        stepsAdapter = StepFragmentAdapter(lessonTab.context, supportFragmentManager, stepTypeResolver)
+        stepsAdapter = StepFragmentAdapter(supportFragmentManager, stepTypeResolver)
         lessonPager.adapter = stepsAdapter
         lessonPager.addOnPageChangeListener(FragmentDelegateScrollStateChangeListener(lessonPager, stepsAdapter))
         lessonPager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
@@ -323,8 +323,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         for (i in 0 until lessonTab.tabCount) {
             val tabFrames = stepsAdapter.getTabDrawable(i)
 
-            val isPassed = stepsAdapter.items[i].assignmentProgress?.isPassed
-                ?: stepsAdapter.items[i].stepProgress?.isPassed
+            val item = stepsAdapter.items[i]
+            val isPassed = item.reviewSession?.isFinished
+                ?: item.assignmentProgress?.isPassed
+                ?: item.stepProgress?.isPassed
                 ?: false
 
             @DrawableRes

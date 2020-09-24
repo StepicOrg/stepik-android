@@ -25,8 +25,6 @@ import org.stepic.droid.di.qualifiers.CourseId
 import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
-import ru.nobird.android.domain.rx.emptyOnErrorStub
-import org.stepic.droid.util.getStepType
 import org.stepik.android.domain.rating.repository.RatingRepository
 import org.stepik.android.domain.recommendation.repository.RecommendationRepository
 import org.stepik.android.domain.step.analytic.reportStepEvent
@@ -36,6 +34,7 @@ import org.stepik.android.model.adaptive.Reaction
 import org.stepik.android.model.adaptive.Recommendation
 import org.stepik.android.model.adaptive.RecommendationReaction
 import retrofit2.HttpException
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import java.util.ArrayDeque
 import javax.inject.Inject
 
@@ -243,7 +242,7 @@ constructor(
                 val unit = units.firstOrNull()
 
                 val assignments = databaseFacade
-                    .getAssignments(unit?.assignments ?: longArrayOf())
+                    .getAssignments(unit?.assignments ?: emptyList())
                     .firstOrNull()
 
                 val course = databaseFacade

@@ -35,7 +35,6 @@ import org.stepik.android.data.course_list.model.CourseListQueryData
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Assignment
 import org.stepik.android.model.Certificate
 import org.stepik.android.model.Course
@@ -127,8 +126,8 @@ constructor(
         assignmentDao.insertOrReplaceAll(assignments)
     }
 
-    fun getAssignments(assignmentsIds: LongArray): List<Assignment> {
-        val stringIds = DbParseHelper.parseLongArrayToString(assignmentsIds, AppConstants.COMMA)
+    fun getAssignments(assignmentsIds: List<Long>): List<Assignment> {
+        val stringIds = DbParseHelper.parseLongListToString(assignmentsIds, AppConstants.COMMA)
         return if (stringIds != null) {
             assignmentDao.getAllInRange(DbStructureAssignment.Columns.ID, stringIds)
         } else {

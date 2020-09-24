@@ -30,7 +30,7 @@ constructor(
             id = cursor.getLong(DbStructureUnit.Columns.ID),
             section = cursor.getLong(DbStructureUnit.Columns.SECTION),
             lesson = cursor.getLong(DbStructureUnit.Columns.LESSON),
-            assignments = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureUnit.Columns.ASSIGNMENTS)),
+            assignments = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureUnit.Columns.ASSIGNMENTS)),
             position = cursor.getInt(DbStructureUnit.Columns.POSITION),
             progress = cursor.getString(DbStructureUnit.Columns.PROGRESS),
             beginDate = cursor.getDate(DbStructureUnit.Columns.BEGIN_DATE),
@@ -53,7 +53,7 @@ constructor(
         values.put(DbStructureUnit.Columns.ID, unit.id)
         values.put(DbStructureUnit.Columns.SECTION, unit.section)
         values.put(DbStructureUnit.Columns.LESSON, unit.lesson)
-        values.put(DbStructureUnit.Columns.ASSIGNMENTS, DbParseHelper.parseLongArrayToString(unit.assignments))
+        values.put(DbStructureUnit.Columns.ASSIGNMENTS, DbParseHelper.parseLongListToString(unit.assignments))
         values.put(DbStructureUnit.Columns.POSITION, unit.position)
         values.put(DbStructureUnit.Columns.PROGRESS, unit.progress)
         values.put(DbStructureUnit.Columns.BEGIN_DATE, unit.beginDate?.time ?: -1)

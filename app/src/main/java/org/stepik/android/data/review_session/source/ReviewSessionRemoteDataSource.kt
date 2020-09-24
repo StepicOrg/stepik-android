@@ -5,5 +5,5 @@ import io.reactivex.Single
 
 interface ReviewSessionRemoteDataSource {
     fun createReviewSession(submissionId: Long): Single<ReviewSession>
-    fun getReviewSession(id: Long): Single<ReviewSession>
+    fun getReviewSessions(ids: List<Long>): Single<List<ReviewSession>>
 }

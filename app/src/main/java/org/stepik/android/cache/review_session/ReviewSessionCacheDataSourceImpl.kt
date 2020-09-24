@@ -13,12 +13,10 @@ class ReviewSessionCacheDataSourceImpl
 constructor(
     private val reviewSessionDao: ReviewSessionDao
 ) : ReviewSessionCacheDataSource {
-    override fun getReviewSession(id: Long): Maybe<ReviewSession> =
+    override fun getReviewSessions(ids: List<Long>): Single<List<ReviewSession>> =
         reviewSessionDao
-            .getReviewSession(id)
+            .getReviewSessions(ids)
 
-    override fun saveReviewSession(item: ReviewSession): Completable =
-        Single
-            .just(item)
-            .flatMapCompletable(reviewSessionDao::saveReviewSession)
+    override fun saveReviewSessions(items: List<ReviewSession>): Completable =
+        reviewSessionDao.saveReviewSessions(items)
 }
