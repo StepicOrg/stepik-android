@@ -178,7 +178,7 @@
         android:layout_below="@id/autoplay_controller_panel"
         app:switchPadding="8dp"
 
-        android:theme="@style/ThemeOverlay.Green"
+        android:theme="@style/ThemeOverlay.Secondary.Green"
         android:text="@string/setting_autoplay_short"
         android:textColor="@color/white" />
 
