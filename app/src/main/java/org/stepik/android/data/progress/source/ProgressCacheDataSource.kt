@@ -8,9 +8,9 @@ import org.stepik.android.model.Progress
 
 interface ProgressCacheDataSource {
     fun getProgress(progressId: String): Maybe<Progress> =
-        getProgresses(progressId).maybeFirst()
+        getProgresses(listOf(progressId)).maybeFirst()
 
-    fun getProgresses(vararg progressIds: String): Single<List<Progress>>
+    fun getProgresses(progressIds: List<String>): Single<List<Progress>>
 
     fun saveProgress(progress: Progress): Completable =
         saveProgresses(listOf(progress))

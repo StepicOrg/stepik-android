@@ -3,11 +3,12 @@ package org.stepik.android.model
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import ru.nobird.android.core.model.Identifiable
 
 @Parcelize
 data class Progress(
     @SerializedName("id")
-    val id: String? = null,
+    override val id: String,
     @SerializedName("last_viewed")
     val lastViewed: String? = null, //in SECONDS
     @SerializedName("score")
@@ -20,4 +21,4 @@ data class Progress(
     val nStepsPassed: Long = 0,
     @SerializedName("is_passed")
     val isPassed: Boolean = false
-) : Parcelable
+) : Parcelable, Identifiable<String>

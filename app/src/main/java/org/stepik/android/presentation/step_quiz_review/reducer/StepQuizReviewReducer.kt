@@ -25,7 +25,7 @@ constructor() : StateReducer<State, Message, Action> {
                     val sessionId = message.stepWrapper.step.session
                     val action =
                         if (sessionId != null && sessionId > 0) {
-                            Action.FetchReviewSession(message.stepWrapper.id, message.stepWrapper.step.instruction ?: -1, sessionId)
+                            Action.FetchReviewSession(message.stepWrapper.id, message.lessonData.unit?.id, message.stepWrapper.step.instruction ?: -1, sessionId)
                         } else {
                             Action.FetchStepQuizState(message.stepWrapper, message.lessonData)
                         }

@@ -135,11 +135,12 @@ constructor(
         }
     }
 
-    @Deprecated("because of step has 0..* assignments.")
-    fun getAssignmentIdByStepId(stepId: Long): Long {
-        val assignment = assignmentDao.get(DbStructureAssignment.Columns.STEP, stepId.toString())
-        return assignment?.id ?: -1
-    }
+    fun getAssignmentByUnitAndStep(unitId: Long, stepId: Long): Assignment? =
+        assignmentDao
+            .get(mapOf(
+                DbStructureAssignment.Columns.UNIT to unitId.toString(),
+                DbStructureAssignment.Columns.STEP to stepId.toString()
+            ))
 
     fun getStepsById(stepIds: LongArray): List<Step> {
         val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)

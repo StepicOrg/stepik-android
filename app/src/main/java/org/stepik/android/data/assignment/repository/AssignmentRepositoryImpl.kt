@@ -1,5 +1,6 @@
 package org.stepik.android.data.assignment.repository
 
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepik.android.data.assignment.source.AssignmentCacheDataSource
 import org.stepik.android.data.assignment.source.AssignmentRemoteDataSource
@@ -24,4 +25,7 @@ constructor(
 
     override fun getAssignments(assignmentIds: List<Long>, sourceType: DataSourceType): Single<List<Assignment>> =
         delegate.get(assignmentIds, sourceType, allowFallback = true)
+
+    override fun getAssignmentByUnitAndStep(unitId: Long, stepId: Long): Maybe<Assignment> =
+        assignmentCacheDataSource.getAssignmentByUnitAndStep(unitId, stepId)
 }

@@ -28,14 +28,14 @@ constructor(
     override fun resolveStructure(vararg items: Section, resolveNestedObjects: Boolean): Observable<Structure> =
         if (resolveNestedObjects) {
             progressRepository
-                .getProgresses(*items.asIterable().getProgresses())
+                .getProgresses(items.asIterable().getProgresses())
                 .ignoreElement()
         } else {
             Completable.complete()
         }
             .andThen(
                 items
-                    .map { unitStructureResolver.resolveStructure(it.course, it.id, unitIds = *it.units.toLongArray(), resolveNestedObjects = resolveNestedObjects) }
+                    .map { unitStructureResolver.resolveStructure(it.course, it.id, unitIds = it.units.toLongArray(), resolveNestedObjects = resolveNestedObjects) }
                     .let { Observable.concat(it) }
             )
 }

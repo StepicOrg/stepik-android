@@ -26,7 +26,7 @@ constructor(
 
     public override fun parsePersistentObject(cursor: Cursor): Progress =
         Progress(
-            id      = cursor.getString(DbStructureProgress.Columns.ID),
+            id      = cursor.getString(DbStructureProgress.Columns.ID).orEmpty(),
             cost    = cursor.getLong(DbStructureProgress.Columns.COST),
             score   = cursor.getString(DbStructureProgress.Columns.SCORE),
             isPassed     = cursor.getBoolean(DbStructureProgress.Columns.IS_PASSED),

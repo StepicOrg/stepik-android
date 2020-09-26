@@ -56,7 +56,12 @@ interface StepQuizReviewView {
 
     sealed class Action {
         data class FetchStepQuizState(val stepWrapper: StepPersistentWrapper, val lessonData: LessonData) : Action() // if there is no review session
-        data class FetchReviewSession(val stepId: Long, val instructionId: Long, val sessionId: Long) : Action()
+        data class FetchReviewSession(
+            val stepId: Long,
+            val unitId: Long?,
+            val instructionId: Long,
+            val sessionId: Long
+        ) : Action()
         data class CreateSessionWithSubmission(val submissionId: Long) : Action() // select solution
 
         sealed class ViewAction : Action() {

@@ -58,7 +58,7 @@ constructor(
 
     fun onNewMessage(message: StepQuizReviewView.Message) {
         val (newState, actions) = stepQuizReviewReducer.reduce(state, message)
-        Timber.d("message = ${message.javaClass.canonicalName}")
+        Timber.d("message = $message")
         Timber.d("newState = ${newState.javaClass.canonicalName}")
         Timber.d("actions = $actions")
 
@@ -89,12 +89,12 @@ constructor(
 
             is StepQuizReviewView.Action.FetchReviewSession -> {
                 compositeDisposable += stepQuizReviewInteractor
-                    .getReviewSession(action.instructionId, action.sessionId)
+                    .getReviewSession(action.stepId, action.unitId, action.instructionId, action.sessionId)
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
-                        onSuccess = { (instruction, sessionData) ->
-                            onNewMessage(StepQuizReviewView.Message.FetchReviewSessionSuccess(sessionData, instruction, null))
+                        onSuccess = { (instruction, sessionData, progress) ->
+                            onNewMessage(StepQuizReviewView.Message.FetchReviewSessionSuccess(sessionData, instruction, progress.firstOrNull()))
                         },
                         onError = { onNewMessage(StepQuizReviewView.Message.InitialFetchError) }
                     )

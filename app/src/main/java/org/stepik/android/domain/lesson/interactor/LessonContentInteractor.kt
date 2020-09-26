@@ -36,7 +36,7 @@ constructor(
                 val reviewSessionsIds = steps.mapNotNull { it.step.session }
 
                 zip(
-                    progressRepository.getProgresses(*progressIds),
+                    progressRepository.getProgresses(progressIds),
                     reviewSessionRepository.getReviewSessions(reviewSessionsIds)
                 ) { progresses, reviewSessions ->
                     packStepItems(assignments, steps, progresses, reviewSessions)

@@ -75,7 +75,7 @@ constructor(
                             .getAssignments(assignmentIds, sourceType = DataSourceType.REMOTE)
                             .flatMapCompletable { assignments ->
                                 progressRepository
-                                    .getProgresses(*progresses + assignments.getProgresses())
+                                    .getProgresses(progresses + assignments.getProgresses())
                                     .ignoreElement()
                             }
                     } else {

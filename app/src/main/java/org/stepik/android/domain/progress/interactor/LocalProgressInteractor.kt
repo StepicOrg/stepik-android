@@ -53,7 +53,7 @@ constructor(
             }
             .flatMap { progressIds ->
                 progressRepository
-                    .getProgresses(*progressIds)
+                    .getProgresses(progressIds)
             }
             .doOnSuccess { progresses ->
                 progresses.forEach(progressesPublisher::onNext)
