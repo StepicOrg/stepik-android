@@ -63,4 +63,8 @@
         <attr name="webViewId" format="reference" />
         <attr name="textViewId" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="ReviewStatusView">
+        <attr name="position" format="integer" />
+    </declare-styleable>
 </resources>

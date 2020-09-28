@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.fragment_step_quiz_review.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
@@ -60,7 +59,6 @@ class StepQuizReviewFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewStateDelegate = ViewStateDelegate()
 
-        appbar.setOnClickListener { showSubmissions() }
     }
 
     override fun onStart() {
@@ -74,6 +72,7 @@ class StepQuizReviewFragment :
     }
 
     override fun render(state: StepQuizReviewView.State) {
+
     }
 
     override fun onAction(action: StepQuizReviewView.Action.ViewAction) {

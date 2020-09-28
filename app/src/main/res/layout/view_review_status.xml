@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:parentTag="android.widget.FrameLayout">
+    <TextView
+        android:id="@+id/peerReviewStatusText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_peer_review_step_active"
+        android:textAppearance="?textAppearanceSubtitle2"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:textColor="@color/color_peer_review_step"
+
+        tools:layout_width="24dp"
+        tools:layout_height="24dp"
+        tools:text="1" />
+
+    <ImageView
+        android:id="@+id/peerReviewStatusImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="@drawable/bg_peer_review_step_passed"
+        android:contentDescription="@null"
+        android:layout_gravity="center"
+
+        android:visibility="gone"
+
+        tools:layout_width="24dp"
+        tools:layout_height="24dp"/>
+</merge>
