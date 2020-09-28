@@ -82,9 +82,9 @@
         <item quantity="other">%d reviews</item>
     </plurals>
 
-    <plurals name="step_quiz_review_given_completed">
-        <item quantity="one">%d review was sent.</item>
-        <item quantity="other">%d reviews were sent.</item>
+    <plurals name="step_quiz_review_given_pending">
+        <item quantity="one">Write %d review</item>
+        <item quantity="other">Write %d reviews</item>
     </plurals>
 
     <plurals name="step_quiz_review_given_in_progress">
@@ -92,13 +92,23 @@
         <item quantity="other">Write %d more reviews.</item>
     </plurals>
 
-    <plurals name="step_quiz_review_taken_completed">
-        <item quantity="one">%d review received.</item>
-        <item quantity="other">%d reviews received.</item>
+    <plurals name="step_quiz_review_given_completed">
+        <item quantity="one">%d review was sent.</item>
+        <item quantity="other">%d reviews were sent.</item>
+    </plurals>
+
+    <plurals name="step_quiz_review_taken_pending">
+        <item quantity="one">Wait for %d review of your solution</item>
+        <item quantity="other">Wait for %d reviews of your solution</item>
     </plurals>
 
     <plurals name="step_quiz_review_taken_in_progress">
         <item quantity="one">Wait for %d more review of your solution.</item>
         <item quantity="other">Wait for %d more reviews of your solution.</item>
+    </plurals>
+
+    <plurals name="step_quiz_review_taken_completed">
+        <item quantity="one">%d review received.</item>
+        <item quantity="other">%d reviews received.</item>
     </plurals>
 </resources>

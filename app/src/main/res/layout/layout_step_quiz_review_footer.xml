@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <!-- Step 5 -->
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/reviewStep5BarrierBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="reviewStep5Status,reviewStep5Title" />
+
+    <org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
+        android:id="@+id/reviewStep5Status"
+        android:layout_width="@dimen/step_quiz_review_status_size"
+        android:layout_height="@dimen/step_quiz_review_status_size"
+
+        app:position="5"
+        android:layout_marginStart="@dimen/step_quiz_review_status_margin"
+        android:layout_marginLeft="@dimen/step_quiz_review_status_margin"
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/reviewStepLast"
+        app:layout_constraintBottom_toBottomOf="@id/reviewStep5BarrierBottom" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/reviewStep5Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:textAppearance="?textAppearanceCaption"
+        android:textColor="?android:textColorPrimary"
+        android:text="@string/step_quiz_review_send_pending"
+
+        android:layout_marginStart="@dimen/step_quiz_review_title_margin"
+        android:layout_marginLeft="@dimen/step_quiz_review_title_margin"
+        android:layout_marginEnd="@dimen/step_quiz_review_vertical_block_margin"
+        android:layout_marginRight="@dimen/step_quiz_review_vertical_block_margin"
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintStart_toEndOf="@id/reviewStep5Status"
+        app:layout_constraintTop_toTopOf="@id/reviewStepLast"
+        app:layout_constraintBottom_toBottomOf="@id/reviewStep5BarrierBottom"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <include
+        android:id="@+id/reviewStep5DividerTop"
+        layout="@layout/view_divider_vertical"
+
+        android:layout_width="0dp"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep5BarrierBottom" />
+
+    <!-- TODO -->
+    <FrameLayout
+        android:id="@+id/reviewStep5Container"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep5DividerTop"
+        app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep5Title" />
+
+    <include
+        android:id="@+id/reviewStep5DividerBottom"
+        layout="@layout/view_divider_vertical"
+
+        android:layout_width="0dp"
+        android:layout_height="?dividerVerticalSize"
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep5Container" />
+
+</merge>

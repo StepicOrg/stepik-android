@@ -122,11 +122,11 @@
         <item quantity="other">%d рецензий</item>
     </plurals>
 
-    <plurals name="step_quiz_review_given_completed">
-        <item quantity="one">%d рецензию отправлена.</item>
-        <item quantity="few">%d рецензии отправлены.</item>
-        <item quantity="many">%d рецензий отправлены.</item>
-        <item quantity="other">%d рецензий отправлены.</item>
+    <plurals name="step_quiz_review_given_pending">
+        <item quantity="one">Сделайте %d рецензию на решения других учащихся</item>
+        <item quantity="few">Сделайте %d рецензии на решения других учащихся</item>
+        <item quantity="many">Сделайте %d рецензий на решения других учащихся</item>
+        <item quantity="other">Сделайте %d рецензий на решения других учащихся</item>
     </plurals>
 
     <plurals name="step_quiz_review_given_in_progress">
@@ -136,11 +136,18 @@
         <item quantity="other">Сделайте ещё %d рецензий на решения других учащихся.</item>
     </plurals>
 
-    <plurals name="step_quiz_review_taken_completed">
-        <item quantity="one">%d рецензию получена.</item>
-        <item quantity="few">%d рецензии получены.</item>
-        <item quantity="many">%d рецензий получены.</item>
-        <item quantity="other">%d рецензий получены.</item>
+    <plurals name="step_quiz_review_given_completed">
+        <item quantity="one">%d рецензию отправлена.</item>
+        <item quantity="few">%d рецензии отправлены.</item>
+        <item quantity="many">%d рецензий отправлены.</item>
+        <item quantity="other">%d рецензий отправлены.</item>
+    </plurals>
+
+    <plurals name="step_quiz_review_taken_pending">
+        <item quantity="one">Дождитесь %d рецензию на своё решение</item>
+        <item quantity="few">Дождитесь %d рецензии на своё решение</item>
+        <item quantity="many">Дождитесь %d рецензий на своё решение</item>
+        <item quantity="other">Дождитесь %d рецензий на своё решение</item>
     </plurals>
 
     <plurals name="step_quiz_review_taken_in_progress">
@@ -148,5 +155,12 @@
         <item quantity="few">Дождитесь ещё %d рецензии на своё решение.</item>
         <item quantity="many">Дождитесь ещё %d рецензий на своё решение.</item>
         <item quantity="other">Дождитесь ещё %d рецензий на своё решение.</item>
+    </plurals>
+
+    <plurals name="step_quiz_review_taken_completed">
+        <item quantity="one">%d рецензию получена.</item>
+        <item quantity="few">%d рецензии получены.</item>
+        <item quantity="many">%d рецензий получены.</item>
+        <item quantity="other">%d рецензий получены.</item>
     </plurals>
 </resources>

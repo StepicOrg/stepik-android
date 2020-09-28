@@ -19,7 +19,7 @@ import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
 class StepQuizReviewFragment :
-    Fragment(R.layout.fragment_step_quiz_review),
+    Fragment(R.layout.fragment_step_quiz_review_peer),
     StepQuizReviewView,
     SubmissionsDialogFragment.Callback {
     companion object {
