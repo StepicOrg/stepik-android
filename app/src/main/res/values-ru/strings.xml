@@ -782,6 +782,18 @@
 
     <string name="step_quiz_reload_message">Извините, задание было изменено авторами. Необходимо начать сначала. Баллы за прошлые решения сохранены.</string>
 
+    <!-- Peer review -->
+    <string name="step_quiz_review_send_pending">Отправьте лучшее решение на проверку</string>
+    <string name="step_quiz_review_send_in_progress">Отправьте лучшее решение на проверку. После отправки заменить решение нельзя.</string>
+    <string name="step_quiz_review_send_completed">Решение отправлено на проверку</string>
+
+    <string name="step_quiz_review_given_extra_note">Делая дополнительные рецензии, вы повышаете шанс получить рецензии на свою работу быстрее</string>
+    <string name="step_quiz_review_given_start_review">Рецензировать в веб версии</string>
+
+    <string name="step_quiz_review_instructor_pending">Дождитесь оценки преподавателя, максимум за задачу — %s</string>
+    <string name="step_quiz_review_peer_pending">Получите баллы, максимальная оценка — %s</string>
+    <string name="step_quiz_review_peer_completed">Ваш ответ оценили на %s из %s</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 
