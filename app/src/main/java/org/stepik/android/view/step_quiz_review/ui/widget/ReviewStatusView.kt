@@ -29,11 +29,11 @@ constructor(
     private val textView: TextView
     private val imageView: View
 
-    var status = Status.DISABLED
+    var status = Status.PENDING
         set(value) {
             field = value
-            imageView.isVisible = value == Status.PASSED
-            textView.isVisible = value != Status.PASSED
+            imageView.isVisible = value == Status.COMPLETED
+            textView.isVisible = value != Status.COMPLETED
 
             val (color, drawableRes) =
                 if (value == Status.ERROR) {
@@ -45,7 +45,7 @@ constructor(
             textView.setTextColor(color)
             textView.setBackgroundResource(drawableRes)
 
-            textView.isEnabled = value != Status.DISABLED
+            textView.isEnabled = value != Status.PENDING
         }
 
     var position: Int = 1
@@ -69,6 +69,6 @@ constructor(
     }
 
     enum class Status {
-        DISABLED, ACTIVE, ERROR, PASSED
+        PENDING, IN_PROGRESS, ERROR, COMPLETED
     }
 }

@@ -41,7 +41,7 @@ constructor() : StateReducer<State, Message, Action> {
                         val quizState = createAttemptLoadedState(message.sessionData.attempt, message.sessionData.submission)
                         val newState =
                             if (message.progress != null) {
-                                State.Completed(quizState, message.progress)
+                                State.Completed(quizState, message.progress, message.instruction)
                             } else {
                                 State.SubmissionSelected(quizState, message.sessionData.session, message.instruction)
                             }

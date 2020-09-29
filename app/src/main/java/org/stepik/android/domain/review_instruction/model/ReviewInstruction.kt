@@ -14,7 +14,7 @@ data class ReviewInstruction(
     @SerializedName("step")
     val step: Long,
     @SerializedName("min_reviews")
-    val minReviews: Long,
+    val minReviews: Int,
     @SerializedName("strategy_type")
     val strategyType: ReviewStrategyType,
     @SerializedName("rubrics")

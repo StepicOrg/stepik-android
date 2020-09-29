@@ -17,11 +17,36 @@ interface StepQuizReviewView {
         data class Loading(val step: Step) : State()
         object Error : State()
 
-        data class SubmissionNotMade(val quizState: StepQuizView.State, val instruction: ReviewInstruction) : State() // 1
-        data class SubmissionNotSelected(val quizState: StepQuizView.State.AttemptLoaded, val instruction: ReviewInstruction) : State() // 2
-        data class SubmissionSelectedLoading(val quizState: StepQuizView.State.AttemptLoaded, val instruction: ReviewInstruction) : State() // 2
-        data class SubmissionSelected(val quizState: StepQuizView.State.AttemptLoaded, val session: ReviewSession, val instruction: ReviewInstruction) : State() // 3
-        data class Completed(val quizState: StepQuizView.State.AttemptLoaded, val progress: Progress) : State() // 3 / 5
+        interface WithInstruction {
+            val instruction: ReviewInstruction
+        }
+
+        data class SubmissionNotMade(
+            val quizState: StepQuizView.State,
+            override val instruction: ReviewInstruction
+        ) : State(), WithInstruction // 1
+
+        data class SubmissionNotSelected(
+            val quizState: StepQuizView.State.AttemptLoaded,
+            override val instruction: ReviewInstruction
+        ) : State(), WithInstruction // 2
+
+        data class SubmissionSelectedLoading(
+            val quizState: StepQuizView.State.AttemptLoaded,
+            override val instruction: ReviewInstruction
+        ) : State(), WithInstruction // 2
+
+        data class SubmissionSelected(
+            val quizState: StepQuizView.State.AttemptLoaded,
+            val session: ReviewSession,
+            override val instruction: ReviewInstruction
+        ) : State(), WithInstruction // 3
+
+        data class Completed(
+            val quizState: StepQuizView.State.AttemptLoaded,
+            val progress: Progress,
+            override val instruction: ReviewInstruction
+        ) : State(), WithInstruction // 3 / 5
     }
 
     sealed class Message {

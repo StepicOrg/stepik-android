@@ -82,7 +82,7 @@ class StepQuizReviewFragment :
         delegate =
             when (instructionType) {
                 ReviewStrategyType.PEER ->
-                    StepQuizReviewPeerDelegate(view)
+                    StepQuizReviewPeerDelegate(view, instructionType)
 
                 ReviewStrategyType.INSTRUCTOR ->
                     StepQuizReviewInstructorDelegate(view)
