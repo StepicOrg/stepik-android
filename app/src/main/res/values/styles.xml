@@ -261,10 +261,4 @@
         <item name="android:layout_marginRight">@dimen/step_quiz_review_title_margin</item>
         <item name="android:layout_marginTop">@dimen/step_quiz_review_vertical_block_margin</item>
     </style>
-
-    <!--    <style name="StepQuizReviewStepLink">-->
-<!--        <item name="android:layout_width">3dp</item>-->
-<!--        <item name="android:layout_height">0dp</item>-->
-<!--        <item name="android:background">@drawable/bg_peer_review_step_link</item>-->
-<!--    </style>-->
 </resources>
