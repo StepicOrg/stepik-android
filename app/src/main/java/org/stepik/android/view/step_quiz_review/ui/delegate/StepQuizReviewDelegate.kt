@@ -1,6 +1,5 @@
 package org.stepik.android.view.step_quiz_review.ui.delegate
 
-import android.content.Context
 import android.view.View
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
@@ -9,11 +8,11 @@ import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_footer.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
 import org.stepic.droid.R
-import org.stepic.droid.util.toFixed
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
+import org.stepik.android.view.progress.ui.mapper.ProgressTextMapper
 import org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
 import ru.nobird.android.core.model.safeCast
 
@@ -198,8 +197,8 @@ class StepQuizReviewDelegate(
             is StepQuizReviewView.State.Completed -> {
                 val receivedPoints = state.progress?.score?.toFloatOrNull() ?: 0f
 
-                reviewStep5Title.text =
-                    resolveQuantityString(
+                reviewStep5Title.text = ProgressTextMapper
+                    .mapProgressToText(
                         containerView.context,
                         receivedPoints,
                         state.progress?.cost ?: 0,
@@ -231,12 +230,4 @@ class StepQuizReviewDelegate(
             }
         }
     }
-
-    // todo clean up
-    private fun resolveQuantityString(context: Context, stepScore: Float, stepCost: Long, @StringRes stringRes: Int, @StringRes fractionRes: Int, @PluralsRes pluralRes: Int): String =
-        if (stepScore.toLong() == 0L) {
-            context.getString(fractionRes, stepScore.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), stepCost)
-        } else {
-            context.getString(stringRes, context.resources.getQuantityString(pluralRes, stepScore.toInt(), stepScore.toFixed(context.resources.getInteger(R.integer.score_decimal_count))), stepCost)
-        }
 }
