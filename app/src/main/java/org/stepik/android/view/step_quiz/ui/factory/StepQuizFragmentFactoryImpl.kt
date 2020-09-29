@@ -23,12 +23,14 @@ constructor() : StepQuizFragmentFactory {
             AppConstants.TYPE_STRING,
             AppConstants.TYPE_NUMBER,
             AppConstants.TYPE_MATH,
-            AppConstants.TYPE_FREE_ANSWER ->
-                if (stepPersistentWrapper.step.actions?.doReview != null) {
-                    StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id)
+            AppConstants.TYPE_FREE_ANSWER -> {
+                val instructionType = stepPersistentWrapper.step.instructionType
+                if (stepPersistentWrapper.step.actions?.doReview != null && instructionType != null) {
+                    StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
                 } else {
                     TextStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
                 }
+            }
 
             AppConstants.TYPE_CHOICE ->
                 ChoiceStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
