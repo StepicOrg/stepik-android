@@ -37,9 +37,9 @@ constructor(
 
             val (color, drawableRes) =
                 if (value == Status.ERROR) {
-                    colorActive to drawableActive
-                } else {
                     colorError to drawableError
+                } else {
+                    colorActive to drawableActive
                 }
 
             textView.setTextColor(color)

@@ -9,6 +9,7 @@ import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository
 import org.stepik.android.domain.review_session.model.ReviewSessionData
 import org.stepik.android.domain.review_session.repository.ReviewSessionRepository
+import org.stepik.android.domain.step.repository.StepRepository
 import org.stepik.android.model.Progress
 import javax.inject.Inject
 
@@ -18,6 +19,7 @@ constructor(
     private val reviewSessionRepository: ReviewSessionRepository,
     private val reviewInstructionRepository: ReviewInstructionRepository,
     private val assignmentRepository: AssignmentRepository,
+    private val stepRepository: StepRepository,
     private val progressRepository: ProgressRepository
 ) {
     fun createSession(submissionId: Long): Single<ReviewSessionData> =
@@ -28,19 +30,18 @@ constructor(
             .zip(
                 getInstruction(instructionId),
                 reviewSessionRepository.getReviewSession(sessionId, sourceType = DataSourceType.REMOTE),
-                getAssignmentProgress(stepId, unitId)
+                getStepProgress(stepId, unitId)
             )
 
     fun getInstruction(instructionId: Long): Single<ReviewInstruction> =
         reviewInstructionRepository.getReviewInstruction(instructionId, sourceType = DataSourceType.REMOTE)
 
-    private fun getAssignmentProgress(stepId: Long, unitId: Long?): Single<List<Progress>> =
+    fun getStepProgress(stepId: Long, unitId: Long?): Single<List<Progress>> =
         if (unitId != null) { // fetch progress from cache as we already load it in StepItem
-            assignmentRepository
-                .getAssignmentByUnitAndStep(unitId, stepId)
-                .flatMapSingleElement { progressRepository.getProgresses(listOfNotNull(it.progress), primarySourceType = DataSourceType.CACHE) }
-                .toSingle(emptyList())
+            assignmentRepository.getAssignmentByUnitAndStep(unitId, stepId)
         } else {
-            Single.just(emptyList())
+            stepRepository.getStep(stepId, primarySourceType = DataSourceType.CACHE)
         }
+            .flatMapSingleElement { progressRepository.getProgresses(listOfNotNull(it.progress), primarySourceType = DataSourceType.CACHE) }
+            .toSingle(emptyList())
 }

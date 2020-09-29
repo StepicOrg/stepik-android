@@ -17,8 +17,6 @@ import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelegate
-import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewInstructorDelegate
-import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewPeerDelegate
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -79,14 +77,7 @@ class StepQuizReviewFragment :
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        delegate =
-            when (instructionType) {
-                ReviewStrategyType.PEER ->
-                    StepQuizReviewPeerDelegate(view, instructionType)
-
-                ReviewStrategyType.INSTRUCTOR ->
-                    StepQuizReviewInstructorDelegate(view)
-            }
+        delegate = StepQuizReviewDelegate(view, instructionType)
     }
 
     override fun onStart() {
@@ -104,6 +95,7 @@ class StepQuizReviewFragment :
     }
 
     override fun onAction(action: StepQuizReviewView.Action.ViewAction) {
+        // todo
     }
 
     private fun showSubmissions() {

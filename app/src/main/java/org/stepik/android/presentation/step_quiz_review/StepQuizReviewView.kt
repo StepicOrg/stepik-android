@@ -21,32 +21,41 @@ interface StepQuizReviewView {
             val instruction: ReviewInstruction
         }
 
+        interface WithProgress {
+            val progress: Progress?
+        }
+
         data class SubmissionNotMade(
             val quizState: StepQuizView.State,
-            override val instruction: ReviewInstruction
-        ) : State(), WithInstruction // 1
+            override val instruction: ReviewInstruction,
+            override val progress: Progress?
+        ) : State(), WithInstruction, WithProgress // 1
 
         data class SubmissionNotSelected(
             val quizState: StepQuizView.State.AttemptLoaded,
-            override val instruction: ReviewInstruction
-        ) : State(), WithInstruction // 2
+            override val instruction: ReviewInstruction,
+            override val progress: Progress?
+        ) : State(), WithInstruction, WithProgress // 2
 
         data class SubmissionSelectedLoading(
             val quizState: StepQuizView.State.AttemptLoaded,
-            override val instruction: ReviewInstruction
-        ) : State(), WithInstruction // 2
+            override val instruction: ReviewInstruction,
+            override val progress: Progress?
+        ) : State(), WithInstruction, WithProgress // 2
 
         data class SubmissionSelected(
             val quizState: StepQuizView.State.AttemptLoaded,
             val session: ReviewSession,
-            override val instruction: ReviewInstruction
-        ) : State(), WithInstruction // 3
+            override val instruction: ReviewInstruction,
+            override val progress: Progress?
+        ) : State(), WithInstruction, WithProgress // 3
 
         data class Completed(
             val quizState: StepQuizView.State.AttemptLoaded,
-            val progress: Progress,
-            override val instruction: ReviewInstruction
-        ) : State(), WithInstruction // 3 / 5
+            val session: ReviewSession,
+            override val instruction: ReviewInstruction,
+            override val progress: Progress?
+        ) : State(), WithInstruction, WithProgress // 3 / 5
     }
 
     sealed class Message {
@@ -61,7 +70,8 @@ interface StepQuizReviewView {
         ) : Message()
         data class FetchStepQuizStateSuccess(
             val quizState: StepQuizView.State,
-            val instruction: ReviewInstruction
+            val instruction: ReviewInstruction,
+            val progress: Progress? // assignment progress
         ) : Message()
         object InitialFetchError : Message()
 

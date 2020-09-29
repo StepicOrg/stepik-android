@@ -77,12 +77,14 @@ constructor(
                     .zip(
                         getAttemptState(action.stepWrapper, action.lessonData),
                         stepQuizReviewInteractor.getInstruction(action.stepWrapper.step.instruction ?: -1),
-                        StepQuizReviewView.Message::FetchStepQuizStateSuccess
+                        stepQuizReviewInteractor.getStepProgress(action.stepWrapper.step.id, action.lessonData.unit?.id)
                     )
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(it) },
+                        onSuccess = { (quizState, instruction, progress) ->
+                            onNewMessage(StepQuizReviewView.Message.FetchStepQuizStateSuccess(quizState, instruction, progress.firstOrNull()))
+                        },
                         onError = { onNewMessage(StepQuizReviewView.Message.InitialFetchError) }
                     )
             }
