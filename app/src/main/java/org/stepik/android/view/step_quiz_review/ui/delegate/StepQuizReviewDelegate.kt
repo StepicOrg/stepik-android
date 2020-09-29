@@ -88,6 +88,7 @@ class StepQuizReviewDelegate(
     }
 
     private fun renderStep3(state: StepQuizReviewView.State) {
+        // todo reduce duplication
         val reviewCount = state.safeCast<StepQuizReviewView.State.WithInstruction>()?.instruction?.minReviews ?: 0
 
         when (state) {
@@ -197,7 +198,6 @@ class StepQuizReviewDelegate(
             is StepQuizReviewView.State.Completed -> {
                 val receivedPoints = state.progress?.score?.toFloatOrNull() ?: 0f
 
-
                 reviewStep5Title.text =
                     resolveQuantityString(
                         containerView.context,
@@ -211,11 +211,20 @@ class StepQuizReviewDelegate(
                 reviewStep5Link.isEnabled = true
                 reviewStep5Status.status = ReviewStatusView.Status.COMPLETED
             }
-            // todo handle instructor
             else -> {
                 val cost = state.safeCast<StepQuizReviewView.State.WithProgress>()?.progress?.cost ?: 0L
 
-                reviewStep5Title.text = resources.getString(R.string.step_quiz_review_peer_pending, resources.getQuantityString(R.plurals.points, cost.toInt(), cost))
+                @StringRes
+                val stringRes =
+                    when (instructionType) {
+                        ReviewStrategyType.PEER ->
+                            R.string.step_quiz_review_peer_pending
+
+                        ReviewStrategyType.INSTRUCTOR ->
+                            R.string.step_quiz_review_instructor_pending
+                    }
+
+                reviewStep5Title.text = resources.getString(stringRes, resources.getQuantityString(R.plurals.points, cost.toInt(), cost))
                 reviewStep5Title.isEnabled = false
                 reviewStep5Link.isEnabled = false
                 reviewStep5Status.status = ReviewStatusView.Status.PENDING
@@ -223,6 +232,7 @@ class StepQuizReviewDelegate(
         }
     }
 
+    // todo clean up
     private fun resolveQuantityString(context: Context, stepScore: Float, stepCost: Long, @StringRes stringRes: Int, @StringRes fractionRes: Int, @PluralsRes pluralRes: Int): String =
         if (stepScore.toLong() == 0L) {
             context.getString(fractionRes, stepScore.toFixed(context.resources.getInteger(R.integer.score_decimal_count)), stepCost)
