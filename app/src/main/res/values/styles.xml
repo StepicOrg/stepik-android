@@ -254,7 +254,7 @@
         <item name="android:layout_height">wrap_content</item>
 
         <item name="android:textAppearance">?textAppearanceCaption</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColor">@color/color_peer_review_step_title</item>
         <item name="android:gravity">start|top</item>
 
         <item name="android:layout_marginLeft">@dimen/step_quiz_review_title_margin</item>
