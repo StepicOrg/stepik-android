@@ -20,13 +20,9 @@
 
     <org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
         android:id="@+id/reviewStep3Status"
-        android:layout_width="@dimen/step_quiz_review_status_size"
-        android:layout_height="@dimen/step_quiz_review_status_size"
+        style="@style/StepQuizReview.Status"
 
         app:position="3"
-        android:layout_marginStart="@dimen/step_quiz_review_status_margin"
-        android:layout_marginLeft="@dimen/step_quiz_review_status_margin"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/reviewStep2DividerBottom"
@@ -34,18 +30,9 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/reviewStep3Title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/StepQuizReview.Title"
 
-        android:textAppearance="?textAppearanceCaption"
-        android:textColor="?android:textColorPrimary"
         android:text="@string/step_quiz_review_send_pending"
-
-        android:layout_marginStart="@dimen/step_quiz_review_title_margin"
-        android:layout_marginLeft="@dimen/step_quiz_review_title_margin"
-        android:layout_marginEnd="@dimen/step_quiz_review_vertical_block_margin"
-        android:layout_marginRight="@dimen/step_quiz_review_vertical_block_margin"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 
         app:layout_constraintStart_toEndOf="@id/reviewStep3Status"
         app:layout_constraintTop_toTopOf="@id/reviewStep2DividerBottom"
@@ -54,10 +41,7 @@
 
     <View
         android:id="@+id/reviewStep3Link"
-
-        android:layout_width="3dp"
-        android:layout_height="0dp"
-        android:background="?dividerVertical"
+        style="@style/StepQuizReview.Link"
 
         app:layout_constraintStart_toStartOf="@id/reviewStep3Status"
         app:layout_constraintEnd_toEndOf="@id/reviewStep3Status"
@@ -67,10 +51,7 @@
     <include
         android:id="@+id/reviewStep3DividerTop"
         layout="@layout/view_divider_vertical"
-
-        android:layout_width="0dp"
-        android:layout_height="?dividerVerticalSize"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        style="@style/StepQuizReview.Divider"
 
         app:layout_constraintStart_toStartOf="@id/reviewStep3Title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,10 +73,7 @@
     <include
         android:id="@+id/reviewStep3DividerBottom"
         layout="@layout/view_divider_vertical"
-
-        android:layout_width="0dp"
-        android:layout_height="?dividerVerticalSize"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        style="@style/StepQuizReview.Divider"
 
         app:layout_constraintStart_toStartOf="@id/reviewStep3Title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -113,13 +91,9 @@
 
     <org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
         android:id="@+id/reviewStep4Status"
-        android:layout_width="@dimen/step_quiz_review_status_size"
-        android:layout_height="@dimen/step_quiz_review_status_size"
+        style="@style/StepQuizReview.Status"
 
         app:position="4"
-        android:layout_marginStart="@dimen/step_quiz_review_status_margin"
-        android:layout_marginLeft="@dimen/step_quiz_review_status_margin"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/reviewStep3DividerBottom"
@@ -127,18 +101,9 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/reviewStep4Title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        style="@style/StepQuizReview.Title"
 
-        android:textAppearance="?textAppearanceCaption"
-        android:textColor="?android:textColorPrimary"
         android:text="@string/step_quiz_review_send_pending"
-
-        android:layout_marginStart="@dimen/step_quiz_review_title_margin"
-        android:layout_marginLeft="@dimen/step_quiz_review_title_margin"
-        android:layout_marginEnd="@dimen/step_quiz_review_vertical_block_margin"
-        android:layout_marginRight="@dimen/step_quiz_review_vertical_block_margin"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 
         app:layout_constraintStart_toEndOf="@id/reviewStep4Status"
         app:layout_constraintTop_toTopOf="@id/reviewStep3DividerBottom"
@@ -147,10 +112,7 @@
 
     <View
         android:id="@+id/reviewStep4Link"
-
-        android:layout_width="3dp"
-        android:layout_height="0dp"
-        android:background="?dividerVertical"
+        style="@style/StepQuizReview.Link"
 
         app:layout_constraintStart_toStartOf="@id/reviewStep4Status"
         app:layout_constraintEnd_toEndOf="@id/reviewStep4Status"
@@ -160,10 +122,7 @@
     <include
         android:id="@+id/reviewStep4DividerTop"
         layout="@layout/view_divider_vertical"
-
-        android:layout_width="0dp"
-        android:layout_height="?dividerVerticalSize"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        style="@style/StepQuizReview.Divider"
 
         app:layout_constraintStart_toStartOf="@id/reviewStep4Title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -185,10 +144,7 @@
     <include
         android:id="@+id/reviewStep4DividerBottom"
         layout="@layout/view_divider_vertical"
-
-        android:layout_width="0dp"
-        android:layout_height="?dividerVerticalSize"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        style="@style/StepQuizReview.Divider"
 
         app:layout_constraintStart_toStartOf="@id/reviewStep4Title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -206,10 +162,7 @@
 
     <View
         android:id="@+id/reviewStep5Link"
-
-        android:layout_width="3dp"
-        android:layout_height="0dp"
-        android:background="?dividerVertical"
+        style="@style/StepQuizReview.Link"
 
         app:layout_constraintStart_toStartOf="@id/reviewStep5Status"
         app:layout_constraintEnd_toEndOf="@id/reviewStep5Status"

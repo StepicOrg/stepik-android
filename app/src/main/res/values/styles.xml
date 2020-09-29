@@ -224,4 +224,47 @@
         <item name="android:minWidth">0dp</item>
         <item name="android:textAppearance">?textAppearanceCaption</item>
     </style>
+
+    <!-- Peer review -->
+    <style name="StepQuizReview" />
+
+    <style name="StepQuizReview.Status">
+        <item name="android:layout_width">@dimen/step_quiz_review_status_size</item>
+        <item name="android:layout_height">@dimen/step_quiz_review_status_size</item>
+
+        <item name="android:layout_marginStart">@dimen/step_quiz_review_status_margin</item>
+        <item name="android:layout_marginLeft">@dimen/step_quiz_review_status_margin</item>
+        <item name="android:layout_marginTop">@dimen/step_quiz_review_vertical_block_margin</item>
+    </style>
+
+    <style name="StepQuizReview.Link">
+        <item name="android:layout_width">3dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:background">@drawable/bg_peer_review_step_link</item>
+    </style>
+
+    <style name="StepQuizReview.Divider">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">?dividerVerticalSize</item>
+        <item name="android:layout_marginTop">@dimen/step_quiz_review_vertical_block_margin</item>
+    </style>
+
+    <style name="StepQuizReview.Title">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:textAppearance">?textAppearanceCaption</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:gravity">start|top</item>
+
+        <item name="android:layout_marginLeft">@dimen/step_quiz_review_title_margin</item>
+        <item name="android:layout_marginRight">@dimen/step_quiz_review_title_margin</item>
+        <item name="android:layout_marginTop">@dimen/step_quiz_review_vertical_block_margin</item>
+    </style>
+
+    <!--    <style name="StepQuizReviewStepLink">-->
+<!--        <item name="android:layout_width">3dp</item>-->
+<!--        <item name="android:layout_height">0dp</item>-->
+<!--        <item name="android:background">@drawable/bg_peer_review_step_link</item>-->
+<!--    </style>-->
 </resources>

@@ -20,10 +20,7 @@
 
     <View
         android:id="@+id/reviewStep5Link"
-
-        android:layout_width="3dp"
-        android:layout_height="0dp"
-        android:background="?dividerVertical"
+        style="@style/StepQuizReview.Link"
 
         app:layout_constraintStart_toStartOf="@id/reviewStep5Status"
         app:layout_constraintEnd_toEndOf="@id/reviewStep5Status"
