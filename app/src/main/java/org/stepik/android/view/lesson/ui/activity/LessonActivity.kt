@@ -324,10 +324,11 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             val tabFrames = stepsAdapter.getTabDrawable(i)
 
             val item = stepsAdapter.items[i]
-            val isPassed = item.reviewSession?.isFinished
-                ?: item.assignmentProgress?.isPassed
-                ?: item.stepProgress?.isPassed
-                ?: false
+            val isPassed =
+                item.stepWrapper.step.instructionType != null &&
+                        item.reviewSession?.isFinished == true ||
+                item.stepWrapper.step.instructionType == null &&
+                        item.assignmentProgress?.isPassed ?: item.stepProgress?.isPassed ?: false
 
             @DrawableRes
             val tabIconResource = if (!isPassed) {

@@ -57,8 +57,7 @@ constructor() : StateReducer<State, Message, Action> {
                     is State.Loading ->
                         State.SubmissionNotMade(
                             quizState = message.quizState,
-                            progress = message.progress,
-                            instruction = message.instruction
+                            progress = message.progress
                         ) to emptySet()
                     else -> null
                 }
@@ -73,7 +72,7 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.SolveAgain ->
                 when (state) {
                     is State.SubmissionNotSelected ->
-                        State.SubmissionNotMade(state.quizState, state.instruction, state.progress) to emptySet()
+                        State.SubmissionNotMade(state.quizState, state.progress) to emptySet()
 
                     else -> null
                 }
@@ -84,7 +83,7 @@ constructor() : StateReducer<State, Message, Action> {
                         val stepQuizViewState =
                             state.quizState.copy(attempt = message.attempt, submissionState = StepQuizView.SubmissionState.Loaded(message.submission))
 
-                        State.SubmissionNotSelected(stepQuizViewState, state.instruction, state.progress) to emptySet()
+                        State.SubmissionNotSelected(stepQuizViewState, state.progress) to emptySet()
                     }
 
                     else -> null
@@ -98,7 +97,7 @@ constructor() : StateReducer<State, Message, Action> {
                             ?.id
 
                         if (submissionId != null) {
-                            State.SubmissionSelectedLoading(state.quizState, state.instruction, state.progress) to setOf(Action.CreateSessionWithSubmission(submissionId))
+                            State.SubmissionSelectedLoading(state.quizState, state.progress) to setOf(Action.CreateSessionWithSubmission(submissionId))
                         } else {
                             null
                         }
@@ -110,7 +109,7 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.CreateSessionError ->
                 when (state) {
                     is State.SubmissionSelectedLoading ->
-                        State.SubmissionNotSelected(state.quizState, state.instruction, state.progress) to setOf(Action.ViewAction.ShowNetworkError)
+                        State.SubmissionNotSelected(state.quizState, state.progress) to setOf(Action.ViewAction.ShowNetworkError)
 
                     else -> null
                 }
@@ -118,7 +117,7 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.SessionCreated ->
                 when (state) {
                     is State.SubmissionSelectedLoading ->
-                        State.SubmissionSelected(state.quizState, message.reviewSession, state.instruction, state.progress) to emptySet()
+                        State.SubmissionSelected(state.quizState, message.reviewSession, message.instruction, state.progress) to emptySet()
 
                     else -> null
                 }

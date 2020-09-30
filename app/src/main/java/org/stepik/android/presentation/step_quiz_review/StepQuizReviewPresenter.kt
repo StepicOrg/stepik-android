@@ -76,14 +76,13 @@ constructor(
                 compositeDisposable += Singles
                     .zip(
                         getAttemptState(action.stepWrapper, action.lessonData),
-                        stepQuizReviewInteractor.getInstruction(action.stepWrapper.step.instruction ?: -1),
                         stepQuizReviewInteractor.getStepProgress(action.stepWrapper.step.id, action.lessonData.unit?.id)
                     )
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
-                        onSuccess = { (quizState, instruction, progress) ->
-                            onNewMessage(StepQuizReviewView.Message.FetchStepQuizStateSuccess(quizState, instruction, progress.firstOrNull()))
+                        onSuccess = { (quizState, progress) ->
+                            onNewMessage(StepQuizReviewView.Message.FetchStepQuizStateSuccess(quizState, progress.firstOrNull()))
                         },
                         onError = { onNewMessage(StepQuizReviewView.Message.InitialFetchError) }
                     )
@@ -108,7 +107,9 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
-                        onSuccess = { onNewMessage(StepQuizReviewView.Message.SessionCreated(it.session)) },
+                        onSuccess = { (session, instruction) ->
+                            onNewMessage(StepQuizReviewView.Message.SessionCreated(session, instruction))
+                        },
                         onError = { onNewMessage(StepQuizReviewView.Message.CreateSessionError) }
                     )
             }

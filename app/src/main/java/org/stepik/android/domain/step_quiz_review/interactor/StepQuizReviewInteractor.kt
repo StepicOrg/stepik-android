@@ -7,6 +7,7 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository
+import org.stepik.android.domain.review_session.model.ReviewSession
 import org.stepik.android.domain.review_session.model.ReviewSessionData
 import org.stepik.android.domain.review_session.repository.ReviewSessionRepository
 import org.stepik.android.domain.step.repository.StepRepository
@@ -22,8 +23,13 @@ constructor(
     private val stepRepository: StepRepository,
     private val progressRepository: ProgressRepository
 ) {
-    fun createSession(submissionId: Long): Single<ReviewSessionData> =
-        reviewSessionRepository.createReviewSession(submissionId)
+    fun createSession(submissionId: Long): Single<Pair<ReviewSession, ReviewInstruction>> =
+        reviewSessionRepository
+            .createReviewSession(submissionId)
+            .flatMap { sessionData ->
+                getInstruction(sessionData.session.instruction)
+                    .map { sessionData.session to it }
+            }
 
     fun getReviewSession(stepId: Long, unitId: Long?, instructionId: Long, sessionId: Long): Single<Triple<ReviewInstruction, ReviewSessionData, List<Progress>>> =
         Singles
@@ -33,7 +39,7 @@ constructor(
                 getStepProgress(stepId, unitId)
             )
 
-    fun getInstruction(instructionId: Long): Single<ReviewInstruction> =
+    private fun getInstruction(instructionId: Long): Single<ReviewInstruction> =
         reviewInstructionRepository.getReviewInstruction(instructionId, sourceType = DataSourceType.REMOTE)
 
     fun getStepProgress(stepId: Long, unitId: Long?): Single<List<Progress>> =
