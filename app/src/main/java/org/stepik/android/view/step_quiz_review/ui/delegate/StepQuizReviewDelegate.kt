@@ -94,7 +94,7 @@ class StepQuizReviewDelegate(
             is StepQuizReviewView.State.SubmissionNotMade,
             is StepQuizReviewView.State.SubmissionNotSelected,
             is StepQuizReviewView.State.SubmissionSelectedLoading -> {
-                reviewStep3Title.text = resources.getQuantityString(R.plurals.step_quiz_review_given_pending, reviewCount, reviewCount)
+                reviewStep3Title.setText(R.string.step_quiz_review_given_pending_zero)
                 reviewStep3Title.isEnabled = false
                 reviewStep3Link.isEnabled = false
                 reviewStep3Status.status = ReviewStatusView.Status.PENDING
@@ -147,7 +147,7 @@ class StepQuizReviewDelegate(
             is StepQuizReviewView.State.SubmissionNotMade,
             is StepQuizReviewView.State.SubmissionNotSelected,
             is StepQuizReviewView.State.SubmissionSelectedLoading -> {
-                reviewStep4Title.text = resources.getQuantityString(R.plurals.step_quiz_review_taken_pending, reviewCount, reviewCount)
+                reviewStep3Title.setText(R.string.step_quiz_review_taken_pending_zero)
                 reviewStep4Title.isEnabled = false
                 reviewStep4Link.isEnabled = false
                 reviewStep4Status.status = ReviewStatusView.Status.PENDING
