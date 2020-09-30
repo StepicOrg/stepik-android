@@ -193,6 +193,12 @@ class StepQuizReviewDelegate(
     }
 
     private fun renderStep5(state: StepQuizReviewView.State) {
+        reviewStep5Status.position =
+            when (instructionType) {
+                ReviewStrategyType.PEER -> 5
+                ReviewStrategyType.INSTRUCTOR -> 3
+            }
+
         when (state) {
             is StepQuizReviewView.State.Completed -> {
                 val receivedPoints = state.progress?.score?.toFloatOrNull() ?: 0f
@@ -224,9 +230,13 @@ class StepQuizReviewDelegate(
                     }
 
                 reviewStep5Title.text = resources.getString(stringRes, resources.getQuantityString(R.plurals.points, cost.toInt(), cost))
-                reviewStep5Title.isEnabled = false
-                reviewStep5Link.isEnabled = false
-                reviewStep5Status.status = ReviewStatusView.Status.PENDING
+
+                val inProgress =
+                    state is StepQuizReviewView.State.SubmissionSelected && instructionType == ReviewStrategyType.INSTRUCTOR
+
+                reviewStep5Title.isEnabled = inProgress
+                reviewStep5Link.isEnabled = inProgress
+                reviewStep5Status.status = if (inProgress) ReviewStatusView.Status.IN_PROGRESS else ReviewStatusView.Status.PENDING
             }
         }
     }
