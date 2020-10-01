@@ -35,25 +35,20 @@
         app:layout_constraintBottom_toBottomOf="@id/reviewStep5BarrierBottom"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <include
-        android:id="@+id/reviewStep5DividerTop"
-        layout="@layout/view_divider_vertical"
-        style="@style/StepQuizReview.Divider"
-
-        app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reviewStep5BarrierBottom" />
-
-    <!-- TODO -->
-    <FrameLayout
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/reviewStep5Container"
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
         android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        android:text="@string/step_quiz_review_instructor_completed_action"
 
-        app:layout_constraintTop_toBottomOf="@id/reviewStep5DividerTop"
+        android:theme="@style/ThemeOverlay.Green"
+        style="?materialButtonOutlinedStyle"
+        app:strokeColor="?colorPrimary"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep5BarrierBottom"
         app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
         app:layout_constraintEnd_toEndOf="@id/reviewStep5Title" />
 

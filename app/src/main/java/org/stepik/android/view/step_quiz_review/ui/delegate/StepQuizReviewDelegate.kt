@@ -208,9 +208,17 @@ class StepQuizReviewDelegate(
                         R.string.step_quiz_review_peer_completed,
                         R.plurals.points
                     )
-                reviewStep5Title.isEnabled = true
-                reviewStep5Link.isEnabled = true
-                reviewStep5Status.status = ReviewStatusView.Status.COMPLETED
+
+                when (instructionType) {
+                    ReviewStrategyType.PEER ->
+                        reviewStep5Container.isVisible = false
+
+                    ReviewStrategyType.INSTRUCTOR -> {
+                        reviewStep5Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
+                        reviewStep5Container.isVisible = true
+                    }
+                }
+                setStepStatus(reviewStep5Title, reviewStep5Link, reviewStep5Status, ReviewStatusView.Status.COMPLETED)
             }
             else -> {
                 val cost = state.safeCast<StepQuizReviewView.State.WithProgress>()?.progress?.cost ?: 0L
@@ -226,13 +234,15 @@ class StepQuizReviewDelegate(
                     }
 
                 reviewStep5Title.text = resources.getString(stringRes, resources.getQuantityString(R.plurals.points, cost.toInt(), cost))
+                reviewStep5Container.isVisible = false
+                val status =
+                    if (state is StepQuizReviewView.State.SubmissionSelected && instructionType == ReviewStrategyType.INSTRUCTOR) {
+                        ReviewStatusView.Status.IN_PROGRESS
+                    } else {
+                        ReviewStatusView.Status.PENDING
+                    }
 
-                val inProgress =
-                    state is StepQuizReviewView.State.SubmissionSelected && instructionType == ReviewStrategyType.INSTRUCTOR
-
-                reviewStep5Title.isEnabled = inProgress
-                reviewStep5Link.isEnabled = inProgress
-                reviewStep5Status.status = if (inProgress) ReviewStatusView.Status.IN_PROGRESS else ReviewStatusView.Status.PENDING
+                setStepStatus(reviewStep5Title, reviewStep5Link, reviewStep5Status, status)
             }
         }
     }
