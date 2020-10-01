@@ -5,6 +5,8 @@ import io.reactivex.rxkotlin.Singles
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.progress.repository.ProgressRepository
+import org.stepik.android.domain.review.model.Review
+import org.stepik.android.domain.review.repository.ReviewRepository
 import org.stepik.android.domain.review_instruction.model.ReviewInstruction
 import org.stepik.android.domain.review_instruction.repository.ReviewInstructionRepository
 import org.stepik.android.domain.review_session.model.ReviewSession
@@ -21,7 +23,8 @@ constructor(
     private val reviewInstructionRepository: ReviewInstructionRepository,
     private val assignmentRepository: AssignmentRepository,
     private val stepRepository: StepRepository,
-    private val progressRepository: ProgressRepository
+    private val progressRepository: ProgressRepository,
+    private val reviewRepository: ReviewRepository
 ) {
     fun createSession(submissionId: Long): Single<Pair<ReviewSession, ReviewInstruction>> =
         reviewSessionRepository
@@ -51,6 +54,7 @@ constructor(
             .flatMapSingleElement { progressRepository.getProgresses(listOfNotNull(it.progress), primarySourceType = DataSourceType.CACHE) }
             .toSingle(emptyList())
 
-    fun createReview(sessionId: Long): Single<Long> =
-        Single.just(sessionId)
+    fun createReview(sessionId: Long): Single<Review> =
+        reviewRepository
+            .createReview(sessionId)
 }

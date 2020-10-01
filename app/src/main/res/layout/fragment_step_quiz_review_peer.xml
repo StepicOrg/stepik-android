@@ -70,7 +70,7 @@
         android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
         android:theme="@style/ThemeOverlay.Green"
 
-        app:layout_constraintTop_toBottomOf="@id/reviewStep3BarrierBottom"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep3Loading"
         app:layout_constraintStart_toStartOf="@id/reviewStep3Title"
         app:layout_constraintEnd_toEndOf="@id/reviewStep3Title" />
 

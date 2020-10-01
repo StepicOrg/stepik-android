@@ -120,8 +120,8 @@ constructor(
                     .observeOn(mainScheduler)
                     .subscribeOn(backgroundScheduler)
                     .subscribeBy(
-                        onSuccess = { reviewId ->
-                            onNewMessage(StepQuizReviewView.Message.ReviewCreated(reviewId))
+                        onSuccess = { review ->
+                            onNewMessage(StepQuizReviewView.Message.ReviewCreated(review.id))
                         },
                         onError = { onNewMessage(StepQuizReviewView.Message.StartReviewError) }
                     )
