@@ -17,4 +17,11 @@ constructor(
             .let(externalDeepLinkProcessor::processExternalDeepLink)
             .build()
             .toString()
+
+    fun createReviewDeepLink(reviewId: Long): String =
+        Uri.parse("${config.baseUrl}/review/reviews/$reviewId")
+            .buildUpon()
+            .let(externalDeepLinkProcessor::processExternalDeepLink)
+            .build()
+            .toString()
 }

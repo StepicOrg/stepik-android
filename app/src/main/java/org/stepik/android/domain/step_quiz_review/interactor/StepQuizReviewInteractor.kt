@@ -50,4 +50,7 @@ constructor(
         }
             .flatMapSingleElement { progressRepository.getProgresses(listOfNotNull(it.progress), primarySourceType = DataSourceType.CACHE) }
             .toSingle(emptyList())
+
+    fun createReview(sessionId: Long): Single<Long> =
+        Single.just(sessionId)
 }

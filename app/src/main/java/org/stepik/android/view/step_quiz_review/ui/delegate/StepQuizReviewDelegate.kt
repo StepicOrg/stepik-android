@@ -24,6 +24,12 @@ class StepQuizReviewDelegate(
 ) : LayoutContainer {
     private val resources = containerView.resources
 
+    init {
+        if (instructionType == ReviewStrategyType.PEER) {
+            reviewStep3Container.setOnClickListener { actionListener.onStartReviewClicked() }
+        }
+    }
+
     fun render(state: StepQuizReviewView.State) {
         renderStep1(state)
         renderStep2(state)
@@ -82,7 +88,6 @@ class StepQuizReviewDelegate(
     }
 
     private fun renderStep3(state: StepQuizReviewView.State) {
-        // todo reduce duplication
         val reviewCount = state.safeCast<StepQuizReviewView.State.WithInstruction>()?.instruction?.minReviews ?: 0
 
         when (state) {
@@ -91,6 +96,8 @@ class StepQuizReviewDelegate(
             is StepQuizReviewView.State.SubmissionSelectedLoading -> {
                 reviewStep3Title.setText(R.string.step_quiz_review_given_pending_zero)
                 setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.PENDING)
+                reviewStep3Container.isVisible = false
+                reviewStep3Loading.isVisible = false
             }
             is StepQuizReviewView.State.SubmissionSelected -> {
                 val givenReviewCount = state.session.givenReviews.size
@@ -118,12 +125,16 @@ class StepQuizReviewDelegate(
                     }
 
                 reviewStep3Title.text = text
+                reviewStep3Container.isVisible = state.session.isReviewAvailable && !state.isReviewCreationInProgress
+                reviewStep3Loading.isVisible = state.isReviewCreationInProgress
                 setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.IN_PROGRESS)
             }
             is StepQuizReviewView.State.Completed -> {
                 val givenReviewCount = state.session.givenReviews.size
 
                 reviewStep3Title.text = resources.getQuantityString(R.plurals.step_quiz_review_given_completed, givenReviewCount, givenReviewCount)
+                reviewStep3Container.isVisible = false
+                reviewStep3Loading.isVisible = false
                 setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.COMPLETED)
             }
         }
@@ -255,5 +266,6 @@ class StepQuizReviewDelegate(
 
     interface ActionListener {
         fun onTakenReviewClicked(sessionId: Long)
+        fun onStartReviewClicked()
     }
 }

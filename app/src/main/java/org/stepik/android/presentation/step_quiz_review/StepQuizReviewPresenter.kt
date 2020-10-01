@@ -113,6 +113,19 @@ constructor(
                         onError = { onNewMessage(StepQuizReviewView.Message.CreateSessionError) }
                     )
             }
+
+            is StepQuizReviewView.Action.CreateReviewWithSession -> {
+                compositeDisposable += stepQuizReviewInteractor
+                    .createReview(action.sessionId)
+                    .observeOn(mainScheduler)
+                    .subscribeOn(backgroundScheduler)
+                    .subscribeBy(
+                        onSuccess = { reviewId ->
+                            onNewMessage(StepQuizReviewView.Message.ReviewCreated(reviewId))
+                        },
+                        onError = { onNewMessage(StepQuizReviewView.Message.StartReviewError) }
+                    )
+            }
         }
     }
 

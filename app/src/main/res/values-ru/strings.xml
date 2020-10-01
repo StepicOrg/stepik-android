@@ -787,9 +787,10 @@
     <string name="step_quiz_review_send_in_progress">Отправьте лучшее решение на проверку. После отправки заменить решение нельзя.</string>
     <string name="step_quiz_review_send_completed">Решение отправлено на проверку</string>
 
+    <string name="step_quiz_review_given_title">Рецензия</string>
     <string name="step_quiz_review_given_pending_zero">Сделайте рецензии на решения других учащихся</string>
     <string name="step_quiz_review_given_extra_note">Делая дополнительные рецензии, вы повышаете шанс получить рецензии на свою работу быстрее</string>
-    <string name="step_quiz_review_given_start_review">Рецензировать в веб версии</string>
+    <string name="step_quiz_review_given_start_review">Рецензировать</string>
     <string name="step_quiz_review_taken_pending_zero">Дождитесь рецензии на своё решение</string>
     <string name="step_quiz_review_taken_action">Смотреть рецензии</string>
     <string name="step_quiz_review_taken_title">Полученные рецензии</string>

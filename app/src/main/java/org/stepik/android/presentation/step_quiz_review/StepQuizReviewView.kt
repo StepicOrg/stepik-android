@@ -42,6 +42,7 @@ interface StepQuizReviewView {
 
         data class SubmissionSelected(
             val quizState: StepQuizView.State.AttemptLoaded,
+            val isReviewCreationInProgress: Boolean,
             val session: ReviewSession,
             override val instruction: ReviewInstruction,
             override val progress: Progress?
@@ -83,6 +84,13 @@ interface StepQuizReviewView {
         object CreateSessionWithCurrentSubmission : Message() // selects current solution
         object CreateSessionError : Message() // error during solution selecting
         data class SessionCreated(val reviewSession: ReviewSession, val instruction: ReviewInstruction) : Message() // solution selected and session created
+
+        /**
+         * Starting review
+         */
+        object StartReviewWithCurrentSession : Message()
+        object StartReviewError : Message()
+        data class ReviewCreated(val reviewId: Long) : Message()
     }
 
     sealed class Action {
@@ -95,8 +103,11 @@ interface StepQuizReviewView {
         ) : Action()
         data class CreateSessionWithSubmission(val submissionId: Long) : Action() // select solution
 
+        data class CreateReviewWithSession(val sessionId: Long) : Action()
+
         sealed class ViewAction : Action() {
             object ShowNetworkError : ViewAction() // error
+            data class OpenReviewScreen(val reviewId: Long) : ViewAction()
         }
     }
 

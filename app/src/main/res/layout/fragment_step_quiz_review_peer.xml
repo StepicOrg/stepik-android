@@ -48,25 +48,29 @@
         app:layout_constraintTop_toBottomOf="@id/reviewStep2Status"
         app:layout_constraintBottom_toTopOf="@id/reviewStep3Status" />
 
-    <include
-        android:id="@+id/reviewStep3DividerTop"
-        layout="@layout/view_divider_vertical"
-        style="@style/StepQuizReview.Divider"
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/reviewStep3Loading"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:radius="?cornerRadius"
 
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep3BarrierBottom"
         app:layout_constraintStart_toStartOf="@id/reviewStep3Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reviewStep3BarrierBottom" />
+        app:layout_constraintEnd_toEndOf="@id/reviewStep3Title" />
 
-    <!-- TODO -->
-    <FrameLayout
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/reviewStep3Container"
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
+        android:text="@string/step_quiz_review_given_start_review"
         android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        android:theme="@style/ThemeOverlay.Green"
 
-        app:layout_constraintTop_toBottomOf="@id/reviewStep3DividerTop"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep3BarrierBottom"
         app:layout_constraintStart_toStartOf="@id/reviewStep3Title"
         app:layout_constraintEnd_toEndOf="@id/reviewStep3Title" />
 

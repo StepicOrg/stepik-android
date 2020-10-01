@@ -43,7 +43,7 @@ constructor() : StateReducer<State, Message, Action> {
                             if (message.sessionData.session.isFinished) {
                                 State.Completed(quizState, message.sessionData.session, message.instruction, message.progress)
                             } else {
-                                State.SubmissionSelected(quizState, message.sessionData.session, message.instruction,  message.progress)
+                                State.SubmissionSelected(quizState, isReviewCreationInProgress = false, message.sessionData.session, message.instruction,  message.progress)
                             }
 
                         newState to emptySet()
@@ -117,10 +117,38 @@ constructor() : StateReducer<State, Message, Action> {
             is Message.SessionCreated ->
                 when (state) {
                     is State.SubmissionSelectedLoading ->
-                        State.SubmissionSelected(state.quizState, message.reviewSession, message.instruction, state.progress) to emptySet()
+                        State.SubmissionSelected(state.quizState, isReviewCreationInProgress = false, message.reviewSession, message.instruction, state.progress) to emptySet()
 
                     else -> null
                 }
+
+            is Message.StartReviewWithCurrentSession -> {
+                if (state is State.SubmissionSelected && state.session.isReviewAvailable) {
+                    state.copy(isReviewCreationInProgress = true) to setOf(Action.CreateReviewWithSession(state.session.id))
+                } else {
+                    null
+                }
+            }
+
+            is Message.StartReviewError -> {
+                when (state) {
+                    is State.SubmissionSelected ->
+                        state.copy(isReviewCreationInProgress = false) to setOf(Action.ViewAction.ShowNetworkError)
+
+                    else ->
+                        null
+                }
+            }
+
+            is Message.ReviewCreated -> {
+                when (state) {
+                    is State.SubmissionSelected ->
+                        state.copy(isReviewCreationInProgress = false) to setOf(Action.ViewAction.OpenReviewScreen(message.reviewId))
+
+                    else ->
+                        null
+                }
+            }
         } ?: state to emptySet()
 
     private fun createAttemptLoadedState(attempt: Attempt, submission: Submission, restrictions: StepQuizRestrictions? = null): StepQuizView.State.AttemptLoaded =

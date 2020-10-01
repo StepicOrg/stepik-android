@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
+import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
@@ -23,6 +24,7 @@ import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelega
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
 
 class StepQuizReviewFragment :
@@ -90,6 +92,10 @@ class StepQuizReviewFragment :
                     stepQuizReviewDeepLinkBuilder.createTakenReviewDeepLink(sessionId)
                 )
             }
+
+            override fun onStartReviewClicked() {
+
+            }
         }
         delegate = StepQuizReviewDelegate(view, instructionType, actionListener)
     }
@@ -109,7 +115,13 @@ class StepQuizReviewFragment :
     }
 
     override fun onAction(action: StepQuizReviewView.Action.ViewAction) {
-        // todo
+        when (action) {
+            is StepQuizReviewView.Action.ViewAction.ShowNetworkError ->
+                view?.snackbar(messageRes = R.string.connectionProblems)
+
+            is StepQuizReviewView.Action.ViewAction.OpenReviewScreen ->
+                openInWeb(R.string.step_quiz_review_given_title, stepQuizReviewDeepLinkBuilder.createReviewDeepLink(action.reviewId))
+        }
     }
 
     private fun openInWeb(@StringRes titleRes: Int, url: String) {
