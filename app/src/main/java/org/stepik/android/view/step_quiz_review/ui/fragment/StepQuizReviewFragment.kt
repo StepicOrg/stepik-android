@@ -24,7 +24,6 @@ import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelega
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
-import ru.nobird.android.view.base.ui.extension.snackbar
 import javax.inject.Inject
 
 class StepQuizReviewFragment :
@@ -94,7 +93,7 @@ class StepQuizReviewFragment :
             }
 
             override fun onStartReviewClicked() {
-
+                stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.StartReviewWithCurrentSession)
             }
         }
         delegate = StepQuizReviewDelegate(view, instructionType, actionListener)

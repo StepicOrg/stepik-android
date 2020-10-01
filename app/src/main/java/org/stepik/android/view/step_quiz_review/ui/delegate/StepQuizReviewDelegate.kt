@@ -125,7 +125,14 @@ class StepQuizReviewDelegate(
                     }
 
                 reviewStep3Title.text = text
-                reviewStep3Container.isVisible = state.session.isReviewAvailable && !state.isReviewCreationInProgress
+
+                reviewStep3Container.isVisible = remainingReviewCount > 0 && !state.isReviewCreationInProgress
+
+                if (reviewStep3Container.isVisible) {
+                    reviewStep3Container.isEnabled = remainingReviewCount <= 0 || state.session.isReviewAvailable
+                    reviewStep3Container.setText(if (reviewStep3Container.isEnabled) R.string.step_quiz_review_given_start_review else R.string.step_quiz_review_given_no_review)
+                }
+
                 reviewStep3Loading.isVisible = state.isReviewCreationInProgress
                 setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.IN_PROGRESS)
             }
@@ -229,7 +236,8 @@ class StepQuizReviewDelegate(
                         reviewStep5Container.isVisible = true
                     }
                 }
-                setStepStatus(reviewStep5Title, reviewStep5Link, reviewStep5Status, ReviewStatusView.Status.COMPLETED)
+                setStepStatus(reviewStep5Title, reviewStep5Link, reviewStep5Status, ReviewStatusView.Status.IN_PROGRESS)
+                reviewStep5Status.status = ReviewStatusView.Status.COMPLETED
             }
             else -> {
                 val cost = state.safeCast<StepQuizReviewView.State.WithProgress>()?.progress?.cost ?: 0L

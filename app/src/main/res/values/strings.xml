@@ -824,6 +824,7 @@
     <string name="step_quiz_review_given_pending_zero">Write %d reviews</string>
     <string name="step_quiz_review_given_extra_note">Write more reviews to increase your chance to receive review</string>
     <string name="step_quiz_review_given_start_review">Start review</string>
+    <string name="step_quiz_review_given_no_review">Nothing to review</string>
     <string name="step_quiz_review_taken_pending_zero">Wait for %d reviews of your solution</string>
     <string name="step_quiz_review_taken_action">View reviews</string>
     <string name="step_quiz_review_taken_title">Received reviews</string>
