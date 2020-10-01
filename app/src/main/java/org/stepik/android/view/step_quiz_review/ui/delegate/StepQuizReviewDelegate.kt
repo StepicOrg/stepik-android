@@ -273,7 +273,9 @@ class StepQuizReviewDelegate(
     }
 
     interface ActionListener {
-        fun onTakenReviewClicked(sessionId: Long)
+        fun onSelectDifferentSubmissionClicked()
+
         fun onStartReviewClicked()
+        fun onTakenReviewClicked(sessionId: Long)
     }
 }

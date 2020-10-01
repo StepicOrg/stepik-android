@@ -85,15 +85,19 @@ class StepQuizReviewFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val actionListener = object : StepQuizReviewDelegate.ActionListener {
+            override fun onSelectDifferentSubmissionClicked() {
+                showSubmissions()
+            }
+
+            override fun onStartReviewClicked() {
+                stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.StartReviewWithCurrentSession)
+            }
+
             override fun onTakenReviewClicked(sessionId: Long) {
                 openInWeb(
                     R.string.step_quiz_review_taken_title,
                     stepQuizReviewDeepLinkBuilder.createTakenReviewDeepLink(sessionId)
                 )
-            }
-
-            override fun onStartReviewClicked() {
-                stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.StartReviewWithCurrentSession)
             }
         }
         delegate = StepQuizReviewDelegate(view, instructionType, actionListener)
