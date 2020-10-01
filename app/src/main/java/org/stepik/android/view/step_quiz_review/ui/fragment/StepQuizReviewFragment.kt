@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.stepic.droid.R
@@ -16,6 +17,8 @@ import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
+import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
+import org.stepik.android.view.step_quiz_review.routing.StepQuizReviewDeepLinkBuilder
 import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelegate
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
@@ -37,6 +40,9 @@ class StepQuizReviewFragment :
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var stepQuizReviewDeepLinkBuilder: StepQuizReviewDeepLinkBuilder
 
     @Inject
     internal lateinit var stepPersistentWrapper: StepPersistentWrapper
@@ -77,7 +83,15 @@ class StepQuizReviewFragment :
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        delegate = StepQuizReviewDelegate(view, instructionType)
+        val actionListener = object : StepQuizReviewDelegate.ActionListener {
+            override fun onTakenReviewClicked(sessionId: Long) {
+                openInWeb(
+                    R.string.step_quiz_review_taken_title,
+                    stepQuizReviewDeepLinkBuilder.createTakenReviewDeepLink(sessionId)
+                )
+            }
+        }
+        delegate = StepQuizReviewDelegate(view, instructionType, actionListener)
     }
 
     override fun onStart() {
@@ -98,6 +112,15 @@ class StepQuizReviewFragment :
         // todo
     }
 
+    private fun openInWeb(@StringRes titleRes: Int, url: String) {
+        InAppWebViewDialogFragment
+            .newInstance(getString(titleRes), url, isProvideAuth = true)
+            .showIfNotExists(childFragmentManager, InAppWebViewDialogFragment.TAG)
+    }
+
+    /**
+     * Submission selection
+     */
     private fun showSubmissions() {
         SubmissionsDialogFragment
             .newInstance(stepPersistentWrapper.step, isSelectionEnabled = true)

@@ -3,6 +3,7 @@ package org.stepik.android.view.step_quiz_review.ui.delegate
 import android.view.View
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_footer.*
@@ -16,10 +17,10 @@ import org.stepik.android.view.progress.ui.mapper.ProgressTextMapper
 import org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
 import ru.nobird.android.core.model.safeCast
 
-
 class StepQuizReviewDelegate(
     override val containerView: View,
-    private val instructionType: ReviewStrategyType
+    private val instructionType: ReviewStrategyType,
+    private val actionListener: ActionListener
 ) : LayoutContainer {
     private val resources = containerView.resources
 
@@ -151,6 +152,7 @@ class StepQuizReviewDelegate(
                 reviewStep4Title.isEnabled = false
                 reviewStep4Link.isEnabled = false
                 reviewStep4Status.status = ReviewStatusView.Status.PENDING
+                reviewStep4Container.isVisible = false
             }
             is StepQuizReviewView.State.SubmissionSelected -> {
                 val takenReviewCount = state.session.takenReviews.size
@@ -181,6 +183,8 @@ class StepQuizReviewDelegate(
                 reviewStep4Title.isEnabled = true
                 reviewStep4Link.isEnabled = true
                 reviewStep4Status.status = ReviewStatusView.Status.IN_PROGRESS
+                reviewStep4Container.isVisible = takenReviewCount > 0
+                reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
             }
             is StepQuizReviewView.State.Completed -> {
                 val takenReviewCount = state.session.takenReviews.size
@@ -188,6 +192,8 @@ class StepQuizReviewDelegate(
                 reviewStep4Title.isEnabled = false
                 reviewStep4Link.isEnabled = true
                 reviewStep4Status.status = ReviewStatusView.Status.COMPLETED
+                reviewStep4Container.isVisible = takenReviewCount > 0
+                reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
             }
         }
     }
@@ -239,5 +245,9 @@ class StepQuizReviewDelegate(
                 reviewStep5Status.status = if (inProgress) ReviewStatusView.Status.IN_PROGRESS else ReviewStatusView.Status.PENDING
             }
         }
+    }
+
+    interface ActionListener {
+        fun onTakenReviewClicked(sessionId: Long)
     }
 }
