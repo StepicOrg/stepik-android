@@ -68,21 +68,15 @@ class StepQuizReviewDelegate(
         when (state) {
             is StepQuizReviewView.State.SubmissionNotMade -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_pending)
-                reviewStep2Title.isEnabled = false
-                reviewStep2Link.isEnabled = false
-                reviewStep2Status.status = ReviewStatusView.Status.PENDING
+                setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.PENDING)
             }
             is StepQuizReviewView.State.SubmissionNotSelected -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_in_progress)
-                reviewStep2Title.isEnabled = true
-                reviewStep2Link.isEnabled = true
-                reviewStep2Status.status = ReviewStatusView.Status.IN_PROGRESS
+                setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.IN_PROGRESS)
             }
             else -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_completed)
-                reviewStep2Title.isEnabled = false
-                reviewStep2Link.isEnabled = true
-                reviewStep2Status.status = ReviewStatusView.Status.COMPLETED
+                setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.COMPLETED)
             }
         }
     }
@@ -96,9 +90,7 @@ class StepQuizReviewDelegate(
             is StepQuizReviewView.State.SubmissionNotSelected,
             is StepQuizReviewView.State.SubmissionSelectedLoading -> {
                 reviewStep3Title.setText(R.string.step_quiz_review_given_pending_zero)
-                reviewStep3Title.isEnabled = false
-                reviewStep3Link.isEnabled = false
-                reviewStep3Status.status = ReviewStatusView.Status.PENDING
+                setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.PENDING)
             }
             is StepQuizReviewView.State.SubmissionSelected -> {
                 val givenReviewCount = state.session.givenReviews.size
@@ -126,17 +118,13 @@ class StepQuizReviewDelegate(
                     }
 
                 reviewStep3Title.text = text
-                reviewStep3Title.isEnabled = true
-                reviewStep3Link.isEnabled = true
-                reviewStep3Status.status = ReviewStatusView.Status.IN_PROGRESS
+                setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.IN_PROGRESS)
             }
             is StepQuizReviewView.State.Completed -> {
                 val givenReviewCount = state.session.givenReviews.size
 
                 reviewStep3Title.text = resources.getQuantityString(R.plurals.step_quiz_review_given_completed, givenReviewCount, givenReviewCount)
-                reviewStep3Title.isEnabled = false
-                reviewStep3Link.isEnabled = true
-                reviewStep3Status.status = ReviewStatusView.Status.COMPLETED
+                setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.COMPLETED)
             }
         }
     }
@@ -148,10 +136,8 @@ class StepQuizReviewDelegate(
             is StepQuizReviewView.State.SubmissionNotMade,
             is StepQuizReviewView.State.SubmissionNotSelected,
             is StepQuizReviewView.State.SubmissionSelectedLoading -> {
-                reviewStep3Title.setText(R.string.step_quiz_review_taken_pending_zero)
-                reviewStep4Title.isEnabled = false
-                reviewStep4Link.isEnabled = false
-                reviewStep4Status.status = ReviewStatusView.Status.PENDING
+                reviewStep4Title.setText(R.string.step_quiz_review_taken_pending_zero)
+                setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.PENDING)
                 reviewStep4Container.isVisible = false
             }
             is StepQuizReviewView.State.SubmissionSelected -> {
@@ -179,19 +165,23 @@ class StepQuizReviewDelegate(
                         }
                     }
 
+                val status =
+                    if (remainingReviewCount > 0) {
+                        ReviewStatusView.Status.IN_PROGRESS
+                    } else {
+                        ReviewStatusView.Status.COMPLETED
+                    }
+
                 reviewStep4Title.text = text
-                reviewStep4Title.isEnabled = true
-                reviewStep4Link.isEnabled = true
-                reviewStep4Status.status = ReviewStatusView.Status.IN_PROGRESS
+                setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, status)
+
                 reviewStep4Container.isVisible = takenReviewCount > 0
                 reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
             }
             is StepQuizReviewView.State.Completed -> {
                 val takenReviewCount = state.session.takenReviews.size
                 reviewStep4Title.text = resources.getQuantityString(R.plurals.step_quiz_review_taken_completed, takenReviewCount, takenReviewCount)
-                reviewStep4Title.isEnabled = false
-                reviewStep4Link.isEnabled = true
-                reviewStep4Status.status = ReviewStatusView.Status.COMPLETED
+                setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.COMPLETED)
                 reviewStep4Container.isVisible = takenReviewCount > 0
                 reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
             }
@@ -245,6 +235,12 @@ class StepQuizReviewDelegate(
                 reviewStep5Status.status = if (inProgress) ReviewStatusView.Status.IN_PROGRESS else ReviewStatusView.Status.PENDING
             }
         }
+    }
+
+    private fun setStepStatus(titleView: View, linkView: View, statusView: ReviewStatusView, status: ReviewStatusView.Status) {
+        titleView.isEnabled = status == ReviewStatusView.Status.IN_PROGRESS
+        linkView.isEnabled = status.ordinal >= ReviewStatusView.Status.IN_PROGRESS.ordinal
+        statusView.status = status
     }
 
     interface ActionListener {

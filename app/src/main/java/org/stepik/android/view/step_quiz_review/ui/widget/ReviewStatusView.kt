@@ -69,6 +69,6 @@ constructor(
     }
 
     enum class Status {
-        PENDING, IN_PROGRESS, ERROR, COMPLETED
+        ERROR, PENDING, IN_PROGRESS, COMPLETED
     }
 }
