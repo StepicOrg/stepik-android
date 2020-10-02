@@ -38,7 +38,7 @@
 
         android:textSize="26sp"
 
-        style="@style/StoryTitle"
+        style="@style/StoriesTitle"
 
         android:layout_marginLeft="@dimen/story_item_margin"
         android:layout_marginRight="@dimen/story_item_margin"
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
 
         android:textSize="22sp"
-        style="@style/StoryTitle"
+        style="@style/StoriesTitle"
         android:layout_marginBottom="@dimen/story_item_margin"
         android:layout_marginLeft="@dimen/story_item_margin"
         android:layout_marginRight="@dimen/story_item_margin"

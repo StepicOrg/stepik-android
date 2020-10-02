@@ -4,5 +4,5 @@
     <gradient
         android:angle="270"
         android:startColor="@color/transparent"
-        android:endColor="#DE000000" />
+        android:endColor="@color/color_stories_overlay" />
 </shape>
