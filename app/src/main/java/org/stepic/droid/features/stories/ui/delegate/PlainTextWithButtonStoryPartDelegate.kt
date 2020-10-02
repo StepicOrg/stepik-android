@@ -28,8 +28,6 @@ class PlainTextWithButtonStoryPartDelegate(
     private val context: Context
 ) : StoryPartViewDelegate() {
     companion object {
-        private const val DARK_BACKGROUND_STYLE = "dark"
-
         private const val COLOR_MASK = 0xFF000000.toInt()
     }
 
@@ -66,17 +64,7 @@ class PlainTextWithButtonStoryPartDelegate(
             }
 
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
-//        val storyTextContainer = view.storyTextContainer
         if (text != null) {
-//            @DrawableRes
-//            val textBackgroundRes =
-//                if (text.backgroundStyle == DARK_BACKGROUND_STYLE) {
-//                    R.drawable.stories_text_background_dark
-//                } else {
-//                    R.drawable.stories_text_background_light
-//                }
-//            storyTextContainer.setBackgroundResource(textBackgroundRes)
-
             val storyTitle = view.storyTitle
             val storyText = view.storyText
 
@@ -88,10 +76,6 @@ class PlainTextWithButtonStoryPartDelegate(
             storyTitle.text = text.title
             storyText.text = text.text
             storyText.isVisible = text.text.isNotBlank()
-
-//            storyTextContainer.isVisible = true
-//        } else {
-//            storyTextContainer.isVisible = false
         }
     }
 
