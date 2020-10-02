@@ -200,6 +200,16 @@
         <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
+    <style name="StoryTitle">
+        <item name="fontFamily">@font/stories</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:shadowDx">4</item>
+        <item name="android:shadowDy">4</item>
+        <!-- Todo -->
+        <item name="android:shadowColor">#33000000</item>
+        <item name="android:gravity">start|top</item>
+    </style>
+
     <!-- Buttons -->
     <style name="Widget.AppTheme.Button" parent="@style/Widget.MaterialComponents.Button">
         <item name="android:stateListAnimator" tools:targetApi="lollipop">@null</item>

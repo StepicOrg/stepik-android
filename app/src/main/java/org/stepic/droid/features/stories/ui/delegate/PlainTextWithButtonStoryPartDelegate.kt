@@ -67,7 +67,7 @@ class PlainTextWithButtonStoryPartDelegate(
             }
 
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
-        val storyTextContainer = view.storyTextContainer
+//        val storyTextContainer = view.storyTextContainer
         if (text != null) {
             @DrawableRes
             val textBackgroundRes =
@@ -76,7 +76,7 @@ class PlainTextWithButtonStoryPartDelegate(
                 } else {
                     R.drawable.stories_text_background_light
                 }
-            storyTextContainer.setBackgroundResource(textBackgroundRes)
+//            storyTextContainer.setBackgroundResource(textBackgroundRes)
 
             val storyTitle = view.storyTitle
             val storyText = view.storyText
@@ -90,9 +90,9 @@ class PlainTextWithButtonStoryPartDelegate(
             storyText.text = text.text
             storyText.isVisible = text.text.isNotBlank()
 
-            storyTextContainer.isVisible = true
+//            storyTextContainer.isVisible = true
         } else {
-            storyTextContainer.isVisible = false
+//            storyTextContainer.isVisible = false
         }
     }
 
