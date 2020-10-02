@@ -235,4 +235,5 @@
     <!-- Stories -->
     <dimen name="story_item_margin">24dp</dimen>
     <dimen name="story_item_margin_vertical">60dp</dimen>
+    <dimen name="stories_default_corner_stroke_radius">17dp</dimen>
 </resources>

@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <corners android:radius="@dimen/stories_default_corner_outer_radius" />
-    <solid android:color="@android:color/transparent"/>
-    <stroke android:width="2dp" android:color="@color/color_overlay_brown" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/stories_default_corner_outer_radius" />
+            <gradient
+                android:startColor="@color/color_overlay_violet"
+                android:endColor="@color/color_overlay_green"
+                android:angle="45"/>
+        </shape>
+    </item>
+    <item android:top="2dp" android:left="2dp" android:right="2dp" android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="@dimen/stories_default_corner_stroke_radius" />
+            <solid android:color="@color/color_surface"/>
+        </shape>
+    </item>
+</layer-list>
