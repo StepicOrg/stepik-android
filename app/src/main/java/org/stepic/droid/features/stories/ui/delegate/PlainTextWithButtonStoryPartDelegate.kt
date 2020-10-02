@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -69,13 +68,13 @@ class PlainTextWithButtonStoryPartDelegate(
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
 //        val storyTextContainer = view.storyTextContainer
         if (text != null) {
-            @DrawableRes
-            val textBackgroundRes =
-                if (text.backgroundStyle == DARK_BACKGROUND_STYLE) {
-                    R.drawable.stories_text_background_dark
-                } else {
-                    R.drawable.stories_text_background_light
-                }
+//            @DrawableRes
+//            val textBackgroundRes =
+//                if (text.backgroundStyle == DARK_BACKGROUND_STYLE) {
+//                    R.drawable.stories_text_background_dark
+//                } else {
+//                    R.drawable.stories_text_background_light
+//                }
 //            storyTextContainer.setBackgroundResource(textBackgroundRes)
 
             val storyTitle = view.storyTitle
@@ -91,7 +90,7 @@ class PlainTextWithButtonStoryPartDelegate(
             storyText.isVisible = text.text.isNotBlank()
 
 //            storyTextContainer.isVisible = true
-        } else {
+//        } else {
 //            storyTextContainer.isVisible = false
         }
     }
