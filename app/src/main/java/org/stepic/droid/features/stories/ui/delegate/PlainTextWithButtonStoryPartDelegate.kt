@@ -18,6 +18,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
 import org.stepik.android.model.StoryTemplate
+import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
 import ru.nobird.android.stories.ui.custom.StoryView
@@ -88,7 +89,7 @@ class PlainTextWithButtonStoryPartDelegate(
             storyButton.text = button.title
             storyButton.setOnClickListener {
                 val uri = Uri.parse(button.url)
-                context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+                InternalDeeplinkRouter.openInternalDeeplink(context, uri)
 
                 if (story != null) {
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.BUTTON_PRESSED, mapOf(
