@@ -1,7 +1,6 @@
 package org.stepic.droid.features.stories.ui.delegate
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.view.LayoutInflater
