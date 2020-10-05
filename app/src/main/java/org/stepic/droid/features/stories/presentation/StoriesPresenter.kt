@@ -48,6 +48,9 @@ constructor(
                 storiesRepository.getStoryTemplates(locale.language).map { it.map(StoryTemplate::toStory) },
                 storiesRepository.getViewedStoriesIds()
             )
+            .map { (stories, viewedIds) ->
+                stories.sortedBy { if (it.id in viewedIds) 1 else 0 } to viewedIds
+            }
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

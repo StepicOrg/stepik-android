@@ -154,4 +154,8 @@
     <color name="lesson_color">@color/color_elevation_overlay_1dp</color>
     <color name="submission_correct">@color/color_overlay_green</color>
     <color name="submission_incorrect">@color/color_error</color>
+
+    <!-- Stories -->
+    <color name="color_stories_shadow">#33000000</color>
+    <color name="color_stories_overlay">#DE000000</color>
 </resources>
