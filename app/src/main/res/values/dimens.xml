@@ -231,4 +231,9 @@
     <!-- Settings -->
     <dimen name="settings_offset_horizontal">24dp</dimen>
     <dimen name="settings_offset_vertical">12dp</dimen>
+
+    <!-- Stories -->
+    <dimen name="story_item_margin">24dp</dimen>
+    <dimen name="story_item_margin_vertical">60dp</dimen>
+    <dimen name="stories_default_corner_stroke_radius">17dp</dimen>
 </resources>
