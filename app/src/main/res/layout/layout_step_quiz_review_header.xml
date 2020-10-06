@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
 
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="reviewStep1Status,reviewStep1Title" />
+        app:constraint_referenced_ids="reviewStep1Status,stepQuizDescription" />
 
     <org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
         android:id="@+id/reviewStep1Status"
@@ -25,7 +25,7 @@
         app:layout_constraintBottom_toBottomOf="@id/reviewStep1BarrierBottom" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/reviewStep1Title"
+        android:id="@+id/stepQuizDescription"
         style="@style/StepQuizReview.Title"
 
         android:text="@string/step_quiz_free_answer_description"
@@ -40,7 +40,7 @@
         layout="@layout/view_divider_vertical"
         style="@style/StepQuizReview.Divider"
 
-        app:layout_constraintStart_toStartOf="@id/reviewStep1Title"
+        app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviewStep1BarrierBottom" />
 
@@ -53,15 +53,15 @@
         android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 
         app:layout_constraintTop_toBottomOf="@id/reviewStep1DividerTop"
-        app:layout_constraintStart_toStartOf="@id/reviewStep1Title"
-        app:layout_constraintEnd_toEndOf="@id/reviewStep1Title" />
+        app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
+        app:layout_constraintEnd_toEndOf="@id/stepQuizDescription" />
 
     <include
         android:id="@+id/reviewStep1DividerBottom"
         layout="@layout/view_divider_vertical"
         style="@style/StepQuizReview.Divider"
 
-        app:layout_constraintStart_toStartOf="@id/reviewStep1Title"
+        app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviewStep1Container" />
 

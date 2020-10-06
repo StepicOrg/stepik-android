@@ -1,6 +1,7 @@
 package org.stepik.android.view.step_quiz_review.ui.delegate
 
 import android.view.View
+import android.view.ViewGroup
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
@@ -14,13 +15,17 @@ import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.progress.ui.mapper.ProgressTextMapper
+import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
 import ru.nobird.android.core.model.safeCast
 
 class StepQuizReviewDelegate(
     override val containerView: View,
     private val instructionType: ReviewStrategyType,
-    private val actionListener: ActionListener
+    private val actionListener: ActionListener,
+
+    private val quizView: View,
+    private val quizDelegate: StepQuizFormDelegate
 ) : LayoutContainer {
     private val resources = containerView.resources
 
@@ -40,6 +45,10 @@ class StepQuizReviewDelegate(
         }
 
         renderStep5(state)
+
+        if (state is StepQuizReviewView.State.WithQuizState) {
+            quizDelegate.setState(state.quizState)
+        }
     }
 
     private fun renderStep1(state: StepQuizReviewView.State) {
@@ -59,11 +68,14 @@ class StepQuizReviewDelegate(
                         ReviewStatusView.Status.IN_PROGRESS
                     }
 
-                reviewStep1Title.isEnabled = true
+                stepQuizDescription.isEnabled = true
+
+                quizView.parent.safeCast<ViewGroup>()?.removeView(quizView)
+                reviewStep1Container.addView(quizView)
             }
 
             else -> {
-                reviewStep1Title.isEnabled = false
+                stepQuizDescription.isEnabled = false
                 reviewStep1Status.status = ReviewStatusView.Status.COMPLETED
             }
         }
@@ -79,10 +91,16 @@ class StepQuizReviewDelegate(
             is StepQuizReviewView.State.SubmissionNotSelected -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_in_progress)
                 setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.IN_PROGRESS)
+
+                quizView.parent.safeCast<ViewGroup>()?.removeView(quizView)
+                reviewStep2Container.addView(quizView)
             }
             else -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_completed)
                 setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.COMPLETED)
+
+                quizView.parent.safeCast<ViewGroup>()?.removeView(quizView)
+                reviewStep2Container.addView(quizView)
             }
         }
     }

@@ -8,10 +8,12 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.layout_step_quiz_review_header.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
+import org.stepic.droid.util.AppConstants
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
@@ -19,8 +21,14 @@ import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
+import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
+import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_fill_blanks.ui.delegate.FillBlanksStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_matching.ui.delegate.MatchingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_review.routing.StepQuizReviewDeepLinkBuilder
 import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelegate
+import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
+import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
@@ -55,6 +63,8 @@ class StepQuizReviewFragment :
     private lateinit var stepQuizReviewPresenter: StepQuizReviewPresenter
     private lateinit var delegate: StepQuizReviewDelegate
 
+    private lateinit var quizView: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -80,7 +90,13 @@ class StepQuizReviewFragment :
                     R.layout.fragment_step_quiz_review_instructor
             }
 
+        // we don't pass [root] in order to clear margins
+        quizView = inflater.inflate(getLayoutResForStep(stepPersistentWrapper.step.block?.name), null)
+
         return inflater.inflate(layoutId, container, false)
+            .also {
+                it.reviewStep1Container.addView(quizView)
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -100,8 +116,61 @@ class StepQuizReviewFragment :
                 )
             }
         }
-        delegate = StepQuizReviewDelegate(view, instructionType, actionListener)
+
+        delegate =
+            StepQuizReviewDelegate(view, instructionType, actionListener, quizView, getDelegateForStep(stepPersistentWrapper.step.block?.name, view)!!)
     }
+
+    // todo reduce duplication from SolutionCommentDialogFragment
+    @LayoutRes
+    private fun getLayoutResForStep(blockName: String?): Int =
+        when (blockName) {
+            AppConstants.TYPE_STRING,
+            AppConstants.TYPE_NUMBER,
+            AppConstants.TYPE_MATH,
+            AppConstants.TYPE_FREE_ANSWER ->
+                R.layout.layout_step_quiz_text
+
+            AppConstants.TYPE_CHOICE ->
+                R.layout.layout_step_quiz_choice
+
+            AppConstants.TYPE_SORTING,
+            AppConstants.TYPE_MATCHING ->
+                R.layout.layout_step_quiz_sorting
+
+            AppConstants.TYPE_SQL ->
+                R.layout.layout_step_quiz_sql
+
+            AppConstants.TYPE_FILL_BLANKS ->
+                R.layout.layout_step_quiz_fill_blanks
+
+            else ->
+                R.layout.fragment_step_quiz_unsupported
+        }
+
+    private fun getDelegateForStep(blockName: String?, view: View): StepQuizFormDelegate? =
+        when (blockName) {
+            AppConstants.TYPE_STRING,
+            AppConstants.TYPE_NUMBER,
+            AppConstants.TYPE_MATH,
+            AppConstants.TYPE_FREE_ANSWER ->
+                TextStepQuizFormDelegate(view, blockName)
+
+            AppConstants.TYPE_CHOICE ->
+                ChoiceStepQuizFormDelegate(view)
+
+            AppConstants.TYPE_SORTING ->
+                SortingStepQuizFormDelegate(view)
+
+            AppConstants.TYPE_MATCHING ->
+                MatchingStepQuizFormDelegate(view)
+
+            AppConstants.TYPE_FILL_BLANKS ->
+                FillBlanksStepQuizFormDelegate(view, childFragmentManager)
+
+            else ->
+                null
+        }
 
     override fun onStart() {
         super.onStart()
