@@ -105,6 +105,10 @@ class StepQuizReviewFragment :
                 showSubmissions()
             }
 
+            override fun onCreateSessionClicked() {
+                stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.CreateSessionWithCurrentSubmission)
+            }
+
             override fun onStartReviewClicked() {
                 stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.StartReviewWithCurrentSession)
             }

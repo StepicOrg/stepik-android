@@ -126,6 +126,49 @@
         app:layout_constraintStart_toStartOf="@id/reviewStep2Title"
         app:layout_constraintEnd_toEndOf="@id/reviewStep2Title" />
 
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/reviewStep2Loading"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:radius="?cornerRadius"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep2Container"
+        app:layout_constraintStart_toStartOf="@id/reviewStep2Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep2Title" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/reviewStep2CreateSession"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:text="@string/step_quiz_review_send_submit"
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        android:theme="@style/ThemeOverlay.Green"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep2Loading"
+        app:layout_constraintStart_toStartOf="@id/reviewStep2Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep2Title" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/reviewStep2SelectSubmission"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        android:text="@string/step_quiz_review_send_choose"
+
+        android:theme="@style/ThemeOverlay.Green"
+        style="?materialButtonOutlinedStyle"
+        app:strokeColor="?colorPrimary"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep2CreateSession"
+        app:layout_constraintStart_toStartOf="@id/reviewStep2Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep2Title" />
+
     <include
         android:id="@+id/reviewStep2DividerBottom"
         layout="@layout/view_divider_vertical"
@@ -133,6 +176,6 @@
 
         app:layout_constraintStart_toStartOf="@id/reviewStep2Title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reviewStep2Container" />
+        app:layout_constraintTop_toBottomOf="@id/reviewStep2SelectSubmission" />
 
 </merge>

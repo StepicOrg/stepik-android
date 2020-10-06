@@ -36,11 +36,7 @@ interface StepQuizReviewView {
 
         data class SubmissionNotSelected(
             override val quizState: StepQuizView.State.AttemptLoaded,
-            override val progress: Progress?
-        ) : State(), WithProgress, WithQuizState // 2
-
-        data class SubmissionSelectedLoading(
-            override val quizState: StepQuizView.State.AttemptLoaded,
+            val isSessionCreationInProgress: Boolean,
             override val progress: Progress?
         ) : State(), WithProgress, WithQuizState // 2
 

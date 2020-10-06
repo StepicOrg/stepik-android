@@ -819,6 +819,8 @@
     <string name="step_quiz_review_send_pending">Send your best submission to review</string>
     <string name="step_quiz_review_send_in_progress">Send your best submission to review. You can\'t change it later.</string>
     <string name="step_quiz_review_send_completed">Submission was sent to review</string>
+    <string name="step_quiz_review_send_choose">Choose submission</string>
+    <string name="step_quiz_review_send_submit">Submit this submission</string>
 
     <string name="step_quiz_review_given_title">Review</string>
     <string name="step_quiz_review_given_pending_zero">Write %d reviews</string>

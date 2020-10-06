@@ -30,6 +30,9 @@ class StepQuizReviewDelegate(
     private val resources = containerView.resources
 
     init {
+        reviewStep2SelectSubmission.setOnClickListener { actionListener.onSelectDifferentSubmissionClicked() }
+        reviewStep2CreateSession.setOnClickListener { actionListener.onCreateSessionClicked() }
+
         if (instructionType == ReviewStrategyType.PEER) {
             reviewStep3Container.setOnClickListener { actionListener.onStartReviewClicked() }
         }
@@ -110,8 +113,7 @@ class StepQuizReviewDelegate(
 
         when (state) {
             is StepQuizReviewView.State.SubmissionNotMade,
-            is StepQuizReviewView.State.SubmissionNotSelected,
-            is StepQuizReviewView.State.SubmissionSelectedLoading -> {
+            is StepQuizReviewView.State.SubmissionNotSelected -> {
                 reviewStep3Title.setText(R.string.step_quiz_review_given_pending_zero)
                 setStepStatus(reviewStep3Title, reviewStep3Link, reviewStep3Status, ReviewStatusView.Status.PENDING)
                 reviewStep3Container.isVisible = false
@@ -170,8 +172,7 @@ class StepQuizReviewDelegate(
 
         when (state) {
             is StepQuizReviewView.State.SubmissionNotMade,
-            is StepQuizReviewView.State.SubmissionNotSelected,
-            is StepQuizReviewView.State.SubmissionSelectedLoading -> {
+            is StepQuizReviewView.State.SubmissionNotSelected -> {
                 reviewStep4Title.setText(R.string.step_quiz_review_taken_pending_zero)
                 setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.PENDING)
                 reviewStep4Container.isVisible = false
@@ -292,6 +293,7 @@ class StepQuizReviewDelegate(
 
     interface ActionListener {
         fun onSelectDifferentSubmissionClicked()
+        fun onCreateSessionClicked()
 
         fun onStartReviewClicked()
         fun onTakenReviewClicked(sessionId: Long)
