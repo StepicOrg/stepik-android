@@ -169,6 +169,8 @@
         android:layout_width="@dimen/step_submit_button_height"
 
         style="@style/Widget.AppTheme.Button.OutlinedButton"
+        android:theme="@style/ThemeOverlay.Green"
+        app:strokeColor="?colorPrimary"
 
         app:iconPadding="-36dp"
         android:padding="12dp"
