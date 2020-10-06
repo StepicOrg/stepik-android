@@ -44,17 +44,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviewStep1BarrierBottom" />
 
-    <FrameLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/reviewStep1Container"
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
 
         android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 
         app:layout_constraintTop_toBottomOf="@id/reviewStep1DividerTop"
         app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
-        app:layout_constraintEnd_toEndOf="@id/stepQuizDescription" />
+        app:layout_constraintEnd_toEndOf="@id/stepQuizDescription">
+        <include
+            android:id="@+id/quizFeedbackView"
+            layout="@layout/layout_step_quiz_feedback_block"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <include
         android:id="@+id/reviewStep1DividerBottom"
@@ -114,11 +124,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviewStep2BarrierBottom" />
 
-    <FrameLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/reviewStep2Container"
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
 
         android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 

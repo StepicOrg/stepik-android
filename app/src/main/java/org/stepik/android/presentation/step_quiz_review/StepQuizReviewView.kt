@@ -26,13 +26,13 @@ interface StepQuizReviewView {
         }
 
         interface WithQuizState {
-            val quizState: StepQuizView.State.AttemptLoaded
+            val quizState: StepQuizView.State
         }
 
         data class SubmissionNotMade(
-            val quizState: StepQuizView.State,
+            override val quizState: StepQuizView.State,
             override val progress: Progress?
-        ) : State(), WithProgress // 1
+        ) : State(), WithProgress, WithQuizState // 1
 
         data class SubmissionNotSelected(
             override val quizState: StepQuizView.State.AttemptLoaded,

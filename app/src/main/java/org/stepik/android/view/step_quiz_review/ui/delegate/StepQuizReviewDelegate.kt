@@ -15,6 +15,8 @@ import org.stepik.android.model.Submission
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.progress.ui.mapper.ProgressTextMapper
+import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
+import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -25,9 +27,12 @@ class StepQuizReviewDelegate(
     private val instructionType: ReviewStrategyType,
     private val actionListener: ActionListener,
 
+    private val blockName: String?,
     private val quizView: View,
-    private val quizDelegate: StepQuizFormDelegate
+    private val quizDelegate: StepQuizFormDelegate,
+    private val quizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate
 ) : LayoutContainer {
+    private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
     private val resources = containerView.resources
 
     private val step2viewStateDelegate = ViewStateDelegate<StepQuizReviewView.State>()
@@ -62,7 +67,10 @@ class StepQuizReviewDelegate(
         renderStep5(state)
 
         if (state is StepQuizReviewView.State.WithQuizState) {
-            quizDelegate.setState(state.quizState)
+            state.quizState.safeCast<StepQuizView.State.AttemptLoaded>()
+                ?.let(quizDelegate::setState)
+
+            quizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(blockName, state.quizState))
         }
     }
 
@@ -85,7 +93,8 @@ class StepQuizReviewDelegate(
 
                 stepQuizDescription.isEnabled = true
 
-                setQuizViewParent(reviewStep1Container)
+                setQuizViewParent(quizView, reviewStep1Container)
+                setQuizViewParent(quizFeedbackView, reviewStep1Container)
             }
 
             else -> {
@@ -111,20 +120,23 @@ class StepQuizReviewDelegate(
                 reviewStep2SelectSubmission.isVisible = !state.isSessionCreationInProgress
                 reviewStep2Retry.isVisible = !state.isSessionCreationInProgress
 
-                setQuizViewParent(reviewStep2Container)
+                setQuizViewParent(quizView, reviewStep2Container)
+                setQuizViewParent(quizFeedbackView, reviewStep2Container)
             }
             else -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_completed)
                 setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.COMPLETED)
 
-                setQuizViewParent(reviewStep2Container)
+                setQuizViewParent(quizView, reviewStep2Container)
+                setQuizViewParent(quizFeedbackView, reviewStep2Container)
+                quizFeedbackView.isVisible = false
             }
         }
     }
 
-    private fun setQuizViewParent(parent: ViewGroup) {
-        quizView.parent.safeCast<ViewGroup>()?.removeView(quizView)
-        parent.addView(quizView)
+    private fun setQuizViewParent(view: View, parent: ViewGroup) {
+        view.parent.safeCast<ViewGroup>()?.removeView(view)
+        parent.addView(view)
     }
 
     private fun renderStep3(state: StepQuizReviewView.State) {

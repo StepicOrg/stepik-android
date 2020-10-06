@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.view.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -21,6 +22,7 @@ import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
+import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_fill_blanks.ui.delegate.FillBlanksStepQuizFormDelegate
@@ -125,8 +127,16 @@ class StepQuizReviewFragment :
             }
         }
 
+        val blockName = stepPersistentWrapper.step.block?.name
+
         delegate =
-            StepQuizReviewDelegate(view, instructionType, actionListener, quizView, getDelegateForStep(stepPersistentWrapper.step.block?.name, view)!!)
+            StepQuizReviewDelegate(
+                view, instructionType, actionListener,
+                blockName,
+                quizView,
+                getDelegateForStep(blockName, view)!!,
+                StepQuizFeedbackBlocksDelegate(quizFeedbackView, false) {}
+            )
     }
 
     // todo reduce duplication from SolutionCommentDialogFragment
