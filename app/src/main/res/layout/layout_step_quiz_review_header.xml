@@ -153,12 +153,32 @@
         app:layout_constraintEnd_toEndOf="@id/reviewStep2Title" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/reviewStep2Retry"
+        android:layout_height="@dimen/step_submit_button_height"
+        android:layout_width="@dimen/step_submit_button_height"
+
+        style="@style/Widget.AppTheme.Button.OutlinedButton"
+
+        android:text="@string/retry_internet"
+        app:iconPadding="-36dp"
+        android:padding="12dp"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep2CreateSession"
+        app:layout_constraintStart_toStartOf="@id/reviewStep2Title"
+
+        app:icon="@drawable/ic_step_quiz_retry" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/reviewStep2SelectSubmission"
 
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
         android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        android:layout_marginLeft="@dimen/step_quiz_review_vertical_block_margin"
+        android:layout_marginStart="@dimen/step_quiz_review_vertical_block_margin"
         android:text="@string/step_quiz_review_send_choose"
 
         android:theme="@style/ThemeOverlay.Green"
@@ -166,7 +186,7 @@
         app:strokeColor="?colorPrimary"
 
         app:layout_constraintTop_toBottomOf="@id/reviewStep2CreateSession"
-        app:layout_constraintStart_toStartOf="@id/reviewStep2Title"
+        app:layout_constraintStart_toEndOf="@id/reviewStep2Retry"
         app:layout_constraintEnd_toEndOf="@id/reviewStep2Title" />
 
     <include

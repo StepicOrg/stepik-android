@@ -33,7 +33,9 @@ class StepQuizReviewDelegate(
     private val step2viewStateDelegate = ViewStateDelegate<StepQuizReviewView.State>()
         .apply {
             addState<StepQuizReviewView.State.SubmissionNotSelected>(
-                reviewStep2DividerBottom, reviewStep2Container, reviewStep2Loading, reviewStep2CreateSession, reviewStep2SelectSubmission)
+                reviewStep2DividerBottom, reviewStep2Container, reviewStep2Loading,
+                reviewStep2CreateSession, reviewStep2SelectSubmission, reviewStep2Retry
+            )
             addState<StepQuizReviewView.State.SubmissionSelected>(reviewStep2DividerBottom, reviewStep2Container)
             addState<StepQuizReviewView.State.Completed>(reviewStep2DividerBottom, reviewStep2Container)
         }
@@ -41,6 +43,7 @@ class StepQuizReviewDelegate(
     init {
         reviewStep2SelectSubmission.setOnClickListener { actionListener.onSelectDifferentSubmissionClicked() }
         reviewStep2CreateSession.setOnClickListener { actionListener.onCreateSessionClicked() }
+        reviewStep2Retry.setOnClickListener { actionListener.onSolveAgainClicked() }
 
         if (instructionType == ReviewStrategyType.PEER) {
             reviewStep3Container.setOnClickListener { actionListener.onStartReviewClicked() }
@@ -93,7 +96,6 @@ class StepQuizReviewDelegate(
     }
 
     private fun renderStep2(state: StepQuizReviewView.State) {
-        // todo work with quiz
         step2viewStateDelegate.switchState(state)
         when (state) {
             is StepQuizReviewView.State.SubmissionNotMade -> {
@@ -107,6 +109,7 @@ class StepQuizReviewDelegate(
                 reviewStep2Loading.isVisible = state.isSessionCreationInProgress
                 reviewStep2CreateSession.isVisible = !state.isSessionCreationInProgress
                 reviewStep2SelectSubmission.isVisible = !state.isSessionCreationInProgress
+                reviewStep2Retry.isVisible = !state.isSessionCreationInProgress
 
                 setQuizViewParent(reviewStep2Container)
             }
@@ -310,6 +313,7 @@ class StepQuizReviewDelegate(
     interface ActionListener {
         fun onSelectDifferentSubmissionClicked()
         fun onCreateSessionClicked()
+        fun onSolveAgainClicked()
 
         fun onStartReviewClicked()
         fun onTakenReviewClicked(sessionId: Long)

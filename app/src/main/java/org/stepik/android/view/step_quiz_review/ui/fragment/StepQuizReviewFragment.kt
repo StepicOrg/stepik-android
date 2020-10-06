@@ -109,6 +109,10 @@ class StepQuizReviewFragment :
                 stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.CreateSessionWithCurrentSubmission)
             }
 
+            override fun onSolveAgainClicked() {
+                stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.SolveAgain)
+            }
+
             override fun onStartReviewClicked() {
                 stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.StartReviewWithCurrentSession)
             }
