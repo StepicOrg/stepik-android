@@ -170,7 +170,6 @@
 
         style="@style/Widget.AppTheme.Button.OutlinedButton"
 
-        android:text="@string/retry_internet"
         app:iconPadding="-36dp"
         android:padding="12dp"
 

@@ -56,6 +56,13 @@ class StepQuizReviewDelegate(
     }
 
     fun render(state: StepQuizReviewView.State) {
+        if (state is StepQuizReviewView.State.WithQuizState) {
+            state.quizState.safeCast<StepQuizView.State.AttemptLoaded>()
+                ?.let(quizDelegate::setState)
+
+            quizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(blockName, state.quizState))
+        }
+
         renderStep1(state)
         renderStep2(state)
 
@@ -65,13 +72,6 @@ class StepQuizReviewDelegate(
         }
 
         renderStep5(state)
-
-        if (state is StepQuizReviewView.State.WithQuizState) {
-            state.quizState.safeCast<StepQuizView.State.AttemptLoaded>()
-                ?.let(quizDelegate::setState)
-
-            quizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(blockName, state.quizState))
-        }
     }
 
     private fun renderStep1(state: StepQuizReviewView.State) {
