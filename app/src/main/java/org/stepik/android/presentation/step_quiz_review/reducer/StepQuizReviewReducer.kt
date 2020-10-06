@@ -54,11 +54,23 @@ constructor() : StateReducer<State, Message, Action> {
 
             is Message.FetchStepQuizStateSuccess ->
                 when (state) {
-                    is State.Loading ->
-                        State.SubmissionNotMade(
-                            quizState = message.quizState,
-                            progress = message.progress
-                        ) to emptySet()
+                    is State.Loading -> {
+                        if (message.quizState is StepQuizView.State.AttemptLoaded &&
+                            message.quizState.submissionState is StepQuizView.SubmissionState.Loaded &&
+                            message.quizState.submissionState.submission.status == Submission.Status.CORRECT
+                        ) {
+                            State.SubmissionNotSelected(
+                                quizState = message.quizState,
+                                isSessionCreationInProgress = false,
+                                progress = message.progress
+                            )
+                        } else {
+                            State.SubmissionNotMade(
+                                quizState = message.quizState,
+                                progress = message.progress
+                            )
+                        } to emptySet()
+                    }
                     else -> null
                 }
 
