@@ -8,6 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.jakewharton.rxrelay2.BehaviorRelay
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.view.*
 import org.stepic.droid.R
@@ -15,6 +16,8 @@ import org.stepic.droid.base.App
 import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
+import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
@@ -22,6 +25,7 @@ import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
+import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDelegate
@@ -56,11 +60,15 @@ class StepQuizReviewFragment :
     internal lateinit var stepQuizReviewDeepLinkBuilder: StepQuizReviewDeepLinkBuilder
 
     @Inject
-    internal lateinit var stepPersistentWrapper: StepPersistentWrapper
+    internal lateinit var stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>
+
+    @Inject
+    internal lateinit var lessonData: LessonData
 
     private var stepId: Long by argument()
-
     private var instructionType: ReviewStrategyType by argument()
+
+    private lateinit var stepWrapper: StepPersistentWrapper
 
     private lateinit var stepQuizReviewPresenter: StepQuizReviewPresenter
     private lateinit var delegate: StepQuizReviewDelegate
@@ -71,7 +79,7 @@ class StepQuizReviewFragment :
         super.onCreate(savedInstanceState)
 
         injectComponent()
-
+        stepWrapper = stepWrapperRxRelay.value ?: throw IllegalStateException("Step wrapper cannot be null")
         stepQuizReviewPresenter = viewModel(viewModelFactory)
     }
 
@@ -93,7 +101,7 @@ class StepQuizReviewFragment :
             }
 
         // we don't pass [root] in order to clear margins
-        quizView = inflater.inflate(getLayoutResForStep(stepPersistentWrapper.step.block?.name), null)
+        quizView = inflater.inflate(getLayoutResForStep(stepWrapper.step.block?.name), null)
 
         return inflater.inflate(layoutId, container, false)
             .also {
@@ -127,15 +135,25 @@ class StepQuizReviewFragment :
             }
         }
 
-        val blockName = stepPersistentWrapper.step.block?.name
+        val blockName = stepWrapper.step.block?.name
+        val stepQuizFormDelegate = getDelegateForStep(blockName, view) ?: throw IllegalStateException("Unsupported quiz")
+        val stepQuizBlockDelegate = StepQuizFeedbackBlocksDelegate(quizFeedbackView, false) {}
+//        val quizDelegate =
+//            StepQuizDelegate(
+//                step = stepWrapper.step,
+//                stepQuizLessonData = StepQuizLessonData(lessonData),
+//                stepQuizFormDelegate = stepQuizFormDelegate,
+//                stepQuizFeedbackBlocksDelegate = stepQuizBlockDelegate,
+//
+//            )
 
         delegate =
             StepQuizReviewDelegate(
                 view, instructionType, actionListener,
                 blockName,
                 quizView,
-                getDelegateForStep(blockName, view)!!,
-                StepQuizFeedbackBlocksDelegate(quizFeedbackView, false) {}
+                stepQuizFormDelegate,
+                stepQuizBlockDelegate
             )
     }
 
@@ -225,7 +243,7 @@ class StepQuizReviewFragment :
      */
     private fun showSubmissions() {
         SubmissionsDialogFragment
-            .newInstance(stepPersistentWrapper.step, isSelectionEnabled = true)
+            .newInstance(stepWrapper.step, isSelectionEnabled = true)
             .showIfNotExists(childFragmentManager, SubmissionsDialogFragment.TAG)
     }
 

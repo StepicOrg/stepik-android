@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.jakewharton.rxrelay2.BehaviorRelay
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz.*
@@ -22,6 +21,7 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.Step
 import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.lesson.ui.interfaces.NextMoveable
 import org.stepik.android.view.magic_links.ui.dialog.MagicLinkDialogFragment
 import org.stepik.android.view.step.routing.StepDeepLinkBuilder
@@ -68,9 +68,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
 
         stepWrapper = stepWrapperRxRelay.value ?: throw IllegalStateException("Step wrapper cannot be null")
 
-        presenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(StepQuizPresenter::class.java)
+        presenter = viewModel(viewModelFactory)
         presenter.onStepData(stepWrapper, lessonData)
     }
 
