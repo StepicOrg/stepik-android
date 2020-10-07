@@ -13,6 +13,7 @@ import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.step_quiz.interactor.StepQuizInteractor
 import org.stepik.android.domain.step_quiz_review.interactor.StepQuizReviewInteractor
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.dispatcher.StepQuizActionDispatcher
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
 import ru.nobird.android.presentation.base.PresenterBase
 import javax.inject.Inject
@@ -23,6 +24,7 @@ constructor(
     stepWrapperRxRelay: BehaviorRelay<StepPersistentWrapper>,
     lessonData: LessonData,
 
+    private val stepQuizActionDispatcher: StepQuizActionDispatcher,
     private val stepQuizInteractor: StepQuizInteractor,
     private val stepQuizReviewInteractor: StepQuizReviewInteractor,
     private val stepQuizReviewReducer: StepQuizReviewReducer,
@@ -40,11 +42,17 @@ constructor(
 
     private val viewActionQueue = ArrayDeque<StepQuizReviewView.Action.ViewAction>()
 
+    private val stepQuizMessageListener = { message: StepQuizView.Message ->
+        onNewMessage(StepQuizReviewView.Message.StepQuizMessage(message))
+    }
+
     init {
         compositeDisposable += stepWrapperRxRelay
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(onNext = { onNewMessage(StepQuizReviewView.Message.InitWithStep(it, lessonData)) })
+
+        compositeDisposable += stepQuizActionDispatcher.disposable
     }
 
     override fun attachView(view: StepQuizReviewView) {
@@ -97,6 +105,9 @@ constructor(
                     )
             }
 
+            is StepQuizReviewView.Action.StepQuizAction ->
+                stepQuizActionDispatcher.handleAction(action.action, stepQuizMessageListener)
+
             is StepQuizReviewView.Action.CreateSessionWithSubmission -> {
                 compositeDisposable += stepQuizReviewInteractor
                     .createSession(action.submissionId)
@@ -131,18 +142,11 @@ constructor(
             .flatMap { attempt ->
                 Singles
                     .zip(
-                        getSubmissionState(attempt.id),
+                        stepQuizActionDispatcher.getSubmissionState(attempt.id),
                         stepQuizInteractor.getStepRestrictions(stepWrapper, lessonData)
                     )
                     .map { (submissionState, stepRestrictions) ->
                         StepQuizView.State.AttemptLoaded(attempt, submissionState, stepRestrictions)
                     }
             }
-
-    // todo remove duplication from StepQuizPresenter.kt
-    private fun getSubmissionState(attemptId: Long): Single<StepQuizView.SubmissionState> =
-        stepQuizInteractor
-            .getSubmission(attemptId)
-            .map<StepQuizView.SubmissionState> { StepQuizView.SubmissionState.Loaded(it) }
-            .toSingle(StepQuizView.SubmissionState.Empty())
 }

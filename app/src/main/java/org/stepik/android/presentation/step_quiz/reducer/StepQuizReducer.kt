@@ -1,4 +1,4 @@
-package org.stepik.android.presentation.step_quiz.model
+package org.stepik.android.presentation.step_quiz.reducer
 
 import org.stepik.android.model.Reply
 import org.stepik.android.model.Submission
@@ -6,7 +6,7 @@ import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.StepQuizView.State
 import org.stepik.android.presentation.step_quiz.StepQuizView.Message
 import org.stepik.android.presentation.step_quiz.StepQuizView.Action
-import org.stepik.android.presentation.step_quiz_review.reducer.StateReducer
+import org.stepik.android.presentation.base.reducer.StateReducer
 import java.util.Calendar
 import javax.inject.Inject
 

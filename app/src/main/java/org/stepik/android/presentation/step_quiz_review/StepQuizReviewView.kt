@@ -73,6 +73,11 @@ interface StepQuizReviewView {
         object InitialFetchError : Message()
 
         /**
+         * Step Quiz Message Wrapper
+         */
+        data class StepQuizMessage(val message: StepQuizView.Message) : Message()
+
+        /**
          * Submission creation or changing
          */
         object SolveAgain : Message() // solve again
@@ -94,6 +99,9 @@ interface StepQuizReviewView {
     }
 
     sealed class Action {
+        /**
+         * Initialization
+         */
         data class FetchStepQuizState(val stepWrapper: StepPersistentWrapper, val lessonData: LessonData) : Action() // if there is no review session
         data class FetchReviewSession(
             val stepId: Long,
@@ -101,6 +109,12 @@ interface StepQuizReviewView {
             val instructionId: Long,
             val sessionId: Long
         ) : Action()
+
+        /**
+         * Step Quiz Action Wrapper
+         */
+        data class StepQuizAction(val action: StepQuizView.Action) : Action()
+
         data class CreateSessionWithSubmission(val submissionId: Long) : Action() // select solution
 
         data class CreateReviewWithSession(val sessionId: Long) : Action()
@@ -109,6 +123,7 @@ interface StepQuizReviewView {
             object ShowNetworkError : ViewAction() // error
             data class OpenReviewScreen(val reviewId: Long) : ViewAction()
         }
+
     }
 
     fun render(state: State)

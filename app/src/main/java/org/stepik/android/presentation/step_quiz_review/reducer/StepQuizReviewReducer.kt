@@ -4,7 +4,9 @@ import org.stepik.android.domain.step_quiz.model.StepQuizRestrictions
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.presentation.base.reducer.StateReducer
 import org.stepik.android.presentation.step_quiz.StepQuizView
+import org.stepik.android.presentation.step_quiz.reducer.StepQuizReducer
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView.State
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView.Action
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView.Message
@@ -13,7 +15,9 @@ import javax.inject.Inject
 
 class StepQuizReviewReducer
 @Inject
-constructor() : StateReducer<State, Message, Action> {
+constructor(
+    private val stepQuizReducer: StepQuizReducer
+) : StateReducer<State, Message, Action> {
     override fun reduce(
         state: State,
         message: Message
@@ -78,6 +82,17 @@ constructor() : StateReducer<State, Message, Action> {
                 when (state) {
                     is State.Loading ->
                         State.Error to emptySet()
+                    else -> null
+                }
+
+            is Message.StepQuizMessage ->
+                when (state) {
+                    is State.SubmissionNotMade -> {
+                        val (quizState, quizActions) = stepQuizReducer.reduce(state.quizState, message.message)
+                        // todo handle submission success state
+                        state.copy(quizState = quizState) to quizActions.map(Action::StepQuizAction).toSet()
+                    }
+
                     else -> null
                 }
 
