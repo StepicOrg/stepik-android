@@ -14,7 +14,6 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
@@ -31,8 +30,7 @@ class StepQuizDelegate(
     private val stepRetryButton: MaterialButton,
     private val stepQuizDiscountingPolicy: TextView,
 
-    private val stepQuizPresenter: StepQuizPresenter,
-
+    private val onNewMessage: (StepQuizView.Message) -> Unit,
     private val onNextClicked: () -> Unit
 ) {
     private val context = stepQuizActionButton.context
@@ -43,7 +41,7 @@ class StepQuizDelegate(
 
     init {
         stepQuizActionButton.setOnClickListener { onActionButtonClicked() }
-        stepRetryButton.setOnClickListener { stepQuizPresenter.onNewMessage(StepQuizView.Message.CreateAttemptClicked(step)) }
+        stepRetryButton.setOnClickListener { onNewMessage(StepQuizView.Message.CreateAttemptClicked(step)) }
     }
 
     fun onActionButtonClicked() {
@@ -53,12 +51,12 @@ class StepQuizDelegate(
             if (StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state)) {
                 onNextClicked()
             } else {
-                stepQuizPresenter.onNewMessage(StepQuizView.Message.CreateAttemptClicked(step))
+                onNewMessage(StepQuizView.Message.CreateAttemptClicked(step))
             }
         } else {
             when (val replyResult = stepQuizFormDelegate.createReply()) {
                 is ReplyResult.Success ->
-                    stepQuizPresenter.onNewMessage(StepQuizView.Message.CreateSubmissionClicked(step, replyResult.reply))
+                    onNewMessage(StepQuizView.Message.CreateSubmissionClicked(step, replyResult.reply))
 
                 is ReplyResult.Error ->
                     stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.message))
@@ -163,6 +161,6 @@ class StepQuizDelegate(
             ?.reply
             ?: return
 
-        stepQuizPresenter.onNewMessage(StepQuizView.Message.SyncReply(reply))
+        onNewMessage(StepQuizView.Message.SyncReply(reply))
     }
 }

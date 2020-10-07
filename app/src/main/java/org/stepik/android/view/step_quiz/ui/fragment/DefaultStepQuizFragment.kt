@@ -111,7 +111,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
                 stepQuizActionButton = stepQuizAction,
                 stepRetryButton = stepQuizRetry,
                 stepQuizDiscountingPolicy = stepQuizDiscountingPolicy,
-                stepQuizPresenter = presenter
+                onNewMessage = presenter::onNewMessage
             ) {
                 (parentFragment as? NextMoveable)?.moveNext()
             }
