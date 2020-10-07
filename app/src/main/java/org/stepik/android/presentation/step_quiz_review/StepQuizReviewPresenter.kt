@@ -15,7 +15,6 @@ import org.stepik.android.domain.step_quiz_review.interactor.StepQuizReviewInter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz_review.reducer.StepQuizReviewReducer
 import ru.nobird.android.presentation.base.PresenterBase
-import timber.log.Timber
 import javax.inject.Inject
 
 class StepQuizReviewPresenter
@@ -58,9 +57,6 @@ constructor(
 
     fun onNewMessage(message: StepQuizReviewView.Message) {
         val (newState, actions) = stepQuizReviewReducer.reduce(state, message)
-        Timber.d("message = $message")
-        Timber.d("newState = ${newState.javaClass.canonicalName}")
-        Timber.d("actions = $actions")
 
         state = newState
         actions.forEach(::handleAction)

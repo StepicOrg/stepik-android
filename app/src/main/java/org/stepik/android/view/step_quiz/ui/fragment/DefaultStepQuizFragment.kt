@@ -90,6 +90,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate = ViewStateDelegate()
         viewStateDelegate.addState<StepQuizView.State.Idle>()
         viewStateDelegate.addState<StepQuizView.State.Loading>(stepQuizProgress)
+        viewStateDelegate.addState<StepQuizView.State.AttemptLoading>(stepQuizProgress)
         viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizDescription, stepQuizActionContainer, *quizViews)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
@@ -131,15 +132,17 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         super.onStop()
     }
 
-    override fun setState(state: StepQuizView.State) {
+    override fun render(state: StepQuizView.State) {
         viewStateDelegate.switchState(state)
         if (state is StepQuizView.State.AttemptLoaded) {
             stepQuizDelegate.setState(state)
         }
     }
 
-    override fun showNetworkError() {
-        view?.snackbar(messageRes = R.string.no_connection)
+    override fun onAction(action: StepQuizView.Action.ViewAction) {
+        if (action is StepQuizView.Action.ViewAction.ShowNetworkError) {
+            view?.snackbar(messageRes = R.string.no_connection)
+        }
     }
 
     private fun openStepInWeb(step: Step) {
