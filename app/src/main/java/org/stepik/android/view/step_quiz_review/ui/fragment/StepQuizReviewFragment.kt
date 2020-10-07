@@ -20,6 +20,7 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.lesson.model.LessonData
+import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
@@ -27,6 +28,7 @@ import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
+import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDelegate
@@ -155,23 +157,27 @@ class StepQuizReviewFragment :
         }
 
         val blockName = stepWrapper.step.block?.name
-        val stepQuizFormDelegate = getDelegateForStep(blockName, view) ?: throw IllegalStateException("Unsupported quiz")
         val stepQuizBlockDelegate = StepQuizFeedbackBlocksDelegate(quizFeedbackView, false) {}
-//        val quizDelegate =
-//            StepQuizDelegate(
-//                step = stepWrapper.step,
-//                stepQuizLessonData = StepQuizLessonData(lessonData),
-//                stepQuizFormDelegate = stepQuizFormDelegate,
-//                stepQuizFeedbackBlocksDelegate = stepQuizBlockDelegate,
-//
-//            )
+        val quizDelegate =
+            StepQuizDelegate(
+                step = stepWrapper.step,
+                stepQuizLessonData = StepQuizLessonData(lessonData),
+                stepQuizFormDelegate = getDelegateForStep(blockName, view) ?: throw IllegalStateException("Unsupported quiz"),
+                stepQuizFeedbackBlocksDelegate = stepQuizBlockDelegate,
+
+                stepQuizActionButton = reviewStep1ActionButton,
+                stepRetryButton = reviewStep1ActionRetry,
+
+                stepQuizDiscountingPolicy = reviewStep1Discounting,
+                onNewMessage = { stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.StepQuizMessage(it)) }
+            ) { } // todo disable next action
 
         delegate =
             StepQuizReviewDelegate(
                 view, instructionType, actionListener,
                 blockName,
                 quizView,
-                stepQuizFormDelegate,
+                quizDelegate,
                 stepQuizBlockDelegate
             )
     }

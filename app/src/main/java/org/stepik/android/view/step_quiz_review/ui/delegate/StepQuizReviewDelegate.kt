@@ -16,8 +16,8 @@ import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.progress.ui.mapper.ProgressTextMapper
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
+import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
-import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.core.model.safeCast
@@ -29,7 +29,7 @@ class StepQuizReviewDelegate(
 
     private val blockName: String?,
     private val quizView: View,
-    private val quizDelegate: StepQuizFormDelegate,
+    private val quizDelegate: StepQuizDelegate,
     private val quizFeedbackBlocksDelegate: StepQuizFeedbackBlocksDelegate
 ) : LayoutContainer {
     private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
@@ -92,6 +92,10 @@ class StepQuizReviewDelegate(
                     }
 
                 stepQuizDescription.isEnabled = true
+
+                if (state.quizState is StepQuizView.State.AttemptLoaded) { // todo handle
+                    quizDelegate.setState(state.quizState)
+                }
 
                 setQuizViewParent(quizView, reviewStep1Container)
                 setQuizViewParent(quizFeedbackView, reviewStep1Container)
