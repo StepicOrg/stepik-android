@@ -9,6 +9,9 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
+import kotlinx.android.synthetic.main.fragment_step_quiz_review.*
+import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.view.*
 import org.stepic.droid.R
@@ -17,7 +20,6 @@ import org.stepic.droid.persistence.model.StepPersistentWrapper
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.AppConstants
 import org.stepik.android.domain.lesson.model.LessonData
-import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
@@ -25,7 +27,6 @@ import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
-import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFormDelegate
 import org.stepik.android.view.step_quiz_choice.ui.delegate.ChoiceStepQuizFormDelegate
@@ -36,6 +37,7 @@ import org.stepik.android.view.step_quiz_review.ui.delegate.StepQuizReviewDelega
 import org.stepik.android.view.step_quiz_sorting.ui.delegate.SortingStepQuizFormDelegate
 import org.stepik.android.view.step_quiz_text.ui.delegate.TextStepQuizFormDelegate
 import org.stepik.android.view.submission.ui.dialog.SubmissionsDialogFragment
+import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
@@ -73,6 +75,8 @@ class StepQuizReviewFragment :
     private lateinit var stepQuizReviewPresenter: StepQuizReviewPresenter
     private lateinit var delegate: StepQuizReviewDelegate
 
+    private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizReviewView.State>
+
     private lateinit var quizView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,6 +94,8 @@ class StepQuizReviewFragment :
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        val view = inflater.inflate(R.layout.fragment_step_quiz_review, container, false) as ViewGroup
+
         @LayoutRes
         val layoutId =
             when (instructionType) {
@@ -103,13 +109,26 @@ class StepQuizReviewFragment :
         // we don't pass [root] in order to clear margins
         quizView = inflater.inflate(getLayoutResForStep(stepWrapper.step.block?.name), null)
 
-        return inflater.inflate(layoutId, container, false)
+        inflater.inflate(layoutId, view)
             .also {
                 it.reviewStep1Container.addView(quizView)
             }
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        viewStateDelegate = ViewStateDelegate()
+        viewStateDelegate.addState<StepQuizReviewView.State.Idle>(stepQuizReviewLoading)
+        viewStateDelegate.addState<StepQuizReviewView.State.Loading>(stepQuizReviewLoading)
+        viewStateDelegate.addState<StepQuizReviewView.State.Error>(stepQuizReviewNetworkError)
+        viewStateDelegate.addState<StepQuizReviewView.State.SubmissionNotMade>(stepQuizReviewContainer)
+        viewStateDelegate.addState<StepQuizReviewView.State.SubmissionNotSelected>(stepQuizReviewContainer)
+        viewStateDelegate.addState<StepQuizReviewView.State.SubmissionSelected>(stepQuizReviewContainer)
+        viewStateDelegate.addState<StepQuizReviewView.State.Completed>(stepQuizReviewContainer)
+
+        tryAgain.setOnClickListener { stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)) }
+
         val actionListener = object : StepQuizReviewDelegate.ActionListener {
             override fun onSelectDifferentSubmissionClicked() {
                 showSubmissions()
@@ -219,6 +238,7 @@ class StepQuizReviewFragment :
     }
 
     override fun render(state: StepQuizReviewView.State) {
+        viewStateDelegate.switchState(state)
         delegate.render(state)
     }
 
