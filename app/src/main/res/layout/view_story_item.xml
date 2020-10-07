@@ -6,6 +6,12 @@
     android:layout_margin="8dp"
     android:foreground="@drawable/story_view_foreground">
 
+    <View
+        android:id="@+id/activeStoryMarker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/active_story_marker" />
+
     <ImageView
         android:id="@+id/storyCover"
         android:layout_width="match_parent"
@@ -18,12 +24,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/story_view_tint_foreground"
         android:layout_margin="4dp" />
-
-    <View
-        android:id="@+id/activeStoryMarker"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/active_story_marker" />
 
     <TextView
         android:id="@+id/storyTitle"

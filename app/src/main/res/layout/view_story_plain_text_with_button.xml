@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".features.stories.ui.activity.StoriesActivity">
@@ -13,49 +14,73 @@
         android:scaleType="centerCrop"
         android:contentDescription="@null" />
 
-    <LinearLayout
+    <View
+        android:id="@+id/storyOverlayTop"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_overlay_story"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/storyOverlayBottom"
+        android:rotation="180" />
+
+    <View
+        android:id="@+id/storyOverlayBottom"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@drawable/bg_overlay_story"
+        app:layout_constraintTop_toBottomOf="@id/storyOverlayTop"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/storyTitle"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="bottom"
-        android:gravity="center_horizontal">
 
-        <LinearLayout
-            android:id="@+id/storyTextContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="start"
-            android:layout_margin="16dp"
-            android:padding="16dp">
+        android:textSize="26sp"
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/storyTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?textAppearanceHeadline6"
-                android:gravity="start"
-                tools:text="Some title" />
+        style="@style/StoriesTitle"
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/storyText"
-                android:layout_marginTop="8dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?textAppearanceBody1"
-                android:gravity="start"
-                tools:text="Some text" />
+        android:layout_marginLeft="@dimen/story_item_margin"
+        android:layout_marginRight="@dimen/story_item_margin"
+        android:layout_marginTop="@dimen/story_item_margin_vertical"
 
-        </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
 
-        <Button
-            android:id="@+id/storyButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            tools:text="Button" />
+        tools:textColor="@color/white"
+        tools:text="Находите ошибки, не тратя попытки" />
 
-    </LinearLayout>
-</FrameLayout>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/storyText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:textSize="22sp"
+        style="@style/StoriesTitle"
+        android:layout_marginBottom="@dimen/story_item_margin"
+        android:layout_marginLeft="@dimen/story_item_margin"
+        android:layout_marginRight="@dimen/story_item_margin"
+        app:layout_goneMarginBottom="@dimen/story_item_margin_vertical"
+
+        app:layout_constraintBottom_toTopOf="@id/storyButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        tools:textColor="@color/white"
+        tools:text="С помощью запуска кода можно найти большинство ошибок " />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/storyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/story_item_margin"
+        android:layout_marginRight="@dimen/story_item_margin"
+        android:layout_marginBottom="@dimen/story_item_margin_vertical"
+        app:cornerRadius="24dp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        tools:text="Button" />
+</androidx.constraintlayout.widget.ConstraintLayout>

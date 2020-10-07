@@ -1,14 +1,12 @@
 package org.stepic.droid.features.stories.ui.delegate
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.core.view.ViewCompat
 import androidx.core.view.isVisible
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
@@ -19,6 +17,7 @@ import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.features.stories.model.PlainTextWithButtonStoryPart
 import org.stepik.android.model.StoryTemplate
+import org.stepik.android.view.base.routing.InternalDeeplinkRouter
 import ru.nobird.android.stories.model.Story
 import ru.nobird.android.stories.model.StoryPart
 import ru.nobird.android.stories.ui.custom.StoryView
@@ -29,8 +28,6 @@ class PlainTextWithButtonStoryPartDelegate(
     private val context: Context
 ) : StoryPartViewDelegate() {
     companion object {
-        private const val DARK_BACKGROUND_STYLE = "dark"
-
         private const val COLOR_MASK = 0xFF000000.toInt()
     }
 
@@ -67,17 +64,7 @@ class PlainTextWithButtonStoryPartDelegate(
             }
 
     private fun setUpText(view: View, text: StoryTemplate.Text?) {
-        val storyTextContainer = view.storyTextContainer
         if (text != null) {
-            @DrawableRes
-            val textBackgroundRes =
-                if (text.backgroundStyle == DARK_BACKGROUND_STYLE) {
-                    R.drawable.stories_text_background_dark
-                } else {
-                    R.drawable.stories_text_background_light
-                }
-            storyTextContainer.setBackgroundResource(textBackgroundRes)
-
             val storyTitle = view.storyTitle
             val storyText = view.storyText
 
@@ -89,10 +76,6 @@ class PlainTextWithButtonStoryPartDelegate(
             storyTitle.text = text.title
             storyText.text = text.text
             storyText.isVisible = text.text.isNotBlank()
-
-            storyTextContainer.isVisible = true
-        } else {
-            storyTextContainer.isVisible = false
         }
     }
 
@@ -105,7 +88,7 @@ class PlainTextWithButtonStoryPartDelegate(
             storyButton.text = button.title
             storyButton.setOnClickListener {
                 val uri = Uri.parse(button.url)
-                context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+                InternalDeeplinkRouter.openInternalDeeplink(context, uri)
 
                 if (story != null) {
                     analytic.reportAmplitudeEvent(AmplitudeAnalytic.Stories.BUTTON_PRESSED, mapOf(
