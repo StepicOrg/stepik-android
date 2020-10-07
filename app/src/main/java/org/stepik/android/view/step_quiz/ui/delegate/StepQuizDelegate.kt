@@ -43,7 +43,7 @@ class StepQuizDelegate(
 
     init {
         stepQuizActionButton.setOnClickListener { onActionButtonClicked() }
-        stepRetryButton.setOnClickListener { stepQuizPresenter.createAttempt(step) }
+        stepRetryButton.setOnClickListener { stepQuizPresenter.onNewMessage(StepQuizView.Message.CreateAttemptClicked(step)) }
     }
 
     fun onActionButtonClicked() {
@@ -53,12 +53,12 @@ class StepQuizDelegate(
             if (StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state)) {
                 onNextClicked()
             } else {
-                stepQuizPresenter.createAttempt(step)
+                stepQuizPresenter.onNewMessage(StepQuizView.Message.CreateAttemptClicked(step))
             }
         } else {
             when (val replyResult = stepQuizFormDelegate.createReply()) {
                 is ReplyResult.Success ->
-                    stepQuizPresenter.createSubmission(step, replyResult.reply)
+                    stepQuizPresenter.onNewMessage(StepQuizView.Message.CreateSubmissionClicked(step, replyResult.reply))
 
                 is ReplyResult.Error ->
                     stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.message))
@@ -163,6 +163,6 @@ class StepQuizDelegate(
             ?.reply
             ?: return
 
-        stepQuizPresenter.syncReplyState(reply)
+        stepQuizPresenter.onNewMessage(StepQuizView.Message.SyncReply(reply))
     }
 }

@@ -69,7 +69,7 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         stepWrapper = stepWrapperRxRelay.value ?: throw IllegalStateException("Step wrapper cannot be null")
 
         presenter = viewModel(viewModelFactory)
-        presenter.onStepData(stepWrapper, lessonData)
+        presenter.onNewMessage(StepQuizView.Message.InitWithStep(stepWrapper, lessonData))
     }
 
     private fun injectComponent() {
@@ -94,7 +94,9 @@ abstract class DefaultStepQuizFragment : Fragment(), StepQuizView {
         viewStateDelegate.addState<StepQuizView.State.AttemptLoaded>(stepQuizDiscountingPolicy, stepQuizFeedbackBlocks, stepQuizDescription, stepQuizActionContainer, *quizViews)
         viewStateDelegate.addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
 
-        stepQuizNetworkError.tryAgain.setOnClickListener { presenter.onStepData(stepWrapper, lessonData, forceUpdate = true) }
+        stepQuizNetworkError.tryAgain.setOnClickListener {
+            presenter.onNewMessage(StepQuizView.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
+        }
 
         stepQuizDelegate =
             StepQuizDelegate(
