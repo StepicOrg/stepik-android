@@ -141,7 +141,7 @@ class StepQuizReviewFragment :
             }
 
             override fun onSolveAgainClicked() {
-                stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.SolveAgain)
+                stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.SolveAgain(stepWrapper.step))
             }
 
             override fun onStartReviewClicked() {

@@ -80,7 +80,7 @@ interface StepQuizReviewView {
         /**
          * Submission creation or changing
          */
-        object SolveAgain : Message() // solve again
+        data class SolveAgain(val step: Step) : Message() // solve again
         data class ChangeSubmission(val submission: Submission, val attempt: Attempt) : Message() // change solution from existing
 
         /**

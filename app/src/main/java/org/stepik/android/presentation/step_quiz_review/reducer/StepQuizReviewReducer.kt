@@ -89,8 +89,13 @@ constructor(
                 when (state) {
                     is State.SubmissionNotMade -> {
                         val (quizState, quizActions) = stepQuizReducer.reduce(state.quizState, message.message)
-                        // todo handle submission success state
-                        state.copy(quizState = quizState) to quizActions.map(Action::StepQuizAction).toSet()
+                        if (quizState is StepQuizView.State.AttemptLoaded &&
+                            quizState.submissionState.safeCast<StepQuizView.SubmissionState.Loaded>()?.submission?.status == Submission.Status.CORRECT
+                        ) {
+                            State.SubmissionNotSelected(quizState, isSessionCreationInProgress = false, state.progress) to emptySet()
+                        } else {
+                            state.copy(quizState = quizState) to quizActions.map(Action::StepQuizAction).toSet()
+                        }
                     }
 
                     else -> null
@@ -98,8 +103,12 @@ constructor(
 
             is Message.SolveAgain ->
                 when (state) {
-                    is State.SubmissionNotSelected ->
-                        State.SubmissionNotMade(state.quizState, state.progress) to emptySet()
+                    is State.SubmissionNotSelected -> {
+                        val (quizState, quizActions) =
+                            stepQuizReducer.reduce(state.quizState, StepQuizView.Message.CreateAttemptClicked(message.step))
+
+                        State.SubmissionNotMade(quizState, state.progress) to quizActions.map(Action::StepQuizAction).toSet()
+                    }
 
                     else -> null
                 }
