@@ -58,6 +58,7 @@ class StepQuizReviewFragment :
                 AppConstants.TYPE_FREE_ANSWER,
                 AppConstants.TYPE_CHOICE,
                 AppConstants.TYPE_MATCHING,
+                AppConstants.TYPE_SORTING,
                 AppConstants.TYPE_FILL_BLANKS
             )
 
