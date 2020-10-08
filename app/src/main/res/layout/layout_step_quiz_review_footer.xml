@@ -35,6 +35,23 @@
         app:layout_constraintBottom_toBottomOf="@id/reviewStep5BarrierBottom"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reviewStep5Hint"
+        style="@style/StepQuizFeedback.Info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:drawableStartCompat="@drawable/ic_step_quiz_validation"
+        android:textColorLink="?android:textColorPrimary"
+        android:text="@string/step_quiz_review_instructor_completed_hint"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep5BarrierBottom"
+        app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep5Title"
+
+        android:visibility="gone" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/reviewStep5Container"
 
@@ -48,7 +65,7 @@
         style="?materialButtonOutlinedStyle"
         app:strokeColor="?colorPrimary"
 
-        app:layout_constraintTop_toBottomOf="@id/reviewStep5BarrierBottom"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep5Hint"
         app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
         app:layout_constraintEnd_toEndOf="@id/reviewStep5Title" />
 

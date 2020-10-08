@@ -316,6 +316,7 @@ class StepQuizReviewDelegate(
                 }
                 setStepStatus(reviewStep5Title, reviewStep5Link, reviewStep5Status, ReviewStatusView.Status.IN_PROGRESS)
                 reviewStep5Status.status = ReviewStatusView.Status.COMPLETED
+                reviewStep5Hint.isVisible = false
             }
             else -> {
                 val cost = state.safeCast<StepQuizReviewView.State.WithProgress>()?.progress?.cost ?: 0L
@@ -338,6 +339,8 @@ class StepQuizReviewDelegate(
                     } else {
                         ReviewStatusView.Status.PENDING
                     }
+
+                reviewStep5Hint.isVisible = instructionType == ReviewStrategyType.INSTRUCTOR && status == ReviewStatusView.Status.IN_PROGRESS
 
                 setStepStatus(reviewStep5Title, reviewStep5Link, reviewStep5Status, status)
             }
