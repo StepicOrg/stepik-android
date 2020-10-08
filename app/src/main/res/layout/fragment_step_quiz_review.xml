@@ -86,7 +86,7 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <org.stepic.droid.ui.custom.LoadingView
-            android:id="@+id/reviewStep2Link"
+            android:id="@+id/reviewStep2LinkLoading"
             style="@style/StepQuizReview.Link"
             android:background="@null"
 
