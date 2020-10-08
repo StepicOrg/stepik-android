@@ -3,7 +3,6 @@ package org.stepik.android.remote.review_session
 import io.reactivex.Single
 import io.reactivex.functions.Function
 import org.stepik.android.data.review_session.source.ReviewSessionRemoteDataSource
-import org.stepik.android.domain.review_session.model.ReviewSession
 import org.stepik.android.domain.review_session.model.ReviewSessionData
 import org.stepik.android.remote.review_session.model.ReviewSessionRequest
 import org.stepik.android.remote.review_session.model.ReviewSessionResponse

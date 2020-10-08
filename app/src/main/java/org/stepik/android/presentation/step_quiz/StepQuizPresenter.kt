@@ -9,7 +9,7 @@ class StepQuizPresenter
 @Inject
 constructor(
     private val stepQuizReducer: StepQuizReducer,
-    private val stepQuizActionDispatcher: StepQuizActionDispatcher,
+    private val stepQuizActionDispatcher: StepQuizActionDispatcher
 ) : PresenterBase<StepQuizView>() {
     private var state: StepQuizView.State = StepQuizView.State.Idle
         set(value) {

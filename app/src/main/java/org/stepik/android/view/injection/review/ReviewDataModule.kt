@@ -19,7 +19,6 @@ abstract class ReviewDataModule {
         reviewRepositoryImpl: ReviewRepositoryImpl
     ): ReviewRepository
 
-
     @Binds
     internal abstract fun bindReviewRemoteDataSource(
         reviewRemoteDataSourceImpl: ReviewRemoteDataSourceImpl

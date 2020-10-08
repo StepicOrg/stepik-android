@@ -99,7 +99,6 @@ constructor() : StateReducer<State, Message, Action> {
                 } else {
                     null
                 }
-
         } ?: state to emptySet()
 
     private fun createLocalSubmission(oldState: State.AttemptLoaded, reply: Reply): Submission {
@@ -110,5 +109,4 @@ constructor() : StateReducer<State, Message, Action> {
 
         return Submission(id = submissionId, attempt = oldState.attempt.id, _reply = reply, status = Submission.Status.LOCAL, time = Calendar.getInstance().time)
     }
-
 }

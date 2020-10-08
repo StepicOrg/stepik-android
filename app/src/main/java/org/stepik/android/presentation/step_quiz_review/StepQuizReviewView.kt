@@ -123,7 +123,6 @@ interface StepQuizReviewView {
             object ShowNetworkError : ViewAction() // error
             data class OpenReviewScreen(val reviewId: Long) : ViewAction()
         }
-
     }
 
     fun render(state: State)
