@@ -31,7 +31,10 @@ class StepQuizDelegate(
     private val stepQuizDiscountingPolicy: TextView,
 
     private val onNewMessage: (StepQuizView.Message) -> Unit,
-    private val onNextClicked: () -> Unit
+    /**
+     * If null so there is no next action will be shown
+     */
+    private val onNextClicked: (() -> Unit)? = null
 ) {
     private val context = stepQuizActionButton.context
 
@@ -48,8 +51,8 @@ class StepQuizDelegate(
         val state = currentState ?: return
 
         if (StepQuizFormResolver.isSubmissionInTerminalState(state)) {
-            if (StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state)) {
-                onNextClicked()
+            if (StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state) && onNextClicked != null) {
+                onNextClicked.invoke()
             } else {
                 onNewMessage(StepQuizView.Message.CreateAttemptClicked(step))
             }
@@ -112,7 +115,7 @@ class StepQuizDelegate(
         with(state.restrictions) {
             if (StepQuizFormResolver.isSubmissionInTerminalState(state)) {
                 when {
-                    StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state) ->
+                    StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state) && onNextClicked != null ->
                         context.getString(R.string.next)
 
                     maxSubmissionCount in 0 until submissionCount ->

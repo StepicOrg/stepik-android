@@ -170,7 +170,7 @@ class StepQuizReviewFragment :
 
                 stepQuizDiscountingPolicy = reviewStep1Discounting,
                 onNewMessage = { stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.StepQuizMessage(it)) }
-            ) { } // todo disable next action
+            )
 
         delegate =
             StepQuizReviewDelegate(
