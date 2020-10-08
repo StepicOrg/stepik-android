@@ -50,6 +50,17 @@ class StepQuizReviewFragment :
     StepQuizReviewView,
     SubmissionsDialogFragment.Callback {
     companion object {
+        val supportedQuizTypes =
+            setOf(
+                AppConstants.TYPE_STRING,
+                AppConstants.TYPE_NUMBER,
+                AppConstants.TYPE_MATH,
+                AppConstants.TYPE_FREE_ANSWER,
+                AppConstants.TYPE_CHOICE,
+                AppConstants.TYPE_MATCHING,
+                AppConstants.TYPE_FILL_BLANKS
+            )
+
         fun newInstance(stepId: Long, instructionType: ReviewStrategyType): Fragment =
             StepQuizReviewFragment()
                 .apply {
@@ -207,9 +218,6 @@ class StepQuizReviewFragment :
             AppConstants.TYPE_MATCHING ->
                 R.layout.layout_step_quiz_sorting
 
-            AppConstants.TYPE_SQL ->
-                R.layout.layout_step_quiz_sql
-
             AppConstants.TYPE_FILL_BLANKS ->
                 R.layout.layout_step_quiz_fill_blanks
 
@@ -277,7 +285,7 @@ class StepQuizReviewFragment :
      */
     private fun showSubmissions() {
         SubmissionsDialogFragment
-            .newInstance(stepWrapper.step, isSelectionEnabled = true)
+            .newInstance(stepWrapper.step, status = Submission.Status.CORRECT, isSelectionEnabled = true)
             .showIfNotExists(childFragmentManager, SubmissionsDialogFragment.TAG)
     }
 

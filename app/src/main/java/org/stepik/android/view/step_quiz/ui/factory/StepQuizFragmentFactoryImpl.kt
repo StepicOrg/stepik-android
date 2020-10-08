@@ -18,19 +18,26 @@ import javax.inject.Inject
 class StepQuizFragmentFactoryImpl
 @Inject
 constructor() : StepQuizFragmentFactory {
-    override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment =
+    override fun createStepQuizFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment {
+        val instructionType =
+            stepPersistentWrapper.step.instructionType.takeIf { stepPersistentWrapper.step.actions?.doReview != null }
+
+        val blockName = stepPersistentWrapper.step.block?.name
+
+        return if (instructionType != null && blockName in StepQuizReviewFragment.supportedQuizTypes) {
+            StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
+        } else {
+            getDefaultQuizFragment(stepPersistentWrapper)
+        }
+    }
+
+    private fun getDefaultQuizFragment(stepPersistentWrapper: StepPersistentWrapper): Fragment =
         when (stepPersistentWrapper.step.block?.name) {
             AppConstants.TYPE_STRING,
             AppConstants.TYPE_NUMBER,
             AppConstants.TYPE_MATH,
-            AppConstants.TYPE_FREE_ANSWER -> {
-                val instructionType = stepPersistentWrapper.step.instructionType
-                if (stepPersistentWrapper.step.actions?.doReview != null && instructionType != null) {
-                    StepQuizReviewFragment.newInstance(stepPersistentWrapper.step.id, instructionType)
-                } else {
-                    TextStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
-                }
-            }
+            AppConstants.TYPE_FREE_ANSWER ->
+                TextStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
 
             AppConstants.TYPE_CHOICE ->
                 ChoiceStepQuizFragment.newInstance(stepPersistentWrapper.step.id)
