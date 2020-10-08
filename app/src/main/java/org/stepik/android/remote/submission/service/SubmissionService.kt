@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface SubmissionService {
     @POST("api/submissions")
@@ -21,14 +22,6 @@ interface SubmissionService {
 
     @GET("api/submissions?order=desc")
     fun getSubmissions(
-        @Query("step") stepId: Long,
-        @Query("page") page: Int
-    ): Single<SubmissionResponse>
-
-    @GET("api/submissions?order=desc")
-    fun getSubmissions(
-        @Query("step") stepId: Long,
-        @Query("user") user: Long,
-        @Query("page") page: Int
+        @QueryMap queryMap: Map<String, String>
     ): Single<SubmissionResponse>
 }

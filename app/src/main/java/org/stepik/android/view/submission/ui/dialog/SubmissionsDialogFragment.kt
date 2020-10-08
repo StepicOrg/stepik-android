@@ -43,11 +43,18 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     companion object {
         const val TAG = "SubmissionsDialogFragment"
 
-        fun newInstance(step: Step, isSelectionEnabled: Boolean = false): DialogFragment =
+        private const val ARG_STATUS = "status"
+
+        fun newInstance(
+            step: Step,
+            status: Submission.Status? = null,
+            isSelectionEnabled: Boolean = false
+        ): DialogFragment =
             SubmissionsDialogFragment()
                 .apply {
                     this.step = step
                     this.isSelectionEnabled = isSelectionEnabled
+                    this.arguments?.putSerializable(ARG_STATUS, status)
                 }
     }
 
@@ -59,6 +66,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
     private var step: Step by argument()
     private var isSelectionEnabled: Boolean by argument()
+    private var status: Submission.Status? = null
 
     private lateinit var submissionsPresenter: SubmissionsPresenter
 
@@ -82,10 +90,12 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
         injectComponent()
 
+        status = arguments?.getSerializable(ARG_STATUS) as? Submission.Status
+
         submissionsPresenter = ViewModelProviders
             .of(this, viewModelFactory)
             .get(SubmissionsPresenter::class.java)
-        submissionsPresenter.fetchSubmissions(step.id)
+        submissionsPresenter.fetchSubmissions(step.id, status)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -133,7 +143,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
 
             setOnPaginationListener { paginationDirection ->
                 if (paginationDirection == PaginationDirection.NEXT) {
-                    submissionsPresenter.fetchNextPage(step.id)
+                    submissionsPresenter.fetchNextPage(step.id, status)
                 }
             }
 
@@ -142,8 +152,8 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
             })
         }
 
-        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, forceUpdate = true) }
-        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, forceUpdate = true) }
+        swipeRefresh.setOnRefreshListener { submissionsPresenter.fetchSubmissions(step.id, status, forceUpdate = true) }
+        tryAgain.setOnClickListener { submissionsPresenter.fetchSubmissions(step.id, status, forceUpdate = true) }
     }
 
     private fun injectComponent() {
