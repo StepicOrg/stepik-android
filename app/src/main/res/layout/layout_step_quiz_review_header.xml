@@ -44,16 +44,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/reviewStep1BarrierBottom" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/reviewStep1Discounting"
-        style="@style/StepQuizReview.Title"
-
-        android:text="@string/step_quiz_free_answer_description"
-
-        app:layout_constraintStart_toEndOf="@id/reviewStep1Status"
-        app:layout_constraintTop_toBottomOf="@id/reviewStep1DividerTop"
-        app:layout_constraintEnd_toEndOf="parent" />
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/reviewStep1Container"
 
@@ -63,47 +53,69 @@
 
         android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 
-        app:layout_constraintTop_toBottomOf="@id/reviewStep1Discounting"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep1DividerTop"
         app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
         app:layout_constraintEnd_toEndOf="@id/stepQuizDescription">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reviewStep1Discounting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/StepQuizReview.Title"
+            android:layout_margin="0dp"
+
+            android:text="@string/step_quiz_free_answer_description" />
+
         <include
-            android:id="@+id/quizFeedbackView"
-            layout="@layout/layout_step_quiz_feedback_block"
+            android:id="@+id/stepQuizNetworkError"
+            layout="@layout/error_no_connection_with_button_small"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin" />
+
+        <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+            android:id="@+id/stepQuizProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/reviewStep1QuizContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <include
+                android:id="@+id/quizFeedbackView"
+                layout="@layout/layout_step_quiz_feedback_block"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/reviewStep1ActionButton"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="@string/step_quiz_action_button_submit"
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+            android:theme="@style/ThemeOverlay.Green" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/reviewStep1ActionRetry"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="@string/step_quiz_action_button_try_again"
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+            android:theme="@style/ThemeOverlay.Green"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/reviewStep1ActionButton"
-
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-        android:text="@string/step_quiz_action_button_submit"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
-        android:theme="@style/ThemeOverlay.Green"
-
-        app:layout_constraintTop_toBottomOf="@id/reviewStep1Container"
-        app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
-        app:layout_constraintEnd_toEndOf="@id/stepQuizDescription" />
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/reviewStep1ActionRetry"
-
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-
-        android:text="@string/step_quiz_action_button_try_again"
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
-        android:theme="@style/ThemeOverlay.Green"
-
-        app:layout_constraintTop_toBottomOf="@id/reviewStep1ActionButton"
-        app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
-        app:layout_constraintEnd_toEndOf="@id/stepQuizDescription" />
 
     <include
         android:id="@+id/reviewStep1DividerBottom"
@@ -112,7 +124,7 @@
 
         app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reviewStep1ActionRetry" />
+        app:layout_constraintTop_toBottomOf="@id/reviewStep1Container" />
 
     <!-- Step 2 -->
 

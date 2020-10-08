@@ -6,6 +6,7 @@ import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_footer.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
@@ -35,6 +36,22 @@ class StepQuizReviewDelegate(
     private val stepQuizFeedbackMapper = StepQuizFeedbackMapper()
     private val resources = containerView.resources
 
+    private val step1viewStateDelegate = ViewStateDelegate<StepQuizReviewView.State>()
+        .apply {
+            addState<StepQuizReviewView.State.SubmissionNotMade>(
+                reviewStep1DividerBottom, reviewStep1Container, reviewStep1Discounting,
+                reviewStep1ActionButton, reviewStep1ActionRetry
+            )
+        }
+
+    private val step1QuizViewStateDelegate = ViewStateDelegate<StepQuizView.State>()
+        .apply {
+            addState<StepQuizView.State.Loading>(stepQuizProgress)
+            addState<StepQuizView.State.AttemptLoading>(stepQuizProgress)
+            addState<StepQuizView.State.AttemptLoaded>(reviewStep1Discounting, reviewStep1QuizContainer, reviewStep1ActionButton, reviewStep1ActionRetry)
+            addState<StepQuizView.State.NetworkError>(stepQuizNetworkError)
+        }
+
     private val step2viewStateDelegate = ViewStateDelegate<StepQuizReviewView.State>()
         .apply {
             addState<StepQuizReviewView.State.SubmissionNotSelected>(
@@ -46,6 +63,8 @@ class StepQuizReviewDelegate(
         }
 
     init {
+        stepQuizNetworkError.tryAgain.setOnClickListener { actionListener.onQuizTryAgainClicked() }
+
         reviewStep2SelectSubmission.setOnClickListener { actionListener.onSelectDifferentSubmissionClicked() }
         reviewStep2CreateSession.setOnClickListener { actionListener.onCreateSessionClicked() }
         reviewStep2Retry.setOnClickListener { actionListener.onSolveAgainClicked() }
@@ -57,9 +76,6 @@ class StepQuizReviewDelegate(
 
     fun render(state: StepQuizReviewView.State) {
         if (state is StepQuizReviewView.State.WithQuizState) {
-            state.quizState.safeCast<StepQuizView.State.AttemptLoaded>()
-                ?.let(quizDelegate::setState)
-
             quizFeedbackBlocksDelegate.setState(stepQuizFeedbackMapper.mapToStepQuizFeedbackState(blockName, state.quizState))
         }
 
@@ -75,7 +91,7 @@ class StepQuizReviewDelegate(
     }
 
     private fun renderStep1(state: StepQuizReviewView.State) {
-        // todo work with quiz
+        step1viewStateDelegate.switchState(state)
         when (state) {
             is StepQuizReviewView.State.SubmissionNotMade -> {
                 val submissionStatus = state.quizState.safeCast<StepQuizView.State.AttemptLoaded>()
@@ -93,12 +109,13 @@ class StepQuizReviewDelegate(
 
                 stepQuizDescription.isEnabled = true
 
-                if (state.quizState is StepQuizView.State.AttemptLoaded) { // todo handle
+                step1QuizViewStateDelegate.switchState(state.quizState)
+                if (state.quizState is StepQuizView.State.AttemptLoaded) {
                     quizDelegate.setState(state.quizState)
                 }
 
-                setQuizViewParent(quizView, reviewStep1Container)
-                setQuizViewParent(quizFeedbackView, reviewStep1Container)
+                setQuizViewParent(quizView, reviewStep1QuizContainer)
+                setQuizViewParent(quizFeedbackView, reviewStep1QuizContainer)
             }
 
             else -> {
@@ -119,6 +136,8 @@ class StepQuizReviewDelegate(
                 reviewStep2Title.setText(R.string.step_quiz_review_send_in_progress)
                 setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.IN_PROGRESS)
 
+                quizDelegate.setState(state.quizState)
+
                 reviewStep2Loading.isVisible = state.isSessionCreationInProgress
                 reviewStep2CreateSession.isVisible = !state.isSessionCreationInProgress
                 reviewStep2SelectSubmission.isVisible = !state.isSessionCreationInProgress
@@ -130,6 +149,11 @@ class StepQuizReviewDelegate(
             else -> {
                 reviewStep2Title.setText(R.string.step_quiz_review_send_completed)
                 setStepStatus(reviewStep2Title, reviewStep2Link, reviewStep2Status, ReviewStatusView.Status.COMPLETED)
+
+                state.safeCast<StepQuizReviewView.State.WithQuizState>()
+                    ?.quizState
+                    ?.safeCast<StepQuizView.State.AttemptLoaded>()
+                    ?.let(quizDelegate::setState)
 
                 setQuizViewParent(quizView, reviewStep2Container)
                 setQuizViewParent(quizFeedbackView, reviewStep2Container)
@@ -330,6 +354,8 @@ class StepQuizReviewDelegate(
         fun onSelectDifferentSubmissionClicked()
         fun onCreateSessionClicked()
         fun onSolveAgainClicked()
+
+        fun onQuizTryAgainClicked()
 
         fun onStartReviewClicked()
         fun onTakenReviewClicked(sessionId: Long)

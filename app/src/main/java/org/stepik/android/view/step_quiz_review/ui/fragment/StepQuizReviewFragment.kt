@@ -9,7 +9,7 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
-import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
+import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_review.*
 import kotlinx.android.synthetic.main.fragment_step_quiz_review_peer.*
 import kotlinx.android.synthetic.main.layout_step_quiz_review_header.*
@@ -24,6 +24,7 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.ReviewStrategyType
 import org.stepik.android.model.Submission
 import org.stepik.android.model.attempts.Attempt
+import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
 import org.stepik.android.view.base.ui.extension.viewModel
@@ -129,7 +130,8 @@ class StepQuizReviewFragment :
         viewStateDelegate.addState<StepQuizReviewView.State.SubmissionSelected>(stepQuizReviewContainer)
         viewStateDelegate.addState<StepQuizReviewView.State.Completed>(stepQuizReviewContainer)
 
-        tryAgain.setOnClickListener { stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)) }
+        stepQuizReviewNetworkError.tryAgain
+            .setOnClickListener { stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true)) }
 
         val actionListener = object : StepQuizReviewDelegate.ActionListener {
             override fun onSelectDifferentSubmissionClicked() {
@@ -142,6 +144,12 @@ class StepQuizReviewFragment :
 
             override fun onSolveAgainClicked() {
                 stepQuizReviewPresenter.onNewMessage(StepQuizReviewView.Message.SolveAgain(stepWrapper.step))
+            }
+
+            override fun onQuizTryAgainClicked() {
+                stepQuizReviewPresenter.onNewMessage(
+                    StepQuizReviewView.Message.StepQuizMessage(StepQuizView.Message.InitWithStep(stepWrapper, lessonData, forceUpdate = true))
+                )
             }
 
             override fun onStartReviewClicked() {
