@@ -830,6 +830,7 @@
     <string name="step_quiz_review_taken_pending_zero">Wait for %d reviews of your solution</string>
     <string name="step_quiz_review_taken_action">View reviews</string>
     <string name="step_quiz_review_taken_title">Received reviews</string>
+    <string name="step_quiz_review_taken_hint">Average waiting time - 48 hours</string>
 
     <string name="step_quiz_review_instructor_pending">Instructor will grade your solution with the maximum score of %s</string>
     <string name="step_quiz_review_instructor_completed_hint">The instructor’s response will not come immediately, you will receive a notification</string>

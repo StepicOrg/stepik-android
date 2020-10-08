@@ -235,6 +235,7 @@ class StepQuizReviewDelegate(
                 reviewStep4Title.setText(R.string.step_quiz_review_taken_pending_zero)
                 setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.PENDING)
                 reviewStep4Container.isVisible = false
+                reviewStep4Hint.isVisible = false
             }
             is StepQuizReviewView.State.SubmissionSelected -> {
                 val takenReviewCount = state.session.takenReviews.size
@@ -273,6 +274,7 @@ class StepQuizReviewDelegate(
 
                 reviewStep4Container.isVisible = takenReviewCount > 0
                 reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
+                reviewStep4Hint.isVisible = takenReviewCount == 0
             }
             is StepQuizReviewView.State.Completed -> {
                 val takenReviewCount = state.session.takenReviews.size
@@ -280,6 +282,7 @@ class StepQuizReviewDelegate(
                 setStepStatus(reviewStep4Title, reviewStep4Link, reviewStep4Status, ReviewStatusView.Status.COMPLETED)
                 reviewStep4Container.isVisible = takenReviewCount > 0
                 reviewStep4Container.setOnClickListener { actionListener.onTakenReviewClicked(state.session.id) }
+                reviewStep4Hint.isVisible = false
             }
         }
     }

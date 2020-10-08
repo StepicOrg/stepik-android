@@ -797,6 +797,7 @@
     <string name="step_quiz_review_taken_pending_zero">Дождитесь рецензии на своё решение</string>
     <string name="step_quiz_review_taken_action">Смотреть рецензии</string>
     <string name="step_quiz_review_taken_title">Полученные рецензии</string>
+    <string name="step_quiz_review_taken_hint">Обычно первая рецензия приходит через 2 дня после отправки решения на рецензирование (но это не точно)</string>
 
     <string name="step_quiz_review_instructor_pending">Дождитесь оценки преподавателя, максимум за задачу — %s</string>
     <string name="step_quiz_review_instructor_completed_hint">Ответ преподавателя придет не сразу, вы получите уведомление</string>

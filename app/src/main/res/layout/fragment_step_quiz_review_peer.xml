@@ -141,6 +141,23 @@
         app:layout_constraintStart_toStartOf="@id/reviewStep4Title"
         app:layout_constraintEnd_toEndOf="@id/reviewStep4Title" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reviewStep4Hint"
+        style="@style/StepQuizFeedback.Info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:drawableStartCompat="@drawable/ic_step_quiz_validation"
+        android:textColorLink="?android:textColorPrimary"
+        android:text="@string/step_quiz_review_taken_hint"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep4Container"
+        app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep5Title"
+
+        android:visibility="gone" />
+
     <include
         android:id="@+id/reviewStep4DividerBottom"
         layout="@layout/view_divider_vertical"
@@ -148,7 +165,7 @@
 
         app:layout_constraintStart_toStartOf="@id/reviewStep4Title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/reviewStep4Container" />
+        app:layout_constraintTop_toBottomOf="@id/reviewStep4Hint" />
 
     <View
         android:id="@+id/reviewStepLast"
