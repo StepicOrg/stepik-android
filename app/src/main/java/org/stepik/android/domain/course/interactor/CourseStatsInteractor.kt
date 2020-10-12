@@ -15,8 +15,9 @@ import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
-import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
+import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
@@ -31,7 +32,7 @@ constructor(
     private val courseReviewRepository: CourseReviewSummaryRepository,
     private val coursePaymentsRepository: CoursePaymentsRepository,
     private val progressRepository: ProgressRepository,
-    private val userCoursesRepository: UserCoursesRepository
+    private val profileRepository: ProfileRepository
 ) {
     companion object {
         private const val COURSE_TIER_PREFIX = "course_tier_"
@@ -83,12 +84,17 @@ constructor(
     private fun resolveCourseEnrollmentState(course: Course, sourceType: DataSourceType, resolveEnrollmentState: Boolean): Single<Pair<Long, EnrollmentState>> =
         when {
             course.enrollment > 0 ->
-                userCoursesRepository
-                    .getUserCourseByCourseId(course.id, sourceType)
-                    .map {
-                        course.id to EnrollmentState.Enrolled(it) as EnrollmentState
-                    }
-                    .toSingle()
+                profileRepository.getProfile().map { profile ->
+                    course.id to EnrollmentState.Enrolled(
+                        UserCourse(
+                            course = course.id,
+                            user = profile.id,
+                            isArchived = course.isArchived,
+                            isFavorite = course.isFavorite,
+                            lastViewed = null
+                        )
+                    ) as EnrollmentState
+                }
 
             !course.isPaid ->
                 Single.just(course.id to EnrollmentState.NotEnrolledFree)
