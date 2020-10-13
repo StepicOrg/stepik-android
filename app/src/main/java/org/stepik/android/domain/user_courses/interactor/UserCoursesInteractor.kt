@@ -26,7 +26,7 @@ constructor(
             userCoursesRepository
                 .getUserCourseByCourseId(userCourse.course, sourceType = DataSourceType.REMOTE)
                 .flatMapSingle { remoteUserCourse ->
-                    savePublishUserCourse(userCourse.copy(id = remoteUserCourse.id))
+                    savePublishUserCourse(userCourse.copy(id = remoteUserCourse.id, lastViewed = remoteUserCourse.lastViewed))
                 }
         } else {
             savePublishUserCourse(userCourse)
