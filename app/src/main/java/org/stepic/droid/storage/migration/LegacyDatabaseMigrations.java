@@ -200,7 +200,7 @@ final class LegacyDatabaseMigrations {
         String drop = "DROP TABLE " + tempTableName;
         db.execSQL(drop);
     }
-    
+
     static void upgradeFrom1To2(SupportSQLiteDatabase db) {
         createAssignment(db, DbStructureAssignment.ASSIGNMENTS);
         createProgress(db, DbStructureProgress.TABLE_NAME);

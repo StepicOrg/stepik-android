@@ -69,6 +69,10 @@ data class Course(
     val isActive: Boolean = false,
     @SerializedName("is_public")
     val isPublic: Boolean = false,
+    @SerializedName("is_archived")
+    val isArchived: Boolean = false,
+    @SerializedName("is_favorite")
+    val isFavorite: Boolean = false,
 
     @SerializedName("certificate_distinction_threshold")
     val certificateDistinctionThreshold: Long = 0,
@@ -168,6 +172,8 @@ data class Course(
         parcel.writeBoolean(isFeatured)
         parcel.writeBoolean(isActive)
         parcel.writeBoolean(isPublic)
+        parcel.writeBoolean(isArchived)
+        parcel.writeBoolean(isFavorite)
 
         parcel.writeLong(certificateDistinctionThreshold)
         parcel.writeLong(certificateRegularThreshold)
@@ -231,6 +237,8 @@ data class Course(
                 parcel.readString(),
                 parcel.readLong(),
                 parcel.readDouble(),
+                parcel.readBoolean(),
+                parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),

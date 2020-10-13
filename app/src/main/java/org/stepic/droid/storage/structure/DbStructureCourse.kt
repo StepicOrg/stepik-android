@@ -40,6 +40,8 @@ object DbStructureCourse {
         const val IS_FEATURED = "is_featured"
         const val IS_ACTIVE = "is_active"
         const val IS_PUBLIC = "is_public"
+        const val IS_ARCHIVED = "is_archived"
+        const val IS_FAVORITE = "is_favorite"
 
         const val CERTIFICATE_DISTINCTION_THRESHOLD = "certificate_distinction_threshold"
         const val CERTIFICATE_REGULAR_THRESHOLD = "certificate_regular_threshold"
@@ -101,6 +103,8 @@ object DbStructureCourse {
                 ${DbStructureCourse.Columns.IS_FEATURED} INTEGER,
                 ${DbStructureCourse.Columns.IS_ACTIVE} INTEGER,
                 ${DbStructureCourse.Columns.IS_PUBLIC} INTEGER,
+                ${DbStructureCourse.Columns.IS_ARCHIVED} INTEGER,
+                ${DbStructureCourse.Columns.IS_FAVORITE} INTEGER,
                 ${DbStructureCourse.Columns.CERTIFICATE_DISTINCTION_THRESHOLD} INTEGER,
                 ${DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD} INTEGER,
                 ${DbStructureCourse.Columns.CERTIFICATE_LINK} TEXT,
