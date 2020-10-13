@@ -48,7 +48,7 @@ constructor(
                         val attemptCompletable = Completable
                             .concat(steps.map(::resolveStepAttempt))
                         progressRepository
-                            .getProgresses(*steps.getProgresses())
+                            .getProgresses(steps.getProgresses())
                             .ignoreElement()
                             .andThen(attemptCompletable)
                     } else {

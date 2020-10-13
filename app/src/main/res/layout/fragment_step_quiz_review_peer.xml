@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/stepQuizReviewContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include layout="@layout/layout_step_quiz_review_header" />
+
+    <!-- Step 3 -->
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/reviewStep3BarrierBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="reviewStep3Status,reviewStep3Title" />
+
+    <org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
+        android:id="@+id/reviewStep3Status"
+        style="@style/StepQuizReview.Status"
+
+        app:position="3"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/reviewStep2DividerBottom"
+        app:layout_constraintBottom_toBottomOf="@id/reviewStep3BarrierBottom" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/reviewStep3Title"
+        style="@style/StepQuizReview.Title"
+
+        android:text="@string/step_quiz_review_send_pending"
+
+        app:layout_constraintStart_toEndOf="@id/reviewStep3Status"
+        app:layout_constraintTop_toTopOf="@id/reviewStep2DividerBottom"
+        app:layout_constraintBottom_toBottomOf="@id/reviewStep3BarrierBottom"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/reviewStep3Link"
+        style="@style/StepQuizReview.Link"
+
+        app:layout_constraintStart_toStartOf="@id/reviewStep3Status"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep3Status"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep2Status"
+        app:layout_constraintBottom_toTopOf="@id/reviewStep3Status" />
+
+    <org.stepic.droid.ui.custom.LoadingView
+        android:id="@+id/reviewStep3Loading"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        app:radius="?cornerRadius"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep3BarrierBottom"
+        app:layout_constraintStart_toStartOf="@id/reviewStep3Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep3Title" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/reviewStep3Container"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:text="@string/step_quiz_review_given_start_review"
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        android:theme="@style/ThemeOverlay.Green"
+
+        app:layout_constraintTop_toBottomOf="@id/reviewStep3Loading"
+        app:layout_constraintStart_toStartOf="@id/reviewStep3Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep3Title" />
+
+    <include
+        android:id="@+id/reviewStep3DividerBottom"
+        layout="@layout/view_divider_vertical"
+        style="@style/StepQuizReview.Divider"
+
+        app:layout_constraintStart_toStartOf="@id/reviewStep3Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep3Container" />
+
+    <!-- Step 4 -->
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/reviewStep4BarrierBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="reviewStep4Status,reviewStep4Title" />
+
+    <org.stepik.android.view.step_quiz_review.ui.widget.ReviewStatusView
+        android:id="@+id/reviewStep4Status"
+        style="@style/StepQuizReview.Status"
+
+        app:position="4"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/reviewStep3DividerBottom"
+        app:layout_constraintBottom_toBottomOf="@id/reviewStep4BarrierBottom" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/reviewStep4Title"
+        style="@style/StepQuizReview.Title"
+
+        android:text="@string/step_quiz_review_send_pending"
+
+        app:layout_constraintStart_toEndOf="@id/reviewStep4Status"
+        app:layout_constraintTop_toTopOf="@id/reviewStep3DividerBottom"
+        app:layout_constraintBottom_toBottomOf="@id/reviewStep4BarrierBottom"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <View
+        android:id="@+id/reviewStep4Link"
+        style="@style/StepQuizReview.Link"
+
+        app:layout_constraintStart_toStartOf="@id/reviewStep4Status"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep4Status"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep3Status"
+        app:layout_constraintBottom_toTopOf="@id/reviewStep4Status" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/reviewStep4Container"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        android:text="@string/step_quiz_review_taken_action"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep4BarrierBottom"
+
+        android:theme="@style/ThemeOverlay.Green"
+        style="?materialButtonOutlinedStyle"
+        app:strokeColor="?colorPrimary"
+
+        app:layout_constraintStart_toStartOf="@id/reviewStep4Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep4Title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/reviewStep4Hint"
+        style="@style/StepQuizFeedback.Info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+
+        app:drawableStartCompat="@drawable/ic_step_quiz_validation"
+        android:textColorLink="?android:textColorPrimary"
+        android:text="@string/step_quiz_review_taken_hint"
+
+        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep4Container"
+        app:layout_constraintStart_toStartOf="@id/reviewStep5Title"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep5Title"
+
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/reviewStep4DividerBottom"
+        layout="@layout/view_divider_vertical"
+        style="@style/StepQuizReview.Divider"
+
+        app:layout_constraintStart_toStartOf="@id/reviewStep4Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep4Hint" />
+
+    <View
+        android:id="@+id/reviewStepLast"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep4DividerBottom" />
+
+    <!-- Step 5 -->
+
+    <include layout="@layout/layout_step_quiz_review_footer" />
+
+    <View
+        android:id="@+id/reviewStep5Link"
+        style="@style/StepQuizReview.Link"
+
+        app:layout_constraintStart_toStartOf="@id/reviewStep5Status"
+        app:layout_constraintEnd_toEndOf="@id/reviewStep5Status"
+        app:layout_constraintTop_toBottomOf="@id/reviewStep4Status"
+        app:layout_constraintBottom_toTopOf="@id/reviewStep5Status" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

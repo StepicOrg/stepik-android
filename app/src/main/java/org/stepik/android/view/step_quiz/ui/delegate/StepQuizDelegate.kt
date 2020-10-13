@@ -14,7 +14,6 @@ import org.stepik.android.domain.step_quiz.model.StepQuizLessonData
 import org.stepik.android.model.DiscountingPolicyType
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
-import org.stepik.android.presentation.step_quiz.StepQuizPresenter
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz.model.ReplyResult
 import org.stepik.android.view.step_quiz.mapper.StepQuizFeedbackMapper
@@ -31,9 +30,11 @@ class StepQuizDelegate(
     private val stepRetryButton: MaterialButton,
     private val stepQuizDiscountingPolicy: TextView,
 
-    private val stepQuizPresenter: StepQuizPresenter,
-
-    private val onNextClicked: () -> Unit
+    private val onNewMessage: (StepQuizView.Message) -> Unit,
+    /**
+     * If null so there is no next action will be shown
+     */
+    private val onNextClicked: (() -> Unit)? = null
 ) {
     private val context = stepQuizActionButton.context
 
@@ -43,22 +44,22 @@ class StepQuizDelegate(
 
     init {
         stepQuizActionButton.setOnClickListener { onActionButtonClicked() }
-        stepRetryButton.setOnClickListener { stepQuizPresenter.createAttempt(step) }
+        stepRetryButton.setOnClickListener { onNewMessage(StepQuizView.Message.CreateAttemptClicked(step)) }
     }
 
     fun onActionButtonClicked() {
         val state = currentState ?: return
 
         if (StepQuizFormResolver.isSubmissionInTerminalState(state)) {
-            if (StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state)) {
-                onNextClicked()
+            if (StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state) && onNextClicked != null) {
+                onNextClicked.invoke()
             } else {
-                stepQuizPresenter.createAttempt(step)
+                onNewMessage(StepQuizView.Message.CreateAttemptClicked(step))
             }
         } else {
             when (val replyResult = stepQuizFormDelegate.createReply()) {
                 is ReplyResult.Success ->
-                    stepQuizPresenter.createSubmission(step, replyResult.reply)
+                    onNewMessage(StepQuizView.Message.CreateSubmissionClicked(step, replyResult.reply))
 
                 is ReplyResult.Error ->
                     stepQuizFeedbackBlocksDelegate.setState(StepQuizFeedbackState.Validation(replyResult.message))
@@ -114,7 +115,7 @@ class StepQuizDelegate(
         with(state.restrictions) {
             if (StepQuizFormResolver.isSubmissionInTerminalState(state)) {
                 when {
-                    StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state) ->
+                    StepQuizFormResolver.canMoveToNextStep(step, stepQuizLessonData, state) && onNextClicked != null ->
                         context.getString(R.string.next)
 
                     maxSubmissionCount in 0 until submissionCount ->
@@ -163,6 +164,6 @@ class StepQuizDelegate(
             ?.reply
             ?: return
 
-        stepQuizPresenter.syncReplyState(reply)
+        onNewMessage(StepQuizView.Message.SyncReply(reply))
     }
 }

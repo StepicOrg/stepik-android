@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface AssignmentService {
     @GET("api/assignments")
-    fun getAssignments(@Query("ids[]") assignmentsIds: LongArray): Single<AssignmentResponse>
+    fun getAssignments(@Query("ids[]") assignmentsIds: List<Long>): Single<AssignmentResponse>
 }

@@ -132,6 +132,10 @@ android {
     }
 }
 
+androidExtensions {
+    experimental = true
+}
+
 dependencies {
     implementation project(':androidsvg')
     implementation files('libs/flexbox-release.aar')

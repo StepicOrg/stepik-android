@@ -13,7 +13,7 @@ interface SubmissionRepository {
     /**
      * If [userId] not specified all available submissions will be returned
      */
-    fun getSubmissionsForStep(stepId: Long, userId: Long? = null, page: Int = 1): Single<PagedList<Submission>>
+    fun getSubmissionsForStep(stepId: Long, userId: Long? = null, status: Submission.Status? = null, page: Int = 1): Single<PagedList<Submission>>
 
     fun removeSubmissionsForAttempt(attemptId: Long): Completable
 }

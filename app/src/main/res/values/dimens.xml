@@ -196,6 +196,12 @@
     <dimen name="step_quiz_fill_blanks_select_popup_margin">32dp</dimen>
     <dimen name="step_quiz_fill_blanks_select_popup_max_width">320dp</dimen>
 
+    <!-- Peer review -->
+    <dimen name="step_quiz_review_status_size">24dp</dimen>
+    <dimen name="step_quiz_review_status_margin">8dp</dimen>
+    <dimen name="step_quiz_review_title_margin">16dp</dimen>
+    <dimen name="step_quiz_review_vertical_block_margin">16dp</dimen>
+
     <!-- Comments -->
     <dimen name="comment_user_image_size">36dp</dimen>
     <dimen name="comment_item_text_line">22sp</dimen>

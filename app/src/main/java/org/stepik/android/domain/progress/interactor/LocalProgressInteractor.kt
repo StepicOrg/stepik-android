@@ -6,7 +6,6 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.util.PagedList
-import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.progress.mapper.getProgresses
@@ -20,8 +19,8 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
-import ru.nobird.android.core.model.flatten
 import ru.nobird.android.core.model.distinct
+import ru.nobird.android.core.model.mapToLongArray
 import javax.inject.Inject
 
 class LocalProgressInteractor
@@ -54,7 +53,7 @@ constructor(
             }
             .flatMap { progressIds ->
                 progressRepository
-                    .getProgresses(*progressIds)
+                    .getProgresses(progressIds)
             }
             .doOnSuccess { progresses ->
                 progresses.forEach(progressesPublisher::onNext)
@@ -63,7 +62,7 @@ constructor(
 
     private fun getAssignments(steps: List<Step>, units: List<Unit>): Single<List<Assignment>> =
         assignmentRepository
-            .getAssignments(*units.mapNotNull(Unit::assignments).flatten().distinct())
+            .getAssignments(units.mapNotNull(Unit::assignments).flatten().distinct())
             .map { assignments ->
                 assignments
                     .filter { assignment ->

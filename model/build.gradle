@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 apply from: '../code_quality_tools/jacoco.gradle'
 
 android {
@@ -29,6 +30,7 @@ android {
 dependencies {
     implementation libraries.kotlinStd
     implementation libraries.gson
+    implementation libraries.model
 
     testImplementation libraries.junit
     testImplementation libraries.robolectric

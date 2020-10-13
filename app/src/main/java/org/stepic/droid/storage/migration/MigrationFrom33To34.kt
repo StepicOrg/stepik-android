@@ -1,6 +1,7 @@
 package org.stepic.droid.storage.migration
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepic.droid.persistence.model.PersistentItem
 import org.stepic.droid.persistence.model.PersistentState
 import org.stepic.droid.persistence.storage.structure.DBStructurePersistentItem
@@ -13,8 +14,8 @@ import org.stepic.droid.storage.structure.DbStructureStep
 import org.stepic.droid.storage.structure.DbStructureUnit
 import org.stepic.droid.storage.structure.DbStructureVideoUrl
 
-object MigrationFrom33To34 : Migration {
-    override fun migrate(db: SQLiteDatabase) {
+object MigrationFrom33To34 : Migration(33, 34) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         DBStructurePersistentItem.createTable(db)
         DBStructurePersistentState.createTable(db)
 
@@ -22,14 +23,14 @@ object MigrationFrom33To34 : Migration {
         migrateCachedVideo(db)
     }
 
-    private fun migrateToPersistentState(db: SQLiteDatabase) {
+    private fun migrateToPersistentState(db: SupportSQLiteDatabase) {
         migrateStepsToPersistentState(db)
         migrateLessonsToPersistentState(db)
         migrateUnitsToPersistentState(db)
         migrateSectionsToPersistentState(db)
     }
 
-    private fun migrateStepsToPersistentState(db: SQLiteDatabase) {
+    private fun migrateStepsToPersistentState(db: SupportSQLiteDatabase) {
         val sql =
                 "REPLACE INTO ${DBStructurePersistentState.TABLE_NAME} " +
                 "SELECT ${DbStructureStep.Column.STEP_ID}, ?, ? FROM ${DbStructureStep.STEPS} WHERE ${DbStructureStep.Column.IS_CACHED} = 1"
@@ -37,7 +38,7 @@ object MigrationFrom33To34 : Migration {
         db.execSQL(sql, arrayOf(PersistentState.Type.STEP.name, PersistentState.State.CACHED))
     }
 
-    private fun migrateLessonsToPersistentState(db: SQLiteDatabase) {
+    private fun migrateLessonsToPersistentState(db: SupportSQLiteDatabase) {
         val sql =
                 "REPLACE INTO ${DBStructurePersistentState.TABLE_NAME} " +
                 "SELECT ${DbStructureLesson.Column.LESSON_ID}, ?, ? FROM ${DbStructureLesson.LESSONS} WHERE ${DbStructureLesson.Column.IS_CACHED} = 1"
@@ -45,7 +46,7 @@ object MigrationFrom33To34 : Migration {
         db.execSQL(sql, arrayOf(PersistentState.Type.LESSON.name, PersistentState.State.CACHED))
     }
 
-    private fun migrateUnitsToPersistentState(db: SQLiteDatabase) {
+    private fun migrateUnitsToPersistentState(db: SupportSQLiteDatabase) {
         val sql =
                 "REPLACE INTO ${DBStructurePersistentState.TABLE_NAME} " +
                 "SELECT ${DbStructureUnit.UNITS}.${DbStructureUnit.Column.UNIT_ID}, ?, ? FROM ${DbStructureUnit.UNITS} " +
@@ -56,7 +57,7 @@ object MigrationFrom33To34 : Migration {
         db.execSQL(sql, arrayOf(PersistentState.Type.UNIT.name, PersistentState.State.CACHED))
     }
 
-    private fun migrateSectionsToPersistentState(db: SQLiteDatabase) {
+    private fun migrateSectionsToPersistentState(db: SupportSQLiteDatabase) {
         val sql =
                 "REPLACE INTO ${DBStructurePersistentState.TABLE_NAME} " +
                 "SELECT ${DbStructureSections.Column.SECTION_ID}, ?, ? FROM ${DbStructureSections.SECTIONS} WHERE ${DbStructureSections.Column.IS_CACHED} = 1"
@@ -64,12 +65,12 @@ object MigrationFrom33To34 : Migration {
         db.execSQL(sql, arrayOf(PersistentState.Type.SECTION.name, PersistentState.State.CACHED))
     }
 
-    private fun migrateCachedVideo(db: SQLiteDatabase) {
+    private fun migrateCachedVideo(db: SupportSQLiteDatabase) {
         migrateThumbnails(db)
         migrateVideo(db)
     }
 
-    private fun migrateVideo(db: SQLiteDatabase) = migrateFromCachedVideos(
+    private fun migrateVideo(db: SupportSQLiteDatabase) = migrateFromCachedVideos(
             db,
             "${DbStructureVideoUrl.externalVideosName}.${DbStructureVideoUrl.Column.url}",
             "${DbStructureCachedVideo.CACHED_VIDEO}.${DbStructureCachedVideo.Column.URL}",
@@ -80,7 +81,7 @@ object MigrationFrom33To34 : Migration {
                     "${DbStructureVideoUrl.externalVideosName}.${DbStructureVideoUrl.Column.quality} "
     )
 
-    private fun migrateThumbnails(db: SQLiteDatabase) = migrateFromCachedVideos(
+    private fun migrateThumbnails(db: SupportSQLiteDatabase) = migrateFromCachedVideos(
             db,
             "${DbStructureBlock.BLOCKS}.${DbStructureBlock.Column.EXTERNAL_THUMBNAIL}",
             "${DbStructureCachedVideo.CACHED_VIDEO}.${DbStructureCachedVideo.Column.THUMBNAIL}",
@@ -90,7 +91,7 @@ object MigrationFrom33To34 : Migration {
     )
 
     private fun migrateFromCachedVideos(
-            db: SQLiteDatabase,
+            db: SupportSQLiteDatabase,
             originalPathSelector: String,
             localFileNameSelector: String,
             urlTableJoining: String

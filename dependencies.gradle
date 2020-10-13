@@ -7,7 +7,7 @@ ext.versions = [
         compileSdk           : 28,
         buildTools           : '28.0.3',
 
-        androidGradlePlugin  : '4.0.1',
+        androidGradlePlugin  : '4.0.2',
         kotlin               : '1.4.0',
         googleServicesVersion: '4.2.0',
         dexcount             : '1.0.3',

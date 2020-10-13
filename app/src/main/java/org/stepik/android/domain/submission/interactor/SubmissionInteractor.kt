@@ -23,9 +23,9 @@ constructor(
     private val userPreferences: UserPreferences,
     private val userRepository: UserRepository
 ) {
-    fun getSubmissionItems(stepId: Long, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
+    fun getSubmissionItems(stepId: Long, status: Submission.Status?, page: Int = 1): Single<PagedList<SubmissionItem.Data>> =
         submissionRepository
-            .getSubmissionsForStep(stepId, userPreferences.userId, page)
+            .getSubmissionsForStep(stepId, userPreferences.userId, status, page)
             .flatMap { submissions ->
                 val attemptIds = submissions.mapToLongArray(Submission::attempt)
 

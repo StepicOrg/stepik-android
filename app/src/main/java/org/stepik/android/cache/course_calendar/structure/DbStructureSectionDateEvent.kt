@@ -1,6 +1,6 @@
 package org.stepik.android.cache.course_calendar.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureSectionDateEvent {
     const val TABLE_NAME = "course_calendar"
@@ -10,11 +10,11 @@ object DbStructureSectionDateEvent {
         const val SECTION_ID = "section_id"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
-            CREATE TABLE IF NOT EXISTS ${DbStructureSectionDateEvent.TABLE_NAME} (
-                ${DbStructureSectionDateEvent.Columns.EVENT_ID} LONG PRIMARY KEY,
-                ${DbStructureSectionDateEvent.Columns.SECTION_ID} LONG
+            CREATE TABLE IF NOT EXISTS $TABLE_NAME (
+                ${Columns.EVENT_ID} LONG PRIMARY KEY,
+                ${Columns.SECTION_ID} LONG
             )
         """.trimIndent())
     }
