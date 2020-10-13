@@ -22,9 +22,15 @@ constructor(
     private val userCoursesOperationPublisher: PublishSubject<UserCourse>
 ) {
     fun saveUserCourse(userCourse: UserCourse): Single<UserCourse> =
-        userCoursesRepository
-            .saveUserCourse(userCourse)
-            .doOnSuccess(userCoursesOperationPublisher::onNext)
+        if (userCourse.id == 0L) {
+            userCoursesRepository
+                .getUserCourseByCourseId(userCourse.course, sourceType = DataSourceType.REMOTE)
+                .flatMapSingle { remoteUserCourse ->
+                    savePublishUserCourse(userCourse.copy(id = remoteUserCourse.id))
+                }
+        } else {
+            savePublishUserCourse(userCourse)
+        }
 
     fun addUserCourse(courseId: Long): Completable =
         profileRepository.getProfile().flatMapCompletable { profile ->
@@ -44,8 +50,8 @@ constructor(
     fun removeUserCourse(courseId: Long): Completable =
         userCoursesRepository.removeUserCourse(courseId)
 
-    fun getUserCourseByCourseId(courseId: Long): Single<UserCourse> =
+    private fun savePublishUserCourse(userCourse: UserCourse): Single<UserCourse> =
         userCoursesRepository
-            .getUserCourseByCourseId(courseId, sourceType = DataSourceType.REMOTE)
-            .toSingle()
+            .saveUserCourse(userCourse)
+            .doOnSuccess(userCoursesOperationPublisher::onNext)
 }

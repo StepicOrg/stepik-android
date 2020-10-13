@@ -477,29 +477,7 @@ constructor(
             }
 
         state = courseStateMapper.mutateEnrolledState(state) { copy(isUserCourseUpdating = true) }
-        if (userCourse.id == 0L) {
-            fetchUserCourse(userCourse, userCourseAction)
-        } else {
-            saveUserCourse(userCourse, userCourseAction)
-        }
-    }
-
-    private fun fetchUserCourse(userCourse: UserCourse, userCourseAction: UserCourseAction) {
-        userCourseDisposable += userCoursesInteractor
-            .getUserCourseByCourseId(userCourse.course)
-            .subscribeOn(backgroundScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { remoteUserCourse ->
-                    val modifiedUserCourse = remoteUserCourse.copy(isFavorite = userCourse.isFavorite, isArchived = userCourse.isArchived)
-                    state = courseStateMapper.mutateEnrolledState(state) { copy(userCourse = modifiedUserCourse, isUserCourseUpdating = true) }
-                    saveUserCourse(modifiedUserCourse, userCourseAction)
-                },
-                onError = {
-                    state = courseStateMapper.mutateEnrolledState(state) { copy(isUserCourseUpdating = false) }
-                    view?.showSaveUserCourseError(userCourseAction)
-                }
-            )
+        saveUserCourse(userCourse, userCourseAction)
     }
 
     private fun saveUserCourse(userCourse: UserCourse, userCourseAction: UserCourseAction) {
