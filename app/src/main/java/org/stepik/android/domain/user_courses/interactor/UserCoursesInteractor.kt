@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
@@ -42,4 +43,9 @@ constructor(
 
     fun removeUserCourse(courseId: Long): Completable =
         userCoursesRepository.removeUserCourse(courseId)
+
+    fun getUserCourseByCourseId(courseId: Long): Single<UserCourse> =
+        userCoursesRepository
+            .getUserCourseByCourseId(courseId, sourceType = DataSourceType.REMOTE)
+            .toSingle()
 }
