@@ -17,11 +17,7 @@ constructor(
     private val progressResponseMapper =
         Function<ProgressResponse, List<Progress>>(ProgressResponse::progresses)
 
-    override fun getProgress(progressId: String): Single<Progress> =
-        getProgresses(progressId)
-            .map { it.first() }
-
-    override fun getProgresses(vararg progressIds: String): Single<List<Progress>> =
+    override fun getProgresses(progressIds: List<String>): Single<List<Progress>> =
         progressIds
             .chunkedSingleMap { ids ->
                 progressService.getProgresses(ids)

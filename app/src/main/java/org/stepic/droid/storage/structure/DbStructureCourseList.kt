@@ -1,29 +1,14 @@
 package org.stepic.droid.storage.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Deprecated("Removed structure")
 object DbStructureCourseList {
-    const val TABLE_NAME = "course_list"
+    private const val TABLE_NAME = "course_list"
 
-    object Columns {
-        const val TYPE = "type"
-        const val COURSE_ID = "course_id"
-    }
-
-    fun createTable(db: SQLiteDatabase) {
+    fun dropTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
-            CREATE TABLE IF NOT EXISTS $TABLE_NAME (
-                ${Columns.TYPE} TEXT,
-                ${Columns.COURSE_ID} LONG,
-                PRIMARY KEY (${Columns.TYPE}, ${Columns.COURSE_ID})
-            )
-        """.trimIndent())
-    }
-
-    fun dropTable(db: SQLiteDatabase) {
-        db.execSQL("""
-            DROP TABLE IF EXISTS ${DbStructureCourseList.TABLE_NAME}
+            DROP TABLE IF EXISTS $TABLE_NAME
         """.trimIndent())
     }
 }

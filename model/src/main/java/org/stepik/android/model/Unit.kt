@@ -1,24 +1,21 @@
 package org.stepik.android.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.readDate
-import org.stepik.android.model.util.writeBoolean
-import org.stepik.android.model.util.writeDate
-
+import kotlinx.android.parcel.Parcelize
+import ru.nobird.android.core.model.Identifiable
 import java.util.Date
 
+@Parcelize
 class Unit(
     @SerializedName("id")
-    val id: Long = 0,
+    override val id: Long = 0,
     @SerializedName("section")
     val section: Long = 0,
     @SerializedName("lesson")
     val lesson: Long = 0,
     @SerializedName("assignments")
-    val assignments: LongArray? = null,
+    val assignments: List<Long>? = null,
     @SerializedName("position")
     val position: Int = 0,
     @SerializedName("progress")
@@ -54,56 +51,4 @@ class Unit(
     val createDate: Date? = null,
     @SerializedName("update_date")
     val updateDate: Date? = null
-) : Parcelable, Progressable {
-
-    override fun describeContents(): Int = 0
-
-    override fun writeToParcel(dest: Parcel, flags: Int) {
-        dest.writeLong(this.id)
-        dest.writeLong(this.section)
-        dest.writeLong(this.lesson)
-        dest.writeLongArray(this.assignments)
-        dest.writeInt(this.position)
-        dest.writeString(this.progress)
-        dest.writeDate(this.beginDate)
-        dest.writeDate(this.endDate)
-        dest.writeDate(this.softDeadline)
-        dest.writeDate(this.hardDeadline)
-        dest.writeString(this.gradingPolicy)
-        dest.writeString(this.beginDateSource)
-        dest.writeString(this.endDateSource)
-        dest.writeString(this.softDeadlineSource)
-        dest.writeString(this.hardDeadlineSource)
-        dest.writeString(this.gradingPolicySource)
-        dest.writeBoolean(isActive)
-        dest.writeDate(this.createDate)
-        dest.writeDate(this.updateDate)
-    }
-
-    companion object CREATOR : Parcelable.Creator<Unit> {
-        override fun createFromParcel(parcel: Parcel): Unit =
-            Unit(
-                parcel.readLong(),
-                parcel.readLong(),
-                parcel.readLong(),
-                parcel.createLongArray(),
-                parcel.readInt(),
-                parcel.readString(),
-                parcel.readDate(),
-                parcel.readDate(),
-                parcel.readDate(),
-                parcel.readDate(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readBoolean(),
-                parcel.readDate(),
-                parcel.readDate()
-            )
-
-        override fun newArray(size: Int): Array<Unit?> = arrayOfNulls(size)
-    }
-}
+) : Parcelable, Progressable, Identifiable<Long>

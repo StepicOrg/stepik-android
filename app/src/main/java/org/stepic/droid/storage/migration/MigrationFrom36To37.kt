@@ -1,9 +1,9 @@
 package org.stepic.droid.storage.migration
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepic.droid.storage.structure.DbStructureBlock
 import org.stepic.droid.storage.structure.DbStructureCourse
-import org.stepic.droid.storage.structure.DbStructureCourseList
 import org.stepic.droid.storage.structure.DbStructureLastStep
 import org.stepic.droid.storage.structure.DbStructureProgress
 import org.stepic.droid.storage.structure.DbStructureSections
@@ -15,8 +15,8 @@ import org.stepik.android.cache.user.structure.DbStructureUser
 import org.stepik.android.cache.video.structure.VideoDbScheme
 import org.stepik.android.cache.video.structure.VideoUrlDbScheme
 
-object MigrationFrom36To37 : Migration {
-    override fun migrate(db: SQLiteDatabase) {
+object MigrationFrom36To37 : Migration(36, 37) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         migrateUser(db)
         migrateLastStep(db)
         migrateCourses(db)
@@ -27,21 +27,20 @@ object MigrationFrom36To37 : Migration {
         migrateProgress(db)
     }
 
-    private fun migrateUser(db: SQLiteDatabase) {
+    private fun migrateUser(db: SupportSQLiteDatabase) {
         DbStructureUser.createTable(db)
     }
 
-    private fun migrateLastStep(db: SQLiteDatabase) {
+    private fun migrateLastStep(db: SupportSQLiteDatabase) {
         db.execSQL("DROP TABLE IF EXISTS last_steps")
         DbStructureLastStep.createTable(db)
     }
 
-    private fun migrateCourses(db: SQLiteDatabase) {
+    private fun migrateCourses(db: SupportSQLiteDatabase) {
         DbStructureCourse.createTable(db)
-        DbStructureCourseList.createTable(db)
     }
 
-    private fun migrateBlockVideos(db: SQLiteDatabase) {
+    private fun migrateBlockVideos(db: SupportSQLiteDatabase) {
         VideoDbScheme.createTable(db)
         VideoUrlDbScheme.createTable(db)
 
@@ -67,7 +66,7 @@ object MigrationFrom36To37 : Migration {
         """.trimIndent())
     }
 
-    private fun migrateLessons(db: SQLiteDatabase) {
+    private fun migrateLessons(db: SupportSQLiteDatabase) {
         DbStructureLesson.createTable(db)
 
         db.execSQL("""
@@ -96,7 +95,7 @@ object MigrationFrom36To37 : Migration {
         """.trimIndent())
     }
 
-    private fun migrateUnits(db: SQLiteDatabase) {
+    private fun migrateUnits(db: SupportSQLiteDatabase) {
         DbStructureUnit.createTable(db)
 
         db.execSQL("""
@@ -125,7 +124,7 @@ object MigrationFrom36To37 : Migration {
         """.trimIndent())
     }
 
-    private fun migrateSections(db: SQLiteDatabase) {
+    private fun migrateSections(db: SupportSQLiteDatabase) {
         DbStructureSection.createTable(db)
 
         db.execSQL("""
@@ -154,9 +153,11 @@ object MigrationFrom36To37 : Migration {
                 ${DbStructureSections.Column.REQUIRED_PERCENT}
             FROM ${DbStructureSections.SECTIONS}
         """.trimIndent())
+
+        db.execSQL("DROP TABLE IF EXISTS ${DbStructureSections.SECTIONS}")
     }
 
-    private fun migrateProgress(db: SQLiteDatabase) {
+    private fun migrateProgress(db: SupportSQLiteDatabase) {
         val tmpTable = "progress_migration_37"
         db.execSQL("ALTER TABLE ${DbStructureProgress.TABLE_NAME} RENAME TO $tmpTable")
 

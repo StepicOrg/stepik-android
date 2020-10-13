@@ -1,6 +1,7 @@
 package org.stepic.droid.storage.structure
 
 import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureCourse {
     const val TABLE_NAME = "course"
@@ -72,7 +73,7 @@ object DbStructureCourse {
         const val PRICE_TIER = "price_tier"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS ${DbStructureCourse.TABLE_NAME} (
                 ${DbStructureCourse.Columns.ID} LONG PRIMARY KEY,

@@ -1,6 +1,6 @@
 package org.stepik.android.cache.course_reviews.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureCourseReview {
     const val TABLE_NAME = "course_reviews"
@@ -15,7 +15,7 @@ object DbStructureCourseReview {
         const val UPDATE_DATE = "update_date"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${DbStructureCourseReview.Columns.ID} LONG PRIMARY KEY,

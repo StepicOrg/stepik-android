@@ -1,6 +1,6 @@
 package org.stepik.android.cache.section.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureSection {
     const val TABLE_NAME = "section"
@@ -29,7 +29,7 @@ object DbStructureSection {
         const val REQUIRED_PERCENT = "required_percent"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${DbStructureSection.Columns.ID} LONG PRIMARY KEY,

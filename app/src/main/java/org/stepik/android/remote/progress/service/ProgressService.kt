@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface ProgressService {
     @GET("api/progresses")
-    fun getProgresses(@Query("ids[]") progresses: Array<String>): Single<ProgressResponse>
+    fun getProgresses(@Query("ids[]") progresses: List<String>): Single<ProgressResponse>
 }

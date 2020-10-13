@@ -1,6 +1,6 @@
 package org.stepic.droid.storage.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureProgress {
     const val TABLE_NAME = "progress"
@@ -25,7 +25,7 @@ object DbStructureProgress {
         const val IS_PASSED = "is_passed"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${DbStructureProgress.Columns.ID} TEXT PRIMARY KEY,

@@ -1,11 +1,12 @@
 package org.stepik.android.model
 
 import com.google.gson.annotations.SerializedName
+import ru.nobird.android.core.model.Identifiable
 import java.util.*
 
 class Assignment(
     @SerializedName("id")
-    val id: Long,
+    override val id: Long,
     @SerializedName("step")
     val step: Long,
     @SerializedName("unit")
@@ -17,4 +18,4 @@ class Assignment(
     val createDate: Date?,
     @SerializedName("update_date")
     val updateDate: Date?
-) : Progressable
+) : Progressable, Identifiable<Long>

@@ -1,10 +1,11 @@
 package org.stepic.droid.storage.migration
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepik.android.cache.attempt.structure.DbStructureAttempt
 
-object MigrationFrom47To48 : Migration {
-    override fun migrate(db: SQLiteDatabase) {
+object MigrationFrom47To48 : Migration(47, 48) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL(DbStructureAttempt.TABLE_SCHEMA)
     }
 }

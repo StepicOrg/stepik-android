@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.stepic.droid.di.AppSingleton
 import org.stepic.droid.persistence.model.Structure
-import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.assignment.repository.AssignmentRepository
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -13,7 +12,7 @@ import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.section.repository.SectionRepository
 import org.stepik.android.domain.unit.repository.UnitRepository
 import org.stepik.android.model.Unit
-import ru.nobird.android.core.model.flatten
+import ru.nobird.android.core.model.mapToLongArray
 import javax.inject.Inject
 
 @AppSingleton
@@ -73,10 +72,10 @@ constructor(
                 val nestedObjectsCompletableSource =
                     if (resolveNestedObjects) {
                         assignmentRepository
-                            .getAssignments(*assignmentIds, primarySourceType = DataSourceType.REMOTE)
+                            .getAssignments(assignmentIds, sourceType = DataSourceType.REMOTE)
                             .flatMapCompletable { assignments ->
                                 progressRepository
-                                    .getProgresses(*progresses + assignments.getProgresses())
+                                    .getProgresses(progresses + assignments.getProgresses())
                                     .ignoreElement()
                             }
                     } else {

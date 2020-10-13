@@ -1,6 +1,6 @@
 package org.stepik.android.cache.video.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object VideoDbScheme {
     const val TABLE_NAME = "video"
@@ -11,7 +11,7 @@ object VideoDbScheme {
         const val DURATION = "duration"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS ${VideoDbScheme.TABLE_NAME} (
                 ${VideoDbScheme.Columns.ID} LONG PRIMARY KEY,

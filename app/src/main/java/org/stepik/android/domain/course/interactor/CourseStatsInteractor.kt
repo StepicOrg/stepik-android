@@ -5,7 +5,6 @@ import io.reactivex.rxkotlin.Singles.zip
 import io.reactivex.rxkotlin.toObservable
 import org.solovyev.android.checkout.ProductTypes
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
-import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.billing.model.SkuSerializableWrapper
 import org.stepik.android.domain.billing.repository.BillingRepository
@@ -15,13 +14,14 @@ import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course.repository.CourseReviewSummaryRepository
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.course_payments.repository.CoursePaymentsRepository
+import org.stepik.android.domain.progress.mapper.getProgresses
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.progress.repository.ProgressRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.model.CourseReviewSummary
 import org.stepik.android.model.Progress
-import org.stepik.android.model.Progressable
+import ru.nobird.android.core.model.mapToLongArray
 import javax.inject.Inject
 
 class CourseStatsInteractor
@@ -68,12 +68,12 @@ constructor(
      */
     private fun resolveCourseReview(courses: List<Course>, sourceType: DataSourceType): Single<List<CourseReviewSummary>> =
         courseReviewRepository
-            .getCourseReviewSummaries(courseReviewSummaryIds = *courses.filter { it.enrollment == 0L }.mapToLongArray { it.reviewSummary }, sourceType = sourceType)
+            .getCourseReviewSummaries(courseReviewSummaryIds = courses.filter { it.enrollment == 0L }.mapToLongArray { it.reviewSummary }, sourceType = sourceType)
             .onErrorReturnItem(emptyList())
 
     private fun resolveCourseProgress(courses: List<Course>, sourceType: DataSourceType): Single<List<Progress>> =
         progressRepository
-            .getProgresses(progressIds = *courses.mapNotNull(Progressable::progress).toTypedArray(), primarySourceType = sourceType)
+            .getProgresses(progressIds = courses.getProgresses(), primarySourceType = sourceType)
 
     private fun resolveCoursesEnrollmentStates(courses: List<Course>, sourceType: DataSourceType, resolveEnrollmentState: Boolean): Single<List<Pair<Long, EnrollmentState>>> =
         courses

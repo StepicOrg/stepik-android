@@ -27,6 +27,7 @@ import org.stepic.droid.util.ProgressHelper
 import org.stepik.android.domain.comment.model.CommentsData
 import org.stepik.android.model.Step
 import org.stepik.android.model.Submission
+import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.model.comments.Comment
 import org.stepik.android.model.comments.DiscussionThread
 import org.stepik.android.presentation.comment.ComposeCommentPresenter
@@ -272,7 +273,7 @@ class ComposeCommentDialogFragment :
         super.dismiss()
     }
 
-    override fun onSubmissionSelected(submission: Submission) {
+    override fun onSubmissionSelected(submission: Submission, attempt: Attempt) {
         composeCommentPresenter.onSubmissionSelected(submission)
     }
 

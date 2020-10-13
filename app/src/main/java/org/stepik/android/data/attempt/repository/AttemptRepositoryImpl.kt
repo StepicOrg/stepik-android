@@ -27,14 +27,18 @@ constructor(
             .onErrorResumeNext(attemptCacheDataSource.getAttemptsForStep(stepId))
 
     override fun getAttempts(vararg attemptIds: Long, dataSourceType: DataSourceType): Single<List<Attempt>> =
-        when (dataSourceType) {
-            DataSourceType.CACHE ->
-                attemptCacheDataSource.getAttempts(*attemptIds)
+        if (attemptIds.isEmpty()) {
+            Single.just(emptyList())
+        } else {
+            when (dataSourceType) {
+                DataSourceType.CACHE ->
+                    attemptCacheDataSource.getAttempts(*attemptIds)
 
-            DataSourceType.REMOTE ->
-                attemptRemoteDataSource
-                    .getAttempts(*attemptIds)
-                    .doCompletableOnSuccess(attemptCacheDataSource::saveAttempts)
-                    .onErrorResumeNext(attemptCacheDataSource.getAttempts(*attemptIds))
+                DataSourceType.REMOTE ->
+                    attemptRemoteDataSource
+                        .getAttempts(*attemptIds)
+                        .doCompletableOnSuccess(attemptCacheDataSource::saveAttempts)
+                        .onErrorResumeNext(attemptCacheDataSource.getAttempts(*attemptIds))
+            }
         }
 }

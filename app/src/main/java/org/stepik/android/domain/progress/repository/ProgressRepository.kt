@@ -7,7 +7,7 @@ import org.stepik.android.model.Progress
 
 interface ProgressRepository {
     fun getProgress(progressId: String): Single<Progress>
-    fun getProgresses(vararg progressIds: String, primarySourceType: DataSourceType = DataSourceType.REMOTE): Single<List<Progress>>
+    fun getProgresses(progressIds: List<String>, primarySourceType: DataSourceType = DataSourceType.REMOTE): Single<List<Progress>>
 
     /**
      * Saves [progresses] to local storage

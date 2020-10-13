@@ -1,6 +1,6 @@
 package org.stepik.android.cache.personal_deadlines.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureDeadlines {
     const val DEADLINES = "personal_deadlines"
@@ -12,7 +12,7 @@ object DbStructureDeadlines {
         const val DEADLINE = "deadline"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         val sql = """
             CREATE TABLE IF NOT EXISTS $DEADLINES (
                 ${Columns.RECORD_ID} LONG,

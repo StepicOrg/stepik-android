@@ -1,11 +1,12 @@
 package org.stepic.droid.storage.migration
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
 import org.stepik.android.cache.step.structure.DbStructureStep
 
-object MigrationFrom40To41 : Migration {
-    override fun migrate(db: SQLiteDatabase) {
+object MigrationFrom40To41 : Migration(40, 41) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         createStepsTable(db)
         migrateSteps(db)
 
@@ -13,7 +14,7 @@ object MigrationFrom40To41 : Migration {
         migrateAssignments(db)
     }
 
-    private fun createStepsTable(db: SQLiteDatabase) {
+    private fun createStepsTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS ${DbStructureStep.TABLE_NAME} (
                 ${DbStructureStep.Column.ID} LONG PRIMARY KEY,
@@ -41,7 +42,7 @@ object MigrationFrom40To41 : Migration {
         """.trimIndent())
     }
 
-    private fun migrateSteps(db: SQLiteDatabase) {
+    private fun migrateSteps(db: SupportSQLiteDatabase) {
         db.execSQL("""
             REPLACE INTO ${DbStructureStep.TABLE_NAME}
             SELECT
@@ -67,7 +68,7 @@ object MigrationFrom40To41 : Migration {
         """.trimIndent())
     }
 
-    private fun createAssignmentsTable(db: SQLiteDatabase) {
+    private fun createAssignmentsTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
              CREATE TABLE IF NOT EXISTS ${DbStructureAssignment.TABLE_NAME} (
                 ${DbStructureAssignment.Columns.ID} LONG PRIMARY KEY,
@@ -82,7 +83,7 @@ object MigrationFrom40To41 : Migration {
         """.trimIndent())
     }
 
-    private fun migrateAssignments(db: SQLiteDatabase) {
+    private fun migrateAssignments(db: SupportSQLiteDatabase) {
         db.execSQL("""
             REPLACE INTO ${DbStructureAssignment.TABLE_NAME}
             SELECT
