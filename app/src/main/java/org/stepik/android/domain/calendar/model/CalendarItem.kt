@@ -23,7 +23,7 @@ data class CalendarItem(
         override fun createFromParcel(parcel: Parcel): CalendarItem =
             CalendarItem(
                 parcel.readLong(),
-                parcel.readString(),
+                parcel.readString()!!,
                 parcel.readBoolean()
             )
 

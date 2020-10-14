@@ -41,7 +41,7 @@ data class CodeOptions(
     companion object CREATOR : Parcelable.Creator<CodeOptions> {
         override fun createFromParcel(parcel: Parcel): CodeOptions =
             CodeOptions(
-                parcel.readMapCustomString(CodeLimit::class.java.classLoader),
+                parcel.readMapCustomString(CodeLimit::class.java.classLoader!!),
                 parcel.readInt(),
 
                 parcel.readMap(Parcel::readString, Parcel::readString),

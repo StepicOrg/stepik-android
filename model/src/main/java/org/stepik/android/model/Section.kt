@@ -89,7 +89,7 @@ data class Section(
             Section(
                 parcel.readLong(),
                 parcel.readLong(),
-                mutableListOf<Long>().apply { parcel.readList(this, Long::class.java.classLoader) },
+                mutableListOf<Long>().apply { parcel.readList(this as List<Long>, Long::class.java.classLoader) },
                 parcel.readInt(),
                 parcel.readString(),
                 parcel.readString(),

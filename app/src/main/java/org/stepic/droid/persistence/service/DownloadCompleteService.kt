@@ -125,7 +125,7 @@ class DownloadCompleteService: JobIntentService() {
 
             applicationContext.contentResolver.openInputStream(Uri.parse(downloadRecord.localUri)).use { input ->
                 targetFile.outputStream().use { output ->
-                    input.copyTo(output)
+                    input?.copyTo(output)
                 }
             }
 

@@ -2,6 +2,7 @@ package org.stepik.android.model.util
 
 import android.os.Parcel
 import android.os.Parcelable
+import ru.nobird.android.core.model.putNullable
 import java.util.*
 
 fun Parcel.writeBoolean(value: Boolean) =
@@ -12,7 +13,7 @@ fun Parcel.readBoolean(): Boolean =
 
 
 private fun getParcelableWriter(flags: Int): Parcel.(Parcelable) -> Unit = { writeParcelable(it, flags) }
-private fun <T: Parcelable> getParcelableReader(classLoader: ClassLoader): Parcel.() -> T = { readParcelable(classLoader) }
+private fun <T: Parcelable> getParcelableReader(classLoader: ClassLoader): Parcel.() -> T? = { readParcelable(classLoader) }
 
 fun <K : Parcelable, V : Parcelable> Parcel.writeMapCustom(map: Map<K, V>, flags: Int) =
         writeMap(map, getParcelableWriter(flags), getParcelableWriter(flags))
@@ -28,13 +29,13 @@ inline fun <K, V> Parcel.writeMap(map: Map<K, V>, writeKey: Parcel.(K) -> Unit, 
     }
 }
 
-inline fun <K, V> Parcel.readMap(readKey: Parcel.() -> K, readVal: Parcel.() -> V): Map<K, V> {
+inline fun <K, V> Parcel.readMap(readKey: Parcel.() -> K?, readVal: Parcel.() -> V?): Map<K, V> {
     val size = readInt()
     val map = HashMap<K, V>(size)
     for (i in 0 until size) {
         val key = readKey()
         val value = readVal()
-        map[key] = value
+        key?.let { map.putNullable(it, value) }
     }
     return map
 }

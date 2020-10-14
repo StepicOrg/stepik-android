@@ -117,7 +117,7 @@ data class Comment(
                 parcel.readValue(Boolean::class.java.classLoader) as Boolean?,
                 parcel.readParcelable(Actions::class.java.classLoader),
                 parcel.readLong(),
-                ArrayList<Long>().apply { parcel.readList(this, Long::class.java.classLoader) },
+                ArrayList<Long>().apply { parcel.readList(this as List<Long>, Long::class.java.classLoader) },
                 parcel.readValue(Int::class.java.classLoader) as Int?,
                 parcel.readValue(Int::class.java.classLoader) as Int?,
                 parcel.readBoolean(),

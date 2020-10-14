@@ -105,7 +105,7 @@ data class User(
                 parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
-                mutableListOf<Long>().apply { parcel.readList(this, Long::class.java.classLoader) },
+                mutableListOf<Long>().apply { parcel.readList(this as List<Long>, Long::class.java.classLoader) },
                 parcel.readLong(),
                 parcel.readLong(),
                 parcel.readLong(),
