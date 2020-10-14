@@ -103,8 +103,6 @@ object DbStructureCourse {
                 ${DbStructureCourse.Columns.IS_FEATURED} INTEGER,
                 ${DbStructureCourse.Columns.IS_ACTIVE} INTEGER,
                 ${DbStructureCourse.Columns.IS_PUBLIC} INTEGER,
-                ${DbStructureCourse.Columns.IS_ARCHIVED} INTEGER,
-                ${DbStructureCourse.Columns.IS_FAVORITE} INTEGER,
                 ${DbStructureCourse.Columns.CERTIFICATE_DISTINCTION_THRESHOLD} INTEGER,
                 ${DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD} INTEGER,
                 ${DbStructureCourse.Columns.CERTIFICATE_LINK} TEXT,
