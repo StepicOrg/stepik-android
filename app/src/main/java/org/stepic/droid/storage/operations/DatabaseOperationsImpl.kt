@@ -2,6 +2,7 @@ package org.stepic.droid.storage.operations
 
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepic.droid.di.storage.StorageSingleton
 import org.stepic.droid.util.RWLocks
 import javax.inject.Inject
@@ -9,7 +10,9 @@ import javax.inject.Inject
 @StorageSingleton
 class DatabaseOperationsImpl
 @Inject
-constructor(private val database: SQLiteDatabase) : DatabaseOperations {
+constructor(
+    private val database: SupportSQLiteDatabase
+) : DatabaseOperations {
 
     private fun open() {
         RWLocks.DatabaseLock.writeLock().lock()
@@ -30,7 +33,7 @@ constructor(private val database: SQLiteDatabase) : DatabaseOperations {
     override fun <U> executeQuery(sqlQuery: String?, selectionArgs: Array<String>?, handler: ResultHandler<U>): U {
         try {
             openRead()
-            val cursor = database.rawQuery(sqlQuery, selectionArgs)
+            val cursor = database.query(sqlQuery, selectionArgs)
             return try {
                 handler.handle(cursor)
             } finally {
@@ -54,7 +57,7 @@ constructor(private val database: SQLiteDatabase) : DatabaseOperations {
     override fun executeUpdate(table: String, values: ContentValues?, whereClause: String?, whereArgs: Array<String>?) {
         try {
             open()
-            database.update(table, values, whereClause, whereArgs)
+            database.update(table, SQLiteDatabase.CONFLICT_NONE, values, whereClause, whereArgs)
         } finally {
             close()
         }
@@ -63,7 +66,7 @@ constructor(private val database: SQLiteDatabase) : DatabaseOperations {
     override fun executeInsert(table: String, values: ContentValues?) {
         try {
             open()
-            database.insert(table, null, values)
+            database.insert(table, SQLiteDatabase.CONFLICT_NONE, values)
         } finally {
             close()
         }
@@ -72,7 +75,7 @@ constructor(private val database: SQLiteDatabase) : DatabaseOperations {
     override fun executeReplace(table: String, values: ContentValues?) {
         try {
             open()
-            database.replace(table, null, values)
+            database.insert(table, SQLiteDatabase.CONFLICT_REPLACE, values)
         } finally {
             close()
         }
@@ -84,7 +87,7 @@ constructor(private val database: SQLiteDatabase) : DatabaseOperations {
             database.beginTransaction()
 
             values.forEach {
-                database.replace(table, null, it)
+                database.insert(table, SQLiteDatabase.CONFLICT_REPLACE, it)
             }
             database.setTransactionSuccessful()
         } finally {

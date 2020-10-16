@@ -1,10 +1,11 @@
 package org.stepic.droid.storage.migration
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 
-object MigrationFrom38To39 : Migration{
-    override fun migrate(db: SQLiteDatabase) {
+object MigrationFrom38To39 : Migration(38, 39) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         DbStructureSectionDateEvent.createTable(db)
     }
 

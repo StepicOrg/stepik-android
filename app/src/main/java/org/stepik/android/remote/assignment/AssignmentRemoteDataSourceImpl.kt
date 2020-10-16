@@ -17,7 +17,7 @@ constructor(
     private val assignmentResponseMapper =
         Function<AssignmentResponse, List<Assignment>>(AssignmentResponse::assignments)
 
-    override fun getAssignments(vararg assignmentIds: Long): Single<List<Assignment>> =
+    override fun getAssignments(assignmentIds: List<Long>): Single<List<Assignment>> =
         assignmentIds
             .chunkedSingleMap { ids ->
                 assigmentService.getAssignments(ids)

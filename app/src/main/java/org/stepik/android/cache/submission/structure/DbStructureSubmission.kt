@@ -1,6 +1,6 @@
 package org.stepik.android.cache.submission.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureSubmission {
     const val TABLE_NAME = "submission"
@@ -18,7 +18,7 @@ object DbStructureSubmission {
         const val FEEDBACK = "feedback"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${Columns.ID} LONG,

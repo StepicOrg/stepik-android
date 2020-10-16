@@ -1,11 +1,12 @@
 package org.stepic.droid.storage.migration
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepik.android.cache.social_profile.structure.DbStructureSocialProfile
 import org.stepik.android.cache.user.structure.DbStructureUser
 
-object MigrationFrom49To50 : Migration {
-    override fun migrate(db: SQLiteDatabase) {
+object MigrationFrom49To50 : Migration(49, 50) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE ${DbStructureUser.TABLE_NAME} ADD COLUMN ${DbStructureUser.Columns.COVER} TEXT")
         db.execSQL("ALTER TABLE ${DbStructureUser.TABLE_NAME} ADD COLUMN ${DbStructureUser.Columns.SOCIAL_PROFILES} TEXT")
         db.execSQL("ALTER TABLE ${DbStructureUser.TABLE_NAME} ADD COLUMN ${DbStructureUser.Columns.KNOWLEDGE} LONG")

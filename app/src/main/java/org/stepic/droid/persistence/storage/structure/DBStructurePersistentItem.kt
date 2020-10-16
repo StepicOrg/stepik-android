@@ -1,6 +1,6 @@
 package org.stepic.droid.persistence.storage.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DBStructurePersistentItem {
     const val PERSISTENT_ITEMS = "persistent_items"
@@ -21,7 +21,7 @@ object DBStructurePersistentItem {
         const val STEP = "step"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         val sql = """
             CREATE TABLE IF NOT EXISTS $PERSISTENT_ITEMS (
                 ${Columns.ORIGINAL_PATH} TEXT,

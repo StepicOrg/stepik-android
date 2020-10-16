@@ -815,6 +815,30 @@
 
     <string name="step_quiz_reload_message">Sorry! This problem has been updated by the author. You have to start it over. Your score for previous submissions is preserved.</string>
 
+    <!-- Peer review -->
+    <string name="step_quiz_review_send_pending">Send your best submission to review</string>
+    <string name="step_quiz_review_send_in_progress">Send your best submission to review. You can\'t change it later.</string>
+    <string name="step_quiz_review_send_completed">Submission was sent to review</string>
+    <string name="step_quiz_review_send_choose">Choose submission</string>
+    <string name="step_quiz_review_send_submit">Submit this submission</string>
+
+    <string name="step_quiz_review_given_title">Review</string>
+    <string name="step_quiz_review_given_pending_zero">Write %d reviews</string>
+    <string name="step_quiz_review_given_extra_note">Write more reviews to increase your chance to receive review</string>
+    <string name="step_quiz_review_given_start_review">Start review</string>
+    <string name="step_quiz_review_given_no_review">Nothing to review</string>
+    <string name="step_quiz_review_taken_pending_zero">Wait for %d reviews of your solution</string>
+    <string name="step_quiz_review_taken_action">View reviews</string>
+    <string name="step_quiz_review_taken_title">Received reviews</string>
+    <string name="step_quiz_review_taken_hint">Average waiting time - 48 hours</string>
+
+    <string name="step_quiz_review_instructor_pending">Instructor will grade your solution with the maximum score of %s</string>
+    <string name="step_quiz_review_instructor_completed_hint">The instructor’s response will not come immediately, you will receive a notification</string>
+    <string name="step_quiz_review_instructor_completed_action">View review</string>
+
+    <string name="step_quiz_review_peer_pending">Get points, max score is %s</string>
+    <string name="step_quiz_review_peer_completed">Your solution was scored for %s out of %s</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Choose email app</string>
 

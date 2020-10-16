@@ -6,6 +6,7 @@ import org.stepik.android.view.injection.course_collection.CourseCollectionDataM
 import org.stepik.android.view.injection.course_list.CourseListScope
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
+import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.tags.TagsDataModule
 
 @CourseListScope
@@ -15,7 +16,8 @@ import org.stepik.android.view.injection.tags.TagsDataModule
     CourseListCollectionModule::class,
     CoursePaymentsDataModule::class,
     LastStepDataModule::class,
-    TagsDataModule::class
+    TagsDataModule::class,
+    ProfileDataModule::class
 ])
 interface CatalogComponent {
     @Subcomponent.Builder

@@ -1,6 +1,6 @@
 package org.stepic.droid.storage.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureLastStep {
     const val TABLE_NAME = "last_step"
@@ -12,7 +12,7 @@ object DbStructureLastStep {
         const val STEP_ID = "step_id"
     }
 
-    fun createTable(sql: SQLiteDatabase) {
+    fun createTable(sql: SupportSQLiteDatabase) {
         sql.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${Columns.ID} TEXT PRIMARY KEY,

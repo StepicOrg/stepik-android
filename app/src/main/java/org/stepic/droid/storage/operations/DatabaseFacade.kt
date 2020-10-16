@@ -20,6 +20,7 @@ import org.stepic.droid.storage.structure.DbStructureViewedNotificationsQueue
 import org.stepic.droid.util.AppConstants
 import org.stepic.droid.util.DbParseHelper
 import org.stepik.android.cache.assignment.structure.DbStructureAssignment
+import org.stepik.android.cache.base.database.AppDatabase
 import org.stepik.android.cache.course_calendar.structure.DbStructureSectionDateEvent
 import org.stepik.android.cache.lesson.structure.DbStructureLesson
 import org.stepik.android.cache.personal_deadlines.dao.DeadlinesBannerDao
@@ -31,11 +32,9 @@ import org.stepik.android.cache.unit.structure.DbStructureUnit
 import org.stepik.android.cache.user_courses.dao.UserCourseDao
 import org.stepik.android.cache.video_player.model.VideoTimestamp
 import org.stepik.android.data.course_list.model.CourseListQueryData
-import org.stepik.android.data.purchase_notification.model.PurchaseNotificationScheduled
 import org.stepik.android.domain.course_calendar.model.SectionDateEvent
 import org.stepik.android.domain.course_payments.model.CoursePayment
 import org.stepik.android.domain.last_step.model.LastStep
-import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Assignment
 import org.stepik.android.model.Certificate
 import org.stepik.android.model.Course
@@ -84,7 +83,9 @@ constructor(
     private val courseCollectionDao: IDao<CourseCollection>,
     private val courseListQueryDataDao: IDao<CourseListQueryData>,
     private val purchaseNotificationDao: PurchaseNotificationDao,
-    private val coursePaymentDao: IDao<CoursePayment>
+    private val coursePaymentDao: IDao<CoursePayment>,
+
+    private val appDatabase: AppDatabase
 ) {
 
     fun dropDatabase() {
@@ -117,14 +118,16 @@ constructor(
         courseListQueryDataDao.removeAll()
         purchaseNotificationDao.removeAll()
         coursePaymentDao.removeAll()
+
+        appDatabase.clearAllTables()
     }
 
     fun addAssignments(assignments: List<Assignment>) {
         assignmentDao.insertOrReplaceAll(assignments)
     }
 
-    fun getAssignments(assignmentsIds: LongArray): List<Assignment> {
-        val stringIds = DbParseHelper.parseLongArrayToString(assignmentsIds, AppConstants.COMMA)
+    fun getAssignments(assignmentsIds: List<Long>): List<Assignment> {
+        val stringIds = DbParseHelper.parseLongListToString(assignmentsIds, AppConstants.COMMA)
         return if (stringIds != null) {
             assignmentDao.getAllInRange(DbStructureAssignment.Columns.ID, stringIds)
         } else {
@@ -132,11 +135,12 @@ constructor(
         }
     }
 
-    @Deprecated("because of step has 0..* assignments.")
-    fun getAssignmentIdByStepId(stepId: Long): Long {
-        val assignment = assignmentDao.get(DbStructureAssignment.Columns.STEP, stepId.toString())
-        return assignment?.id ?: -1
-    }
+    fun getAssignmentByUnitAndStep(unitId: Long, stepId: Long): Assignment? =
+        assignmentDao
+            .get(mapOf(
+                DbStructureAssignment.Columns.UNIT to unitId.toString(),
+                DbStructureAssignment.Columns.STEP to stepId.toString()
+            ))
 
     fun getStepsById(stepIds: LongArray): List<Step> {
         val stringIds = DbParseHelper.parseLongArrayToString(stepIds, AppConstants.COMMA)

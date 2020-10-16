@@ -1,10 +1,11 @@
 package org.stepic.droid.storage.migration
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.stepic.droid.storage.structure.DbStructureCourse
 
-object MigrationFrom50To51 : Migration {
-    override fun migrate(db: SQLiteDatabase) {
+object MigrationFrom50To51 : Migration(50, 51) {
+    override fun migrate(db: SupportSQLiteDatabase) {
         db.execSQL("ALTER TABLE ${DbStructureCourse.TABLE_NAME} ADD COLUMN ${DbStructureCourse.Columns.IS_CERTIFICATE_ISSUED} INTEGER")
     }
 }

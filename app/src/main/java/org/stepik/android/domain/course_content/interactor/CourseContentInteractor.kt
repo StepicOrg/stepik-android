@@ -95,7 +95,7 @@ constructor(
             Single.just(emptyList())
         } else {
             progressRepository
-                .getProgresses(*sections.getProgresses())
+                .getProgresses(sections.getProgresses())
         }
             .map { progresses ->
                 courseContentItemMapper.mapSectionsWithEmptyUnits(course, sections, items.filterIsInstance<CourseContentItem.UnitItem>(), progresses)
@@ -105,7 +105,7 @@ constructor(
         Observable
             .fromCallable { courseContentItemMapper.getUnitPlaceholdersIds(items) }
             .flatMap { unitIds ->
-                val subject = PublishSubject.create<Array<String>>()
+                val subject = PublishSubject.create<List<String>>()
 
                 val unitsSource = unitIds
                     .chunked(UNITS_CHUNK_SIZE)
@@ -129,7 +129,7 @@ constructor(
                             subject
                                 .observeOn(Schedulers.io())
                                 .flatMapSingle { progressIds ->
-                                    progressRepository.getProgresses(*progressIds)
+                                    progressRepository.getProgresses(progressIds)
                                 }
                         )
                     }

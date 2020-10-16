@@ -23,6 +23,7 @@
     <color name="color_on_surface_emphasis_medium">#99000000</color>
     <color name="color_elevation_overlay_1dp">#12000000</color>
     <color name="color_elevation_overlay_2dp">#17000000</color>
+    <color name="color_elevation_overlay_24dp">#28000000</color>
 
     <color name="color_on_error">@color/white</color>
 

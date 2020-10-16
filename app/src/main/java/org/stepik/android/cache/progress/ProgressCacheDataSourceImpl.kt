@@ -12,9 +12,9 @@ class ProgressCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : ProgressCacheDataSource {
-    override fun getProgresses(vararg progressIds: String): Single<List<Progress>> =
+    override fun getProgresses(progressIds: List<String>): Single<List<Progress>> =
         Single.fromCallable {
-            databaseFacade.getProgresses(progressIds.toList())
+            databaseFacade.getProgresses(progressIds)
         }
 
     override fun saveProgresses(progresses: List<Progress>): Completable =

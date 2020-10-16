@@ -1,6 +1,7 @@
 package org.stepik.android.cache.assignment
 
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepik.android.data.assignment.source.AssignmentCacheDataSource
@@ -12,9 +13,14 @@ class AssignmentCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : AssignmentCacheDataSource {
-    override fun getAssignments(vararg assignmentIds: Long): Single<List<Assignment>> =
+    override fun getAssignments(assignmentIds: List<Long>): Single<List<Assignment>> =
         Single.fromCallable {
             databaseFacade.getAssignments(assignmentIds)
+        }
+
+    override fun getAssignmentByUnitAndStep(unitId: Long, stepId: Long): Maybe<Assignment> =
+        Maybe.fromCallable {
+            databaseFacade.getAssignmentByUnitAndStep(unitId, stepId)
         }
 
     override fun saveAssignments(assignments: List<Assignment>): Completable =

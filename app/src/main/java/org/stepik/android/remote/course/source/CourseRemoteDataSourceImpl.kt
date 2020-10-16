@@ -22,7 +22,7 @@ constructor(
     private val courseResponseMapper =
         Function<CourseResponse, List<Course>>(CourseResponse::courses)
 
-    override fun getCourses(vararg courseIds: Long): Single<List<Course>> =
+    override fun getCourses(courseIds: List<Long>): Single<List<Course>> =
         courseIds
             .chunkedSingleMap { ids ->
                 courseService.getCourses(ids)

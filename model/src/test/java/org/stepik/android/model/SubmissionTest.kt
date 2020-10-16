@@ -19,7 +19,7 @@ class SubmissionTest {
                 time = Date(),
                 _reply = ReplyTest.createTestReply(),
                 attempt = 999,
-                session = "session",
+                session = 111,
                 eta = "eta",
                 feedback = ChoiceFeedback(listOf("a", "b"))
             )

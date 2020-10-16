@@ -1,19 +1,11 @@
 package org.stepik.android.data.lesson.source
 
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
-import ru.nobird.android.domain.rx.maybeFirst
 import org.stepik.android.model.Lesson
 
 interface LessonCacheDataSource {
-    fun getLesson(lessonId: Long): Maybe<Lesson> =
-        getLessons(lessonId).maybeFirst()
-
-    fun getLessons(vararg lessonIds: Long): Single<List<Lesson>>
-
-    fun saveLesson(lesson: Lesson): Completable =
-        saveLessons(listOf(lesson))
+    fun getLessons(lessonIds: List<Long>): Single<List<Lesson>>
 
     fun saveLessons(lessons: List<Lesson>): Completable
 

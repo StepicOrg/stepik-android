@@ -53,7 +53,7 @@ constructor(
             time = cursor.getString(DbStructureSubmission.Columns.TIME)?.let(utcDateAdapter::stringToDate),
             _reply = cursor.getString(DbStructureSubmission.Columns.REPLY)?.toObject(gson),
             attempt = cursor.getLong(DbStructureSubmission.Columns.ATTEMPT_ID),
-            session = cursor.getString(DbStructureSubmission.Columns.SESSION),
+            session = cursor.getString(DbStructureSubmission.Columns.SESSION)?.toLongOrNull(),
             eta = cursor.getString(DbStructureSubmission.Columns.ETA),
             feedback = cursor.getString(DbStructureSubmission.Columns.FEEDBACK)?.toObject(gson)
         )
@@ -67,7 +67,7 @@ constructor(
             put(DbStructureSubmission.Columns.TIME, persistentObject.time?.let(utcDateAdapter::dateToString))
             put(DbStructureSubmission.Columns.REPLY, persistentObject.reply?.let(gson::toJson))
             put(DbStructureSubmission.Columns.ATTEMPT_ID, persistentObject.attempt)
-            put(DbStructureSubmission.Columns.SESSION, persistentObject.session)
+            put(DbStructureSubmission.Columns.SESSION, persistentObject.session?.toString())
             put(DbStructureSubmission.Columns.ETA, persistentObject.eta)
             put(DbStructureSubmission.Columns.FEEDBACK, persistentObject.feedback?.let(gson::toJson))
         }

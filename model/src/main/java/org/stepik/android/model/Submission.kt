@@ -24,7 +24,7 @@ data class Submission(
     @SerializedName("attempt")
     val attempt: Long = 0,
     @SerializedName("session")
-    val session: String? = null,
+    val session: Long? = null,
     @SerializedName("eta")
     val eta: String? = null,
     @SerializedName("feedback")
@@ -61,7 +61,7 @@ data class Submission(
         parcel.writeDate(time)
         parcel.writeParcelable(reply, flags)
         parcel.writeLong(attempt)
-        parcel.writeString(session)
+        parcel.writeValue(session)
         parcel.writeString(eta)
         parcel.writeSerializable(feedback)
     }
@@ -79,7 +79,7 @@ data class Submission(
 
                 parcel.readParcelable(Reply::class.java.classLoader),
                 parcel.readLong(),
-                parcel.readString(),
+                parcel.readValue(Long::class.java.classLoader) as Long?,
                 parcel.readString(),
                 parcel.readSerializable() as? Feedback
             )

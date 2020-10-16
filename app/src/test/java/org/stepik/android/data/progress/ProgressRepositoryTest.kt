@@ -28,7 +28,7 @@ class ProgressRepositoryTest {
         val progressRepositoryImpl = ProgressRepositoryImpl(progressRemoteDataSource, progressCacheDataSource)
 
         val progressId = "aaa"
-        val progress = Progress()
+        val progress = Progress(id = "1")
         whenever(progressCacheDataSource.getProgress(progressId)) doReturn Maybe.empty()
         whenever(progressCacheDataSource.saveProgress(progress)) doReturn Completable.complete()
 
@@ -50,7 +50,7 @@ class ProgressRepositoryTest {
         val progressRepositoryImpl = ProgressRepositoryImpl(progressRemoteDataSource, progressCacheDataSource)
 
         val progressId = "aaa"
-        val progress = Progress()
+        val progress = Progress(id = "1")
         whenever(progressCacheDataSource.getProgress(progressId)) doReturn Maybe.just(progress)
         whenever(progressRemoteDataSource.getProgress(progressId)) doReturn Single.error(IOException(""))
 

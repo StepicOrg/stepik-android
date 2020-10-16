@@ -7,6 +7,7 @@ import okhttp3.ResponseBody
 import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.util.then
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course.repository.EnrollmentRepository
 import org.stepik.android.domain.lesson.repository.LessonRepository
@@ -52,7 +53,7 @@ constructor(
     fun fetchCourseEnrollmentAfterPurchaseInWeb(courseId: Long): Completable =
         requireAuthorization then
         courseRepository
-            .getCourse(courseId, canUseCache = false)
+            .getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false)
             .toSingle()
             .flatMapCompletable { course ->
                 if (course.enrollment > 0) {
@@ -70,7 +71,7 @@ constructor(
             .addEnrollment(courseId)
             .andThen(userCoursesInteractor.addUserCourse(courseId))
             .andThen(lessonRepository.removeCachedLessons(courseId))
-            .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
+            .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 
     fun dropCourse(courseId: Long): Single<Course> =
@@ -81,6 +82,6 @@ constructor(
             .andThen(deadlinesRepository.removeDeadlineRecordByCourseId(courseId).onErrorComplete())
             .andThen(userCoursesInteractor.removeUserCourse(courseId))
             .andThen(lessonRepository.removeCachedLessons(courseId))
-            .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
+            .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
 }

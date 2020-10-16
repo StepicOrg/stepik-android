@@ -124,7 +124,7 @@ constructor(
     private fun updateCourseAfterEnrollment(courseId: Long): Completable =
         userCoursesInteractor.addUserCourse(courseId)
             .andThen(lessonRepository.removeCachedLessons(courseId))
-            .andThen(courseRepository.getCourse(courseId, canUseCache = false).toSingle())
+            .andThen(courseRepository.getCourse(courseId, sourceType = DataSourceType.REMOTE, allowFallback = false).toSingle())
             .doOnSuccess(enrollmentSubject::onNext) // notify everyone about changes
             .ignoreElement()
 
