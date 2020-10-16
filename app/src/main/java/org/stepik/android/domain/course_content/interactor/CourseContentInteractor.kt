@@ -88,7 +88,7 @@ constructor(
 
     private fun getSectionsOfCourse(course: Course, dataSourceType: DataSourceType): Single<List<Section>> =
         sectionRepository
-            .getSections(*course.sections ?: longArrayOf(), primarySourceType = dataSourceType)
+            .getSections(*course.sections?.toLongArray() ?: longArrayOf(), primarySourceType = dataSourceType)
 
     private fun populateSections(course: Course, sections: List<Section>, items: List<CourseContentItem>, dataSourceType: DataSourceType): Single<List<CourseContentItem>> =
         if (dataSourceType == DataSourceType.CACHE) {

@@ -134,7 +134,7 @@ constructor(
             }
 
         return sectionRepository
-            .getSections(*sectionIds.sliceArray(range))
+            .getSections(*sectionIds.slice(range).toLongArray())
             .map { sections ->
                 when (direction) {
                     StepNavigationDirection.NEXT ->

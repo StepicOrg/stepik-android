@@ -35,7 +35,7 @@ constructor(
         }
             .andThen(
                 items
-                    .map { sectionStructureResolver.resolveStructure(*it.sections ?: longArrayOf(), resolveNestedObjects = resolveNestedObjects) }
+                    .map { sectionStructureResolver.resolveStructure(*it.sections?.toLongArray() ?: longArrayOf(), resolveNestedObjects = resolveNestedObjects) }
                     .let { Observable.concat(it) }
             )
 }

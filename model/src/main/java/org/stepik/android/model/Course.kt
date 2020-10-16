@@ -1,12 +1,11 @@
 package org.stepik.android.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.writeBoolean
+import kotlinx.android.parcel.Parcelize
 import ru.nobird.android.core.model.Identifiable
 
+@Parcelize
 data class Course(
     @SerializedName("id")
     override val id: Long,
@@ -33,11 +32,11 @@ data class Course(
     val language: String? = null,
 
     @SerializedName("authors")
-    val authors: LongArray? = null,
+    val authors: List<Long>? = null,
     @SerializedName("instructors")
-    val instructors: LongArray? = null,
+    val instructors: List<Long>? = null,
     @SerializedName("sections")
-    val sections: LongArray? = null,
+    val sections: List<Long>? = null,
 
     @SerializedName("course_format")
     val courseFormat: String? = null,
@@ -137,137 +136,8 @@ data class Course(
             anyCertificateThreshold && (hasText || (isCertificateAutoIssued && isCertificateIssued))
         } ?: false
 
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(id)
-        parcel.writeString(title)
-        parcel.writeString(description)
-        parcel.writeString(cover)
-
-        parcel.writeString(certificate)
-        parcel.writeString(requirements)
-        parcel.writeString(summary)
-        parcel.writeString(workload)
-        parcel.writeString(intro)
-        parcel.writeParcelable(introVideo, flags)
-        parcel.writeString(language)
-
-        parcel.writeLongArray(authors)
-        parcel.writeLongArray(instructors)
-        parcel.writeLongArray(sections)
-
-        parcel.writeString(courseFormat)
-        parcel.writeString(targetAudience)
-        parcel.writeString(certificateFooter)
-        parcel.writeString(certificateCoverOrg)
-
-        parcel.writeLong(totalUnits)
-
-        parcel.writeLong(enrollment)
-        parcel.writeString(progress)
-        parcel.writeLong(owner)
-
-        parcel.writeDouble(readiness)
-
-        parcel.writeBoolean(isContest)
-        parcel.writeBoolean(isFeatured)
-        parcel.writeBoolean(isActive)
-        parcel.writeBoolean(isPublic)
-        parcel.writeBoolean(isArchived)
-        parcel.writeBoolean(isFavorite)
-
-        parcel.writeLong(certificateDistinctionThreshold)
-        parcel.writeLong(certificateRegularThreshold)
-        parcel.writeString(certificateLink)
-        parcel.writeBoolean(isCertificateAutoIssued)
-        parcel.writeBoolean(isCertificateIssued)
-
-        parcel.writeString(lastDeadline)
-        parcel.writeString(beginDate)
-        parcel.writeString(endDate)
-
-        parcel.writeString(slug)
-
-        parcel.writeString(scheduleLink)
-        parcel.writeString(scheduleLongLink)
-        parcel.writeString(scheduleType)
-
-        parcel.writeString(lastStepId)
-        parcel.writeLong(learnersCount)
-        parcel.writeLong(reviewSummary)
-
-        parcel.writeValue(timeToComplete)
-        parcel.writeParcelable(courseOptions, flags)
-
-        parcel.writeBoolean(isPaid)
-        parcel.writeString(price)
-        parcel.writeString(currencyCode)
-        parcel.writeString(displayPrice)
-        parcel.writeString(priceTier)
-    }
-
-    override fun describeContents(): Int = 0
-
-
-    companion object CREATOR : Parcelable.Creator<Course> {
+    companion object {
         const val SCHEDULE_TYPE_ENDED = "ended"
         const val SCHEDULE_TYPE_UPCOMMING = "upcoming"
-
-        override fun createFromParcel(parcel: Parcel): Course =
-            Course(
-                parcel.readLong(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readParcelable(Video::class.java.classLoader),
-                parcel.readString(),
-                parcel.createLongArray(),
-                parcel.createLongArray(),
-                parcel.createLongArray(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readLong(),
-                parcel.readLong(),
-                parcel.readString(),
-                parcel.readLong(),
-                parcel.readDouble(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readLong(),
-                parcel.readLong(),
-                parcel.readString(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readLong(),
-                parcel.readLong(),
-                parcel.readValue(Long::class.java.classLoader) as Long?,
-                parcel.readParcelable(CourseOptions::class.java.classLoader) as CourseOptions?,
-
-                parcel.readBoolean(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString()
-            )
-
-        override fun newArray(size: Int): Array<Course?> = arrayOfNulls(size)
     }
 }
