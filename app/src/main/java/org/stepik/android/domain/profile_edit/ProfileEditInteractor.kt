@@ -25,7 +25,7 @@ constructor(
                     return@flatMap Single.just(ProfileWrapper(profile))
                 }
                 emailAddressRepository
-                    .getEmailAddresses(*profile.emailAddresses ?: longArrayOf(), primarySourceType = DataSourceType.CACHE)
+                    .getEmailAddresses(*profile.emailAddresses?.toLongArray() ?: longArrayOf(), primarySourceType = DataSourceType.CACHE)
                     .map { emailAddresses ->
                         val primary = emailAddresses.find { it.isPrimary }
                         ProfileWrapper(profile, primaryEmailAddress = primary)

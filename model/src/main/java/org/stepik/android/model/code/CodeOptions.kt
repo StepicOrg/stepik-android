@@ -1,16 +1,11 @@
 package org.stepik.android.model.code
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 import org.stepik.android.model.util.ParcelableStringList
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.readMap
-import org.stepik.android.model.util.readMapCustomString
-import org.stepik.android.model.util.writeBoolean
-import org.stepik.android.model.util.writeMap
-import org.stepik.android.model.util.writeMapCustomString
 
+@Parcelize
 data class CodeOptions(
     @SerializedName("limits")
     val limits: Map<String, CodeLimit>,
@@ -24,34 +19,4 @@ data class CodeOptions(
     val samples: List<ParcelableStringList>,
     @SerializedName("is_run_user_code_allowed")
     val isRunUserCodeAllowed: Boolean
-) : Parcelable {
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeMapCustomString(limits, flags)
-        parcel.writeInt(executionTimeLimit)
-
-        parcel.writeMap(codeTemplates, Parcel::writeString, Parcel::writeString)
-
-        parcel.writeInt(executionMemoryLimit)
-        parcel.writeTypedList(samples)
-        parcel.writeBoolean(isRunUserCodeAllowed)
-    }
-
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<CodeOptions> {
-        override fun createFromParcel(parcel: Parcel): CodeOptions =
-            CodeOptions(
-                parcel.readMapCustomString(CodeLimit::class.java.classLoader!!),
-                parcel.readInt(),
-
-                parcel.readMap(Parcel::readString, Parcel::readString),
-
-                parcel.readInt(),
-                mutableListOf<ParcelableStringList>().apply { parcel.readTypedList(this, ParcelableStringList) },
-                parcel.readBoolean()
-            )
-
-        override fun newArray(size: Int): Array<CodeOptions?> =
-            arrayOfNulls(size)
-    }
-}
+) : Parcelable
