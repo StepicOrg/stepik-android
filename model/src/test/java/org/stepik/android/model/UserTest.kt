@@ -1,11 +1,11 @@
-package org.stepik.android.domain.model.user
+package org.stepik.android.model
 
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
-import org.stepic.droid.testUtils.assertThatObjectParcelable
 import org.stepik.android.model.user.User
-import java.util.*
+import org.stepik.android.model.util.assertThatObjectParcelable
+import java.util.Date
 
 @RunWith(RobolectricTestRunner::class)
 class UserTest {
@@ -37,7 +37,7 @@ class UserTest {
     }
 
     @Test
-    fun userIsSerializable() {
+    fun userIsParcelable() {
         createUser()
             .assertThatObjectParcelable<User>()
     }

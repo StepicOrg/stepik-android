@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Actions(
+data class Actions(
     @SerializedName("vote")
     val vote: Boolean = false,
     @SerializedName("edit")
