@@ -3,14 +3,7 @@ package org.stepik.android.model.util
 import android.os.Parcel
 import android.os.Parcelable
 import ru.nobird.android.core.model.putNullable
-import java.util.*
-
-fun Parcel.writeBoolean(value: Boolean) =
-        writeByte(if (value) 1 else 0)
-
-fun Parcel.readBoolean(): Boolean =
-        readByte() != 0.toByte()
-
+import java.util.Date
 
 private fun getParcelableWriter(flags: Int): Parcel.(Parcelable) -> Unit = { writeParcelable(it, flags) }
 private fun <T: Parcelable> getParcelableReader(classLoader: ClassLoader): Parcel.() -> T? = { readParcelable(classLoader) }
