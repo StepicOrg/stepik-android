@@ -108,4 +108,47 @@
         <item quantity="many">Адправіць %d рашэнняў</item>
         <item quantity="other">Адправіць %d рашэнняў</item>
     </plurals>
+    <!-- Peer review -->
+    <plurals name="reviews">
+        <item quantity="one">%d рэцэнзію</item>
+        <item quantity="few">%d рэцэнзіі</item>
+        <item quantity="many">%d рэцэнзій</item>
+        <item quantity="other">%d рэцэнзій</item>
+    </plurals>
+    <plurals name="step_quiz_review_given_pending">
+        <item quantity="one">Зрабіце %d рэцэнзію на рашэнні іншых студэнтаў</item>
+        <item quantity="few">Зрабіце %d рэцэнзіі на рашэнні іншых студэнтаў</item>
+        <item quantity="many">Зрабіце %d рэцэнзій на рашэнні іншых студэнтаў</item>
+        <item quantity="other">Зрабіце %d рэцэнзій на рашэнні іншых студэнтаў</item>
+    </plurals>
+    <plurals name="step_quiz_review_given_in_progress">
+        <item quantity="one">Зрабіце яшчэ %d рэцэнзію на рашэнні іншых студэнтаў.</item>
+        <item quantity="few">Зрабіце яшчэ %d рэцэнзіі на рашэнні іншых студэнтаў.</item>
+        <item quantity="many">Зрабіце яшчэ %d рэцэнзій на рашэнні іншых студэнтаў.</item>
+        <item quantity="other">Зрабіце яшчэ %d рэцэнзій на рашэнні іншых студэнтаў.</item>
+    </plurals>
+    <plurals name="step_quiz_review_given_completed">
+        <item quantity="one">%d рэцэнзія адпраўлена.</item>
+        <item quantity="few">%d рэцэнзіі адпраўленыя.</item>
+        <item quantity="many">%d рэцэнзій адпраўлена.</item>
+        <item quantity="other">%d рэцэнзій адпраўлена.</item>
+    </plurals>
+    <plurals name="step_quiz_review_taken_pending">
+        <item quantity="one">Дачакайцеся %d рэцэнзію на сваё рашэнне</item>
+        <item quantity="few">Дачакайцеся %d рэцэнзіі на сваё рашэнне</item>
+        <item quantity="many">Дачакайцеся %d рэцэнзій на сваё рашэнне</item>
+        <item quantity="other">Дачакайцеся %d рэцэнзій на сваё рашэнне</item>
+    </plurals>
+    <plurals name="step_quiz_review_taken_in_progress">
+        <item quantity="one">Дачакайцеся яшчэ %d рэцэнзію на сваё рашэнне.</item>
+        <item quantity="few">Дачакайцеся яшчэ %d рэцэнзіі на сваё рашэнне.</item>
+        <item quantity="many">Дачакайцеся яшчэ %d рэцэнзій на сваё рашэнне.</item>
+        <item quantity="other">Дачакайцеся яшчэ %d рэцэнзій на сваё рашэнне.</item>
+    </plurals>
+    <plurals name="step_quiz_review_taken_completed">
+        <item quantity="one">%d рэцэнзія атрыманая.</item>
+        <item quantity="few">%d рэцэнзіі атрыманыя.</item>
+        <item quantity="many">%d рэцэнзій атрымана.</item>
+        <item quantity="other">%d рэцэнзій атрымана.</item>
+    </plurals>
 </resources>

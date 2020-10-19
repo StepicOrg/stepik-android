@@ -677,6 +677,26 @@
     <string name="step_quiz_code_input_not_supported">Дадзены тып заданняў не падтрымлівае ўвод дадзеных</string>
     <string name="step_quiz_pycharm_message">Калі ласка, адкрыйце гэтую задачу ў <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
     <string name="step_quiz_reload_message">Выбачайце, заданне было зменена аўтарамі. Неабходна пачаць спачатку. Балы за мінулыя рашэнні захаваныя.</string>
+    <!-- Peer review -->
+    <string name="step_quiz_review_send_pending">Адпраўце лепшае рашэнне на праверку</string>
+    <string name="step_quiz_review_send_in_progress">Адпраўце лепшае рашэнне на праверку. Пасля адпраўкі замяніць рашэнне нельга.</string>
+    <string name="step_quiz_review_send_completed">Рашэнне адпраўлена на праверку</string>
+    <string name="step_quiz_review_send_choose">Абраць рашэнне</string>
+    <string name="step_quiz_review_send_submit">Адправіць гэтае рашэнне</string>
+    <string name="step_quiz_review_given_title">Рэцэнзія</string>
+    <string name="step_quiz_review_given_pending_zero">Зрабіце рэцэнзіі на рашэнні іншых студэнтаў</string>
+    <string name="step_quiz_review_given_extra_note">Робячы дадатковыя рэцэнзіі, вы падвышаеце шанец атрымаць рэцэнзіі на сваю працу хутчэй</string>
+    <string name="step_quiz_review_given_start_review">Рэцэнзаваць</string>
+    <string name="step_quiz_review_given_no_review">Пакуль няма рашэнняў для рэцэнзіі</string>
+    <string name="step_quiz_review_taken_pending_zero">Дачакайцеся рэцэнзіі на сваё рашэнне</string>
+    <string name="step_quiz_review_taken_action">Глядзець рэцэнзіі</string>
+    <string name="step_quiz_review_taken_title">Атрыманыя рэцэнзіі</string>
+    <string name="step_quiz_review_taken_hint">Звычайна першая рэцэнзія прыходзіць праз 2 дні пасля адпраўкі рашэнні на рэцэнзаванне (але гэта не дакладна)</string>
+    <string name="step_quiz_review_instructor_pending">Дачакайцеся ацэнкі выкладчыка, максімум за задачу — %s</string>
+    <string name="step_quiz_review_instructor_completed_hint">Адказ выкладчыка прыйдзе не адразу, вы атрымаеце апавяшчэнне</string>
+    <string name="step_quiz_review_instructor_completed_action">Глядзець рэцэнзію</string>
+    <string name="step_quiz_review_peer_pending">Атрымайце балы, максімальная адзнака — %s</string>
+    <string name="step_quiz_review_peer_completed">Ваш адказ ацанілі на %s з %s</string>
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Абярыце паштовы кліент</string>
     <!-- Comment -->
