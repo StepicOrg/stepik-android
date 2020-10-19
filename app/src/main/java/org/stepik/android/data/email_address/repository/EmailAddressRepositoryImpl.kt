@@ -18,13 +18,13 @@ constructor(
     private val cacheDataSource: EmailAddressCacheDataSource
 ) : EmailAddressRepository {
 
-    override fun getEmailAddresses(vararg emailIds: Long, primarySourceType: DataSourceType): Single<List<EmailAddress>> {
+    override fun getEmailAddresses(emailIds: List<Long>, primarySourceType: DataSourceType): Single<List<EmailAddress>> {
         val remoteSource = remoteDataSource
-            .getEmailAddresses(*emailIds)
+            .getEmailAddresses(emailIds)
             .doCompletableOnSuccess(cacheDataSource::saveEmailAddresses)
 
         val cacheSource = cacheDataSource
-            .getEmailAddresses(*emailIds)
+            .getEmailAddresses(emailIds)
 
         return when (primarySourceType) {
             DataSourceType.REMOTE ->
@@ -32,9 +32,9 @@ constructor(
 
             DataSourceType.CACHE ->
                 cacheSource.flatMap { cachedEmails ->
-                    val ids = (emailIds.toList() - cachedEmails.map(EmailAddress::id)).toLongArray()
+                    val ids = (emailIds.toList() - cachedEmails.map(EmailAddress::id))
                     remoteDataSource
-                        .getEmailAddresses(*ids)
+                        .getEmailAddresses(ids)
                         .doCompletableOnSuccess(cacheDataSource::saveEmailAddresses)
                         .map { remoteEmails -> cachedEmails + remoteEmails }
                 }

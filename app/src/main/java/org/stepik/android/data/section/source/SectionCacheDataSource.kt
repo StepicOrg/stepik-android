@@ -8,9 +8,9 @@ import org.stepik.android.model.Section
 
 interface SectionCacheDataSource {
     fun getSection(sectionId: Long): Maybe<Section> =
-        getSections(sectionId).maybeFirst()
+        getSections(listOf(sectionId)).maybeFirst()
 
-    fun getSections(vararg sectionIds: Long): Single<List<Section>>
+    fun getSections(sectionIds: List<Long>): Single<List<Section>>
 
     fun saveSection(section: Section): Completable =
         saveSections(listOf(section))

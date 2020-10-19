@@ -7,9 +7,9 @@ import org.stepik.android.model.Unit
 
 interface UnitRemoteDataSource {
     fun getUnit(unitId: Long): Maybe<Unit> =
-        getUnits(unitId).maybeFirst()
+        getUnits(listOf(unitId)).maybeFirst()
 
-    fun getUnits(vararg unitIds: Long): Single<List<Unit>>
+    fun getUnits(unitIds: List<Long>): Single<List<Unit>>
 
     fun getUnitsByLessonId(lessonId: Long): Single<List<Unit>>
 

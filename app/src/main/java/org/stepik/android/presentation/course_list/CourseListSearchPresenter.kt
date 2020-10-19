@@ -168,7 +168,7 @@ constructor(
         val oldSearchQuery = searchResultQuery ?: return
 
         compositeDisposable += courseListSearchInteractor
-            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Search(oldSearchQuery), sourceTypeComposition = SourceTypeComposition.CACHE)
+            .getCourseListItems(listOf(course.id), courseViewSource = CourseViewSource.Search(oldSearchQuery), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(

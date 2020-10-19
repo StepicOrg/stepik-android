@@ -151,7 +151,7 @@ class NotificationListPresenter
         }
 
         if (userIds.isNotEmpty()) {
-            userRemoteDataSource.getUsers(*userIds.toLongArray()).blockingGet().forEach {
+            userRemoteDataSource.getUsers(userIds.toList()).blockingGet().forEach {
                 val avatar = it.avatar
                 userIdToNotificationsIndexes[it.id]?.forEach { notificationIndex ->
                     notifications[notificationIndex].userAvatarUrl = avatar

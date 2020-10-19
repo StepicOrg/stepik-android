@@ -123,9 +123,9 @@ class DownloadCompleteService: JobIntentService() {
                 if (!targetFile.createNewFile()) throw IOException("Can't create new file")
             }
 
-            applicationContext.contentResolver.openInputStream(Uri.parse(downloadRecord.localUri)).use { input ->
+            applicationContext.contentResolver.openInputStream(Uri.parse(downloadRecord.localUri))?.use { input ->
                 targetFile.outputStream().use { output ->
-                    input?.copyTo(output)
+                    input.copyTo(output)
                 }
             }
 

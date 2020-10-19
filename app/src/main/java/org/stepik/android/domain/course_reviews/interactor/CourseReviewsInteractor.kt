@@ -54,7 +54,6 @@ constructor(
                     .map(CourseReview::user)
                     .filter { it != profileId }
                     .distinct()
-                    .toLongArray()
 
                 val currentUserReviewSource =
                     if (page == 1) {
@@ -64,7 +63,7 @@ constructor(
                         Single.just(emptyList())
                     }
 
-                zip(currentUserReviewSource, Single.just(courseReviews), userRepository.getUsers(userIds = *userIds))
+                zip(currentUserReviewSource, Single.just(courseReviews), userRepository.getUsers(userIds = userIds))
             }
             .map { (currentUserReview, courseReviews, users) ->
                 val usersMap = users
@@ -88,7 +87,7 @@ constructor(
         Maybes
             .zip(
                 courseReviewsRepository.getCourseReviewByCourseIdAndUserId(courseId, profileId, sourceType),
-                userRepository.getUsers(profileId, primarySourceType = sourceType).maybeFirst()
+                userRepository.getUsers(listOf(profileId), primarySourceType = sourceType).maybeFirst()
             )
             .map { (review, user) ->
                 listOf<CourseReviewItem>(CourseReviewItem.Data(review, user, isCurrentUserReview = true))

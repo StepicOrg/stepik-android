@@ -15,13 +15,13 @@ constructor(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val userCacheDataSource: UserCacheDataSource
 ) : UserRepository {
-    override fun getUsers(vararg userIds: Long, primarySourceType: DataSourceType): Single<List<User>> {
+    override fun getUsers(userIds: List<Long>, primarySourceType: DataSourceType): Single<List<User>> {
         val remoteSource = userRemoteDataSource
-            .getUsers(*userIds)
+            .getUsers(userIds)
             .doCompletableOnSuccess(userCacheDataSource::saveUsers)
 
         val cacheSource = userCacheDataSource
-            .getUsers(*userIds)
+            .getUsers(userIds)
 
         return when (primarySourceType) {
             DataSourceType.REMOTE ->
@@ -29,9 +29,9 @@ constructor(
 
             DataSourceType.CACHE ->
                 cacheSource.flatMap { cachedUsers ->
-                    val ids = (userIds.toList() - cachedUsers.map(User::id)).toLongArray()
+                    val ids = (userIds.toList() - cachedUsers.map(User::id))
                     userRemoteDataSource
-                        .getUsers(*ids)
+                        .getUsers(ids)
                         .doCompletableOnSuccess(userCacheDataSource::saveUsers)
                         .map { remoteUsers -> cachedUsers + remoteUsers }
                 }

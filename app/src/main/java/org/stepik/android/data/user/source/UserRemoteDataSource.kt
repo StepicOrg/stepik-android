@@ -4,5 +4,5 @@ import io.reactivex.Single
 import org.stepik.android.model.user.User
 
 interface UserRemoteDataSource {
-    fun getUsers(vararg userIds: Long): Single<List<User>>
+    fun getUsers(userIds: List<Long>): Single<List<User>>
 }

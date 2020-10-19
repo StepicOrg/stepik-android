@@ -16,13 +16,13 @@ constructor(
     private val sectionCacheDataSource: SectionCacheDataSource,
     private val sectionRemoteDataSource: SectionRemoteDataSource
 ) : SectionRepository {
-    override fun getSections(vararg sectionIds: Long, primarySourceType: DataSourceType): Single<List<Section>> {
+    override fun getSections(sectionIds: List<Long>, primarySourceType: DataSourceType): Single<List<Section>> {
         val remoteSource = sectionRemoteDataSource
-            .getSections(*sectionIds)
+            .getSections(sectionIds)
             .doCompletableOnSuccess(sectionCacheDataSource::saveSections)
 
         val cacheSource = sectionCacheDataSource
-            .getSections(*sectionIds)
+            .getSections(sectionIds)
 
         return when (primarySourceType) {
             DataSourceType.REMOTE ->
@@ -30,9 +30,9 @@ constructor(
 
             DataSourceType.CACHE ->
                 cacheSource.flatMap { cachedSections ->
-                    val ids = (sectionIds.toList() - cachedSections.map(Section::id)).toLongArray()
+                    val ids = (sectionIds.toList() - cachedSections.map(Section::id))
                     sectionRemoteDataSource
-                        .getSections(*ids)
+                        .getSections(ids)
                         .doCompletableOnSuccess(sectionCacheDataSource::saveSections)
                         .map { remoteSections -> cachedSections + remoteSections }
                 }

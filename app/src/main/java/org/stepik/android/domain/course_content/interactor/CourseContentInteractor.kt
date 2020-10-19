@@ -88,7 +88,7 @@ constructor(
 
     private fun getSectionsOfCourse(course: Course, dataSourceType: DataSourceType): Single<List<Section>> =
         sectionRepository
-            .getSections(*course.sections?.toLongArray() ?: longArrayOf(), primarySourceType = dataSourceType)
+            .getSections(course.sections ?: listOf(), primarySourceType = dataSourceType)
 
     private fun populateSections(course: Course, sections: List<Section>, items: List<CourseContentItem>, dataSourceType: DataSourceType): Single<List<CourseContentItem>> =
         if (dataSourceType == DataSourceType.CACHE) {
@@ -111,7 +111,7 @@ constructor(
                     .chunked(UNITS_CHUNK_SIZE)
                     .toObservable()
                     .concatMapSingle { ids ->
-                        getUnits(ids.toLongArray(), dataSourceType)
+                        getUnits(ids, dataSourceType)
                             .flatMap { units ->
                                 lessonRepository
                                     .getLessons(*units.mapToLongArray(Unit::lesson), primarySourceType = dataSourceType)
@@ -148,7 +148,7 @@ constructor(
             }
             .map { course to it }
 
-    private fun getUnits(unitIds: LongArray, dataSourceType: DataSourceType): Single<List<Unit>> =
+    private fun getUnits(unitIds: List<Long>, dataSourceType: DataSourceType): Single<List<Unit>> =
         unitRepository
-            .getUnits(*unitIds, primarySourceType = dataSourceType)
+            .getUnits(unitIds, primarySourceType = dataSourceType)
 }

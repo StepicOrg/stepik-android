@@ -31,7 +31,7 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<CourseCollection>(
                 put(DbStructureCourseCollection.Columns.POSITION, persistentObject.position)
                 put(DbStructureCourseCollection.Columns.TITLE, persistentObject.title)
                 put(DbStructureCourseCollection.Columns.LANGUAGE, persistentObject.language)
-                put(DbStructureCourseCollection.Columns.COURSES, DbParseHelper.parseLongArrayToString(persistentObject.courses))
+                put(DbStructureCourseCollection.Columns.COURSES, DbParseHelper.parseLongListToString(persistentObject.courses))
                 put(DbStructureCourseCollection.Columns.DESCRIPTION, persistentObject.description)
             }
 
@@ -41,7 +41,7 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<CourseCollection>(
             cursor.getInt(DbStructureCourseCollection.Columns.POSITION),
             cursor.getString(DbStructureCourseCollection.Columns.TITLE)!!,
             cursor.getString(DbStructureCourseCollection.Columns.LANGUAGE)!!,
-            DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourseCollection.Columns.COURSES)) ?: longArrayOf(),
+            DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourseCollection.Columns.COURSES)) ?: listOf(),
             cursor.getString(DbStructureCourseCollection.Columns.DESCRIPTION)!!
         )
 }

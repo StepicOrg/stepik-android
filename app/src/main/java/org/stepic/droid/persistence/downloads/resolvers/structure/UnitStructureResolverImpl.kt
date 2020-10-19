@@ -28,16 +28,16 @@ constructor(
 
     private val stepStructureResolver: StepStructureResolver
 ): UnitStructureResolver {
-    override fun resolveStructure(vararg ids: Long, resolveNestedObjects: Boolean): Observable<Structure> =
+    override fun resolveStructure(ids: List<Long>, resolveNestedObjects: Boolean): Observable<Structure> =
         unitRepository
-            .getUnits(*ids)
+            .getUnits(ids)
             .flatMapObservable { units ->
                 resolveStructure(*units.toTypedArray(), resolveNestedObjects = resolveNestedObjects)
             }
 
     override fun resolveStructure(vararg items: Unit, resolveNestedObjects: Boolean): Observable<Structure> =
         sectionRepository
-            .getSections(*items.mapToLongArray(Unit::section))
+            .getSections(items.map(Unit::section))
             .flatMapObservable { sections ->
                 val observables =
                     items.mapNotNull { unit ->
@@ -48,9 +48,9 @@ constructor(
                 Observable.concat(observables)
             }
 
-    override fun resolveStructure(courseId: Long, sectionId: Long, vararg unitIds: Long, resolveNestedObjects: Boolean): Observable<Structure> =
+    override fun resolveStructure(courseId: Long, sectionId: Long, unitIds: List<Long>, resolveNestedObjects: Boolean): Observable<Structure> =
         unitRepository
-            .getUnits(*unitIds)
+            .getUnits(unitIds)
             .flatMapObservable { units ->
                 resolveStructure(courseId, sectionId, *units.toTypedArray(), resolveNestedObjects = resolveNestedObjects)
             }
