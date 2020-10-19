@@ -1,6 +1,6 @@
 package org.stepik.android.cache.course.source.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureCourseReviewSummary {
     const val TABLE_NAME = "course_summary"
@@ -14,12 +14,12 @@ object DbStructureCourseReviewSummary {
         const val DISTRIBUTION = "distribution"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
-            CREATE TABLE IF NOT EXISTS ${DbStructureCourseReviewSummary.TABLE_NAME} (
-                ${DbStructureCourseReviewSummary.Columns.SUMMARY_ID} LONG PRIMARY KEY,
-                ${DbStructureCourseReviewSummary.Columns.COURSE_ID} LONG,
-                ${DbStructureCourseReviewSummary.Columns.AVERAGE} REAL
+            CREATE TABLE IF NOT EXISTS $TABLE_NAME (
+                ${Columns.SUMMARY_ID} LONG PRIMARY KEY,
+                ${Columns.COURSE_ID} LONG,
+                ${Columns.AVERAGE} REAL
             )
         """.trimIndent())
     }

@@ -12,10 +12,9 @@ class CourseCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : CourseCacheDataSource {
-    override fun getCourses(vararg ids: Long): Single<List<Course>> =
+    override fun getCourses(ids: List<Long>): Single<List<Course>> =
         Single.fromCallable {
-            ids.map(databaseFacade::getCourseById)
-                .filterNotNull()
+            ids.mapNotNull(databaseFacade::getCourseById)
         }
 
     override fun saveCourses(courses: List<Course>): Completable =

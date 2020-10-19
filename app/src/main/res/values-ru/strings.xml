@@ -782,6 +782,30 @@
 
     <string name="step_quiz_reload_message">Извините, задание было изменено авторами. Необходимо начать сначала. Баллы за прошлые решения сохранены.</string>
 
+    <!-- Peer review -->
+    <string name="step_quiz_review_send_pending">Отправьте лучшее решение на проверку</string>
+    <string name="step_quiz_review_send_in_progress">Отправьте лучшее решение на проверку. После отправки заменить решение нельзя.</string>
+    <string name="step_quiz_review_send_completed">Решение отправлено на проверку</string>
+    <string name="step_quiz_review_send_choose">Выбрать решение</string>
+    <string name="step_quiz_review_send_submit">Отправить это решение</string>
+
+    <string name="step_quiz_review_given_title">Рецензия</string>
+    <string name="step_quiz_review_given_pending_zero">Сделайте рецензии на решения других учащихся</string>
+    <string name="step_quiz_review_given_extra_note">Делая дополнительные рецензии, вы повышаете шанс получить рецензии на свою работу быстрее</string>
+    <string name="step_quiz_review_given_start_review">Рецензировать</string>
+    <string name="step_quiz_review_given_no_review">Пока нет решений для рецензии</string>
+    <string name="step_quiz_review_taken_pending_zero">Дождитесь рецензии на своё решение</string>
+    <string name="step_quiz_review_taken_action">Смотреть рецензии</string>
+    <string name="step_quiz_review_taken_title">Полученные рецензии</string>
+    <string name="step_quiz_review_taken_hint">Обычно первая рецензия приходит через 2 дня после отправки решения на рецензирование (но это не точно)</string>
+
+    <string name="step_quiz_review_instructor_pending">Дождитесь оценки преподавателя, максимум за задачу — %s</string>
+    <string name="step_quiz_review_instructor_completed_hint">Ответ преподавателя придет не сразу, вы получите уведомление</string>
+    <string name="step_quiz_review_instructor_completed_action">Смотреть рецензию</string>
+
+    <string name="step_quiz_review_peer_pending">Получите баллы, максимальная оценка — %s</string>
+    <string name="step_quiz_review_peer_completed">Ваш ответ оценили на %s из %s</string>
+
     <!-- Feedback -->
     <string name="feedback_email_chooser_title">Выберите почтовый клиент</string>
 

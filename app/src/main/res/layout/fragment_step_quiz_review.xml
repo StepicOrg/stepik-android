@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <include
+        android:id="@+id/stepQuizReviewNetworkError"
+        layout="@layout/error_no_connection_with_button_small"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:visibility="gone" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/stepQuizReviewLoading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/reviewStep1StatusLoading"
+            style="@style/StepQuizReview.Status"
+
+            app:radius="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/stepQuizDescriptionLoading"
+            style="@style/StepQuizReview.Title"
+            android:layout_height="12dp"
+
+            app:layout_constraintStart_toEndOf="@id/reviewStep1StatusLoading"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/reviewStep1StatusLoading"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <include
+            android:id="@+id/reviewStep1DividerTopLoading"
+            layout="@layout/view_divider_vertical"
+            style="@style/StepQuizReview.Divider"
+
+            app:layout_constraintStart_toStartOf="@id/stepQuizDescriptionLoading"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reviewStep1StatusLoading" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/reviewStep1ContainerLoading"
+
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:orientation="vertical"
+
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+            app:layout_constraintTop_toBottomOf="@id/reviewStep1DividerTopLoading"
+            app:layout_constraintStart_toStartOf="@id/stepQuizDescriptionLoading"
+            app:layout_constraintEnd_toEndOf="@id/stepQuizDescriptionLoading" />
+
+        <include
+            android:id="@+id/reviewStep1DividerBottomLoading"
+            layout="@layout/view_divider_vertical"
+            style="@style/StepQuizReview.Divider"
+
+            app:layout_constraintStart_toStartOf="@id/stepQuizDescriptionLoading"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reviewStep1ContainerLoading" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/reviewStep2StatusLoading"
+            style="@style/StepQuizReview.Status"
+            app:radius="12dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/reviewStep1DividerBottomLoading" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/reviewStep2TitleLoading"
+            style="@style/StepQuizReview.Title"
+            android:layout_height="12dp"
+
+            android:layout_marginTop="0dp"
+            app:layout_constraintStart_toEndOf="@id/reviewStep2StatusLoading"
+            app:layout_constraintTop_toTopOf="@id/reviewStep2StatusLoading"
+            app:layout_constraintBottom_toBottomOf="@id/reviewStep2StatusLoading"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/reviewStep2LinkLoading"
+            style="@style/StepQuizReview.Link"
+            android:background="@null"
+
+            app:layout_constraintStart_toStartOf="@id/reviewStep2StatusLoading"
+            app:layout_constraintEnd_toEndOf="@id/reviewStep2StatusLoading"
+            app:layout_constraintTop_toBottomOf="@id/reviewStep1StatusLoading"
+            app:layout_constraintBottom_toTopOf="@id/reviewStep2StatusLoading" />
+
+        <include
+            android:id="@+id/reviewStep2DividerTopLoading"
+            layout="@layout/view_divider_vertical"
+            style="@style/StepQuizReview.Divider"
+
+            app:layout_constraintStart_toStartOf="@id/reviewStep2TitleLoading"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reviewStep2StatusLoading" />
+
+        <org.stepic.droid.ui.custom.LoadingView
+            android:id="@+id/reviewStep2ContainerLoading"
+
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:orientation="vertical"
+
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
+
+            app:layout_constraintTop_toBottomOf="@id/reviewStep2DividerTopLoading"
+            app:layout_constraintStart_toStartOf="@id/reviewStep2TitleLoading"
+            app:layout_constraintEnd_toEndOf="@id/reviewStep2TitleLoading" />
+
+        <include
+            android:id="@+id/reviewStep2DividerBottomLoading"
+            layout="@layout/view_divider_vertical"
+            style="@style/StepQuizReview.Divider"
+
+            app:layout_constraintStart_toStartOf="@id/reviewStep2TitleLoading"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/reviewStep2ContainerLoading" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

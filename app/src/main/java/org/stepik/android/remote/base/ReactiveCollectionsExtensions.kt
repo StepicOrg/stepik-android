@@ -15,10 +15,13 @@ inline fun <R> LongArray.chunkedSingleMap(chuckSize: Int = CHUNK_SIZE, mapper: (
         .let { Single.concat(it) }
         .reduce(emptyList()) { a, b -> a + b }
 
-inline fun <reified T, R> Array<out T>.chunkedSingleMap(chuckSize: Int = CHUNK_SIZE, mapper: (Array<T>) -> Single<List<R>>): Single<List<R>> =
+inline fun <reified T, R> Array<out T>.chunkedSingleMap(chuckSize: Int = CHUNK_SIZE, mapper: (List<T>) -> Single<List<R>>): Single<List<R>> =
     asIterable()
-        .chunked(chuckSize)
-        .map { mapper(it.toTypedArray()) }
+        .chunkedSingleMap(chuckSize, mapper)
+
+inline fun <reified T, R> Iterable<T>.chunkedSingleMap(chuckSize: Int = CHUNK_SIZE, mapper: (List<T>) -> Single<List<R>>): Single<List<R>> =
+    chunked(chuckSize)
+        .map { mapper(it) }
         .let { Single.concat(it) }
         .reduce(emptyList()) { a, b -> a + b }
 

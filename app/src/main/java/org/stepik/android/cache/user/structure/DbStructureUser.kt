@@ -1,6 +1,6 @@
 package org.stepik.android.cache.user.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureUser {
     const val TABLE_NAME = "users"
@@ -32,7 +32,7 @@ object DbStructureUser {
         const val JOIN_DATE = "join_date"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${DbStructureUser.Columns.ID} LONG PRIMARY KEY,

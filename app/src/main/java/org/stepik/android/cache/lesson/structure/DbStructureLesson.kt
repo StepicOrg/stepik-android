@@ -1,6 +1,6 @@
 package org.stepik.android.cache.lesson.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureLesson {
     const val TABLE_NAME = "lesson"
@@ -29,7 +29,7 @@ object DbStructureLesson {
         const val TIME_TO_COMPLETE = "time_to_complete"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${DbStructureLesson.Columns.ID} LONG PRIMARY KEY,

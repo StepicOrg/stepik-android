@@ -1,6 +1,6 @@
 package org.stepik.android.cache.certificates.structure
 
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 object DbStructureCertificate {
     const val TABLE_NAME = "certificate"
@@ -16,7 +16,7 @@ object DbStructureCertificate {
         const val URL = "url"
     }
 
-    fun createTable(db: SQLiteDatabase) {
+    fun createTable(db: SupportSQLiteDatabase) {
         db.execSQL("""
             CREATE TABLE IF NOT EXISTS $TABLE_NAME (
                 ${Columns.ID} LONG PRIMARY KEY,

@@ -1,6 +1,5 @@
 package org.stepic.droid.util.resolvers
 
-import android.graphics.drawable.AnimationDrawable
 import org.stepic.droid.ui.quiz.QuizDelegate
 import org.stepik.android.model.Step
 

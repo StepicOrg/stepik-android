@@ -58,6 +58,8 @@ constructor(
             isFeatured = cursor.getBoolean(DbStructureCourse.Columns.IS_FEATURED),
             isActive = cursor.getBoolean(DbStructureCourse.Columns.IS_ACTIVE),
             isPublic = cursor.getBoolean(DbStructureCourse.Columns.IS_PUBLIC),
+            isArchived = cursor.getBoolean(DbStructureCourse.Columns.IS_ARCHIVED),
+            isFavorite = cursor.getBoolean(DbStructureCourse.Columns.IS_FAVORITE),
             certificateDistinctionThreshold = cursor.getLong(DbStructureCourse.Columns.CERTIFICATE_DISTINCTION_THRESHOLD),
             certificateRegularThreshold = cursor.getLong(DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD),
             certificateLink = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_LINK),
@@ -115,6 +117,8 @@ constructor(
         values.put(DbStructureCourse.Columns.IS_FEATURED, course.isFeatured)
         values.put(DbStructureCourse.Columns.IS_ACTIVE, course.isActive)
         values.put(DbStructureCourse.Columns.IS_PUBLIC, course.isPublic)
+        values.put(DbStructureCourse.Columns.IS_ARCHIVED, course.isArchived)
+        values.put(DbStructureCourse.Columns.IS_FAVORITE, course.isFavorite)
         values.put(DbStructureCourse.Columns.CERTIFICATE_DISTINCTION_THRESHOLD, course.certificateDistinctionThreshold)
         values.put(DbStructureCourse.Columns.CERTIFICATE_REGULAR_THRESHOLD, course.certificateRegularThreshold)
         values.put(DbStructureCourse.Columns.CERTIFICATE_LINK, course.certificateLink)

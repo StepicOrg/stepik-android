@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.stepic.droid.util.DateTimeHelper
+import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.profile.repository.ProfileRepository
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.domain.user_courses.repository.UserCoursesRepository
@@ -21,9 +22,15 @@ constructor(
     private val userCoursesOperationPublisher: PublishSubject<UserCourse>
 ) {
     fun saveUserCourse(userCourse: UserCourse): Single<UserCourse> =
-        userCoursesRepository
-            .saveUserCourse(userCourse)
-            .doOnSuccess(userCoursesOperationPublisher::onNext)
+        if (userCourse.id == 0L) {
+            userCoursesRepository
+                .getUserCourseByCourseId(userCourse.course, sourceType = DataSourceType.REMOTE)
+                .flatMapSingle { remoteUserCourse ->
+                    savePublishUserCourse(userCourse.copy(id = remoteUserCourse.id, lastViewed = remoteUserCourse.lastViewed))
+                }
+        } else {
+            savePublishUserCourse(userCourse)
+        }
 
     fun addUserCourse(courseId: Long): Completable =
         profileRepository.getProfile().flatMapCompletable { profile ->
@@ -42,4 +49,9 @@ constructor(
 
     fun removeUserCourse(courseId: Long): Completable =
         userCoursesRepository.removeUserCourse(courseId)
+
+    private fun savePublishUserCourse(userCourse: UserCourse): Single<UserCourse> =
+        userCoursesRepository
+            .saveUserCourse(userCourse)
+            .doOnSuccess(userCoursesOperationPublisher::onNext)
 }

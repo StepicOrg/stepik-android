@@ -1,9 +1,9 @@
 package org.stepik.android.data.course.repository
 
 import io.reactivex.Completable
-import io.reactivex.Maybe
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
+import org.stepik.android.data.base.repository.delegate.ListRepositoryDelegate
 import org.stepik.android.data.course.source.CourseCacheDataSource
 import org.stepik.android.data.course.source.CourseRemoteDataSource
 import org.stepik.android.data.course_list.source.CourseListQueryCacheDataSource
@@ -13,8 +13,6 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.model.Course
 import ru.nobird.android.core.model.mapToLongArray
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
-import ru.nobird.android.domain.rx.maybeFirst
-import ru.nobird.android.domain.rx.requireSize
 import javax.inject.Inject
 
 class CourseRepositoryImpl
@@ -24,47 +22,17 @@ constructor(
     private val courseCacheDataSource: CourseCacheDataSource,
     private val courseListQueryCacheDataSource: CourseListQueryCacheDataSource
 ) : CourseRepository {
+    private val delegate =
+        ListRepositoryDelegate(
+            courseRemoteDataSource::getCourses,
+            courseCacheDataSource::getCourses,
+            courseCacheDataSource::saveCourses
+        )
 
-    override fun getCourse(courseId: Long, canUseCache: Boolean): Maybe<Course> {
-        val remoteSource = courseRemoteDataSource.getCourses(courseId).maybeFirst()
-            .doCompletableOnSuccess(courseCacheDataSource::saveCourse)
-
-        val cacheSource = courseCacheDataSource.getCourses(courseId).maybeFirst()
-
-        return if (canUseCache) {
-            cacheSource.switchIfEmpty(remoteSource)
-        } else {
-            remoteSource
-        }
-    }
-
-    override fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType): Single<PagedList<Course>> {
-        if (courseIds.isEmpty()) return Single.just(PagedList(emptyList()))
-
-        val remoteSource = courseRemoteDataSource
-            .getCourses(*courseIds)
-            .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
-
-        val cacheSource = courseCacheDataSource
-            .getCourses(*courseIds)
-
-        return when (primarySourceType) {
-            DataSourceType.REMOTE ->
-                remoteSource.onErrorResumeNext(cacheSource.requireSize(courseIds.size))
-
-            DataSourceType.CACHE ->
-                cacheSource.flatMap { cachedCourses ->
-                    val ids = (courseIds.toList() - cachedCourses.map(Course::id)).toLongArray()
-                    courseRemoteDataSource
-                        .getCourses(*ids)
-                        .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
-                        .map { remoteCourses -> cachedCourses + remoteCourses }
-                }
-
-            else ->
-                throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }.map { courses -> PagedList(courses.sortedBy { courseIds.indexOf(it.id) }) }
-    }
+    override fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType, allowFallback: Boolean): Single<PagedList<Course>> =
+        delegate
+            .get(courseIds.toList(), primarySourceType, allowFallback)
+            .map(::PagedList)
 
     override fun getCourses(courseListQuery: CourseListQuery, primarySourceType: DataSourceType, allowFallback: Boolean): Single<PagedList<Course>> {
         val remoteSource = courseRemoteDataSource

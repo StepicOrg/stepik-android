@@ -13,6 +13,10 @@ object DbStructureStep {
 
         const val SUBSCRIPTION = "subscription"
 
+        const val SESSION = "session"
+        const val INSTRUCTION = "instruction"
+        const val INSTRUCTION_TYPE = "instruction_type"
+
         const val VIEWED_BY = "viewed_by"
         const val PASSED_BY = "passed_by"
         const val WORTH = "worth"

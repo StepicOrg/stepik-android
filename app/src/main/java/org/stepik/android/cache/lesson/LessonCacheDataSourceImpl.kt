@@ -12,9 +12,9 @@ class LessonCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : LessonCacheDataSource {
-    override fun getLessons(vararg lessonIds: Long): Single<List<Lesson>> =
+    override fun getLessons(lessonIds: List<Long>): Single<List<Lesson>> =
         Single.fromCallable {
-            databaseFacade.getLessonsByIds(lessonIds)
+            databaseFacade.getLessonsByIds(lessonIds.toLongArray())
         }
 
     override fun saveLessons(lessons: List<Lesson>): Completable =

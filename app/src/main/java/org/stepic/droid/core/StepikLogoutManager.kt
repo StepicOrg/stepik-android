@@ -7,7 +7,7 @@ import org.stepic.droid.persistence.downloads.interactor.RemovalDownloadsInterac
 import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.storage.operations.DatabaseFacade
 import org.stepic.droid.util.RWLocks
-import org.stepik.android.cache.base.AnalyticDatabase
+import org.stepik.android.cache.base.database.AnalyticDatabase
 import java.util.concurrent.ThreadPoolExecutor
 import javax.inject.Inject
 

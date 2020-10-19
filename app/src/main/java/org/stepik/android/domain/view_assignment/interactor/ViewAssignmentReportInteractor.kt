@@ -61,7 +61,7 @@ constructor(
         if (isStepPassedAfterView(step)) {
             val progresses =
                 listOfNotNull(
-                    Progress(id = step.progress, isPassed = true, nSteps = 1, nStepsPassed = 1),
+                    Progress(id = step.progress.orEmpty(), isPassed = true, nSteps = 1, nStepsPassed = 1),
                     assignment?.progress?.let { Progress(id = it, isPassed = true, nSteps = 1, nStepsPassed = 1) }
                 )
 
@@ -99,7 +99,7 @@ constructor(
                 viewAssignmentRepository
                     .createViewAssignment(viewAssignment, dataSourceType = DataSourceType.CACHE) // add view assignment to local queue
                     .doOnComplete {
-                        viewAssignmentObserver.onNext(kotlin.Unit)
+                        viewAssignmentObserver.onNext(Unit)
                     }
             }
 }

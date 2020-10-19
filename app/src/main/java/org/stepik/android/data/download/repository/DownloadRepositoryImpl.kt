@@ -57,7 +57,7 @@ constructor(
 
     private fun resolveCourse(courseId: Long, items: List<PersistentItem>): Single<DownloadItem> =
         Singles.zip(
-            courseRepository.getCourse(courseId, canUseCache = true).toSingle(),
+            courseRepository.getCourse(courseId).toSingle(),
             getStorageRecords(items)
         ) { course, records ->
             resolveDownloadItem(course, items, records)

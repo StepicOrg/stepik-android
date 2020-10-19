@@ -29,7 +29,7 @@ class CourseHeaderDataTest {
                 review = 1.0,
                 learnersCount = 100,
                 readiness = 1.0,
-                progress = Progress(),
+                progress = Progress(id = "1"),
                 enrollmentState = EnrollmentState.NotEnrolledWeb
             ),
             localSubmissionsCount = 5

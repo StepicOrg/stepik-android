@@ -28,7 +28,7 @@ constructor(
     override fun resolveStructure(vararg items: Course, resolveNestedObjects: Boolean): Observable<Structure> =
         if (resolveNestedObjects) {
             progressRepository
-                .getProgresses(*items.asIterable().getProgresses())
+                .getProgresses(items.asIterable().getProgresses())
                 .ignoreElement()
         } else {
             Completable.complete()

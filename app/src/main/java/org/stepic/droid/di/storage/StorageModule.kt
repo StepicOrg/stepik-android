@@ -1,9 +1,10 @@
 package org.stepic.droid.di.storage
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Binds
@@ -19,7 +20,6 @@ import org.stepic.droid.persistence.storage.dao.PersistentItemDao
 import org.stepic.droid.persistence.storage.dao.PersistentItemDaoImpl
 import org.stepic.droid.persistence.storage.dao.PersistentStateDao
 import org.stepic.droid.persistence.storage.dao.PersistentStateDaoImpl
-import org.stepic.droid.storage.DatabaseHelper
 import org.stepic.droid.storage.dao.AdaptiveExpDao
 import org.stepic.droid.storage.dao.AdaptiveExpDaoImpl
 import org.stepic.droid.storage.dao.AssignmentDaoImpl
@@ -41,11 +41,13 @@ import org.stepic.droid.storage.dao.UnitDaoImpl
 import org.stepic.droid.storage.dao.VideoTimestampDaoImpl
 import org.stepic.droid.storage.dao.ViewAssignmentDaoImpl
 import org.stepic.droid.storage.dao.ViewedNotificationsQueueDaoImpl
+import org.stepic.droid.storage.migration.Migrations
 import org.stepic.droid.storage.operations.DatabaseOperations
 import org.stepic.droid.storage.operations.DatabaseOperationsImpl
 import org.stepik.android.cache.attempt.dao.AttemptDaoImpl
-import org.stepik.android.cache.base.AnalyticDatabase
-import org.stepik.android.cache.base.AnalyticDatabaseInfo
+import org.stepik.android.cache.base.database.AnalyticDatabase
+import org.stepik.android.cache.base.database.AnalyticDatabaseInfo
+import org.stepik.android.cache.base.database.AppDatabase
 import org.stepik.android.cache.certificates.dao.CertificateDaoImpl
 import org.stepik.android.cache.course_collection.dao.CourseCollectionDaoImpl
 import org.stepik.android.cache.course_list.dao.CourseListQueryDaoImpl
@@ -99,10 +101,6 @@ abstract class StorageModule {
     @StorageSingleton
     @Binds
     internal abstract fun bindsOperations(databaseOperationsImpl: DatabaseOperationsImpl): DatabaseOperations
-
-    @StorageSingleton
-    @Binds
-    internal abstract fun provideSqlOpenHelper(databaseHelper: DatabaseHelper): SQLiteOpenHelper
 
     @StorageSingleton
     @Binds
@@ -273,13 +271,32 @@ abstract class StorageModule {
         @StorageSingleton
         @Provides
         @JvmStatic
-        internal fun provideWritableDatabase(helper: SQLiteOpenHelper): SQLiteDatabase =
-                helper.writableDatabase
+        internal fun provideAnalyticDatabase(context: Context): AnalyticDatabase =
+            Room.databaseBuilder(context, AnalyticDatabase::class.java, AnalyticDatabaseInfo.DATABASE_NAME).build()
 
         @StorageSingleton
         @Provides
         @JvmStatic
-        internal fun provideAnalyticDatabase(context: Context): AnalyticDatabase =
-            Room.databaseBuilder(context, AnalyticDatabase::class.java, AnalyticDatabaseInfo.DATABASE_NAME).build()
+        internal fun provideAppDatabase(context: Context): AppDatabase =
+            Room.databaseBuilder(context, AppDatabase::class.java, AppDatabase.NAME)
+                .addMigrations(*Migrations.migrations)
+                .addCallback(object : RoomDatabase.Callback() {
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        Migrations.migrations.forEach { it.migrate(db) }
+                    }
+                })
+                .build()
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideSqlOpenHelper(appDatabase: AppDatabase): SupportSQLiteOpenHelper =
+            appDatabase.openHelper
+
+        @StorageSingleton
+        @Provides
+        @JvmStatic
+        internal fun provideWritableDatabase(helper: SupportSQLiteOpenHelper): SupportSQLiteDatabase =
+            helper.writableDatabase
     }
 }

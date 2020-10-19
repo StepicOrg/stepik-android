@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
+import org.stepik.android.model.Submission
 import org.stepik.android.presentation.base.PresenterBase
 import javax.inject.Inject
 
@@ -31,7 +32,7 @@ constructor(
         view.setState(state)
     }
 
-    fun fetchSubmissions(stepId: Long, forceUpdate: Boolean = false) {
+    fun fetchSubmissions(stepId: Long, status: Submission.Status?, forceUpdate: Boolean = false) {
         if (state != SubmissionsView.State.Idle &&
             !((state == SubmissionsView.State.NetworkError || state is SubmissionsView.State.Content) && forceUpdate)) {
             return
@@ -42,7 +43,7 @@ constructor(
 
         state = SubmissionsView.State.Loading
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(stepId)
+            .getSubmissionItems(stepId, status)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
@@ -65,14 +66,14 @@ constructor(
             )
     }
 
-    fun fetchNextPage(stepId: Long) {
+    fun fetchNextPage(stepId: Long, status: Submission.Status?) {
         val oldState = (state as? SubmissionsView.State.Content)
             ?.takeIf { it.items.hasNext }
             ?: return
 
         state = SubmissionsView.State.ContentLoading(oldState.items)
         compositeDisposable += submissionInteractor
-            .getSubmissionItems(stepId, page = oldState.items.page + 1)
+            .getSubmissionItems(stepId, status, page = oldState.items.page + 1)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(

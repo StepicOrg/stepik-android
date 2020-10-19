@@ -5,10 +5,11 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import org.stepik.android.model.util.readBoolean
 import org.stepik.android.model.util.writeBoolean
+import ru.nobird.android.core.model.Identifiable
 
 data class Course(
     @SerializedName("id")
-    val id: Long,
+    override val id: Long,
     @SerializedName("title")
     val title: String? = null,
     @SerializedName("description")
@@ -68,6 +69,10 @@ data class Course(
     val isActive: Boolean = false,
     @SerializedName("is_public")
     val isPublic: Boolean = false,
+    @SerializedName("is_archived")
+    val isArchived: Boolean = false,
+    @SerializedName("is_favorite")
+    val isFavorite: Boolean = false,
 
     @SerializedName("certificate_distinction_threshold")
     val certificateDistinctionThreshold: Long = 0,
@@ -123,7 +128,7 @@ data class Course(
     val displayPrice: String? = null,
     @SerializedName("price_tier")
     val priceTier: String? = null
-) : Progressable, Parcelable {
+) : Progressable, Parcelable, Identifiable<Long> {
 
     val hasCertificate: Boolean
         get() = certificate?.let {
@@ -167,6 +172,8 @@ data class Course(
         parcel.writeBoolean(isFeatured)
         parcel.writeBoolean(isActive)
         parcel.writeBoolean(isPublic)
+        parcel.writeBoolean(isArchived)
+        parcel.writeBoolean(isFavorite)
 
         parcel.writeLong(certificateDistinctionThreshold)
         parcel.writeLong(certificateRegularThreshold)
@@ -230,6 +237,8 @@ data class Course(
                 parcel.readString(),
                 parcel.readLong(),
                 parcel.readDouble(),
+                parcel.readBoolean(),
+                parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),
                 parcel.readBoolean(),

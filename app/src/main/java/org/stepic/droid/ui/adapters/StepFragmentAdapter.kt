@@ -1,30 +1,20 @@
 package org.stepic.droid.ui.adapters
 
-import android.content.Context
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import org.stepic.droid.R
-import org.stepic.droid.util.resolveColorAttribute
-import org.stepic.droid.util.resolveFloatAttribute
 import org.stepic.droid.util.resolvers.StepTypeResolver
 import org.stepik.android.domain.lesson.model.LessonData
 import org.stepik.android.domain.lesson.model.StepItem
-import org.stepik.android.view.base.ui.extension.ColorExtensions
 import org.stepik.android.view.fragment_pager.ActiveFragmentPagerAdapter
 import org.stepik.android.view.step.ui.fragment.StepFragment
 
 class StepFragmentAdapter(
-    context: Context,
     fm: FragmentManager,
     private val stepTypeResolver: StepTypeResolver
 ) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT),
     ActiveFragmentPagerAdapter {
-
-    private val alphaEmphasisDisabled = context.resolveFloatAttribute(R.attr.alphaEmphasisDisabled)
-    private val colorSecondary = context.resolveColorAttribute(R.attr.colorSecondary)
     
     var items: List<StepItem> = emptyList()
         set(value) {

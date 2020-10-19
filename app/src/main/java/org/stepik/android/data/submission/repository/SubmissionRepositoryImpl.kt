@@ -45,8 +45,8 @@ constructor(
                     }
         }
 
-    override fun getSubmissionsForStep(stepId: Long, userId: Long?, page: Int): Single<PagedList<Submission>> =
-        submissionRemoteDataSource.getSubmissionsForStep(stepId, userId, page)
+    override fun getSubmissionsForStep(stepId: Long, userId: Long?, status: Submission.Status?, page: Int): Single<PagedList<Submission>> =
+        submissionRemoteDataSource.getSubmissionsForStep(stepId, userId, status, page)
 
     override fun removeSubmissionsForAttempt(attemptId: Long): Completable =
         submissionCacheDataSource.removeSubmissionsForAttempt(attemptId)
