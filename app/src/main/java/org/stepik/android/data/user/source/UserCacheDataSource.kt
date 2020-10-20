@@ -5,6 +5,6 @@ import io.reactivex.Single
 import org.stepik.android.model.user.User
 
 interface UserCacheDataSource {
-    fun getUsers(vararg userIds: Long): Single<List<User>>
+    fun getUsers(userIds: List<Long>): Single<List<User>>
     fun saveUsers(users: List<User>): Completable
 }

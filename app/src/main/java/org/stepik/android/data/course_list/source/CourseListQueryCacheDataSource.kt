@@ -5,6 +5,6 @@ import io.reactivex.Single
 import org.stepik.android.domain.course_list.model.CourseListQuery
 
 interface CourseListQueryCacheDataSource {
-    fun getCourses(courseListQuery: CourseListQuery): Single<LongArray>
-    fun saveCourses(courseListQuery: CourseListQuery, courses: LongArray): Completable
+    fun getCourses(courseListQuery: CourseListQuery): Single<List<Long>>
+    fun saveCourses(courseListQuery: CourseListQuery, courses: List<Long>): Completable
 }

@@ -51,8 +51,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
 
-        android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
-
         app:layout_constraintTop_toBottomOf="@id/reviewStep1DividerTop"
         app:layout_constraintStart_toStartOf="@id/stepQuizDescription"
         app:layout_constraintEnd_toEndOf="@id/stepQuizDescription">
@@ -62,7 +60,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/StepQuizReview.Title"
-            android:layout_margin="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin"
 
             android:text="@string/step_quiz_free_answer_description" />
 
@@ -79,13 +79,15 @@
             android:id="@+id/stepQuizProgress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/reviewStep1QuizContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/step_quiz_review_vertical_block_margin">
             <include
                 android:id="@+id/quizFeedbackView"
                 layout="@layout/layout_step_quiz_feedback_block"

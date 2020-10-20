@@ -13,7 +13,6 @@ import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.presentation.course_list.CourseListUserView
 import org.stepik.android.presentation.course_list.CourseListView
 import ru.nobird.android.core.model.insert
-import ru.nobird.android.core.model.mapToLongArray
 import ru.nobird.android.core.model.slice
 import java.util.Date
 import javax.inject.Inject
@@ -135,7 +134,7 @@ constructor(
         return state.copy(courseListViewState = newCourseListViewState)
     }
 
-    fun getNextPageCourseIds(userCourses: List<UserCourse>, courseListViewState: CourseListView.State.Content): LongArray? {
+    fun getNextPageCourseIds(userCourses: List<UserCourse>, courseListViewState: CourseListView.State.Content): List<Long>? {
         if (!courseListViewState.courseListDataItems.hasNext ||
             (courseListViewState.courseListItems.last() as? CourseListItem.PlaceHolder)?.courseId == -1L) {
             return null
@@ -145,7 +144,7 @@ constructor(
 
         return userCourses
             .slice(offset, offset + PAGE_SIZE)
-            .mapToLongArray(UserCourse::course)
+            .map(UserCourse::course)
     }
 
     /**

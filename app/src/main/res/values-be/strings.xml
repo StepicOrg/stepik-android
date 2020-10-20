@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="stepik_free_courses_title">Stepik.org: бясплатныя курсы</string>
+    <string name="local_remind_message">Мы заўважылі, што вы да гэтага часу не выбралі ні аднаго курса
+        для вывучэння. Не адкладайце, запішыцеся на прыдатны бясплатны курс прама зараз!
+    </string>
+    <string name="logout_title">Выхад</string>
+    <string name="home_title">Галоўная</string>
+    <string name="password_hint">Пароль</string>
+    <string name="remind_password">Успомніць пароль</string>
+    <string name="settings_title">Налады</string>
+    <string name="sign_in">Увайсці</string>
+    <string name="sign_up">Рэгістрацыя</string>
+    <string name="tap_to_see_more">разгарнуць…</string>
+    <string name="loading">Загрузка</string>
+    <string name="soft_deadline">Мяккі дэдлайн</string>
+    <string name="hard_deadline">Жорсткі дэдлайн</string>
+    <string name="steps_title">Крокі</string>
+    <string name="not_video_player_error">Калі ласка, усталюйце відэаплэер</string>
+    <string name="video_title">Відэа</string>
+    <string name="clear_cache_title">Ачысціць кэш</string>
+    <string name="wi_fi_setting">Загружаць толькі па Wi-Fi</string>
+    <string name="title_confirmation">Пацверджанне</string>
+    <string name="yes">Так</string>
+    <string name="no">Не</string>
+    <string name="allow_mobile_download_title">Дазволіць загрузку праз мабільны інтэрнэт</string>
+    <string name="allow_mobile_message">Дазволіць тэлефону загружаць відэа па мабільным інтэрнэце,
+        калі Wi-Fi недаступны?
+    </string>
+    <string name="allow_mobile_snack">Загрузка праз мабільны інтэрнэт недаступная</string>
+    <string name="drop_course">Пакінуць курс</string>
+    <string name="you_dropped">Вы пакінулі %s</string>
+    <string name="cancel">Скасаваць</string>
+    <string name="save">Захаваць</string>
+    <string name="are_you_sure">Вы ўпэўнены?</string>
+    <string name="deny">Адхіліць</string>
+    <string name="allow">Дазволіць</string>
+    <string name="allow_question">Дазволіць?</string>
+    <string name="explain_permission">Для захавання і прагляду відэа ў рэжыме афлайн Stepik
+        мусіць мець права запісу файлаў у памяць тэлефона.
+    </string>
+    <string name="connectionProblems">Немагчыма ўсталяваць злучэнне з серверам</string>
+    <string name="video_quality">Якасць відэа для загрузкі</string>
+    <string name="video_quality_playing">Якасць відэа для прагляду</string>
+    <string name="video_quality_presence_message">Калі ласка, абярыце якасць відэа для наступных загрузак:</string>
+    <string name="download_system_request_title">кроку - %s ва ўроку - %s</string>
+    <string name="download_error">Памылка пры загрузцы %s</string>
+    <string name="download_error_insufficient_storage">: недастаткова вольнага месца</string>
+    <string name="download_error_system_manager">Пры загрузцы кантэнту адбылася памылка сістэмнага загрузчыка. Калі памылка паўтараецца, калі ласка, звярніцеся ў падтрымку.</string>
+    <string name="sync_problem">Узніклі праблемы з сінхранізацыяй дадзеных, калі ласка, паўтарыце
+        спробу пазней
+    </string>
+    <string name="empty_courses">Выглядае, што вы не запісаныя ні на адзін курс</string>
+    <string name="empty_courses_anonymous">Паглядзіце курсы або ўвайдзіце, каб запісацца на іх
+    </string>
+    <string name="join_course_web_exception">Паспрабуйце запісацца на курс у вэб версіі</string>
+    <string name="downloads">Загрузкі</string>
+    <string name="loading_message">Калі ласка, пачакайце…</string>
+    <string name="kb">КБ</string>
+    <string name="mb">МБ</string>
+    <string name="gb">ГБ</string>
+    <string name="clear_videos">Вы ўпэўненыя, што жадаеце выдаліць усе захаваныя відэа?</string>
+    <string name="empty_downloading">Няма загружаных відэа</string>
+    <string name="find_courses_hint">Шукаць курсы</string>
+    <string name="search_title">Пошук</string>
+    <string name="empty_search">Курсы не знойдзеныя</string>
+    <string name="submit">Даслаць</string>
+    <string name="wrong">Няправільна. Калі ласка, паспрабуйце яшчэ раз.</string>
+    <string name="correct">Дакладна!</string>
+    <string name="try_again">Паспрабаваць зноў</string>
+    <string name="correct_free_response">Ваша рашэнне захавана.</string>
+    <string name="terms_message_register"><![CDATA[Рэгіструючыся, вы пагаджаецеся з <a href="https://stepik.org/page/terms/?from_mobile_app=true">Умовамі карыстання</a> і <a href="https://stepik.org/page/privacy/?from_mobile_app=true">Палітыкай канфедыцыйнасці</a>]]></string>
+    <string name="review_warning">Гэта заданне з рэцэнзіяй. Націсніце, каб скончыць заданне ў web і
+        атрымаць балы.
+    </string>
+    <string name="password_too_short">Мінімальная колькасць знакаў у паролі: 6.</string>
+    <string name="send">Даслаць</string>
+    <string name="email_sent">Мы адправілі вам ліст.</string>
+    <string name="email_wrong">Няма карыстальніка з такім e-mail.</string>
+    <string name="are_you_sure_logout">Усе захаваныя дадзеныя будуць выдаленыя. Вы ўпэўненыя?</string>
+    <string name="feedback_good_description">Дадатак падабаецца, ім прыемна карыстацца.</string>
+    <string name="feedback_good">выдатна</string>
+    <string name="feedback_bad">дрэнна</string>
+    <string name="feedback_bad_description">Дадатак нязручны, доўга загружаецца, відэа не
+        прайграецца.
+    </string>
+    <string name="feedback_title">Пакінуць водгук</string>
+    <string name="email_incorrect">Уведзены некарэктны e-mail</string>
+    <string name="feedback_subject">Водгук аб Android дадатку Stepik.org</string>
+    <string name="feedback_sent">Паведамленне даслана</string>
+    <string name="feedback_fail">Ой… нешта пайшло не так. Паспрабуйце пазней</string>
+    <string name="internet_problem">Інтэрнэт недаступны. Паспрабуйце пазней</string>
+    <string name="feedback_fill_fields">Запоўніце пустыя палі</string>
+    <string name="open_in_external_player">Адкрываць у сістэмным плэеры</string>
+    <string name="notification_title">Апавяшчэнні</string>
+    <string name="notification_learn_list">Дэдлайн, новыя модулі, сертыфікаты</string>
+    <string name="vibration_title">Вібрацыя</string>
+    <plurals name="notification_plural">
+        <item quantity="one">%d новае апавяшчэнне</item>
+        <item quantity="few">%d новых апавяшчэнні</item>
+        <item quantity="many">%d новых апавяшчэнняў</item>
+        <item quantity="other">%d новых апавяшчэнняў</item>
+    </plurals>
+    <string name="open_comments_zero">Няма каментароў. Пакіньце першы.</string>
+    <string name="empty_try_later">Цяпер тут пуста, паспрабуйце пазней.</string>
+    <string name="sound_title">Гук</string>
+    <string name="cached_title">Загружана</string>
+    <string name="remove_all">Выдаліць усе</string>
+    <string name="hint_for_idea">Напішыце заўвагу або ідэю</string>
+    <string name="feedback_from">Ад</string>
+    <string name="load_more">яшчэ</string>
+    <string name="leave_first_comment">Няма абмеркаванняў. Пачніце першае.</string>
+    <string name="comment_sent">Каментар паспяхова адпраўлены</string>
+    <string name="reply_title">Адказаць</string>
+    <string name="space_management_title">Кіраванне памяццю</string>
+    <string name="clear_cache_explanation">Прыкладанне падтрымлівае прагляд відэа онлайн, але для
+        прагляду урокаў без Інтэрнэт-падключэння іх неабходна захоўваць. Большую частку памяці
+        займаюць відэа-ўрокі. Выдаленне ўсіх загружаных відэа можа заняць некалькі хвілін.
+    </string>
+    <string name="empty">Пуста</string>
+    <string name="storage">Загружаны кантэнт</string>
+    <string name="notMountExplanation">Карта памяці не ўсталяваная на прыладу. Для таго, каб
+        захоўваць відэа на карту памяці, ўстаўце яе ў тэлефон і перазапусціце прыкладанне.
+    </string>
+    <string name="mountExplanation">Вы можаце захоўваць ўрокі на SD-карту або на ўнутраную памяць
+        прылады. Звярніце ўвагу, што калі ўрокі былі запісаныя на SD-карту, то, пры выманні
+        SD-карты, яны перастануць быць даступныя для праходжання афлайн.
+    </string>
+    <string name="choose_storage_title">Месца для захоўвання</string>
+    <string name="secondary_storage">Знешняя</string>
+    <string name="default_storage">Унутраная</string>
+    <string name="free_title">свабодна</string>
+    <string name="move_data_explanation">Усе раней загружаныя відэа будуць перанесены, новыя відэа
+        будуць захоўвацца ў абранае месца. Аперацыя можа заняць некалькі хвілін. Вы ўпэўнены?
+    </string>
+    <string name="done">Гатова</string>
+    <string name="moving">Перанос</string>
+    <string name="fail_to_parse">На жаль, курс не знойдзены</string>
+    <string name="authorization">Аўтарызацыя</string>
+    <string name="unauthorization_detail">Для таго, каб працягнуць, неабходна ўвайсці або
+        зарэгістравацца. Вы хочаце зрабіць гэта цяпер?
+    </string>
+    <string name="delete_label">Выдаліць</string>
+    <string name="fail_delete_comment">Выбачайце, не ўдалося выдаліць каментар</string>
+    <string name="share_title">Падзяліцца</string>
+    <string name="last_discussion">Новыя абмеркаванні</string>
+    <string name="most_liked_discussion">Самыя папулярныя</string>
+    <string name="most_active_discussion">Часта абмяркоўваюцца</string>
+    <string name="recent_activity_discussion">Свежыя абнаўленні</string>
+    <string name="calendar_title">Каляндар</string>
+    <string name="calendar_detail">У заданняў у дадзеным курсе ёсць крайні тэрмін здачы. Для таго, каб
+        прайсці заданне своечасова і атрымаць сертыфікат, мы рэкамендуем дадаць у каляндар крайнія
+        тэрміны здачы і атрымліваць нагадванні за 2 дні да іх наступлення. Кіраваць з\'яўленнем гэтага
+        паведамлення можна ў наладах праграмы.
+    </string>
+    <string name="add_to_the_calendar">Дадаць у каляндар</string>
+    <string name="explain_calendar_permission">Для дадання дэдлайнаў у каляндар праграма
+        мусіць мець доступ да календара. Мы не змяняем і не праглядаем Вашы падзеі, толькі
+        дадаем дэдлайны.
+    </string>
+    <string name="calendar_setting_description">Паказваць віджэт дадання ў каляндар</string>
+    <string name="ok">Добра</string>
+    <string name="choose_calendar_title">Абярыце каляндар</string>
+    <string name="calendar_added_message">Дэдлайн паспяхова дададзены ў каляндар</string>
+    <string name="user_not_have_calendar">Календароў няма. Паспрабуйце стварыць у дадатку
+        календара
+    </string>
+    <string name="certificates_title">Сертыфікаты</string>
+    <string name="certificate_regular_with_substitution">Сертыфікат за курс %s</string>
+    <string name="certificate_distinction_with_substitution">Сертыфікат з адзнакай за курс %s
+    </string>
+    <string name="certificate_result_with_substitution">Вынік: %s%%</string>
+    <string name="certificate_issuing">Выдаецца</string>
+    <string name="certificate_not_issuing">Не выдаецца</string>
+    <string name="copy_link_title">Капіяваць спасылку</string>
+    <string name="link_copied_title">Спасылка скапіяваная</string>
+    <string name="certificate_share_share_link">Падзяліцца…</string>
+    <string name="add_to_linkedin">Дадаць у профіль LinkedIn</string>
+    <string name="empty_certificates">Няма сертыфікатаў</string>
+    <string name="are_you_sure_remove_comment_text">Калі вы выйдзіце, гэты запіс будзе страчаны
+    </string>
+    <string name="auth_error_invalid_credentials">E-mail адрас/пароль няслушныя</string>
+    <string name="auth_error_email_already_used">Гэты e-mail выкарыстоўваецца ў іншым акаўнце</string>
+    <string name="auth_error_email_not_provided_by_social">Памылка аўтарызацыі: у акаўнце сацыяльнай сеткі не пазначаны email</string>
+    <string name="auth_error_unknown">Памылка аўтарызацыі</string>
+    <string name="go_to_the_next_lesson">Наступны ўрок</string>
+    <string name="cant_show_next_step">Выбачайце, наступны ўрок недасяжны</string>
+    <string name="previous_lesson">Папярэдні ўрок</string>
+    <string name="cant_show_previous_step">Выбачайце, папярэдні ўрок недасяжны</string>
+    <string name="lesson_not_found_or_not_access">Урок не існуе ці ў вас няма правоў на яго
+        прагляд
+    </string>
+    <string name="not_auth_message">Увайдзіце, каб працягнуць</string>
+    <string name="auth_action_title">Увайсці</string>
+    <string name="empty_steps_title">У гэтым уроку яшчэ няма крокаў альбо ў вас няма правоў на яго
+        прагляд</string>
+    <string name="open_in_browser">Адкрыць у браўзэры</string>
+    <string name="low_quality">Нiзкая</string>
+    <string name="medium_quality">Сярэдняя</string>
+    <string name="high_quality">Высокая</string>
+    <string name="do_not_ask_me_again">Больш не пытацца (вы заўсёды можаце змяніць якасць відэа ў наладах)</string>
+    <string name="discount_policy_inverse_title">Пасля кожнага няправільнага рашэння балы, якія
+        можна атрымаць за заданне, будуць зменшаны
+    </string>
+    <plurals name="discount_policy_first_n">
+        <item quantity="one">У вас  засталася %d спроба, за якую вы зможаце атрымаць балы</item>
+        <item quantity="few">У вас  засталося %d спробы, за якія вы зможаце атрымаць балы</item>
+        <item quantity="many">У вас  засталося %d спробаў, за якія вы зможаце атрымаць балы</item>
+        <item quantity="other">У вас  засталося %d спробаў, за якія вы зможаце атрымаць балы
+        </item>
+    </plurals>
+    <plurals name="restriction_submission">
+        <item quantity="one">У вас  засталася %d спроба</item>
+        <item quantity="few">У вас  засталося %d спробы</item>
+        <item quantity="many">У вас  засталося %d спробаў</item>
+        <item quantity="other">У вас  засталося %d спробаў</item>
+    </plurals>
+    <string name="discount_policy_no_way">За вашыя наступныя спробы не будуць налічаны балы
+    </string>
+    <string name="other_title">Iншае</string>
+    <string name="discounting_policy_title_settings">Папярэджваць пра ўрокі са штрафамі за няслушныя
+        адказы
+    </string>
+    <string name="discounting_policy_message">Калі вы адправіце няправільнае рашэнне гэтага задання, то ў
+        далейшым вы можаце не атрымаць балы. Вы ўпэўнены?
+    </string>
+    <string name="keep_screen_on_title_settings">Пакідаць экран уключаным падчас рашэння задач
+    </string>
+    <string name="adaptive_mode_settings">@string/adaptive_courses</string>
+    <string name="all_title">Усе</string>
+    <string name="learning_title">Навучанне</string>
+    <string name="reviews_title">Рэцэнзіі</string>
+    <string name="teaching_title">Выкладанне</string>
+    <string name="accessibility_switch_viewed_state">Змяніць стан прагледжанасці</string>
+    <string name="mark_all_as_read">Адзначыць усе як прачытаныя</string>
+    <string name="empty_notification_title">Пакуль апавяшчэнняў няма</string>
+    <string name="not_now">Не цяпер</string>
+    <string name="received_review_title">Атрымана рэцэнзія</string>
+    <string name="new_message_title">Новае паведамленне</string>
+    <string name="get_certifcate_title">Атрыманы сертыфікат</string>
+    <string name="get_license_message">Атрымана ліцэнзія</string>
+    <string name="added_to_group_title">Даданне ў групу</string>
+    <string name="notification_comment_list">Каментары і адказы</string>
+    <string name="restriction_submission_enough">Нельга адправіць рашэнне, бо колькасць
+        спробаў была перавышана
+    </string>
+    <string name="too_many_attempts">Занадта шмат няслушных спробаў. Паспрабуйце пазней</string>
+    <string name="profile_title">Профіль</string>
+    <string name="current_streak">Цяперашні рэкорд</string>
+    <string name="max_streak">Мой рэкорд</string>
+    <string name="short_bio">Кароткая біяграфія</string>
+    <string name="user_info">Інфармацыя</string>
+    <plurals name="day_number">
+        <item quantity="one" tools:ignore="ImpliedQuantity">дзень</item>
+        <item quantity="few">дні</item>
+        <item quantity="many">дзён</item>
+        <item quantity="other">дзён</item>
+    </plurals>
+    <plurals name="streak_description">
+        <item quantity="one">Гэта %d-ы дзень, калі вы рашаеце задачы без перапынку. Рашайце па
+            адной штодня, каб падтрымаць прагрэс. Для гэтага мы прапануем Вам уключыць
+            нагадванні.
+        </item>
+        <item quantity="few">Гэта %d-і дзень, калі вы рашаеце задачы без перапынку. Рашайце па
+            адной штодня, каб падтрымаць прагрэс. Для гэтага мы прапануем Вам уключыць
+            нагадванні.
+        </item>
+        <item quantity="many">Гэта %d-ы дзень, калі вы рашаеце задачы без перапынку. Рашайце па
+            адной штодня, каб падтрымаць прагрэс. Для гэтага мы прапануем Вам уключыць
+            нагадванні.
+        </item>
+        <item quantity="other">Гэта %d-ы дзень, калі вы рашаеце задачы без перапынку. Рашайце па
+            адной штодня, каб падтрымаць прагрэс. Для гэтага мы прапануем Вам уключыць
+            нагадванні.
+        </item>
+    </plurals>
+    <string name="empty_user_title">Карыстальнік не знойдзены</string>
+    <string name="streak_dialog_title">Віншуем!</string>
+    <string name="later_tatle">Пазней</string>
+    <string name="choose_notification_time_interval">Змяніце час нагадвання</string>
+    <string name="notification_time">Час нагадвання: %s</string>
+    <string name="notification_about_learning">Нагадваць пра заняткі</string>
+    <string name="time_to_learn_notification_title">Час вучыцца!</string>
+    <plurals name="streak_notification_message_call_to_action">
+        <item quantity="one">Вы малайчына! Вы рашаеце ўжо %d дзень без перапынку. Не спыняйцеся,
+            рашыце задачу проста зараз!
+        </item>
+        <item quantity="few">Вы малайчына! Вы рашаеце ўжо %d дні без перапынку. Не спыняйцеся,
+            рашыце задачу проста зараз!
+        </item>
+        <item quantity="many">Вы малайчына! Вы рашаеце ўжо %d дзён без перапынку. Не спыняйцеся,
+            рашыце задачу проста зараз!
+        </item>
+        <item quantity="other">Вы малайчына! Вы рашаеце ўжо %d дзён без перапынку. Не спыняйцеся,
+            рашыце задачу проста зараз!
+        </item>
+    </plurals>
+    <string name="streak_notification_message_improvement">Добрая праца! Вы павялічылі колькасць
+        дзён без перапынку да %d. Так трымаць!
+    </string>
+    <string name="streak_notification_empty_number">Навучанне патрабуе штодзённай практыкі. Рашыце
+        заданне прама зараз!
+    </string>
+    <string name="streak_description_not_positive">Дакладна! Рашайце па адной задачы кожны дзень, каб
+        падтрымаць прагрэс. Для гэтага мы прапануем Вам уключыць нагадванні.
+    </string>
+    <string name="streak_notification_enabled_successfully">Апавяшчэнні ўключаны. Вы можаце змяніць
+        свой выбар у Профілі
+    </string>
+    <string name="streak_notification_canceled">Апавяшчэнні адключаныя. Вы можаце змяніць свой выбар
+        у Профілі
+    </string>
+    <string name="streak_notification_not_working">Падобна, нагадванні не дзейнічаюць. Мы больш не
+        будзем іх дасылаць. Націсніце, каб уключыць зноў
+    </string>
+    <string name="streak_updated_timezone">Рэкорды абнаўляюцца ў %s</string>
+    <string name="about_app_title">Аб праграме</string>
+    <string name="terms_of_service_title">Умовы выкарыстання</string>
+    <string name="privacy_policy_title">Палітыка прыватнасці</string>
+    <string name="about_our_social">Нашы акаўнты ў сацсетках</string>
+    <string name="sign_in_with_password">Увайсці з e-mail</string>
+    <string name="sign_in_with_password_suffix">" з e-mail"</string>
+    <string name="content_course_logo">Лагатып курса</string>
+    <string name="auth_inline_message">Увайдзіце, каб мы запомнілі вашыя поспехі</string>
+    <string name="step_with_position">- Крок %d</string>
+    <string name="retry">Паўтарыць спробу</string>
+    <string name="retry_internet">Паўтарыць</string>
+    <string name="accessibility_drag_and_drop">Націснуць і перацягнуць</string>
+    <string name="logout_user_error">Доступ быў адкліканы. Залагінцеся зноў</string>
+    <string name="accessibility_video_cover">Вокладка відэа</string>
+    <string name="close_screen">Закрыць</string>
+    <string name="google_services_late">Абнавіце Google Play Services для ўваходу з дапамогай Google
+    </string>
+    <string name="next">Далей</string>
+    <string name="no_connection">Няма злучэння</string>
+    <!--Video player screen-->
+    <string name="video_player_quality">Якасць відэа</string>
+    <string name="video_player_device_orientation_title">Паварот відэа</string>
+    <string name="video_player_downloaded_quality">Загружанае (%s)</string>
+    <string name="video_url_incorrect">Выбачайце, відэа не знойдзена</string>
+    <string name="video_content_description">Прайграць відэа</string>
+    <!--Rate dialog-->
+    <string name="rate_dialog_title">Як бы вы ацанілі Stepik?</string>
+    <string name="rate_dialog_google_play">Google Play</string>
+    <string name="rate_dialog_support">Падтрымка</string>
+    <string name="rate_dialog_later">Пазней</string>
+    <string name="rate_dialog_hint_positive">Калі ласка, пакіньце водгук у Google Play</string>
+    <string name="rate_dialog_hint_negative">Калі ласка, напішыце ў Падтрымку</string>
+    <string name="rate_dialog_thanks">Дзякуй!</string>
+    <!--Profile screen-->
+    <string name="short_bio_and_info">Кароткая біяграфія &amp; Інфармацыя</string>
+    <!--Home screen-->
+    <string name="catalog_title">Каталог</string>
+    <!--Notification channel's names-->
+    <string name="comments_channel_name">Каментары</string>
+    <string name="review_channel_name">Рэцэнзіі</string>
+    <string name="teach_channel_name">Выкладанне</string>
+    <string name="learn_channel_name">Навучанне</string>
+    <string name="other_channel_name">Iншае</string>
+    <string name="user_channel_name">Карыстальніцкія апавяшчэнні</string>
+    <string name="comments_channel_description">Апавяшчэнні аб атрыманні адказаў на вашыя каментары</string>
+    <string name="review_channel_description">Апавяшчэнні аб атрыманні рэцэнзій на вашыя рашэнні</string>
+    <string name="teach_channel_description">Апавяшчэнні аб выкладчыцкай дзейнасці на платформе</string>
+    <string name="learn_channel_description">Апавяшчэнні аб дэдлайнах, адкрыцці новых модуляў у курсах</string>
+    <string name="other_channel_description">Апавяшчэнні аб іншых дзеяннях на платформе</string>
+    <string name="user_channel_description">Лакальныя апавяшчэнні карыстальніка</string>
+    <string name="notification_settings_title">Налады апавяшчэнняў</string>
+    <string name="course_item_join">Паступіць на курс</string>
+    <string name="learners_count">Колькасць студэнтаў</string>
+    <string name="continue_learning">Працягнуць вучыцца</string>
+    <string name="accessibility_last_step_cover">Выява апошняга кроку</string>
+    <string name="my_courses_title">Мае курсы</string>
+    <string name="popular_courses_title">Папулярныя</string>
+    <string name="view_all_courses">Усе</string>
+    <string name="sign_in_with_social_suffix">" праз сацыяльныя сеткі"</string>
+    <string name="sign_in_with_social">Уваход праз сацсеткі</string>
+    <string name="social_recycler_show_more">Яшчэ</string>
+    <string name="social_recycler_show_less">Менш</string>
+    <string name="name">Імя</string>
+    <string name="sign_up_with_email_suffix">" з e-mail"</string>
+    <string name="placeholder_explore_courses">Адкрыйце для сябе бясплатныя онлайн курсы</string>
+    <string name="placeholder_login">Увайдзіце і пачніце вучыцца проста зараз</string>
+    <string name="courses_carousel_my_courses_empty">Запішыцеся на курсы і яны будуць паказаныя тут</string>
+    <string name="empty_courses_popular">Адкрытыя курсы зараз у адпачынку. Калі ласка, зайдзіце пазней</string>
+    <string name="choose_language">Абярыце мову</string>
+    <string name="choose_action">Абраць</string>
+    <string name="code_quiz_reset">Скінуць</string>
+    <string name="reset_code_dialog_title">Вы ўпэўненыя?</string>
+    <string name="reset_code_dialog_explanation">Ваш код будзе згублены</string>
+    <string name="change_code_dialog_explanation">Пасля змены мовы праграмавання Ваш бягучы код будзе згублены</string>
+    <string name="code_playground_language_title">Мова</string>
+    <plurals name="time_seconds">
+        <item quantity="one">%d секунда</item>
+        <item quantity="few">%d секунды</item>
+        <item quantity="many">%d секундаў</item>
+        <item quantity="other">%d секундаў</item>
+    </plurals>
+    <string name="language_of_courses">Мова курсаў</string>
+    <string name="language_widget_hint">Гэта можна змяніць у наладах</string>
+    <string name="course_collection_empty">Выбачайце, гэтая падборка на вакацыях</string>
+    <string name="internet_problem_catalog">Уключыце інтэрнэт, каб убачыць нашы падборкі курсаў</string>
+    <string name="course_rating">Рэйтынг курса</string>
+    <string name="trending_topics">Папулярныя тэмы</string>
+    <string name="early_notification_description">Праграма дапаможа завяршыць курс і атрымаць сертыфікат. Уключыце штодзённыя апавяшчэнні, каб вучыцца часцей!</string>
+    <string name="early_notification_title">Прывітанне!</string>
+    <plurals name="course_count">
+        <item quantity="one">%d курс</item>
+        <item quantity="few">%d курсы</item>
+        <item quantity="many">%d курсаў</item>
+        <item quantity="other">%d курсаў</item>
+    </plurals>
+    <string name="course_current_progress">Наяўны прагрэс %s/%d балаў</string>
+    <string name="home_streak_counter_text"><![CDATA[Вы рашаеце <b>%s</b> запар!]]></string>
+    <string name="registration_remind_message">Завершыце рэгістрацыю і атрымайце доступ да неабмежаванай колькасці бясплатных курсаў!</string>
+    <!--onboarding-->
+    <string name="onboarding_next_action">Далей</string>
+    <string name="onboarding_done_action">Пачаць</string>
+    <string name="onboarding_first_title">Абірайце</string>
+    <string name="onboarding_first_subtitle">Доступ да ўсіх курсаў на Stepik \u2014 абірайце, што цікава</string>
+    <string name="onboarding_second_title">Захоўвайце</string>
+    <string name="onboarding_second_subtitle">Глядзіце лекцыі і захоўвайце іх для прагляду афлайн</string>
+    <string name="onboarding_third_title">Рашайце</string>
+    <string name="onboarding_third_subtitle">Выконвайце заданні проста з\u00A0тэлефона!</string>
+    <string name="onboarding_fourth_title">Дасягайце</string>
+    <string name="onboarding_fourth_subtitle">Усталюйце нагадванні, каб займацца рэгулярна і хутчэй скончыць курс</string>
+    <string name="notification_icon_content_description">Значок апавяшчэння</string>
+    <!--adaptive-->
+    <string name="adaptive_courses">Адаптыўныя курсы</string>
+    <string name="adaptive_reaction_easy">ПРОСТА</string>
+    <string name="adaptive_reaction_hard">СКЛАДАНА</string>
+    <string name="adaptive_retry">Новая спроба</string>
+    <string name="adaptive_correct">СЛУШНА</string>
+    <string name="adaptive_wrong">НЯСЛУШНА</string>
+    <string name="adaptive_attempt_button">Рашыць</string>
+    <string name="adaptive_course_completed">Віншуем!\n\nВы паспяхова прайшлі курс!</string>
+    <string name="adaptive_course_not_supported">Гэты курс недаступны ў адаптыўным рэжыме</string>
+    <string name="adaptive_exp_title">Узровень <b>%d</b></string>
+    <string name="adaptive_exp_level_title">Новы ўзровень!</string>
+    <string name="adaptive_exp_subtitle">%s вопыту да наступнага</string>
+    <string name="adaptive_streak_failed">Серыя страчана</string>
+    <string name="adaptive_onboarding_title">@string/adaptive_courses</string>
+    <string name="adaptive_onboarding_card_title_1">Вітаем</string>
+    <string name="adaptive_onboarding_card_question_1"><![CDATA[        <p>Сардэчна запрашаем на адаптыўны курс. У гэтым курсе пытанні падбіраюцца аўтаматычна, адаптоўваючыся да вашых адказаў і рэакцый. Давайце паглядзім як гэта працуе.</p>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_2">Складанае пытанне</string>
+    <string name="adaptive_onboarding_card_question_2"><![CDATA[        <p>Уявіце, што гэта складанае пытанне, на якое вы не ведаеце адказу ці не хочаце цяпер адказваць. Вы можаце адкласці яго, змахнуўшы картку з пытаннем <b>направа</b>.</p>
+        <p>Паспрабуйце зрабіць так з гэтай карткай.</p>
+        <div class="center">
+            <div class="padding-box">
+                <img src="file:///android_asset/web/images/arrow_right.svg" />
+            </div>
+        </div>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_3">Простае пытанне</string>
+    <string name="adaptive_onboarding_card_question_3"><![CDATA[        <p>Цяпер уявіце, што гэта, наадварот, занадта простае пытанне, на якое вам ужо лянота адказваць. Вы можаце прапусціць яго, змахнуўшы картку <b>налева</b>. Больш вы <b>ніколі</b> не ўбачыце гэтае пытанне.</p>
+        <p>Паспрабуйце змахнуць гэтую картку <b>налева</b>.</p>
+        <div class="center">
+            <div class="padding-box">
+                <img src="file:///android_asset/web/images/arrow_left.svg" />
+            </div>
+        </div>
+    ]]></string>
+    <string name="adaptive_onboarding_card_title_4">Налады</string>
+    <string name="adaptive_onboarding_card_question_4"><![CDATA[        <p>Пры патрэбе вы можаце адключыць адаптыўныя курсы ў наладах (<b>Налады</b> -> <b>Іншае</b> -> <b>Адаптыўныя курсы</b>) і працягнуць навучанне ў звыклым рэжыме.</p>
+    ]]></string>
+    <string name="adaptive_level_dialog_continue">Працягнуць</string>
+    <string name="adaptive_stats_title">Статыстыка</string>
+    <string name="adaptive_stats_total_exp">УСЯГО ВОПЫТУ</string>
+    <string name="adaptive_stats_last_7_days">АПОШНІЯ 7 ДЗЁН</string>
+    <string name="adaptive_stats_level">УЗРОВЕНЬ</string>
+    <string name="adaptive_stats_exp_for_a_week">вопыту за тыдзень</string>
+    <string name="adaptive_progress">Прагрэс</string>
+    <string name="adaptive_rating">Рэйтынг</string>
+    <string name="adaptive_rating_you_placeholder"><b>Вы</b></string>
+    <string name="adaptive_exp_tooltip_text">Націснуўшы на панэль з вопытам, вы можаце ўбачыць падрабязную статыстыку вашага навучання</string>
+    <string name="adaptive_course_marker">АДАПТЫЎНЫ</string>
+    <string name="request_error">Нешта пайшло не так</string>
+    <string name="placeholder_go_to_catalog">Перайсці ў Каталог</string>
+    <string name="deadlines_menu_create">Стварыць расклад</string>
+    <string name="deadlines_menu_edit">Рэдагаваць расклад</string>
+    <string name="deadlines_menu_remove">Выдаліць расклад</string>
+    <string name="deadlines_menu_sync">Экспартаваць у каляндар</string>
+    <string name="deadlines_section">Дэдлайн: %s</string>
+    <string name="deadlines_notification">Дэдлайн па модулю %s у курсе %s наступае праз %s</string>
+    <string name="deadlines_edit_title">Рэдагаванне раскладу</string>
+    <string name="deadlines_edit_date_picker_title">Абярыце новы дэдлайн</string>
+    <string name="deadlines_create_title">Абярыце рэжым навучання</string>
+    <string name="deadlines_learning_rate_hobby">Хобі</string>
+    <string name="deadlines_learning_rate_standard">Стандарт</string>
+    <string name="deadlines_learning_rate_extreme">Экстрым</string>
+    <string name="deadlines_learning_rate_time_template">г/тыдз</string>
+    <string name="deadlines_banner_description">Пастаяннае навучанне гэта ключ да поспеху. Стварыце персанальны расклад, каб ніколі не забываць аб занятках.</string>
+    <string name="deadlines_banner_action">Стварыць</string>
+    <string name="deadlines_fetching_error">Пры загрузцы раскладу адбылася памылка</string>
+    <string name="achievements_title">Дасягненні</string>
+    <string name="achievement_level">Узровень %d / %d</string>
+    <string name="achievement_remaining_exp">%d да наступнага ўзроўню</string>
+    <string name="achievement_remaining_exp_locked">Яшчэ не атрымана</string>
+    <string name="achievement_share">Я атрымаў дасягненне «%s» на Stepik.org. Паспрабуй абагнаць!</string>
+    <string name="achievement_notification_message">Віншуем! Вы атрымалі новы ўзровень дасягнення «%s», праверце свой профіль.</string>
+    <!-- Course -->
+    <string name="course_title">Курс</string>
+    <string name="course_verified">Правераны</string>
+    <string name="course_share_description">Падзяліцеся спасылкай з сябрамі, каб праходзіць курс разам!</string>
+    <string name="course_tab_info">Інфа</string>
+    <string name="course_tab_reviews">Водгукі</string>
+    <string name="course_tab_modules">Модулі</string>
+    <string name="course_progress_current">Наяўны прагрэс</string>
+    <string name="course_progress_solutions">Недасланыя рашэнні</string>
+    <string name="course_list_free">Бясплатна</string>
+    <string name="course_list_archived">У архіве</string>
+    <string name="course_try_free">Паспрабаваць бясплатна</string>
+    <string name="course_info_organization_prefix">ад %s</string>
+    <string name="course_info_about">Пра курс</string>
+    <string name="course_info_requirements">Патрабаванні</string>
+    <string name="course_info_target_audience">Мэтавая аўдыторыя</string>
+    <string name="course_info_instructors">Выкладчыкі</string>
+    <string name="course_info_time_to_complete">Час праходжання курса</string>
+    <string name="course_info_language">Мова</string>
+    <string name="course_info_certificate">Сертыфікат</string>
+    <string name="course_info_certificate_detail">Падрабязна пра сертыфікат</string>
+    <string name="course_info_learners_count">Колькі запісалася на курс</string>
+    <string name="course_info_certificate_regular">Умова атрымання сертыфіката: %s</string>
+    <string name="course_info_certificate_distinction">З адзнакай: %s</string>
+    <string name="course_error_generic">Пры загрузцы дадзеных адбылася памылка</string>
+    <string name="course_error_continue_learning">Немагчыма працягнуць навучанне</string>
+    <string name="course_error_enroll">\@ String/course_error_generic</string>
+    <string name="course_reviews_empty">Для гэтага курса пакуль няма водгукаў</string>
+    <string name="course_reviews_compose_title">Водгук пра курс</string>
+    <string name="course_reviews_compose_hint">Ваш водгук</string>
+    <string name="course_reviews_action_create">Напісаць водгук</string>
+    <string name="course_reviews_action_edit">Змяніць</string>
+    <string name="course_reviews_action_remove">Выдаліць</string>
+    <string name="course_reviews_compose_banner_review_description">Каб пакінуць водгук, прайдзіце больш за 80% матэрыялаў</string>
+    <string name="course_reviews_compose_banner_review_motivation">Падзяліцеся сваім меркаваннем</string>
+    <string name="course_content_time_to_complete_hours_unit">%d г</string>
+    <string name="course_content_text_progress_points">%s/%d балаў</string>
+    <string name="course_content_timeline_begin_date">Дата пачатку</string>
+    <string name="course_content_timeline_end_date">Дата закрыцця</string>
+    <string name="course_content_timeline_soft_deadline">Мяккі дэдлайн</string>
+    <string name="course_content_timeline_hard_deadline">Жорсткі дэдлайн</string>
+    <string name="course_content_timeline_deadline">Дэдлайн</string>
+    <string name="course_content_section_exam_description">Гэта экзаменацыйны модуль, які даступны толькі ў вэб версіі. Націсніце, каб адкрыць яго ў браўзэры.</string>
+    <string name="course_content_section_requirements">Для адкрыцця гэтага модуля неабходна набраць %s у модулі %s</string>
+    <string name="course_content_unit_demo_access">Дэма-дасяг</string>
+    <string name="course_control_schedule">Расклад</string>
+    <string name="course_control_filter">Фільтр</string>
+    <string name="course_control_download_all">Спампаваць</string>
+    <string name="course_control_processing">Апрацоўка</string>
+    <string name="course_content_calendar_sync_success">Даты паспяхова экспартаваныя ў каляндар</string>
+    <string name="course_content_calendar_no_calendars_error">Календары не знойдзены</string>
+    <string name="course_content_calendar_permission_error">Уключыце дазвол для выкарыстання календара ў наладах</string>
+    <string name="course_content_remove_item_title">Выдаліць элемент?</string>
+    <string name="course_content_remove_item_description">Гэты элемент будзе выдалены з вашай прылады</string>
+    <string name="course_restore_purchase">Аднавіць пакупку</string>
+    <string name="course_payments_purchase_in_app">Купіць за %s</string>
+    <string name="course_payments_purchase_in_web">Купіць у вэб версіі</string>
+    <string name="course_payments_purchase_in_web_with_price">Купіць за %s</string>
+    <string name="course_purchase_server_error">Пры апрацоўцы плацяжу адбылася памылка, паспрабуйце аднавіць пакупку і звяжыцеся з падтрымкай, калі памылка будзе паўтарацца</string>
+    <string name="course_purchase_billing_error">Пры апрацоўцы плацяжу адбылася памылка</string>
+    <string name="course_purchase_billing_cancelled">Плацёж быў адменены</string>
+    <string name="course_purchase_billing_not_available">Убудаваныя пакупкі не падтрымліваюцца на гэтай прыладзе</string>
+    <string name="course_purchase_billing_no_purchases_to_restore">У вас няма неактываваных пакупак гэтага курса</string>
+    <string name="course_purchase_already_owned">Вы ўжо маеце гэты курс</string>
+    <string name="routing_external_app_chooser_title">Адкрыць у</string>
+    <string name="course_action_archive_add">Перамясціць у архіў</string>
+    <string name="course_action_archive_add_success">Курс паспяхова перанесены ў архіў</string>
+    <string name="course_action_archive_add_failure">Не атрымалася перанесці курс у архіў</string>
+    <string name="course_action_archive_remove">Прыбраць з архіву</string>
+    <string name="course_action_archive_remove_success">Курс паспяхова прыбраны з архіву</string>
+    <string name="course_action_archive_remove_failure">Не атрымалася прыбраць курс з архіву</string>
+    <string name="course_action_favorites_add">Дадаць да абранага</string>
+    <string name="course_action_favorites_add_success">Курс паспяхова дададзены да абранага</string>
+    <string name="course_action_favorites_add_failure">Не атрымалася дадаць курс да абранага</string>
+    <string name="course_action_favorites_remove">Прыбраць з абранага</string>
+    <string name="course_action_favorites_remove_success">Курс паспяхова прыбраны з абранага</string>
+    <string name="course_action_favorites_remove_failure">Не атрымалася прыбраць курс з абранага</string>
+    <string name="video_player_control_notification_channel_name">Кіраванне відэа-плэерам</string>
+    <string name="video_player_control_notification_channel_description">Панэль з кіраваннем фонавым прайграваннем плэера</string>
+    <string name="video_player_in_background_popup">Вы можаце працягнуць прайграванне відэа ў фоне</string>
+    <string name="video_player_autoplay_cancel">Застацца на гэтым кроку</string>
+    <string name="retention_notification_day1_title">Не змяншаем тэмп</string>
+    <string name="retention_notification_day1_message">Вы зрабілі годную працу ўчора — гэта добрая нагода зайсці сёння і працягнуць вучыцца! 🚀</string>
+    <string name="retention_notification_day3_title">Час вучыцца 🎓</string>
+    <string name="retention_notification_day3_message">Вас даўно не было. Заходзьце і вучыцеся новаму! 💡</string>
+    <!-- Profile edit -->
+    <string name="profile_edit_menu_item">Рэдагаваць профіль</string>
+    <string name="profile_edit_password_title">Пароль</string>
+    <string name="profile_edit_password_current_hint">Існуючы пароль</string>
+    <string name="profile_edit_password_new_hint">Новы пароль</string>
+    <string name="profile_edit_password_new_repeat_hint">Новы пароль (яшчэ раз)</string>
+    <string name="profile_edit_info_title">Персанальныя дадзеныя</string>
+    <string name="profile_edit_info_subtitle">Вашае імя і іншая інфармацыя</string>
+    <string name="profile_edit_info_first_name_hint">Імя</string>
+    <string name="profile_edit_info_last_name_hint">Прозвішча</string>
+    <string name="profile_edit_info_name_helper_text">Гэтае імя будзе выкарыстана ў сертыфікатах</string>
+    <string name="profile_edit_info_short_bio_hint">Кароткая інфармацыя</string>
+    <string name="profile_edit_info_short_bio_helper_text">Горад, універсітэт, праца…</string>
+    <string name="profile_edit_info_about_hint">Пра вас</string>
+    <string name="profile_edit_save">Захаваць</string>
+    <string name="profile_edit_error_required_field">Абавязковае поле</string>
+    <string name="profile_edit_error_password">Памылка пры спробе змены пароля</string>
+    <string name="profile_edit_error_info">Памылка пры спробе змены інфармацыі</string>
+    <string name="profile_edit_change_success_info">Інфармацыя абноўлена</string>
+    <string name="profile_edit_change_success_password">Пароль зменены</string>
+    <!-- Lesson -->
+    <string name="lesson_title">Урок</string>
+    <string name="lesson_menu_info">Інфа</string>
+    <string name="lesson_info_points_with_score">Вы атрымалі %s з %s за крок</string>
+    <string name="lesson_info_points_with_score_fraction">Вы атрымалі %s бала з %s за крок</string>
+    <string name="lesson_info_points">Вы атрымаеце %s за крок</string>
+    <string name="lesson_info_time_to_complete">&#8776;%s на ўрок</string>
+    <string name="lesson_info_certificate_threshold">%s да сертыфіката</string>
+    <string name="lesson_info_distinction_certificate_threshold">%s да сертыфіката з адзнакай</string>
+    <string name="lesson_error_exam_description">Гэты ўрок - частка экзаменацыйнага модуля, які даступны толькі ў вэб версіі.</string>
+    <string name="lesson_error_exam_action">Адкрыць у вэб версіі</string>
+    <string name="lesson_step_counter">Крок %d з %d</string>
+    <!-- Step -->
+    <string name="step_amount_passed">Рашыла:&#160;</string>
+    <string name="step_correct_submissions_percentage">Паспяховых рашэнняў:&#160;</string>
+    <string name="step_navigation_next">Наступны ўрок</string>
+    <string name="step_navigation_prev">Папярэдні ўрок</string>
+    <string name="step_discussion_show">Адкрыць каментары (%d)</string>
+    <string name="step_discussion_write_first">Напісаць першы каментар</string>
+    <string name="step_solutions_show">Форум рашэнняў (%d)</string>
+    <string name="step_solutions_empty">Рашэнняў пакуль няма</string>
+    <string name="step_solutions_write_first">Падзяліцца рашэннем</string>
+    <string name="step_action_edit_content">Змяніць тэкст кроку</string>
+    <string name="step_action_edit_hint">Тэкст кроку</string>
+    <string name="step_action_edit_description">Вы можаце рэдагаваць толькі тэкст кроку і толькі ў выглядзе HTML кода. Для доступу да паўнавартаснага рэдактара крокаў, калі ласка, скарыстайцеся вэб версіяй Stepik.</string>
+    <string name="step_content_video_no_video">Відэа не было дададзена або яшчэ не апрацавана</string>
+    <string name="step_quiz_action_button_submit">Адправіць</string>
+    <string name="step_quiz_action_button_submit_with_counter">Адправіць (засталося %s)</string>
+    <string name="step_quiz_action_button_try_again">Паспрабаваць зноў</string>
+    <string name="step_quiz_action_button_no_submissions">Спробы скончыліся</string>
+    <string name="step_quiz_text_field_hint">Увядзіце адказ…</string>
+    <string name="step_quiz_feedback_evaluation">Праверка…</string>
+    <string name="step_quiz_feedback_correct_free_answer">Любы адказ будзе ацэнены як правільны</string>
+    <string name="step_quiz_feedback_wrong_not_last_try">Пакуль няправільна, паспрабуйце яшчэ раз</string>
+    <string name="step_quiz_feedback_wrong_last_try">Няслушна</string>
+    <string name="step_quiz_number_description">Увядзіце лікавы адказ</string>
+    <string name="step_quiz_math_description">Увядзіце матэматычную формулу</string>
+    <string name="step_quiz_string_description">Напішыце тэкст (радок)</string>
+    <string name="step_quiz_free_answer_description">Напішыце эсэ</string>
+    <string name="step_quiz_sorting_description">Упарадкуйце элементы спіса</string>
+    <string name="step_quiz_matching_description">Супастаўце значэнні з двух спісаў</string>
+    <string name="step_quiz_choice_description_single">Абярыце адзін элемент</string>
+    <string name="step_quiz_choice_description_multiple">Абярыце адзін або некалькі аб\'ектаў</string>
+    <string name="step_quiz_sql_description">Увядзіце SQL запыт</string>
+    <string name="step_quiz_fill_blanks_description">Запоўніце пропускі</string>
+    <string name="step_quiz_text_empty_reply">Адказ не можа быць пустым</string>
+    <string name="step_quiz_text_invalid_number_reply">Адказ мае быць лікам</string>
+    <string name="step_quiz_choice_empty_reply">Абярыце варыянт</string>
+    <string name="step_quiz_code_details">Дэталі</string>
+    <string name="step_quiz_code_detail_sample_title">Прыклад дадзеных %d:</string>
+    <string name="step_quiz_code_detail_limit_title_time">Абмежаванне па часе:</string>
+    <string name="step_quiz_code_detail_limit_title_memory">Абмежаванне па памяці:</string>
+    <string name="step_quiz_code_detail_limit_value_memory">%d МБ</string>
+    <string name="step_quiz_code_lang_chooser">Абярыце мову</string>
+    <string name="step_quiz_code_empty_lang">Перад адпраўкай рашэння абярыце мову праграмавання са спісу</string>
+    <string name="step_quiz_not_ready">Выбачайце, гэтая задача яшчэ не гатовая</string>
+    <string name="step_quiz_unsupported_action">Прайсці заданне ў вэб-версіі</string>
+    <string name="step_quiz_unsupported_solution_action">Адкрыць рашэнне ў вэб-версіі</string>
+    <string name="step_quiz_unsupported_message">Гэты тып заданняў пакуль не падтрымліваецца ў дадатку</string>
+    <string name="step_quiz_code_full_screen_instruction_tab">Умовы</string>
+    <string name="step_quiz_code_full_screen_code_tab">Код</string>
+    <string name="step_quiz_code_full_screen_run_code_tab">Запуск</string>
+    <string name="step_quiz_code_input_data">Уваходныя дадзеныя</string>
+    <string name="step_quiz_code_output_data">Вынік выканання</string>
+    <string name="step_quiz_code_samples">прыклады</string>
+    <string name="step_quiz_code_run_code_action">Запусціць код</string>
+    <string name="step_quiz_code_empty_output">Пусты вывад</string>
+    <string name="step_quiz_code_spinner_item">Прыклад %d: %s</string>
+    <string name="step_quiz_code_input_data_hint">Увядзіце ўваходныя дадзеныя…</string>
+    <string name="step_quiz_code_run_code_tooltip">Перад адпраўкай рашэння, вы можаце запусціць ваш код з тэставымі ўводнымі дадзенымі!</string>
+    <string name="step_quiz_code_empty_code">Поле з кодам не можа быць пустым</string>
+    <string name="step_quiz_code_input_not_supported">Дадзены тып заданняў не падтрымлівае ўвод дадзеных</string>
+    <string name="step_quiz_pycharm_message">Калі ласка, адкрыйце гэтую задачу ў <a href="https://www.jetbrains.com/education/">JetBrains IDE</a></string>
+    <string name="step_quiz_reload_message">Выбачайце, заданне было зменена аўтарамі. Неабходна пачаць спачатку. Балы за мінулыя рашэнні захаваныя.</string>
+    <!-- Peer review -->
+    <string name="step_quiz_review_send_pending">Адпраўце лепшае рашэнне на праверку</string>
+    <string name="step_quiz_review_send_in_progress">Адпраўце лепшае рашэнне на праверку. Пасля адпраўкі замяніць рашэнне нельга.</string>
+    <string name="step_quiz_review_send_completed">Рашэнне адпраўлена на праверку</string>
+    <string name="step_quiz_review_send_choose">Абраць рашэнне</string>
+    <string name="step_quiz_review_send_submit">Адправіць гэтае рашэнне</string>
+    <string name="step_quiz_review_given_title">Рэцэнзія</string>
+    <string name="step_quiz_review_given_pending_zero">Зрабіце рэцэнзіі на рашэнні іншых студэнтаў</string>
+    <string name="step_quiz_review_given_extra_note">Робячы дадатковыя рэцэнзіі, вы падвышаеце шанец атрымаць рэцэнзіі на сваю працу хутчэй</string>
+    <string name="step_quiz_review_given_start_review">Рэцэнзаваць</string>
+    <string name="step_quiz_review_given_no_review">Пакуль няма рашэнняў для рэцэнзіі</string>
+    <string name="step_quiz_review_taken_pending_zero">Дачакайцеся рэцэнзіі на сваё рашэнне</string>
+    <string name="step_quiz_review_taken_action">Глядзець рэцэнзіі</string>
+    <string name="step_quiz_review_taken_title">Атрыманыя рэцэнзіі</string>
+    <string name="step_quiz_review_taken_hint">Звычайна першая рэцэнзія прыходзіць праз 2 дні пасля адпраўкі рашэнні на рэцэнзаванне (але гэта не дакладна)</string>
+    <string name="step_quiz_review_instructor_pending">Дачакайцеся ацэнкі выкладчыка, максімум за задачу — %s</string>
+    <string name="step_quiz_review_instructor_completed_hint">Адказ выкладчыка прыйдзе не адразу, вы атрымаеце апавяшчэнне</string>
+    <string name="step_quiz_review_instructor_completed_action">Глядзець рэцэнзію</string>
+    <string name="step_quiz_review_peer_pending">Атрымайце балы, максімальная адзнака — %s</string>
+    <string name="step_quiz_review_peer_completed">Ваш адказ ацанілі на %s з %s</string>
+    <!-- Feedback -->
+    <string name="feedback_email_chooser_title">Абярыце паштовы кліент</string>
+    <!-- Comment -->
+    <string name="comment_compose_hint">Пакіньце каментар</string>
+    <string name="comment_compose_title">Каментар</string>
+    <string name="solutions_compose_title">Рашэнне</string>
+    <string name="comment_action_create">Напісаць каментар</string>
+    <string name="comment_action_edit">Змяніць</string>
+    <string name="comment_action_remove">Выдаліць</string>
+    <string name="comment_action_remove_description">Выдаліць гэты каментар</string>
+    <string name="comment_solution_pattern">Рашэнне %d</string>
+    <string name="comment_disabled">Каментары адключаныя</string>
+    <string name="solution_disabled">Рашэнні адключаныя</string>
+    <string name="comments_title">Каментары</string>
+    <string name="solutions_title">Рашэнні</string>
+    <string name="comments_load_more_replies">Паказаць %s</string>
+    <string name="comment_tag_pinned">Замацаваны</string>
+    <string name="comment_tag_course_team">Каманда курса</string>
+    <string name="comment_tag_staff">Каманда Stepik</string>
+    <string name="comment_tag_moderator">Мадэратар курса</string>
+    <string name="comment_auth_required">Каб далучыцца да гэтага абмеркавання трэба зайсці пад сваім акаўнтам</string>
+    <string name="relative_date_pattern">%s назад</string>
+    <string name="relative_date_now">цяпер</string>
+    <string name="copied_to_clipboard_toast">Скапіявана ў буфер</string>
+    <!-- Main screen -->
+    <string name="main_tab_home">Навучанне</string>
+    <string name="main_tab_catalog">Каталог</string>
+    <string name="main_tab_profile">Профіль</string>
+    <string name="main_tab_notifications">Апавяшчэнні</string>
+    <!-- Settings -->
+    <string name="setting_section_learning">Навучанне</string>
+    <string name="setting_section_appearance">Знешні выгляд</string>
+    <string name="setting_section_other">Iншае</string>
+    <string name="setting_autoplay">Аўтапераход на наступны крок пасля заканчэння відэа</string>
+    <string name="setting_autoplay_short">Аўтапераход на наступны крок</string>
+    <string name="setting_night_mode">Тэма</string>
+    <string name="setting_font_size">Памер шрыфта ў кроках</string>
+    <string name="setting_font_size_dialog_title">Абярыце памер шрыфта</string>
+    <!-- Downloads -->
+    <string name="downloads_title">Загружаныя курсы</string>
+    <string name="downloads_remove_task_error">Пры выдаленні элемента ўзнікла памылка</string>
+    <string name="downloads_is_used_by_stepik">&#160;выкарыстоўваецца Stepik</string>
+    <string name="downloads_free_space">%s свабодна</string>
+    <string name="downloads_other_apps">Іншыя праграмы</string>
+    <!-- Submissions -->
+    <string name="submissions_title">Рашэнні</string>
+    <string name="submissions_select_title">Абярыце рашэнне</string>
+    <!-- Profile -->
+    <string name="profile_stat_knowledge">Веды</string>
+    <string name="profile_stat_reputation">Рэпутацыя</string>
+    <string name="profile_stat_certificates">выдадзена</string>
+    <string name="profile_stat_courses">апублікавана</string>
+    <string name="profile_stat_top">" %d | Топ %d"</string>
+    <string name="profile_detail_title">Пра сябе</string>
+    <string name="profile_activities_title">Актыўнасць</string>
+    <string name="profile_activities_current_streak_start">Пачніце вучыцца сёння</string>
+    <string name="profile_activities_current_streak_continue">Рашайце сёння, каб працягнуць серыю</string>
+    <string name="profile_activities_current_streak_active">Бягучая серыя</string>
+    <string name="profile_activities_max_streak">Максімальная серыя</string>
+    <string name="profile_external_links_title">Спасылкі</string>
+    <string name="profile_notifcation_title">Апавяшчэнні</string>
+    <string name="profile_settings_menu_item">Налады</string>
+    <string name="profile_courses_title">Курсы</string>
+    <!-- Solutions -->
+    <string name="solutions_toolbar_title">Недасланыя рашэнні</string>
+    <string name="solutions_information_block">Пры патрэбе вы можаце адрэдагаваць рашэнні перад адпраўкай</string>
+    <string name="solutions_selected">%d&#160;абрана</string>
+    <string name="solutions_delete_dialog_title">Выдаліць рашэнне?</string>
+    <string name="solutions_delete_dialog_description">Гэта рашэнне будзе выдаленае з вашай прылады</string>
+    <string name="solutions_submission_step_position">Крок %d - %s</string>
+    <string name="solutions_submit_all">Адправіць усе рашэнні</string>
+    <string name="solutions_submit_in_progress">Ідзе адпраўка рашэнняў</string>
+    <string name="solutions_submission_correctly">Задача вырашана слушна</string>
+    <string name="solutions_submission_incorrectly">Задача вырашана няслушна</string>
+    <!-- Course list -->
+    <string name="course_list_popular_toolbar_title">Рэкамендаваныя</string>
+    <string name="course_list_user_courses_title">Мае курсы</string>
+    <string name="course_list_user_all_courses_tab">Усе курсы</string>
+    <string name="course_list_user_favorites_tab">Абраныя</string>
+    <string name="course_list_user_archive_tab">Архіў</string>
+    <string name="ar_not_supported_alert">Прылада не падтрымлівае функцыі дапоўненай рэальнасці</string>
+    <string name="course_purchase">Купля курса</string>
+    <string name="purchase_notification_title">Адзін крок да новых ведаў</string>
+    <string name="purchase_notification_description">Вы збіраліся набыць курс %s? Завяршыце куплю і пачніце вучыцца проста зараз!</string>
+    <string name="internal_deeplink_error">Не атрымалася адкрыць спасылку: %s</string>
+    <!-- Picture in picture -->
+    <string name="pip_play_label">Прайграць</string>
+    <string name="pip_stop_label">Паўза</string>
+    <string name="pip_forward_label">Пераматаць наперад</string>
+    <string name="pip_rewind_label">Пераматаць назад</string>
+</resources>

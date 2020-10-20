@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.jakewharton.rxrelay2.BehaviorRelay
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.view.*
@@ -27,7 +28,6 @@ import org.stepik.android.model.attempts.Attempt
 import org.stepik.android.presentation.step_quiz.StepQuizView
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewPresenter
 import org.stepik.android.presentation.step_quiz_review.StepQuizReviewView
-import org.stepik.android.view.base.ui.extension.viewModel
 import org.stepik.android.view.in_app_web_view.InAppWebViewDialogFragment
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizDelegate
 import org.stepik.android.view.step_quiz.ui.delegate.StepQuizFeedbackBlocksDelegate
@@ -87,7 +87,7 @@ class StepQuizReviewFragment :
 
     private lateinit var stepWrapper: StepPersistentWrapper
 
-    private lateinit var stepQuizReviewPresenter: StepQuizReviewPresenter
+    private val stepQuizReviewPresenter: StepQuizReviewPresenter by viewModels { viewModelFactory }
     private lateinit var delegate: StepQuizReviewDelegate
 
     private lateinit var viewStateDelegate: ViewStateDelegate<StepQuizReviewView.State>
@@ -99,7 +99,6 @@ class StepQuizReviewFragment :
 
         injectComponent()
         stepWrapper = stepWrapperRxRelay.value ?: throw IllegalStateException("Step wrapper cannot be null")
-        stepQuizReviewPresenter = viewModel(viewModelFactory)
     }
 
     private fun injectComponent() {

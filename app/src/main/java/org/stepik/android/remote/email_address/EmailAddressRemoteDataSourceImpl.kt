@@ -14,7 +14,7 @@ class EmailAddressRemoteDataSourceImpl
 constructor(
     private val emailAddressService: EmailAddressService
 ) : EmailAddressRemoteDataSource {
-    override fun getEmailAddresses(vararg emailIds: Long): Single<List<EmailAddress>> =
+    override fun getEmailAddresses(emailIds: List<Long>): Single<List<EmailAddress>> =
         if (emailIds.isEmpty()) {
             Single.just(emptyList())
         } else {

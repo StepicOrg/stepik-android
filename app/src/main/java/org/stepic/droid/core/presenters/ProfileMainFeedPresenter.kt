@@ -52,7 +52,7 @@ class ProfileMainFeedPresenter
                 if (emailIds?.isNotEmpty() == true) {
                     try {
                         emailAddressRepository
-                            .getEmailAddresses(*emailIds.toLongArray())
+                            .getEmailAddresses(emailIds)
                             .ignoreElement()
                             .blockingAwait()
                     } catch (exceptionEmails: Exception) {

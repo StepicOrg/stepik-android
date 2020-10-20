@@ -1,10 +1,11 @@
 package org.stepik.android.model.user
 
 import com.google.gson.annotations.SerializedName
+import ru.nobird.android.core.model.Identifiable
 
 data class EmailAddress(
     @SerializedName("id")
-    val id: Long = 0,
+    override val id: Long = 0,
     @SerializedName("user")
     val user: Long = 0,
     @SerializedName("email")
@@ -14,4 +15,4 @@ data class EmailAddress(
     val isVerified: Boolean = false,
     @SerializedName("is_primary")
     val isPrimary: Boolean = false
-)
+) : Identifiable<Long>

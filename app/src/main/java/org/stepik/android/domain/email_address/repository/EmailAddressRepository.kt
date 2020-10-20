@@ -9,7 +9,7 @@ interface EmailAddressRepository {
     /**
      * Returns email addresses with given ids from primary and secondary data sources
      */
-    fun getEmailAddresses(vararg emailIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<EmailAddress>>
+    fun getEmailAddresses(emailIds: List<Long>, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<EmailAddress>>
 
     /**
      * Creates new email address and returns created email address object

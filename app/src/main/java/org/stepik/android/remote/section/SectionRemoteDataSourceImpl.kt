@@ -16,7 +16,7 @@ constructor(
 ) : SectionRemoteDataSource {
     private val sectionResponseMapper = Function(SectionResponse::sections)
 
-    override fun getSections(vararg sectionIds: Long): Single<List<Section>> =
+    override fun getSections(sectionIds: List<Long>): Single<List<Section>> =
         sectionIds
             .chunkedSingleMap { ids ->
                 sectionService.getSections(ids)

@@ -5,7 +5,7 @@ import io.reactivex.Single
 import org.stepik.android.model.user.EmailAddress
 
 interface EmailAddressRemoteDataSource {
-    fun getEmailAddresses(vararg emailIds: Long): Single<List<EmailAddress>>
+    fun getEmailAddresses(emailIds: List<Long>): Single<List<EmailAddress>>
 
     fun createEmailAddress(emailAddress: EmailAddress): Single<EmailAddress>
 

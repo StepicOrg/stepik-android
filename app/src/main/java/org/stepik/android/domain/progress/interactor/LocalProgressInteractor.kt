@@ -19,8 +19,6 @@ import org.stepik.android.model.Progress
 import org.stepik.android.model.Section
 import org.stepik.android.model.Step
 import org.stepik.android.model.Unit
-import ru.nobird.android.core.model.distinct
-import ru.nobird.android.core.model.mapToLongArray
 import javax.inject.Inject
 
 class LocalProgressInteractor
@@ -83,9 +81,9 @@ constructor(
 
     private fun getSections(units: List<Unit>): Single<List<Section>> =
         sectionRepository
-            .getSections(*units.mapToLongArray(Unit::section).distinct())
+            .getSections(units.map(Unit::section).distinct())
 
     private fun getCourses(sections: List<Section>): Single<PagedList<Course>> =
         courseRepository
-            .getCourses(*sections.mapToLongArray(Section::course).distinct())
+            .getCourses(sections.map(Section::course).distinct())
 }

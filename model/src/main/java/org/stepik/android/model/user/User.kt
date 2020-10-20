@@ -3,12 +3,13 @@ package org.stepik.android.model.user
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import ru.nobird.android.core.model.Identifiable
 import java.util.Date
 
 @Parcelize
 data class User(
     @SerializedName("id")
-    val id: Long = 0,
+    override val id: Long = 0,
     @SerializedName("profile")
     val profile: Long = 0,
 
@@ -57,4 +58,4 @@ data class User(
 
     @SerializedName("join_date")
     val joinDate: Date?
-) : Parcelable
+) : Parcelable, Identifiable<Long>

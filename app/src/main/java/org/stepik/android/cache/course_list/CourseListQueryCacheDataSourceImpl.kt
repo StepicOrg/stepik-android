@@ -14,15 +14,15 @@ class CourseListQueryCacheDataSourceImpl
 constructor(
     private val courseListQueryDataDao: IDao<CourseListQueryData>
 ) : CourseListQueryCacheDataSource {
-    override fun getCourses(courseListQuery: CourseListQuery): Single<LongArray> =
+    override fun getCourses(courseListQuery: CourseListQuery): Single<List<Long>> =
         Single.fromCallable {
             courseListQueryDataDao
                 .get(DbStructureCourseListQuery.Columns.ID, courseListQuery.toString())
                 ?.courses
-                ?: LongArray(0)
+                ?: listOf()
         }
 
-    override fun saveCourses(courseListQuery: CourseListQuery, courses: LongArray): Completable =
+    override fun saveCourses(courseListQuery: CourseListQuery, courses: List<Long>): Completable =
         Completable.fromCallable {
             courseListQueryDataDao.insertOrReplace(CourseListQueryData(courseListQueryId = courseListQuery.toString(), courses = courses))
         }
