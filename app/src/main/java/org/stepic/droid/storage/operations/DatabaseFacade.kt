@@ -266,8 +266,8 @@ constructor(
         return emptyList()
     }
 
-    fun getSectionsByIds(keys: LongArray): List<Section> {
-        DbParseHelper.parseLongArrayToString(keys, AppConstants.COMMA)?.let {
+    fun getSectionsByIds(keys: List<Long>): List<Section> {
+        DbParseHelper.parseLongListToString(keys, AppConstants.COMMA)?.let {
             return sectionDao.getAllInRange(DbStructureSection.Columns.ID, it)
         }
 

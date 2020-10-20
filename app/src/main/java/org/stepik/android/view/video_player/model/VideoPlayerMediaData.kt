@@ -4,7 +4,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import org.stepik.android.model.Video
 
-class VideoPlayerMediaData(
+data class VideoPlayerMediaData(
     val thumbnail: String? = null,
     val title: String,
     val description: String? = null,

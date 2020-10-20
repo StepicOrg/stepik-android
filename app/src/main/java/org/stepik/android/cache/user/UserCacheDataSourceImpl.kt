@@ -14,7 +14,7 @@ constructor(
     private val userDao: IDao<User>
 ) : UserCacheDataSource {
 
-    override fun getUsers(vararg userIds: Long): Single<List<User>> =
+    override fun getUsers(userIds: List<Long>): Single<List<User>> =
         Single.fromCallable {
             userDao.getAllInRange(DbStructureUser.Columns.ID, userIds.joinToString())
         }

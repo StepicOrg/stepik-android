@@ -7,7 +7,7 @@ import android.net.Uri
  */
 fun Uri.getQueryParameters(): Map<String, String> =
     queryParameterNames
-        .associateWith { getQueryParameter(it) }
+        .associateWith { getQueryParameter(it)!! }
 
 /**
  * Returns map with all query params

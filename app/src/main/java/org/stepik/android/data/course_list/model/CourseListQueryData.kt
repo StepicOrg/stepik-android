@@ -6,5 +6,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class CourseListQueryData(
     val courseListQueryId: String,
-    val courses: LongArray
+    val courses: List<Long>
 ) : Parcelable

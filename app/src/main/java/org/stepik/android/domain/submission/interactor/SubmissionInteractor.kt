@@ -33,7 +33,7 @@ constructor(
                     attemptRepository
                         .getAttempts(*attemptIds),
                     userRepository
-                        .getUsers(userPreferences.userId)
+                        .getUsers(listOf(userPreferences.userId))
                 ) { attempts, users ->
                     mapToSubmissionItems(submissions, attempts, users)
                 }

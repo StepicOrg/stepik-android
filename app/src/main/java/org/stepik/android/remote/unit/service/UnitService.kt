@@ -7,7 +7,7 @@ import retrofit2.http.Query
 
 interface UnitService {
     @GET("api/units")
-    fun getUnits(@Query("ids[]") unitIds: LongArray): Single<UnitResponse>
+    fun getUnits(@Query("ids[]") unitIds: List<Long>): Single<UnitResponse>
 
     @GET("api/units")
     fun getUnitsByLessonId(@Query("lesson") lessonId: Long): Single<UnitResponse>

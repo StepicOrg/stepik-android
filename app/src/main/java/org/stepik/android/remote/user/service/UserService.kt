@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface UserService {
     @GET("api/users")
-    fun getUsersRx(@Query("ids[]") userIds: LongArray): Single<UserResponse>
+    fun getUsersRx(@Query("ids[]") userIds: List<Long>): Single<UserResponse>
 }

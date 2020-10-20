@@ -39,7 +39,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 
     override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
-        canvas.drawBitmap(maskBitmap, 0f, 0f, maskPaint)
+        maskBitmap?.let { canvas.drawBitmap(it, 0f, 0f, maskPaint) }
     }
 
     private fun updateMask(width: Int, height: Int) {

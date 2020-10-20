@@ -11,7 +11,6 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.di.qualifiers.BackgroundScheduler
 import org.stepic.droid.di.qualifiers.MainScheduler
 import ru.nobird.android.domain.rx.emptyOnErrorStub
-import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course_list.interactor.CourseListUserInteractor
 import org.stepik.android.domain.course_list.model.UserCourseQuery
@@ -138,14 +137,14 @@ constructor(
         val ids = oldState
             .userCourses
             .slice(to = PAGE_SIZE)
-            .mapToLongArray(UserCourse::course)
+            .map(UserCourse::course)
 
         paginationDisposable += Single
             .concat(
                 courseListUserInteractor
-                    .getCourseListItems(*ids, sourceType = DataSourceType.CACHE),
+                    .getCourseListItems(ids, sourceType = DataSourceType.CACHE),
                 courseListUserInteractor
-                    .getCourseListItems(*ids, sourceType = DataSourceType.REMOTE)
+                    .getCourseListItems(ids, sourceType = DataSourceType.REMOTE)
             )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -176,9 +175,9 @@ constructor(
         paginationDisposable += Single
             .concat(
                 courseListUserInteractor
-                    .getCourseListItems(*ids, sourceType = DataSourceType.CACHE),
+                    .getCourseListItems(ids, sourceType = DataSourceType.CACHE),
                 courseListUserInteractor
-                    .getCourseListItems(*ids, sourceType = DataSourceType.REMOTE)
+                    .getCourseListItems(ids, sourceType = DataSourceType.REMOTE)
             )
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)

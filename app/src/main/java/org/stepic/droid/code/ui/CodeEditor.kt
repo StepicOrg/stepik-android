@@ -334,7 +334,7 @@ constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
     }
 
 
-    override fun onSaveInstanceState(): Parcelable {
+    override fun onSaveInstanceState(): Parcelable? {
         removeSpans(CodeHighlightSpan::class.java) // to fix crashes on low APIs when brackets are highlighted
         return super.onSaveInstanceState()
     }

@@ -80,10 +80,10 @@ constructor(
         paginationDisposable += Single
             .concat(
                 courseListInteractor
-                    .getCourseListItems(*courseCollection.courses, sourceTypeComposition = SourceTypeComposition.CACHE, courseViewSource = viewSource),
+                    .getCourseListItems(courseCollection.courses, sourceTypeComposition = SourceTypeComposition.CACHE, courseViewSource = viewSource),
 
                 courseListInteractor
-                    .getCourseListItems(*courseCollection.courses, sourceTypeComposition = SourceTypeComposition.REMOTE, courseViewSource = viewSource)
+                    .getCourseListItems(courseCollection.courses, sourceTypeComposition = SourceTypeComposition.REMOTE, courseViewSource = viewSource)
             )
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
@@ -138,7 +138,7 @@ constructor(
             ?: return
 
         compositeDisposable += courseListInteractor
-            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceTypeComposition = SourceTypeComposition.CACHE)
+            .getCourseListItems(listOf(course.id), courseViewSource = CourseViewSource.Collection(oldState.courseCollection.id), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
