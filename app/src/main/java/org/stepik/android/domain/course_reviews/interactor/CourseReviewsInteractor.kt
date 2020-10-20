@@ -51,9 +51,11 @@ constructor(
             .getCourseReviewsByCourseId(courseId, page, sourceType)
             .flatMap { courseReviews ->
                 val userIds = courseReviews
+                    .asSequence()
                     .map(CourseReview::user)
                     .filter { it != profileId }
                     .distinct()
+                    .toList()
 
                 val currentUserReviewSource =
                     if (page == 1) {
@@ -63,7 +65,7 @@ constructor(
                         Single.just(emptyList())
                     }
 
-                zip(currentUserReviewSource, Single.just(courseReviews), userRepository.getUsers(userIds = userIds))
+                zip(currentUserReviewSource, Single.just(courseReviews), userRepository.getUsers(userIds))
             }
             .map { (currentUserReview, courseReviews, users) ->
                 val usersMap = users
@@ -74,7 +76,7 @@ constructor(
                         val user = usersMap[review.user]
                             ?: return@mapNotNull null
 
-                        CourseReviewItem.Data(review, user, isCurrentUserReview = false) as CourseReviewItem
+                        CourseReviewItem.Data(review, user, isCurrentUserReview = false)
                     }
 
                 PagedList(currentUserReview + courseReviewsItems, page = courseReviews.page, hasNext = courseReviews.hasNext, hasPrev = courseReviews.hasPrev)

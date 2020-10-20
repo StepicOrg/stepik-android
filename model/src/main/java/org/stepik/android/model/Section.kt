@@ -3,12 +3,13 @@ package org.stepik.android.model
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import ru.nobird.android.core.model.Identifiable
 import java.util.Date
 
 @Parcelize
 data class Section(
     @SerializedName("id")
-    val id: Long = 0,
+    override val id: Long = 0,
     @SerializedName("course")
     val course: Long = 0, // course id
     @SerializedName("units")
@@ -53,4 +54,4 @@ data class Section(
     val requiredSection: Long = 0, //id of required section
     @SerializedName("required_percent")
     val requiredPercent: Int = 0
-) : Parcelable, Progressable
+) : Parcelable, Progressable, Identifiable<Long>
