@@ -1,9 +1,10 @@
 package org.stepik.android.model
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Reply(
     @SerializedName("choices")
     val choices: List<Boolean>? = null,
@@ -28,42 +29,6 @@ data class Reply(
     val solveSql: String? = null,
 
     var tableChoices: List<TableChoiceAnswer>? = null //this is not serialize by default, because  field 'choices' is already created by different type
-) : Parcelable {
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeList(choices)
-        parcel.writeString(text)
-        parcel.writeTypedList(attachments)
-        parcel.writeString(formula)
-        parcel.writeString(number)
-        parcel.writeList(ordering)
-        parcel.writeString(language)
-        parcel.writeString(code)
-        parcel.writeStringList(blanks)
-        parcel.writeString(solveSql)
-        parcel.writeTypedList(tableChoices)
-    }
-
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<Reply> {
-        override fun createFromParcel(parcel: Parcel): Reply =
-            Reply(
-                parcel.readArrayList(Boolean::class.java.classLoader) as? List<Boolean>,
-                parcel.readString(),
-                parcel.createTypedArrayList(Attachment),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readArrayList(Int::class.java.classLoader) as? List<Int>,
-                parcel.readString(),
-                parcel.readString(),
-                parcel.createStringArrayList(),
-                parcel.readString(),
-                parcel.createTypedArrayList(TableChoiceAnswer)
-            )
-
-        override fun newArray(size: Int): Array<Reply?> =
-            arrayOfNulls(size)
-    }
-}
+) : Parcelable
 
 data class ReplyWrapper(val reply: Reply?)

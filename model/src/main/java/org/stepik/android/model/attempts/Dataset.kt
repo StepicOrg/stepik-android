@@ -3,9 +3,9 @@ package org.stepik.android.model.attempts
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.writeBoolean
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Dataset(
     val options: List<String>? = null,
     val someStringValueFromServer: String? = null,
@@ -21,41 +21,7 @@ data class Dataset(
     val isCheckbox: Boolean = false,
     @SerializedName("is_html_enabled")
     val isHtmlEnabled: Boolean = false
-) : Parcelable {
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeStringList(options)
-        parcel.writeString(someStringValueFromServer)
-        parcel.writeTypedList(pairs)
-        parcel.writeStringList(rows)
-        parcel.writeStringList(columns)
-        parcel.writeString(description)
-        parcel.writeTypedList(components)
-        parcel.writeBoolean(isMultipleChoice)
-        parcel.writeBoolean(isCheckbox)
-        parcel.writeBoolean(isHtmlEnabled)
-    }
-
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<Dataset> {
-        override fun createFromParcel(parcel: Parcel): Dataset =
-            Dataset(
-                parcel.createStringArrayList(),
-                parcel.readString(),
-                parcel.createTypedArrayList(Pair),
-                parcel.createStringArrayList(),
-                parcel.createStringArrayList(),
-                parcel.readString(),
-                parcel.createTypedArrayList(Component),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readBoolean()
-            )
-
-        override fun newArray(size: Int): Array<Dataset?> =
-            arrayOfNulls(size)
-    }
-}
+) : Parcelable
 
 data class DatasetWrapper(
     val dataset: Dataset? = null

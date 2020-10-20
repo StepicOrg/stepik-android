@@ -23,7 +23,7 @@ fun Context.getDrawableCompat(@DrawableRes drawableRes: Int): Drawable =
 
 fun Context.copyTextToClipboard(label: String? = null, textToCopy: String, toastMessage: String) {
     val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-    clipboardManager.primaryClip = ClipData.newPlainText(label, textToCopy)
+    clipboardManager.setPrimaryClip(ClipData.newPlainText(label, textToCopy))
     Toast.makeText(this, toastMessage, Toast.LENGTH_SHORT).show()
 }
 

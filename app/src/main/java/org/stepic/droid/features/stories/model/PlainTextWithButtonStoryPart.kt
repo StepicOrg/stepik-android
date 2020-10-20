@@ -24,7 +24,7 @@ class PlainTextWithButtonStoryPart(
     companion object CREATOR : Parcelable.Creator<PlainTextWithButtonStoryPart> {
         override fun createFromParcel(parcel: Parcel) = PlainTextWithButtonStoryPart(
                 parcel.readLong(),
-                parcel.readString(),
+                parcel.readString()!!,
                 parcel.readParcelable(StoryTemplate.Button::class.java.classLoader),
                 parcel.readParcelable(StoryTemplate.Text::class.java.classLoader)
         )

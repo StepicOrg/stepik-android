@@ -12,7 +12,7 @@ class EmailAddressCacheDataSourceImpl
 constructor(
     private val sharedPreferenceHelper: SharedPreferenceHelper
 ) : EmailAddressCacheDataSource {
-    override fun getEmailAddresses(vararg emailIds: Long): Single<List<EmailAddress>> =
+    override fun getEmailAddresses(emailIds: List<Long>): Single<List<EmailAddress>> =
         Single.fromCallable {
             sharedPreferenceHelper.storedEmails
                 ?.filter { it.id in emailIds }

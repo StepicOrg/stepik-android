@@ -89,12 +89,12 @@ constructor(
                 .toObservable()
                 .flatMapSingle { lesson -> unitRepository.getUnitsByLessonId(lesson.id, primarySourceType = DataSourceType.CACHE) }
                 .reduce(emptyList<Unit>()) { a, b ->  a + b }
-                .flatMap { units -> getSections(courseId, units.mapToLongArray { it.section }, attempts, submissions, steps, lessons, units) }
+                .flatMap { units -> getSections(courseId, units.map { it.section }, attempts, submissions, steps, lessons, units) }
             }
 
-    private fun getSections(courseId: Long, ids: LongArray, attempts: List<Attempt>, submissions: List<Submission>, steps: List<Step>, lessons: List<Lesson>, units: List<Unit>): Single<List<SolutionItem>> =
+    private fun getSections(courseId: Long, ids: List<Long>, attempts: List<Attempt>, submissions: List<Submission>, steps: List<Step>, lessons: List<Lesson>, units: List<Unit>): Single<List<SolutionItem>> =
         sectionRepository
-            .getSections(*ids, primarySourceType = DataSourceType.CACHE)
+            .getSections(ids, primarySourceType = DataSourceType.CACHE)
             .map { sections ->
                 solutionItemMapper.mapAttemptCacheItems(courseId, attempts, submissions, steps, lessons, units, sections)
             }

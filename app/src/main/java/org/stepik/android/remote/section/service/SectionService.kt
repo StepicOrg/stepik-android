@@ -7,5 +7,5 @@ import retrofit2.http.Query
 
 interface SectionService {
     @GET("api/sections")
-    fun getSections(@Query("ids[]") sectionIds: LongArray): Single<SectionResponse>
+    fun getSections(@Query("ids[]") sectionIds: List<Long>): Single<SectionResponse>
 }

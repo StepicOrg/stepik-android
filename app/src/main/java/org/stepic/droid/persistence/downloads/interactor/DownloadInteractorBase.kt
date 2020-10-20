@@ -16,11 +16,11 @@ class DownloadInteractorBase<T>(
 
     private val networkTypeRepository: NetworkTypeRepository
 ): DownloadInteractor<T> {
-    override fun addTask(vararg ids: Long, configuration: DownloadConfiguration): Completable =
+    override fun addTask(ids: List<Long>, configuration: DownloadConfiguration): Completable =
         getConfiguration(configuration)
             .flatMapCompletable { config ->
                 addDownloadTasksHelper
-                    .addTasks(structureResolver.resolveStructure(*ids, resolveNestedObjects = true), config)
+                    .addTasks(structureResolver.resolveStructure(ids, resolveNestedObjects = true), config)
             }
 
     override fun addTask(vararg items: T, configuration: DownloadConfiguration): Completable =
@@ -51,6 +51,6 @@ class DownloadInteractorBase<T>(
     override fun removeTask(vararg item: T): Completable =
         removeDownloadTaskHelper.removeTasks(structureResolver.resolveStructure(*item, resolveNestedObjects = false))
 
-    override fun removeTask(vararg id: Long): Completable =
-        removeDownloadTaskHelper.removeTasks(structureResolver.resolveStructure(*id, resolveNestedObjects = false))
+    override fun removeTask(ids: List<Long>): Completable =
+        removeDownloadTaskHelper.removeTasks(structureResolver.resolveStructure(ids, resolveNestedObjects = false))
 }

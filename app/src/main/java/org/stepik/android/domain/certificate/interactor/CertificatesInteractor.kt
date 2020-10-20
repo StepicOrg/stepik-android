@@ -3,7 +3,6 @@ package org.stepik.android.domain.certificate.interactor
 import io.reactivex.Single
 import org.stepic.droid.model.CertificateViewItem
 import org.stepic.droid.util.PagedList
-import ru.nobird.android.core.model.mapToLongArray
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.certificate.repository.CertificateRepository
 import org.stepik.android.domain.course.repository.CourseRepository
@@ -21,10 +20,10 @@ constructor(
         certificateRepository.getCertificates(userId, page, sourceType)
             .flatMap { certificates ->
                 val courseIds =
-                    certificates.mapToLongArray(Certificate::course)
+                    certificates.map(Certificate::course)
 
                 courseRepository
-                    .getCourses(*courseIds)
+                    .getCourses(courseIds)
                     .map { courses ->
                         val coursesMap =
                             courses.associateBy(Course::id)

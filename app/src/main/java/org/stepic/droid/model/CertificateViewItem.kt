@@ -22,7 +22,7 @@ class CertificateViewItem(
         @JvmField val CREATOR: Parcelable.Creator<CertificateViewItem> = object : Parcelable.Creator<CertificateViewItem> {
             override fun createFromParcel(source: Parcel): CertificateViewItem =
                 CertificateViewItem(
-                    source.readParcelable(Certificate::class.java.classLoader),
+                    source.readParcelable(Certificate::class.java.classLoader)!!,
                     source.readString(),
                     source.readString()
                 )

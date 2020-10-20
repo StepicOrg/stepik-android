@@ -11,7 +11,6 @@ import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.repository.CourseRepository
 import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.model.Course
-import ru.nobird.android.core.model.mapToLongArray
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import javax.inject.Inject
 
@@ -29,7 +28,7 @@ constructor(
             courseCacheDataSource::saveCourses
         )
 
-    override fun getCourses(vararg courseIds: Long, primarySourceType: DataSourceType, allowFallback: Boolean): Single<PagedList<Course>> =
+    override fun getCourses(courseIds: List<Long>, primarySourceType: DataSourceType, allowFallback: Boolean): Single<PagedList<Course>> =
         delegate
             .get(courseIds.toList(), primarySourceType, allowFallback)
             .map(::PagedList)
@@ -38,12 +37,12 @@ constructor(
         val remoteSource = courseRemoteDataSource
             .getCourses(courseListQuery)
             .doCompletableOnSuccess(courseCacheDataSource::saveCourses)
-            .doCompletableOnSuccess { courseListQueryCacheDataSource.saveCourses(courseListQuery, it.mapToLongArray(Course::id)) }
+            .doCompletableOnSuccess { courseListQueryCacheDataSource.saveCourses(courseListQuery, it.map(Course::id)) }
 
         val cacheSource = courseListQueryCacheDataSource
             .getCourses(courseListQuery)
             .flatMap { ids ->
-                getCourses(*ids, primarySourceType = primarySourceType)
+                getCourses(ids, primarySourceType = primarySourceType)
             }
 
         return when (primarySourceType) {

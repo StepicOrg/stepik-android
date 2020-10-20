@@ -230,7 +230,7 @@ constructor(
         view?.updateCourseDownloadProgress(DownloadProgress(course.id, DownloadProgress.Status.Pending))
 
         compositeDisposable += courseDownloadInteractor
-            .addTask(courseId, configuration = DownloadConfiguration(videoQuality = quality))
+            .addTask(listOf(courseId), configuration = DownloadConfiguration(videoQuality = quality))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .doFinally {

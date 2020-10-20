@@ -12,7 +12,7 @@ class SectionCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : SectionCacheDataSource {
-    override fun getSections(vararg sectionIds: Long): Single<List<Section>> =
+    override fun getSections(sectionIds: List<Long>): Single<List<Section>> =
         Single.fromCallable {
             databaseFacade.getSectionsByIds(sectionIds)
         }

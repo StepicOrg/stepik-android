@@ -12,9 +12,9 @@ class UnitCacheDataSourceImpl
 constructor(
     private val databaseFacade: DatabaseFacade
 ) : UnitCacheDataSource {
-    override fun getUnits(vararg unitIds: Long): Single<List<Unit>> =
+    override fun getUnits(unitIds: List<Long>): Single<List<Unit>> =
         Single.fromCallable {
-            databaseFacade.getUnitsByIds(unitIds.toList())
+            databaseFacade.getUnitsByIds(unitIds)
         }
 
     override fun saveUnits(units: List<Unit>): Completable =

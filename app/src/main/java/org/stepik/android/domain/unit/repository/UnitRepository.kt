@@ -8,9 +8,9 @@ import org.stepik.android.model.Unit
 
 interface UnitRepository {
     fun getUnit(unitId: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Maybe<Unit> =
-        getUnits(unitId, primarySourceType = primarySourceType).maybeFirst()
+        getUnits(listOf(unitId), primarySourceType = primarySourceType).maybeFirst()
 
-    fun getUnits(vararg unitIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Unit>>
+    fun getUnits(unitIds: List<Long>, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Unit>>
 
     fun getUnitsByLessonId(lessonId: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Unit>>
 

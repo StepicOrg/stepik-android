@@ -32,7 +32,7 @@ class SectionRepositoryTest {
         val sectionId = 312L
         val section = Section(id = sectionId)
 
-        whenever(sectionCacheDataSource.getSections(sectionId)) doReturn Single.just(listOf(section))
+        whenever(sectionCacheDataSource.getSections(listOf(sectionId))) doReturn Single.just(listOf(section))
         whenever(sectionCacheDataSource.saveSections(any())) doReturn Completable.complete()
         whenever(sectionRemoteDataSource.getSections(any())) doReturn Single.just(emptyList())
 
@@ -51,8 +51,8 @@ class SectionRepositoryTest {
         val sectionId = 312L
         val section = Section(id = sectionId)
 
-        whenever(sectionCacheDataSource.getSections(sectionId)) doReturn Single.just(listOf(section))
-        whenever(sectionRemoteDataSource.getSections(sectionId)) doReturn Single.error(IOException(""))
+        whenever(sectionCacheDataSource.getSections(listOf(sectionId))) doReturn Single.just(listOf(section))
+        whenever(sectionRemoteDataSource.getSections(listOf(sectionId))) doReturn Single.error(IOException(""))
 
         sectionRepository
             .getSection(sectionId, primarySourceType = DataSourceType.REMOTE)
@@ -70,9 +70,9 @@ class SectionRepositoryTest {
         val section = Section(id = sectionId)
         val sectionList = listOf(section)
 
-        whenever(sectionCacheDataSource.getSections(sectionId)) doReturn Single.just(emptyList())
+        whenever(sectionCacheDataSource.getSections(listOf(sectionId))) doReturn Single.just(emptyList())
         whenever(sectionCacheDataSource.saveSections(sectionList)) doReturn Completable.complete()
-        whenever(sectionRemoteDataSource.getSections(sectionId)) doReturn Single.just(sectionList)
+        whenever(sectionRemoteDataSource.getSections(listOf(sectionId))) doReturn Single.just(sectionList)
 
         sectionRepository
             .getSection(sectionId)
@@ -88,19 +88,19 @@ class SectionRepositoryTest {
     fun sectionPartialLoadingTest() {
         val sectionRepository = SectionRepositoryImpl(sectionCacheDataSource, sectionRemoteDataSource)
 
-        val sectionsIds = longArrayOf(1, 2)
+        val sectionsIds = listOf(1L, 2L)
         val sections = sectionsIds.map { Section(id = it) }
 
         val cacheList = sections.subList(0, 1)
         val remoteList = sections.subList(1, 2)
 
-        whenever(sectionCacheDataSource.getSections(*sectionsIds)) doReturn Single.just(cacheList)
+        whenever(sectionCacheDataSource.getSections(sectionsIds)) doReturn Single.just(cacheList)
         whenever(sectionCacheDataSource.saveSections(remoteList)) doReturn Completable.complete()
-        whenever(sectionRemoteDataSource.getSections(*sectionsIds)) doReturn Single.just(emptyList())
-        whenever(sectionRemoteDataSource.getSections(sectionsIds[1])) doReturn Single.just(remoteList)
+        whenever(sectionRemoteDataSource.getSections(sectionsIds)) doReturn Single.just(emptyList())
+        whenever(sectionRemoteDataSource.getSections(listOf(sectionsIds[1]))) doReturn Single.just(remoteList)
 
         sectionRepository
-            .getSections(*sectionsIds)
+            .getSections(sectionsIds)
             .test()
             .assertNoErrors()
             .assertComplete()
