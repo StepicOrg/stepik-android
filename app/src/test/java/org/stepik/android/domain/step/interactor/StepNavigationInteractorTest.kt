@@ -96,7 +96,7 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections()) doReturn Single.just(emptyList())
+        whenever(sectionRepository.getSections(listOf())) doReturn Single.just(emptyList())
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -123,7 +123,7 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections()) doReturn Single.just(emptyList())
+        whenever(sectionRepository.getSections(listOf())) doReturn Single.just(emptyList())
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -149,8 +149,8 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -179,8 +179,8 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -209,8 +209,8 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -238,8 +238,8 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -267,8 +267,8 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -405,7 +405,7 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
         whenever(unitRepository.getUnit(nextUnit.id)) doReturn Maybe.just(nextUnit)
         whenever(lessonRepository.getLesson(nextLesson.id)) doReturn Maybe.just(nextLesson)
 
@@ -440,7 +440,7 @@ class StepNavigationInteractorTest {
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
         whenever(unitRepository.getUnit(prevUnit.id)) doReturn Maybe.just(prevUnit)
         whenever(lessonRepository.getLesson(prevLesson.id)) doReturn Maybe.just(prevLesson)
 
