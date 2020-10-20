@@ -60,6 +60,8 @@ ext.versions = [
 
         lottie               : '2.7.0',
 
+        playCore             : '1.8.2',
+        playCoreKtx          : '1.8.1',
         googleauth           : '16.0.1',
         firebaseAnalytics    : '17.4.3',
         firebaseAppindexing  : '19.1.0',
@@ -181,6 +183,8 @@ ext.libraries = [
 
         lottie               : "com.airbnb.android:lottie:$versions.lottie",
 
+        playCore             : "com.google.android.play:core:$versions.playCore",
+        playCoreKtx          : "com.google.android.play:core-ktx:$versions.playCoreKtx",
         googleauth           : "com.google.android.gms:play-services-auth:$versions.googleauth",
         firebaseAnalytics    : "com.google.firebase:firebase-analytics-ktx:$versions.firebaseAnalytics",
         firebaseAppindexing  : "com.google.firebase:firebase-appindexing:$versions.firebaseAppindexing",
