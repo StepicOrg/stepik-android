@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="recommendation_loading_placeholders">
+        <item>Аналізуем рэакцыю…</item>
+        <item>Шукаем наступную задачу…</item>
+        <item>Робаты шукаюць задачы…</item>
+        <item>Лічым нешта…</item>
+    </string-array>
+    <string-array name="adaptive_rating_periods">
+        <item>Апошнія 24 гадзіны</item>
+        <item>Апошнія 7 дзён</item>
+        <item>За ўвесь час</item>
+    </string-array>
+    <string-array name="step_quiz_feedback_correct">
+        <item>Правільна</item>
+        <item>Правільна, малайчына!</item>
+        <item>Усё правільна</item>
+        <item>Слушна</item>
+        <item>Дакладна. Так трымаць!</item>
+        <item>Файна, усё слушна</item>
+        <item>Выдатная работа</item>
+        <item>Выдатнае рашэнне!</item>
+        <item>Абсалютна слушна</item>
+        <item>Добрыя навіны, слушна!</item>
+        <item>Выдатны адказ</item>
+        <item>Так ёсць!</item>
+        <item>Выдатна!</item>
+        <item>Усё атрымалася!</item>
+    </string-array>
+    <string-array name="step_quiz_feedback_partially_correct">
+        <item>Амаль дакладна. Так трымаць!</item>
+        <item>Вы блізкія да правільнага адказу! Паспрабуйце палепшыць вынік.</item>
+        <item>Ваш адказ амаль слушны. Паспрабуеце палепшыць вынік?</item>
+        <item>Амаль дакладна! Можа быць, паспрабуеце яшчэ?</item>
+        <item>Амаль дакладна. Паспрабуйце атрымаць поўны бал!</item>
+        <item>Вы блізкія да правільнага адказу, так трымаць. Паспрабуеце яшчэ?</item>
+    </string-array>
+    <string-array name="step_content_font_size">
+        <item>Дробны</item>
+        <item>Сярэдні</item>
+        <item>Вялікі</item>
+    </string-array>
+    <string-array name="course_list_languages">
+        <item>Руская</item>
+        <item>Ангельская</item>
+    </string-array>
+    <string-array name="night_modes">
+        <item>Светлая</item>
+        <item>Цёмная</item>
+        <item>Сістэмная</item>
+    </string-array>
+</resources>

@@ -1,7 +1,7 @@
 package org.stepik.android.data.user.repository
 
 import io.reactivex.Single
-import ru.nobird.android.domain.rx.doCompletableOnSuccess
+import org.stepik.android.data.base.repository.delegate.ListRepositoryDelegate
 import org.stepik.android.data.user.source.UserCacheDataSource
 import org.stepik.android.data.user.source.UserRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -15,29 +15,13 @@ constructor(
     private val userRemoteDataSource: UserRemoteDataSource,
     private val userCacheDataSource: UserCacheDataSource
 ) : UserRepository {
-    override fun getUsers(vararg userIds: Long, primarySourceType: DataSourceType): Single<List<User>> {
-        val remoteSource = userRemoteDataSource
-            .getUsers(*userIds)
-            .doCompletableOnSuccess(userCacheDataSource::saveUsers)
+    private val delegate =
+        ListRepositoryDelegate(
+            userRemoteDataSource::getUsers,
+            userCacheDataSource::getUsers,
+            userCacheDataSource::saveUsers
+        )
 
-        val cacheSource = userCacheDataSource
-            .getUsers(*userIds)
-
-        return when (primarySourceType) {
-            DataSourceType.REMOTE ->
-                remoteSource.onErrorResumeNext(cacheSource)
-
-            DataSourceType.CACHE ->
-                cacheSource.flatMap { cachedUsers ->
-                    val ids = (userIds.toList() - cachedUsers.map(User::id)).toLongArray()
-                    userRemoteDataSource
-                        .getUsers(*ids)
-                        .doCompletableOnSuccess(userCacheDataSource::saveUsers)
-                        .map { remoteUsers -> cachedUsers + remoteUsers }
-                }
-
-            else ->
-                throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }.map { users -> users.sortedBy { userIds.indexOf(it.id) } }
-    }
+    override fun getUsers(userIds: List<Long>, primarySourceType: DataSourceType): Single<List<User>> =
+        delegate.get(userIds, primarySourceType, allowFallback = true)
 }

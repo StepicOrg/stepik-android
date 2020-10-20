@@ -41,7 +41,7 @@ class StepNavigationInteractorTest {
         val lesson = Lesson(id = 200, steps = longArrayOf(0, step.id, 2))
         val unit = Unit(id = 300, lesson = lesson.id)
         val section = Section(id = 400, units = listOf(unit.id))
-        val course = Course(id = 500, sections = longArrayOf(section.id))
+        val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
 
@@ -67,7 +67,7 @@ class StepNavigationInteractorTest {
         val nextUnit = Unit(id = 301, lesson = 0, position = 3)
 
         val section = Section(id = 400, units = listOf(prevUnit.id, unit.id, nextUnit.id), position = 1)
-        val course = Course(id = 500, sections = longArrayOf(section.id))
+        val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
 
@@ -92,11 +92,11 @@ class StepNavigationInteractorTest {
         val nextUnit = Unit(id = 301, lesson = 0, position = 2)
 
         val section = Section(id = 400, units = listOf(unit.id, nextUnit.id), position = 1)
-        val course = Course(id = 500, sections = longArrayOf(section.id))
+        val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections()) doReturn Single.just(emptyList())
+        whenever(sectionRepository.getSections(listOf())) doReturn Single.just(emptyList())
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -119,11 +119,11 @@ class StepNavigationInteractorTest {
         val unit = Unit(id = 300, lesson = lesson.id, position = 2)
 
         val section = Section(id = 400, units = listOf(prevUnit.id, unit.id), position = 1)
-        val course = Course(id = 500, sections = longArrayOf(section.id))
+        val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections()) doReturn Single.just(emptyList())
+        whenever(sectionRepository.getSections(listOf())) doReturn Single.just(emptyList())
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -145,12 +145,12 @@ class StepNavigationInteractorTest {
         val prevSection = Section(id = 399, units = listOf(0), position = 1, isActive = true, isRequirementSatisfied = true, isExam = false)
         val section = Section(id = 400, units = listOf(unit.id), position = 2)
         val nextSection = Section(id = 401, units = listOf(0), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
-        val course = Course(id = 500, sections = longArrayOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
+        val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -175,12 +175,12 @@ class StepNavigationInteractorTest {
         val prevSection = Section(id = 399, units = listOf(0), position = 1, isActive = true, isRequirementSatisfied = true, isExam = false)
         val section = Section(id = 400, units = listOf(unit.id), position = 2)
         val nextSection = Section(id = 401, units = listOf(0), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
-        val course = Course(id = 500, sections = longArrayOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
+        val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -205,12 +205,12 @@ class StepNavigationInteractorTest {
         val prevSection = Section(id = 399, units = listOf(0), position = 1, isActive = true, isRequirementSatisfied = true, isExam = false)
         val section = Section(id = 400, units = listOf(unit.id), position = 2)
         val nextSection = Section(id = 401, units = listOf(0), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
-        val course = Course(id = 500, sections = longArrayOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
+        val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -234,12 +234,12 @@ class StepNavigationInteractorTest {
         val prevSection = Section(id = 399, units = emptyList(), position = 1, isActive = true, isRequirementSatisfied = true, isExam = false)
         val section = Section(id = 400, units = listOf(unit.id), position = 2)
         val nextSection = Section(id = 401, units = listOf(0), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
-        val course = Course(id = 500, sections = longArrayOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
+        val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -263,12 +263,12 @@ class StepNavigationInteractorTest {
         val prevSection = Section(id = 399, units = listOf(0), position = 1, isActive = true, isRequirementSatisfied = true, isExam = false)
         val section = Section(id = 400, units = listOf(unit.id), position = 2)
         val nextSection = Section(id = 401, units = emptyList(), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
-        val course = Course(id = 500, sections = longArrayOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
+        val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
 
         verifyNoMoreInteractions(sectionRepository)
         verifyNoMoreInteractions(unitRepository)
@@ -288,7 +288,7 @@ class StepNavigationInteractorTest {
         val lesson = Lesson(id = 200, steps = longArrayOf(0, step.id, 2))
         val unit = Unit(id = 300, lesson = lesson.id)
         val section = Section(id = 400, units = listOf(unit.id))
-        val course = Course(id = 500, sections = longArrayOf(section.id))
+        val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
 
@@ -310,7 +310,7 @@ class StepNavigationInteractorTest {
         val lesson = Lesson(id = 200, steps = longArrayOf(0, step.id, 2))
         val unit = Unit(id = 300, lesson = lesson.id)
         val section = Section(id = 400, units = listOf(unit.id))
-        val course = Course(id = 500, sections = longArrayOf(section.id))
+        val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
 
@@ -339,7 +339,7 @@ class StepNavigationInteractorTest {
         val nextUnit = Unit(id = 301, lesson = nextLesson.id, position = 3)
 
         val section = Section(id = 400, units = listOf(prevUnit.id, unit.id, nextUnit.id), position = 1)
-        val course = Course(id = 500, sections = longArrayOf(section.id))
+        val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
 
@@ -369,7 +369,7 @@ class StepNavigationInteractorTest {
         val nextUnit = Unit(id = 301, lesson = 0, position = 3)
 
         val section = Section(id = 400, units = listOf(prevUnit.id, unit.id, nextUnit.id), position = 1)
-        val course = Course(id = 500, sections = longArrayOf(section.id))
+        val course = Course(id = 500, sections = listOf(section.id))
 
         val lessonData = LessonData(lesson, unit, section, course)
 
@@ -401,11 +401,11 @@ class StepNavigationInteractorTest {
         val prevSection = Section(id = 399, units = listOf(prevUnit.id), position = 1, isActive = true, isRequirementSatisfied = true, isExam = false)
         val section = Section(id = 400, units = listOf(unit.id), position = 2)
         val nextSection = Section(id = 401, units = listOf(nextUnit.id), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
-        val course = Course(id = 500, sections = longArrayOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
+        val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(nextSection.id)) doReturn Single.just(listOf(nextSection))
+        whenever(sectionRepository.getSections(listOf(nextSection.id))) doReturn Single.just(listOf(nextSection))
         whenever(unitRepository.getUnit(nextUnit.id)) doReturn Maybe.just(nextUnit)
         whenever(lessonRepository.getLesson(nextLesson.id)) doReturn Maybe.just(nextLesson)
 
@@ -436,11 +436,11 @@ class StepNavigationInteractorTest {
         val prevSection = Section(id = 399, units = listOf(prevUnit.id), position = 1, isActive = true, isRequirementSatisfied = true, isExam = false)
         val section = Section(id = 400, units = listOf(unit.id), position = 2)
         val nextSection = Section(id = 401, units = listOf(nextUnit.id), position = 3, isActive = true, isRequirementSatisfied = true, isExam = false)
-        val course = Course(id = 500, sections = longArrayOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
+        val course = Course(id = 500, sections = listOf(prevSection.id, section.id, nextSection.id), enrollment = 500)
 
         val lessonData = LessonData(lesson, unit, section, course)
 
-        whenever(sectionRepository.getSections(prevSection.id)) doReturn Single.just(listOf(prevSection))
+        whenever(sectionRepository.getSections(listOf(prevSection.id))) doReturn Single.just(listOf(prevSection))
         whenever(unitRepository.getUnit(prevUnit.id)) doReturn Maybe.just(prevUnit)
         whenever(lessonRepository.getLesson(prevLesson.id)) doReturn Maybe.just(prevLesson)
 

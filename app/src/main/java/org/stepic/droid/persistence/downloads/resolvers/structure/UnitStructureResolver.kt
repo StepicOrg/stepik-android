@@ -8,7 +8,7 @@ interface UnitStructureResolver: StructureResolver<Unit> {
     fun resolveStructure(
         courseId: Long,
         sectionId: Long,
-        vararg unitIds: Long,
+        unitIds: List<Long>,
         resolveNestedObjects: Boolean
     ): Observable<Structure>
 }

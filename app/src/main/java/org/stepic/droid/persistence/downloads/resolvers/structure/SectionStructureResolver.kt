@@ -18,9 +18,9 @@ constructor(
     private val unitStructureResolver: UnitStructureResolver,
     private val progressRepository: ProgressRepository
 ): StructureResolver<Section> {
-    override fun resolveStructure(vararg ids: Long, resolveNestedObjects: Boolean): Observable<Structure> =
+    override fun resolveStructure(ids: List<Long>, resolveNestedObjects: Boolean): Observable<Structure> =
         sectionRepository
-            .getSections(*ids)
+            .getSections(ids)
             .flatMapObservable { sections ->
                 resolveStructure(*sections.toTypedArray(), resolveNestedObjects = resolveNestedObjects)
             }
@@ -35,7 +35,7 @@ constructor(
         }
             .andThen(
                 items
-                    .map { unitStructureResolver.resolveStructure(it.course, it.id, unitIds = it.units.toLongArray(), resolveNestedObjects = resolveNestedObjects) }
+                    .map { unitStructureResolver.resolveStructure(it.course, it.id, unitIds = it.units, resolveNestedObjects = resolveNestedObjects) }
                     .let { Observable.concat(it) }
             )
 }

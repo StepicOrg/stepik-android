@@ -17,7 +17,7 @@ constructor(
     private val userResponseMapper =
         Function<UserResponse, List<User>>(UserResponse::users)
 
-    override fun getUsers(vararg userIds: Long): Single<List<User>> =
+    override fun getUsers(userIds: List<Long>): Single<List<User>> =
         userIds
             .chunkedSingleMap { ids ->
                 userService.getUsersRx(ids)

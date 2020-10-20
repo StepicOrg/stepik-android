@@ -22,8 +22,8 @@ constructor(
     private fun getCourseInfoUsers(course: Course): Observable<CourseInfoData> {
         val emptySource = Observable.just(mapToCourseInfoData(course))
 
-        val instructorsSource = userRepository.getUsers(userIds = *course.instructors ?: longArrayOf())
-        val ownerSource = userRepository.getUsers(course.owner)
+        val instructorsSource = userRepository.getUsers(userIds = course.instructors ?: listOf())
+        val ownerSource = userRepository.getUsers(listOf(course.owner))
 
         val remoteSource =
             zip(instructorsSource, ownerSource) { instructors, owners ->

@@ -1,5 +1,6 @@
 package org.stepik.android.cache.calendar
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentUris
 import android.content.ContentValues
@@ -21,6 +22,7 @@ constructor(
     private val contentResolver: ContentResolver
 ) : CalendarCacheDataSource {
 
+    @SuppressLint("MissingPermission")
     override fun getCalendarPrimaryItems(): Single<List<CalendarItem>> =
         Single.create<List<CalendarItem>> { emitter ->
             val listOfCalendarItems = mutableListOf<CalendarItem>()
@@ -89,11 +91,13 @@ constructor(
             ids.forEach { removeEventById(it) }
         }
 
+    @SuppressLint("MissingPermission")
     override fun saveCalendarEventData(calendarEventData: CalendarEventData, calendarItem: CalendarItem): Single<Long> =
         Single.fromCallable {
             contentResolver
                     .insert(CalendarContract.Events.CONTENT_URI, mapContentValues(calendarEventData, calendarItem))
-                    .lastPathSegment.toLong()
+                    ?.lastPathSegment
+                    ?.toLong()
         }
 
     private fun removeEventById(id: Long) =

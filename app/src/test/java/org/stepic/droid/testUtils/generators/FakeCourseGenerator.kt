@@ -6,8 +6,8 @@ object FakeCourseGenerator {
     @JvmOverloads
     fun generate(
             courseId: Long = 0,
-            sectionIds: LongArray? = null,
-            instructors: LongArray? = null
+            sectionIds: List<Long>? = null,
+            instructors: List<Long>? = null
     ): Course =
             Course(id = courseId, sections = sectionIds, instructors = instructors)
 }

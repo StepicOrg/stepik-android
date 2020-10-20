@@ -14,7 +14,7 @@ import retrofit2.http.Query
 interface EmailAddressService {
     @GET("api/email-addresses")
     fun getEmailAddresses(
-        @Query("ids[]") ids: LongArray
+        @Query("ids[]") ids: List<Long>
     ): Single<EmailAddressResponse>
 
     @POST("api/email-addresses")
