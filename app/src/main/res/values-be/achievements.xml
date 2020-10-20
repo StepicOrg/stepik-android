@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="achievement_steps_solved_title">Галоўнае — колькасць</string>
+    <string name="achievement_steps_solved_description">Вырашыце правільна %s</string>
+    <string name="achievement_steps_solved_streak_title">Сапёр</string>
+    <string name="achievement_steps_solved_streak_description">Рашыце правільна %s запар</string>
+    <string name="achievement_steps_solved_choice_title">Я абіраю</string>
+    <string name="achievement_steps_solved_choice_description">Рашыце правільна %s з выбарам адказу</string>
+    <string name="achievement_steps_solved_code_title">Кампутарны майстар</string>
+    <string name="achievement_steps_solved_code_description">Рашыце правільна %s на праграмаванне</string>
+    <string name="achievement_steps_solved_number_title">Яшчэ адно дасягненне</string>
+    <string name="achievement_steps_solved_number_description">Рашыце правільна %s з лічбамі</string>
+    <string name="achievement_code_quizzes_solved_python_title">Утаймавальнік змеяў</string>
+    <string name="achievement_code_quizzes_solved_python_description">Рашыце правільна %s на Python</string>
+    <string name="achievement_code_quizzes_solved_cpp_title">Developer.cpp</string>
+    <string name="achievement_code_quizzes_solved_cpp_description">Рашыце правільна %s на C ++</string>
+    <string name="achievement_code_quizzes_solved_java_title">Трохі кавы?</string>
+    <string name="achievement_code_quizzes_solved_java_description">Рашыце правільна %s на Java</string>
+    <string name="achievement_active_days_streak_title">Пастаянны карыстальнік</string>
+    <string name="achievement_active_days_streak_description">Рашайце як мінімум адну задачу на працягу %s</string>
+    <string name="achievement_certificates_regular_count_title">Выпускнік</string>
+    <string name="achievement_certificates_regular_count_description">Атрымайце %s</string>
+    <string name="achievement_certificates_distinction_count_title">Выдатнік</string>
+    <string name="achievement_certificates_distinction_count_description">Атрымайце %s з адзнакай</string>
+    <string name="achievement_course_reviews_count_title">Крытык</string>
+    <string name="achievement_course_reviews_count_description">Пакіньце %s</string>
+    <string name="achievement_unknown_title">Невядомае дасягненне</string>
+    <string name="achievement_unknown_description">Ніхто не ведае, што гэта такое</string>
+</resources>
