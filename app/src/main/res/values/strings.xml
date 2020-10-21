@@ -960,4 +960,17 @@
     <string name="pip_stop_label">Pause</string>
     <string name="pip_forward_label">Forward</string>
     <string name="pip_rewind_label">Rewind</string>
+    
+    <!-- Filter -->
+    <string name="filter_dialog_title">Filters</string>
+    <string name="filter_language_subtitle">Language</string>
+    <string name="filter_any_radio_button_title">Any</string>
+    <string name="filter_rus_radio_button_title">Russian</string>
+    <string name="filter_eng_radio_button_title">English</string>
+
+    <string name="filter_with_certificate_switch_title">With certificate</string>
+    <string name="filter_free_switch_title">Free</string>
+
+    <string name="filter_dismiss_action">Dismiss</string>
+    <string name="filter_apply_action">Show result</string>
 </resources>
