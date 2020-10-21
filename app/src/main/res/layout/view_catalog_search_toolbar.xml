@@ -10,7 +10,7 @@
 
     <include layout="@layout/view_centered_toolbar"/>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/searchViewContainer"
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -22,6 +22,10 @@
             android:visibility="gone"
             android:background="?selectableItemBackgroundBorderless"
             android:layout_gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/searchViewToolbar"
             android:layout_marginStart="@dimen/back_button_left_margin"
             android:layout_marginLeft="@dimen/back_button_left_margin"
             android:layout_marginRight="@dimen/back_button_right_margin"
@@ -42,11 +46,30 @@
             app:searchIcon="@drawable/ic_action_search"
             app:defaultQueryHint="find_courses_hint"
             app:queryHint="@string/find_courses_hint"
+            app:layout_constraintLeft_toRightOf="@id/backIcon"
+            app:layout_constraintRight_toLeftOf="@id/filterIcon"
             android:background="@drawable/bg_catalog_search_bar"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             tools:visibility="visible" />
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/filterIcon"
+            app:srcCompat="@drawable/ic_filter"
+            android:visibility="gone"
+            android:background="?selectableItemBackgroundBorderless"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/searchViewToolbar"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/back_button_left_margin"
+            android:layout_marginLeft="@dimen/back_button_left_margin"
+            android:layout_marginRight="@dimen/back_button_right_margin"
+            android:layout_marginEnd="@dimen/back_button_right_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.appbar.AppBarLayout>

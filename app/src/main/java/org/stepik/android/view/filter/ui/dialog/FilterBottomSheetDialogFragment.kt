@@ -24,8 +24,6 @@ class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "FilterBottomSheetDialogFragment"
 
-        private const val ARG_FILTER_QUERY = "FILTER_QUERY"
-
         fun newInstance(filterQuery: CourseListFilterQuery): DialogFragment =
             FilterBottomSheetDialogFragment().apply {
                 this.filterQuery = filterQuery

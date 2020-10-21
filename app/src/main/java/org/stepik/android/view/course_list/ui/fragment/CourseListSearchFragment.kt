@@ -34,11 +34,13 @@ import org.stepik.android.presentation.course_list.CourseListSearchPresenter
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
+class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), FilterBottomSheetDialogFragment.Callback {
     companion object {
         fun newInstance(query: String?): Fragment =
             CourseListSearchFragment().apply {
@@ -138,7 +140,12 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
                         interactionSource = CourseContinueInteractionSource.COURSE_WIDGET
                     )
             },
-            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive
+            isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
+            onFilterClicked = {
+                FilterBottomSheetDialogFragment
+                    .newInstance(filterQuery = it)
+                    .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
+            }
         )
 
         courseListPresenter.fetchCourses(searchResultQuery)
@@ -147,6 +154,7 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
     private fun setupSearchBar() {
         centeredToolbar.isVisible = false
         backIcon.isVisible = true
+        filterIcon.isVisible = true
         searchViewToolbar.isVisible = true
         searchIcon.setImageResource(0)
         (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
@@ -160,6 +168,9 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
             } else {
                 activity?.finish()
             }
+        }
+        filterIcon.setOnClickListener {
+            courseListPresenter.onFilterMenuItemClicked()
         }
     }
 
@@ -199,5 +210,12 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
     override fun onStop() {
         courseListPresenter.detachView(courseListViewDelegate)
         super.onStop()
+    }
+
+    override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
+        courseListPresenter.fetchCourses(
+            searchResultQuery = SearchResultQuery(page = 1, query = query, filterQuery = filterQuery),
+            forceUpdate = true
+        )
     }
 }

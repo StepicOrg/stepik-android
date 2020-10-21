@@ -184,13 +184,14 @@ class CourseListQueryFragment :
     override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
         FilterBottomSheetDialogFragment
             .newInstance(filterQuery)
-            .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
+            .showIfNotExists(parentFragmentManager, FilterBottomSheetDialogFragment.TAG)
     }
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
         courseListQueryPresenter.fetchCourses(
             courseListQuery = courseListQuery.copy(filterQuery = filterQuery),
             forceUpdate = true
+
         )
     }
 }

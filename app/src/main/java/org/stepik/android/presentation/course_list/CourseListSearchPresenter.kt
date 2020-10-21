@@ -14,12 +14,14 @@ import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.interactor.CourseListSearchInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegate
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
+import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import ru.nobird.android.presentation.base.PresenterBase
@@ -146,6 +148,16 @@ constructor(
                     view?.showNetworkError()
                 }
             )
+    }
+
+    fun onFilterMenuItemClicked() {
+        val oldState = state as? CourseListView.State.Content
+            ?: return
+
+        val filterView = (view as? FilterQueryView)
+            ?: return
+
+        filterView.showFilterDialog(filterQuery = searchResultQuery?.filterQuery ?: CourseListFilterQuery())
     }
 
     /**
