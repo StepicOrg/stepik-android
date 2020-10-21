@@ -21,11 +21,13 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
@@ -62,6 +64,9 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
+    internal lateinit var sharedPreferencesHelper: SharedPreferenceHelper
+
+    @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
@@ -94,7 +99,7 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list) {
 
         goToCatalog.setOnClickListener { screenManager.showCatalog(requireContext()) }
 
-        val searchResultQuery = SearchResultQuery(page = 1, query = query)
+        val searchResultQuery = SearchResultQuery(page = 1, query = query, filterQuery = CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured))
         courseListSwipeRefresh.setOnRefreshListener {
             courseListPresenter.fetchCourses(
                 searchResultQuery,

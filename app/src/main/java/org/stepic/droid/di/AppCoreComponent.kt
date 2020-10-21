@@ -48,6 +48,7 @@ import org.stepik.android.view.injection.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
+import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.analytic.AnalyticComponent
 import org.stepik.android.view.injection.auth.AuthComponent
@@ -328,4 +329,6 @@ interface AppCoreComponent {
     fun inject(onboardingActivity: AnimatedOnboardingActivity)
 
     fun inject(purchaseNotificationReceiver: PurchaseNotificationReceiver)
+
+    fun inject(filterBottomSheetDialogFragment: FilterBottomSheetDialogFragment)
 }

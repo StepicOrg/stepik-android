@@ -14,10 +14,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -47,6 +49,9 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
 
     @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
@@ -83,7 +88,7 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
 
-        val searchResultQuery = SearchResultQuery(page = 1, tagId = tag.id)
+        val searchResultQuery = SearchResultQuery(page = 1, tagId = tag.id, filterQuery = CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,

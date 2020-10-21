@@ -12,6 +12,8 @@ constructor() {
         private const val TAG = "tag"
         private const val QUERY = "query"
         private const val LANG = "language"
+        private const val IS_PAID = "is_paid"
+        private const val WITH_CERTIFICATE = "with_certificate"
     }
 
     fun mapToQueryMap(searchResultQuery: SearchResultQuery): Map<String, String> =
@@ -19,6 +21,8 @@ constructor() {
             PAGE to searchResultQuery.page?.toString(),
             TAG to searchResultQuery.tagId?.toString(),
             QUERY to searchResultQuery.query,
-            LANG to searchResultQuery.lang
+            LANG to searchResultQuery.filterQuery?.language,
+            IS_PAID to searchResultQuery.filterQuery?.isPaid?.toString(),
+            WITH_CERTIFICATE to searchResultQuery.filterQuery?.withCertificate?.toString()
         )
 }

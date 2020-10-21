@@ -19,6 +19,7 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
@@ -87,8 +88,8 @@ class CourseListPopularFragment : Fragment(R.layout.item_course_list), CourseLis
         val courseListQuery = CourseListQuery(
             page = 1,
             order = CourseListQuery.Order.ACTIVITY_DESC,
-            language = sharedPreferenceHelper.languageForFeatured,
-            isCataloged = true
+            isCataloged = true,
+            filterQuery = CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured)
         )
 
         courseListTitleContainer.setOnClickListener {

@@ -14,6 +14,7 @@ import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.catalog.model.CatalogItem
@@ -21,6 +22,7 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListQueryStateMapper
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
+import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import ru.nobird.android.core.model.cast
@@ -28,6 +30,7 @@ import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListQueryPresenter
@@ -77,6 +80,8 @@ constructor(
 
     fun fetchCourses(courseListQuery: CourseListQuery, forceUpdate: Boolean = false) {
         if (state != CourseListQueryView.State.Idle && !forceUpdate) return
+
+        Timber.d("fetchCourses: $courseListQuery")
 
         paginationDisposable.clear()
 
@@ -167,6 +172,19 @@ constructor(
                     }
                 )
         }
+    }
+
+    fun onFilterMenuItemClicked() {
+        val oldState = (state as? CourseListQueryView.State.Data)
+            ?: return
+
+        val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
+            ?: return
+
+        val filterView = (view as? FilterQueryView)
+            ?: return
+
+        filterView.showFilterDialog(filterQuery = oldState.courseListQuery.filterQuery ?: CourseListFilterQuery())
     }
 
     /**

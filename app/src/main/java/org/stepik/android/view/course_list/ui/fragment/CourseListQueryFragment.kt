@@ -1,6 +1,9 @@
 package org.stepik.android.view.course_list.ui.fragment
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -19,19 +22,27 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
+import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
+import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CourseListQueryFragment : Fragment(R.layout.fragment_course_list), CourseListQueryView {
+class CourseListQueryFragment :
+    Fragment(R.layout.fragment_course_list),
+    CourseListQueryView,
+    FilterQueryView,
+    FilterBottomSheetDialogFragment.Callback {
     companion object {
         fun newInstance(courseListTitle: String, courseListQuery: CourseListQuery): Fragment =
             CourseListQueryFragment().apply {
@@ -60,6 +71,7 @@ class CourseListQueryFragment : Fragment(R.layout.fragment_course_list), CourseL
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         injectComponent()
 
         courseListQueryPresenter = ViewModelProviders
@@ -71,6 +83,7 @@ class CourseListQueryFragment : Fragment(R.layout.fragment_course_list), CourseL
         super.onViewCreated(view, savedInstanceState)
 
         initCenteredToolbar(courseListTitle, true)
+
         with(courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
             setOnPaginationListener { pageDirection ->
@@ -151,5 +164,33 @@ class CourseListQueryFragment : Fragment(R.layout.fragment_course_list), CourseL
     override fun onStop() {
         courseListQueryPresenter.detachView(this)
         super.onStop()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.course_list_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean =
+        when (item.itemId) {
+            R.id.course_list_filter -> {
+                courseListQueryPresenter.onFilterMenuItemClicked()
+                true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        }
+
+    override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
+        FilterBottomSheetDialogFragment
+            .newInstance(filterQuery)
+            .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
+    }
+
+    override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
+        courseListQueryPresenter.fetchCourses(
+            courseListQuery = courseListQuery.copy(filterQuery = filterQuery),
+            forceUpdate = true
+        )
     }
 }

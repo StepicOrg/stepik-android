@@ -3,6 +3,7 @@ package org.stepik.android.domain.search_result.model
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import java.io.Serializable
 
 @Parcelize
@@ -13,6 +14,5 @@ data class SearchResultQuery(
     val tagId: Int? = null,
     @SerializedName("query")
     val query: String? = null,
-    @SerializedName("lang")
-    val lang: String? = null
+    val filterQuery: CourseListFilterQuery? = null
 ) : Parcelable, Serializable
