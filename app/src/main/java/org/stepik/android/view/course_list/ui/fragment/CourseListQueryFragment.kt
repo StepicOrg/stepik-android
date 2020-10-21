@@ -44,12 +44,16 @@ class CourseListQueryFragment :
     FilterQueryView,
     FilterBottomSheetDialogFragment.Callback {
     companion object {
+        private const val ARG_MENU_RESOURCE = "MENU_RESOURCE"
+
         fun newInstance(courseListTitle: String, courseListQuery: CourseListQuery): Fragment =
             CourseListQueryFragment().apply {
                 this.courseListTitle = courseListTitle
                 this.courseListQuery = courseListQuery
             }
     }
+
+    private var menuDrawableRes: Int = R.drawable.ic_filter
 
     private var courseListTitle by argument<String>()
     private var courseListQuery by argument<CourseListQuery>()
@@ -79,6 +83,10 @@ class CourseListQueryFragment :
         super.onViewCreated(view, savedInstanceState)
 
         initCenteredToolbar(courseListTitle, true)
+
+        if (savedInstanceState != null) {
+            menuDrawableRes = savedInstanceState.getInt(ARG_MENU_RESOURCE)
+        }
 
         with(courseListCoursesRecycler) {
             layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
@@ -162,6 +170,11 @@ class CourseListQueryFragment :
         super.onStop()
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        menu.findItem(R.id.course_list_filter).setIcon(menuDrawableRes)
+        super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.course_list_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
@@ -177,6 +190,11 @@ class CourseListQueryFragment :
                 super.onOptionsItemSelected(item)
         }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ARG_MENU_RESOURCE, menuDrawableRes)
+    }
+
     override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
         FilterBottomSheetDialogFragment
             .newInstance(filterQuery)
@@ -184,6 +202,12 @@ class CourseListQueryFragment :
     }
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
+        menuDrawableRes = if (courseListQuery.filterQuery == filterQuery) {
+            R.drawable.ic_filter
+        } else {
+            R.drawable.ic_filter_active
+        }
+        requireActivity().invalidateOptionsMenu()
         courseListQueryPresenter.fetchCourses(
             courseListQuery = courseListQuery.copy(filterQuery = filterQuery),
             forceUpdate = true

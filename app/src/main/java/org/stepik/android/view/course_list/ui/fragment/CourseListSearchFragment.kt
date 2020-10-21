@@ -5,10 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
-import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
@@ -27,7 +25,6 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
-import org.stepic.droid.util.resolveResourceIdAttribute
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
@@ -45,6 +42,8 @@ import javax.inject.Inject
 
 class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), FilterBottomSheetDialogFragment.Callback {
     companion object {
+        private const val ARG_MENU_RESOURCE = "MENU_RESOURCE"
+
         fun newInstance(query: String?): Fragment =
             CourseListSearchFragment().apply {
                 this.query = query ?: ""
@@ -55,6 +54,7 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), Filter
         }
     }
 
+    private var menuDrawableRes: Int = R.drawable.ic_filter
     private lateinit var searchIcon: ImageView
 
     private var query by argument<String>()
@@ -86,6 +86,11 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), Filter
         super.onViewCreated(view, savedInstanceState)
 
         initCenteredToolbar(query, true)
+
+        if (savedInstanceState != null) {
+            menuDrawableRes = savedInstanceState.getInt(ARG_MENU_RESOURCE)
+        }
+
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
 
@@ -151,10 +156,10 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), Filter
     }
 
     private fun setupSearchBar() {
-        ImageViewCompat.setImageTintList(filterIcon, AppCompatResources.getColorStateList(requireContext(), requireContext().resolveResourceIdAttribute(R.attr.colorControlNormal)))
         centeredToolbar.isVisible = false
         backIcon.isVisible = true
         filterIcon.isVisible = true
+        filterIcon.setImageResource(menuDrawableRes)
         searchViewToolbar.isVisible = true
         searchIcon.setImageResource(0)
         (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
@@ -212,7 +217,19 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), Filter
         super.onStop()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(ARG_MENU_RESOURCE, menuDrawableRes)
+    }
+
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
+        val defaultFilterQuery = CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured)
+        menuDrawableRes = if (defaultFilterQuery == filterQuery) {
+            R.drawable.ic_filter
+        } else {
+            R.drawable.ic_filter_active
+        }
+        filterIcon.setImageResource(menuDrawableRes)
         courseListPresenter.fetchCourses(
             searchResultQuery = SearchResultQuery(page = 1, query = query, filterQuery = filterQuery),
             forceUpdate = true

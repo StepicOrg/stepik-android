@@ -5,6 +5,5 @@
         android:id="@+id/course_list_filter"
         android:icon="@drawable/ic_filter"
         android:title="@string/filter_menu_title"
-        app:iconTint="?colorControlNormal"
         app:showAsAction="always"/>
 </menu>
