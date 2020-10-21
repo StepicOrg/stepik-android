@@ -19,7 +19,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="18dp"
         android:layout_marginBottom="18dp"
-        android:drawableTint="?colorControlNormal"
+        app:drawableTint="?colorControlNormal"
         android:text="@string/filter_dialog_title"
         android:textAppearance="?textAppearanceSubtitle1" />
 
@@ -32,7 +32,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="14dp"
         android:layout_marginBottom="18dp"
-        android:drawableTint="?colorControlNormal"
+        app:drawableTint="?colorControlNormal"
         android:text="@string/filter_language_subtitle"
         android:textAppearance="?textAppearanceSubtitle1" />
 
@@ -107,7 +107,7 @@
         android:drawableLeft="@drawable/ic_dismiss_filter"
         android:drawablePadding="12dp"
         android:paddingLeft="16dp"
-        android:text="Сбросить"
+        android:text="@string/filter_dismiss_action"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:visibility="gone"
@@ -129,7 +129,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
 
-        android:text="Посмотреть результат"
+        android:text="@string/filter_apply_action"
         android:theme="@style/ThemeOverlay.Violet" />
 
 

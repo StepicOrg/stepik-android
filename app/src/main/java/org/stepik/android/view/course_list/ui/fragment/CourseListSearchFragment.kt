@@ -5,8 +5,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
+import androidx.core.widget.ImageViewCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -25,6 +27,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.custom.AutoCompleteSearchView
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
+import org.stepic.droid.util.resolveResourceIdAttribute
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
@@ -152,6 +155,7 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), Filter
     }
 
     private fun setupSearchBar() {
+        ImageViewCompat.setImageTintList(filterIcon, AppCompatResources.getColorStateList(requireContext(), requireContext().resolveResourceIdAttribute(R.attr.colorControlNormal)))
         centeredToolbar.isVisible = false
         backIcon.isVisible = true
         filterIcon.isVisible = true

@@ -962,6 +962,7 @@
     <string name="pip_rewind_label">Rewind</string>
     
     <!-- Filter -->
+    <string name="filter_menu_title">Filter</string>
     <string name="filter_dialog_title">Filters</string>
     <string name="filter_language_subtitle">Language</string>
     <string name="filter_any_radio_button_title">Any</string>
