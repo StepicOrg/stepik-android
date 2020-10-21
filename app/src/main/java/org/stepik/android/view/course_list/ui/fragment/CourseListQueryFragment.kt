@@ -185,11 +185,9 @@ class CourseListQueryFragment :
     }
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
-        Timber.d("Sync: $filterQuery")
         courseListQueryPresenter.fetchCourses(
             courseListQuery = courseListQuery.copy(filterQuery = filterQuery),
             forceUpdate = true
-
         )
     }
 }

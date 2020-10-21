@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbarStyle="outsideOverlay">
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -14,7 +14,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
+            app:tint="?colorControlNormal"
             app:srcCompat="@drawable/ic_grip" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -22,9 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="18dp"
-            android:layout_marginBottom="18dp"
-            app:drawableTint="?colorControlNormal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/filter_dialog_title"
             android:textAppearance="?textAppearanceSubtitle1" />
 
@@ -35,19 +35,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="18dp"
-            app:drawableTint="?colorControlNormal"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/filter_language_subtitle"
             android:textAppearance="?textAppearanceSubtitle1" />
-
 
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/anyRadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:paddingLeft="6dp"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
             android:text="@string/filter_any_radio_button_title"
             android:textAppearance="?textAppearanceBody1" />
 
@@ -55,14 +53,14 @@
             layout="@layout/view_divider_vertical"
             android:layout_width="match_parent"
             android:layout_height="?dividerVerticalSize"
-            android:layout_marginLeft="12dp" />
+            android:layout_marginLeft="16dp" />
 
         <androidx.appcompat.widget.AppCompatRadioButton
             android:id="@+id/rusRadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:paddingLeft="6dp"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
             android:text="@string/filter_rus_radio_button_title"
             android:textAppearance="?textAppearanceBody1" />
 
@@ -70,8 +68,8 @@
             android:id="@+id/engRadioButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
-            android:paddingLeft="6dp"
+            android:layout_marginLeft="8dp"
+            android:paddingLeft="8dp"
             android:text="@string/filter_eng_radio_button_title"
             android:textAppearance="?textAppearanceBody1" />
 
@@ -79,14 +77,13 @@
             layout="@layout/view_divider_vertical"
             android:layout_width="match_parent"
             android:layout_height="?dividerVerticalSize"
-            android:layout_marginLeft="12dp" />
+            android:layout_marginLeft="16dp" />
 
         <org.stepic.droid.ui.custom.BetterSwitch
             android:id="@+id/certificatesSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:padding="16dp"
             android:text="@string/filter_with_certificate_switch_title"
             android:textAppearance="?textAppearanceSubtitle1" />
 
@@ -94,29 +91,29 @@
             layout="@layout/view_divider_vertical"
             android:layout_width="match_parent"
             android:layout_height="?dividerVerticalSize"
-            android:layout_marginLeft="12dp" />
+            android:layout_marginLeft="16dp" />
 
         <org.stepic.droid.ui.custom.BetterSwitch
             android:id="@+id/freeSwitch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
+            android:padding="16dp"
             android:text="@string/filter_free_switch_title"
             android:textAppearance="?textAppearanceSubtitle1" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/dismissFilter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_dismiss_filter"
-            android:drawablePadding="12dp"
             android:paddingLeft="16dp"
+            android:paddingStart="16dp"
             android:text="@string/filter_dismiss_action"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp"
-            android:visibility="gone"
-            android:textAppearance="?textAppearanceBody1"
+            android:visibility="visible"
+            app:icon="@drawable/ic_dismiss_filter"
+            app:iconPadding="12dp"
+            app:cornerRadius="0dp"
+            style="@style/Widget.AppTheme.Button.TextButton"
+            android:gravity="start|center"
             android:theme="@style/ThemeOverlay.Violet" />
 
         <include
@@ -134,7 +131,8 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
 
+            style="@style/Widget.AppTheme.Button"
             android:text="@string/filter_apply_action"
             android:theme="@style/ThemeOverlay.Violet" />
-    </LinearLayout>
-</ScrollView>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.core.widget.NestedScrollView>

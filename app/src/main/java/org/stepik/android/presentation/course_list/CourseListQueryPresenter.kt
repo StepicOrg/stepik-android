@@ -10,7 +10,6 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
-import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
@@ -27,10 +26,10 @@ import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import ru.nobird.android.core.model.cast
 import ru.nobird.android.core.model.safeCast
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
-import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListQueryPresenter
@@ -80,8 +79,6 @@ constructor(
 
     fun fetchCourses(courseListQuery: CourseListQuery, forceUpdate: Boolean = false) {
         if (state != CourseListQueryView.State.Idle && !forceUpdate) return
-
-        Timber.d("fetchCourses: $courseListQuery")
 
         paginationDisposable.clear()
 
@@ -176,9 +173,7 @@ constructor(
 
     fun onFilterMenuItemClicked() {
         val oldState = (state as? CourseListQueryView.State.Data)
-            ?: return
-
-        val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
+            ?.takeIf { it.courseListViewState is CourseListView.State.Content }
             ?: return
 
         val filterView = (view as? FilterQueryView)
