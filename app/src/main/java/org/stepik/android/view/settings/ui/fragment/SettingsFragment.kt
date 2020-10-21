@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.facebook.login.LoginManager
 import com.vk.sdk.VKSdk
 import kotlinx.android.synthetic.main.fragment_settings.*
@@ -38,7 +38,7 @@ class SettingsFragment :
             SettingsFragment()
     }
 
-    private lateinit var presenter: SettingsPresenter
+    private val presenter: SettingsPresenter by viewModels { viewModelFactory }
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -61,10 +61,6 @@ class SettingsFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-
-        presenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(SettingsPresenter::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

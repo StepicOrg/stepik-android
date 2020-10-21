@@ -5,8 +5,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -29,7 +29,7 @@ class MagicLinkDialogFragment : DialogFragment(), MagicLinkView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var magicLinkPresenter: MagicLinkPresenter
+    private val magicLinkPresenter: MagicLinkPresenter by viewModels { viewModelFactory }
 
     private var url: String by argument()
 
@@ -46,10 +46,6 @@ class MagicLinkDialogFragment : DialogFragment(), MagicLinkView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-
-        magicLinkPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(MagicLinkPresenter::class.java)
         magicLinkPresenter.onData(url)
     }
 

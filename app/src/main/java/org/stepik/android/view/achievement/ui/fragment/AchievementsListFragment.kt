@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -42,7 +42,7 @@ class AchievementsListFragment : Fragment(), AchievementsView {
     @Inject
     internal lateinit var achievementResourceResolver: AchievementResourceResolver
 
-    private lateinit var achievementsPresenter: AchievementsPresenter
+    private val achievementsPresenter: AchievementsPresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
 
     private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementItem>
@@ -53,10 +53,6 @@ class AchievementsListFragment : Fragment(), AchievementsView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-
-        achievementsPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(AchievementsPresenter::class.java)
 
         achievementsAdapter = DefaultDelegateAdapter()
         achievementsAdapter += AchievementAdapterDelegate(achievementResourceResolver, ::onAchievementClicked)

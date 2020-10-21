@@ -6,8 +6,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -68,16 +68,12 @@ class CourseListQueryFragment :
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
-    private lateinit var courseListQueryPresenter: CourseListQueryPresenter
+    private val courseListQueryPresenter: CourseListQueryPresenter by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         injectComponent()
-
-        courseListQueryPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(CourseListQueryPresenter::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

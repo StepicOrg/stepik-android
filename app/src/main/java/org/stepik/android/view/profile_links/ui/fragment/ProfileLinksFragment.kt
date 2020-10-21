@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_links.*
@@ -39,7 +39,7 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
 
     private var userId by argument<Long>()
 
-    private lateinit var profileLinksPresenter: ProfileLinksPresenter
+    private val profileLinksPresenter: ProfileLinksPresenter by viewModels { viewModelFactory }
 
     private var profileLinksAdapter: DefaultDelegateAdapter<SocialProfile> = DefaultDelegateAdapter()
 
@@ -49,10 +49,6 @@ class ProfileLinksFragment : Fragment(), ProfileLinksView {
         super.onCreate(savedInstanceState)
 
         injectComponent()
-
-        profileLinksPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileLinksPresenter::class.java)
 
         profileLinksAdapter += ProfileLinksAdapterDelegate(
             onItemClick = { screenManager.openSocialMediaLink(requireContext(), it) }

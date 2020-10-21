@@ -6,11 +6,11 @@ import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_solutions.*
@@ -59,7 +59,7 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var solutionsPresenter: SolutionsPresenter
+    private val solutionsPresenter: SolutionsPresenter by viewModels { viewModelFactory }
 
     private var isDeleteMenuItemVisible = false
 
@@ -80,9 +80,6 @@ class SolutionsActivity : FragmentActivityBase(), SolutionsView, RemoveSolutions
         val courseId = intent.getLongExtra(EXTRA_COURSE_ID, -1)
         injectComponent(courseId)
 
-        solutionsPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(SolutionsPresenter::class.java)
         initCenteredToolbar(R.string.solutions_toolbar_title, showHomeButton = true)
 
         solutionsAdapter += SolutionDisclaimerAdapterDelegate()

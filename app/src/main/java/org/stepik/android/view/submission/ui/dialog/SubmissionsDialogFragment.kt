@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.dialog_submissions.*
@@ -68,7 +68,7 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
     private var isSelectionEnabled: Boolean by argument()
     private var status: Submission.Status? = null
 
-    private lateinit var submissionsPresenter: SubmissionsPresenter
+    private val submissionsPresenter: SubmissionsPresenter by viewModels { viewModelFactory }
 
     private lateinit var submissionItemAdapter: DefaultDelegateAdapter<SubmissionItem>
 
@@ -91,10 +91,6 @@ class SubmissionsDialogFragment : DialogFragment(), SubmissionsView {
         injectComponent()
 
         status = arguments?.getSerializable(ARG_STATUS) as? Submission.Status
-
-        submissionsPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(SubmissionsPresenter::class.java)
         submissionsPresenter.fetchSubmissions(step.id, status)
     }
 

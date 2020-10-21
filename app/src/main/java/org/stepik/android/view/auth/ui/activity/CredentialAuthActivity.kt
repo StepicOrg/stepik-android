@@ -9,12 +9,12 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_auth_credential.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -66,7 +66,7 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var credentialAuthPresenter: CredentialAuthPresenter
+    private val credentialAuthPresenter: CredentialAuthPresenter by viewModels { viewModelFactory }
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -76,9 +76,6 @@ class CredentialAuthActivity : SmartLockActivityBase(), CredentialAuthView {
         setContentView(R.layout.activity_auth_credential)
 
         injectComponent()
-        credentialAuthPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(CredentialAuthPresenter::class.java)
 
         initTitle()
 

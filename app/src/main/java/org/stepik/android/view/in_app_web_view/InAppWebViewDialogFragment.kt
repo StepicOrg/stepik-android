@@ -15,8 +15,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.dialog_in_app_web_view.*
 import kotlinx.android.synthetic.main.dialog_in_app_web_view.view.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -46,7 +46,7 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var inAppWebViewPresenter: InAppWebViewPresenter
+    private val inAppWebViewPresenter: InAppWebViewPresenter by viewModels { viewModelFactory }
 
     private var title: String by argument()
     private var url: String by argument()
@@ -70,9 +70,6 @@ class InAppWebViewDialogFragment : DialogFragment(), InAppWebViewView {
         setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
 
         injectComponent()
-        inAppWebViewPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(InAppWebViewPresenter::class.java)
     }
 
     private fun injectComponent() {

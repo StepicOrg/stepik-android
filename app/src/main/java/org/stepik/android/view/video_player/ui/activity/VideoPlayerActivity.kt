@@ -24,12 +24,12 @@ import android.view.Gravity
 import android.view.View
 import android.widget.PopupWindow
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
@@ -193,7 +193,7 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
     private var isLandscapeVideo = false
     private var isPIPModeActive = false
 
-    private lateinit var videoPlayerPresenter: VideoPlayerPresenter
+    private val videoPlayerPresenter: VideoPlayerPresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<VideoPlayerView.State>
 
     private var animator: ValueAnimator? = null
@@ -208,10 +208,6 @@ class VideoPlayerActivity : AppCompatActivity(), VideoPlayerView, VideoQualityDi
         labelPause = getString(R.string.pip_stop_label)
         labelRewind = getString(R.string.pip_rewind_label)
         labelForward = getString(R.string.pip_forward_label)
-
-        videoPlayerPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(VideoPlayerPresenter::class.java)
 
         savedInstanceState
             ?.let(videoPlayerPresenter::onRestoreInstanceState)

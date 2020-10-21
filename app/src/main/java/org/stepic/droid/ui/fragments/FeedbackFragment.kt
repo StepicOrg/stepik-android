@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_feedback.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -27,7 +27,7 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
         }
     }
 
-    private lateinit var feedbackPresenter: FeedbackPresenter
+    private val feedbackPresenter: FeedbackPresenter by viewModels { viewModelFactory }
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -37,14 +37,6 @@ class FeedbackFragment : FragmentBase(), FeedbackView {
             .feedbackComponentBuilder()
             .build()
             .inject(this)
-    }
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        feedbackPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(FeedbackPresenter::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

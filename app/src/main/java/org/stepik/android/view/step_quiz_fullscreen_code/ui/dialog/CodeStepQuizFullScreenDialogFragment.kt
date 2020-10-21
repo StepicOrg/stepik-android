@@ -10,8 +10,8 @@ import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
@@ -106,7 +106,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var codeRunPresenter: StepQuizCodeRunPresenter
+    private val codeRunPresenter: StepQuizCodeRunPresenter by viewModels { viewModelFactory }
 
     private fun injectComponent() {
         App.component()
@@ -128,11 +128,7 @@ class CodeStepQuizFullScreenDialogFragment : DialogFragment(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
-
         injectComponent()
-        codeRunPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(StepQuizCodeRunPresenter::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
