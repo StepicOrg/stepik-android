@@ -7,7 +7,7 @@ import java.io.Serializable
 
 @Parcelize
 data class CourseListFilterQuery(
-    @SerializedName("lang")
+    @SerializedName("language")
     val language: String? = null,
     @SerializedName("is_paid")
     val isPaid: Boolean? = null,
