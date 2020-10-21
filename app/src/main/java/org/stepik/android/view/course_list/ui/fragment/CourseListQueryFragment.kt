@@ -36,6 +36,7 @@ import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListQueryFragment :
@@ -184,10 +185,11 @@ class CourseListQueryFragment :
     override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
         FilterBottomSheetDialogFragment
             .newInstance(filterQuery)
-            .showIfNotExists(parentFragmentManager, FilterBottomSheetDialogFragment.TAG)
+            .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
     }
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
+        Timber.d("Sync: $filterQuery")
         courseListQueryPresenter.fetchCourses(
             courseListQuery = courseListQuery.copy(filterQuery = filterQuery),
             forceUpdate = true

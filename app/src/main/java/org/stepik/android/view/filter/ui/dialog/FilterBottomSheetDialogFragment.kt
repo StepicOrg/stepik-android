@@ -91,8 +91,11 @@ class FilterBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         applyFilterAction.setOnClickListener {
-            (parentFragment as? Callback)
-                ?.onSyncFilterQueryWithParent(mapFiltersToQuery())
+            val newFilterQuery = mapFiltersToQuery()
+            if (newFilterQuery != filterQuery) {
+                (parentFragment as? Callback)
+                    ?.onSyncFilterQueryWithParent(newFilterQuery)
+            }
             dismiss()
         }
     }
