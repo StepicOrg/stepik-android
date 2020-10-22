@@ -8,7 +8,6 @@ import org.stepik.android.domain.course_list.model.CourseListQuery
 import org.stepik.android.model.Course
 import org.stepik.android.remote.base.chunkedSingleMap
 import org.stepik.android.remote.base.mapper.toPagedList
-import org.stepik.android.remote.course.mapper.CourseListQueryMapper
 import org.stepik.android.remote.course.model.CourseResponse
 import org.stepik.android.remote.course.service.CourseService
 import javax.inject.Inject
@@ -16,8 +15,7 @@ import javax.inject.Inject
 class CourseRemoteDataSourceImpl
 @Inject
 constructor(
-    private val courseService: CourseService,
-    private val courseListQueryMapper: CourseListQueryMapper
+    private val courseService: CourseService
 ) : CourseRemoteDataSource {
     private val courseResponseMapper =
         Function<CourseResponse, List<Course>>(CourseResponse::courses)
@@ -31,6 +29,6 @@ constructor(
 
     override fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
         courseService
-            .getCourses(courseListQueryMapper.mapToQueryMap(courseListQuery))
+            .getCourses(courseListQuery.toMap().mapValues { it.toString() })
             .map { it.toPagedList(CourseResponse::courses) }
 }

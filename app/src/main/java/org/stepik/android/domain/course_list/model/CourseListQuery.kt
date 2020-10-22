@@ -29,12 +29,9 @@ data class CourseListQuery(
         private const val PAGE = "page"
         private const val ORDER = "order"
         private const val TEACHER = "teacher"
-        private const val LANGUAGE = "language"
         private const val IS_PUBLIC = "is_public"
         private const val IS_EXCLUDE_ENDED = "exclude_ended"
         private const val IS_CATALOGED = "is_cataloged"
-        private const val IS_PAID = "is_paid"
-        private const val WITH_CERTIFICATE = "with_certificate"
     }
 
     enum class Order(val order: String) {
@@ -49,11 +46,8 @@ data class CourseListQuery(
             PAGE to page,
             ORDER to order,
             TEACHER to teacher,
-            LANGUAGE to filterQuery?.language,
             IS_PUBLIC to isPublic,
             IS_EXCLUDE_ENDED to isExcludeEnded,
-            IS_CATALOGED to isCataloged,
-            IS_PAID to filterQuery?.isPaid,
-            WITH_CERTIFICATE to filterQuery?.withCertificate
-        )
+            IS_CATALOGED to isCataloged
+        ) + (filterQuery?.toMap() ?: emptyMap())
 }
