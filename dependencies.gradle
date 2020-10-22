@@ -71,7 +71,7 @@ ext.versions = [
         checkout             : '1.2.1',
 
         facebook             : '8.1.0',
-        vk                   : '1.6.7',
+        vk                   : '2.2.3',
 
         timber               : '4.7.1',
 
