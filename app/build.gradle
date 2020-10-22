@@ -150,8 +150,6 @@ dependencies {
     //<DI>
     implementation libraries.dagger
     kapt libraries.daggerCompiler
-    implementation libraries.butterKnife
-    kapt libraries.butterKnifeCompiler
     //</DI>
 
     implementation libraries.rxAndroid
