@@ -80,7 +80,7 @@ ext.versions = [
         recyclerAnimators    : '3.0.0',
         materialProgress     : '1.6.1',
         circleImageView      : '2.1.0',
-        circleIndicator      : '1.2.2@aar',
+        circleIndicator      : '2.1.4',
         confetti             : '1.1.2',
         MPAndroidChart       : 'v3.0.3',
 
