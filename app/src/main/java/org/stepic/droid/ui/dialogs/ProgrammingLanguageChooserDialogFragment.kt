@@ -2,10 +2,9 @@ package org.stepic.droid.ui.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
-import android.widget.NumberPicker
 import androidx.fragment.app.DialogFragment
-import biz.kasual.materialnumberpicker.MaterialNumberPicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.shawnlin.numberpicker.NumberPicker
 import org.stepic.droid.R
 import org.stepic.droid.util.resolveColorAttribute
 
@@ -26,7 +25,7 @@ class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val picker = MaterialNumberPicker(context)
+        val picker = NumberPicker(context)
         val languageNames = arguments?.getStringArray(LANGUAGES_KEY) ?: emptyArray()
         picker.minValue = 0
         picker.maxValue = languageNames.size - 1
@@ -35,9 +34,11 @@ class ProgrammingLanguageChooserDialogFragment : DialogFragment() {
         picker.wrapSelectorWheel = false
         picker.setBackgroundColor(0x0)
         picker.textColor = requireContext().resolveColorAttribute(R.attr.colorOnSurface)
+        picker.selectedTextColor = requireContext().resolveColorAttribute(R.attr.colorOnSurface)
+        picker.dividerColor = 0x0
 
         try {
-            picker.setTextSize(50f) //Warning: reflection!
+            picker.textSize = 50f //Warning: reflection!
         } catch (exception: Exception) {
             //reflection failed -> ignore
         }
