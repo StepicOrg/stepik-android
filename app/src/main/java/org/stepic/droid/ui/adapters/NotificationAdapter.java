@@ -31,8 +31,6 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import kotlin.text.StringsKt;
 import timber.log.Timber;
 
@@ -46,10 +44,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     private final int headerCount;
 
 
-    private NotificationListPresenter notificationListPresenter;
+    private final NotificationListPresenter notificationListPresenter;
     private List<Notification> notifications = new ArrayList<>();
     private boolean isNeedShowFooter;
-    private View.OnClickListener markAllReadListener = v -> markAllAsRead();
+    private final View.OnClickListener markAllReadListener = v -> markAllAsRead();
     private boolean isNeedEnableMarkButton = true;
 
     public NotificationAdapter(NotificationListPresenter notificationListPresenter, NotificationCategory notificationCategory) {
@@ -193,24 +191,21 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
     public static final class DateHeaderViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.notification_section_date)
-        TextView sectionDate;
-
-        @BindView(R.id.notification_section_day)
-        TextView sectionDay;
+        private final TextView sectionDate;
+        private final TextView sectionDay;
 
         public DateHeaderViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            sectionDate = itemView.findViewById(R.id.notification_section_date);
+            sectionDay = itemView.findViewById(R.id.notification_section_day);
+
             itemView.setBackgroundColor(ColorExtensions.INSTANCE.colorSurfaceWithElevationOverlay(itemView.getContext(), 1, false));
         }
     }
 
     static abstract class GenericViewHolder extends RecyclerView.ViewHolder {
-
         public GenericViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
         }
 
         abstract void setData(int position);
@@ -221,26 +216,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @Inject
         NotificationTextResolver notificationTextResolver;
 
-        @BindView(R.id.notification_body)
-        TextView notificationBody;
-
-        @BindView(R.id.notification_root)
-        ViewGroup notificationRoot;
-
-        @BindView(R.id.notification_time)
-        TextView notificationTime;
-
-        @BindView(R.id.notification_icon)
-        ImageView notificationIcon;
-
-        @BindView(R.id.check_view_read)
-        View checkViewRead;
-
-        @BindView(R.id.check_view_unread)
-        View checkViewUnread;
+        private final TextView notificationBody;
+        private final TextView notificationTime;
+        private final ImageView notificationIcon;
+        private final View checkViewRead;
+        private final View checkViewUnread;
 
         NotificationViewHolder(View itemView) {
             super(itemView);
+            notificationBody = itemView.findViewById(R.id.notification_body);
+            notificationTime = itemView.findViewById(R.id.notification_time);
+            notificationIcon = itemView.findViewById(R.id.notification_icon);
+            checkViewRead = itemView.findViewById(R.id.check_view_read);
+            checkViewUnread = itemView.findViewById(R.id.check_view_unread);
+
             App.Companion.component().inject(this);
             notificationBody.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -249,7 +238,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             View.OnClickListener onlyCheckView = v -> NotificationAdapter.this.onClick(getAdapterPosition(), false);
 
-            notificationRoot.setOnClickListener(rootClick);
+            itemView.findViewById(R.id.notification_root).setOnClickListener(rootClick);
             notificationBody.setOnClickListener(rootClick);
             checkViewUnread.setOnClickListener(onlyCheckView);
         }
@@ -309,12 +298,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class HeaderViewHolder extends GenericViewHolder {
-
-        @BindView(R.id.mark_all_as_read_button)
-        TextView markAllAsViewed;
+        private final TextView markAllAsViewed;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
+            markAllAsViewed = itemView.findViewById(R.id.mark_all_as_read_button);
             markAllAsViewed.setOnClickListener(markAllReadListener);
         }
 
@@ -325,13 +313,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     class FooterViewHolder extends GenericViewHolder {
-
-        @BindView(R.id.loadingRoot)
-        ViewGroup loadingRoot;
-
+        private final ViewGroup loadingRoot;
 
         public FooterViewHolder(View itemView) {
             super(itemView);
+            loadingRoot = itemView.findViewById(R.id.loadingRoot);
         }
 
         @Override
