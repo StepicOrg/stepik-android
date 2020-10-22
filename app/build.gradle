@@ -1,3 +1,7 @@
+plugins {
+    id "com.github.plnice.canidropjetifier" version "0.5"
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -194,10 +198,6 @@ dependencies {
         force = true
     }
     implementation libraries.jsoup
-    debugImplementation libraries.stetho
-    debugImplementation libraries.stethoOkHttp
-    stageDebuggableImplementation libraries.stetho
-    stageDebuggableImplementation libraries.stethoOkHttp
 
     implementation libraries.glide
     implementation libraries.glideTransformations

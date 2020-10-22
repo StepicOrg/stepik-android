@@ -89,7 +89,6 @@ ext.versions = [
         AdapterDelegates     : '1.0.1',
         Adapters             : '1.0.1',
 
-        stetho               : '1.5.1',
         leakCanary           : '1.5.1',
         crashlytics          : '17.1.0',
         crashlyticsPlugin    : '2.2.0',
@@ -166,8 +165,6 @@ ext.libraries = [
         okhttp               : "com.squareup.okhttp3:okhttp:$versions.okhttp",
         gson                 : "com.google.code.gson:gson:$versions.gson",
         jsoup                : "org.jsoup:jsoup:$versions.jsoup",
-        stetho               : "com.facebook.stetho:stetho:$versions.stetho",
-        stethoOkHttp         : "com.facebook.stetho:stetho-okhttp3:$versions.stetho",
 
         glide                : "com.github.bumptech.glide:glide:$versions.glide",
         glideTransformations : "jp.wasabeef:glide-transformations:$versions.glideTransformations",
