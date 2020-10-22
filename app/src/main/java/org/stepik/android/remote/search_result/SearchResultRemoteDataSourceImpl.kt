@@ -17,6 +17,6 @@ constructor(
 ) : SearchResultRemoteDataSource {
     override fun getSearchResults(searchResultQuery: SearchResultQuery): Single<PagedList<SearchResult>> =
         searchResultService
-            .getSearchResults(searchResultQuery.toMap().mapValues { it.toString() })
+            .getSearchResults(searchResultQuery.toMap().mapValues { it.value.toString() })
             .map { it.toPagedList(SearchResultResponse::searchResultList) }
 }

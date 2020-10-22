@@ -29,6 +29,6 @@ constructor(
 
     override fun getCourses(courseListQuery: CourseListQuery): Single<PagedList<Course>> =
         courseService
-            .getCourses(courseListQuery.toMap().mapValues { it.toString() })
+            .getCourses(courseListQuery.toMap().mapValues { it.value.toString() })
             .map { it.toPagedList(CourseResponse::courses) }
 }

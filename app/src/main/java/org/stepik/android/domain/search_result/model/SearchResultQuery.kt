@@ -28,6 +28,6 @@ data class SearchResultQuery(
         mapOfNotNull(
             PAGE to page,
             TAG to tagId,
-            QUERY to query,
+            QUERY to query
         ) + (filterQuery?.toMap() ?: emptyMap())
 }

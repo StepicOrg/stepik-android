@@ -44,7 +44,7 @@ data class CourseListQuery(
     fun toMap(): Map<String, Any> =
         mapOfNotNull(
             PAGE to page,
-            ORDER to order,
+            ORDER to order?.order,
             TEACHER to teacher,
             IS_PUBLIC to isPublic,
             IS_EXCLUDE_ENDED to isExcludeEnded,
