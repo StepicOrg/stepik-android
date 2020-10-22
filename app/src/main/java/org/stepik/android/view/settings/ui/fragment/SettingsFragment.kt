@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.facebook.login.LoginManager
-import com.vk.sdk.VKSdk
+import com.vk.api.sdk.VK
 import kotlinx.android.synthetic.main.fragment_settings.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -104,7 +104,7 @@ class SettingsFragment :
                     val dialogFragment = AllowMobileDataDialogFragment.newInstance()
                     dialogFragment.setTargetFragment(this@SettingsFragment, 0)
                     if (!dialogFragment.isAdded) {
-                        dialogFragment.show(requireFragmentManager(), null)
+                        dialogFragment.show(childFragmentManager, null)
                     }
                 }
             }
@@ -113,14 +113,14 @@ class SettingsFragment :
         videoQualityView.setOnClickListener {
             val videoDialog = VideoQualityDialog.newInstance(forPlaying = false)
             if (!videoDialog.isAdded) {
-                videoDialog.show(requireFragmentManager(), null)
+                videoDialog.show(childFragmentManager, null)
             }
         }
 
         videoPlayingQualityView.setOnClickListener {
             val videoDialog = VideoQualityDialog.newInstance(forPlaying = true)
             if (!videoDialog.isAdded) {
-                videoDialog.show(requireFragmentManager(), null)
+                videoDialog.show(childFragmentManager, null)
             }
         }
 
@@ -129,19 +129,19 @@ class SettingsFragment :
         langWidgetActionButton.setOnClickListener {
             CoursesLangDialogFragment
                 .newInstance()
-                .showIfNotExists(requireFragmentManager(), CoursesLangDialogFragment.TAG)
+                .showIfNotExists(childFragmentManager, CoursesLangDialogFragment.TAG)
         }
 
         nightModeSettingsButton.setOnClickListener {
             NightModeSettingDialogFragment
                 .newInstance()
-                .showIfNotExists(requireFragmentManager(), NightModeSettingDialogFragment.TAG)
+                .showIfNotExists(childFragmentManager, NightModeSettingDialogFragment.TAG)
         }
 
         fontSizeSettingsButton.setOnClickListener {
             ChooseFontSizeDialogFragment
                 .newInstance()
-                .showIfNotExists(requireFragmentManager(), ChooseFontSizeDialogFragment.TAG)
+                .showIfNotExists(childFragmentManager, ChooseFontSizeDialogFragment.TAG)
         }
 
         downloadsSettingsButton.setOnClickListener {
@@ -222,7 +222,7 @@ class SettingsFragment :
 
     override fun onLogoutSuccess() {
         LoginManager.getInstance().logOut()
-        VKSdk.logout()
+        VK.logout()
         (activity as? SignOutListener)?.onSignOut()
         screenManager.showLaunchScreenAfterLogout(requireContext())
     }

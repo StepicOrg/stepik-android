@@ -5,12 +5,11 @@ import android.os.Build
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.multidex.MultiDexApplication
-import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.security.ProviderInstaller
 import com.squareup.leakcanary.LeakCanary
 import com.squareup.leakcanary.RefWatcher
-import com.vk.sdk.VKSdk
+import com.vk.api.sdk.VK
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
 import io.branch.referral.Branch
@@ -112,9 +111,8 @@ class App : MultiDexApplication() {
             initSSL()
         }
 
-        FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)
-        VKSdk.initialize(this)
+        VK.initialize(this)
         
         // init AppMetrica SDK
         YandexMetrica.activate(applicationContext, YandexMetricaConfig.newConfigBuilder("fd479031-bdf4-419e-8d8f-6895aab23502").build())
