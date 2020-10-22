@@ -13,6 +13,7 @@ import org.stepic.droid.preferences.SharedPreferenceHelper
 import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.catalog.interactor.CatalogInteractor
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.catalog.model.CatalogItem
 import org.stepik.android.presentation.course_list.CourseListCollectionPresenter
 import org.stepik.android.presentation.course_list.CourseListQueryPresenter
@@ -116,8 +117,8 @@ constructor(
             courseListQuery = CourseListQuery(
                 page = 1,
                 order = CourseListQuery.Order.ACTIVITY_DESC,
-                language = sharedPreferenceHelper.languageForFeatured,
-                isCataloged = true
+                isCataloged = true,
+                filterQuery = CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured)
             ),
             forceUpdate = forceUpdate
         )

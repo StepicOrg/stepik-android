@@ -8,8 +8,8 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.fragment_fast_continue.*
@@ -47,7 +47,7 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
     @Inject
     internal lateinit var screenManager: ScreenManager
 
-    private lateinit var fastContinuePresenter: FastContinuePresenter
+    private val fastContinuePresenter: FastContinuePresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<FastContinueView.State>
 
     private lateinit var courseCoverImageViewTarget: BitmapImageViewTarget
@@ -64,12 +64,7 @@ class FastContinueFragment : Fragment(R.layout.fragment_fast_continue), FastCont
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         injectComponent()
-
-        fastContinuePresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(FastContinuePresenter::class.java)
     }
 
     private fun injectComponent() {

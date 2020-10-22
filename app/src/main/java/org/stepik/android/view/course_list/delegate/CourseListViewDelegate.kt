@@ -8,8 +8,10 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.ui.custom.StepikSwipeRefreshLayout
 import org.stepic.droid.ui.util.snackbar
 import org.stepik.android.domain.course_list.model.CourseListItem
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.presentation.course_continue.CourseContinueView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListItemAdapterDelegate
 import org.stepik.android.view.course_list.ui.adapter.delegate.CourseListPlaceHolderAdapterDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
@@ -23,8 +25,9 @@ class CourseListViewDelegate(
     private val courseItemsRecyclerView: RecyclerView,
     private val courseListViewStateDelegate: ViewStateDelegate<CourseListView.State>,
     onContinueCourseClicked: (CourseListItem.Data) -> Unit,
-    private val isHandleInAppPurchase: Boolean
-) : CourseListView, CourseContinueView by courseContinueViewDelegate {
+    private val isHandleInAppPurchase: Boolean,
+    private val onFilterClicked: ((CourseListFilterQuery) -> Unit)? = null
+) : CourseListView, CourseContinueView by courseContinueViewDelegate, FilterQueryView {
 
     private val courseListCounter = courseListTitleContainer?.coursesCarouselCount
     private val courseItemAdapter: DefaultDelegateAdapter<CourseListItem> = DefaultDelegateAdapter()
@@ -82,5 +85,9 @@ class CourseListViewDelegate(
 
     override fun showNetworkError() {
         courseItemsRecyclerView.snackbar(messageRes = R.string.connectionProblems)
+    }
+
+    override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
+        onFilterClicked?.invoke(filterQuery)
     }
 }

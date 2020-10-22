@@ -8,10 +8,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile_edit_password.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -38,7 +38,7 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
-    private lateinit var profileEditPasswordPresenter: ProfileEditPasswordPresenter
+    private val profileEditPasswordPresenter: ProfileEditPasswordPresenter by viewModels { viewModelFactory }
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -50,9 +50,6 @@ class ProfileEditPasswordActivity : AppCompatActivity(), ProfileEditPasswordView
         setContentView(R.layout.activity_profile_edit_password)
 
         injectComponent()
-        profileEditPasswordPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileEditPasswordPresenter::class.java)
 
         initCenteredToolbar(R.string.profile_edit_password_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 

@@ -3,8 +3,8 @@ package org.stepik.android.view.course_list.ui.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.empty_search.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -14,14 +14,19 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
+import org.stepic.droid.preferences.SharedPreferenceHelper
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.search_result.model.SearchResultQuery
+import org.stepik.android.model.Course
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
+import org.stepik.android.presentation.course_list.CourseListSearchResultView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -29,7 +34,9 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
+class CourseListTagFragment :
+    Fragment(R.layout.fragment_course_list),
+    CourseListSearchResultView {
     companion object {
         fun newInstance(tag: Tag): Fragment =
             CourseListTagFragment().apply {
@@ -49,18 +56,17 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
+    internal lateinit var sharedPreferenceHelper: SharedPreferenceHelper
+
+    @Inject
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
-    private lateinit var courseListPresenter: CourseListSearchPresenter
+    private val courseListPresenter: CourseListSearchPresenter by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-
-        courseListPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(CourseListSearchPresenter::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,7 +89,7 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
         viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
         viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
 
-        val searchResultQuery = SearchResultQuery(page = 1, tagId = tag.id)
+        val searchResultQuery = SearchResultQuery(page = 1, tagId = tag.id, filterQuery = CourseListFilterQuery(language = sharedPreferenceHelper.languageForFeatured))
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -130,13 +136,34 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
             .inject(this)
     }
 
+    override fun setState(state: CourseListSearchResultView.State) {
+        val courseListState = (state as? CourseListSearchResultView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+        courseListViewDelegate.setState(courseListState)
+    }
+
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, source, isAdaptive)
+    }
+
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, source, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        courseListViewDelegate.setBlockingLoading(isLoading)
+    }
+
+    override fun showNetworkError() {
+        courseListViewDelegate.showNetworkError()
+    }
+
     override fun onStart() {
         super.onStart()
-        courseListPresenter.attachView(courseListViewDelegate)
+        courseListPresenter.attachView(this)
     }
 
     override fun onStop() {
-        courseListPresenter.detachView(courseListViewDelegate)
+        courseListPresenter.detachView(this)
         super.onStop()
     }
 }

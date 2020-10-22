@@ -4,8 +4,8 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -26,14 +26,11 @@ class CoursesLangDialogFragment : DialogFragment(), FiltersView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var presenter: FiltersPresenter
+    private val presenter: FiltersPresenter by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-        presenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(FiltersPresenter::class.java)
     }
 
     private fun injectComponent() {

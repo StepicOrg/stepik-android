@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.dialog_step_source_edit.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
 import org.stepic.droid.R
@@ -48,7 +48,7 @@ class EditStepSourceDialogFragment :
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var editStepContentPresenter: EditStepSourcePresenter
+    private val editStepContentPresenter: EditStepSourcePresenter by viewModels { viewModelFactory }
 
     private var stepWrapper: StepPersistentWrapper by argument()
     private var lessonTitle: String by argument()
@@ -73,11 +73,7 @@ class EditStepSourceDialogFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
-
         injectComponent()
-        editStepContentPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(EditStepSourcePresenter::class.java)
     }
 
     private fun injectComponent() {

@@ -12,8 +12,8 @@ import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.dialog_compose_comment.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
 import kotlinx.android.synthetic.main.view_centered_toolbar.*
@@ -75,7 +75,7 @@ class ComposeCommentDialogFragment :
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var composeCommentPresenter: ComposeCommentPresenter
+    private val composeCommentPresenter: ComposeCommentPresenter by viewModels { viewModelFactory }
 
     private var discussionThread: DiscussionThread by argument()
     private var step: Step by argument()
@@ -105,11 +105,7 @@ class ComposeCommentDialogFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, R.style.ThemeOverlay_AppTheme_Dialog_Fullscreen)
-
         injectComponent()
-        composeCommentPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ComposeCommentPresenter::class.java)
     }
 
     private fun injectComponent() {

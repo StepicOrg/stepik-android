@@ -6,8 +6,8 @@ import android.view.animation.Animation
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_profile_notification.*
 import kotlinx.android.synthetic.main.view_notification_interval_chooser.*
 import org.stepic.droid.R
@@ -43,16 +43,11 @@ class ProfileNotificationFragment : Fragment(R.layout.fragment_profile_notificat
 
     private var userId by argument<Long>()
 
-    private lateinit var profileNotificationPresenter: ProfileNotificationPresenter
+    private val profileNotificationPresenter: ProfileNotificationPresenter by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         injectComponent()
-
-        profileNotificationPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileNotificationPresenter::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

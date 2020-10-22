@@ -3,8 +3,8 @@ package org.stepik.android.view.profile_certificates.ui.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_certificates.*
@@ -39,7 +39,7 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
 
     private var userId: Long by argument()
 
-    private lateinit var certificatesPresenter: ProfileCertificatesPresenter
+    private val certificatesPresenter: ProfileCertificatesPresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileCertificatesView.State>
     private lateinit var certificatesAdapter: DefaultDelegateAdapter<CertificateViewItem>
 
@@ -49,10 +49,6 @@ class ProfileCertificatesFragment : Fragment(R.layout.fragment_profile_certifica
         super.onCreate(savedInstanceState)
 
         injectComponent()
-
-        certificatesPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileCertificatesPresenter::class.java)
 
         certificatesAdapter = DefaultDelegateAdapter()
         certificatesAdapter += CertificateProfileAdapterDelegate(::onCertificateClicked)

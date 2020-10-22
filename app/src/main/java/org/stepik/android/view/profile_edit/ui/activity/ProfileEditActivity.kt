@@ -5,10 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_profile_edit.*
@@ -33,7 +33,7 @@ class ProfileEditActivity : AppCompatActivity(R.layout.activity_profile_edit), P
             Intent(context, ProfileEditActivity::class.java)
     }
 
-    private lateinit var profileEditPresenter: ProfileEditPresenter
+    private val profileEditPresenter: ProfileEditPresenter by viewModels { viewModelFactory }
 
     @Inject
     internal lateinit var screenManager: ScreenManager
@@ -50,9 +50,6 @@ class ProfileEditActivity : AppCompatActivity(R.layout.activity_profile_edit), P
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-        profileEditPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileEditPresenter::class.java)
         initCenteredToolbar(R.string.profile_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 
         navigationItems = listOf(
