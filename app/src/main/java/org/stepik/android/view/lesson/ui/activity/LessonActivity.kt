@@ -8,11 +8,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.review.ReviewInfo
@@ -109,7 +109,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var lessonPresenter: LessonPresenter
+    private val lessonPresenter: LessonPresenter by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<LessonView.State>
     private lateinit var viewStepStateDelegate: ViewStateDelegate<LessonView.StepsState>
@@ -151,9 +151,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         }
 
         injectComponent()
-        lessonPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(LessonPresenter::class.java)
 
         initCenteredToolbar(R.string.lesson_title, showHomeButton = true)
 

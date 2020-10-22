@@ -5,8 +5,8 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.view_profile_user_id.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -31,16 +31,11 @@ class ProfileIdFragment : Fragment(R.layout.view_profile_user_id), ProfileIdView
 
     private var userId by argument<Long>()
 
-    private lateinit var profileIdPresenter: ProfileIdPresenter
+    private val profileIdPresenter: ProfileIdPresenter by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         injectComponent()
-
-        profileIdPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileIdPresenter::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

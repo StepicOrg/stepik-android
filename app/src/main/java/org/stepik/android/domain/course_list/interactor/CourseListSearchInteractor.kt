@@ -27,7 +27,7 @@ constructor(
     fun getCoursesBySearch(searchResultQuery: SearchResultQuery): Observable<Pair<PagedList<CourseListItem.Data>, DataSourceType>> =
         addSearchQuery(searchResultQuery) then
         searchResultRepository
-            .getSearchResults(searchResultQuery.copy(lang = sharedPreferenceHelper.languageForFeatured))
+            .getSearchResults(searchResultQuery)
             .flatMapObservable { searchResult ->
                 val ids = searchResult.map(SearchResult::course)
                 Single

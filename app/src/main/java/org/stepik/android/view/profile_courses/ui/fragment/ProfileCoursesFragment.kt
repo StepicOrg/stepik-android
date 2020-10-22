@@ -3,8 +3,8 @@ package org.stepik.android.view.profile_courses.ui.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
@@ -55,7 +55,7 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
 
     private var userId by argument<Long>()
 
-    private lateinit var profileCoursesPresenter: ProfileCoursesPresenter
+    private val profileCoursesPresenter: ProfileCoursesPresenter by viewModels { viewModelFactory }
     private lateinit var courseContinueViewDelegate: CourseContinueViewDelegate
 
     private lateinit var coursesAdapter: DefaultDelegateAdapter<CourseListItem>
@@ -66,9 +66,6 @@ class ProfileCoursesFragment : Fragment(R.layout.fragment_profile_courses), Prof
 
         injectComponent()
 
-        profileCoursesPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileCoursesPresenter::class.java)
         savedInstanceState?.let(profileCoursesPresenter::onRestoreInstanceState)
 
         courseContinueViewDelegate = CourseContinueViewDelegate(

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_certificates.*
 import kotlinx.android.synthetic.main.empty_certificates.*
@@ -42,7 +42,7 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var certificatesPresenter: CertificatesPresenter
+    private val certificatesPresenter: CertificatesPresenter by viewModels { viewModelFactory }
 
     private var certificatesAdapter: DefaultDelegateAdapter<CertificateViewItem> = DefaultDelegateAdapter()
 
@@ -54,9 +54,6 @@ class CertificatesActivity : FragmentActivityBase(), CertificatesView {
         setContentView(R.layout.activity_certificates)
 
         injectComponent()
-        certificatesPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(CertificatesPresenter::class.java)
 
         initCenteredToolbar(R.string.certificates_title, showHomeButton = true)
         userId = intent.getLongExtra(EXTRA_USER_ID, -1)

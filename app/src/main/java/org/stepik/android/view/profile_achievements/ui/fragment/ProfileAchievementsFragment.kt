@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_achievements.*
@@ -46,7 +46,7 @@ class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achieveme
 
     private var userId: Long by argument()
 
-    private lateinit var achievementsPresenter: ProfileAchievementsPresenter
+    private val achievementsPresenter: ProfileAchievementsPresenter by viewModels { viewModelFactory }
     private lateinit var viewStateDelegate: ViewStateDelegate<AchievementsView.State>
     private lateinit var achievementsAdapter: DefaultDelegateAdapter<AchievementItem>
 
@@ -60,9 +60,6 @@ class ProfileAchievementsFragment : Fragment(R.layout.fragment_profile_achieveme
         achievementsToDisplay = resources.getInteger(R.integer.achievements_to_display)
         injectComponent()
 
-        achievementsPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileAchievementsPresenter::class.java)
         savedInstanceState
             ?.let(achievementsPresenter::onRestoreInstanceState)
 

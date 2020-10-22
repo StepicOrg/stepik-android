@@ -5,12 +5,13 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
+import androidx.core.widget.TextViewCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -50,7 +51,7 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var downloadPresenter: DownloadPresenter
+    private val downloadPresenter: DownloadPresenter by viewModels { viewModelFactory }
 
     private val downloadedCoursesAdapter: DefaultDelegateAdapter<DownloadItem> = DefaultDelegateAdapter()
 
@@ -65,9 +66,6 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         setContentView(R.layout.activity_download)
 
         injectComponent()
-        downloadPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(DownloadPresenter::class.java)
 
         initCenteredToolbar(R.string.downloads_title, showHomeButton = true)
 
@@ -88,9 +86,9 @@ class DownloadActivity : FragmentActivityBase(), DownloadView, RemoveCachedConte
         downloadPresenter.fetchStorage()
         downloadPresenter.fetchDownloadedCourses()
 
-        downloadsOtherApps.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_on_surface_alpha_12))
-        downloadsStepik.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_green))
-        downloadsFree.supportCompoundDrawablesTintList = ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey04))
+        TextViewCompat.setCompoundDrawableTintList(downloadsOtherApps, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_on_surface_alpha_12)))
+        TextViewCompat.setCompoundDrawableTintList(downloadsStepik, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.color_overlay_green)))
+        TextViewCompat.setCompoundDrawableTintList(downloadsFree, ColorStateList.valueOf(ContextCompat.getColor(this, R.color.grey04)))
     }
 
     private fun injectComponent() {

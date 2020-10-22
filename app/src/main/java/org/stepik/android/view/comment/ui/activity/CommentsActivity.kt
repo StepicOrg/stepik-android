@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import kotlinx.android.synthetic.main.activity_comments.*
@@ -77,7 +77,7 @@ class CommentsActivity :
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var commentsPresenter: CommentsPresenter
+    private val commentsPresenter: CommentsPresenter by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<CommentsView.State>
     private lateinit var commentsViewStateDelegate: ViewStateDelegate<CommentsView.CommentsState>
@@ -97,9 +97,6 @@ class CommentsActivity :
         setContentView(R.layout.activity_comments)
 
         injectComponent()
-        commentsPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(CommentsPresenter::class.java)
 
         initCenteredToolbar(
             titleRes =

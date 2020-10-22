@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.fragment_step_content_video.*
 import kotlinx.android.synthetic.main.view_course_info_video.*
@@ -52,16 +52,12 @@ class VideoStepContentFragment : Fragment(), VideoStepContentView, Playable {
     @Inject
     internal lateinit var lessonData: LessonData
 
-    private lateinit var presenter: VideoStepContentPresenter
+    private val presenter: VideoStepContentPresenter by viewModels { viewModelFactory }
     private var stepId: Long by argument()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-
-        presenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(VideoStepContentPresenter::class.java)
 
         if (savedInstanceState == null) {
             presenter.fetchVideoLength(stepWrapper)

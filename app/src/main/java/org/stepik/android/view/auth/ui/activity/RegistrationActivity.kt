@@ -10,12 +10,12 @@ import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_registration.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -56,7 +56,7 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var registrationPresenter: RegistrationPresenter
+    private val registrationPresenter: RegistrationPresenter by viewModels { viewModelFactory }
 
     private val passwordTooShortMessage by lazy {
         resources.getString(R.string.password_too_short)
@@ -73,9 +73,6 @@ class RegistrationActivity : SmartLockActivityBase(), RegistrationView {
         setContentView(R.layout.activity_registration)
 
         injectComponent()
-        registrationPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(RegistrationPresenter::class.java)
 
         initTitle()
 

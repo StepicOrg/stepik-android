@@ -924,4 +924,18 @@
     <string name="pip_stop_label">Пауза</string>
     <string name="pip_forward_label">Перемотать вперед</string>
     <string name="pip_rewind_label">Перемотать назад</string>
+
+    <!-- Filter -->
+    <string name="filter_menu_title">Filter</string>
+    <string name="filter_dialog_title">Фильтры</string>
+    <string name="filter_language_subtitle">Язык</string>
+    <string name="filter_any_radio_button_title">Любой</string>
+    <string name="filter_rus_radio_button_title">Русский</string>
+    <string name="filter_eng_radio_button_title">Английский</string>
+
+    <string name="filter_with_certificate_switch_title">Только с сертификатом</string>
+    <string name="filter_free_switch_title">Только бесплатные</string>
+
+    <string name="filter_dismiss_action">Сбросить</string>
+    <string name="filter_apply_action">Посмотреть результат</string>
 </resources>

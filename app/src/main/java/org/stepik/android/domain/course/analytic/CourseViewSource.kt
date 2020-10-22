@@ -29,7 +29,7 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
         override val name: String = "search"
 
         override val params: Map<String, Any> =
-            mapOf(PARAM_QUERY to query)
+            mapOf(PARAM_QUERY to query.toMap())
     }
 
     class Collection(collectionId: Long) : CourseViewSource() {
@@ -51,7 +51,7 @@ sealed class CourseViewSource : AnalyticEvent, Serializable {
         override val name: String = "query"
 
         override val params: Map<String, Any> =
-            mapOf(PARAM_QUERY to query)
+            mapOf(PARAM_QUERY to query.toMap())
     }
 
     class Story(storyId: Long) : CourseViewSource() {

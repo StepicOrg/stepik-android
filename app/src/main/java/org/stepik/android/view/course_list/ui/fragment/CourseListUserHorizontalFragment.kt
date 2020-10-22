@@ -3,8 +3,8 @@ package org.stepik.android.view.course_list.ui.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_user_course_list.*
 import org.stepic.droid.R
@@ -49,16 +49,12 @@ class CourseListUserHorizontalFragment : Fragment(R.layout.fragment_user_course_
     internal lateinit var inAppPurchaseSplitTest: InAppPurchaseSplitTest
 
     private lateinit var courseListViewDelegate: CourseListViewDelegate
-    private lateinit var courseListPresenter: CourseListUserPresenter
+    private val courseListPresenter: CourseListUserPresenter by viewModels { viewModelFactory }
     private lateinit var wrapperViewStateDelegate: ViewStateDelegate<CourseListUserView.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-
-        courseListPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(CourseListUserPresenter::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

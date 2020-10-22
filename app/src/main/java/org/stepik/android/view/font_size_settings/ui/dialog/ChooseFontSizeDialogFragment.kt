@@ -4,8 +4,8 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
@@ -31,14 +31,11 @@ class ChooseFontSizeDialogFragment : DialogFragment(), FontSizeView {
     @Inject
     internal lateinit var analytic: Analytic
 
-    private lateinit var presenter: FontSizePresenter
+    private val presenter: FontSizePresenter by viewModels { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         injectComponent()
-        presenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(FontSizePresenter::class.java)
         presenter.fetchFontSize()
     }
 

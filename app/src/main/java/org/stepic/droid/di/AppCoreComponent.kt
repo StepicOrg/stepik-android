@@ -48,6 +48,7 @@ import org.stepik.android.view.injection.glide.GlideCustomModule
 import org.stepik.android.model.Course
 import org.stepik.android.view.app_rating.ui.dialog.RateAppDialog
 import org.stepik.android.view.course_content.ui.dialog.RemoveCachedContentDialog
+import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
 import org.stepik.android.view.injection.achievements.AchievementsComponent
 import org.stepik.android.view.injection.analytic.AnalyticComponent
 import org.stepik.android.view.injection.auth.AuthComponent
@@ -62,7 +63,7 @@ import org.stepik.android.view.injection.course.CourseComponent
 import org.stepik.android.view.injection.course.CourseRoutingModule
 import org.stepik.android.view.injection.course_collection.CourseCollectionDataModule
 import org.stepik.android.view.injection.course_list.CourseListBusModule
-import org.stepik.android.view.injection.course_list.CourseListComponent
+import org.stepik.android.view.injection.course_list.search_result.CourseListSearchResultComponent
 import org.stepik.android.view.injection.course_list.collection.CourseListCollectionComponent
 import org.stepik.android.view.injection.course_list.query.CourseListQueryComponent
 import org.stepik.android.view.injection.course_list.user.CourseListUserComponent
@@ -225,7 +226,7 @@ interface AppCoreComponent {
 
     fun userCodeRunComponentBuilder(): UserCodeRunComponent.Builder
 
-    fun courseListComponentBuilder(): CourseListComponent.Builder
+    fun courseListComponentBuilder(): CourseListSearchResultComponent.Builder
 
     fun catalogComponentBuilder(): CatalogComponent.Builder
 
@@ -328,4 +329,6 @@ interface AppCoreComponent {
     fun inject(onboardingActivity: AnimatedOnboardingActivity)
 
     fun inject(purchaseNotificationReceiver: PurchaseNotificationReceiver)
+
+    fun inject(filterBottomSheetDialogFragment: FilterBottomSheetDialogFragment)
 }

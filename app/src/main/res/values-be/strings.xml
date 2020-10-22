@@ -787,4 +787,20 @@
     <string name="pip_stop_label">Паўза</string>
     <string name="pip_forward_label">Пераматаць наперад</string>
     <string name="pip_rewind_label">Пераматаць назад</string>
+
+    <!-- Filter (done via Google Translate -->
+    <string name="filter_menu_title">Фільтр</string>
+    <string name="filter_dialog_title">Фільтры</string>
+    <string name="filter_language_subtitle">Мова</string>
+    <string name="filter_any_radio_button_title">Любы</string>
+    <string name="filter_rus_radio_button_title">Руская</string>
+    <string name="filter_eng_radio_button_title">Англійская</string>
+
+    <string name="filter_with_certificate_switch_title">Толькі з сертыфікатам</string>
+    <string name="filter_free_switch_title">Толькі бясплатныя</string>
+
+    <string name="filter_dismiss_action">Скінуць</string>
+    <string name="filter_apply_action">Паглядзець вынік</string>
+    <!-- -->
+
 </resources>

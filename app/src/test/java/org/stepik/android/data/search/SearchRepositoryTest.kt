@@ -12,6 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.stepic.droid.util.PagedList
 import org.stepik.android.data.search_result.repository.SearchResultRepositoryImpl
 import org.stepik.android.data.search_result.source.SearchResultRemoteDataSource
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.search_result.model.SearchResultQuery
 import org.stepik.android.model.SearchResult
 
@@ -34,7 +35,7 @@ class SearchRepositoryTest {
             SearchResultQuery(
                 page = page,
                 query = rawQuery,
-                lang = lang
+                filterQuery = CourseListFilterQuery(language = lang)
             )
         )) doReturn Single.just(remoteResult)
 
@@ -43,7 +44,7 @@ class SearchRepositoryTest {
                 SearchResultQuery(
                     page = page,
                     query = rawQuery,
-                    lang = lang
+                    filterQuery = CourseListFilterQuery(language = lang)
                 )
             )
             .test()
