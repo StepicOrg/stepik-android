@@ -48,16 +48,16 @@ ext.versions = [
         gson                 : '2.8.5',
         jsoup                : '1.12.1',
 
-        glide                : '4.9.0',
-        glideTransformations : '4.0.1',
-        glideAnnotations     : '4.9.0',
+        glide                : '4.11.0',
+        glideTransformations : '4.2.0',
+        glideAnnotations     : '4.11.0',
 
         amplitude            : '2.23.2',
         appMetrica           : '3.8.0',
         branch               : '5.0.0',
         installreferrer      : '1.0',
 
-        lottie               : '2.7.0',
+        lottie               : '3.4.4',
 
         playCore             : '1.8.2',
         playCoreKtx          : '1.8.1',
@@ -70,15 +70,15 @@ ext.versions = [
 
         checkout             : '1.2.1',
 
-        facebook             : '4.17.0',
-        vk                   : '1.6.5',
+        facebook             : '8.1.0',
+        vk                   : '1.6.7',
 
         timber               : '4.7.1',
 
         numberPicker         : '1.2.1',
         photoView            : '2.3.0',
-        recyclerAnimators    : '2.1.0',
-        materialProgress     : '1.4.2',
+        recyclerAnimators    : '3.0.0',
+        materialProgress     : '1.6.1',
         circleImageView      : '2.1.0',
         circleIndicator      : '1.2.2@aar',
         confetti             : '1.1.2',
