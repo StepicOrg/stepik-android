@@ -192,11 +192,6 @@ class CourseListQueryFragment :
                 super.onOptionsItemSelected(item)
         }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-//        outState.putInt(ARG_MENU_RESOURCE, menuDrawableRes)
-    }
-
     override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
         FilterBottomSheetDialogFragment
             .newInstance(filterQuery)

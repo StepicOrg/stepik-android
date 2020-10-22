@@ -20,10 +20,13 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.search_result.model.SearchResultQuery
+import org.stepik.android.model.Course
 import org.stepik.android.model.Tag
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
+import org.stepik.android.presentation.course_list.CourseListSearchResultView
 import org.stepik.android.presentation.course_list.CourseListView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
@@ -31,7 +34,9 @@ import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import ru.nobird.android.view.base.ui.extension.argument
 import javax.inject.Inject
 
-class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
+class CourseListTagFragment :
+    Fragment(R.layout.fragment_course_list),
+    CourseListSearchResultView {
     companion object {
         fun newInstance(tag: Tag): Fragment =
             CourseListTagFragment().apply {
@@ -131,13 +136,34 @@ class CourseListTagFragment : Fragment(R.layout.fragment_course_list) {
             .inject(this)
     }
 
+    override fun setState(state: CourseListSearchResultView.State) {
+        val courseListState = (state as? CourseListSearchResultView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+        courseListViewDelegate.setState(courseListState)
+    }
+
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, source, isAdaptive)
+    }
+
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, source, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        courseListViewDelegate.setBlockingLoading(isLoading)
+    }
+
+    override fun showNetworkError() {
+        courseListViewDelegate.showNetworkError()
+    }
+
     override fun onStart() {
         super.onStart()
-        courseListPresenter.attachView(courseListViewDelegate)
+        courseListPresenter.attachView(this)
     }
 
     override fun onStop() {
-        courseListPresenter.detachView(courseListViewDelegate)
+        courseListPresenter.detachView(this)
         super.onStop()
     }
 }

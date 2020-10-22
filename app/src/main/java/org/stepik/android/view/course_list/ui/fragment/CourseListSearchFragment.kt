@@ -28,10 +28,14 @@ import org.stepic.droid.ui.util.setOnPaginationListener
 import org.stepik.android.domain.base.PaginationDirection
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.filter.model.CourseListFilterQuery
+import org.stepik.android.domain.last_step.model.LastStep
 import org.stepik.android.domain.search_result.model.SearchResultQuery
+import org.stepik.android.model.Course
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListSearchPresenter
+import org.stepik.android.presentation.course_list.CourseListSearchResultView
 import org.stepik.android.presentation.course_list.CourseListView
+import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.course_list.delegate.CourseContinueViewDelegate
 import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.filter.ui.dialog.FilterBottomSheetDialogFragment
@@ -40,7 +44,11 @@ import ru.nobird.android.view.base.ui.extension.argument
 import ru.nobird.android.view.base.ui.extension.showIfNotExists
 import javax.inject.Inject
 
-class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), FilterBottomSheetDialogFragment.Callback {
+class CourseListSearchFragment :
+    Fragment(R.layout.fragment_course_list),
+    CourseListSearchResultView,
+    FilterQueryView,
+    FilterBottomSheetDialogFragment.Callback {
     companion object {
         private const val ARG_MENU_RESOURCE = "MENU_RESOURCE"
 
@@ -159,7 +167,6 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), Filter
         centeredToolbar.isVisible = false
         backIcon.isVisible = true
         filterIcon.isVisible = true
-        filterIcon.setImageResource(menuDrawableRes)
         searchViewToolbar.isVisible = true
         searchIcon.setImageResource(0)
         (searchViewToolbar.layoutParams as ViewGroup.MarginLayoutParams).setMargins(0, 0, 0, 0)
@@ -207,29 +214,53 @@ class CourseListSearchFragment : Fragment(R.layout.fragment_course_list), Filter
             .inject(this)
     }
 
+    override fun setState(state: CourseListSearchResultView.State) {
+        val courseListState = (state as? CourseListSearchResultView.State.Data)?.courseListViewState ?: CourseListView.State.Idle
+        courseListViewDelegate.setState(courseListState)
+        (state as? CourseListSearchResultView.State.Data)?.let {
+            val defaultFilterQuery = CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured)
+            menuDrawableRes = if (defaultFilterQuery == it.searchResultQuery.filterQuery) {
+                R.drawable.ic_filter
+            } else {
+                R.drawable.ic_filter_active
+            }
+            filterIcon.setImageResource(menuDrawableRes)
+        }
+    }
+
+    override fun showCourse(course: Course, source: CourseViewSource, isAdaptive: Boolean) {
+        courseListViewDelegate.showCourse(course, source, isAdaptive)
+    }
+
+    override fun showSteps(course: Course, source: CourseViewSource, lastStep: LastStep) {
+        courseListViewDelegate.showSteps(course, source, lastStep)
+    }
+
+    override fun setBlockingLoading(isLoading: Boolean) {
+        courseListViewDelegate.setBlockingLoading(isLoading)
+    }
+
+    override fun showNetworkError() {
+        courseListViewDelegate.showNetworkError()
+    }
+
     override fun onStart() {
         super.onStart()
-        courseListPresenter.attachView(courseListViewDelegate)
+        courseListPresenter.attachView(this)
     }
 
     override fun onStop() {
-        courseListPresenter.detachView(courseListViewDelegate)
+        courseListPresenter.detachView(this)
         super.onStop()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putInt(ARG_MENU_RESOURCE, menuDrawableRes)
+    override fun showFilterDialog(filterQuery: CourseListFilterQuery) {
+        FilterBottomSheetDialogFragment
+            .newInstance(filterQuery)
+            .showIfNotExists(childFragmentManager, FilterBottomSheetDialogFragment.TAG)
     }
 
     override fun onSyncFilterQueryWithParent(filterQuery: CourseListFilterQuery) {
-        val defaultFilterQuery = CourseListFilterQuery(language = sharedPreferencesHelper.languageForFeatured)
-        menuDrawableRes = if (defaultFilterQuery == filterQuery) {
-            R.drawable.ic_filter
-        } else {
-            R.drawable.ic_filter_active
-        }
-        filterIcon.setImageResource(menuDrawableRes)
         courseListPresenter.fetchCourses(
             searchResultQuery = SearchResultQuery(page = 1, query = query, filterQuery = filterQuery),
             forceUpdate = true

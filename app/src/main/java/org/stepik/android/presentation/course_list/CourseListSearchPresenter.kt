@@ -24,6 +24,8 @@ import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
 import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
+import ru.nobird.android.core.model.cast
+import ru.nobird.android.core.model.safeCast
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -44,20 +46,18 @@ constructor(
     @UserCoursesOperationBus
     private val userCourseOperationObservable: Observable<UserCourse>,
 
-    viewContainer: PresenterViewContainer<CourseListView>,
+    viewContainer: PresenterViewContainer<CourseListSearchResultView>,
     continueCoursePresenterDelegate: CourseContinuePresenterDelegateImpl
-) : PresenterBase<CourseListView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
+) : PresenterBase<CourseListSearchResultView>(viewContainer), CourseContinuePresenterDelegate by continueCoursePresenterDelegate {
 
-    override val delegates: List<PresenterDelegate<in CourseListView>> =
+    override val delegates: List<PresenterDelegate<in CourseListSearchResultView>> =
         listOf(continueCoursePresenterDelegate)
 
-    private var state: CourseListView.State = CourseListView.State.Idle
+    private var state: CourseListSearchResultView.State = CourseListSearchResultView.State.Idle
         set(value) {
             field = value
             view?.setState(value)
         }
-
-    private var searchResultQuery: SearchResultQuery? = null
 
     private val paginationDisposable = CompositeDisposable()
 
@@ -67,22 +67,22 @@ constructor(
         subscribeForUserCourseOperationUpdates()
     }
 
-    override fun attachView(view: CourseListView) {
+    override fun attachView(view: CourseListSearchResultView) {
         super.attachView(view)
         view.setState(state)
     }
 
     fun fetchCourses(searchResultQuery: SearchResultQuery, forceUpdate: Boolean = false) {
-        if (state != CourseListView.State.Idle && !forceUpdate) return
+        if (state != CourseListSearchResultView.State.Idle && !forceUpdate) return
 
         paginationDisposable.clear()
 
-        val oldState = state
-
         logEvent(searchResultQuery)
 
-        state = CourseListView.State.Loading
-        this.searchResultQuery = searchResultQuery
+        state = CourseListSearchResultView.State.Data(
+            searchResultQuery = searchResultQuery,
+            courseListViewState = CourseListView.State.Loading
+        )
 
         paginationDisposable += courseListSearchInteractor
             .getCoursesBySearch(searchResultQuery)
@@ -90,74 +90,79 @@ constructor(
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
                 onNext = { (items, source) ->
-                    state =
-                        if (source == DataSourceType.CACHE) {
-                            if (items.isNotEmpty()) {
-                                CourseListView.State.Content(
-                                    courseListDataItems = items,
-                                    courseListItems = items
-                                )
-                            } else {
-                                CourseListView.State.Empty
-                            }
+                    val courseListState = if (source == DataSourceType.CACHE) {
+                        if (items.isNotEmpty()) {
+                            CourseListView.State.Content(
+                                courseListDataItems = items,
+                                courseListItems = items
+                            )
                         } else {
-                            courseListStateMapper.mergeWithUpdatedItems(state, items.associateBy { it.course.id })
+                            CourseListView.State.Empty
                         }
+                    } else {
+                        courseListStateMapper.mergeWithUpdatedItems((state as CourseListSearchResultView.State.Data).courseListViewState, items.associateBy { it.course.id })
+                    }
+                    state = CourseListSearchResultView.State.Data(searchResultQuery, courseListState)
                 },
                 onError = {
-                    when (oldState) {
+                    when (val oldState = state.safeCast<CourseListSearchResultView.State.Data>()?.courseListViewState) {
                         is CourseListView.State.Content -> {
-                            state = oldState
+                            state = state.cast<CourseListSearchResultView.State.Data>()
+                                .copy(
+                                    courseListViewState = oldState.copy(oldState.courseListDataItems, oldState.courseListDataItems)
+                                )
                             view?.showNetworkError()
                         }
                         else ->
-                            state = CourseListView.State.NetworkError
+                            state = CourseListSearchResultView.State.Data(searchResultQuery, CourseListView.State.NetworkError)
                     }
                 }
             )
     }
 
     fun fetchNextPage() {
-        val oldState = state as? CourseListView.State.Content
+        val oldState = state as? CourseListSearchResultView.State.Data
             ?: return
 
-        val oldSearchQuery = searchResultQuery ?: return
+        val oldCourseListState = oldState.courseListViewState as? CourseListView.State.Content
+            ?: return
 
-        if (oldState.courseListItems.last() is CourseListItem.PlaceHolder || !oldState.courseListDataItems.hasNext) {
+        if (oldCourseListState.courseListItems.last() is CourseListItem.PlaceHolder || !oldCourseListState.courseListDataItems.hasNext) {
             return
         }
 
-        val nextPage = oldState.courseListDataItems.page + 1
+        val nextPage = oldCourseListState.courseListDataItems.page + 1
 
-        state = courseListStateMapper.mapToLoadMoreState(oldState)
+        state = oldState.copy(courseListViewState = courseListStateMapper.mapToLoadMoreState(oldCourseListState))
         paginationDisposable += courseListSearchInteractor
-            .getCoursesBySearch(oldSearchQuery.copy(page = nextPage))
+            .getCoursesBySearch(oldState.searchResultQuery.copy(page = nextPage))
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { (items, source) ->
                     state =
                         if (source == DataSourceType.CACHE) {
-                            courseListStateMapper.mapFromLoadMoreToSuccess(state, items)
+                            oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToSuccess(oldCourseListState, items))
                         } else {
-                            courseListStateMapper.mergeWithUpdatedItems(state, items.associateBy { it.course.id })
+                            oldState.copy(courseListViewState = courseListStateMapper.mergeWithUpdatedItems(oldCourseListState, items.associateBy { it.course.id }))
                         }
                 },
                 onError = {
-                    state = courseListStateMapper.mapFromLoadMoreToError(state)
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapFromLoadMoreToError(oldCourseListState))
                     view?.showNetworkError()
                 }
             )
     }
 
     fun onFilterMenuItemClicked() {
-        val oldState = state as? CourseListView.State.Content
+        val oldState = (state as? CourseListSearchResultView.State.Data)
+            ?.takeIf { it.courseListViewState is CourseListView.State.Content }
             ?: return
 
         val filterView = (view as? FilterQueryView)
             ?: return
 
-        filterView.showFilterDialog(filterQuery = searchResultQuery?.filterQuery ?: CourseListFilterQuery())
+        filterView.showFilterDialog(filterQuery = oldState.searchResultQuery.filterQuery ?: CourseListFilterQuery())
     }
 
     /**
@@ -169,7 +174,10 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { enrolledCourse ->
-                    state = courseListStateMapper.mapToEnrollmentUpdateState(state, enrolledCourse)
+                    val oldState = (state as? CourseListSearchResultView.State.Data)
+                        ?: return@subscribeBy
+
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, enrolledCourse))
                     fetchForEnrollmentUpdate(enrolledCourse)
                 },
                 onError = emptyOnErrorStub
@@ -177,15 +185,16 @@ constructor(
     }
 
     private fun fetchForEnrollmentUpdate(course: Course) {
-        val oldSearchQuery = searchResultQuery ?: return
+        val oldState = (state as? CourseListSearchResultView.State.Data)
+            ?: return
 
         compositeDisposable += courseListSearchInteractor
-            .getCourseListItems(listOf(course.id), courseViewSource = CourseViewSource.Search(oldSearchQuery), sourceTypeComposition = SourceTypeComposition.CACHE)
+            .getCourseListItems(listOf(course.id), courseViewSource = CourseViewSource.Search(oldState.searchResultQuery), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { courses ->
-                    state = courseListStateMapper.mapToEnrollmentUpdateState(state, courses.first())
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToEnrollmentUpdateState(oldState.courseListViewState, courses.first()))
                 },
                 onError = emptyOnErrorStub
             )
@@ -200,7 +209,10 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeBy(
                 onNext = { userCourse ->
-                    state = courseListStateMapper.mapToUserCourseUpdate(state, userCourse)
+                    val oldState = (state as? CourseListSearchResultView.State.Data)
+                        ?: return@subscribeBy
+
+                    state = oldState.copy(courseListViewState = courseListStateMapper.mapToUserCourseUpdate(oldState.courseListViewState, userCourse))
                 },
                 onError = emptyOnErrorStub
             )
