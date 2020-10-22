@@ -5,7 +5,7 @@ import io.reactivex.Single
 import org.stepik.android.model.user.EmailAddress
 
 interface EmailAddressCacheDataSource {
-    fun getEmailAddresses(vararg emailIds: Long): Single<List<EmailAddress>>
+    fun getEmailAddresses(emailIds: List<Long>): Single<List<EmailAddress>>
 
     fun saveEmailAddress(emailAddress: EmailAddress): Completable =
         saveEmailAddresses(listOf(emailAddress))

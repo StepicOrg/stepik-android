@@ -6,11 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
+import androidx.activity.viewModels
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
@@ -77,7 +77,7 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var socialAuthPresenter: SocialAuthPresenter
+    private val socialAuthPresenter: SocialAuthPresenter by viewModels { viewModelFactory }
 
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
@@ -95,9 +95,6 @@ class SocialAuthActivity : SmartLockActivityBase(), SocialAuthView {
         course = intent.getParcelableExtra(EXTRA_COURSE)
 
         injectComponent()
-        socialAuthPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(SocialAuthPresenter::class.java)
 
         overridePendingTransition(R.anim.no_transition, R.anim.slide_out_to_bottom)
 

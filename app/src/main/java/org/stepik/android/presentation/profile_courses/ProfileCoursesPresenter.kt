@@ -81,7 +81,7 @@ constructor(
             if (state == ProfileCoursesView.State.Idle) {
                 state = ProfileCoursesView.State.Loading
                 compositeDisposable += courseListInteractor // TODO Cache data source?
-                    .getCourseListItems(*courseIds, courseViewSource = CourseViewSource.Query(CourseListQuery(teacher = userId, order = CourseListQuery.Order.POPULARITY_DESC)))
+                    .getCourseListItems(courseIds.toList(), courseViewSource = CourseViewSource.Query(CourseListQuery(teacher = userId, order = CourseListQuery.Order.POPULARITY_DESC)))
                     .subscribeOn(backgroundScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(

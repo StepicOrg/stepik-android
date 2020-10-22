@@ -7,8 +7,8 @@ import android.widget.ImageView
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_catalog.*
 import kotlinx.android.synthetic.main.view_catalog_search_toolbar.*
@@ -68,7 +68,7 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
 
     private lateinit var searchIcon: ImageView
 
-    private lateinit var catalogPresenter: CatalogPresenter
+    private val catalogPresenter: CatalogPresenter by viewModels { viewModelFactory }
 
     private var catalogItemAdapter: DefaultDelegateAdapter<CatalogItem> = DefaultDelegateAdapter()
 
@@ -79,10 +79,6 @@ class CatalogFragment : Fragment(R.layout.fragment_catalog), CatalogView, AutoCo
         super.onCreate(savedInstanceState)
         injectComponent()
         analytic.reportAmplitudeEvent(AmplitudeAnalytic.Catalog.CATALOG_SCREEN_OPENED)
-
-        catalogPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(CatalogPresenter::class.java)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

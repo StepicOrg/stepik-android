@@ -17,7 +17,7 @@ constructor(
     private val unitResponseMapper =
         Function<UnitResponse, List<Unit>>(UnitResponse::units)
 
-    override fun getUnits(vararg unitIds: Long): Single<List<Unit>> =
+    override fun getUnits(unitIds: List<Long>): Single<List<Unit>> =
         unitIds
             .chunkedSingleMap { ids ->
                 unitService.getUnits(ids)

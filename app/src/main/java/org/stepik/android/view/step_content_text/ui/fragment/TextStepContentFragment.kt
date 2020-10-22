@@ -9,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import org.stepic.droid.R
 import org.stepic.droid.analytic.AmplitudeAnalytic
 import org.stepic.droid.analytic.Analytic
@@ -54,19 +54,14 @@ class TextStepContentFragment :
 
     private var stepId: Long by argument()
 
-    private lateinit var presenter: TextStepContentPresenter
+    private val presenter: TextStepContentPresenter by viewModels { viewModelFactory }
 
     private var latexWebView: LatexWebView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         retainInstance = true
-
         injectComponent()
-
-        presenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(TextStepContentPresenter::class.java)
     }
 
     private fun injectComponent() {

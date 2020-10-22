@@ -16,8 +16,8 @@ import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_no_connection_with_button.*
@@ -83,7 +83,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
     private var userId by argument<Long>()
 
     private lateinit var profileComponent: ProfileComponent
-    private lateinit var profilePresenter: ProfilePresenter
+    private val profilePresenter: ProfilePresenter by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileView.State>
 
@@ -128,10 +128,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile), ProfileView {
 
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        profilePresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfilePresenter::class.java)
         profilePresenter.onData(userId)
     }
 

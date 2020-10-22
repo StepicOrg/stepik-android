@@ -42,9 +42,9 @@ constructor(
             intro = cursor.getString(DbStructureCourse.Columns.INTRO),
             introVideo = Video(id = cursor.getLong(DbStructureCourse.Columns.INTRO_VIDEO_ID)),
             language = cursor.getString(DbStructureCourse.Columns.LANGUAGE),
-            authors = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourse.Columns.AUTHORS)),
-            instructors = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourse.Columns.INSTRUCTORS)),
-            sections = DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourse.Columns.SECTIONS)),
+            authors = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.AUTHORS)),
+            instructors = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.INSTRUCTORS)),
+            sections = DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourse.Columns.SECTIONS)),
             courseFormat = cursor.getString(DbStructureCourse.Columns.COURSE_FORMAT),
             targetAudience = cursor.getString(DbStructureCourse.Columns.TARGET_AUDIENCE),
             certificateFooter = cursor.getString(DbStructureCourse.Columns.CERTIFICATE_FOOTER),
@@ -101,9 +101,9 @@ constructor(
         values.put(DbStructureCourse.Columns.INTRO, course.intro)
         values.put(DbStructureCourse.Columns.INTRO_VIDEO_ID, course.introVideo?.id ?: -1) // todo add complete course entity and remove this hack
         values.put(DbStructureCourse.Columns.LANGUAGE, course.language)
-        values.put(DbStructureCourse.Columns.AUTHORS, DbParseHelper.parseLongArrayToString(course.authors))
-        values.put(DbStructureCourse.Columns.INSTRUCTORS, DbParseHelper.parseLongArrayToString(course.instructors))
-        values.put(DbStructureCourse.Columns.SECTIONS, DbParseHelper.parseLongArrayToString(course.sections))
+        values.put(DbStructureCourse.Columns.AUTHORS, DbParseHelper.parseLongListToString(course.authors))
+        values.put(DbStructureCourse.Columns.INSTRUCTORS, DbParseHelper.parseLongListToString(course.instructors))
+        values.put(DbStructureCourse.Columns.SECTIONS, DbParseHelper.parseLongListToString(course.sections))
         values.put(DbStructureCourse.Columns.COURSE_FORMAT, course.courseFormat)
         values.put(DbStructureCourse.Columns.TARGET_AUDIENCE, course.targetAudience)
         values.put(DbStructureCourse.Columns.CERTIFICATE_FOOTER, course.certificateFooter)

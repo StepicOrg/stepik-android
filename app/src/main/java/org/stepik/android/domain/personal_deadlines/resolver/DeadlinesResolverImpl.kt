@@ -33,15 +33,15 @@ constructor(
     override fun calculateDeadlinesForCourse(courseId: Long, learningRate: LearningRate): Single<DeadlinesWrapper> =
         courseRepository.getCourse(courseId)
             .flatMapSingle { course ->
-                sectionRepository.getSections(*course.sections ?: longArrayOf())
+                sectionRepository.getSections(course.sections ?: listOf())
             }
             .flatMap { sections ->
                 val unitIds = sections
                     .flatMap(Section::units)
-                    .fold(longArrayOf(), LongArray::plus)
+                    .fold(listOf(), List<Long>::plus)
 
                 unitRepository
-                    .getUnits(*unitIds)
+                    .getUnits(unitIds)
                     .map { units -> sections to units }
             }
             .flatMap { (sections, units) ->

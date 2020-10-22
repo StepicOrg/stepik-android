@@ -1,14 +1,11 @@
 package org.stepik.android.model.code
 
-import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import org.stepik.android.model.util.readBoolean
-import org.stepik.android.model.util.readDate
-import org.stepik.android.model.util.writeBoolean
-import org.stepik.android.model.util.writeDate
-import java.util.Date
+import kotlinx.android.parcel.Parcelize
+import java.util.*
 
+@Parcelize
 data class UserCodeRun(
     @SerializedName("id")
     val id: Long = 0,
@@ -47,45 +44,5 @@ data class UserCodeRun(
 
         @SerializedName("evaluation")
         EVALUATION("evaluation")
-    }
-
-    override fun writeToParcel(parcel: Parcel, flags: Int) {
-        parcel.writeLong(id)
-        parcel.writeLong(user)
-        parcel.writeLong(step)
-        parcel.writeString(language)
-        parcel.writeString(code)
-        parcel.writeInt(status?.ordinal ?: -1)
-        parcel.writeString(stdin)
-        parcel.writeString(stdout)
-        parcel.writeString(stderr)
-        parcel.writeBoolean(timeLimitExceeded)
-        parcel.writeBoolean(memoryLimitExceeded)
-        parcel.writeDate(createDate)
-        parcel.writeDate(updateDate)
-    }
-
-    override fun describeContents(): Int = 0
-
-    companion object CREATOR : Parcelable.Creator<UserCodeRun> {
-        override fun createFromParcel(parcel: Parcel): UserCodeRun =
-            UserCodeRun(
-                parcel.readLong(),
-                parcel.readLong(),
-                parcel.readLong(),
-                parcel.readString(),
-                parcel.readString(),
-                Status.values().getOrNull(parcel.readInt()),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readString(),
-                parcel.readBoolean(),
-                parcel.readBoolean(),
-                parcel.readDate(),
-                parcel.readDate()
-            )
-
-        override fun newArray(size: Int): Array<UserCodeRun?> =
-            arrayOfNulls(size)
     }
 }

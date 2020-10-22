@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="adaptive_streak_success">
+        <item quantity="one">Серыя з %d адказу</item>
+        <item quantity="few">Серыя з %d адказаў</item>
+        <item quantity="many">Серыя з %d адказаў</item>
+        <item quantity="other">Серыя з %d адказаў</item>
+    </plurals>
+    <plurals name="min">
+        <item quantity="one">%d хв</item>
+        <item quantity="few">%d хв</item>
+        <item quantity="many">%d хв</item>
+        <item quantity="other">%d хв</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%d хвіліна</item>
+        <item quantity="few">%d хвіліны</item>
+        <item quantity="many">%d хвілін</item>
+        <item quantity="other">%d хвілін</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%d гадзіна</item>
+        <item quantity="few">%d гадзіны</item>
+        <item quantity="many">%d гадзін</item>
+        <item quantity="other">%d гадзін</item>
+    </plurals>
+    <plurals name="day">
+        <item quantity="one">%d дзень</item>
+        <item quantity="few">%d дні</item>
+        <item quantity="many">%d дзён</item>
+        <item quantity="other">%d дзён</item>
+    </plurals>
+    <plurals name="week">
+        <item quantity="one">%d тыдзень</item>
+        <item quantity="few">%d тыдні</item>
+        <item quantity="many">%d тыдняў</item>
+        <item quantity="other">%d тыдняў</item>
+    </plurals>
+    <plurals name="month">
+        <item quantity="one">%d месяц</item>
+        <item quantity="few">%d месяцы</item>
+        <item quantity="many">%d месяцаў</item>
+        <item quantity="other">%d месяцаў</item>
+    </plurals>
+    <plurals name="year">
+        <item quantity="one">%d год</item>
+        <item quantity="few">%d гады</item>
+        <item quantity="many">%d гадоў</item>
+        <item quantity="other">%d гадоў</item>
+    </plurals>
+    <plurals name="task">
+        <item quantity="one">%d заданне</item>
+        <item quantity="few">%d заданні</item>
+        <item quantity="many">%d заданняў</item>
+        <item quantity="other">%d заданняў</item>
+    </plurals>
+    <plurals name="problem">
+        <item quantity="one">%d задача</item>
+        <item quantity="few">%d задачы</item>
+        <item quantity="many">%d задач</item>
+        <item quantity="other">%d задач</item>
+    </plurals>
+    <plurals name="certificate">
+        <item quantity="one">%d сертыфікат</item>
+        <item quantity="few">%d сертыфікаты</item>
+        <item quantity="many">%d сертыфікатаў</item>
+        <item quantity="other">%d сертыфікатаў</item>
+    </plurals>
+    <plurals name="course_review">
+        <item quantity="one">%d водгук аб курсе</item>
+        <item quantity="few">%d водгукі аб курсах</item>
+        <item quantity="many">%d водгукаў аб курсах</item>
+        <item quantity="other">%d водгукаў аб курсах</item>
+    </plurals>
+    <plurals name="points">
+        <item quantity="one">%s бал</item>
+        <item quantity="few">%s балы</item>
+        <item quantity="many">%s балаў</item>
+        <item quantity="other">%s балаў</item>
+    </plurals>
+    <plurals name="submissions">
+        <item quantity="one">%d спроба</item>
+        <item quantity="few">%d спробы</item>
+        <item quantity="many">%d спробаў</item>
+        <item quantity="other">%d спробаў</item>
+    </plurals>
+    <plurals name="replies">
+        <item quantity="one">%d адказ</item>
+        <item quantity="few">%d адказы</item>
+        <item quantity="many">%d адказаў</item>
+        <item quantity="other">%d адказаў</item>
+    </plurals>
+    <plurals name="certificates_issued">
+        <item quantity="one">%d сертыфікат выдадзены</item>
+        <item quantity="few">%d сертыфікаты выдадзена</item>
+        <item quantity="many">%d сертыфікатаў выдадзена</item>
+        <item quantity="other">%d сертыфікатаў выдадзена</item>
+    </plurals>
+    <plurals name="courses_published">
+        <item quantity="one">%d курс апублікаваны</item>
+        <item quantity="few">%d курсы апублікавана</item>
+        <item quantity="many">%d курсаў апублікавана</item>
+        <item quantity="other">%d курсаў апублікавана</item>
+    </plurals>
+    <plurals name="submit_solutions">
+        <item quantity="one">Адправіць %d рашэнне</item>
+        <item quantity="few">Адправіць %d рашэнні</item>
+        <item quantity="many">Адправіць %d рашэнняў</item>
+        <item quantity="other">Адправіць %d рашэнняў</item>
+    </plurals>
+    <!-- Peer review -->
+    <plurals name="reviews">
+        <item quantity="one">%d рэцэнзію</item>
+        <item quantity="few">%d рэцэнзіі</item>
+        <item quantity="many">%d рэцэнзій</item>
+        <item quantity="other">%d рэцэнзій</item>
+    </plurals>
+    <plurals name="step_quiz_review_given_pending">
+        <item quantity="one">Зрабіце %d рэцэнзію на рашэнні іншых студэнтаў</item>
+        <item quantity="few">Зрабіце %d рэцэнзіі на рашэнні іншых студэнтаў</item>
+        <item quantity="many">Зрабіце %d рэцэнзій на рашэнні іншых студэнтаў</item>
+        <item quantity="other">Зрабіце %d рэцэнзій на рашэнні іншых студэнтаў</item>
+    </plurals>
+    <plurals name="step_quiz_review_given_in_progress">
+        <item quantity="one">Зрабіце яшчэ %d рэцэнзію на рашэнні іншых студэнтаў.</item>
+        <item quantity="few">Зрабіце яшчэ %d рэцэнзіі на рашэнні іншых студэнтаў.</item>
+        <item quantity="many">Зрабіце яшчэ %d рэцэнзій на рашэнні іншых студэнтаў.</item>
+        <item quantity="other">Зрабіце яшчэ %d рэцэнзій на рашэнні іншых студэнтаў.</item>
+    </plurals>
+    <plurals name="step_quiz_review_given_completed">
+        <item quantity="one">%d рэцэнзія адпраўлена.</item>
+        <item quantity="few">%d рэцэнзіі адпраўленыя.</item>
+        <item quantity="many">%d рэцэнзій адпраўлена.</item>
+        <item quantity="other">%d рэцэнзій адпраўлена.</item>
+    </plurals>
+    <plurals name="step_quiz_review_taken_pending">
+        <item quantity="one">Дачакайцеся %d рэцэнзію на сваё рашэнне</item>
+        <item quantity="few">Дачакайцеся %d рэцэнзіі на сваё рашэнне</item>
+        <item quantity="many">Дачакайцеся %d рэцэнзій на сваё рашэнне</item>
+        <item quantity="other">Дачакайцеся %d рэцэнзій на сваё рашэнне</item>
+    </plurals>
+    <plurals name="step_quiz_review_taken_in_progress">
+        <item quantity="one">Дачакайцеся яшчэ %d рэцэнзію на сваё рашэнне.</item>
+        <item quantity="few">Дачакайцеся яшчэ %d рэцэнзіі на сваё рашэнне.</item>
+        <item quantity="many">Дачакайцеся яшчэ %d рэцэнзій на сваё рашэнне.</item>
+        <item quantity="other">Дачакайцеся яшчэ %d рэцэнзій на сваё рашэнне.</item>
+    </plurals>
+    <plurals name="step_quiz_review_taken_completed">
+        <item quantity="one">%d рэцэнзія атрыманая.</item>
+        <item quantity="few">%d рэцэнзіі атрыманыя.</item>
+        <item quantity="many">%d рэцэнзій атрымана.</item>
+        <item quantity="other">%d рэцэнзій атрымана.</item>
+    </plurals>
+</resources>

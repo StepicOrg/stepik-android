@@ -25,12 +25,12 @@ constructor(databaseOperations: DatabaseOperations) : DaoBase<CourseListQueryDat
     override fun getContentValues(persistentObject: CourseListQueryData): ContentValues =
         ContentValues(2).apply {
             put(DbStructureCourseListQuery.Columns.ID, persistentObject.courseListQueryId)
-            put(DbStructureCourseListQuery.Columns.COURSES, DbParseHelper.parseLongArrayToString(persistentObject.courses))
+            put(DbStructureCourseListQuery.Columns.COURSES, DbParseHelper.parseLongListToString(persistentObject.courses))
         }
 
     override fun parsePersistentObject(cursor: Cursor): CourseListQueryData =
         CourseListQueryData(
             cursor.getString(DbStructureCourseListQuery.Columns.ID)!!,
-            DbParseHelper.parseStringToLongArray(cursor.getString(DbStructureCourseListQuery.Columns.COURSES)) ?: longArrayOf()
+            DbParseHelper.parseStringToLongList(cursor.getString(DbStructureCourseListQuery.Columns.COURSES)) ?: listOf()
         )
 }

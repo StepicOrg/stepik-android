@@ -8,7 +8,7 @@ import org.stepik.android.model.Section
 
 interface SectionRepository {
     fun getSection(sectionId: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Maybe<Section> =
-        getSections(sectionId, primarySourceType = primarySourceType).maybeFirst()
+        getSections(listOf(sectionId), primarySourceType = primarySourceType).maybeFirst()
 
-    fun getSections(vararg sectionIds: Long, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Section>>
+    fun getSections(sectionIds: List<Long>, primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<Section>>
 }

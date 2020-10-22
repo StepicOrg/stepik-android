@@ -1,8 +1,7 @@
 package org.stepik.android.data.section.repository
 
 import io.reactivex.Single
-import ru.nobird.android.domain.rx.doCompletableOnSuccess
-import ru.nobird.android.domain.rx.requireSize
+import org.stepik.android.data.base.repository.delegate.ListRepositoryDelegate
 import org.stepik.android.data.section.source.SectionCacheDataSource
 import org.stepik.android.data.section.source.SectionRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -16,29 +15,13 @@ constructor(
     private val sectionCacheDataSource: SectionCacheDataSource,
     private val sectionRemoteDataSource: SectionRemoteDataSource
 ) : SectionRepository {
-    override fun getSections(vararg sectionIds: Long, primarySourceType: DataSourceType): Single<List<Section>> {
-        val remoteSource = sectionRemoteDataSource
-            .getSections(*sectionIds)
-            .doCompletableOnSuccess(sectionCacheDataSource::saveSections)
+    private val delegate =
+        ListRepositoryDelegate(
+            sectionRemoteDataSource::getSections,
+            sectionCacheDataSource::getSections,
+            sectionCacheDataSource::saveSections
+        )
 
-        val cacheSource = sectionCacheDataSource
-            .getSections(*sectionIds)
-
-        return when (primarySourceType) {
-            DataSourceType.REMOTE ->
-                remoteSource.onErrorResumeNext(cacheSource.requireSize(sectionIds.size))
-
-            DataSourceType.CACHE ->
-                cacheSource.flatMap { cachedSections ->
-                    val ids = (sectionIds.toList() - cachedSections.map(Section::id)).toLongArray()
-                    sectionRemoteDataSource
-                        .getSections(*ids)
-                        .doCompletableOnSuccess(sectionCacheDataSource::saveSections)
-                        .map { remoteSections -> cachedSections + remoteSections }
-                }
-
-            else ->
-                throw IllegalArgumentException("Unsupported source type = $primarySourceType")
-        }.map { sections -> sections.sortedBy { sectionIds.indexOf(it.id) } }
-    }
+    override fun getSections(sectionIds: List<Long>, primarySourceType: DataSourceType): Single<List<Section>> =
+        delegate.get(sectionIds, primarySourceType, allowFallback = true)
 }

@@ -434,7 +434,7 @@ constructor(
         if (courseId == null) return null
         var course: Course? = databaseFacade.getCourseById(courseId)
         if (course == null) {
-            course = courseRepository.getCourses(courseId, primarySourceType = DataSourceType.REMOTE).blockingGet().firstOrNull()
+            course = courseRepository.getCourses(listOf(courseId), primarySourceType = DataSourceType.REMOTE).blockingGet().firstOrNull()
         }
         return course
     }

@@ -1,17 +1,23 @@
 package org.stepik.android.view.lesson.ui.activity
 
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
 import androidx.annotation.DrawableRes
 import androidx.core.view.isVisible
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.review.ReviewInfo
+import com.google.android.play.core.review.ReviewManager
+import com.google.android.play.core.review.ReviewManagerFactory
 import kotlinx.android.synthetic.main.activity_lesson.*
 import kotlinx.android.synthetic.main.empty_login.*
 import kotlinx.android.synthetic.main.error_lesson_is_exam.*
@@ -24,10 +30,12 @@ import org.stepic.droid.analytic.Analytic
 import org.stepic.droid.base.App
 import org.stepic.droid.base.FragmentActivityBase
 import org.stepic.droid.ui.adapters.StepFragmentAdapter
+import org.stepic.droid.ui.dialogs.LoadingProgressDialogFragment
 import org.stepic.droid.ui.dialogs.TimeIntervalPickerDialogFragment
 import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.ui.util.snackbar
 import org.stepic.droid.util.DeviceInfoUtil
+import org.stepic.droid.util.ProgressHelper
 import org.stepic.droid.util.RatingUtil
 import org.stepic.droid.util.reportRateEvent
 import org.stepic.droid.util.resolvers.StepTypeResolver
@@ -101,12 +109,18 @@ class LessonActivity : FragmentActivityBase(), LessonView,
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    private lateinit var lessonPresenter: LessonPresenter
+    private val lessonPresenter: LessonPresenter by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<LessonView.State>
     private lateinit var viewStepStateDelegate: ViewStateDelegate<LessonView.StepsState>
 
     private lateinit var stepsAdapter: StepFragmentAdapter
+
+    private lateinit var manager: ReviewManager
+    private var reviewInfo: ReviewInfo? = null
+
+    private val progressDialogFragment: DialogFragment =
+        LoadingProgressDialogFragment.newInstance()
 
     private var infoMenuItem: MenuItem? = null
     private var isInfoMenuItemVisible: Boolean = false
@@ -121,6 +135,10 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_lesson)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            initReview()
+        }
+
         if (savedInstanceState == null) {
             if (intent.getBooleanExtra(EXTRA_BACK_ANIMATION, false)) {
                 overridePendingTransition(R.anim.slide_in_from_start, R.anim.slide_out_to_end)
@@ -133,9 +151,6 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         }
 
         injectComponent()
-        lessonPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(LessonPresenter::class.java)
 
         initCenteredToolbar(R.string.lesson_title, showHomeButton = true)
 
@@ -436,7 +451,7 @@ class LessonActivity : FragmentActivityBase(), LessonView,
         analytic.reportRateEvent(starNumber, Analytic.Rating.POSITIVE_APPSTORE)
 
         if (config.isAppInStore) {
-            screenManager.showStoreWithApp(this)
+            resolveGooglePlayRating()
         } else {
             setupTextFeedback()
         }
@@ -463,6 +478,46 @@ class LessonActivity : FragmentActivityBase(), LessonView,
             getString(R.string.feedback_subject),
             DeviceInfoUtil.getInfosAboutDevice(this, "\n")
         )
+    }
+
+    private fun resolveGooglePlayRating() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            requestReview()
+        } else {
+            screenManager.showStoreWithApp(this)
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun initReview() {
+        manager = ReviewManagerFactory.create(this)
+        manager.requestReviewFlow()
+            .addOnCompleteListener { request ->
+                if (request.isSuccessful) {
+                    reviewInfo = request.result
+                }
+            }
+    }
+
+    /*
+    * Google Play enforces a time-bound quota on how often a user can be shown the review dialog, so
+    * launchReviewFlow may not always display the dialog.
+    */
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private fun requestReview() {
+        if (reviewInfo != null) {
+            ProgressHelper.activate(progressDialogFragment, supportFragmentManager, LoadingProgressDialogFragment.TAG)
+            manager.launchReviewFlow(this, reviewInfo)
+                .addOnFailureListener {
+                    ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+                    screenManager.showStoreWithApp(this)
+                }
+                .addOnCompleteListener {
+                    ProgressHelper.dismiss(supportFragmentManager, LoadingProgressDialogFragment.TAG)
+                }
+        } else {
+            screenManager.showStoreWithApp(this)
+        }
     }
 
     override fun onStreakNotificationDialogCancelled() {

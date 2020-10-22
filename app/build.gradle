@@ -130,6 +130,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 androidExtensions {
@@ -164,6 +168,8 @@ dependencies {
     implementation libraries.cardView
     implementation libraries.constraintLayout
     implementation libraries.material
+    implementation libraries.fragment
+    implementation libraries.fragmentKtx
     implementation libraries.room
     kapt libraries.roomCompiler
 
@@ -206,6 +212,8 @@ dependencies {
 
     implementation libraries.lottie
 
+    implementation libraries.playCore
+    implementation libraries.playCoreKtx
     implementation libraries.firebaseMessaging
     implementation libraries.firebaseAnalytics
     implementation libraries.firebaseAppindexing

@@ -83,9 +83,9 @@ constructor(
             single.flatMap {
                 val userIds = it
                     .filter(RatingItem::isNotFake)
-                    .mapToLongArray(RatingItem::user)
+                    .map(RatingItem::user)
 
-                zip(userRepository.getUsers(*userIds), Single.just(it))
+                zip(userRepository.getUsers(userIds), Single.just(it))
             }.map { (users, items) ->
                 items.mapIndexed { index, item ->
                     val user = users.find { it.id == item.user }

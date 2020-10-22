@@ -7,9 +7,9 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import ru.nobird.android.view.base.ui.extension.argument
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.error_no_connection_with_button_small.*
 import kotlinx.android.synthetic.main.fragment_profile_activities.*
 import org.stepic.droid.R
@@ -33,18 +33,13 @@ class ProfileActivitiesFragment : Fragment(R.layout.fragment_profile_activities)
 
     private var userId by argument<Long>()
 
-    private lateinit var profileActivitiesPresenter: ProfileActivitiesPresenter
+    private val profileActivitiesPresenter: ProfileActivitiesPresenter by viewModels { viewModelFactory }
 
     private lateinit var viewStateDelegate: ViewStateDelegate<ProfileActivitiesView.State>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         injectComponent()
-
-        profileActivitiesPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileActivitiesPresenter::class.java)
     }
 
     private fun injectComponent() {

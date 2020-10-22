@@ -6,10 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_profile_edit_info.*
 import org.stepic.droid.R
 import org.stepic.droid.base.App
@@ -36,7 +36,7 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
     private val progressDialogFragment: DialogFragment =
         LoadingProgressDialogFragment.newInstance()
 
-    private lateinit var profileEditInfoPresenter: ProfileEditInfoPresenter
+    private val profileEditInfoPresenter: ProfileEditInfoPresenter by viewModels { viewModelFactory }
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -48,9 +48,6 @@ class ProfileEditInfoActivity : AppCompatActivity(), ProfileEditInfoView {
         setContentView(R.layout.activity_profile_edit_info)
 
         injectComponent()
-        profileEditInfoPresenter = ViewModelProviders
-            .of(this, viewModelFactory)
-            .get(ProfileEditInfoPresenter::class.java)
 
         initCenteredToolbar(R.string.profile_edit_info_title, showHomeButton = true, homeIndicator = R.drawable.ic_close_dark)
 

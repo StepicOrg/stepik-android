@@ -10,10 +10,10 @@ import org.stepic.droid.di.qualifiers.MainScheduler
 import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
-import ru.nobird.android.domain.rx.emptyOnErrorStub
 import org.stepik.android.domain.course_list.interactor.CourseListInteractor
 import org.stepik.android.domain.course_list.model.CourseListItem
 import org.stepik.android.domain.course_list.model.CourseListQuery
+import org.stepik.android.domain.filter.model.CourseListFilterQuery
 import org.stepik.android.domain.user_courses.model.UserCourse
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.catalog.model.CatalogItem
@@ -21,10 +21,12 @@ import org.stepik.android.presentation.course_continue.delegate.CourseContinuePr
 import org.stepik.android.presentation.course_continue.delegate.CourseContinuePresenterDelegateImpl
 import org.stepik.android.presentation.course_list.mapper.CourseListQueryStateMapper
 import org.stepik.android.presentation.course_list.mapper.CourseListStateMapper
+import org.stepik.android.presentation.filter.FilterQueryView
 import org.stepik.android.view.injection.course.EnrollmentCourseUpdates
 import org.stepik.android.view.injection.course_list.UserCoursesOperationBus
 import ru.nobird.android.core.model.cast
 import ru.nobird.android.core.model.safeCast
+import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
@@ -169,6 +171,17 @@ constructor(
         }
     }
 
+    fun onFilterMenuItemClicked() {
+        val oldState = (state as? CourseListQueryView.State.Data)
+            ?.takeIf { it.courseListViewState is CourseListView.State.Content }
+            ?: return
+
+        val filterView = (view as? FilterQueryView)
+            ?: return
+
+        filterView.showFilterDialog(filterQuery = oldState.courseListQuery.filterQuery ?: CourseListFilterQuery())
+    }
+
     /**
      * Enrollment updates
      */
@@ -194,7 +207,7 @@ constructor(
             ?: return
 
         compositeDisposable += courseListInteractor
-            .getCourseListItems(course.id, courseViewSource = CourseViewSource.Query(oldState.courseListQuery), sourceTypeComposition = SourceTypeComposition.CACHE)
+            .getCourseListItems(listOf(course.id), courseViewSource = CourseViewSource.Query(oldState.courseListQuery), sourceTypeComposition = SourceTypeComposition.CACHE)
             .subscribeOn(backgroundScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
