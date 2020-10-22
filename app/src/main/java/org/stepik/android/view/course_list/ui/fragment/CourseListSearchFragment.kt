@@ -50,8 +50,6 @@ class CourseListSearchFragment :
     FilterQueryView,
     FilterBottomSheetDialogFragment.Callback {
     companion object {
-        private const val ARG_MENU_RESOURCE = "MENU_RESOURCE"
-
         fun newInstance(query: String?): Fragment =
             CourseListSearchFragment().apply {
                 this.query = query ?: ""
@@ -94,10 +92,6 @@ class CourseListSearchFragment :
         super.onViewCreated(view, savedInstanceState)
 
         initCenteredToolbar(query, true)
-
-        if (savedInstanceState != null) {
-            menuDrawableRes = savedInstanceState.getInt(ARG_MENU_RESOURCE)
-        }
 
         searchIcon = searchViewToolbar.findViewById(androidx.appcompat.R.id.search_mag_icon) as ImageView
         setupSearchBar()
