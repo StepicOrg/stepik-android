@@ -272,5 +272,7 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.getkeepsafe.dexcount'
+if (getGradle().getStartParameter().getTaskRequests().toString().contains("Release")) {
+    apply plugin: 'com.getkeepsafe.dexcount'
+}
 apply plugin: 'com.google.firebase.firebase-perf'
