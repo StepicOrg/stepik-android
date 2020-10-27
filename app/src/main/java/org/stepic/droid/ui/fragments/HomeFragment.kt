@@ -17,6 +17,7 @@ import org.stepic.droid.ui.util.initCenteredToolbar
 import org.stepic.droid.util.commitNow
 import org.stepik.android.view.course_list.ui.fragment.CourseListPopularFragment
 import org.stepik.android.view.course_list.ui.fragment.CourseListUserHorizontalFragment
+import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedFragment
 import org.stepik.android.view.fast_continue.ui.fragment.FastContinueFragment
 import javax.inject.Inject
 
@@ -55,6 +56,7 @@ class HomeFragment : FragmentBase(), HomeStreakView {
                 add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
                 add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
+                add(R.id.homeMainContainer, CourseListVisitedFragment.newInstance())
             }
         }
 

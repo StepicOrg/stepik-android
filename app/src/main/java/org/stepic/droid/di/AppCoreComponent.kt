@@ -67,6 +67,7 @@ import org.stepik.android.view.injection.course_list.search_result.CourseListSea
 import org.stepik.android.view.injection.course_list.collection.CourseListCollectionComponent
 import org.stepik.android.view.injection.course_list.query.CourseListQueryComponent
 import org.stepik.android.view.injection.course_list.user.CourseListUserComponent
+import org.stepik.android.view.injection.course_list.visited.CourseListVisitedComponent
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.course_reviews.ComposeCourseReviewComponent
 import org.stepik.android.view.injection.device.DeviceDataModule
@@ -239,6 +240,8 @@ interface AppCoreComponent {
     fun courseListCollectionComponentBuilder(): CourseListCollectionComponent.Builder
 
     fun courseListUserComponentBuilder(): CourseListUserComponent.Builder
+
+    fun courseListVisitedComponentBuilder(): CourseListVisitedComponent.Builder
 
     fun inAppWebViewComponentBuilder(): InAppWebViewComponent.Builder
 
