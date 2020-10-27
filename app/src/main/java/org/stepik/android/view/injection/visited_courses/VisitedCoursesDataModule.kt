@@ -3,6 +3,7 @@ package org.stepik.android.view.injection.visited_courses
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import org.stepic.droid.di.AppSingleton
 import org.stepik.android.cache.base.database.AppDatabase
 import org.stepik.android.cache.visited_courses.VisitedCoursesCacheDataSourceImpl
 import org.stepik.android.cache.visited_courses.dao.VisitedCourseDao
@@ -19,6 +20,7 @@ import retrofit2.create
 @Module
 abstract class VisitedCoursesDataModule {
     @Binds
+    @AppSingleton
     internal abstract fun bindVisitedCoursesRepository(
         visitedCoursesRepositoryImpl: VisitedCoursesRepositoryImpl
     ): VisitedCoursesRepository

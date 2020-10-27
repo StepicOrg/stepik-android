@@ -20,6 +20,7 @@ import ru.nobird.android.domain.rx.emptyOnErrorStub
 import ru.nobird.android.presentation.base.PresenterBase
 import ru.nobird.android.presentation.base.PresenterViewContainer
 import ru.nobird.android.presentation.base.delegate.PresenterDelegate
+import timber.log.Timber
 import javax.inject.Inject
 
 class CourseListVisitedPresenter
@@ -70,8 +71,9 @@ constructor(
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
             .subscribeBy(
-                onSuccess = { items ->
+                onNext = { items ->
                     state = if (items.isNotEmpty()) {
+                        Timber.d("GO")
                         CourseListView.State.Content(
                             courseListDataItems = items,
                             courseListItems = items

@@ -1,8 +1,8 @@
 package org.stepik.android.domain.course_list.interactor
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.stepic.droid.util.PagedList
-import org.stepik.android.domain.base.DataSourceType
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.domain.course.model.SourceTypeComposition
 import org.stepik.android.domain.course_list.model.CourseListItem
@@ -16,10 +16,10 @@ constructor(
     private val visitedCoursesRepository: VisitedCoursesRepository,
     private val courseListInteractor: CourseListInteractor
 ) {
-    fun getVisitedCourseListItems(): Single<PagedList<CourseListItem.Data>> =
+    fun getVisitedCourseListItems(): Observable<PagedList<CourseListItem.Data>> =
         visitedCoursesRepository
-            .getVisitedCourses(primarySourceType = DataSourceType.REMOTE)
-            .flatMap { visitedCourses ->
+            .observeVisitedCourses()
+            .flatMapSingle { visitedCourses ->
                 getCourseListItems(visitedCourses.map(VisitedCourse::course))
             }
 

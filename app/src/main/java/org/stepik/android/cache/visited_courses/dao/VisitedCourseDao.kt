@@ -6,13 +6,13 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Transaction
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Flowable
 import org.stepik.android.domain.visited_courses.model.VisitedCourse
 
 @Dao
 abstract class VisitedCourseDao {
-    @Query("SELECT * FROM VisitedCourse")
-    abstract fun getVisitedCourses(): Single<List<VisitedCourse>>
+    @Query("SELECT * FROM VisitedCourse ORDER BY id DESC LIMIT 20")
+    abstract fun getVisitedCourses(): Flowable<List<VisitedCourse>>
 
     @Query("SELECT MAX(id) FROM VisitedCourse")
     abstract fun getMaxId(): Long
@@ -26,6 +26,6 @@ abstract class VisitedCourseDao {
     @Transaction
     open fun saveVisitedCourse(courseId: Long) {
         val id = getMaxId()
-        saveVisitedCourse(VisitedCourse(id = id + 1, course = courseId))
+        return saveVisitedCourse(VisitedCourse(id = id + 1, course = courseId))
     }
 }
