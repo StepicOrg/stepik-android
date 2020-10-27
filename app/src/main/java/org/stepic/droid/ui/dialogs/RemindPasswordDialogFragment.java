@@ -29,8 +29,6 @@ import org.stepik.android.domain.auth.repository.AuthRepository;
 
 import javax.inject.Inject;
 
-import butterknife.BindString;
-import butterknife.ButterKnife;
 import io.reactivex.Scheduler;
 import io.reactivex.disposables.CompositeDisposable;
 import kotlin.text.StringsKt;
@@ -60,10 +58,6 @@ public class RemindPasswordDialogFragment extends DialogFragment {
     private TextInputLayout emailTextWrapper;
     private Dialog progressLogin;
     private View rootView;
-
-    @BindString(R.string.email_wrong)
-    String emailWrong;
-
 
     @NotNull
     @Override
@@ -111,8 +105,6 @@ public class RemindPasswordDialogFragment extends DialogFragment {
             });
         }
 
-        ButterKnife.bind(this, alertDialog);
-
         if (savedInstanceState != null) {
             String errorText = savedInstanceState.getString(ERROR_TEXT_KEY);
             if (errorText != null) {
@@ -149,7 +141,7 @@ public class RemindPasswordDialogFragment extends DialogFragment {
                     } else if (response.code() == 200) {
                         if (rootView != null)
                             rootView.requestFocus();
-                        showError(emailTextWrapper, emailWrong);
+                        showError(emailTextWrapper, getString(R.string.email_wrong));
                     } else {
                         final Context context = getContext();
                         if (context != null) {

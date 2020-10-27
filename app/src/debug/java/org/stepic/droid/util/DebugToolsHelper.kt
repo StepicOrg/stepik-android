@@ -1,7 +1,6 @@
 package org.stepic.droid.util
 
 import android.app.Application
-import android.content.Context
 import com.facebook.flipper.android.AndroidFlipperClient
 import com.facebook.flipper.android.utils.FlipperUtils
 import com.facebook.flipper.plugins.databases.DatabasesFlipperPlugin
@@ -12,8 +11,6 @@ import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import com.facebook.flipper.plugins.sharedpreferences.SharedPreferencesFlipperPlugin
 import com.facebook.soloader.SoLoader
-import com.facebook.stetho.Stetho
-import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.gu.toolargetool.TooLargeTool
 import okhttp3.Interceptor
 
@@ -21,7 +18,6 @@ object DebugToolsHelper {
     private val networkPlugin = NetworkFlipperPlugin()
 
     fun initDebugTools(app: Application) {
-        Stetho.initializeWithDefaults(app)
         TooLargeTool.startLogging(app)
 
         if (FlipperUtils.shouldEnableFlipper(app)) {
@@ -40,7 +36,6 @@ object DebugToolsHelper {
 
     fun getDebugInterceptors(): List<Interceptor> =
         listOf(
-            FlipperOkhttpInterceptor(networkPlugin),
-            StethoInterceptor()
+            FlipperOkhttpInterceptor(networkPlugin)
         )
 }
