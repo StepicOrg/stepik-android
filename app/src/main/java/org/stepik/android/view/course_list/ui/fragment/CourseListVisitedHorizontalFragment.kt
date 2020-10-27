@@ -2,12 +2,11 @@ package org.stepik.android.view.course_list.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.android.synthetic.main.fragment_course_list.*
-import kotlinx.android.synthetic.main.fragment_course_list.courseListCoursesRecycler
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.item_course_list.*
 import org.stepic.droid.R
 import org.stepic.droid.analytic.Analytic
@@ -15,7 +14,7 @@ import org.stepic.droid.analytic.experiments.InAppPurchaseSplitTest
 import org.stepic.droid.base.App
 import org.stepic.droid.core.ScreenManager
 import org.stepic.droid.preferences.SharedPreferenceHelper
-import org.stepic.droid.ui.util.initCenteredToolbar
+import org.stepic.droid.ui.util.CoursesSnapHelper
 import org.stepik.android.domain.course.analytic.CourseViewSource
 import org.stepik.android.presentation.course_continue.model.CourseContinueInteractionSource
 import org.stepik.android.presentation.course_list.CourseListView
@@ -25,10 +24,10 @@ import org.stepik.android.view.course_list.delegate.CourseListViewDelegate
 import org.stepik.android.view.ui.delegate.ViewStateDelegate
 import javax.inject.Inject
 
-class CourseListVisitedFragment : Fragment(R.layout.fragment_course_list) {
+class CourseListVisitedHorizontalFragment : Fragment(R.layout.item_course_list) {
     companion object {
         fun newInstance(): Fragment =
-            CourseListVisitedFragment()
+            CourseListVisitedHorizontalFragment()
     }
 
     @Inject
@@ -57,16 +56,28 @@ class CourseListVisitedFragment : Fragment(R.layout.fragment_course_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initCenteredToolbar(R.string.visited_courses_title, true)
+        coursesCarouselCount.isVisible = false
+        courseListTitle.text = resources.getString(R.string.visited_courses_title)
 
-        courseListCoursesRecycler.layoutManager = GridLayoutManager(context, resources.getInteger(R.integer.course_list_columns))
+        with(courseListCoursesRecycler) {
+            val rowCount = 1
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            itemAnimator?.changeDuration = 0
+            val snapHelper = CoursesSnapHelper(rowCount)
+            snapHelper.attachToRecyclerView(this)
+        }
+
+        courseListTitleContainer.setOnClickListener {
+            screenManager.showVisitedCourses(requireContext())
+        }
 
         val viewStateDelegate = ViewStateDelegate<CourseListView.State>()
-        viewStateDelegate.addState<CourseListView.State.Idle>()
-        viewStateDelegate.addState<CourseListView.State.Loading>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Content>(courseListCoursesRecycler)
-        viewStateDelegate.addState<CourseListView.State.Empty>(courseListCoursesEmpty)
-        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListCoursesLoadingErrorVertical)
+
+        viewStateDelegate.addState<CourseListView.State.Idle>(courseListTitleContainer)
+        viewStateDelegate.addState<CourseListView.State.Loading>(courseListTitleContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Content>(courseListTitleContainer, courseListCoursesRecycler)
+        viewStateDelegate.addState<CourseListView.State.Empty>(courseListPlaceholderEmpty)
+        viewStateDelegate.addState<CourseListView.State.NetworkError>(courseListPlaceholderNoConnection)
 
         courseListViewDelegate = CourseListViewDelegate(
             analytic = analytic,
@@ -87,7 +98,7 @@ class CourseListVisitedFragment : Fragment(R.layout.fragment_course_list) {
                     )
             },
             isHandleInAppPurchase = inAppPurchaseSplitTest.currentGroup.isInAppPurchaseActive,
-            itemAdapterDelegateType = CourseListViewDelegate.ItemAdapterDelegateType.STANDARD
+            itemAdapterDelegateType = CourseListViewDelegate.ItemAdapterDelegateType.VISITED
         )
 
         courseListVisitedPresenter.fetchCourses()

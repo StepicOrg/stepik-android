@@ -77,6 +77,7 @@ import org.stepik.android.view.course_list.ui.activity.CourseListCollectionActiv
 import org.stepik.android.view.course_list.ui.activity.CourseListQueryActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListTagActivity;
 import org.stepik.android.view.course_list.ui.activity.CourseListUserActivity;
+import org.stepik.android.view.course_list.ui.activity.CourseListVisitedActivity;
 import org.stepik.android.view.download.ui.activity.DownloadActivity;
 import org.stepik.android.view.lesson.ui.activity.LessonActivity;
 import org.stepik.android.view.profile.ui.activity.ProfileActivity;
@@ -689,6 +690,12 @@ public class ScreenManagerImpl implements ScreenManager {
     @Override
     public void showCoursesByTag(Context context, Tag tag) {
         Intent intent = CourseListTagActivity.Companion.createIntent(context, tag);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void showVisitedCourses(Context context) {
+        Intent intent = CourseListVisitedActivity.Companion.createIntent(context);
         context.startActivity(intent);
     }
 }

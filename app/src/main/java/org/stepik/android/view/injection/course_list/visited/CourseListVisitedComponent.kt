@@ -2,6 +2,7 @@ package org.stepik.android.view.injection.course_list.visited
 
 import dagger.Subcomponent
 import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedFragment
+import org.stepik.android.view.course_list.ui.fragment.CourseListVisitedHorizontalFragment
 import org.stepik.android.view.injection.course.CourseDataModule
 import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModule
 import org.stepik.android.view.injection.last_step.LastStepDataModule
@@ -24,5 +25,6 @@ interface CourseListVisitedComponent {
     interface Builder {
         fun build(): CourseListVisitedComponent
     }
+    fun inject(courseListVisitedHorizontalFragment: CourseListVisitedHorizontalFragment)
     fun inject(courseListVisitedFragment: CourseListVisitedFragment)
 }
