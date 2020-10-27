@@ -17,6 +17,7 @@ import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.progress.ProgressDataModule
 import org.stepik.android.view.injection.step.StepDataModule
 import org.stepik.android.view.injection.user.UserDataModule
+import org.stepik.android.view.injection.visited_courses.VisitedCoursesDataModule
 
 @CourseScope
 @Subcomponent(modules = [
@@ -36,7 +37,8 @@ import org.stepik.android.view.injection.user.UserDataModule
 
     CourseCalendarDataModule::class,
     CalendarDataModule::class,
-    ProfileDataModule::class
+    ProfileDataModule::class,
+    VisitedCoursesDataModule::class
 ])
 interface CourseComponent {
     @Subcomponent.Builder

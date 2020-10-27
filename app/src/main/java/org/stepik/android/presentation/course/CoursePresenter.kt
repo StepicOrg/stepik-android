@@ -31,6 +31,7 @@ import org.stepik.android.domain.solutions.interactor.SolutionsInteractor
 import org.stepik.android.domain.solutions.model.SolutionItem
 import org.stepik.android.domain.user_courses.interactor.UserCoursesInteractor
 import org.stepik.android.domain.user_courses.model.UserCourse
+import org.stepik.android.domain.visited_courses.interactor.VisitedCoursesInteractor
 import org.stepik.android.model.Course
 import org.stepik.android.presentation.course.mapper.toEnrollmentError
 import org.stepik.android.presentation.course.model.EnrollmentError
@@ -66,6 +67,7 @@ constructor(
     private val courseIndexingInteractor: CourseIndexingInteractor,
     private val solutionsInteractor: SolutionsInteractor,
     private val userCoursesInteractor: UserCoursesInteractor,
+    private val visitedCoursesInteractor: VisitedCoursesInteractor,
 
     private val courseNotificationInteractor: CourseNotificationInteractor,
     private val coursePurchaseReminderInteractor: PurchaseReminderInteractor,
@@ -171,6 +173,7 @@ constructor(
                     state = CourseView.State.CourseLoaded(it)
                     postCourseViewedNotification(it.courseId)
                     logCoursePreviewOpenedEvent(it.course, viewSource)
+                    visitedCoursesInteractor.saveVisitedCourse(it.courseId)
                 },
                 onError    = { state = CourseView.State.NetworkError }
             )
