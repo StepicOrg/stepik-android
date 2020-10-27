@@ -26,6 +26,6 @@ abstract class VisitedCourseDao {
     @Transaction
     open fun saveVisitedCourse(courseId: Long) {
         val id = getMaxId()
-        return saveVisitedCourse(VisitedCourse(id = id + 1, course = courseId))
+        saveVisitedCourse(VisitedCourse(id = id + 1, course = courseId))
     }
 }

@@ -184,7 +184,7 @@ constructor(
             .saveVisitedCourse(courseId)
             .observeOn(mainScheduler)
             .subscribeOn(backgroundScheduler)
-            .subscribe()
+            .subscribeBy(onError = emptyOnErrorStub)
     }
 
     private fun postCourseViewedNotification(courseId: Long) {
