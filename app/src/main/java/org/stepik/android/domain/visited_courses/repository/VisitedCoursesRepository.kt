@@ -7,5 +7,5 @@ import org.stepik.android.domain.visited_courses.model.VisitedCourse
 
 interface VisitedCoursesRepository {
     fun getVisitedCourses(primarySourceType: DataSourceType = DataSourceType.CACHE): Single<List<VisitedCourse>>
-    fun saveVisitedCourse(visitedCourse: VisitedCourse): Completable
+    fun saveVisitedCourse(courseId: Long): Completable
 }

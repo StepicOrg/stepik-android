@@ -106,6 +106,7 @@ import org.stepik.android.view.injection.user_courses.UserCoursesDataModule
 import org.stepik.android.view.injection.video_player.VideoPlayerComponent
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentBusModule
 import org.stepik.android.view.injection.view_assignment.ViewAssignmentComponent
+import org.stepik.android.view.injection.visited_courses.VisitedCoursesDataModule
 import org.stepik.android.view.latex.ui.widget.LatexView
 import org.stepik.android.view.notification.service.BootCompleteService
 import org.stepik.android.view.notification.service.NotificationAlarmService
@@ -160,7 +161,8 @@ import org.stepik.android.view.streak.ui.dialog.StreakNotificationDialogFragment
         BillingDataModule::class,
 
         CoursePaymentsDataModule::class,
-        PurchaseNotificationDataModule::class
+        PurchaseNotificationDataModule::class,
+        VisitedCoursesDataModule::class
     ]
 )
 interface AppCoreComponent {

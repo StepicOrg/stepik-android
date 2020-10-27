@@ -13,16 +13,14 @@ constructor(
     private val visitedCourseDao: VisitedCourseDao
 ) : VisitedCoursesCacheDataSource {
     override fun getVisitedCourses(): Single<List<VisitedCourse>> =
-        Single
-            .fromCallable {
-                visitedCourseDao
-                    .getVisitedCourses()
-            }
+        visitedCourseDao.getVisitedCourses()
 
-    override fun saveVisitedCourse(visitedCourses: List<VisitedCourse>): Completable =
-        Completable
-            .fromCallable {
-                visitedCourseDao
-                    .saveVisitedCourse(visitedCourses)
-            }
+    override fun saveVisitedCourses(visitedCourses: List<VisitedCourse>): Completable =
+        visitedCourseDao.saveVisitedCourses(visitedCourses)
+
+    override fun saveVisitedCourse(courseId: Long): Completable =
+        Completable.fromCallable {
+            visitedCourseDao
+                .saveVisitedCourse(courseId)
+        }
 }

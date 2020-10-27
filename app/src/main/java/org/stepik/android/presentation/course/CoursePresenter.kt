@@ -173,10 +173,18 @@ constructor(
                     state = CourseView.State.CourseLoaded(it)
                     postCourseViewedNotification(it.courseId)
                     logCoursePreviewOpenedEvent(it.course, viewSource)
-                    visitedCoursesInteractor.saveVisitedCourse(it.courseId)
+                    saveVisitedCourse(it.courseId)
                 },
                 onError    = { state = CourseView.State.NetworkError }
             )
+    }
+
+    private fun saveVisitedCourse(courseId: Long) {
+        compositeDisposable += visitedCoursesInteractor
+            .saveVisitedCourse(courseId)
+            .observeOn(mainScheduler)
+            .subscribeOn(backgroundScheduler)
+            .subscribe()
     }
 
     private fun postCourseViewedNotification(courseId: Long) {

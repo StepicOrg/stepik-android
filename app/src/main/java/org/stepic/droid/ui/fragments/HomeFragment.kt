@@ -55,8 +55,8 @@ class HomeFragment : FragmentBase(), HomeStreakView {
             childFragmentManager.commitNow {
                 add(R.id.homeMainContainer, FastContinueFragment.newInstance(), fastContinueTag)
                 add(R.id.homeMainContainer, CourseListUserHorizontalFragment.newInstance())
-                add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
                 add(R.id.homeMainContainer, CourseListVisitedHorizontalFragment.newInstance())
+                add(R.id.homeMainContainer, CourseListPopularFragment.newInstance())
             }
         }
 

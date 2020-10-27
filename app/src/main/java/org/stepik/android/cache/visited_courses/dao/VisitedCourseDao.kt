@@ -1,16 +1,31 @@
 package org.stepik.android.cache.visited_courses.dao
 
 import androidx.room.Dao
+import androidx.room.Query
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.Transaction
+import io.reactivex.Completable
+import io.reactivex.Single
 import org.stepik.android.domain.visited_courses.model.VisitedCourse
 
 @Dao
-interface VisitedCourseDao {
+abstract class VisitedCourseDao {
     @Query("SELECT * FROM VisitedCourse")
-    fun getVisitedCourses(): List<VisitedCourse>
+    abstract fun getVisitedCourses(): Single<List<VisitedCourse>>
+
+    @Query("SELECT MAX(id) FROM VisitedCourse")
+    abstract fun getMaxId(): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun saveVisitedCourse(visitedCourses: List<VisitedCourse>)
+    abstract fun saveVisitedCourses(visitedCourses: List<VisitedCourse>): Completable
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract fun saveVisitedCourse(visitedCourse: VisitedCourse)
+
+    @Transaction
+    open fun saveVisitedCourse(courseId: Long) {
+        val id = getMaxId()
+        saveVisitedCourse(VisitedCourse(id = id + 1, course = courseId))
+    }
 }

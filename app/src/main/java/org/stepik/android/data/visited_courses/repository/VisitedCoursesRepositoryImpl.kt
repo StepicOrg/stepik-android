@@ -2,6 +2,7 @@ package org.stepik.android.data.visited_courses.repository
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.stepic.droid.di.AppSingleton
 import org.stepik.android.data.visited_courses.source.VisitedCoursesCacheDataSource
 import org.stepik.android.data.visited_courses.source.VisitedCoursesRemoteDataSource
 import org.stepik.android.domain.base.DataSourceType
@@ -10,6 +11,7 @@ import org.stepik.android.domain.visited_courses.repository.VisitedCoursesReposi
 import ru.nobird.android.domain.rx.doCompletableOnSuccess
 import javax.inject.Inject
 
+@AppSingleton
 class VisitedCoursesRepositoryImpl
 @Inject
 constructor(
@@ -19,7 +21,7 @@ constructor(
     override fun getVisitedCourses(primarySourceType: DataSourceType): Single<List<VisitedCourse>> {
         val remoteSource = visitedCoursesRemoteDataSource
             .getVisitedCourses()
-            .doCompletableOnSuccess(visitedCoursesCacheDataSource::saveVisitedCourse)
+            .doCompletableOnSuccess(visitedCoursesCacheDataSource::saveVisitedCourses)
 
         val cacheSource = visitedCoursesCacheDataSource
             .getVisitedCourses()
@@ -38,7 +40,7 @@ constructor(
         }
     }
 
-    override fun saveVisitedCourse(visitedCourse: VisitedCourse): Completable =
+    override fun saveVisitedCourse(courseId: Long): Completable =
         visitedCoursesCacheDataSource
-            .saveVisitedCourse(listOf(visitedCourse))
+            .saveVisitedCourse(courseId)
 }

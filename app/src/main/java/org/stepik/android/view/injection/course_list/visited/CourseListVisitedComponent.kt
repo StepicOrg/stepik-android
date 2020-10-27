@@ -8,12 +8,10 @@ import org.stepik.android.view.injection.course_payments.CoursePaymentsDataModul
 import org.stepik.android.view.injection.last_step.LastStepDataModule
 import org.stepik.android.view.injection.profile.ProfileDataModule
 import org.stepik.android.view.injection.tags.TagsDataModule
-import org.stepik.android.view.injection.visited_courses.VisitedCoursesDataModule
 
 @CourseListVisitedScope
 @Subcomponent(modules = [
     CourseListVisitedModule::class,
-    VisitedCoursesDataModule::class,
     CourseDataModule::class,
     CoursePaymentsDataModule::class,
     LastStepDataModule::class,
