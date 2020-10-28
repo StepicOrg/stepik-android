@@ -68,7 +68,7 @@ class VisitedCourseListItemAdapterDelegate(
 
             val (@ColorRes textColor, displayPrice) = when {
                 isEnrolled -> {
-                    R.color.color_overlay_brown to context.resources.getString(R.string.visited_courses_enrolled)
+                    R.color.material_on_surface_disabled to context.resources.getString(R.string.visited_courses_enrolled)
                 }
                 data.course.isPaid -> {
                     R.color.color_overlay_violet to handleCoursePrice(data)
