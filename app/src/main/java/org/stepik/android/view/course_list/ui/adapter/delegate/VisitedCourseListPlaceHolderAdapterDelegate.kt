@@ -8,8 +8,16 @@ import ru.nobird.android.ui.adapterdelegates.AdapterDelegate
 import ru.nobird.android.ui.adapterdelegates.DelegateViewHolder
 
 class VisitedCourseListPlaceHolderAdapterDelegate : AdapterDelegate<CourseListItem, DelegateViewHolder<CourseListItem>>() {
-    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> =
-        ViewHolder(createView(parent, R.layout.item_visited_course_skeleton))
+    override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> {
+        val itemView = createView(parent, R.layout.item_visited_course_skeleton)
+        val itemCount = (parent.measuredWidth - parent.paddingLeft - parent.paddingRight) /
+                (itemView.resources.getDimensionPixelSize(R.dimen.visited_course_item_width) + itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2)
+
+        itemView.layoutParams.apply {
+            width = ((parent.measuredWidth - parent.paddingLeft - parent.paddingRight) / itemCount) - itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2
+        }
+        return ViewHolder(itemView)
+    }
 
     override fun isForViewType(position: Int, data: CourseListItem): Boolean =
         data is CourseListItem.PlaceHolder

@@ -30,11 +30,11 @@ class VisitedCourseListItemAdapterDelegate(
 
     override fun onCreateViewHolder(parent: ViewGroup): DelegateViewHolder<CourseListItem> {
         val itemView = createView(parent, R.layout.item_visited_course)
-        val itemCount = (parent.width - parent.paddingLeft - parent.paddingRight) /
+        val itemCount = (parent.measuredWidth - parent.paddingLeft - parent.paddingRight) /
                 (itemView.resources.getDimensionPixelSize(R.dimen.visited_course_item_width) + itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2)
 
         itemView.layoutParams.apply {
-            width = ((parent.width - parent.paddingLeft - parent.paddingRight) / itemCount) - itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2
+            width = ((parent.measuredWidth - parent.paddingLeft - parent.paddingRight) / itemCount) - itemView.resources.getDimensionPixelSize(R.dimen.course_item_margin) * 2
         }
         return ViewHolder(itemView)
     }
