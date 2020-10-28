@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="160dp"
-    android:layout_height="222dp"
+    android:layout_height="200dp"
     android:layout_margin="@dimen/course_item_margin"
     app:cardElevation="4dp"
     app:cardCornerRadius="@dimen/course_item_radius">
@@ -35,16 +35,16 @@
             android:layout_marginLeft="@dimen/course_item_space_between_items"
             android:layout_marginStart="@dimen/course_item_space_between_items"
             android:layout_marginRight="@dimen/course_item_space_between_items"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
 
-            android:textAppearance="?textAppearanceSubtitle2"
+            android:textAppearance="?textAppearanceBody2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/courseItemImage"
             app:layout_constraintRight_toRightOf="parent"
             tools:ignore="MissingPrefix"
             android:ellipsize="end"
             android:maxLines="4"
-            tools:text="345678921334567892145678921334567892133456789213345678921334567892136789213"/>
+            tools:text="3456789213345678921456789213345678921334567892133456789213345678"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/coursePrice"
@@ -56,7 +56,7 @@
 
             android:layout_marginLeft="@dimen/course_item_space_between_items"
             android:layout_marginStart="@dimen/course_item_space_between_items"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="8dp"
             android:gravity="bottom"
 
             android:textAppearance="?textAppearanceSubtitle2"
