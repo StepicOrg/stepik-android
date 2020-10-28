@@ -19,6 +19,6 @@ object MigrationFrom60To61 : Migration(60, 61) {
             END;
         """.trimIndent()
         db.execSQL("CREATE TABLE IF NOT EXISTS `VisitedCourse` (`id` INTEGER NOT NULL, `course` INTEGER NOT NULL, PRIMARY KEY(`course`))")
-        db.execSQL(trigger)
+//        db.execSQL(trigger)
     }
 }

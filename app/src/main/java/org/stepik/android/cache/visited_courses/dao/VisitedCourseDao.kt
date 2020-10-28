@@ -14,7 +14,7 @@ abstract class VisitedCourseDao {
     @Query("SELECT * FROM VisitedCourse ORDER BY id DESC LIMIT 20")
     abstract fun getVisitedCourses(): Flowable<List<VisitedCourse>>
 
-    @Query("SELECT MAX(id) FROM VisitedCourse")
+    @Query("SELECT COALESCE(MAX(id), 0) FROM VisitedCourse")
     abstract fun getMaxId(): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -26,6 +26,6 @@ abstract class VisitedCourseDao {
     @Transaction
     open fun saveVisitedCourse(courseId: Long) {
         val id = getMaxId()
-        saveVisitedCourse(VisitedCourse(id = id + 1, course = courseId))
+        return saveVisitedCourse(VisitedCourse(id = id + 1, course = courseId))
     }
 }
