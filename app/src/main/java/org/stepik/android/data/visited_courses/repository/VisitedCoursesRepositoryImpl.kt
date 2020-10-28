@@ -1,8 +1,7 @@
 package org.stepik.android.data.visited_courses.repository
 
-import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.Flowable
 import org.stepik.android.data.visited_courses.source.VisitedCoursesCacheDataSource
 import org.stepik.android.data.visited_courses.source.VisitedCoursesRemoteDataSource
 import org.stepik.android.domain.visited_courses.model.VisitedCourse
@@ -13,26 +12,18 @@ class VisitedCoursesRepositoryImpl
 @Inject
 constructor(
     private val visitedCoursesCacheDataSource: VisitedCoursesCacheDataSource,
-    private val visitedCoursesRemoteDataSource: VisitedCoursesRemoteDataSource
+    visitedCoursesRemoteDataSource: VisitedCoursesRemoteDataSource
 ) : VisitedCoursesRepository {
 
-    private val behaviorRelay: BehaviorRelay<List<VisitedCourse>> = BehaviorRelay.create()
-
-    private val visitedCoursesSource: Observable<List<VisitedCourse>> =
+    private val visitedCoursesSource: Completable =
         visitedCoursesRemoteDataSource
             .getVisitedCourses()
-            .toObservable()
-            .filter { it.isNotEmpty() }
-            .doOnNext(visitedCoursesCacheDataSource::saveVisitedCourses)
-            .share()
+            .doOnSuccess(visitedCoursesCacheDataSource::saveVisitedCourses)
+            .flatMapCompletable { Completable.complete().cache() } // cache only success
 
-    override fun observeVisitedCourses(): Observable<List<VisitedCourse>> =
-        visitedCoursesCacheDataSource
-            .getVisitedCourses()
-            .toObservable()
-            .filter { it.isNotEmpty() }
-            .concatWith(visitedCoursesSource)
-            .concatWith(behaviorRelay)
+    override fun observeVisitedCourses(): Flowable<List<VisitedCourse>> =
+        visitedCoursesSource
+            .andThen(visitedCoursesCacheDataSource.getVisitedCourses())
 
     override fun saveVisitedCourse(courseId: Long): Completable =
         visitedCoursesCacheDataSource

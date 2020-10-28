@@ -15,8 +15,9 @@ constructor(
     override fun getVisitedCourses(): Flowable<List<VisitedCourse>> =
         visitedCourseDao.getVisitedCourses()
 
-    override fun saveVisitedCourses(visitedCourses: List<VisitedCourse>): Completable =
+    override fun saveVisitedCourses(visitedCourses: List<VisitedCourse>) {
         visitedCourseDao.saveVisitedCourses(visitedCourses)
+    }
 
     override fun saveVisitedCourse(courseId: Long): Completable =
         Completable.fromCallable {
